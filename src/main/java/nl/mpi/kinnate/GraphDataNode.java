@@ -1,4 +1,4 @@
-package nl.mpi.kingraph2;
+package nl.mpi.kinnate;
 
 import java.util.ArrayList;
 import nl.mpi.arbil.ImdiField;
