@@ -1,11 +1,11 @@
-package nl.mpi.kingraph2;
+package nl.mpi.kinnate;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
-import edu.uci.ics.jung.graph.Vertex;
-import edu.uci.ics.jung.graph.decorators.StringLabeller;
+//import edu.uci.ics.jung.graph.Vertex;
+//import edu.uci.ics.jung.graph.decorators.StringLabeller;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import java.awt.Dimension;
 import java.net.URI;
