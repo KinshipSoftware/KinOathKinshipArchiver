@@ -17,6 +17,7 @@ public class GraphData {
 
     private HashMap<String, GraphDataNode> graphDataNodeList = new HashMap<String, GraphDataNode>();
     public int gridWidth;
+    public int gridHeight;
 
     public void readData() {
         String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
@@ -67,6 +68,7 @@ public class GraphData {
                 yPos++;
             }
         }
+        gridHeight = yPos;
     }
 
     public GraphDataNode[] getDataNodes() {

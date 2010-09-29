@@ -49,11 +49,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         JScrollPane tableScrollPane = new JScrollPane(previewTable);
         jScrollPane1.getViewport().add(leftTree);
-        jTabbedPane1.add("SVG", graphPanel);
+        jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
         jTabbedPane1.add("SVG2", new GraphPanel1());
         jTabbedPane1.add("Jung", jungGraph);
         jTabbedPane1.add("Table", tableScrollPane);
-        jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
+        jTabbedPane1.add("SVG (deprecated)", graphPanel);
 
         leftTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
         String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");

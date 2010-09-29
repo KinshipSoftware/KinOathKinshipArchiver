@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.mpi.kinnate;
 
 import java.awt.BorderLayout;
@@ -23,13 +19,13 @@ import org.w3c.dom.svg.SVGDocument;
  *  Created on : Aug 16, 2010, 5:31:33 PM
  *  Author     : Peter Withers
  */
-public class GraphPanel1 extends JPanel {
+public class GraphPanel extends JPanel {
 
     protected JSVGCanvas svgCanvas = new JSVGCanvas();
 
-    public GraphPanel1() {
+    public GraphPanel() {
         this.setLayout(new BorderLayout());
-        drawNodes();
+//        drawNodes();
         svgCanvas.setEnableImageZoomInteractor(true);
         svgCanvas.setEnablePanInteractor(true);
         svgCanvas.setEnableRotateInteractor(true);
@@ -43,15 +39,13 @@ public class GraphPanel1 extends JPanel {
                 super.mouseClicked(e);
             }
         });
+        this.add(BorderLayout.CENTER, svgCanvas);
     }
 
-    public void drawNodes() {
-        GraphData graphData = new GraphData();
-        graphData.readData();
-
+    public void drawNodes(GraphData graphData) {
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
-        SVGDocument doc = (SVGDocument)impl.createDocument(svgNS, "svg", null);
+        SVGDocument doc = (SVGDocument) impl.createDocument(svgNS, "svg", null);
 //        Document doc = impl.createDocument(svgNS, "svg", null);
 //        SVGDocument doc = svgCanvas.getSVGDocument();
         // Get the root element (the 'svg' elemen¤t).
@@ -60,10 +54,11 @@ public class GraphPanel1 extends JPanel {
 
         int stepNumber = 300;
         int preferedWidth = graphData.gridWidth * stepNumber + stepNumber * 2;
+        int preferedHeight = graphData.gridHeight * stepNumber + stepNumber * 2;
 
         // Set the width and height attributes on the root 'svg' element.
         svgRoot.setAttributeNS(null, "width", Integer.toString(preferedWidth));
-        svgRoot.setAttributeNS(null, "height", Integer.toString(preferedWidth));
+        svgRoot.setAttributeNS(null, "height", Integer.toString(preferedHeight));
 
         this.setPreferredSize(new Dimension(preferedWidth, preferedWidth));
 
@@ -127,7 +122,6 @@ public class GraphPanel1 extends JPanel {
                 svgRoot.appendChild(linkLine);
             }
         }
-        this.add(BorderLayout.CENTER, svgCanvas);
-        new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output1.svg"));
+        new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
     }
 }

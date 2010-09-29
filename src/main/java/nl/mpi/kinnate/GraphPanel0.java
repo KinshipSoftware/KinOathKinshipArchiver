@@ -224,6 +224,6 @@ public class GraphPanel0 extends JPanel {
 //            ex.printStackTrace();
 //        }
         this.add(BorderLayout.CENTER, svgCanvas);
-        new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+        new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output0.svg"));
     }
 }
