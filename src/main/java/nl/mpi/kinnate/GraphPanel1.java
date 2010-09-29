@@ -2,31 +2,21 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nl.mpi.kingraph2;
+package nl.mpi.kinnate;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
-import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import nl.mpi.arbil.data.ImdiLoader;
-import nl.mpi.arbil.data.ImdiTreeObject;
-import org.apache.batik.swing.gvt.AbstractPanInteractor;
-import org.apache.batik.swing.gvt.AbstractZoomInteractor;
-import org.apache.batik.swing.gvt.Interactor;
 import org.w3c.dom.Text;
+import org.w3c.dom.svg.SVGDocument;
 
 /**
  *  Document   : GraphPanel
@@ -61,8 +51,10 @@ public class GraphPanel1 extends JPanel {
 
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
-        Document doc = impl.createDocument(svgNS, "svg", null);
-        // Get the root element (the 'svg' element).
+        SVGDocument doc = (SVGDocument)impl.createDocument(svgNS, "svg", null);
+//        Document doc = impl.createDocument(svgNS, "svg", null);
+//        SVGDocument doc = svgCanvas.getSVGDocument();
+        // Get the root element (the 'svg' elemen¤t).
         Element svgRoot = doc.getDocumentElement();
         // svgRoot.removeAttribute("version");
 
@@ -75,7 +67,8 @@ public class GraphPanel1 extends JPanel {
 
         this.setPreferredSize(new Dimension(preferedWidth, preferedWidth));
 
-        svgCanvas.setDocument(doc);
+        svgCanvas.setSVGDocument(doc);
+//        svgCanvas.setDocument(doc);
         int counterTest = 0;
         for (GraphDataNode currentNode : graphData.getDataNodes()) {
             counterTest++;
@@ -130,13 +123,11 @@ public class GraphPanel1 extends JPanel {
                 linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.yPos * stepNumber + stepNumber));
                 linkLine.setAttributeNS(null, "stroke", "black");
                 linkLine.setAttributeNS(null, "stroke-width", "1");
-// Attach the rectangle to the root 'svg' element.
+                // Attach the rectangle to the root 'svg' element.
                 svgRoot.appendChild(linkLine);
             }
         }
-
-
         this.add(BorderLayout.CENTER, svgCanvas);
-        new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/KinGraph/KinGraph2/src/main/resources/output1.svg"));
+        new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output1.svg"));
     }
 }
