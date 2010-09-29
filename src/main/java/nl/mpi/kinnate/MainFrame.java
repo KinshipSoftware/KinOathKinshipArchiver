@@ -53,6 +53,7 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane1.add("SVG2", new GraphPanel1());
         jTabbedPane1.add("Jung", jungGraph);
         jTabbedPane1.add("Table", tableScrollPane);
+        jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
 
         leftTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
         String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
