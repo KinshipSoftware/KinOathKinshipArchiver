@@ -1,4 +1,4 @@
-package nl.mpi.kingraph2;
+package nl.mpi.kinnate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
