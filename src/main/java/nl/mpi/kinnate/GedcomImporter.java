@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nl.mpi.kingraph2;
+package nl.mpi.kinnate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
