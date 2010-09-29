@@ -8,7 +8,7 @@
  *
  * Created on Aug 16, 2010, 5:20:20 PM
  */
-package nl.mpi.kingraph2;
+package nl.mpi.kinnate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
