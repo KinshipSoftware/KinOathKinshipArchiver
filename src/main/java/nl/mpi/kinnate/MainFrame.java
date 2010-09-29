@@ -33,7 +33,7 @@ import nl.mpi.arbil.data.ImdiTreeObject;
 public class MainFrame extends javax.swing.JFrame {
 
     private ImdiTree leftTree;
-    private GraphPanel graphPanel;
+    private GraphPanel0 graphPanel;
     private JungGraph jungGraph;
     private ImdiTable previewTable;
     private ImdiTableModel imdiTableModel;
@@ -42,7 +42,7 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         leftTree = new ImdiTree();
-        graphPanel = new GraphPanel();
+        graphPanel = new GraphPanel0();
         jungGraph = new JungGraph();
         imdiTableModel = new ImdiTableModel();
         previewTable = new ImdiTable(imdiTableModel, "Preview Table");

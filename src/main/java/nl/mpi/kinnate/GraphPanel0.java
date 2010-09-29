@@ -23,15 +23,15 @@ import org.w3c.dom.Text;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- *  Document   : GraphPanel
+ *  Document   : GraphPanel0
  *  Created on : Aug 16, 2010, 5:31:33 PM
  *  Author     : Peter Withers
  */
-public class GraphPanel extends JPanel {
+public class GraphPanel0 extends JPanel {
 
     protected JSVGCanvas svgCanvas = new JSVGCanvas();
 
-    public GraphPanel() {
+    public GraphPanel0() {
         this.setLayout(new BorderLayout());
         //doTest();
         drawNodes();
