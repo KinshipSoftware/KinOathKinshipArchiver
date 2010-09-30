@@ -2,6 +2,7 @@ package nl.mpi.kinnate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.data.ImdiLoader;
@@ -32,7 +33,7 @@ public class GraphData {
             }
         }
         calculateLinks();
-        calculateLocations();
+        sanguineSort();
         printLocations();
     }
 
@@ -52,21 +53,74 @@ public class GraphData {
 
     }
 
-    protected void calculateLocations() {
-        System.out.println("calculateLocations");
-        gridWidth = (int) Math.sqrt(graphDataNodeList.size());
-        System.out.println("gridWidth: " + gridWidth);
-        int xPos = 0;
-        int yPos = 0;
-        for (GraphDataNode graphDataNode : graphDataNodeList.values()) {
-            graphDataNode.xPos = xPos;
-            graphDataNode.yPos = yPos;
-            xPos++;
-            if (xPos > gridWidth) {
-                xPos = 0;
-                yPos++;
-            }
+    private void sanguineSubnodeSort(ArrayList<ArrayList<GraphDataNode>> generationRows, ArrayList<GraphDataNode> currentColumns, ArrayList<GraphDataNode> inputNodes, GraphDataNode currentNode) {
+        int currentRowIndex = generationRows.indexOf(currentColumns);
+        ArrayList<GraphDataNode> ancestorColumns;
+        ArrayList<GraphDataNode> descendentColumns;
+        if (currentRowIndex < generationRows.size() - 1) {
+            descendentColumns = generationRows.get(currentRowIndex + 1);
+        } else {
+            descendentColumns = new ArrayList<GraphDataNode>();
+            generationRows.add(currentRowIndex + 1, descendentColumns);
         }
+        if (currentRowIndex > 0) {
+            ancestorColumns = generationRows.get(currentRowIndex - 1);
+        } else {
+            ancestorColumns = new ArrayList<GraphDataNode>();
+            generationRows.add(currentRowIndex, ancestorColumns);
+        }
+        for (GraphDataNode.NodeRelation relatedNode : currentNode.getNodeRelations()) {
+            ArrayList<GraphDataNode> targetColumns = null;
+            switch (relatedNode.relationType) {
+                case ancestor:
+                    targetColumns = ancestorColumns;
+                    break;
+                case sibling:
+                    targetColumns = currentColumns;
+                    break;
+                case descendant:
+                    targetColumns = descendentColumns;
+                    break;
+                case union:
+                    targetColumns = currentColumns;
+                    break;
+            }
+            inputNodes.remove(relatedNode.linkedNode);
+            targetColumns.add(relatedNode.linkedNode);
+            sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.linkedNode);
+        }
+    }
+
+    protected void sanguineSort() {
+        System.out.println("calculateLocations");
+        // create an array of rows
+        ArrayList<ArrayList<GraphDataNode>> generationRows = new ArrayList<ArrayList<GraphDataNode>>();
+        ArrayList<GraphDataNode> inputNodes = new ArrayList<GraphDataNode>();
+        inputNodes.addAll(graphDataNodeList.values());
+        // put an array of columns into the current row
+        ArrayList<GraphDataNode> currentColumns = new ArrayList<GraphDataNode>();
+        generationRows.add(currentColumns);
+
+        while (inputNodes.size() > 0) {
+            GraphDataNode currentNode = inputNodes.remove(0);
+            currentColumns.add(currentNode);
+            sanguineSubnodeSort(generationRows, currentColumns, inputNodes, currentNode);
+        }
+        gridWidth = 0;
+        int yPos = 0;
+        for (ArrayList<GraphDataNode> currentRow : generationRows) {
+            int xPos = 0;
+            if (gridWidth < currentRow.size()) {
+                gridWidth = currentRow.size();
+            }
+            for (GraphDataNode graphDataNode : currentRow) {
+                graphDataNode.yPos = yPos;
+                graphDataNode.xPos = xPos;
+                xPos++;
+            }
+            yPos++;
+        }
+        System.out.println("gridWidth: " + gridWidth);
         gridHeight = yPos;
     }
 

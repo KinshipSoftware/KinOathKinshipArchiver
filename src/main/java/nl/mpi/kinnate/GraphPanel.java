@@ -81,8 +81,8 @@ public class GraphPanel extends JPanel {
             switch (currentNode.symbolType) {
                 case circle:
                     symbolNode = doc.createElementNS(svgNS, "circle");
-                    symbolNode.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
-                    symbolNode.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * vSpacing + vSpacing + symbolSize / 2));
+                    symbolNode.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+                    symbolNode.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
                     symbolNode.setAttributeNS(null, "r", Integer.toString(symbolSize / 2));
                     symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
 //            <circle id="_16" cx="120.0" cy="155.0" r="50" fill="red" stroke="black" stroke-width="1"/>
@@ -90,15 +90,15 @@ public class GraphPanel extends JPanel {
                     break;
                 case square:
                     symbolNode = doc.createElementNS(svgNS, "rect");
-                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize));
-                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
+                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
                     symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
                     symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
                     break;
                 case triangle:
                     symbolNode = doc.createElementNS(svgNS, "polygon");
-                    int posXt = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
-                    int posYt = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
+                    int posXt = currentNode.xPos * hSpacing + hSpacing;
+                    int posYt = currentNode.yPos * vSpacing + vSpacing;
                     int triangleHeight = (int) (Math.sqrt(3) * symbolSize / 2);
                     symbolNode.setAttributeNS(null, "points",
                             (posXt - symbolSize / 2) + "," + (posYt + triangleHeight / 2) + " "
@@ -132,8 +132,8 @@ public class GraphPanel extends JPanel {
             svgRoot.appendChild(symbolNode);
             // <text id="_7" x="39.0" y="140.0" fill="black" stroke="black" stroke-width="0" font-size="15">Sample Text</text>
             Element labelText = doc.createElementNS(svgNS, "text");
-            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
-            labelText.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
+            labelText.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
             labelText.setAttributeNS(null, "fill", "black");
             labelText.setAttributeNS(null, "stroke-width", "0");
             labelText.setAttributeNS(null, "font-size", "14");

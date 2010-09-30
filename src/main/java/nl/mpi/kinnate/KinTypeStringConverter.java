@@ -89,6 +89,6 @@ public class KinTypeStringConverter extends GraphData {
             }
         }
         calculateLinks();
-        calculateLocations();
+        sanguineSort();
     }
 }

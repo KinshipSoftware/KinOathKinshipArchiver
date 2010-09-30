@@ -24,6 +24,7 @@ public class KinTypeStringTestPanel extends JPanel {
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel();
         kinTypeStringInput = new JTextArea(defaultString);
+        kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
         this.add(kinTypeStringInput, BorderLayout.PAGE_START);
         this.add(graphPanel, BorderLayout.CENTER);
 //        kinTypeStringInput.setForeground(Color.lightGray);
