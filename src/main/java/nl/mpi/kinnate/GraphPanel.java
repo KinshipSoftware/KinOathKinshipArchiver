@@ -59,6 +59,9 @@ public class GraphPanel extends JPanel {
         }
         // todo: find the real text size from batik
         int stepNumber = maxTextLength * 10 + 100;
+        int symbolSize = 10;
+        int strokeWidth = 1;
+
         int preferedWidth = graphData.gridWidth * stepNumber + stepNumber * 2;
         int preferedHeight = graphData.gridHeight * stepNumber + stepNumber * 2;
 
@@ -76,37 +79,35 @@ public class GraphPanel extends JPanel {
             Element symbolNode;
             switch (currentNode.symbolType) {
                 case circle:
-                    // Create the circle.
                     symbolNode = doc.createElementNS(svgNS, "circle");
-                    symbolNode.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
-                    symbolNode.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
-                    symbolNode.setAttributeNS(null, "r", "5");
-                    symbolNode.setAttributeNS(null, "height", "10");
+                    symbolNode.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize / 2));
+                    symbolNode.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * stepNumber + stepNumber + symbolSize / 2));
+                    symbolNode.setAttributeNS(null, "r", Integer.toString(symbolSize / 2));
+                    symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
 //            <circle id="_16" cx="120.0" cy="155.0" r="50" fill="red" stroke="black" stroke-width="1"/>
 //    <polygon id="_17" transform="matrix(0.7457627,0.0,0.0,circle0.6567164,467.339,103.462685)" points="20,10 80,40 40,80" fill="blue" stroke="black" stroke-width="1"/>
                     break;
                 case square:
-                    // Create the rectangle.
                     symbolNode = doc.createElementNS(svgNS, "rect");
-                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - 5));
-                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber - 5));
-                    symbolNode.setAttributeNS(null, "width", "10");
-                    symbolNode.setAttributeNS(null, "height", "10");
+                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize));
+                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+                    symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
+                    symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
                     break;
                 case equals:
-                    // Create the rectangle.
                     symbolNode = doc.createElementNS(svgNS, "rect");
-                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
+                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize));
                     symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
-                    symbolNode.setAttributeNS(null, "width", "10");
-                    symbolNode.setAttributeNS(null, "height", "10");
+                    symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize / 2));
+                    symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize / 2));
                     break;
                 default:
                     symbolNode = doc.createElementNS(svgNS, "polyline");
-                    int posX = currentNode.xPos * stepNumber + stepNumber;
-                    int posY = currentNode.yPos * stepNumber + stepNumber;
+                    int posX = currentNode.xPos * stepNumber + stepNumber - symbolSize / 2;
+                    int posY = currentNode.yPos * stepNumber + stepNumber + symbolSize / 2;
+                    int offsetAmount = symbolSize / 2;
                     symbolNode.setAttributeNS(null, "fill", "none");
-                    symbolNode.setAttributeNS(null, "points", (posX - 5) + "," + (posY - 5) + " " + (posX + 5) + "," + (posY + 5) + " " + (posX) + "," + (posY) + " " + (posX - 5) + "," + (posY + 5) + " " + (posX + 5) + "," + (posY - 5));
+                    symbolNode.setAttributeNS(null, "points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
             }
             if (currentNode.isEgo) {
                 symbolNode.setAttributeNS(null, "fill", "red");
