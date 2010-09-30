@@ -11,6 +11,13 @@ import nl.mpi.arbil.data.ImdiTreeObject;
  */
 public class GraphDataNode {
 
+    enum SymbolType {
+        // symbol terms are used here to try to keep things agnostic
+
+        square, triangle, circle, equals
+    }
+    SymbolType symbolType;
+    boolean isEgo = false;
     private ImdiTreeObject imdiTreeObject;
     private String labelString;
     private String[] linkStringsArray = new String[]{};

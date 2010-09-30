@@ -51,8 +51,14 @@ public class GraphPanel extends JPanel {
         // Get the root element (the 'svg' elemen¤t).
         Element svgRoot = doc.getDocumentElement();
         // svgRoot.removeAttribute("version");
-
-        int stepNumber = 300;
+        int maxTextLength = 0;
+        for (GraphDataNode currentNode : graphData.getDataNodes()) {
+            if (currentNode.getLabel().length() > maxTextLength) {
+                maxTextLength = currentNode.getLabel().length();
+            }
+        }
+        // todo: find the real text size from batik
+        int stepNumber = maxTextLength * 10 + 100;
         int preferedWidth = graphData.gridWidth * stepNumber + stepNumber * 2;
         int preferedHeight = graphData.gridHeight * stepNumber + stepNumber * 2;
 
@@ -67,30 +73,51 @@ public class GraphPanel extends JPanel {
         int counterTest = 0;
         for (GraphDataNode currentNode : graphData.getDataNodes()) {
             counterTest++;
-            if (counterTest % 2 > 0) {
-                // Create the rectangle.
-                Element circle = doc.createElementNS(svgNS, "circle");
-                circle.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
-                circle.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
-                circle.setAttributeNS(null, "r", "5");
-                circle.setAttributeNS(null, "height", "10");
-                circle.setAttributeNS(null, "fill", "red");
-                // Attach the rectangle to the root 'svg' element.
-                svgRoot.appendChild(circle);
+            Element symbolNode;
+            switch (currentNode.symbolType) {
+                case circle:
+                    // Create the circle.
+                    symbolNode = doc.createElementNS(svgNS, "circle");
+                    symbolNode.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
+                    symbolNode.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+                    symbolNode.setAttributeNS(null, "r", "5");
+                    symbolNode.setAttributeNS(null, "height", "10");
 //            <circle id="_16" cx="120.0" cy="155.0" r="50" fill="red" stroke="black" stroke-width="1"/>
 //    <polygon id="_17" transform="matrix(0.7457627,0.0,0.0,circle0.6567164,467.339,103.462685)" points="20,10 80,40 40,80" fill="blue" stroke="black" stroke-width="1"/>
-            } else {
-
-                // Create the rectangle.
-                Element rectangle = doc.createElementNS(svgNS, "rect");
-                rectangle.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
-                rectangle.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
-                rectangle.setAttributeNS(null, "width", "10");
-                rectangle.setAttributeNS(null, "height", "10");
-                rectangle.setAttributeNS(null, "fill", "red");
-                // Attach the rectangle to the root 'svg' element.
-                svgRoot.appendChild(rectangle);
+                    break;
+                case square:
+                    // Create the rectangle.
+                    symbolNode = doc.createElementNS(svgNS, "rect");
+                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - 5));
+                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber - 5));
+                    symbolNode.setAttributeNS(null, "width", "10");
+                    symbolNode.setAttributeNS(null, "height", "10");
+                    break;
+                case equals:
+                    // Create the rectangle.
+                    symbolNode = doc.createElementNS(svgNS, "rect");
+                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
+                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+                    symbolNode.setAttributeNS(null, "width", "10");
+                    symbolNode.setAttributeNS(null, "height", "10");
+                    break;
+                default:
+                    symbolNode = doc.createElementNS(svgNS, "polyline");
+                    int posX = currentNode.xPos * stepNumber + stepNumber;
+                    int posY = currentNode.yPos * stepNumber + stepNumber;
+                    symbolNode.setAttributeNS(null, "fill", "none");
+                    symbolNode.setAttributeNS(null, "points", (posX - 5) + "," + (posY - 5) + " " + (posX + 5) + "," + (posY + 5) + " " + (posX) + "," + (posY) + " " + (posX - 5) + "," + (posY + 5) + " " + (posX + 5) + "," + (posY - 5));
             }
+            if (currentNode.isEgo) {
+                symbolNode.setAttributeNS(null, "fill", "red");
+            } else {
+                symbolNode.setAttributeNS(null, "fill", "none");
+            }
+
+            symbolNode.setAttributeNS(null, "stroke", "black");
+            symbolNode.setAttributeNS(null, "stroke-width", "2");
+            // Attach the rectangle to the root 'svg' element.
+            svgRoot.appendChild(symbolNode);
             // <text id="_7" x="39.0" y="140.0" fill="black" stroke="black" stroke-width="0" font-size="15">Sample Text</text>
             Element labelText = doc.createElementNS(svgNS, "text");
             labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
