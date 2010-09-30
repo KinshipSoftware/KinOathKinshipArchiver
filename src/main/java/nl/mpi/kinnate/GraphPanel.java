@@ -57,13 +57,14 @@ public class GraphPanel extends JPanel {
                 maxTextLength = currentNode.getLabel().length();
             }
         }
+        int vSpacing = 100;
         // todo: find the real text size from batik
-        int stepNumber = maxTextLength * 10 + 100;
+        int hSpacing = maxTextLength * 10 + 100;
         int symbolSize = 10;
         int strokeWidth = 1;
 
-        int preferedWidth = graphData.gridWidth * stepNumber + stepNumber * 2;
-        int preferedHeight = graphData.gridHeight * stepNumber + stepNumber * 2;
+        int preferedWidth = graphData.gridWidth * hSpacing + hSpacing * 2;
+        int preferedHeight = graphData.gridHeight * vSpacing + vSpacing * 2;
 
         // Set the width and height attributes on the root 'svg' element.
         svgRoot.setAttributeNS(null, "width", Integer.toString(preferedWidth));
@@ -80,8 +81,8 @@ public class GraphPanel extends JPanel {
             switch (currentNode.symbolType) {
                 case circle:
                     symbolNode = doc.createElementNS(svgNS, "circle");
-                    symbolNode.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize / 2));
-                    symbolNode.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * stepNumber + stepNumber + symbolSize / 2));
+                    symbolNode.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
+                    symbolNode.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * vSpacing + vSpacing + symbolSize / 2));
                     symbolNode.setAttributeNS(null, "r", Integer.toString(symbolSize / 2));
                     symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
 //            <circle id="_16" cx="120.0" cy="155.0" r="50" fill="red" stroke="black" stroke-width="1"/>
@@ -89,22 +90,32 @@ public class GraphPanel extends JPanel {
                     break;
                 case square:
                     symbolNode = doc.createElementNS(svgNS, "rect");
-                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize));
-                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize));
+                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
                     symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
                     symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
                     break;
-                case equals:
-                    symbolNode = doc.createElementNS(svgNS, "rect");
-                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize));
-                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
-                    symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize / 2));
-                    symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize / 2));
+                case triangle:
+                    symbolNode = doc.createElementNS(svgNS, "polygon");
+                    int posXt = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
+                    int posYt = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
+                    int triangleHeight = (int) (Math.sqrt(3) * symbolSize / 2);
+                    symbolNode.setAttributeNS(null, "points",
+                            (posXt - symbolSize / 2) + "," + (posYt + triangleHeight / 2) + " "
+                            + (posXt) + "," + (posYt - +triangleHeight / 2) + " "
+                            + (posXt + symbolSize / 2) + "," + (posYt + triangleHeight / 2));
                     break;
+//                case equals:
+//                    symbolNode = doc.createElementNS(svgNS, "rect");
+//                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize));
+//                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+//                    symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize / 2));
+//                    symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize / 2));
+//                    break;
                 default:
                     symbolNode = doc.createElementNS(svgNS, "polyline");
-                    int posX = currentNode.xPos * stepNumber + stepNumber - symbolSize / 2;
-                    int posY = currentNode.yPos * stepNumber + stepNumber + symbolSize / 2;
+                    int posX = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
+                    int posY = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
                     int offsetAmount = symbolSize / 2;
                     symbolNode.setAttributeNS(null, "fill", "none");
                     symbolNode.setAttributeNS(null, "points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
@@ -121,8 +132,8 @@ public class GraphPanel extends JPanel {
             svgRoot.appendChild(symbolNode);
             // <text id="_7" x="39.0" y="140.0" fill="black" stroke="black" stroke-width="0" font-size="15">Sample Text</text>
             Element labelText = doc.createElementNS(svgNS, "text");
-            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
-            labelText.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+            labelText.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
             labelText.setAttributeNS(null, "fill", "black");
             labelText.setAttributeNS(null, "stroke-width", "0");
             labelText.setAttributeNS(null, "font-size", "14");
@@ -134,16 +145,16 @@ public class GraphPanel extends JPanel {
             svgRoot.appendChild(labelText);
 
             // draw links
-            for (GraphDataNode graphLinkNode : currentNode.linkedNodes) {
-                System.out.println("link: " + graphLinkNode.xPos + ":" + graphLinkNode.yPos);
+            for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
+                System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
 
 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
                 Element linkLine = doc.createElementNS(svgNS, "line");
-                linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
-                linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+                linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+                linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
 
-                linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.xPos * stepNumber + stepNumber));
-                linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.yPos * stepNumber + stepNumber));
+                linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
+                linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
                 linkLine.setAttributeNS(null, "stroke", "black");
                 linkLine.setAttributeNS(null, "stroke-width", "1");
                 // Attach the rectangle to the root 'svg' element.

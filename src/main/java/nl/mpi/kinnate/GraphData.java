@@ -2,7 +2,6 @@ package nl.mpi.kinnate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.data.ImdiLoader;
@@ -41,15 +40,14 @@ public class GraphData {
         System.out.println("calculateLinks");
         for (GraphDataNode currentNode : graphDataNodeList.values()) {
             System.out.println("currentNode: " + currentNode.getLabel());
-            ArrayList<GraphDataNode> linkNodes = new ArrayList<GraphDataNode>();
+//            ArrayList<GraphDataNode> linkNodes = new ArrayList<GraphDataNode>();
             for (String currentLinkString : currentNode.getLinks()) {
                 GraphDataNode linkedNode = graphDataNodeList.get(currentLinkString);
                 if (linkedNode != null) {
-                    linkNodes.add(linkedNode);
+                    currentNode.addRelatedNode(linkedNode, 0, GraphDataNode.RelationType.sibling);
                     System.out.println("link found: " + currentLinkString);
                 }
             }
-            currentNode.setGraphDataNodes(linkNodes.toArray(new GraphDataNode[]{}));
         }
 
     }
@@ -80,8 +78,8 @@ public class GraphData {
         System.out.println("printLocations");
         for (GraphDataNode graphDataNode : graphDataNodeList.values()) {
             System.out.println("node: " + graphDataNode.xPos + ":" + graphDataNode.yPos);
-            for (GraphDataNode graphLinkNode : graphDataNode.linkedNodes) {
-                System.out.println("link: " + graphLinkNode.xPos + ":" + graphLinkNode.yPos);
+            for (GraphDataNode.NodeRelation graphLinkNode : graphDataNode.getNodeRelations()) {
+                System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
             }
         }
     }

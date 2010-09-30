@@ -14,16 +14,28 @@ public class GraphDataNode {
     enum SymbolType {
         // symbol terms are used here to try to keep things agnostic
 
-        square, triangle, circle, equals
+        square, triangle, circle
+    }
+
+    public enum RelationType {
+
+        sibling, ancestor, descendant, union
     }
     SymbolType symbolType;
     boolean isEgo = false;
     private ImdiTreeObject imdiTreeObject;
     private String labelString;
     private String[] linkStringsArray = new String[]{};
-    public GraphDataNode[] linkedNodes;
+    private ArrayList<NodeRelation> relatedNodes = new ArrayList<NodeRelation>();
     int xPos;
     int yPos;
+
+    public class NodeRelation {
+
+        public GraphDataNode linkedNode;
+        public int generationalDistance;
+        RelationType relationType;
+    }
 
     public GraphDataNode(ImdiTreeObject imdiTreeObjectLocal) {
         imdiTreeObject = imdiTreeObjectLocal;
@@ -59,7 +71,15 @@ public class GraphDataNode {
         }
     }
 
-    public void setGraphDataNodes(GraphDataNode[] linkedNodesLocal) {
-        linkedNodes = linkedNodesLocal;
+    public void addRelatedNode(GraphDataNode relatedNode, int generationalDistance, RelationType relationType) {
+        NodeRelation nodeRelation = new NodeRelation();
+        nodeRelation.linkedNode = relatedNode;
+        nodeRelation.generationalDistance = generationalDistance;
+        nodeRelation.relationType = relationType;
+        relatedNodes.add(nodeRelation);
+    }
+
+    public NodeRelation[] getNodeRelations() {
+        return relatedNodes.toArray(new NodeRelation[]{});
     }
 }
