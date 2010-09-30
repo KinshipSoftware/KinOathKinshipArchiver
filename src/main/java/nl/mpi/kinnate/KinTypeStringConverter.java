@@ -9,8 +9,18 @@ public class KinTypeStringConverter extends GraphData {
 
     public void readKinTypes(String[] kinTypes) {
         for (String kinTypeString : kinTypes) {
-            System.out.println("kinTypeString: " + kinTypeString);
+            if (kinTypeString != null && kinTypeString.length() > 0) {
+                System.out.println("kinTypeString: " + kinTypeString);
+                if (graphDataNodeList.containsKey(kinTypeString)) {
+                    graphDataNodeList.get(kinTypeString); // add any child nodes
+                } else {
+                    graphDataNodeList.put(kinTypeString, new GraphDataNode(kinTypeString));
+                    // add any child nodes
+                }
+            }
         }
-        super.readData();
+        calculateLinks();
+        calculateLocations();
+//        printLocations();
     }
 }

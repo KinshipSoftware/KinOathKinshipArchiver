@@ -101,7 +101,7 @@ public class GraphPanel extends JPanel {
             //labelText.setNodeValue(currentChild.toString());
 
             //String textWithUni = "\u0041";
-            Text textNode = doc.createTextNode(currentNode.imdiTreeObject.toString());
+            Text textNode = doc.createTextNode(currentNode.getLabel());
             labelText.appendChild(textNode);
             svgRoot.appendChild(labelText);
 

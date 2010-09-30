@@ -15,7 +15,7 @@ import nl.mpi.arbil.data.ImdiTreeObject;
  */
 public class GraphData {
 
-    private HashMap<String, GraphDataNode> graphDataNodeList = new HashMap<String, GraphDataNode>();
+    protected HashMap<String, GraphDataNode> graphDataNodeList = new HashMap<String, GraphDataNode>();
     public int gridWidth;
     public int gridHeight;
 
@@ -37,9 +37,10 @@ public class GraphData {
         printLocations();
     }
 
-    private void calculateLinks() {
+    protected void calculateLinks() {
         System.out.println("calculateLinks");
         for (GraphDataNode currentNode : graphDataNodeList.values()) {
+            System.out.println("currentNode: " + currentNode.getLabel());
             ArrayList<GraphDataNode> linkNodes = new ArrayList<GraphDataNode>();
             for (String currentLinkString : currentNode.getLinks()) {
                 GraphDataNode linkedNode = graphDataNodeList.get(currentLinkString);
@@ -53,7 +54,7 @@ public class GraphData {
 
     }
 
-    private void calculateLocations() {
+    protected void calculateLocations() {
         System.out.println("calculateLocations");
         gridWidth = (int) Math.sqrt(graphDataNodeList.size());
         System.out.println("gridWidth: " + gridWidth);
