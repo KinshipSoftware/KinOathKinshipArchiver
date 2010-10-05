@@ -146,19 +146,21 @@ public class GraphPanel extends JPanel {
 
             // draw links
             for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
-                System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
+                if (graphLinkNode.sourceNode.equals(currentNode)) {
+                    System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
 
 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
-                Element linkLine = doc.createElementNS(svgNS, "line");
-                linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
-                linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+                    Element linkLine = doc.createElementNS(svgNS, "line");
+                    linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+                    linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
 
-                linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
-                linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
-                linkLine.setAttributeNS(null, "stroke", "black");
-                linkLine.setAttributeNS(null, "stroke-width", "1");
-                // Attach the rectangle to the root 'svg' element.
-                svgRoot.appendChild(linkLine);
+                    linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
+                    linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
+                    linkLine.setAttributeNS(null, "stroke", "black");
+                    linkLine.setAttributeNS(null, "stroke-width", "1");
+                    // Attach the rectangle to the root 'svg' element.
+                    svgRoot.appendChild(linkLine);
+                }
             }
         }
         new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));

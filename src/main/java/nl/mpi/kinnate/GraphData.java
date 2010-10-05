@@ -70,24 +70,54 @@ public class GraphData {
             generationRows.add(currentRowIndex, ancestorColumns);
         }
         for (GraphDataNode.NodeRelation relatedNode : currentNode.getNodeRelations()) {
-            ArrayList<GraphDataNode> targetColumns = null;
-            switch (relatedNode.relationType) {
-                case ancestor:
-                    targetColumns = ancestorColumns;
-                    break;
-                case sibling:
-                    targetColumns = currentColumns;
-                    break;
-                case descendant:
-                    targetColumns = descendentColumns;
-                    break;
-                case union:
-                    targetColumns = currentColumns;
-                    break;
+            if (relatedNode.sourceNode.equals(currentNode)) {
+                if (inputNodes.contains(relatedNode.linkedNode)) {
+                    ArrayList<GraphDataNode> targetColumns = null;
+                    switch (relatedNode.relationType) {
+                        case ancestor:
+                            targetColumns = ancestorColumns;
+                            break;
+                        case sibling:
+                            targetColumns = currentColumns;
+                            break;
+                        case descendant:
+                            targetColumns = descendentColumns;
+                            break;
+                        case union:
+                            targetColumns = currentColumns;
+                            break;
+                    }
+                    inputNodes.remove(relatedNode.linkedNode);
+                    targetColumns.add(relatedNode.linkedNode);
+                    System.out.println("sorted: " + relatedNode.linkedNode.getLabel() + " : " + relatedNode.relationType + " of " + currentNode.getLabel());
+                    sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.linkedNode);
+                }
             }
-            inputNodes.remove(relatedNode.linkedNode);
-            targetColumns.add(relatedNode.linkedNode);
-            sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.linkedNode);
+        }
+//        for (GraphDataNode reverceLinkNode : inputNodes.toArray(new GraphDataNode[]{})) {
+//            for (GraphDataNode.NodeRelation relatedNode : reverceLinkNode.getNodeRelations()) {
+        for (GraphDataNode.NodeRelation relatedNode : currentNode.getNodeRelations()) {
+            if (!relatedNode.sourceNode.equals(currentNode)) {
+                ArrayList<GraphDataNode> targetColumns = null;
+                switch (relatedNode.relationType) {
+                    case ancestor:
+                        targetColumns = descendentColumns;
+                        break;
+                    case sibling:
+                        targetColumns = currentColumns;
+                        break;
+                    case descendant:
+                        targetColumns = ancestorColumns;
+                        break;
+                    case union:
+                        targetColumns = currentColumns;
+                        break;
+                }
+                inputNodes.remove(relatedNode.sourceNode);
+                targetColumns.add(relatedNode.sourceNode);
+                System.out.println("sorted: " + relatedNode.sourceNode.getLabel() + " : " + "reverce link" + " of " + currentNode.getLabel());
+                sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.sourceNode);
+            }
         }
     }
 
@@ -103,17 +133,20 @@ public class GraphData {
 
         while (inputNodes.size() > 0) {
             GraphDataNode currentNode = inputNodes.remove(0);
+            System.out.println("add as root node: " + currentNode.getLabel());
             currentColumns.add(currentNode);
             sanguineSubnodeSort(generationRows, currentColumns, inputNodes, currentNode);
         }
         gridWidth = 0;
         int yPos = 0;
         for (ArrayList<GraphDataNode> currentRow : generationRows) {
+            System.out.println("row: : " + yPos);
             int xPos = 0;
             if (gridWidth < currentRow.size()) {
                 gridWidth = currentRow.size();
             }
             for (GraphDataNode graphDataNode : currentRow) {
+                System.out.println("updating: " + xPos + " : " + yPos + " : " + graphDataNode.getLabel());
                 graphDataNode.yPos = yPos;
                 graphDataNode.xPos = xPos;
                 xPos++;
@@ -122,7 +155,70 @@ public class GraphData {
         }
         System.out.println("gridWidth: " + gridWidth);
         gridHeight = yPos;
+        sortByLinkDistance();
+        sortByLinkDistance();
     }
+
+    private void sortByLinkDistance() {
+        GraphDataNode[][] graphGrid = new GraphDataNode[gridHeight][gridWidth];
+        for (GraphDataNode graphDataNode : graphDataNodeList.values()) {
+            graphGrid[graphDataNode.yPos][graphDataNode.xPos] = graphDataNode;
+        }
+        for (GraphDataNode graphDataNode : graphDataNodeList.values()) {
+            int relationCounter = 0;
+            int totalPositionCounter = 0;
+            for (GraphDataNode.NodeRelation graphLinkNode : graphDataNode.getNodeRelations()) {
+                relationCounter++;
+                if (graphLinkNode.sourceNode.equals(graphDataNode)) {
+                    totalPositionCounter += graphLinkNode.linkedNode.xPos;
+                } else {
+                    totalPositionCounter += graphLinkNode.sourceNode.xPos;
+                }
+                //totalPositionCounter += Math.abs(graphLinkNode.linkedNode.xPos - graphLinkNode.sourceNode.xPos);
+//                totalPositionCounter += Math.abs(graphLinkNode.linkedNode.xPos - graphLinkNode.sourceNode.xPos);
+                System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.sourceNode.xPos);
+                System.out.println("totalPositionCounter: " + totalPositionCounter);
+            }
+            if (relationCounter > 0) {
+                int averagePosition = totalPositionCounter / relationCounter;
+                while (averagePosition < gridWidth - 1 && graphGrid[graphDataNode.yPos][averagePosition] != null) {
+                    averagePosition++;
+                }
+                while (averagePosition > 0 && graphGrid[graphDataNode.yPos][averagePosition] != null) {
+                    averagePosition--;
+                }
+                if (graphGrid[graphDataNode.yPos][averagePosition] == null) {
+                    graphGrid[graphDataNode.yPos][graphDataNode.xPos] = null;
+                    graphDataNode.xPos = averagePosition; // todo: swap what ever is aready there
+                    graphGrid[graphDataNode.yPos][graphDataNode.xPos] = graphDataNode;
+                }
+                System.out.println("averagePosition: " + averagePosition);
+            }
+//            if (relationCounter > 0) {
+//                int averagePosition = totalPositionCounter / relationCounter;
+//                System.out.println("averagePosition: " + averagePosition);
+//                if (graphGrid[graphDataNode.yPos][averagePosition] == null) {
+//                    graphGrid[graphDataNode.yPos][graphDataNode.xPos] = null;
+//                    graphDataNode.xPos = averagePosition; // todo: swap what ever is aready there
+//                    graphGrid[graphDataNode.yPos][graphDataNode.xPos] = graphDataNode;
+//                }
+//            }
+        }
+    }
+//
+//    private void siblingSort() {
+//        GraphDataNode[][] graphGrid = new GraphDataNode[gridHeight][gridWidth];
+//        for (GraphDataNode graphDataNode : graphDataNodeList.values()) {
+//            graphGrid[graphDataNode.yPos][graphDataNode.xPos] = graphDataNode;
+//        }
+//    }
+//
+//    private void calculateLinkDistance() {
+//        GraphDataNode[][] graphGrid = new GraphDataNode[gridHeight][gridWidth];
+//        for (GraphDataNode graphDataNode : graphDataNodeList.values()) {
+//            graphGrid[graphDataNode.yPos][graphDataNode.xPos] = graphDataNode;
+//        }
+//    }
 
     public GraphDataNode[] getDataNodes() {
         return graphDataNodeList.values().toArray(new GraphDataNode[]{});

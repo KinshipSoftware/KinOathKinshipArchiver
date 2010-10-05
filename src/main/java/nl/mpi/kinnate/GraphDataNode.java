@@ -32,6 +32,7 @@ public class GraphDataNode {
 
     public class NodeRelation {
 
+        public GraphDataNode sourceNode;
         public GraphDataNode linkedNode;
         public int generationalDistance;
         RelationType relationType;
@@ -73,10 +74,12 @@ public class GraphDataNode {
 
     public void addRelatedNode(GraphDataNode relatedNode, int generationalDistance, RelationType relationType) {
         NodeRelation nodeRelation = new NodeRelation();
+        nodeRelation.sourceNode = this;
         nodeRelation.linkedNode = relatedNode;
         nodeRelation.generationalDistance = generationalDistance;
         nodeRelation.relationType = relationType;
         relatedNodes.add(nodeRelation);
+        relatedNode.relatedNodes.add(nodeRelation);
     }
 
     public NodeRelation[] getNodeRelations() {
