@@ -179,9 +179,12 @@ public class GedcomImporter {
                 if (currentField != null && currentField.length > 0) {
                     appendToTaskOutput(importTextArea, "linkA: " + currentField[0].getFieldValue());
                     appendToTaskOutput(importTextArea, "linkB: " + createdNodesTable.get(currentField[0].getFieldValue()));
-                    currentField[0].setFieldValue(createdNodesTable.get(currentField[0].getFieldValue()), false, true);
+                    String linkValue = createdNodesTable.get(currentField[0].getFieldValue());
+                    if (linkValue != null) {
+                        currentField[0].setFieldValue(linkValue, false, true);
+                    }
                     appendToTaskOutput(importTextArea, "linkC: " + currentField[0].getFieldValue());
-                    linkImdiObject.saveChangesToCache(true);
+//                    linkImdiObject.saveChangesToCache(true);
                 }
             }
 

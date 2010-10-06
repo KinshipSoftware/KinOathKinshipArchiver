@@ -40,6 +40,8 @@ public class GraphDataNode {
 
     public GraphDataNode(ImdiTreeObject imdiTreeObjectLocal) {
         imdiTreeObject = imdiTreeObjectLocal;
+        ImdiField[] imdiFields = imdiTreeObject.getFields().get()
+//        symbolType = SymbolType.square;
     }
 
     public GraphDataNode(String labelStringLocal) {

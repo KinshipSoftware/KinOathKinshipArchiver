@@ -33,7 +33,7 @@ import nl.mpi.arbil.data.ImdiTreeObject;
 public class MainFrame extends javax.swing.JFrame {
 
     private ImdiTree leftTree;
-    private GraphPanel0 graphPanel;
+    private GraphPanel graphPanel;
     private JungGraph jungGraph;
     private ImdiTable previewTable;
     private ImdiTableModel imdiTableModel;
@@ -42,7 +42,13 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         leftTree = new ImdiTree();
-        graphPanel = new GraphPanel0();
+        GraphPanel0 graphPanel0Deprecated;
+        graphPanel0Deprecated = new GraphPanel0();
+        graphPanel = new GraphPanel();
+        // this data load should be elsewhere
+        GraphData graphData = new GraphData();
+        graphData.readData();
+        graphPanel.drawNodes(graphData);
         jungGraph = new JungGraph();
         imdiTableModel = new ImdiTableModel();
         previewTable = new ImdiTable(imdiTableModel, "Preview Table");
@@ -50,10 +56,11 @@ public class MainFrame extends javax.swing.JFrame {
         JScrollPane tableScrollPane = new JScrollPane(previewTable);
         jScrollPane1.getViewport().add(leftTree);
         jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
-        jTabbedPane1.add("SVG2", new GraphPanel1());
+        jTabbedPane1.add("Graph", graphPanel);
+        jTabbedPane1.add("SVG2  (deprecated)", new GraphPanel1());
         jTabbedPane1.add("Jung", jungGraph);
         jTabbedPane1.add("Table", tableScrollPane);
-        jTabbedPane1.add("SVG (deprecated)", graphPanel);
+        jTabbedPane1.add("SVG (deprecated)", graphPanel0Deprecated);
 
         leftTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
         String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
@@ -155,7 +162,9 @@ public class MainFrame extends javax.swing.JFrame {
                     imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
                 }
                 leftTree.requestResort();
-                graphPanel.drawNodes();
+                GraphData graphData = new GraphData();
+                graphData.readData();
+                graphPanel.drawNodes(graphData);
             }
         }.start();
 
