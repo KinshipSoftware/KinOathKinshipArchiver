@@ -41,16 +41,8 @@ public class GraphData {
         System.out.println("calculateLinks");
         for (GraphDataNode currentNode : graphDataNodeList.values()) {
             System.out.println("currentNode: " + currentNode.getLabel());
-//            ArrayList<GraphDataNode> linkNodes = new ArrayList<GraphDataNode>();
-            for (String currentLinkString : currentNode.getLinks()) {
-                GraphDataNode linkedNode = graphDataNodeList.get(currentLinkString);
-                if (linkedNode != null) {
-                    currentNode.addRelatedNode(linkedNode, 0, GraphDataNode.RelationType.sibling);
-                    System.out.println("link found: " + currentLinkString);
-                }
-            }
+            currentNode.calculateLinks(graphDataNodeList);
         }
-
     }
 
     private void sanguineSubnodeSort(ArrayList<ArrayList<GraphDataNode>> generationRows, ArrayList<GraphDataNode> currentColumns, ArrayList<GraphDataNode> inputNodes, GraphDataNode currentNode) {
@@ -115,7 +107,7 @@ public class GraphData {
                 }
                 inputNodes.remove(relatedNode.sourceNode);
                 targetColumns.add(relatedNode.sourceNode);
-                System.out.println("sorted: " + relatedNode.sourceNode.getLabel() + " : " + "reverce link" + " of " + currentNode.getLabel());
+                System.out.println("sorted: " + relatedNode.sourceNode.getLabel() + " : " + "reverse link" + " of " + currentNode.getLabel());
                 sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.sourceNode);
             }
         }
