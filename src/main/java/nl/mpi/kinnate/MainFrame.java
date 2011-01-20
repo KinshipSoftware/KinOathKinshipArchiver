@@ -108,6 +108,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(null);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
         jSplitPane1.setRightComponent(jTabbedPane1);
@@ -141,7 +142,9 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void run() {
                 JTextArea importTextArea = new JTextArea();
-                jTabbedPane1.add("Import", new JScrollPane(importTextArea));
+                JScrollPane importScrollPane = new JScrollPane(importTextArea);
+                jTabbedPane1.add("Import", importScrollPane);
+                jTabbedPane1.setSelectedComponent(importScrollPane);
                 JProgressBar progressBar = new JProgressBar();
                 progressBar.setVisible(true);
                 new GedcomImporter().importTestFile(importTextArea);
