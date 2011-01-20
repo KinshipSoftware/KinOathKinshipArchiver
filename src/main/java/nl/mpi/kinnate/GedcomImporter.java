@@ -15,6 +15,7 @@ import javax.swing.JTextArea;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiField;
 import nl.mpi.arbil.LinorgSessionStorage;
+import nl.mpi.arbil.clarin.ArbilMetadataException;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.arbil.data.ImdiTreeObject;
@@ -63,6 +64,7 @@ public class GedcomImporter {
         try {
             String strLine;
             int levelCounter = 0;
+            ImdiField[] previousField = null;
             while ((strLine = bufferedReader.readLine()) != null) {
                 String[] lineParts = strLine.split(" ", 3);
                 System.out.println(strLine);
@@ -70,6 +72,7 @@ public class GedcomImporter {
                 if (lineParts[0].equals("0")) {
                     if (createdNodes.size() > 16) {
 //                    if (!lineParts[1].equals("HEAD")) {
+                        appendToTaskOutput(importTextArea, "stopped import at node count: " + createdNodes.size());
                         break;
                     }
                     if (!lineParts[1].equals("HEAD")) {
@@ -115,60 +118,74 @@ public class GedcomImporter {
                         if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
                             appendToTaskOutput(importTextArea, "--> link adding");
 //                            gedcomImdiObject.saveChangesToCache(true);
-                            URI linkUri = metadataBuilder.addChildNode(gedcomImdiObject, ".Gedcom.Relation", null, null, null);
-                            ImdiTreeObject linkImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, linkUri);
-                            appendToTaskOutput(importTextArea, "--> gedcomImdiObject.getChildCount: " + gedcomImdiObject.getChildCount());
-                            gedcomImdiObject.loadImdiDom();
-                            gedcomImdiObject.clearChildIcons();
-                            gedcomImdiObject.clearIcon();
+                            try {
+                                URI linkUri = metadataBuilder.addChildNode(gedcomImdiObject, ".Gedcom.Relation", null, null, null);
+                                ImdiTreeObject linkImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, linkUri);
+                                appendToTaskOutput(importTextArea, "--> gedcomImdiObject.getChildCount: " + gedcomImdiObject.getChildCount());
+                                gedcomImdiObject.loadImdiDom();
+                                gedcomImdiObject.clearChildIcons();
+                                gedcomImdiObject.clearIcon();
 //                            gedcomImdiObject.waitTillLoaded();
-                            appendToTaskOutput(importTextArea, "--> link url: " + linkImdiObject.getUrlString());
+                                appendToTaskOutput(importTextArea, "--> link url: " + linkImdiObject.getUrlString());
 //                            appendToTaskOutput(importTextArea, "--> InternalNameT2" + lineParts[2] + " : " + linkImdiObject.getUrlString());
 //                            createdNodesTable.put(lineParts[2], linkImdiObject.getUrlString());
 //                            createdNodes.add(linkImdiObject.getUrlString());
 //                            System.out.println("keys: " + linkImdiObject.getFields().keys().nextElement());
-                            ImdiField[] currentField = linkImdiObject.getFields().get("Link");
-                            if (currentField != null && currentField.length > 0) {
-                                appendToTaskOutput(importTextArea, "--> Link" + lineParts[2]);
-                                // the target of this link might not be read in at this point so lets store the fields for updateing later
-                                //createdNodesTable.get(lineParts[2])
-                                currentField[0].setFieldValue(lineParts[2], false, true);
-                                linkNodes.add(linkImdiObject);
+                                ImdiField[] currentField = linkImdiObject.getFields().get("Link");
+                                if (currentField != null && currentField.length > 0) {
+                                    appendToTaskOutput(importTextArea, "--> Link" + lineParts[2]);
+                                    // the target of this link might not be read in at this point so lets store the fields for updateing later
+                                    //createdNodesTable.get(lineParts[2])
+                                    currentField[0].setFieldValue(lineParts[2], false, true);
+                                    linkNodes.add(linkImdiObject);
 //                                appendToTaskOutput(importTextArea, "--> link count: " + linkFields.size());
-                            }
-                            ImdiField[] currentField1 = linkImdiObject.getFields().get("Type");
-                            if (currentField1 != null && currentField1.length > 0) {
-                                appendToTaskOutput(importTextArea, "--> Type" + lineParts[1]);
-                                currentField1[0].setFieldValue(lineParts[1], false, true);
-                            }
-                            ImdiField[] currentField2 = linkImdiObject.getFields().get("TargetName");
-                            if (currentField2 != null && currentField2.length > 0) {
-                                appendToTaskOutput(importTextArea, "--> TargetName" + lineParts[2]);
-                                currentField2[0].setFieldValue(lineParts[2], false, true);
+                                }
+                                ImdiField[] currentField1 = linkImdiObject.getFields().get("Type");
+                                if (currentField1 != null && currentField1.length > 0) {
+                                    appendToTaskOutput(importTextArea, "--> Type" + lineParts[1]);
+                                    currentField1[0].setFieldValue(lineParts[1], false, true);
+                                }
+                                ImdiField[] currentField2 = linkImdiObject.getFields().get("TargetName");
+                                if (currentField2 != null && currentField2.length > 0) {
+                                    appendToTaskOutput(importTextArea, "--> TargetName" + lineParts[2]);
+                                    currentField2[0].setFieldValue(lineParts[2], false, true);
+                                }
+                            } catch (ArbilMetadataException arbilMetadataException) {
+                                System.err.println(arbilMetadataException.getMessage());
                             }
                         }
                     }
                 }
-                if (strLine.length() >= 6) {
-                    if (strLine.substring(2, 6).equals("NAME")) {
+                if (lineParts.length > 2) {
+                    if (lineParts[1].equals("NAME")) {
                         ImdiField[] currentField = gedcomImdiObject.getFields().get("Gedcom.Name");
                         if (currentField != null && currentField.length > 0) {
-                            currentField[0].setFieldValue(strLine.substring(7), false, true);
+                            currentField[0].setFieldValue(lineParts[2], false, true);
+                            previousField = currentField;
                         } else {
-                            System.err.println("missing field for: " + strLine);
+                            System.err.println("missing field for: " + lineParts[1]);
+                            previousField = null;
                         }
                     } else {
-                        String tagString = strLine.substring(2, 6);
-                        ImdiField[] currentField = gedcomImdiObject.getFields().get("Gedcom." + tagString);
-                        if (currentField != null && currentField.length > 0) {
-                            currentField[currentField.length - 1].setFieldValue(strLine.substring(7), false, true);
+                        if (lineParts[1].equals("CONT") && previousField != null) {
+                            previousField[previousField.length - 1].setFieldValue(previousField[previousField.length - 1].getFieldValue() + "\n" + lineParts[2], false, true);
                         } else {
-                            System.err.println("missing field for: " + strLine);
+                            ImdiField[] currentField = gedcomImdiObject.getFields().get("Gedcom." + lineParts[1]);
+                            if (currentField != null && currentField.length > 0) {
+                                currentField[currentField.length - 1].setFieldValue(lineParts[2], false, true);
+                                previousField = currentField;
+                            } else {
+                                previousField = null;
+                                System.err.println("missing field for: " + lineParts[1]);
+                            }
                         }
                     }
+                } else {
+                    previousField = null;
                 }
 //                1 NAME John A. Nairn
             }
+            appendToTaskOutput(importTextArea, "import finished with a node count of: " + createdNodes.size());
 //            ImdiLoader.getSingleInstance().saveNodesNeedingSave(true);
 //            appendToTaskOutput(importTextArea, "--> link count: " + linkFields.size());
             // update all the links now we have the urls for each internal name
