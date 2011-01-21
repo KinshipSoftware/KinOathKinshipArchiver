@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ann="http://www.clarin.eu">
+    <xs:element name="Gedcom">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="HEAD">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="SOUR">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="SOUR" />
+                                        <xs:element name="NAME" />
+                                        <xs:element name="VERS" />
+                                        <xs:element name="CORP">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="CORP" />
+                                                    <xs:element name="ADDR">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="ADDR" />
+                                                                <xs:element name="ADR1" />
+                                                                <xs:element name="ADR2" />
+                                                                <xs:element name="CITY" />
+                                                                <xs:element name="STAE" />
+                                                                <xs:element name="POST" />
+                                                                <xs:element name="CTRY" />
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="PHON" />
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="DATA">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="DATA" />
+                                                    <xs:element name="DATE" />
+                                                    <xs:element name="COPR" />
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="SUBM" />
+                            <xs:element name="SUBN" />
+                            <xs:element name="_HME" />
+                            <xs:element name="DEST" />
+                            <xs:element name="DATE">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="DATE" />
+                                        <xs:element name="TIME" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="FILE" />
+                            <xs:element name="COPR" />
+                            <xs:element name="GEDC">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="VERS" />
+                                        <xs:element name="FORM" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="LANG" />
+                            <xs:element name="CHAR">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="CHAR" />
+                                        <xs:element name="VERS" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="PLAC">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="FORM" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="NOTE" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="NamedElement">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="NamedElement" />
+                            <xs:element name="SUBM" />
+                            <xs:element name="FAMF" />
+                            <xs:element name="TEMP" />
+                            <xs:element name="ANCE" />
+                            <xs:element name="DESC" />
+                            <xs:element name="ORDI" />
+                            <xs:element name="RIN" />
+                            <xs:element name="NAME" />
+                            <xs:element name="ADDR">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="ADDR" />
+                                        <xs:element name="ADR1" />
+                                        <xs:element name="ADR2" />
+                                        <xs:element name="CITY" />
+                                        <xs:element name="STAE" />
+                                        <xs:element name="POST" />
+                                        <xs:element name="CTRY" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="PHON" />
+                            <xs:element name="LANG" />
+                            <xs:element name="OBJE">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="FORM" />
+                                        <xs:element name="TITL" />
+                                        <xs:element name="FILE" />
+                                        <xs:element name="NOTE" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="RFN" />
+                            <xs:element name="RIN" />
+                            <xs:element name="CHAN">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="DATE">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="DATE" />
+                                                    <xs:element name="TIME" />
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Relation" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Link" type="xs:string" ann:displaypriority="1"/>
+                            <xs:element name="Type" type="xs:string" />
+                            <xs:element name="TargetName" type="xs:string" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
