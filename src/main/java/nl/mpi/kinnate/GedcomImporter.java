@@ -42,20 +42,16 @@ public class GedcomImporter {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/TestGED/TGC55C.ged")));
         // really should close the file properly but this is only for testing at this stage
 
-        URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), "/xsd/gedcom-import.xsd");
+//        URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), gedcomXsdLocation);
         CmdiComponentBuilder componentBuilder = new CmdiComponentBuilder();
-        try {
-            targetFileURI = componentBuilder.createComponentFile(targetFileURI, this.getClass().getResource("/xsd/gedcom-import.xsd").toURI(), false);
-        } catch (URISyntaxException ex) {
-            GuiHelper.linorgBugCatcher.logError(ex);
-            return;
-        }
+//        try {
+//            targetFileURI = componentBuilder.createComponentFile(targetFileURI, this.getClass().getResource(gedcomXsdLocation).toURI(), false);
+//        } catch (URISyntaxException ex) {
+//            GuiHelper.linorgBugCatcher.logError(ex);
+//            return;
+//        }
 
-        ImdiTreeObject gedcomImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, targetFileURI);
-        gedcomImdiObject.waitTillLoaded();
-        createdNodes.add(gedcomImdiObject.getUrlString());
-
-
+        ImdiTreeObject gedcomImdiObject = null;
         MetadataBuilder metadataBuilder = new MetadataBuilder();
 //        metadataBuilder.addChildNode(gedcomImdiObject, ".Gedcom.Relation", null, null, null);
 //        gedcomImdiObject.loadImdiDom();
@@ -63,29 +59,62 @@ public class GedcomImporter {
 
         try {
             String strLine;
-            int levelCounter = 0;
+            int gedcomLevel = 0;
+            String xsdString = ""; // temp string to create the xsd
+            ArrayList<String> xsdTagsDone = new ArrayList<String>(); // temp array to create the xsd
+            ArrayList<String> gedcomLevelStrings = new ArrayList<String>();
+            ArrayList<String> xsdLevelStrings = new ArrayList<String>(); // temp array to create the xsd
             ImdiField[] previousField = null;
             while ((strLine = bufferedReader.readLine()) != null) {
                 String[] lineParts = strLine.split(" ", 3);
+                gedcomLevel = Integer.parseInt(lineParts[0]);
+                while (gedcomLevelStrings.size() > gedcomLevel) {
+                    gedcomLevelStrings.remove(gedcomLevelStrings.size() - 1);
+                }
+                while (xsdLevelStrings.size() > gedcomLevel) {
+                    xsdLevelStrings.remove(xsdLevelStrings.size() - 1);
+                    xsdString += "</xs:sequence>\n</xs:complexType>\n</xs:element>\n";
+                }
+                gedcomLevelStrings.add(lineParts[1]);
                 System.out.println(strLine);
+                System.out.println("gedcomLevelString: " + gedcomLevelStrings);
                 appendToTaskOutput(importTextArea, strLine);
-                if (lineParts[0].equals("0")) {
-                    if (createdNodes.size() > 16) {
-//                    if (!lineParts[1].equals("HEAD")) {
-                        appendToTaskOutput(importTextArea, "stopped import at node count: " + createdNodes.size());
-                        break;
+                boolean lastFieldContinued = false;
+                if (lineParts[1].equals("CONT")) {
+                    if (previousField != null) {
+                        // todo: if the previous field is null this should be caught and handled as an error in the source file
+                        previousField[previousField.length - 1].setFieldValue(previousField[previousField.length - 1].getFieldValue() + "\n" + lineParts[2], false, true);
                     }
-                    if (!lineParts[1].equals("HEAD")) {
+                    lastFieldContinued = true;
+                } else if (lineParts[1].equals("CONC")) {
+                    if (previousField != null) {
+                        // todo: if the previous field is null this should be caught and handled as an error in the source file
+                        previousField[previousField.length - 1].setFieldValue(previousField[previousField.length - 1].getFieldValue() + lineParts[2], false, true);
+                    }
+                    lastFieldContinued = true;
+                }
+                if (lastFieldContinued == false) {
+                    previousField = null;
+                    if (gedcomLevel == 0) {
+                        if (createdNodes.size() > 2) {
+                            appendToTaskOutput(importTextArea, "stopped import at node count: " + createdNodes.size());
+                            break;
+                        }
+
 //                        gedcomImdiObject.saveChangesToCache(true);
 //                        URI eniryFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), "Entity");
 //                        targetFileURI = MetadataReader.getSingleInstance().addFromTemplate(new File(eniryFileURI), "Entity");
 //                        gedcomImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, targetFileURI);
 //                        gedcomImdiObject.waitTillLoaded();
 //                        createdNodes.add(gedcomImdiObject.getUrlString());
-                        gedcomImdiObject.saveChangesToCache(true);
-                        URI eniryFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), "/xsd/gedcom-import.xsd");
+                        if (gedcomImdiObject != null) {
+                            gedcomImdiObject.saveChangesToCache(true);
+                        }
+//                        String gedcomXsdLocation = "/xsd/gedcom-import.xsd";
+                        String gedcomXsdLocation = "/xsd/gedcom-autogenerated.xsd";
+                        URI eniryFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), gedcomXsdLocation);
                         try {
-                            eniryFileURI = componentBuilder.createComponentFile(eniryFileURI, this.getClass().getResource("/xsd/gedcom-import.xsd").toURI(), false);
+                            eniryFileURI = componentBuilder.createComponentFile(eniryFileURI, this.getClass().getResource(gedcomXsdLocation).toURI(), false);
                         } catch (URISyntaxException ex) {
                             GuiHelper.linorgBugCatcher.logError(ex);
                             return;
@@ -112,80 +141,104 @@ public class GedcomImporter {
 //        gedcomImdiObject.loadImdiDom();
 //        gedcomImdiObject.waitTillLoaded();
 
-                    }
-                } else {
-                    if (lineParts.length > 2) {
-                        if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
-                            appendToTaskOutput(importTextArea, "--> link adding");
+                    } else {
+                        if (lineParts.length > 2) {
+                            if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
+                                appendToTaskOutput(importTextArea, "--> link adding");
 //                            gedcomImdiObject.saveChangesToCache(true);
-                            try {
-                                URI linkUri = metadataBuilder.addChildNode(gedcomImdiObject, ".Gedcom.Relation", null, null, null);
-                                ImdiTreeObject linkImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, linkUri);
-                                appendToTaskOutput(importTextArea, "--> gedcomImdiObject.getChildCount: " + gedcomImdiObject.getChildCount());
-                                gedcomImdiObject.loadImdiDom();
-                                gedcomImdiObject.clearChildIcons();
-                                gedcomImdiObject.clearIcon();
+                                try {
+                                    URI linkUri = metadataBuilder.addChildNode(gedcomImdiObject, ".Gedcom.Relation", null, null, null);
+                                    ImdiTreeObject linkImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, linkUri);
+                                    appendToTaskOutput(importTextArea, "--> gedcomImdiObject.getChildCount: " + gedcomImdiObject.getChildCount());
+                                    gedcomImdiObject.loadImdiDom();
+                                    gedcomImdiObject.clearChildIcons();
+                                    gedcomImdiObject.clearIcon();
 //                            gedcomImdiObject.waitTillLoaded();
-                                appendToTaskOutput(importTextArea, "--> link url: " + linkImdiObject.getUrlString());
+                                    appendToTaskOutput(importTextArea, "--> link url: " + linkImdiObject.getUrlString());
 //                            appendToTaskOutput(importTextArea, "--> InternalNameT2" + lineParts[2] + " : " + linkImdiObject.getUrlString());
 //                            createdNodesTable.put(lineParts[2], linkImdiObject.getUrlString());
 //                            createdNodes.add(linkImdiObject.getUrlString());
 //                            System.out.println("keys: " + linkImdiObject.getFields().keys().nextElement());
-                                ImdiField[] currentField = linkImdiObject.getFields().get("Link");
-                                if (currentField != null && currentField.length > 0) {
-                                    appendToTaskOutput(importTextArea, "--> Link" + lineParts[2]);
-                                    // the target of this link might not be read in at this point so lets store the fields for updateing later
-                                    //createdNodesTable.get(lineParts[2])
-                                    currentField[0].setFieldValue(lineParts[2], false, true);
-                                    linkNodes.add(linkImdiObject);
+                                    ImdiField[] currentField = linkImdiObject.getFields().get("Link");
+                                    if (currentField != null && currentField.length > 0) {
+                                        appendToTaskOutput(importTextArea, "--> Link" + lineParts[2]);
+                                        // the target of this link might not be read in at this point so lets store the fields for updateing later
+                                        //createdNodesTable.get(lineParts[2])
+                                        currentField[0].setFieldValue(lineParts[2], false, true);
+                                        linkNodes.add(linkImdiObject);
 //                                appendToTaskOutput(importTextArea, "--> link count: " + linkFields.size());
+                                    }
+                                    ImdiField[] currentField1 = linkImdiObject.getFields().get("Type");
+                                    if (currentField1 != null && currentField1.length > 0) {
+                                        appendToTaskOutput(importTextArea, "--> Type" + lineParts[1]);
+                                        currentField1[0].setFieldValue(lineParts[1], false, true);
+                                    }
+                                    ImdiField[] currentField2 = linkImdiObject.getFields().get("TargetName");
+                                    if (currentField2 != null && currentField2.length > 0) {
+                                        appendToTaskOutput(importTextArea, "--> TargetName" + lineParts[2]);
+                                        currentField2[0].setFieldValue(lineParts[2], false, true);
+                                    }
+                                } catch (ArbilMetadataException arbilMetadataException) {
+                                    System.err.println(arbilMetadataException.getMessage());
                                 }
-                                ImdiField[] currentField1 = linkImdiObject.getFields().get("Type");
-                                if (currentField1 != null && currentField1.length > 0) {
-                                    appendToTaskOutput(importTextArea, "--> Type" + lineParts[1]);
-                                    currentField1[0].setFieldValue(lineParts[1], false, true);
-                                }
-                                ImdiField[] currentField2 = linkImdiObject.getFields().get("TargetName");
-                                if (currentField2 != null && currentField2.length > 0) {
-                                    appendToTaskOutput(importTextArea, "--> TargetName" + lineParts[2]);
-                                    currentField2[0].setFieldValue(lineParts[2], false, true);
-                                }
-                            } catch (ArbilMetadataException arbilMetadataException) {
-                                System.err.println(arbilMetadataException.getMessage());
                             }
                         }
                     }
-                }
-                if (lineParts.length > 2) {
-                    if (lineParts[1].equals("NAME")) {
-                        ImdiField[] currentField = gedcomImdiObject.getFields().get("Gedcom.Name");
+                    if (lineParts.length > 2) {
+//                        if (lineParts[1].equals("NAME")) {
+//                            ImdiField[] currentField = gedcomImdiObject.getFields().get("Gedcom.Name");
+//                            if (currentField != null && currentField.length > 0) {
+//                                currentField[0].setFieldValue(lineParts[2], false, true);
+//                                previousField = currentField;
+//                            } else {
+//                                System.err.println("missing field for: " + lineParts[1]);
+//                                previousField = null;
+//                            }
+//                        } else {
+                        String gedcomPath = "Gedcom";
+                        for (String levelString : gedcomLevelStrings) {
+                            if (levelString.startsWith("@")) {
+                                // this could be handled better
+                                // this occurs at level 0 where the element type is named eg "0 @I9@ INDI"
+                                levelString = "NamedElement";
+                            }
+                            gedcomPath = gedcomPath + "." + levelString;
+                        }
+                        if (!xsdTagsDone.contains(gedcomPath)) {
+                            while (gedcomLevelStrings.size() > xsdLevelStrings.size() + 1) {
+                                String xsdLevelString = gedcomLevelStrings.get(xsdLevelStrings.size());
+                                if (xsdLevelString.startsWith("@")) {
+                                    // this occurs at level 0 where the element type is named eg "0 @I9@ INDI"
+                                    xsdLevelString = "NamedElement";
+                                }
+                                xsdLevelStrings.add(xsdLevelString);
+                                xsdString += "   <xs:element name=\"" + xsdLevelString + "\">\n";
+                                xsdString += "<xs:complexType>\n<xs:sequence>\n";
+                            }
+//                            while (gedcomLevelStrings.size() < xsdLevelStrings.size()) {
+//                                xsdLevelStrings.remove(xsdLevelStrings.size() - 1);
+//                                xsdString += "</xs:sequence>\n</xs:complexType>\n";
+//                            }
+                            String xsdElementString = lineParts[1];
+                            if (xsdElementString.startsWith("@")) {
+                                // this occurs at level 0 where the element type is named eg "0 @I9@ INDI"
+                                xsdElementString = "NamedElement";
+                            }
+                            xsdString += "   <xs:element name=\"" + xsdElementString + "\" />\n";// + gedcomPath + "\n" + strLine + "\n";
+                            xsdTagsDone.add(gedcomPath);
+                        }
+                        ImdiField[] currentField = gedcomImdiObject.getFields().get(gedcomPath);
                         if (currentField != null && currentField.length > 0) {
-                            currentField[0].setFieldValue(lineParts[2], false, true);
+                            currentField[currentField.length - 1].setFieldValue(lineParts[2], false, true);
                             previousField = currentField;
                         } else {
-                            System.err.println("missing field for: " + lineParts[1]);
-                            previousField = null;
+                            System.err.println("missing field for: " + gedcomLevelStrings);
                         }
-                    } else {
-                        if (lineParts[1].equals("CONT") && previousField != null) {
-                            previousField[previousField.length - 1].setFieldValue(previousField[previousField.length - 1].getFieldValue() + "\n" + lineParts[2], false, true);
-                        } else {
-                            ImdiField[] currentField = gedcomImdiObject.getFields().get("Gedcom." + lineParts[1]);
-                            if (currentField != null && currentField.length > 0) {
-                                currentField[currentField.length - 1].setFieldValue(lineParts[2], false, true);
-                                previousField = currentField;
-                            } else {
-                                previousField = null;
-                                System.err.println("missing field for: " + lineParts[1]);
-                            }
-                        }
+//                        }
                     }
-                } else {
-                    previousField = null;
                 }
 //                1 NAME John A. Nairn
             }
-            appendToTaskOutput(importTextArea, "import finished with a node count of: " + createdNodes.size());
 //            ImdiLoader.getSingleInstance().saveNodesNeedingSave(true);
 //            appendToTaskOutput(importTextArea, "--> link count: " + linkFields.size());
             // update all the links now we have the urls for each internal name
@@ -204,6 +257,9 @@ public class GedcomImporter {
 //                    linkImdiObject.saveChangesToCache(true);
                 }
             }
+            System.out.println("xsdString: " + xsdString);
+            appendToTaskOutput(importTextArea, "xsdString:\n" + xsdString);
+            appendToTaskOutput(importTextArea, "import finished with a node count of: " + createdNodes.size());
 
 //            gedcomImdiObject.saveChangesToCache(true);
 //            gedcomImdiObject.loadImdiDom();
