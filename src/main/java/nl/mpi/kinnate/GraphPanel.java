@@ -1,6 +1,7 @@
 package nl.mpi.kinnate;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -12,7 +13,12 @@ import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
+import org.w3c.dom.svg.SVGLocatable;
+import org.w3c.dom.svg.SVGRect;
 
 /**
  *  Document   : GraphPanel
@@ -21,31 +27,61 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class GraphPanel extends JPanel {
 
-    protected JSVGCanvas svgCanvas = new JSVGCanvas();
+    protected JSVGCanvas svgCanvas;
+    private SVGDocument doc;
+    private Element currentDraggedElement;
+    private Cursor preDragCursor;
 
     public GraphPanel() {
         this.setLayout(new BorderLayout());
+        svgCanvas = new JSVGCanvas();
+//        svgCanvas.setMySize(new Dimension(600, 400));
+        svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
 //        drawNodes();
         svgCanvas.setEnableImageZoomInteractor(true);
         svgCanvas.setEnablePanInteractor(true);
         svgCanvas.setEnableRotateInteractor(true);
         svgCanvas.setEnableZoomInteractor(true);
         svgCanvas.setEnableResetTransformInteractor(true);
-        svgCanvas.addMouseListener(new MouseInputAdapter() {
+
+        MouseInputAdapter mouseInputAdapter = new MouseInputAdapter() {
 
             @Override
-            public void mouseClicked(MouseEvent e) {
-                System.out.println(e.toString());
-                super.mouseClicked(e);
+            public void mouseDragged(MouseEvent me) {
+//                System.out.println("mouseDragged: " + me.toString());
+                if (currentDraggedElement != null) {
+                    currentDraggedElement.setAttribute("x", String.valueOf(me.getX()));
+                    currentDraggedElement.setAttribute("y", String.valueOf(me.getY()));
+                    svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
+                    System.out.println("bbox X: " + bbox.getX());
+                    System.out.println("bbox Y: " + bbox.getY());
+                    System.out.println("bbox W: " + bbox.getWidth());
+                    System.out.println("bbox H: " + bbox.getHeight());
+                }
             }
-        });
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+//                System.out.println("mouseReleased: " + me.toString());
+                if (currentDraggedElement != null) {
+                    currentDraggedElement.setAttribute("x", String.valueOf(me.getX()));
+                    currentDraggedElement.setAttribute("y", String.valueOf(me.getY()));
+                    currentDraggedElement.setAttribute("fill", "none");
+                    currentDraggedElement = null;
+                    svgCanvas.setCursor(preDragCursor);
+                }
+            }
+        };
+        svgCanvas.addMouseListener(mouseInputAdapter);
+        svgCanvas.addMouseMotionListener(mouseInputAdapter);
         this.add(BorderLayout.CENTER, svgCanvas);
     }
 
     public void drawNodes(GraphData graphData) {
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
-        SVGDocument doc = (SVGDocument) impl.createDocument(svgNS, "svg", null);
+        doc = (SVGDocument) impl.createDocument(svgNS, "svg", null);
 //        Document doc = impl.createDocument(svgNS, "svg", null);
 //        SVGDocument doc = svgCanvas.getSVGDocument();
         // Get the root element (the 'svg' elemen¤t).
@@ -130,6 +166,37 @@ public class GraphPanel extends JPanel {
             symbolNode.setAttributeNS(null, "stroke-width", "2");
             // Attach the rectangle to the root 'svg' element.
             svgRoot.appendChild(symbolNode);
+
+            ((EventTarget) symbolNode).addEventListener("mouseover", new EventListener() {
+
+                public void handleEvent(Event evt) {
+                    System.out.println("OnMouseOverCircleAction: " + evt.getCurrentTarget());
+                    if (currentDraggedElement == null) {
+                        ((Element) evt.getCurrentTarget()).setAttribute("fill", "green");
+                    }
+                }
+            }, false);
+            ((EventTarget) symbolNode).addEventListener("mouseout",
+                    new EventListener() {
+
+                        public void handleEvent(Event evt) {
+                            System.out.println("mouseout: " + evt.getCurrentTarget());
+                            if (currentDraggedElement == null) {
+                                ((Element) evt.getCurrentTarget()).setAttribute("fill", "none");
+                            }
+                        }
+                    }, false);
+            ((EventTarget) symbolNode).addEventListener("mousedown",
+                    new EventListener() {
+
+                        public void handleEvent(Event evt) {
+                            System.out.println("mousedrag: " + evt.getCurrentTarget());
+                            currentDraggedElement = ((Element) evt.getCurrentTarget());
+                            preDragCursor = svgCanvas.getCursor();
+                            ((Element) evt.getCurrentTarget()).setAttribute("fill", "red");
+                        }
+                    }, false);
+
             // <text id="_7" x="39.0" y="140.0" fill="black" stroke="black" stroke-width="0" font-size="15">Sample Text</text>
             Element labelText = doc.createElementNS(svgNS, "text");
             labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
