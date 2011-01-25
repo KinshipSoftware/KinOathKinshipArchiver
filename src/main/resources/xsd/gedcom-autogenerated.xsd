@@ -10,7 +10,7 @@
                                 <xs:complexType>
                                     <xs:sequence>
                                         <xs:element name="SOUR" />
-                                        <xs:element name="NAME" />
+                                        <xs:element name="NAME"  ann:displaypriority="1"/>
                                         <xs:element name="VERS" />
                                         <xs:element name="CORP">
                                             <xs:complexType>
@@ -98,7 +98,7 @@
                             <xs:element name="DESC" />
                             <xs:element name="ORDI" />
                             <xs:element name="RIN" />
-                            <xs:element name="NAME" />
+                            <xs:element name="NAME"  ann:displaypriority="2"/>
                             <xs:element name="ADDR">
                                 <xs:complexType>
                                     <xs:sequence>
@@ -112,7 +112,7 @@
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="PHON" />
+                            <xs:element name="PHON" minOccurs="1" maxOccurs="unbounded"/>
                             <xs:element name="LANG" />
                             <xs:element name="OBJE">
                                 <xs:complexType>
@@ -137,6 +137,21 @@
                                                 </xs:sequence>
                                             </xs:complexType>
                                         </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="SEX" />
+                            <xs:element name="BIRT">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="DATE" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="DEAT">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="DATE" />
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
