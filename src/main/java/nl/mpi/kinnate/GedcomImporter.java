@@ -10,7 +10,9 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiField;
@@ -33,13 +35,12 @@ public class GedcomImporter {
         importTextArea.setCaretPosition(importTextArea.getText().length());
     }
 
-    public void importTestFile(JTextArea importTextArea) {
+    public void importTestFile(JTextArea importTextArea, String testFileString) {
         ArrayList<String> createdNodes = new ArrayList<String>();
         Hashtable<String, String> createdNodesTable = new Hashtable<String, String>();
         ArrayList<ImdiTreeObject> linkNodes = new ArrayList<ImdiTreeObject>();
 
-        System.out.println(getClass().getResource("/TestGED/TGC55C.ged"));
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/TestGED/TGC55C.ged")));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString)));
         // really should close the file properly but this is only for testing at this stage
 
 //        URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), gedcomXsdLocation);
@@ -96,7 +97,7 @@ public class GedcomImporter {
                 if (lastFieldContinued == false) {
                     previousField = null;
                     if (gedcomLevel == 0) {
-                        if (createdNodes.size() > 2) {
+                        if (createdNodes.size() > 20) {
                             appendToTaskOutput(importTextArea, "stopped import at node count: " + createdNodes.size());
                             break;
                         }
@@ -204,6 +205,17 @@ public class GedcomImporter {
                             }
                             gedcomPath = gedcomPath + "." + levelString;
                         }
+                        List<String> swapList = Arrays.asList(new String[]{"Gedcom.HEAD.SOUR", "Gedcom.HEAD.CORP", "Gedcom.HEAD.CORP.ADDR", "Gedcom.HEAD.SOUR.DATA", "Gedcom.HEAD.DATE", "Gedcom.HEAD.CHAR", "Gedcom.NamedElement", "Gedcom.NamedElement.ADDR", "Gedcom.NamedElement.CHAN.DATE", "Gedcom.HEAD.SOUR.CORP", "Gedcom.HEAD.SOUR.CORP.ADDR"});
+                        if (swapList.contains(gedcomPath)) {
+                            if (lineParts[1].startsWith("@")) {
+                                gedcomPath += ".NamedElement";
+                            } else {
+                                gedcomPath += "." + lineParts[1];
+                            }
+                        }
+
+//                        System.out.println("is template: " + gedcomImdiObject.nodeTemplate.pathIsChildNode(gedcomPath));
+
                         if (!xsdTagsDone.contains(gedcomPath)) {
                             while (gedcomLevelStrings.size() > xsdLevelStrings.size() + 1) {
                                 String xsdLevelString = gedcomLevelStrings.get(xsdLevelStrings.size());
@@ -232,7 +244,7 @@ public class GedcomImporter {
                             currentField[currentField.length - 1].setFieldValue(lineParts[2], false, true);
                             previousField = currentField;
                         } else {
-                            System.err.println("missing field for: " + gedcomLevelStrings);
+                            System.err.println("missing field for: " + gedcomLevelStrings + " : " + gedcomPath);
                         }
 //                        }
                     }
