@@ -151,7 +151,14 @@ public class GedcomImporter {
                                     }
                                 }
                             }
-                            if (!lineParts[1].equals("HEAD")) {
+                            if (lineParts[1].equals("HEAD")) {
+                                Element headElement = metadataDom.createElement("HEAD");
+                                currentDomNode.appendChild(headElement);
+                                currentDomNode = headElement;
+                            } else {
+                                Element entityElement = metadataDom.createElement("Entity");
+                                currentDomNode.appendChild(entityElement);
+                                currentDomNode = entityElement;
                                 System.out.println("currentDomElement: " + currentDomNode);
                                 Element addedElement = metadataDom.createElement("InternalName");
                                 addedElement.setTextContent(lineParts[1]);
@@ -214,7 +221,7 @@ public class GedcomImporter {
                         for (Node countingDomNode = currentDomNode; countingDomNode != null; countingDomNode = countingDomNode.getParentNode()) {
                             parentNodeCount++;
                         }
-                        for (int nodeCount = parentNodeCount; nodeCount > gedcomLevel + 2; nodeCount--) {
+                        for (int nodeCount = parentNodeCount; nodeCount > gedcomLevel + 3; nodeCount--) {
                             System.out.println("gedcomLevel: " + gedcomLevel + " parentNodeCount: " + parentNodeCount + " nodeCount: " + nodeCount + " exiting from node: " + currentDomNode);
                             currentDomNode = currentDomNode.getParentNode();
                         }
