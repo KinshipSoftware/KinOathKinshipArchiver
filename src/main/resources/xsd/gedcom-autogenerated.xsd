@@ -6,7 +6,7 @@
                 <xs:element name="Gedcom">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="HEAD" minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="HEAD" minOccurs="0" maxOccurs="1">
                                 <xs:complexType>
                                     <xs:sequence>
                                         <xs:element name="SOUR" minOccurs="0" maxOccurs="unbounded">
@@ -90,7 +90,7 @@
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="NamedElement" minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="Entity" minOccurs="0" maxOccurs="1">
                                 <xs:complexType>
                                     <xs:sequence>
                                         <xs:element name="NamedElement" minOccurs="0" maxOccurs="unbounded"/>
