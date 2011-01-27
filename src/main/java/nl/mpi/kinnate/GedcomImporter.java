@@ -160,7 +160,7 @@ public class GedcomImporter {
                                 currentDomNode.appendChild(entityElement);
                                 currentDomNode = entityElement;
                                 System.out.println("currentDomElement: " + currentDomNode);
-                                Element addedElement = metadataDom.createElement("InternalName");
+                                Element addedElement = metadataDom.createElement("GedcomId");
                                 addedElement.setTextContent(lineParts[1]);
                                 currentDomNode.appendChild(addedElement);
                                 if (lineParts.length > 2) {
@@ -253,7 +253,7 @@ public class GedcomImporter {
                                 if (levelString.startsWith("@")) {
                                     // this could be handled better
                                     // this occurs at level 0 where the element type is named eg "0 @I9@ INDI"
-                                    levelString = "NamedElement";
+                                    levelString = "Entity";
                                 }
                                 gedcomPath = gedcomPath + "." + levelString;
 //                                loopLevelCount++;
@@ -263,7 +263,18 @@ public class GedcomImporter {
 //                                    currentDomNode = addedElement;
 //                                }
                             }
-                            List<String> swapList = Arrays.asList(new String[]{"Kinnate.Gedcom.HEAD.SOUR", "Kinnate.Gedcom.HEAD.CORP", "Kinnate.Gedcom.HEAD.CORP.ADDR", "Kinnate.Gedcom.HEAD.SOUR.DATA", "Kinnate.Gedcom.HEAD.DATE", "Kinnate.Gedcom.HEAD.CHAR", "Kinnate.Gedcom.ADDR", "Kinnate.Gedcom.CHAN.DATE", "Kinnate.Gedcom.HEAD.SOUR.CORP", "Kinnate.Gedcom.HEAD.SOUR.CORP.ADDR"});
+                            List<String> swapList = Arrays.asList(new String[]{
+                                "Kinnate.Gedcom.HEAD.SOUR",
+                                "Kinnate.Gedcom.HEAD.CORP",
+                                "Kinnate.Gedcom.HEAD.CORP.ADDR",
+                                "Kinnate.Gedcom.HEAD.SOUR.DATA",
+                                "Kinnate.Gedcom.HEAD.CHAN.DATE",
+                                "Kinnate.Gedcom.HEAD.DATE",
+                                "Kinnate.Gedcom.HEAD.CHAR",
+                                "Kinnate.Gedcom.Entity.ADDR",
+                                "Kinnate.Gedcom.Entity.CHAN.DATE",
+                                "Kinnate.Gedcom.HEAD.SOUR.CORP",
+                                "Kinnate.Gedcom.HEAD.SOUR.CORP.ADDR"});
                             Element addedExtraElement = null;
                             if (swapList.contains(gedcomPath)) {
                                 gedcomPath += "." + lineParts[1];
