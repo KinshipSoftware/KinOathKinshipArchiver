@@ -93,70 +93,79 @@
                             <xs:element name="Entity" minOccurs="0" maxOccurs="1">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="NamedElement" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="SUBM" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="FAMF" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="TEMP" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="ANCE" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="DESC" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="ORDI" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="RIN" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="NAME"  ann:displaypriority="2" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="ADDR" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="ADDR" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="ADR1" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="ADR2" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="CITY" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="STAE" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="POST" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="CTRY" minOccurs="0" maxOccurs="unbounded"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="PHON" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="LANG" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="OBJE" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="FORM" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="TITL" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="FILE" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="NOTE" minOccurs="0" maxOccurs="unbounded"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="RFN" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="CHAN" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded">
-                                                        <xs:complexType>
-                                                            <xs:sequence>
-                                                                <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded"/>
-                                                                <xs:element name="TIME" minOccurs="0" maxOccurs="unbounded"/>
-                                                            </xs:sequence>
-                                                        </xs:complexType>
-                                                    </xs:element>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="SEX" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="BIRT" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="DEAT" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
+                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                            <xs:element name="GedcomId"/>
+                                            <xs:element name="Type"/>
+                                            <xs:element name="SUBM"/>
+                                            <xs:element name="FAMF"/>
+                                            <xs:element name="TEMP"/>
+                                            <xs:element name="ANCE"/>
+                                            <xs:element name="DESC"/>
+                                            <xs:element name="ORDI"/>
+                                            <xs:element name="RIN"/>
+                                            <xs:element name="NAME" ann:displaypriority="2"/>
+                                            <xs:element name="ADDR">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="ADDR" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="ADR1" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="ADR2" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="CITY" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="STAE" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="POST" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="CTRY" minOccurs="0" maxOccurs="unbounded"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="PHON"/>
+                                            <xs:element name="LANG"/>
+                                            <xs:element name="OBJE">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="FORM" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="TITL" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="FILE" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="NOTE" minOccurs="0" maxOccurs="unbounded"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="RFN"/>
+                                            <xs:element name="CHAN">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded">
+                                                            <xs:complexType>
+                                                                <xs:sequence>
+                                                                    <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded"/>
+                                                                    <xs:element name="TIME" minOccurs="0" maxOccurs="unbounded"/>
+                                                                </xs:sequence>
+                                                            </xs:complexType>
+                                                        </xs:element>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="SEX"/>
+                                            <xs:element name="FAMS"/>
+                                            <xs:element name="FAMC"/>
+                                            <xs:element name="HUSB"/>
+                                            <xs:element name="WIFE"/>
+                                            <xs:element name="MARR"/>
+                                            <xs:element name="CHIL"/>
+                                            <xs:element name="BIRT">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="DEAT">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:choice>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
