@@ -264,17 +264,19 @@ public class GedcomImporter {
 //                                }
                             }
                             List<String> swapList = Arrays.asList(new String[]{
-                                "Kinnate.Gedcom.HEAD.SOUR",
-                                "Kinnate.Gedcom.HEAD.CORP",
-                                "Kinnate.Gedcom.HEAD.CORP.ADDR",
-                                "Kinnate.Gedcom.HEAD.SOUR.DATA",
-                                "Kinnate.Gedcom.HEAD.CHAN.DATE",
-                                "Kinnate.Gedcom.HEAD.DATE",
-                                "Kinnate.Gedcom.HEAD.CHAR",
-                                "Kinnate.Gedcom.Entity.ADDR",
-                                "Kinnate.Gedcom.Entity.CHAN.DATE",
-                                "Kinnate.Gedcom.HEAD.SOUR.CORP",
-                                "Kinnate.Gedcom.HEAD.SOUR.CORP.ADDR"});
+                                        "Kinnate.Gedcom.HEAD.SOUR",
+                                        "Kinnate.Gedcom.HEAD.CORP",
+                                        "Kinnate.Gedcom.HEAD.CORP.ADDR",
+                                        "Kinnate.Gedcom.HEAD.SOUR.DATA",
+                                        "Kinnate.Gedcom.HEAD.CHAN.DATE",
+                                        "Kinnate.Gedcom.HEAD.DATE",
+                                        "Kinnate.Gedcom.HEAD.CHAR",
+                                        "Kinnate.Gedcom.Entity.ADDR",
+                                        "Kinnate.Gedcom.Entity.CHAN.DATE",
+                                        "Kinnate.Gedcom.Entity.DEAT",
+                                        "Kinnate.Gedcom.Entity.OBJE",
+                                        "Kinnate.Gedcom.HEAD.SOUR.CORP",
+                                        "Kinnate.Gedcom.HEAD.SOUR.CORP.ADDR"});
                             Element addedExtraElement = null;
                             if (swapList.contains(gedcomPath)) {
                                 gedcomPath += "." + lineParts[1];
@@ -282,7 +284,7 @@ public class GedcomImporter {
                                 currentDomNode.appendChild(addedExtraElement);
                                 currentDomNode = addedExtraElement;
                             }
-                            currentDomNode.setTextContent(gedcomPath + " : " + lineParts[2]);
+                            currentDomNode.setTextContent(/*gedcomPath + " : " +*/lineParts[2]);
                             if (addedExtraElement != null) {
                                 addedExtraElement = null;
                                 currentDomNode = currentDomNode.getParentNode();
