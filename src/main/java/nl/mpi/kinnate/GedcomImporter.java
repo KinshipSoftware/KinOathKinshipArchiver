@@ -129,6 +129,10 @@ public class GedcomImporter {
                                 GuiHelper.linorgBugCatcher.logError(ex);
                                 appendToTaskOutput(importTextArea, "error: " + ex.getMessage());
                                 return;
+//                            } catch (org.apache.xmlbeans.XmlException ex) {
+//                                GuiHelper.linorgBugCatcher.logError(ex);
+//                                appendToTaskOutput(importTextArea, "error: " + ex.getMessage());
+//                                return;
                             }
 
                             gedcomImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, eniryFileURI);
@@ -275,6 +279,20 @@ public class GedcomImporter {
                                         "Kinnate.Gedcom.Entity.REFN",
                                         "Kinnate.Gedcom.Entity.REPO",
                                         "Kinnate.Gedcom.Entity.DATA",
+                                        "Kinnate.Gedcom.Entity.ENGA",
+                                        "Kinnate.Gedcom.Entity.ENGA.SOUR",
+                                        "Kinnate.Gedcom.Entity.MARB",
+                                        "Kinnate.Gedcom.Entity.MARB.SOUR",
+                                        "Kinnate.Gedcom.Entity.MARC",
+                                        "Kinnate.Gedcom.Entity.MARC.SOUR",
+                                        "Kinnate.Gedcom.Entity.MARL",
+                                        "Kinnate.Gedcom.Entity.MARL.SOUR",
+                                        "Kinnate.Gedcom.Entity.MARS",
+                                        "Kinnate.Gedcom.Entity.MARS.SOUR",
+                                        "Kinnate.Gedcom.Entity.DIV",
+                                        "Kinnate.Gedcom.Entity.DIV.SOUR",
+                                        "Kinnate.Gedcom.Entity.DIVF",
+                                        "Kinnate.Gedcom.Entity.DIVF.SOUR",
                                         "Kinnate.Gedcom.Entity.DATA.EVEN",
                                         "Kinnate.Gedcom.Entity.REPO.CALN",
                                         "Kinnate.Gedcom.Entity.NAME.SOUR",
