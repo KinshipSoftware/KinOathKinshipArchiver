@@ -220,6 +220,498 @@
                                             <xs:element name="NOTE"/>
                                             <xs:element name="RESN"/>
                                             <xs:element name="NCHI"/>
+                                            <!-- this section below is a sequence of duplicates that should be tidied up -->
+                                            <xs:element name="ENGA">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                            <xs:element name="ENGA"/>
+                                                            <xs:element name="DATE"/>
+                                                            <xs:element name="PLAC"/>
+                                                            <xs:element name="AGE"/>
+                                                            <xs:element name="CAUS"/>
+                                                            <xs:element name="AGNC"/>
+                                                            <xs:element name="TYPE"/>
+                                                            <xs:element name="NOTE"/>
+                                                            <xs:element name="ADDR"/>
+                                                            <xs:element name="HUSB">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="WIFE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="OBJE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="FORM"/>
+                                                                            <xs:element name="TITL"/>
+                                                                            <xs:element name="FILE"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="OBJE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="SOUR">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="SOUR"/>
+                                                                            <xs:element name="PAGE"/>
+                                                                            <xs:element name="QUAY"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="DATA">
+                                                                                <xs:complexType>
+                                                                                    <xs:sequence>
+                                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                                            <xs:element name="DATE"/>
+                                                                                            <xs:element name="TEXT"/>
+                                                                                        </xs:choice>
+                                                                                    </xs:sequence>
+                                                                                </xs:complexType>
+                                                                            </xs:element>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                        </xs:choice>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="MARB">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                            <xs:element name="ENGA"/>
+                                                            <xs:element name="DATE"/>
+                                                            <xs:element name="PLAC"/>
+                                                            <xs:element name="AGE"/>
+                                                            <xs:element name="CAUS"/>
+                                                            <xs:element name="AGNC"/>
+                                                            <xs:element name="TYPE"/>
+                                                            <xs:element name="NOTE"/>
+                                                            <xs:element name="ADDR"/>
+                                                            <xs:element name="HUSB">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="WIFE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="OBJE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="FORM"/>
+                                                                            <xs:element name="TITL"/>
+                                                                            <xs:element name="FILE"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="OBJE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="SOUR">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="SOUR"/>
+                                                                            <xs:element name="PAGE"/>
+                                                                            <xs:element name="QUAY"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="DATA">
+                                                                                <xs:complexType>
+                                                                                    <xs:sequence>
+                                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                                            <xs:element name="DATE"/>
+                                                                                            <xs:element name="TEXT"/>
+                                                                                        </xs:choice>
+                                                                                    </xs:sequence>
+                                                                                </xs:complexType>
+                                                                            </xs:element>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                        </xs:choice>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="MARC">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                            <xs:element name="ENGA"/>
+                                                            <xs:element name="DATE"/>
+                                                            <xs:element name="PLAC"/>
+                                                            <xs:element name="AGE"/>
+                                                            <xs:element name="CAUS"/>
+                                                            <xs:element name="AGNC"/>
+                                                            <xs:element name="TYPE"/>
+                                                            <xs:element name="NOTE"/>
+                                                            <xs:element name="ADDR"/>
+                                                            <xs:element name="HUSB">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="WIFE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="OBJE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="FORM"/>
+                                                                            <xs:element name="TITL"/>
+                                                                            <xs:element name="FILE"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="OBJE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="SOUR">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="SOUR"/>
+                                                                            <xs:element name="PAGE"/>
+                                                                            <xs:element name="QUAY"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="DATA">
+                                                                                <xs:complexType>
+                                                                                    <xs:sequence>
+                                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                                            <xs:element name="DATE"/>
+                                                                                            <xs:element name="TEXT"/>
+                                                                                        </xs:choice>
+                                                                                    </xs:sequence>
+                                                                                </xs:complexType>
+                                                                            </xs:element>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                        </xs:choice>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="MARL">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                            <xs:element name="ENGA"/>
+                                                            <xs:element name="DATE"/>
+                                                            <xs:element name="PLAC"/>
+                                                            <xs:element name="AGE"/>
+                                                            <xs:element name="CAUS"/>
+                                                            <xs:element name="AGNC"/>
+                                                            <xs:element name="TYPE"/>
+                                                            <xs:element name="NOTE"/>
+                                                            <xs:element name="ADDR"/>
+                                                            <xs:element name="HUSB">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="WIFE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="OBJE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="FORM"/>
+                                                                            <xs:element name="TITL"/>
+                                                                            <xs:element name="FILE"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="OBJE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="SOUR">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="SOUR"/>
+                                                                            <xs:element name="PAGE"/>
+                                                                            <xs:element name="QUAY"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="DATA">
+                                                                                <xs:complexType>
+                                                                                    <xs:sequence>
+                                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                                            <xs:element name="DATE"/>
+                                                                                            <xs:element name="TEXT"/>
+                                                                                        </xs:choice>
+                                                                                    </xs:sequence>
+                                                                                </xs:complexType>
+                                                                            </xs:element>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                        </xs:choice>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="MARS">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                            <xs:element name="ENGA"/>
+                                                            <xs:element name="DATE"/>
+                                                            <xs:element name="PLAC"/>
+                                                            <xs:element name="AGE"/>
+                                                            <xs:element name="CAUS"/>
+                                                            <xs:element name="AGNC"/>
+                                                            <xs:element name="TYPE"/>
+                                                            <xs:element name="NOTE"/>
+                                                            <xs:element name="ADDR"/>
+                                                            <xs:element name="HUSB">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="WIFE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="OBJE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="FORM"/>
+                                                                            <xs:element name="TITL"/>
+                                                                            <xs:element name="FILE"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="OBJE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="SOUR">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="SOUR"/>
+                                                                            <xs:element name="PAGE"/>
+                                                                            <xs:element name="QUAY"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="DATA">
+                                                                                <xs:complexType>
+                                                                                    <xs:sequence>
+                                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                                            <xs:element name="DATE"/>
+                                                                                            <xs:element name="TEXT"/>
+                                                                                        </xs:choice>
+                                                                                    </xs:sequence>
+                                                                                </xs:complexType>
+                                                                            </xs:element>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                        </xs:choice>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="DIV">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                            <xs:element name="ENGA"/>
+                                                            <xs:element name="DATE"/>
+                                                            <xs:element name="PLAC"/>
+                                                            <xs:element name="AGE"/>
+                                                            <xs:element name="CAUS"/>
+                                                            <xs:element name="AGNC"/>
+                                                            <xs:element name="TYPE"/>
+                                                            <xs:element name="NOTE"/>
+                                                            <xs:element name="ADDR"/>
+                                                            <xs:element name="HUSB">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="WIFE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="OBJE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="FORM"/>
+                                                                            <xs:element name="TITL"/>
+                                                                            <xs:element name="FILE"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="OBJE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="SOUR">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="SOUR"/>
+                                                                            <xs:element name="PAGE"/>
+                                                                            <xs:element name="QUAY"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="DATA">
+                                                                                <xs:complexType>
+                                                                                    <xs:sequence>
+                                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                                            <xs:element name="DATE"/>
+                                                                                            <xs:element name="TEXT"/>
+                                                                                        </xs:choice>
+                                                                                    </xs:sequence>
+                                                                                </xs:complexType>
+                                                                            </xs:element>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                        </xs:choice>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="DIVF">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                            <xs:element name="ENGA"/>
+                                                            <xs:element name="DATE"/>
+                                                            <xs:element name="PLAC"/>
+                                                            <xs:element name="AGE"/>
+                                                            <xs:element name="CAUS"/>
+                                                            <xs:element name="AGNC"/>
+                                                            <xs:element name="TYPE"/>
+                                                            <xs:element name="NOTE"/>
+                                                            <xs:element name="ADDR"/>
+                                                            <xs:element name="HUSB">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="WIFE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="AGE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="OBJE">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="FORM"/>
+                                                                            <xs:element name="TITL"/>
+                                                                            <xs:element name="FILE"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="OBJE"/>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                            <xs:element name="SOUR">
+                                                                <xs:complexType>
+                                                                    <xs:sequence>
+                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                            <xs:element name="SOUR"/>
+                                                                            <xs:element name="PAGE"/>
+                                                                            <xs:element name="QUAY"/>
+                                                                            <xs:element name="NOTE"/>
+                                                                            <xs:element name="DATA">
+                                                                                <xs:complexType>
+                                                                                    <xs:sequence>
+                                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                                            <xs:element name="DATE"/>
+                                                                                            <xs:element name="TEXT"/>
+                                                                                        </xs:choice>
+                                                                                    </xs:sequence>
+                                                                                </xs:complexType>
+                                                                            </xs:element>
+                                                                        </xs:choice>
+                                                                    </xs:sequence>
+                                                                </xs:complexType>
+                                                            </xs:element>
+                                                        </xs:choice>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <!-- ende of section above that is a sequence of duplicates that should be tidied up -->
                                             <xs:element name="BIRT">
                                                 <xs:complexType>
                                                     <xs:sequence>
@@ -267,7 +759,7 @@
                                                         </xs:element>
                                                     </xs:sequence>
                                                 </xs:complexType>
-                                            </xs:element>                     
+                                            </xs:element>
                                             <xs:element name="DATA">
                                                 <xs:complexType>
                                                     <xs:sequence>
