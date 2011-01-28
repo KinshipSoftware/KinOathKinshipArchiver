@@ -164,7 +164,7 @@ public class GedcomImporter {
                                 addedElement.setTextContent(lineParts[1]);
                                 currentDomNode.appendChild(addedElement);
                                 if (lineParts.length > 2) {
-                                    Element addedElement2 = metadataDom.createElement("Type");
+                                    Element addedElement2 = metadataDom.createElement("GedcomType");
                                     addedElement2.setTextContent(lineParts[2]);
                                     currentDomNode.appendChild(addedElement2);
                                 }
@@ -271,6 +271,13 @@ public class GedcomImporter {
                                         "Kinnate.Gedcom.HEAD.CHAN.DATE",
                                         "Kinnate.Gedcom.HEAD.DATE",
                                         "Kinnate.Gedcom.HEAD.CHAR",
+                                        "Kinnate.Gedcom.Entity.NAME",
+                                        "Kinnate.Gedcom.Entity.REFN",
+                                        "Kinnate.Gedcom.Entity.REPO",
+                                        "Kinnate.Gedcom.Entity.DATA",
+                                        "Kinnate.Gedcom.Entity.DATA.EVEN",
+                                        "Kinnate.Gedcom.Entity.REPO.CALN",
+                                        "Kinnate.Gedcom.Entity.NAME.SOUR",
                                         "Kinnate.Gedcom.Entity.ADDR",
                                         "Kinnate.Gedcom.Entity.CHAN.DATE",
                                         "Kinnate.Gedcom.Entity.DEAT",
