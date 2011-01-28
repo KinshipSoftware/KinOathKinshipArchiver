@@ -122,10 +122,13 @@
                                             <xs:element name="OBJE">
                                                 <xs:complexType>
                                                     <xs:sequence>
-                                                        <xs:element name="FORM" minOccurs="0" maxOccurs="unbounded"/>
-                                                        <xs:element name="TITL" minOccurs="0" maxOccurs="unbounded"/>
-                                                        <xs:element name="FILE" minOccurs="0" maxOccurs="unbounded"/>
-                                                        <xs:element name="NOTE" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                            <xs:element name="FORM"/>
+                                                            <xs:element name="TITL"/>
+                                                            <xs:element name="FILE"/>
+                                                            <xs:element name="NOTE"/>
+                                                            <xs:element name="OBJE"/>
+                                                        </xs:choice>
                                                     </xs:sequence>
                                                 </xs:complexType>
                                             </xs:element>
@@ -141,6 +144,7 @@
                                                                 </xs:sequence>
                                                             </xs:complexType>
                                                         </xs:element>
+                                                        <xs:element name="NOTE" minOccurs="0" maxOccurs="unbounded"/>
                                                     </xs:sequence>
                                                 </xs:complexType>
                                             </xs:element>
@@ -151,17 +155,51 @@
                                             <xs:element name="WIFE"/>
                                             <xs:element name="MARR"/>
                                             <xs:element name="CHIL"/>
+                                            <xs:element name="NOTE"/>
+                                            <xs:element name="RESN"/>
                                             <xs:element name="BIRT">
                                                 <xs:complexType>
                                                     <xs:sequence>
                                                         <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="PLAC" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="TYPE" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="ADDR" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="AGNC" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="OBJE">
+                                                            <xs:complexType>
+                                                                <xs:sequence>
+                                                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                        <xs:element name="TITL"/>
+                                                                        <xs:element name="FORM"/>
+                                                                        <xs:element name="FILE"/>
+                                                                        <xs:element name="NOTE"/>
+                                                                        <xs:element name="OBJE"/>
+                                                                    </xs:choice>
+                                                                </xs:sequence>
+                                                            </xs:complexType>
+                                                        </xs:element>
                                                     </xs:sequence>
                                                 </xs:complexType>
                                             </xs:element>
                                             <xs:element name="DEAT">
                                                 <xs:complexType>
                                                     <xs:sequence>
+                                                        <xs:element name="DEAT" minOccurs="0" maxOccurs="unbounded"/>
                                                         <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="PLAC" minOccurs="0" maxOccurs="unbounded"/>
+                                                        <xs:element name="OBJE">
+                                                            <xs:complexType>
+                                                                <xs:sequence>
+                                                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                        <xs:element name="TITL"/>
+                                                                        <xs:element name="FORM"/>
+                                                                        <xs:element name="FILE"/>
+                                                                        <xs:element name="NOTE"/>
+                                                                        <xs:element name="OBJE"/>
+                                                                    </xs:choice>
+                                                                </xs:sequence>
+                                                            </xs:complexType>
+                                                        </xs:element>
                                                     </xs:sequence>
                                                 </xs:complexType>
                                             </xs:element>
