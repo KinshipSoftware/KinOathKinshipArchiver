@@ -23,6 +23,7 @@ import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.ImdiTree;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.PreviewSplitPanel;
+import nl.mpi.arbil.XsdChecker;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.arbil.data.ImdiTreeObject;
 
@@ -55,6 +56,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         JScrollPane tableScrollPane = new JScrollPane(previewTable);
         jScrollPane1.getViewport().add(leftTree);
+        jTabbedPane1.add("EgoSelection", new KinTypeEgoSelectionTestPanel());
         jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
         jTabbedPane1.add("Graph", graphPanel);
         jTabbedPane1.add("SVG2  (deprecated)", new GraphPanel1());
@@ -109,7 +111,21 @@ public class MainFrame extends javax.swing.JFrame {
                     ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
                     for (String currentNodeString : treeNodesArray) {
                         try {
-                            tempArray.add(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString)));
+                            ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
+                            tempArray.add(currentImdiObject);
+//                            JTextPane fileText = new JTextPane();
+                            XsdChecker xsdChecker = new XsdChecker();
+                            if (xsdChecker.simpleCheck(currentImdiObject.getFile(), currentImdiObject.getURI()) != null) {
+                                jTabbedPane1.add("XSD Error on Import", xsdChecker);
+                                xsdChecker.checkXML(currentImdiObject);
+                                xsdChecker.setDividerLocation(0.5);
+                            }
+//                            try {
+//                                fileText.setPage(currentNodeString);
+//                            } catch (IOException iOException) {
+//                                fileText.setText(iOException.getMessage());
+//                            }
+//                            jTabbedPane1.add("ImportedFile", fileText);
                         } catch (URISyntaxException exception) {
                             System.err.println(exception.getMessage());
                             exception.printStackTrace();
