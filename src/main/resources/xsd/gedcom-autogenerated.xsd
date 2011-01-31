@@ -786,15 +786,15 @@
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="Relation" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="Link" type="xs:string" ann:displaypriority="1"/>
-                                        <xs:element name="Type" type="xs:string"/>
-                                        <xs:element name="TargetName" type="xs:string"/>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Relation" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Link" type="xs:string" ann:displaypriority="1"/>
+                            <xs:element name="Type" type="xs:string"/>
+                            <xs:element name="TargetName" type="xs:string"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
