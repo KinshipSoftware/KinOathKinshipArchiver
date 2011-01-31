@@ -15,9 +15,8 @@ import java.util.Hashtable;
 import java.util.List;
 import javax.swing.JTextArea;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
-//import nl.mpi.arbil.ImdiField;
-import nl.mpi.arbil.ImdiField;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.arbil.data.ImdiLoader;
@@ -27,6 +26,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -42,9 +42,9 @@ public class GedcomImporter {
     }
 
     public void importTestFile(JTextArea importTextArea, String testFileString) {
-        ArrayList<String> createdNodes = new ArrayList<String>();
+        ArrayList<ImdiTreeObject> createdNodes = new ArrayList<ImdiTreeObject>();
         Hashtable<String, String> createdNodesTable = new Hashtable<String, String>();
-        ArrayList<ImdiTreeObject> linkNodes = new ArrayList<ImdiTreeObject>();
+//        ArrayList<ImdiTreeObject> linkNodes = new ArrayList<ImdiTreeObject>();
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString)));
         // really should close the file properly but this is only for testing at this stage
@@ -139,7 +139,7 @@ public class GedcomImporter {
                             gedcomImdiObject.waitTillLoaded();
                             appendToTaskOutput(importTextArea, "--> InternalNameT1" + lineParts[1] + " : " + gedcomImdiObject.getUrlString());
                             createdNodesTable.put(lineParts[1], gedcomImdiObject.getUrlString());
-                            createdNodes.add(gedcomImdiObject.getUrlString());
+                            createdNodes.add(gedcomImdiObject);
                             metadataDom = new CmdiComponentBuilder().getDocument(gedcomImdiObject.getURI());
                             currentDomNode = metadataDom.getDocumentElement();
                             // find the deepest element node to start adding child nodes to
@@ -171,16 +171,22 @@ public class GedcomImporter {
                                     Element addedElement2 = metadataDom.createElement("GedcomType");
                                     addedElement2.setTextContent(lineParts[2]);
                                     currentDomNode.appendChild(addedElement2);
+                                    if (lineParts[2].equals("NOTE")) {
+                                        Element addedNoteElement = metadataDom.createElement(lineParts[2]);
+                                        currentDomNode.appendChild(addedNoteElement);
+                                        previousField = addedNoteElement;
+                                    }
                                 }
                             }
+
                             System.out.println("currentDomElement: " + currentDomNode + " value: " + currentDomNode.getTextContent());
                             appendToTaskOutput(importTextArea, "--> new node started");
                         }
                     } else {
-                        if (lineParts.length > 2) {
-                            // todo: move this into an array to be processed after all the fields have been insterted
-//                            if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
-//                                appendToTaskOutput(importTextArea, "--> link adding");
+//                        if (lineParts.length > 2) {
+                        // todo: move this into an array to be processed after all the fields have been insterted
+
+
 ////                            gedcomImdiObject.saveChangesToCache(true);
 //                                try {
 //                                    URI linkUri = metadataBuilder.addChildNode(gedcomImdiObject, ".Gedcom.Relation", null, null, null);
@@ -219,7 +225,7 @@ public class GedcomImporter {
 //                                }
 //                            }
 //                        }
-                        }
+//                        }
                         // trim the nodes to the current gedcom level
                         int parentNodeCount = 0;
                         for (Node countingDomNode = currentDomNode; countingDomNode != null; countingDomNode = countingDomNode.getParentNode()) {
@@ -341,10 +347,33 @@ public class GedcomImporter {
                                 xsdString += "   <xs:element name=\"" + xsdElementString + "\" />\n";// + gedcomPath + "\n" + strLine + "\n";
                                 xsdTagsDone.add(gedcomPath);
                             }
+                            // create the link node when required
+                            if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
+                                appendToTaskOutput(importTextArea, "--> adding link");
+
+                                Element relationElement = metadataDom.createElement("Relation");
+                                metadataDom.getDocumentElement().appendChild(relationElement);
+
+                                Element linkElement = metadataDom.createElement("Link");
+                                linkElement.setTextContent(lineParts[2]);
+                                relationElement.appendChild(linkElement);
+
+                                Element typeElement = metadataDom.createElement("Type");
+                                typeElement.setTextContent(gedcomPath);
+                                relationElement.appendChild(typeElement);
+
+                                Element targetNameElement = metadataDom.createElement("TargetName");
+                                targetNameElement.setTextContent(lineParts[2]);
+                                relationElement.appendChild(targetNameElement);
+
+//                                appendToTaskOutput(importTextArea, "--> typeElement: " + typeElement.getTextContent());
+//                                appendToTaskOutput(importTextArea, "--> typeElement: " + typeElement.getNodeName());
+//                                appendToTaskOutput(importTextArea, "--> typeElement: " + typeElement.getParentNode().getNodeName());
+//                                appendToTaskOutput(importTextArea, "--> typeElement: " + typeElement.getParentNode().getParentNode().getNodeName());
+                            }
                         }
                     }
                 }
-//                1 NAME John A. Nairn
             }
 
             if (metadataDom != null) {
@@ -354,23 +383,31 @@ public class GedcomImporter {
 //            ImdiLoader.getSingleInstance().saveNodesNeedingSave(true);
 //            appendToTaskOutput(importTextArea, "--> link count: " + linkFields.size());
             // update all the links now we have the urls for each internal name
-            for (ImdiTreeObject linkImdiObject : linkNodes) {
-                linkImdiObject.waitTillLoaded();
-                appendToTaskOutput(importTextArea, "linkParent: " + linkImdiObject.getParentDomNode());
-                ImdiField[] currentField = linkImdiObject.getFields().get("Link");
-                if (currentField != null && currentField.length > 0) {
-                    appendToTaskOutput(importTextArea, "linkA: " + currentField[0].getFieldValue());
-                    appendToTaskOutput(importTextArea, "linkB: " + createdNodesTable.get(currentField[0].getFieldValue()));
-                    String linkValue = createdNodesTable.get(currentField[0].getFieldValue());
-                    if (linkValue != null) {
-                        currentField[0].setFieldValue(linkValue, false, true);
+
+            appendToTaskOutput(importTextArea, "xsdString:\n" + xsdString);
+
+            for (ImdiTreeObject currentImdiObject : createdNodes) {
+                appendToTaskOutput(importTextArea, "linkParent: " + currentImdiObject.getUrlString());
+                try {
+                    String linkXpath = "/Kinnate/Relation/Link";
+                    Document linksDom = new CmdiComponentBuilder().getDocument(currentImdiObject.getURI());
+                    NodeList relationLinkNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, linkXpath);
+                    for (int nodeCounter = 0; nodeCounter < relationLinkNodeList.getLength(); nodeCounter++) {
+                        Node relationLinkNode = relationLinkNodeList.item(nodeCounter);
+                        if (relationLinkNode != null) {
+                            // todo: update the links
+                            String linkValue = createdNodesTable.get(relationLinkNode.getTextContent());
+                            if (linkValue != null) {
+                                relationLinkNode.setTextContent(linkValue);
+                                appendToTaskOutput(importTextArea, "linkValue: " + linkValue);
+                            }
+                        }
                     }
-                    appendToTaskOutput(importTextArea, "linkC: " + currentField[0].getFieldValue());
-//                    linkImdiObject.saveChangesToCache(true);
+                    new CmdiComponentBuilder().savePrettyFormatting(linksDom, currentImdiObject.getFile());
+                } catch (TransformerException exception) {
+                    GuiHelper.linorgBugCatcher.logError(exception);
                 }
             }
-            System.out.println("xsdString: " + xsdString);
-            appendToTaskOutput(importTextArea, "xsdString:\n" + xsdString);
             appendToTaskOutput(importTextArea, "import finished with a node count of: " + createdNodes.size());
 
 //            gedcomImdiObject.saveChangesToCache(true);
@@ -392,6 +429,12 @@ public class GedcomImporter {
             appendToTaskOutput(importTextArea, "error: " + sAXException.getMessage());
         }
 //        LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
-        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", createdNodes.toArray(new String[]{}));
+        String[] createdNodePaths = new String[createdNodes.size()];
+        int createdNodeCounter = 0;
+        for (ImdiTreeObject currentImdiObject : createdNodes) {
+            createdNodePaths[createdNodeCounter] = currentImdiObject.getUrlString();
+            createdNodeCounter++;
+        }
+        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", createdNodePaths);
     }
 }
