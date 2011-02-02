@@ -156,13 +156,25 @@ public class GedcomImporter {
                                 }
                             }
                             if (lineParts[1].equals("HEAD")) {
-                                Element headElement = metadataDom.createElement("HEAD");
-                                currentDomNode.appendChild(headElement);
+                                // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
+                                Node headElement = currentDomNode;
+//                                Element headElement = metadataDom.createElement("HEAD");
+//                                currentDomNode.appendChild(headElement);
                                 currentDomNode = headElement;
                             } else {
-                                Element entityElement = metadataDom.createElement("Entity");
-                                currentDomNode.appendChild(entityElement);
+                                // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
+                                Node entityElement = null;
+                                for (Node siblingNode = currentDomNode.getNextSibling(); siblingNode != null; siblingNode = siblingNode.getNextSibling()) {
+                                    if (siblingNode.getNodeName().equals("Entity")) {
+                                        entityElement = siblingNode;
+                                        break;
+                                    }
+                                }
+//                                Element entityElement = metadataDom.createElement("Entity");
+//                                currentDomNode.appendChild(entityElement);
                                 currentDomNode = entityElement;
+//                                Element nameElement = metadataDom.createElement("NAME");
+//                                currentDomNode.appendChild(nameElement);
                                 System.out.println("currentDomElement: " + currentDomNode);
                                 Element addedElement = metadataDom.createElement("GedcomId");
                                 addedElement.setTextContent(lineParts[1]);
@@ -235,10 +247,24 @@ public class GedcomImporter {
                             System.out.println("gedcomLevel: " + gedcomLevel + " parentNodeCount: " + parentNodeCount + " nodeCount: " + nodeCount + " exiting from node: " + currentDomNode);
                             currentDomNode = currentDomNode.getParentNode();
                         }
-                        // add the current gedcom node
-                        Element addedElement = metadataDom.createElement(lineParts[1]);
-                        currentDomNode.appendChild(addedElement);
-                        currentDomNode = addedElement;
+                        if (lineParts[1].equals("NAME") && currentDomNode.getNodeName().equals("Entity")) {
+                            // find the existing node if only one should exist
+                            System.out.println("Found Name Node easching: " + currentDomNode.getNodeName());
+                            for (Node childNode = currentDomNode.getFirstChild(); childNode != null; childNode = childNode.getNextSibling()) {
+                                System.out.println(childNode.getNodeName());
+                                if (childNode.getNodeName().equals("NAME")) {
+                                    System.out.println("Using found node");
+                                    currentDomNode = childNode;
+                                    break;
+                                }
+                            }
+                        } else {
+                            System.out.println("Creating Node: " + lineParts[1]);
+                            // otherwise add the current gedcom node
+                            Element addedElement = metadataDom.createElement(lineParts[1]);
+                            currentDomNode.appendChild(addedElement);
+                            currentDomNode = addedElement;
+                        }
                         // if the current line has a value then enter it into the node
                         if (lineParts.length > 2) {
 //                        if (lineParts[1].equals("NAME")) {
