@@ -19,6 +19,36 @@ public class GraphData {
     public int gridWidth;
     public int gridHeight;
 
+//    public void setEgoNodes(String[] treeNodesArray) {
+//        if (treeNodesArray != null) {
+//            graphDataNodeList = new HashMap<String, GraphDataNode>();
+//            for (String currentNodeString : treeNodesArray) {
+//                try {
+//                    ImdiTreeObject imdiTreeObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
+//                    graphDataNodeList.put(imdiTreeObject.getUrlString(), new GraphDataNode(imdiTreeObject));
+//                } catch (URISyntaxException exception) {
+//                    System.err.println(exception.getMessage());
+//                    exception.printStackTrace();
+//                }
+//            }
+//        }
+//        calculateLinks();
+//        sanguineSort();
+//        printLocations();
+//    }
+
+    public void setEgoNodes(ImdiTreeObject[] treeNodesArray) {
+        if (treeNodesArray != null) {
+            graphDataNodeList = new HashMap<String, GraphDataNode>();
+            for (ImdiTreeObject imdiTreeObject : treeNodesArray) {
+                graphDataNodeList.put(imdiTreeObject.getUrlString(), new GraphDataNode(imdiTreeObject));
+            }
+        }
+        calculateLinks();
+        sanguineSort();
+        printLocations();
+    }
+
     public void readData() {
         String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
         if (treeNodesArray != null) {
