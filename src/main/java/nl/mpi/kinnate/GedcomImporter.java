@@ -176,13 +176,21 @@ public class GedcomImporter {
 //                                Element nameElement = metadataDom.createElement("NAME");
 //                                currentDomNode.appendChild(nameElement);
                                 System.out.println("currentDomElement: " + currentDomNode);
-                                Element addedElement = metadataDom.createElement("GedcomId");
-                                addedElement.setTextContent(lineParts[1]);
-                                currentDomNode.appendChild(addedElement);
+                                Node gedcomIdElement = null; // metadataDom.createElement("GedcomId");
+                                Node gedcomTypeElement = null; // metadataDom.createElement("GedcomType");
+//                                currentDomNode.appendChild(gedcomIdElement);
+                                for (Node siblingNode = currentDomNode.getFirstChild(); siblingNode != null; siblingNode = siblingNode.getNextSibling()) {
+                                    if (siblingNode.getNodeName().equals("GedcomId")) {
+                                        gedcomIdElement = siblingNode;
+                                    }
+                                    if (siblingNode.getNodeName().equals("GedcomType")) {
+                                        gedcomTypeElement = siblingNode;
+                                    }
+                                }
+                                gedcomIdElement.setTextContent(lineParts[1]);
                                 if (lineParts.length > 2) {
-                                    Element addedElement2 = metadataDom.createElement("GedcomType");
-                                    addedElement2.setTextContent(lineParts[2]);
-                                    currentDomNode.appendChild(addedElement2);
+                                    gedcomTypeElement.setTextContent(lineParts[2]);
+//                                    currentDomNode.appendChild(gedcomTypeElement);
                                     if (lineParts[2].equals("NOTE")) {
                                         Element addedNoteElement = metadataDom.createElement(lineParts[2]);
                                         currentDomNode.appendChild(addedNoteElement);
