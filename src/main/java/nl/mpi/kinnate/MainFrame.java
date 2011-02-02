@@ -1,13 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * MainFrame.java
- *
- * Created on Aug 16, 2010, 5:20:20 PM
- */
 package nl.mpi.kinnate;
 
 import java.net.URI;
@@ -27,9 +17,10 @@ import nl.mpi.arbil.XsdChecker;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.arbil.data.ImdiTreeObject;
 
-/**
- *
- * @author petwit
+/*
+ *  Document   : MainFrame
+ *  Author     : Peter Withers
+ *  Created on : Aug 16, 2010, 5:20:20 PM
  */
 public class MainFrame extends javax.swing.JFrame {
 
@@ -56,13 +47,14 @@ public class MainFrame extends javax.swing.JFrame {
 
         JScrollPane tableScrollPane = new JScrollPane(previewTable);
         jScrollPane1.getViewport().add(leftTree);
-        jTabbedPane1.add("EgoSelection", new KinTypeEgoSelectionTestPanel());
+        KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel();
+        jTabbedPane1.add("EgoSelection", egoSelectionTestPanel);
         jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
-        jTabbedPane1.add("Graph", graphPanel);
-        jTabbedPane1.add("SVG2  (deprecated)", new GraphPanel1());
-        jTabbedPane1.add("Jung", jungGraph);
+//        jTabbedPane1.add("Graph", graphPanel);
+//        jTabbedPane1.add("SVG2  (deprecated)", new GraphPanel1());
+//        jTabbedPane1.add("Jung", jungGraph);
         jTabbedPane1.add("Table", tableScrollPane);
-        jTabbedPane1.add("SVG (deprecated)", graphPanel0Deprecated);
+//        jTabbedPane1.add("SVG (deprecated)", graphPanel0Deprecated);
 
         leftTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
         String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
@@ -88,6 +80,11 @@ public class MainFrame extends javax.swing.JFrame {
         PreviewSplitPanel.previewTableShown = true;
 
         jSplitPane1.setDividerLocation(0.25);
+
+//        System.out.println();
+        DragTransferHandler dragTransferHandler = new DragTransferHandler();
+        leftTree.setTransferHandler(dragTransferHandler);
+        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
 
         this.doLayout();
         this.pack();
@@ -120,6 +117,7 @@ public class MainFrame extends javax.swing.JFrame {
                                 xsdChecker.checkXML(currentImdiObject);
                                 xsdChecker.setDividerLocation(0.5);
                             }
+                            currentImdiObject.reloadNode();
 //                            try {
 //                                fileText.setPage(currentNodeString);
 //                            } catch (IOException iOException) {
