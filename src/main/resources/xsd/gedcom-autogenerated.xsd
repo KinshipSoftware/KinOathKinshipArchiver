@@ -96,8 +96,8 @@
                                         <xs:element name="NAME">
                                             <xs:complexType>
                                                 <xs:sequence>
+                                                    <xs:element name="NAME" ann:displaypriority="1" minOccurs="0" maxOccurs="unbounded"/>
                                                     <xs:choice minOccurs="0" maxOccurs="unbounded">
-                                                        <xs:element name="NAME" ann:displaypriority="2"/>
                                                         <xs:element name="NPFX"/>
                                                         <xs:element name="GIVN"/>
                                                         <xs:element name="NICK"/>
@@ -118,12 +118,12 @@
                                                 </xs:sequence>
                                             </xs:complexType>
                                         </xs:element>
+                                        <xs:element name="GedcomId"/>
+                                        <xs:element name="GedcomType" ann:displaypriority="5"/>
                                         <xs:choice minOccurs="0" maxOccurs="unbounded">
-                                            <xs:element name="GedcomId"/>
-                                            <xs:element name="GedcomType" ann:displaypriority="5"/>
                                             <xs:element name="TITL"/>
                                             <xs:element name="SUBM"/>
-                                            <xs:element name="FAMF" ann:displaypriority="4"/>
+                                            <xs:element name="FAMF"/>
                                             <xs:element name="TEMP"/>
                                             <xs:element name="ANCE"/>
                                             <xs:element name="DESC"/>
