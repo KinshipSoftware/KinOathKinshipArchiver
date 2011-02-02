@@ -6,19 +6,19 @@
                 <xs:element name="Gedcom">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="HEAD" minOccurs="0" maxOccurs="1">
+                            <xs:element name="HEAD" minOccurs="1" maxOccurs="1">
                                 <xs:complexType>
                                     <xs:sequence>
                                         <xs:element name="SOUR" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element name="SOUR" minOccurs="0" maxOccurs="unbounded"/>
+                                                    <xs:element name="SOUR" minOccurs="0" maxOccurs="unbounded" ann:displaypriority="2"/>
                                                     <xs:element name="NAME" ann:displaypriority="1" minOccurs="0" maxOccurs="unbounded"/>
                                                     <xs:element name="VERS" minOccurs="0" maxOccurs="unbounded"/>
                                                     <xs:element name="CORP" minOccurs="0" maxOccurs="unbounded">
                                                         <xs:complexType>
                                                             <xs:sequence>
-                                                                <xs:element name="CORP" minOccurs="0" maxOccurs="unbounded"/>
+                                                                <xs:element name="CORP" minOccurs="0" maxOccurs="unbounded" ann:displaypriority="1"/>
                                                                 <xs:element name="ADDR" minOccurs="0" maxOccurs="unbounded">
                                                                     <xs:complexType>
                                                                         <xs:sequence>
@@ -51,22 +51,22 @@
                                         <xs:element name="SUBM" minOccurs="0" maxOccurs="unbounded"/>
                                         <xs:element name="SUBN" minOccurs="0" maxOccurs="unbounded"/>
                                         <xs:element name="_HME" minOccurs="0" maxOccurs="unbounded"/>
-                                        <xs:element name="DEST" minOccurs="0" maxOccurs="unbounded"/>
+                                        <xs:element name="DEST" minOccurs="0" maxOccurs="unbounded" ann:displaypriority="2"/>
                                         <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="TIME" minOccurs="0" maxOccurs="unbounded"/>
+                                                    <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded" ann:displaypriority="1"/>
+                                                    <xs:element name="TIME" minOccurs="0" maxOccurs="unbounded" ann:displaypriority="2"/>
                                                 </xs:sequence>
                                             </xs:complexType>
                                         </xs:element>
-                                        <xs:element name="FILE" minOccurs="0" maxOccurs="unbounded"/>
+                                        <xs:element name="FILE" minOccurs="0" maxOccurs="unbounded" ann:displaypriority="3"/>
                                         <xs:element name="COPR" minOccurs="0" maxOccurs="unbounded"/>
                                         <xs:element name="GEDC" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element name="VERS" minOccurs="0" maxOccurs="unbounded"/>
-                                                    <xs:element name="FORM" minOccurs="0" maxOccurs="unbounded"/>
+                                                    <xs:element name="VERS" minOccurs="0" maxOccurs="unbounded" ann:displaypriority="1"/>
+                                                    <xs:element name="FORM" minOccurs="0" maxOccurs="unbounded" ann:displaypriority="2"/>
                                                 </xs:sequence>
                                             </xs:complexType>
                                         </xs:element>
@@ -74,7 +74,7 @@
                                         <xs:element name="CHAR" minOccurs="0" maxOccurs="unbounded">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element name="CHAR" minOccurs="0" maxOccurs="unbounded"/>
+                                                    <xs:element name="CHAR" minOccurs="0" maxOccurs="unbounded" ann:displaypriority="1"/>
                                                     <xs:element name="VERS" minOccurs="0" maxOccurs="unbounded"/>
                                                 </xs:sequence>
                                             </xs:complexType>
@@ -90,15 +90,40 @@
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="Entity" minOccurs="0" maxOccurs="1">
+                            <xs:element name="Entity" minOccurs="1" maxOccurs="1">
                                 <xs:complexType>
                                     <xs:sequence>
+                                        <xs:element name="NAME">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                        <xs:element name="NAME" ann:displaypriority="2"/>
+                                                        <xs:element name="NPFX"/>
+                                                        <xs:element name="GIVN"/>
+                                                        <xs:element name="NICK"/>
+                                                        <xs:element name="SPFX"/>
+                                                        <xs:element name="SURN"/>
+                                                        <xs:element name="NSFX"/>
+                                                        <xs:element name="SOUR">
+                                                            <xs:complexType>
+                                                                <xs:sequence>
+                                                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                                        <xs:element name="SOUR" ann:displaypriority="1"/>
+                                                                        <xs:element name="PAGE"/>
+                                                                    </xs:choice>
+                                                                </xs:sequence>
+                                                            </xs:complexType>
+                                                        </xs:element>
+                                                    </xs:choice>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
                                         <xs:choice minOccurs="0" maxOccurs="unbounded">
                                             <xs:element name="GedcomId"/>
-                                            <xs:element name="GedcomType"/>
+                                            <xs:element name="GedcomType" ann:displaypriority="5"/>
                                             <xs:element name="TITL"/>
                                             <xs:element name="SUBM"/>
-                                            <xs:element name="FAMF"/>
+                                            <xs:element name="FAMF" ann:displaypriority="4"/>
                                             <xs:element name="TEMP"/>
                                             <xs:element name="ANCE"/>
                                             <xs:element name="DESC"/>
@@ -110,31 +135,6 @@
                                             <xs:element name="AUTH"/>
                                             <xs:element name="PUBL"/>
                                             <xs:element name="BLOB"/>
-                                            <xs:element name="NAME">
-                                                <xs:complexType>
-                                                    <xs:sequence>
-                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
-                                                            <xs:element name="NAME" ann:displaypriority="2"/>
-                                                            <xs:element name="NPFX"/>
-                                                            <xs:element name="GIVN"/>
-                                                            <xs:element name="NICK"/>
-                                                            <xs:element name="SPFX"/>
-                                                            <xs:element name="SURN"/>
-                                                            <xs:element name="NSFX"/>
-                                                            <xs:element name="SOUR">
-                                                                <xs:complexType>
-                                                                    <xs:sequence>
-                                                                        <xs:choice minOccurs="0" maxOccurs="unbounded">
-                                                                            <xs:element name="SOUR" ann:displaypriority="1"/>
-                                                                            <xs:element name="PAGE"/>
-                                                                        </xs:choice>
-                                                                    </xs:sequence>
-                                                                </xs:complexType>
-                                                            </xs:element>
-                                                        </xs:choice>
-                                                    </xs:sequence>
-                                                </xs:complexType>
-                                            </xs:element>
                                             <xs:element name="ADDR">
                                                 <xs:complexType>
                                                     <xs:sequence>
@@ -197,10 +197,10 @@
                                             <xs:element name="CHAN">
                                                 <xs:complexType>
                                                     <xs:sequence>
-                                                        <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded">
+                                                        <xs:element name="DATE" minOccurs="1" maxOccurs="1">
                                                             <xs:complexType>
                                                                 <xs:sequence>
-                                                                    <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded"/>
+                                                                    <xs:element name="DATE" minOccurs="0" maxOccurs="unbounded" ann:displaypriority="1"/>
                                                                     <xs:element name="TIME" minOccurs="0" maxOccurs="unbounded"/>
                                                                 </xs:sequence>
                                                             </xs:complexType>
