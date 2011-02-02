@@ -5,9 +5,11 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.arbil.data.ImdiTreeObject;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.DOMImplementation;
@@ -31,6 +33,7 @@ public class GraphPanel extends JPanel {
     private SVGDocument doc;
     private Element currentDraggedElement;
     private Cursor preDragCursor;
+    HashSet<ImdiTreeObject> egoSet = new HashSet<ImdiTreeObject>();
 
     public GraphPanel() {
         this.setLayout(new BorderLayout());
@@ -58,6 +61,10 @@ public class GraphPanel extends JPanel {
                     System.out.println("bbox Y: " + bbox.getY());
                     System.out.println("bbox W: " + bbox.getWidth());
                     System.out.println("bbox H: " + bbox.getHeight());
+//                    todo: look into transform issues when dragging ellements eg when the canvas is scaled or panned
+//                            SVGLocatable.getTransformToElement()
+//                            SVGPoint.matrixTransform()
+
                 }
             }
 
@@ -76,6 +83,26 @@ public class GraphPanel extends JPanel {
         svgCanvas.addMouseListener(mouseInputAdapter);
         svgCanvas.addMouseMotionListener(mouseInputAdapter);
         this.add(BorderLayout.CENTER, svgCanvas);
+    }
+
+    public void readSvg(File svgFilePath) {
+    }
+
+    public ImdiTreeObject[] getEgoList() {
+        return egoSet.toArray(new ImdiTreeObject[]{});
+        //return new String[]{"file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/201101251709350.cmdi", "file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/20110125170936.cmdi"};
+//"file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/20110125170935.cmdi"
+        //ego tree: 
+        //ego tree: file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/201101251709360.cmdi
+        //ego tree: file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/201101251709361.cmdi
+        //ego tree: file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/20110125170937.cmdi"};
+    }
+
+    public void setEgoList(ImdiTreeObject[] egoListArray) {
+        egoSet = new HashSet<ImdiTreeObject>();
+        for (ImdiTreeObject imdiTreeObject : egoListArray) {
+            egoSet.add(imdiTreeObject);
+        }
     }
 
     public void drawNodes(GraphData graphData) {
