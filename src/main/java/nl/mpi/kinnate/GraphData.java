@@ -1,12 +1,7 @@
 package nl.mpi.kinnate;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import nl.mpi.arbil.LinorgSessionStorage;
-import nl.mpi.arbil.data.ImdiLoader;
-import nl.mpi.arbil.data.ImdiTreeObject;
+import java.util.Arrays;
 
 /**
  *  Document   : GraphData
@@ -15,7 +10,7 @@ import nl.mpi.arbil.data.ImdiTreeObject;
  */
 public class GraphData {
 
-    protected HashMap<String, GraphDataNode> graphDataNodeList = new HashMap<String, GraphDataNode>();
+    protected GraphDataNode[] graphDataNodeArray = new GraphDataNode[]{};
     public int gridWidth;
     public int gridHeight;
 
@@ -36,45 +31,43 @@ public class GraphData {
 //        sanguineSort();
 //        printLocations();
 //    }
-
-    public void setEgoNodes(URI[] treeNodesArray) {
-        if (treeNodesArray != null) {
-            graphDataNodeList = new HashMap<String, GraphDataNode>();
-            for (URI entityUri : treeNodesArray) {
-                graphDataNodeList.put(entityUri.toASCIIString(), new GraphDataNode(ImdiLoader.getSingleInstance().getImdiObject(null, entityUri)));
-            }
-        }
-        calculateLinks();
+    public void setEgoNodes(GraphDataNode[] graphDataNodeArrayLocal) {
+        graphDataNodeArray = graphDataNodeArrayLocal;
+//        if (graphDataNodeArray != null) {
+//            graphDataNodeList = new HashMap<String, GraphDataNode>();
+//            for (URI entityUri : treeNodesArray) {
+//                graphDataNodeList.put(entityUri.toASCIIString(), new GraphDataNode(ImdiLoader.getSingleInstance().getImdiObject(null, entityUri)));
+//            }
+//        }
+//        calculateLinks();
         sanguineSort();
         printLocations();
     }
 
-    public void readData() {
-        String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
-        if (treeNodesArray != null) {
-            for (String currentNodeString : treeNodesArray) {
-                try {
-                    ImdiTreeObject imdiTreeObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
-                    graphDataNodeList.put(imdiTreeObject.getUrlString(), new GraphDataNode(imdiTreeObject));
-                } catch (URISyntaxException exception) {
-                    System.err.println(exception.getMessage());
-                    exception.printStackTrace();
-                }
-            }
-        }
-        calculateLinks();
-        sanguineSort();
-        printLocations();
-    }
-
-    protected void calculateLinks() {
-        System.out.println("calculateLinks");
-        for (GraphDataNode currentNode : graphDataNodeList.values()) {
-            System.out.println("currentNode: " + currentNode.getLabel());
-            currentNode.calculateLinks(graphDataNodeList);
-        }
-    }
-
+//    public void readData() {
+//        String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
+//        if (treeNodesArray != null) {
+//            for (String currentNodeString : treeNodesArray) {
+//                try {
+//                    ImdiTreeObject imdiTreeObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
+//                    graphDataNodeList.put(imdiTreeObject.getUrlString(), new GraphDataNode(imdiTreeObject));
+//                } catch (URISyntaxException exception) {
+//                    System.err.println(exception.getMessage());
+//                    exception.printStackTrace();
+//                }
+//            }
+//        }
+//        calculateLinks();
+//        sanguineSort();
+//        printLocations();
+//    }
+//    protected void calculateLinks() {
+//        System.out.println("calculateLinks");
+//        for (GraphDataNode currentNode : graphDataNodeList.values()) {
+//            System.out.println("currentNode: " + currentNode.getLabel());
+////            currentNode.calculateLinks(graphDataNodeList);
+//        }
+//    }
     private void sanguineSubnodeSort(ArrayList<ArrayList<GraphDataNode>> generationRows, ArrayList<GraphDataNode> currentColumns, ArrayList<GraphDataNode> inputNodes, GraphDataNode currentNode) {
         int currentRowIndex = generationRows.indexOf(currentColumns);
         ArrayList<GraphDataNode> ancestorColumns;
@@ -148,7 +141,7 @@ public class GraphData {
         // create an array of rows
         ArrayList<ArrayList<GraphDataNode>> generationRows = new ArrayList<ArrayList<GraphDataNode>>();
         ArrayList<GraphDataNode> inputNodes = new ArrayList<GraphDataNode>();
-        inputNodes.addAll(graphDataNodeList.values());
+        inputNodes.addAll(Arrays.asList(graphDataNodeArray));
         // put an array of columns into the current row
         ArrayList<GraphDataNode> currentColumns = new ArrayList<GraphDataNode>();
         generationRows.add(currentColumns);
@@ -183,10 +176,10 @@ public class GraphData {
 
     private void sortByLinkDistance() {
         GraphDataNode[][] graphGrid = new GraphDataNode[gridHeight][gridWidth];
-        for (GraphDataNode graphDataNode : graphDataNodeList.values()) {
+        for (GraphDataNode graphDataNode : graphDataNodeArray) {
             graphGrid[graphDataNode.yPos][graphDataNode.xPos] = graphDataNode;
         }
-        for (GraphDataNode graphDataNode : graphDataNodeList.values()) {
+        for (GraphDataNode graphDataNode : graphDataNodeArray) {
             int relationCounter = 0;
             int totalPositionCounter = 0;
             for (GraphDataNode.NodeRelation graphLinkNode : graphDataNode.getNodeRelations()) {
@@ -243,22 +236,21 @@ public class GraphData {
 //    }
 
     public GraphDataNode[] getDataNodes() {
-        return graphDataNodeList.values().toArray(new GraphDataNode[]{});
+        return graphDataNodeArray;
     }
 
     private void printLocations() {
         System.out.println("printLocations");
-        for (GraphDataNode graphDataNode : graphDataNodeList.values()) {
+        for (GraphDataNode graphDataNode : graphDataNodeArray) {
             System.out.println("node: " + graphDataNode.xPos + ":" + graphDataNode.yPos);
             for (GraphDataNode.NodeRelation graphLinkNode : graphDataNode.getNodeRelations()) {
                 System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
             }
         }
     }
-
-    public static void main(String args[]) {
-        GraphData graphData = new GraphData();
-        graphData.readData();
-        System.exit(0);
-    }
+//    public static void main(String args[]) {
+//        GraphData graphData = new GraphData();
+//        graphData.readData();
+//        System.exit(0);
+//    }
 }
