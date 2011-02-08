@@ -1,5 +1,7 @@
 package nl.mpi.kinnate;
 
+import java.util.HashMap;
+
 /**
  *  Document   : KinTypeStringConverter
  *  Created on : Sep 29, 2010, 12:52:33 PM
@@ -48,6 +50,7 @@ public class KinTypeStringConverter extends GraphData {
     };
 
     public void readKinTypes(String[] inputStringArray) {
+        HashMap<String, GraphDataNode> graphDataNodeList = new HashMap<String, GraphDataNode>();
         GraphDataNode egoDataNode = new GraphDataNode("ego");
         egoDataNode.symbolType = GraphDataNode.SymbolType.square;
         egoDataNode.isEgo = true;
@@ -88,7 +91,7 @@ public class KinTypeStringConverter extends GraphData {
                 }
             }
         }
-        calculateLinks();
+        graphDataNodeArray = graphDataNodeList.values().toArray(new GraphDataNode[]{});
         sanguineSort();
     }
 }
