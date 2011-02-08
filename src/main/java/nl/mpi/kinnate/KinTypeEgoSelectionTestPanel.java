@@ -7,11 +7,10 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.net.URI;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import nl.mpi.arbil.data.ImdiTreeObject;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -20,23 +19,23 @@ import nl.mpi.arbil.data.ImdiTreeObject;
  */
 public class KinTypeEgoSelectionTestPanel extends JPanel {
 
-    JTextArea kinTypeStringInput;
-    GraphPanel graphPanel;
-    GraphData graphData;
-    EgoSelectionPanel egoSelectionPanel;
-    String defaultString = "This test panel should provide a kin diagram of the kintype strings entered here.\nEnter one string per line.\nEach new line (enter/return key) will update the graph.";
+    private JTextArea kinTypeStringInput;
+    private GraphPanel graphPanel;
+    private GraphData graphData;
+    private EgoSelectionPanel egoSelectionPanel;
+    private EntityIndex entityIndex;
+    private String defaultString = "This test panel should provide a kin diagram based on selected egos and the the kintype strings entered here.\nEnter one string per line.";
+    private String kinTypeStrings[] = new String[]{};
 
-    public KinTypeEgoSelectionTestPanel() {
+    public KinTypeEgoSelectionTestPanel(EntityIndex entityIndexLocal, File existingFile) {
+        entityIndex = entityIndexLocal;
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel();
         egoSelectionPanel = new EgoSelectionPanel();
         kinTypeStringInput = new JTextArea(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
         this.add(kinTypeStringInput, BorderLayout.PAGE_START);
-        this.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, egoSelectionPanel, new JScrollPane(graphPanel)), BorderLayout.CENTER);
-//        this.add(new EgoSelectionPanel(), BorderLayout.LINE_START);
-//        this.add(new JScrollPane(graphPanel), BorderLayout.CENTER);
-//        kinTypeStringInput.setForeground(Color.lightGray);
+        this.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, egoSelectionPanel, graphPanel), BorderLayout.CENTER);
         kinTypeStringInput.addFocusListener(new FocusListener() {
 
             public void focusGained(FocusEvent e) {
@@ -56,32 +55,31 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
         kinTypeStringInput.addKeyListener(new KeyListener() {
 
             public void keyTyped(KeyEvent e) {
-//                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             public void keyPressed(KeyEvent e) {
-//                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             public void keyReleased(KeyEvent e) {
-//                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                KinTypeStringConverter graphData = new KinTypeStringConverter();
-                graphData.readKinTypes(kinTypeStringInput.getText().split("\n"));
+                kinTypeStrings = kinTypeStringInput.getText().split("\n");
+                graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), kinTypeStrings));
                 graphPanel.drawNodes(graphData);
-                KinTypeEgoSelectionTestPanel.this.doLayout();
-//                }
             }
         });
-        graphPanel.readSvg(new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/EgoSelection.svg"));
         graphData = new GraphData();
-        ImdiTreeObject[] egoSelection = graphPanel.getEgoList();
+        URI[] egoSelection = graphPanel.getEgoList();
         graphData.setEgoNodes(egoSelection);
         egoSelectionPanel.setEgoNodes(egoSelection);
-        graphPanel.drawNodes(graphData);
+        if (existingFile.exists()) {
+            graphPanel.readSvg(existingFile);
+        } else {
+            graphPanel.drawNodes(graphData);
+        }
     }
 
-    public void addEgoNodes(ImdiTreeObject[] egoSelection) {
-        graphData.setEgoNodes(egoSelection);
+    public void addEgoNodes(URI[] egoSelection) {
+        graphPanel.setEgoList(egoSelection);
+        graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
         egoSelectionPanel.setEgoNodes(egoSelection);
         graphPanel.drawNodes(graphData);
     }
