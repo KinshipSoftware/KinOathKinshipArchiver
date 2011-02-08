@@ -53,6 +53,17 @@ public class EgoSelectionPanel extends JPanel {
         }
     }
 
+    public void setEgoNodes(URI[] egoNodes) {
+        if (egoNodes != null) {
+            ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
+            for (URI currentNodeUri : egoNodes) {
+                System.out.println("ego tree: " + currentNodeUri);
+                tempArray.add(ImdiLoader.getSingleInstance().getImdiObject(null, currentNodeUri));
+            }
+            setEgoNodes(tempArray.toArray(new ImdiTreeObject[]{}));
+        }
+    }
+
     public void setEgoNodes(ImdiTreeObject[] egoNodes) {
         rootEgoNode.removeAllChildren();
         egoModel.nodeStructureChanged(rootEgoNode);
