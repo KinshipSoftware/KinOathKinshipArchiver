@@ -5,6 +5,8 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import nl.mpi.arbil.ImdiTree;
@@ -51,6 +53,7 @@ public class DragTransferHandler extends TransferHandler implements Transferable
         return true;
     }
     //////////////////////////////////////
+
     public boolean canImport(TransferHandler.TransferSupport support) {
 //        if (!support.isDrop()) {
 //            return false;
@@ -89,7 +92,11 @@ public class DragTransferHandler extends TransferHandler implements Transferable
         Component dropLocation = support.getComponent();
         if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
             System.out.println("dropped to KinTypeEgoSelectionTestPanel");
-            ((KinTypeEgoSelectionTestPanel) dropLocation).addEgoNodes(selectedNodes);
+            ArrayList<URI> slectedUris = new ArrayList<URI>();
+            for (ImdiTreeObject currentImdiNode : selectedNodes) {
+                slectedUris.add(currentImdiNode.getURI());
+            }
+            ((KinTypeEgoSelectionTestPanel) dropLocation).addEgoNodes(slectedUris.toArray(new URI[]{}));
             return true;
         }
         return false;
