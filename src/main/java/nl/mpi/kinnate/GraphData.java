@@ -37,11 +37,11 @@ public class GraphData {
 //        printLocations();
 //    }
 
-    public void setEgoNodes(ImdiTreeObject[] treeNodesArray) {
+    public void setEgoNodes(URI[] treeNodesArray) {
         if (treeNodesArray != null) {
             graphDataNodeList = new HashMap<String, GraphDataNode>();
-            for (ImdiTreeObject imdiTreeObject : treeNodesArray) {
-                graphDataNodeList.put(imdiTreeObject.getUrlString(), new GraphDataNode(imdiTreeObject));
+            for (URI entityUri : treeNodesArray) {
+                graphDataNodeList.put(entityUri.toASCIIString(), new GraphDataNode(ImdiLoader.getSingleInstance().getImdiObject(null, entityUri)));
             }
         }
         calculateLinks();
