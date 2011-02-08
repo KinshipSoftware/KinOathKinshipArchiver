@@ -45,11 +45,11 @@ public class EntityIndex {
                     linkedEntities.put(relationLinkNode.getTextContent(), releventDataFound);
                     // get any requested link data
                     for (String relevantDataPath : relevantLinkData) {
-                       for (Node linkDataNode= relationLinkNode.getParentNode().getFirstChild(); linkDataNode!=null; linkDataNode = linkDataNode.getNextSibling()){
-                           if (relevantDataPath.equals(linkDataNode.getNodeName())){
-                               releventDataFound.add(new String[]{relevantDataPath, linkDataNode.getTextContent()});
-                           }
-                       }
+                        for (Node linkDataNode = relationLinkNode.getParentNode().getFirstChild(); linkDataNode != null; linkDataNode = linkDataNode.getNextSibling()) {
+                            if (relevantDataPath.equals(linkDataNode.getNodeName())) {
+                                releventDataFound.add(new String[]{relevantDataPath, linkDataNode.getTextContent()});
+                            }
+                        }
                     }
                     // get any requested entity data
                     for (String relevantDataPath : relevantEntityData) {
@@ -107,8 +107,31 @@ public class EntityIndex {
     }
 
     public URI[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) {
-        // todo: return the next level relations of this individual
-        return new URI[]{};
+        ArrayList<String> relatedNodes = new ArrayList<String>();
+        ArrayList<URI> relatedNodeUris = new ArrayList<URI>();
+        // todo: this could return just the ego or also the reverce links of the ego
+        for (URI currentEgoUri : egoNodes) {
+            relatedNodeUris.add(currentEgoUri);
+            HashMap<String, ArrayList<String[]>> currentLink = knownEntities.get(currentEgoUri.toASCIIString());
+            relatedNodes.addAll(currentLink.keySet());
+
+//            HashMap<String, ArrayList<String[]>> currentLinks = knownEntities.get(currentEgo);
+//            for (String currentLink : currentLinks.keySet()) {
+//                System.out.println("-> currentLink: " + currentLink);
+//                ArrayList<String[]> currentData = currentLinks.get(currentLink);
+//                for (String[] currentRecord : currentData) {
+//                    System.out.println("--> currentRecord: " + currentRecord[0] + " : " + currentRecord[1]);
+//                }
+//            }
+        }
+        for (String currentUriString : relatedNodes) {
+            try {
+                relatedNodeUris.add(new URI(currentUriString));
+            } catch (URISyntaxException urise) {
+                GuiHelper.linorgBugCatcher.logError(urise);
+            }
+        }
+        return relatedNodeUris.toArray(new URI[]{});
     }
 
     public static void main(String[] args) {
