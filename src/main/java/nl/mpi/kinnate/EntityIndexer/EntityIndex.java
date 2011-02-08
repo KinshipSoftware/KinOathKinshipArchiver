@@ -1,4 +1,4 @@
-package nl.mpi.kinnate;
+package nl.mpi.kinnate.EntityIndexer;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,6 +10,7 @@ import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.kinnate.GraphDataNode;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
