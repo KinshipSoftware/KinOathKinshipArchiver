@@ -23,16 +23,33 @@ import org.xml.sax.SAXException;
  */
 public class EntityIndex {
 
-    private HashMap<String /* url to the ego entity */, HashMap<String /* url to the related entiry */, ArrayList<String[] /* relevant entity data (link vs entity is clear from the data path)
-            eg: [link.famc, link.kinterm:uncle,entity.gender:m, entity.age:60, entity.birth.year:1960]
-             */>>> knownEntities;
+    private class EntityData {
+
+        private HashMap<String /* url to the related entiry */, ArrayList<String[] /* relevant entity data (link vs entity is clear from the data path)
+                eg: [link.famc, link.kinterm:uncle,entity.gender:m, entity.age:60, entity.birth.year:1960]
+                 */>> relationData = new HashMap<String, ArrayList<String[]>>();
+        private ArrayList<String[] /* relevant entity data (link vs entity is clear from the data path)
+                eg: [link.famc, link.kinterm:uncle,entity.gender:m, entity.age:60, entity.birth.year:1960]
+                 */> entityFields = new ArrayList<String[]>();
+
+        public String getEntityField(String fieldName) {
+            for (String[] currentField : entityFields) {
+                if (currentField[0].equals(fieldName)) {
+                    return currentField[1];
+                }
+            }
+            return null;
+        }
+    }
+    private HashMap<String /* url to the ego entity */, EntityData> knownEntities;
 
     public EntityIndex() {
-        knownEntities = new HashMap<String, HashMap<String, ArrayList<String[]>>>();
+        knownEntities = new HashMap<String, EntityData>();
     }
 
-    private void getLinksFromDom(URI egoEntityUri, HashMap<String, ArrayList<String[]>> linkedEntities) {
-        String[] relevantEntityData = {"Kinnate/Gedcom/Entity/SEX", "Kinnate.Gedcom.Entity.GedcomType"}; // todo: the relevantData array comes from the user via the svg
+    private void getLinksFromDom(URI egoEntityUri, EntityData entityData) {
+        // HashMap<String, ArrayList<String[]>> linkedEntities
+        String[] relevantEntityData = {"Kinnate/Gedcom/Entity/SEX", "Kinnate/Gedcom/Entity/GedcomType", "Kinnate/Gedcom/Entity/NAME/NAME"}; // todo: the relevantData array comes from the user via the svg
         String[] relevantLinkData = {"Type"}; // todo: the relevantData array comes from the user via the svg
         try {
             String linkXpath = "/Kinnate/Relation/Link";
@@ -42,7 +59,7 @@ public class EntityIndex {
                 Node relationLinkNode = relationLinkNodeList.item(nodeCounter);
                 if (relationLinkNode != null) {
                     ArrayList<String[]> releventDataFound = new ArrayList<String[]>();
-                    linkedEntities.put(relationLinkNode.getTextContent(), releventDataFound);
+                    entityData.relationData.put(relationLinkNode.getTextContent(), releventDataFound);
                     // get any requested link data
                     for (String relevantDataPath : relevantLinkData) {
                         for (Node linkDataNode = relationLinkNode.getParentNode().getFirstChild(); linkDataNode != null; linkDataNode = linkDataNode.getNextSibling()) {
@@ -51,15 +68,15 @@ public class EntityIndex {
                             }
                         }
                     }
-                    // get any requested entity data
-                    for (String relevantDataPath : relevantEntityData) {
-                        NodeList relevantaDataNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, relevantDataPath);
-                        for (int dataCounter = 0; dataCounter < relevantaDataNodeList.getLength(); dataCounter++) {
-                            Node dataNode = relevantaDataNodeList.item(dataCounter);
-                            if (dataNode != null) {
-                                releventDataFound.add(new String[]{relevantDataPath, dataNode.getTextContent()});
-                            }
-                        }
+                }
+            }
+            // get any requested entity data
+            for (String relevantDataPath : relevantEntityData) {
+                NodeList relevantaDataNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, relevantDataPath);
+                for (int dataCounter = 0; dataCounter < relevantaDataNodeList.getLength(); dataCounter++) {
+                    Node dataNode = relevantaDataNodeList.item(dataCounter);
+                    if (dataNode != null) {
+                        entityData.entityFields.add(new String[]{relevantDataPath, dataNode.getTextContent()});
                     }
                 }
             }
@@ -79,12 +96,15 @@ public class EntityIndex {
     public void printKnownEntities() {
         for (String currentEgo : knownEntities.keySet()) {
             System.out.println("currentEgo: " + currentEgo);
-            HashMap<String, ArrayList<String[]>> currentLinks = knownEntities.get(currentEgo);
-            for (String currentLink : currentLinks.keySet()) {
-                System.out.println("-> currentLink: " + currentLink);
-                ArrayList<String[]> currentData = currentLinks.get(currentLink);
+            EntityData currentEntityData = knownEntities.get(currentEgo);
+            for (String[] currentRecord : currentEntityData.entityFields) {
+                System.out.println("-> entityField: " + currentRecord[0] + " : " + currentRecord[1]);
+            }
+            for (String currentLink : currentEntityData.relationData.keySet()) {
+                System.out.println("--> currentLink: " + currentLink);
+                ArrayList<String[]> currentData = currentEntityData.relationData.get(currentLink);
                 for (String[] currentRecord : currentData) {
-                    System.out.println("--> currentRecord: " + currentRecord[0] + " : " + currentRecord[1]);
+                    System.out.println("---> linkField: " + currentRecord[0] + " : " + currentRecord[1]);
                 }
             }
         }
@@ -93,9 +113,9 @@ public class EntityIndex {
     public boolean indexEntities(URI[] egoEntityUris) {
         for (URI egoEntityUri : egoEntityUris) {
             if (egoEntityUri != null) {
-                HashMap<String, ArrayList<String[]>> linkedEntities = new HashMap<String, ArrayList<String[]>>();
-                knownEntities.put(egoEntityUri.toASCIIString(), linkedEntities);
-                getLinksFromDom(egoEntityUri, linkedEntities);
+                EntityData entityData = new EntityData();
+                knownEntities.put(egoEntityUri.toASCIIString(), entityData);
+                getLinksFromDom(egoEntityUri, entityData);
             }
         }
         return false;
@@ -106,13 +126,52 @@ public class EntityIndex {
         // eg: setKinTypeStringTerm("M", "Kinnate.Gedcom.Entity.SEX", "F");
     }
 
+    private GraphDataNode getGraphDataNode(URI entityUri) {
+        EntityData entityData = knownEntities.get(entityUri.toASCIIString());
+//        HashMap<String, ArrayList<String[]>> currentLink = entityData.relationData;
+        String labelText = "not found"; // todo: this could be an array so that multiple labels are avaiable
+        int entitySymbolIndex = 0;
+//       ImdiTreeObject currentImdi = ImdiLoader.getSingleInstance().getImdiObject(null, entityUri);
+//        return new GraphDataNode(currentImdi.toString());
+        String[] labelFields = {"Kinnate/Gedcom/Entity/NAME/NAME", "Kinnate/Gedcom/Entity/GedcomType"};
+        for (String currentLabelField : labelFields) {
+            String labelTextTemp = entityData.getEntityField(currentLabelField);
+            if (labelTextTemp != null) {
+                labelText = labelTextTemp;
+                break;
+            }
+        }
+        String[] symbolFieldsFields = {"Kinnate/Gedcom/Entity/SEX", "Kinnate/Gedcom/Entity/GedcomType"};
+        for (String currentSymbolField : symbolFieldsFields) {
+            String linkSymbolString = entityData.getEntityField(currentSymbolField);
+            if (linkSymbolString != null) {
+                if (linkSymbolString.equals("m")) {
+                    entitySymbolIndex = 1;
+                }
+                if (linkSymbolString.equals("f")) {
+                    entitySymbolIndex = 2;
+                }
+                break;
+            }
+        }
+        return new GraphDataNode(entitySymbolIndex, labelText);
+    }
+
+    public GraphDataNode[] getEgoGraphData(URI[] egoNodes) {
+        ArrayList<GraphDataNode> graphDataNodeList = new ArrayList<GraphDataNode>();
+        for (URI currentEgoUri : egoNodes) {
+            graphDataNodeList.add(getGraphDataNode(currentEgoUri));
+        }
+        return graphDataNodeList.toArray(new GraphDataNode[]{});
+    }
+
     public URI[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) {
         ArrayList<String> relatedNodes = new ArrayList<String>();
         ArrayList<URI> relatedNodeUris = new ArrayList<URI>();
         // todo: this could return just the ego or also the reverce links of the ego
         for (URI currentEgoUri : egoNodes) {
             relatedNodeUris.add(currentEgoUri);
-            HashMap<String, ArrayList<String[]>> currentLink = knownEntities.get(currentEgoUri.toASCIIString());
+            HashMap<String, ArrayList<String[]>> currentLink = knownEntities.get(currentEgoUri.toASCIIString()).relationData;
             relatedNodes.addAll(currentLink.keySet());
 
 //            HashMap<String, ArrayList<String[]>> currentLinks = knownEntities.get(currentEgo);
