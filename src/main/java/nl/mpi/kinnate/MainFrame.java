@@ -42,8 +42,8 @@ public class MainFrame extends javax.swing.JFrame {
 //        graphPanel0Deprecated = new GraphPanel0();
 //        graphPanel = new GraphPanel();
         // this data load should be elsewhere
-        GraphData graphData = new GraphData();
-        graphData.readData();
+//        GraphData graphData = new GraphData();
+//        graphData.readData();
 //        graphPanel.drawNodes(graphData);
 //        jungGraph = new JungGraph();
         imdiTableModel = new ImdiTableModel();
