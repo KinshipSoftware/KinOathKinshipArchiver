@@ -5,11 +5,12 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.net.URI;
 import java.util.HashSet;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
-import nl.mpi.arbil.data.ImdiTreeObject;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.DOMImplementation;
@@ -29,11 +30,12 @@ import org.w3c.dom.svg.SVGRect;
  */
 public class GraphPanel extends JPanel {
 
+    private JScrollPane jScrollPane;
     protected JSVGCanvas svgCanvas;
     private SVGDocument doc;
     private Element currentDraggedElement;
     private Cursor preDragCursor;
-    HashSet<ImdiTreeObject> egoSet = new HashSet<ImdiTreeObject>();
+    HashSet<URI> egoSet = new HashSet<URI>();
 
     public GraphPanel() {
         this.setLayout(new BorderLayout());
@@ -82,14 +84,21 @@ public class GraphPanel extends JPanel {
         };
         svgCanvas.addMouseListener(mouseInputAdapter);
         svgCanvas.addMouseMotionListener(mouseInputAdapter);
-        this.add(BorderLayout.CENTER, svgCanvas);
+        jScrollPane = new JScrollPane(svgCanvas);
+        this.add(BorderLayout.CENTER, jScrollPane);
     }
 
     public void readSvg(File svgFilePath) {
+        svgCanvas.setURI(svgFilePath.toURI().toString());
     }
 
-    public ImdiTreeObject[] getEgoList() {
-        return egoSet.toArray(new ImdiTreeObject[]{});
+    public void saveSvg(File svgFilePath) {
+        new CmdiComponentBuilder().savePrettyFormatting(doc, svgFilePath);
+    }
+
+    public URI[] getEgoList() {
+        // todo: read this from the SVG
+        return egoSet.toArray(new URI[]{});
         //return new String[]{"file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/201101251709350.cmdi", "file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/20110125170936.cmdi"};
 //"file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/20110125170935.cmdi"
         //ego tree: 
@@ -98,10 +107,11 @@ public class GraphPanel extends JPanel {
         //ego tree: file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/20110125170937.cmdi"};
     }
 
-    public void setEgoList(ImdiTreeObject[] egoListArray) {
-        egoSet = new HashSet<ImdiTreeObject>();
-        for (ImdiTreeObject imdiTreeObject : egoListArray) {
-            egoSet.add(imdiTreeObject);
+    public void setEgoList(URI[] egoListArray) {
+        // todo: write this to the SVG
+        egoSet = new HashSet<URI>();
+        for (URI egoUri : egoListArray) {
+            egoSet.add(egoUri);
         }
     }
 
@@ -257,6 +267,7 @@ public class GraphPanel extends JPanel {
                 }
             }
         }
-        new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+        //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+        svgCanvas.revalidate();
     }
 }
