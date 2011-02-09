@@ -76,23 +76,9 @@ public class KinTypeStringConverter extends GraphData {
                             } else {
                                 currentGraphDataNode = new GraphDataNode(fullKinTypeString);
                                 currentGraphDataNode.symbolType = currentReferenceKinType.symbolType;
-                                GraphDataNode.RelationType otherRelationType = GraphDataNode.RelationType.sibling;
-                                switch (currentReferenceKinType.relationType) {
-                                    case ancestor:
-                                        otherRelationType = GraphDataNode.RelationType.descendant;
-                                        break;
-                                    case descendant:
-                                        otherRelationType = GraphDataNode.RelationType.ancestor;
-                                        break;
-                                    case sibling:
-                                        otherRelationType = GraphDataNode.RelationType.sibling;
-                                        break;
-                                    case union:
-                                        otherRelationType = GraphDataNode.RelationType.union;
-                                        break;
-                                }
+                                GraphDataNode.RelationType opposingRelationType = GraphDataNode.getOpposingRelationType(currentReferenceKinType.relationType);
                                 parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType);
-                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, otherRelationType);
+                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType);
                                 graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
                                 // add any child nodes?
                             }
