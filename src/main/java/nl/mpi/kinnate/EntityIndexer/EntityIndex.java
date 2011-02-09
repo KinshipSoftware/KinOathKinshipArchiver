@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -108,7 +107,7 @@ public class EntityIndex {
         // eg: setKinTypeStringTerm("M", "Kinnate.Gedcom.Entity.SEX", "F");
     }
 
-    private GraphDataNode getGraphDataNode(URI entityUri) {
+    private GraphDataNode getGraphDataNode(boolean isEgo, URI entityUri) {
         EntityData entityData = knownEntities.get(entityUri.toASCIIString());
 //        HashMap<String, ArrayList<String[]>> currentLink = entityData.relationData;
         String labelText = "not found"; // todo: this could be an array so that multiple labels are avaiable
@@ -123,37 +122,68 @@ public class EntityIndex {
                 break;
             }
         }
-        String[] symbolFieldsFields = {"Kinnate/Gedcom/Entity/SEX", "Kinnate/Gedcom/Entity/GedcomType"};
-        for (String currentSymbolField : symbolFieldsFields) {
-            String linkSymbolString = entityData.getEntityField(currentSymbolField);
-            if (linkSymbolString != null) {
-                if (linkSymbolString.equals("m")) {
-                    entitySymbolIndex = 1;
+        if (isEgo) {
+            entitySymbolIndex = 0;
+        } else {
+            String[] symbolFieldsFields = {"Kinnate/Gedcom/Entity/SEX", "Kinnate/Gedcom/Entity/GedcomType"};
+            for (String currentSymbolField : symbolFieldsFields) {
+                String linkSymbolString = entityData.getEntityField(currentSymbolField);
+                if (linkSymbolString != null) {
+                    if (linkSymbolString.equals("F")) {
+                        entitySymbolIndex = 1;
+                    }
+                    if (linkSymbolString.equals("M")) {
+                        entitySymbolIndex = 2;
+                    }
+                    break;
                 }
-                if (linkSymbolString.equals("f")) {
-                    entitySymbolIndex = 2;
-                }
-                break;
             }
         }
         return new GraphDataNode(entitySymbolIndex, labelText);
     }
 
+    private void setRelationData(GraphDataNode egoNode, GraphDataNode relationNode, EntityData egoData, EntityData relationData, String egoPath, String relationPath) {
+//        EntityData relationDataData = knownEntities.get(currentEgoUri.toASCIIString());
+//        String[] labelFields = {"Kinnate/Gedcom/Entity/NAME/NAME", "Kinnate/Gedcom/Entity/GedcomType"};
+//        for (String currentLabelField : labelFields) {
+//            String labelTextTemp = entityData.getEntityField(currentLabelField);
+//            if (labelTextTemp != null) {
+//                labelText = labelTextTemp;
+//                break;
+//            }
+//        }
+
+
+
+        egoNode.addRelatedNode(relationNode, 0, GraphDataNode.RelationType.ancestor);
+        relationNode.addRelatedNode(egoNode, 0, GraphDataNode.RelationType.descendant);
+    }
+
     public GraphDataNode[] getEgoGraphData(URI[] egoNodes) {
         ArrayList<GraphDataNode> graphDataNodeList = new ArrayList<GraphDataNode>();
         for (URI currentEgoUri : egoNodes) {
-            graphDataNodeList.add(getGraphDataNode(currentEgoUri));
+            graphDataNodeList.add(getGraphDataNode(true, currentEgoUri));
         }
         return graphDataNodeList.toArray(new GraphDataNode[]{});
     }
 
     public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) {
-        ArrayList<String> relatedNodes = new ArrayList<String>();
         ArrayList<GraphDataNode> graphDataNodeList = new ArrayList<GraphDataNode>();
         // todo: this could return just the ego or also the reverce links of the ego
         for (URI currentEgoUri : egoNodes) {
-            graphDataNodeList.add(getGraphDataNode(currentEgoUri));
-            relatedNodes.addAll(Arrays.asList(knownEntities.get(currentEgoUri.toASCIIString()).getRelationPaths()));
+            GraphDataNode egoNode = getGraphDataNode(true, currentEgoUri);
+            graphDataNodeList.add(egoNode);
+            EntityData egoData = knownEntities.get(currentEgoUri.toASCIIString());
+            for (String relationPath : egoData.getRelationPaths()) {
+                try {
+                    GraphDataNode relationNode = getGraphDataNode(false, new URI(relationPath));
+                    EntityData relationDataData = knownEntities.get(currentEgoUri.toASCIIString());
+                    setRelationData(egoNode, relationNode, egoData, relationDataData, currentEgoUri.toASCIIString(), relationPath);
+                    graphDataNodeList.add(relationNode);
+                } catch (URISyntaxException urise) {
+                    GuiHelper.linorgBugCatcher.logError(urise);
+                }
+            }
 //            relatedNodes.addAll(currentLink.keySet());
 
 //            HashMap<String, ArrayList<String[]>> currentLinks = knownEntities.get(currentEgo);
@@ -164,13 +194,6 @@ public class EntityIndex {
 //                    System.out.println("--> currentRecord: " + currentRecord[0] + " : " + currentRecord[1]);
 //                }
 //            }
-        }
-        for (String currentUriString : relatedNodes) {
-            try {
-                graphDataNodeList.add(getGraphDataNode(new URI(currentUriString)));
-            } catch (URISyntaxException urise) {
-                GuiHelper.linorgBugCatcher.logError(urise);
-            }
         }
         return graphDataNodeList.toArray(new GraphDataNode[]{});
     }
