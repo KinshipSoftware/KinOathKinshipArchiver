@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -24,24 +25,6 @@ import org.xml.sax.SAXException;
  */
 public class EntityIndex {
 
-    private class EntityData {
-
-        private HashMap<String /* url to the related entiry */, ArrayList<String[] /* relevant entity data (link vs entity is clear from the data path)
-                eg: [link.famc, link.kinterm:uncle,entity.gender:m, entity.age:60, entity.birth.year:1960]
-                 */>> relationData = new HashMap<String, ArrayList<String[]>>();
-        private ArrayList<String[] /* relevant entity data (link vs entity is clear from the data path)
-                eg: [link.famc, link.kinterm:uncle,entity.gender:m, entity.age:60, entity.birth.year:1960]
-                 */> entityFields = new ArrayList<String[]>();
-
-        public String getEntityField(String fieldName) {
-            for (String[] currentField : entityFields) {
-                if (currentField[0].equals(fieldName)) {
-                    return currentField[1];
-                }
-            }
-            return null;
-        }
-    }
     private HashMap<String /* url to the ego entity */, EntityData> knownEntities;
 
     public EntityIndex() {
@@ -59,13 +42,12 @@ public class EntityIndex {
             for (int nodeCounter = 0; nodeCounter < relationLinkNodeList.getLength(); nodeCounter++) {
                 Node relationLinkNode = relationLinkNodeList.item(nodeCounter);
                 if (relationLinkNode != null) {
-                    ArrayList<String[]> releventDataFound = new ArrayList<String[]>();
-                    entityData.relationData.put(relationLinkNode.getTextContent(), releventDataFound);
+                    entityData.addRelation(relationLinkNode.getTextContent());
                     // get any requested link data
                     for (String relevantDataPath : relevantLinkData) {
                         for (Node linkDataNode = relationLinkNode.getParentNode().getFirstChild(); linkDataNode != null; linkDataNode = linkDataNode.getNextSibling()) {
                             if (relevantDataPath.equals(linkDataNode.getNodeName())) {
-                                releventDataFound.add(new String[]{relevantDataPath, linkDataNode.getTextContent()});
+                                entityData.addRelationData(relationLinkNode.getTextContent(), relevantDataPath, linkDataNode.getTextContent());
                             }
                         }
                     }
@@ -77,7 +59,7 @@ public class EntityIndex {
                 for (int dataCounter = 0; dataCounter < relevantaDataNodeList.getLength(); dataCounter++) {
                     Node dataNode = relevantaDataNodeList.item(dataCounter);
                     if (dataNode != null) {
-                        entityData.entityFields.add(new String[]{relevantDataPath, dataNode.getTextContent()});
+                        entityData.addEntityData(relevantDataPath, dataNode.getTextContent());
                     }
                 }
             }
@@ -98,13 +80,12 @@ public class EntityIndex {
         for (String currentEgo : knownEntities.keySet()) {
             System.out.println("currentEgo: " + currentEgo);
             EntityData currentEntityData = knownEntities.get(currentEgo);
-            for (String[] currentRecord : currentEntityData.entityFields) {
+            for (String[] currentRecord : currentEntityData.getEntityFields()) {
                 System.out.println("-> entityField: " + currentRecord[0] + " : " + currentRecord[1]);
             }
-            for (String currentLink : currentEntityData.relationData.keySet()) {
+            for (String currentLink : currentEntityData.getRelationPaths()) {
                 System.out.println("--> currentLink: " + currentLink);
-                ArrayList<String[]> currentData = currentEntityData.relationData.get(currentLink);
-                for (String[] currentRecord : currentData) {
+                for (String[] currentRecord : currentEntityData.getRelationData(currentLink)) {
                     System.out.println("---> linkField: " + currentRecord[0] + " : " + currentRecord[1]);
                 }
             }
@@ -172,8 +153,8 @@ public class EntityIndex {
         // todo: this could return just the ego or also the reverce links of the ego
         for (URI currentEgoUri : egoNodes) {
             relatedNodeUris.add(currentEgoUri);
-            HashMap<String, ArrayList<String[]>> currentLink = knownEntities.get(currentEgoUri.toASCIIString()).relationData;
-            relatedNodes.addAll(currentLink.keySet());
+            relatedNodes.addAll(Arrays.asList(knownEntities.get(currentEgoUri.toASCIIString()).getRelationPaths()));
+//            relatedNodes.addAll(currentLink.keySet());
 
 //            HashMap<String, ArrayList<String[]>> currentLinks = knownEntities.get(currentEgo);
 //            for (String currentLink : currentLinks.keySet()) {
