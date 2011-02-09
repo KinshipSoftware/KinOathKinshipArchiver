@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.mpi.kinnate.EntityIndexer;
 
 import java.util.ArrayList;
@@ -28,5 +24,36 @@ public class EntityData {
             }
         }
         return null;
+    }
+
+    protected void addRelation(String linkPath) {
+        addRelationData(linkPath, null, null);
+    }
+
+    protected void addRelationData(String linkPath, String dataPath, String dataValue) {
+        ArrayList<String[]> dataArray;
+        if (!relationData.containsKey(linkPath)) {
+            dataArray = new ArrayList<String[]>();
+            relationData.put(linkPath, dataArray);
+        } else {
+            dataArray = relationData.get(linkPath);
+        }
+        dataArray.add(new String[]{dataPath, dataValue});
+    }
+
+    protected void addEntityData(String dataPath, String dataValue) {
+        entityFields.add(new String[]{dataPath, dataValue});
+    }
+
+    protected String[][] getEntityFields() {
+        return entityFields.toArray(new String[][]{});
+    }
+
+    protected String[] getRelationPaths() {
+        return relationData.keySet().toArray(new String[]{});
+    }
+
+    protected String[][] getRelationData(String realtionPath) {
+        return relationData.get(realtionPath).toArray(new String[][]{});
     }
 }
