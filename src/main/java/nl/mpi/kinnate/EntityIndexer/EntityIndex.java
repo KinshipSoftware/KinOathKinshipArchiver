@@ -147,12 +147,12 @@ public class EntityIndex {
         return graphDataNodeList.toArray(new GraphDataNode[]{});
     }
 
-    public URI[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) {
+    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) {
         ArrayList<String> relatedNodes = new ArrayList<String>();
-        ArrayList<URI> relatedNodeUris = new ArrayList<URI>();
+        ArrayList<GraphDataNode> graphDataNodeList = new ArrayList<GraphDataNode>();
         // todo: this could return just the ego or also the reverce links of the ego
         for (URI currentEgoUri : egoNodes) {
-            relatedNodeUris.add(currentEgoUri);
+            graphDataNodeList.add(getGraphDataNode(currentEgoUri));
             relatedNodes.addAll(Arrays.asList(knownEntities.get(currentEgoUri.toASCIIString()).getRelationPaths()));
 //            relatedNodes.addAll(currentLink.keySet());
 
@@ -167,12 +167,12 @@ public class EntityIndex {
         }
         for (String currentUriString : relatedNodes) {
             try {
-                relatedNodeUris.add(new URI(currentUriString));
+                graphDataNodeList.add(getGraphDataNode(new URI(currentUriString)));
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
             }
         }
-        return relatedNodeUris.toArray(new URI[]{});
+        return graphDataNodeList.toArray(new GraphDataNode[]{});
     }
 
     public static void main(String[] args) {
