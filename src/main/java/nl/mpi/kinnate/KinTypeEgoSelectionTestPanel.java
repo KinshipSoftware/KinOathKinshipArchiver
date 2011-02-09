@@ -11,6 +11,7 @@ import java.net.URI;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import nl.mpi.kinnate.EntityIndexer.EntityIndex;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -68,7 +69,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
         });
         graphData = new GraphData();
         URI[] egoSelection = graphPanel.getEgoList();
-        graphData.setEgoNodes(egoSelection);
+        graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
         egoSelectionPanel.setEgoNodes(egoSelection);
         if (existingFile.exists()) {
             graphPanel.readSvg(existingFile);
