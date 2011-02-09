@@ -177,25 +177,46 @@ public class EntityIndex {
         return graphDataNodeList.toArray(new GraphDataNode[]{});
     }
 
-    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) {
-        ArrayList<GraphDataNode> graphDataNodeList = new ArrayList<GraphDataNode>();
-        for (URI currentEgoUri : egoNodes) {
-            GraphDataNode egoNode = getGraphDataNode(true, currentEgoUri);
-            graphDataNodeList.add(egoNode);
-            EntityData egoData = knownEntities.get(currentEgoUri.toASCIIString());
-            for (String alterPath : egoData.getRelationPaths()) {
-                try {
-                    GraphDataNode alterNode = getGraphDataNode(false, new URI(alterPath));
-                    EntityData alterData = knownEntities.get(currentEgoUri.toASCIIString());
-                    setRelationData(egoNode, alterNode, egoData, alterPath);
-                    setRelationData(alterNode, egoNode, alterData, currentEgoUri.toASCIIString());
-                    graphDataNodeList.add(alterNode);
-                } catch (URISyntaxException urise) {
-                    GuiHelper.linorgBugCatcher.logError(urise);
+    private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, String currentEgoPath, GraphDataNode egoNode, String remaningKinTypeString) {
+        EntityData egoData = knownEntities.get(currentEgoPath);
+        String currentKinType = remaningKinTypeString.substring(0, 1);
+        remaningKinTypeString = remaningKinTypeString.substring(1);
+        for (String alterPath : egoData.getRelationPaths()) {
+            try {
+                GraphDataNode alterNode;
+                if (createdGraphNodes.containsKey(alterPath)) {
+                    alterNode = createdGraphNodes.get(alterPath);
+                } else {
+                    alterNode = getGraphDataNode(true, new URI(alterPath));
+                    createdGraphNodes.put(alterPath, alterNode);
                 }
+                EntityData alterData = knownEntities.get(currentEgoPath);
+                setRelationData(egoNode, alterNode, egoData, alterPath);
+                setRelationData(alterNode, egoNode, alterData, currentEgoPath);
+                if (remaningKinTypeString.length() > 0) {
+                    getNextRelations(createdGraphNodes, alterPath, alterNode, remaningKinTypeString);
+                }
+            } catch (URISyntaxException urise) {
+                GuiHelper.linorgBugCatcher.logError(urise);
             }
         }
-        return graphDataNodeList.toArray(new GraphDataNode[]{});
+    }
+
+    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) {
+        HashMap<String, GraphDataNode> createdGraphNodes = new HashMap<String, GraphDataNode>();
+        for (URI currentEgoUri : egoNodes) {
+            GraphDataNode egoNode;
+            if (createdGraphNodes.containsKey(currentEgoUri.toASCIIString())) {
+                egoNode = createdGraphNodes.get(currentEgoUri.toASCIIString());
+            } else {
+                egoNode = getGraphDataNode(true, currentEgoUri);
+                createdGraphNodes.put(currentEgoUri.toASCIIString(), egoNode);
+            }
+            for (String currentKinString : kinTypeStrings) {
+                getNextRelations(createdGraphNodes, currentEgoUri.toASCIIString(), egoNode, currentKinString);
+            }
+        }
+        return createdGraphNodes.values().toArray(new GraphDataNode[]{});
     }
 
     public static void main(String[] args) {
