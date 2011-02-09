@@ -54,6 +54,10 @@ public class EntityData {
     }
 
     protected String[][] getRelationData(String realtionPath) {
-        return relationData.get(realtionPath).toArray(new String[][]{});
+        if (relationData.containsKey(realtionPath)) {
+            return relationData.get(realtionPath).toArray(new String[][]{});
+        } else {
+            return null;
+        }
     }
 }
