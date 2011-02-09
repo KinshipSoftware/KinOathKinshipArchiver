@@ -142,21 +142,38 @@ public class EntityIndex {
         return new GraphDataNode(entitySymbolIndex, labelText);
     }
 
-    private void setRelationData(GraphDataNode egoNode, GraphDataNode relationNode, EntityData egoData, EntityData relationData, String egoPath, String relationPath) {
-//        EntityData relationDataData = knownEntities.get(currentEgoUri.toASCIIString());
-//        String[] labelFields = {"Kinnate/Gedcom/Entity/NAME/NAME", "Kinnate/Gedcom/Entity/GedcomType"};
-//        for (String currentLabelField : labelFields) {
-//            String labelTextTemp = entityData.getEntityField(currentLabelField);
-//            if (labelTextTemp != null) {
-//                labelText = labelTextTemp;
-//                break;
-//            }
-//        }
+    private void setRelationData(GraphDataNode egoNode, GraphDataNode alterNode, EntityData egoData, String alterPath) {
+        GraphDataNode.RelationType egoType = null;
+        GraphDataNode.RelationType alterType = null;
+//        String[] relationFields = {"TYPE"};
+        String[] ancestorFields = {"Kinnate.Gedcom.Entity.FAMC", "Kinnate.Gedcom.Entity.HUSB", "Kinnate.Gedcom.Entity.WIFE"};
+        String[] decendantFields = {"Kinnate.Gedcom.Entity.CHIL", "Kinnate.Gedcom.Entity.FAMS"};
 
-
-
-        egoNode.addRelatedNode(relationNode, 0, GraphDataNode.RelationType.ancestor);
-        relationNode.addRelatedNode(egoNode, 0, GraphDataNode.RelationType.descendant);
+//        String[][] egoRelationFields = alterData.getRelationData(egoPath);
+        String[][] alterRelationFields = egoData.getRelationData(alterPath);
+        if (alterRelationFields != null) {
+//        for (String currentRelationField : relationFields) {
+            for (String ancestorField : ancestorFields) {
+                for (String[] egoRelationField : alterRelationFields) {
+                    if (ancestorField.equals(egoRelationField[1])) {
+                        egoType = GraphDataNode.RelationType.ancestor;
+                        alterType = GraphDataNode.RelationType.descendant;
+                    }
+                }
+            }
+            for (String ancestorField : decendantFields) {
+                for (String[] egoRelationField : alterRelationFields) {
+                    if (ancestorField.equals(egoRelationField[1])) {
+                        egoType = GraphDataNode.RelationType.descendant;
+                        alterType = GraphDataNode.RelationType.ancestor;
+                    }
+                }
+            }
+            if (egoType != null && alterType != null) {
+                egoNode.addRelatedNode(alterNode, 0, egoType);
+                alterNode.addRelatedNode(egoNode, 0, alterType);
+            }
+        }
     }
 
     public GraphDataNode[] getEgoGraphData(URI[] egoNodes) {
@@ -174,12 +191,13 @@ public class EntityIndex {
             GraphDataNode egoNode = getGraphDataNode(true, currentEgoUri);
             graphDataNodeList.add(egoNode);
             EntityData egoData = knownEntities.get(currentEgoUri.toASCIIString());
-            for (String relationPath : egoData.getRelationPaths()) {
+            for (String alterPath : egoData.getRelationPaths()) {
                 try {
-                    GraphDataNode relationNode = getGraphDataNode(false, new URI(relationPath));
-                    EntityData relationDataData = knownEntities.get(currentEgoUri.toASCIIString());
-                    setRelationData(egoNode, relationNode, egoData, relationDataData, currentEgoUri.toASCIIString(), relationPath);
-                    graphDataNodeList.add(relationNode);
+                    GraphDataNode alterNode = getGraphDataNode(false, new URI(alterPath));
+                    EntityData alterData = knownEntities.get(currentEgoUri.toASCIIString());
+                    setRelationData(egoNode, alterNode, egoData, alterPath);
+                    setRelationData(alterNode, egoNode, alterData, currentEgoUri.toASCIIString());
+                    graphDataNodeList.add(alterNode);
                 } catch (URISyntaxException urise) {
                     GuiHelper.linorgBugCatcher.logError(urise);
                 }
