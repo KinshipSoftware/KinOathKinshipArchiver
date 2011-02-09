@@ -19,6 +19,20 @@ public class GraphDataNode {
 
         sibling, ancestor, descendant, union
     }
+
+    public static RelationType getOpposingRelationType(RelationType relationType) {
+        switch (relationType) {
+            case ancestor:
+                return GraphDataNode.RelationType.descendant;
+            case descendant:
+                return GraphDataNode.RelationType.ancestor;
+            case sibling:
+                return GraphDataNode.RelationType.sibling;
+            case union:
+                return GraphDataNode.RelationType.union;
+        }
+        return GraphDataNode.RelationType.sibling;
+    }
     SymbolType symbolType;
     boolean isEgo = false;
     private String labelString;
