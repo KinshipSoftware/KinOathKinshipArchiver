@@ -71,12 +71,28 @@ public class KinTypeStringConverter extends GraphData {
                             System.out.println("fullKinTypeString: " + fullKinTypeString);
                             GraphDataNode currentGraphDataNode;
                             if (graphDataNodeList.containsKey(fullKinTypeString)) {
-                                currentGraphDataNode = graphDataNodeList.get(fullKinTypeString); 
+                                currentGraphDataNode = graphDataNodeList.get(fullKinTypeString);
                                 // add any child nodes?
                             } else {
                                 currentGraphDataNode = new GraphDataNode(fullKinTypeString);
                                 currentGraphDataNode.symbolType = currentReferenceKinType.symbolType;
+                                GraphDataNode.RelationType otherRelationType = GraphDataNode.RelationType.sibling;
+                                switch (currentReferenceKinType.relationType) {
+                                    case ancestor:
+                                        otherRelationType = GraphDataNode.RelationType.descendant;
+                                        break;
+                                    case descendant:
+                                        otherRelationType = GraphDataNode.RelationType.ancestor;
+                                        break;
+                                    case sibling:
+                                        otherRelationType = GraphDataNode.RelationType.sibling;
+                                        break;
+                                    case union:
+                                        otherRelationType = GraphDataNode.RelationType.union;
+                                        break;
+                                }
                                 parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType);
+                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, otherRelationType);
                                 graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
                                 // add any child nodes?
                             }
