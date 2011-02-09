@@ -31,7 +31,6 @@ public class EntityIndex {
     }
 
     private void getLinksFromDom(URI egoEntityUri, EntityData entityData) {
-        // HashMap<String, ArrayList<String[]>> linkedEntities
         String[] relevantEntityData = {"Kinnate/Gedcom/Entity/SEX", "Kinnate/Gedcom/Entity/GedcomType", "Kinnate/Gedcom/Entity/NAME/NAME"}; // todo: the relevantData array comes from the user via the svg
         String[] relevantLinkData = {"Type"}; // todo: the relevantData array comes from the user via the svg
         try {
@@ -109,11 +108,8 @@ public class EntityIndex {
 
     private GraphDataNode getGraphDataNode(boolean isEgo, URI entityUri) {
         EntityData entityData = knownEntities.get(entityUri.toASCIIString());
-//        HashMap<String, ArrayList<String[]>> currentLink = entityData.relationData;
         String labelText = "not found"; // todo: this could be an array so that multiple labels are avaiable
         int entitySymbolIndex = 0;
-//       ImdiTreeObject currentImdi = ImdiLoader.getSingleInstance().getImdiObject(null, entityUri);
-//        return new GraphDataNode(currentImdi.toString());
         String[] labelFields = {"Kinnate/Gedcom/Entity/NAME/NAME", "Kinnate/Gedcom/Entity/GedcomType"};
         for (String currentLabelField : labelFields) {
             String labelTextTemp = entityData.getEntityField(currentLabelField);
@@ -148,11 +144,8 @@ public class EntityIndex {
 //        String[] relationFields = {"TYPE"};
         String[] ancestorFields = {"Kinnate.Gedcom.Entity.FAMC", "Kinnate.Gedcom.Entity.HUSB", "Kinnate.Gedcom.Entity.WIFE"};
         String[] decendantFields = {"Kinnate.Gedcom.Entity.CHIL", "Kinnate.Gedcom.Entity.FAMS"};
-
-//        String[][] egoRelationFields = alterData.getRelationData(egoPath);
         String[][] alterRelationFields = egoData.getRelationData(alterPath);
         if (alterRelationFields != null) {
-//        for (String currentRelationField : relationFields) {
             for (String ancestorField : ancestorFields) {
                 for (String[] egoRelationField : alterRelationFields) {
                     if (ancestorField.equals(egoRelationField[1])) {
@@ -186,7 +179,6 @@ public class EntityIndex {
 
     public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) {
         ArrayList<GraphDataNode> graphDataNodeList = new ArrayList<GraphDataNode>();
-        // todo: this could return just the ego or also the reverce links of the ego
         for (URI currentEgoUri : egoNodes) {
             GraphDataNode egoNode = getGraphDataNode(true, currentEgoUri);
             graphDataNodeList.add(egoNode);
@@ -202,16 +194,6 @@ public class EntityIndex {
                     GuiHelper.linorgBugCatcher.logError(urise);
                 }
             }
-//            relatedNodes.addAll(currentLink.keySet());
-
-//            HashMap<String, ArrayList<String[]>> currentLinks = knownEntities.get(currentEgo);
-//            for (String currentLink : currentLinks.keySet()) {
-//                System.out.println("-> currentLink: " + currentLink);
-//                ArrayList<String[]> currentData = currentLinks.get(currentLink);
-//                for (String[] currentRecord : currentData) {
-//                    System.out.println("--> currentRecord: " + currentRecord[0] + " : " + currentRecord[1]);
-//                }
-//            }
         }
         return graphDataNodeList.toArray(new GraphDataNode[]{});
     }
