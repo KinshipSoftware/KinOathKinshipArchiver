@@ -131,7 +131,7 @@ public class GraphData {
                 inputNodes.remove(relatedNode.sourceNode);
                 targetColumns.add(relatedNode.sourceNode);
                 System.out.println("sorted: " + relatedNode.sourceNode.getLabel() + " : " + "reverse link" + " of " + currentNode.getLabel());
-                sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.sourceNode);
+//                sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.sourceNode);
             }
         }
     }
