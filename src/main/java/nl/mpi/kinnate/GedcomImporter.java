@@ -192,7 +192,7 @@ public class GedcomImporter {
                                     gedcomTypeElement.setTextContent(lineParts[2]);
 //                                    currentDomNode.appendChild(gedcomTypeElement);
                                     if (lineParts[2].equals("NOTE")) {
-                                        Element addedNoteElement = metadataDom.createElement(lineParts[2]);
+                                        Element addedNoteElement = metadataDom.createElement("NoteText");
                                         currentDomNode.appendChild(addedNoteElement);
                                         previousField = addedNoteElement;
                                     }
