@@ -126,8 +126,8 @@ public class GraphPanel extends JPanel {
         // svgRoot.removeAttribute("version");
         int maxTextLength = 0;
         for (GraphDataNode currentNode : graphData.getDataNodes()) {
-            if (currentNode.getLabel().length() > maxTextLength) {
-                maxTextLength = currentNode.getLabel().length();
+            if (currentNode.getLabel()[0].length() > maxTextLength) {
+                maxTextLength = currentNode.getLabel()[0].length();
             }
         }
         int vSpacing = 100;
@@ -167,6 +167,40 @@ public class GraphPanel extends JPanel {
                     symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
                     symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
                     symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
+                    break;
+                case resource:
+                    symbolNode = doc.createElementNS(svgNS, "rect");
+                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
+                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+                    symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
+                    symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
+                    symbolNode.setAttributeNS(null, "transform", "rotate(-45 " + Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2) + " " + Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + ")");
+                    symbolNode.setAttributeNS(null, "stroke-width", "4");
+                    symbolNode.setAttributeNS(null, "fill", "black");
+                    break;
+                case union:
+//                    DOMUtilities.deepCloneDocument(doc, doc.getImplementation());
+
+//                    symbolNode = doc.createElementNS(svgNS, "layer");
+//                    Element upperNode = doc.createElementNS(svgNS, "rect");
+//                    Element lowerNode = doc.createElementNS(svgNS, "rect");
+//                    upperNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
+//                    upperNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+//                    upperNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
+//                    upperNode.setAttributeNS(null, "height", Integer.toString(symbolSize / 3));
+//                    lowerNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2 + (symbolSize / 3) * 2));
+//                    lowerNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+//                    lowerNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
+//                    lowerNode.setAttributeNS(null, "height", Integer.toString(symbolSize / 3));
+//                    lowerNode.appendChild(upperNode);
+//                    symbolNode.appendChild(lowerNode);
+                    symbolNode = doc.createElementNS(svgNS, "polyline");
+                    int posXa = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
+                    int posYa = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
+                    int offsetAmounta = symbolSize / 2;
+                    symbolNode.setAttributeNS(null, "fill", "none");
+                    symbolNode.setAttributeNS(null, "points", (posXa + offsetAmounta * 3) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa - offsetAmounta) + " " + (posXa + offsetAmounta * 3) + "," + (posYa - offsetAmounta));
+
                     break;
                 case triangle:
                     symbolNode = doc.createElementNS(svgNS, "polygon");
@@ -233,21 +267,51 @@ public class GraphPanel extends JPanel {
                             ((Element) evt.getCurrentTarget()).setAttribute("fill", "red");
                         }
                     }, false);
+////////////////////////////// tspan method appears to fail in batik rendering process unless saved and reloaded ////////////////////////////////////////////////
+//            Element labelText = doc.createElementNS(svgNS, "text");
+////            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
+////            labelText.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+//            labelText.setAttributeNS(null, "fill", "black");
+//            labelText.setAttributeNS(null, "fill-opacity", "1");
+//            labelText.setAttributeNS(null, "stroke-width", "0");
+//            labelText.setAttributeNS(null, "font-size", "14px");
+////            labelText.setAttributeNS(null, "text-anchor", "end");
+////            labelText.setAttributeNS(null, "style", "font-size:14px;text-anchor:end;fill:black;fill-opacity:1");
+//            //labelText.setNodeValue(currentChild.toString());
+//
+//            //String textWithUni = "\u0041";
+//            int textSpanCounter = 0;
+//            int lineSpacing = 10;
+//            for (String currentTextLable : currentNode.getLabel()) {
+//                Text textNode = doc.createTextNode(currentTextLable);
+//                Element tspanElement = doc.createElement("tspan");
+//                tspanElement.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
+//                tspanElement.setAttribute("y", Integer.toString((currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + textSpanCounter));
+////                tspanElement.setAttribute("y", Integer.toString(textSpanCounter * lineSpacing));
+//                tspanElement.appendChild(textNode);
+//                labelText.appendChild(tspanElement);
+//                textSpanCounter += lineSpacing;
+//            }
+//            svgRoot.appendChild(labelText);
+////////////////////////////// end tspan method appears to fail in batik rendering process ////////////////////////////////////////////////
 
-            // <text id="_7" x="39.0" y="140.0" fill="black" stroke="black" stroke-width="0" font-size="15">Sample Text</text>
-            Element labelText = doc.createElementNS(svgNS, "text");
-            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
-            labelText.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-            labelText.setAttributeNS(null, "fill", "black");
-            labelText.setAttributeNS(null, "stroke-width", "0");
-            labelText.setAttributeNS(null, "font-size", "14");
-            //labelText.setNodeValue(currentChild.toString());
-
-            //String textWithUni = "\u0041";
-            Text textNode = doc.createTextNode(currentNode.getLabel());
-            labelText.appendChild(textNode);
-            svgRoot.appendChild(labelText);
-
+////////////////////////////// alternate method ////////////////////////////////////////////////
+            // todo: this method has the draw back that the text is not selectable as a block
+            int textSpanCounter = 0;
+            int lineSpacing = 15;
+            for (String currentTextLable : currentNode.getLabel()) {
+                Element labelText = doc.createElementNS(svgNS, "text");
+                labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
+                labelText.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2 + textSpanCounter));
+                labelText.setAttributeNS(null, "fill", "black");
+                labelText.setAttributeNS(null, "stroke-width", "0");
+                labelText.setAttributeNS(null, "font-size", "14");
+                Text textNode = doc.createTextNode(currentTextLable);
+                labelText.appendChild(textNode);
+                textSpanCounter += lineSpacing;
+                svgRoot.appendChild(labelText);
+            }
+////////////////////////////// end alternate method ////////////////////////////////////////////////
             // draw links
             for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
                 if (graphLinkNode.sourceNode.equals(currentNode)) {
