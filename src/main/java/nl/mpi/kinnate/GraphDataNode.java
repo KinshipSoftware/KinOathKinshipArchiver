@@ -35,6 +35,7 @@ public class GraphDataNode {
         }
         return GraphDataNode.RelationType.sibling;
     }
+    private String entityPath;
     SymbolType symbolType;
     boolean isEgo = false;
     private String[] labelString;
@@ -50,7 +51,8 @@ public class GraphDataNode {
         RelationType relationType;
     }
 
-    public GraphDataNode(int symbolIndex, String[] labelStringLocal) {
+    public GraphDataNode(String entityPathLocal, int symbolIndex, String[] labelStringLocal) {
+        entityPath = entityPathLocal;
         switch (symbolIndex) {
             case 0:
                 symbolType = SymbolType.square;
@@ -78,6 +80,10 @@ public class GraphDataNode {
 
     public GraphDataNode(String[] labelStringLocal) {
         labelString = labelStringLocal;
+    }
+
+    public String getEntityPath() {
+        return entityPath;
     }
 
     public String[] getLabel() {
