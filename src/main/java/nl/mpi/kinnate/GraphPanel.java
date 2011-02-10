@@ -5,16 +5,23 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.MouseInputAdapter;
+import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
+import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
@@ -36,6 +43,7 @@ public class GraphPanel extends JPanel {
     private Element currentDraggedElement;
     private Cursor preDragCursor;
     HashSet<URI> egoSet = new HashSet<URI>();
+    HashSet<String> kinTypeStringSet = new HashSet<String>();
 
     public GraphPanel() {
         this.setLayout(new BorderLayout());
@@ -89,30 +97,77 @@ public class GraphPanel extends JPanel {
     }
 
     public void readSvg(File svgFilePath) {
-        svgCanvas.setURI(svgFilePath.toURI().toString());
+        String parser = XMLResourceDescriptor.getXMLParserClassName();
+        SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
+        try {
+            doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toURI().toString());
+            svgCanvas.setDocument(doc);
+        } catch (IOException ioe) {
+            GuiHelper.linorgBugCatcher.logError(ioe);
+        }
+//        svgCanvas.setURI(svgFilePath.toURI().toString());
+        getParametersFromDom();
     }
 
     public void saveSvg(File svgFilePath) {
         new CmdiComponentBuilder().savePrettyFormatting(doc, svgFilePath);
     }
 
+    private void getParametersFromDom() {
+        if (doc != null) {
+            Element svgRoot = doc.getDocumentElement();
+            for (Node currentChild = svgRoot.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
+                if ("desc".equals(currentChild.getLocalName())) {
+                    Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
+                    if (idAttrubite != null) {
+                        System.out.println("Desc idAttrubite: " + idAttrubite.getTextContent());
+                        if (idAttrubite.getTextContent().equals("EgoList")) {
+                            String[] egoPaths = currentChild.getTextContent().split(",");
+                            egoSet = new HashSet<URI>();
+                            for (String egoPath : egoPaths) {
+                                if (egoPath.length() > 0) {
+                                    try {
+                                        egoSet.add(new URI(egoPath));
+                                    } catch (URISyntaxException urise) {
+                                        GuiHelper.linorgBugCatcher.logError(urise);
+                                    }
+                                }
+                            }
+                        }
+                        if (idAttrubite.getTextContent().equals("KinTypeStrings")) {
+                            String[] kinTypeStringArray = currentChild.getTextContent().split(",");
+                            kinTypeStringSet = new HashSet<String>();
+                            for (String kinTypeString : kinTypeStringArray) {
+                                if (kinTypeString.length() > 0) {
+                                    kinTypeStringSet.add(kinTypeString);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public String[] getKinTypeStrigs() {
+        return kinTypeStringSet.toArray(new String[]{});
+    }
+
+    public void setKinTypeStrigs(String[] kinTypeStringArray) {
+        kinTypeStringSet = new HashSet<String>();
+        for (String kinTypeString : kinTypeStringArray) {
+            if (kinTypeString != null && kinTypeString.trim().length() > 0) {
+                kinTypeStringSet.add(kinTypeString.trim());
+            }
+        }
+    }
+
     public URI[] getEgoList() {
-        // todo: read this from the SVG
         return egoSet.toArray(new URI[]{});
-        //return new String[]{"file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/201101251709350.cmdi", "file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/20110125170936.cmdi"};
-//"file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/20110125170935.cmdi"
-        //ego tree: 
-        //ego tree: file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/201101251709360.cmdi
-        //ego tree: file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/201101251709361.cmdi
-        //ego tree: file:/Users/petwit/Documents/SharedInVirtualBox/ArbilWorkingFiles/20110125170937.cmdi"};
     }
 
     public void setEgoList(URI[] egoListArray) {
-        // todo: write this to the SVG
-        egoSet = new HashSet<URI>();
-        for (URI egoUri : egoListArray) {
-            egoSet.add(egoUri);
-        }
+        egoSet = new HashSet<URI>(Arrays.asList(egoListArray));
     }
 
     public void drawNodes(GraphData graphData) {
@@ -123,7 +178,7 @@ public class GraphPanel extends JPanel {
 //        SVGDocument doc = svgCanvas.getSVGDocument();
         // Get the root element (the 'svg' elemen¤t).
         Element svgRoot = doc.getDocumentElement();
-        // svgRoot.removeAttribute("version");
+        // todo: set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
         int maxTextLength = 0;
         for (GraphDataNode currentNode : graphData.getDataNodes()) {
             if (currentNode.getLabel()[0].length() > maxTextLength) {
@@ -145,10 +200,41 @@ public class GraphPanel extends JPanel {
 
         this.setPreferredSize(new Dimension(preferedWidth, preferedWidth));
 
+        // store the selected ego nodes in the dom
+        Element egoRecordNode = doc.createElementNS(svgNS, "desc");
+        egoRecordNode.setAttributeNS(null, "id", "EgoList");
+        StringBuilder egoRecordBuilder = new StringBuilder();
+        for (URI currentEgoUri : egoSet) {
+            if (egoRecordBuilder.length() > 0) {
+                egoRecordBuilder.append(",");
+            }
+            egoRecordBuilder.append(currentEgoUri.toASCIIString());
+        }
+        Text egoTextNode = doc.createTextNode(egoRecordBuilder.toString());
+        egoRecordNode.appendChild(egoTextNode);
+        svgRoot.appendChild(egoRecordNode);
+        // end store the selected ego nodes in the dom
+        // store the selected kin type strings in the dom
+        Element kinTypesRecordNode = doc.createElementNS(svgNS, "desc");
+        kinTypesRecordNode.setAttributeNS(null, "id", "KinTypeStrings");
+        StringBuilder kinTypeRecordBuilder = new StringBuilder();
+        for (String currentKinType : kinTypeStringSet) {
+            if (kinTypeRecordBuilder.length() > 0) {
+                kinTypeRecordBuilder.append(",");
+            }
+            kinTypeRecordBuilder.append(currentKinType);
+        }
+        Text kinTypeTextNode = doc.createTextNode(kinTypeRecordBuilder.toString());
+        kinTypesRecordNode.appendChild(kinTypeTextNode);
+        svgRoot.appendChild(kinTypesRecordNode);
+        // end store the selected kin type strings nodes in the dom
+
         svgCanvas.setSVGDocument(doc);
 //        svgCanvas.setDocument(doc);
         int counterTest = 0;
         for (GraphDataNode currentNode : graphData.getDataNodes()) {
+            Element groupNode = doc.createElementNS(svgNS, "g");
+            groupNode.setAttributeNS(null, "id", currentNode.getEntityPath());
             counterTest++;
             Element symbolNode;
             switch (currentNode.symbolType) {
@@ -236,7 +322,7 @@ public class GraphPanel extends JPanel {
             symbolNode.setAttributeNS(null, "stroke", "black");
             symbolNode.setAttributeNS(null, "stroke-width", "2");
             // Attach the rectangle to the root 'svg' element.
-            svgRoot.appendChild(symbolNode);
+            groupNode.appendChild(symbolNode);
 
             ((EventTarget) symbolNode).addEventListener("mouseover", new EventListener() {
 
@@ -292,7 +378,7 @@ public class GraphPanel extends JPanel {
 //                labelText.appendChild(tspanElement);
 //                textSpanCounter += lineSpacing;
 //            }
-//            svgRoot.appendChild(labelText);
+//            groupNode.appendChild(labelText);
 ////////////////////////////// end tspan method appears to fail in batik rendering process ////////////////////////////////////////////////
 
 ////////////////////////////// alternate method ////////////////////////////////////////////////
@@ -309,9 +395,10 @@ public class GraphPanel extends JPanel {
                 Text textNode = doc.createTextNode(currentTextLable);
                 labelText.appendChild(textNode);
                 textSpanCounter += lineSpacing;
-                svgRoot.appendChild(labelText);
+                groupNode.appendChild(labelText);
             }
 ////////////////////////////// end alternate method ////////////////////////////////////////////////
+            svgRoot.appendChild(groupNode);
             // draw links
             for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
                 if (graphLinkNode.sourceNode.equals(currentNode)) {
