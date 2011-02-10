@@ -63,6 +63,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
 
             public void keyReleased(KeyEvent e) {
                 kinTypeStrings = kinTypeStringInput.getText().split("\n");
+                graphPanel.setKinTypeStrigs(kinTypeStrings);
                 graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), kinTypeStrings));
                 graphPanel.drawNodes(graphData);
             }
@@ -70,18 +71,29 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
         graphData = new GraphData();
         URI[] egoSelection = graphPanel.getEgoList();
         graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
-        egoSelectionPanel.setEgoNodes(egoSelection);
         if (existingFile.exists()) {
             graphPanel.readSvg(existingFile);
         } else {
             graphPanel.drawNodes(graphData);
+        }
+        egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
+        kinTypeStrings = graphPanel.getKinTypeStrigs();
+        boolean firstString = true;
+        for (String currentKinTypeString : kinTypeStrings) {
+            if (currentKinTypeString.trim().length() > 0) {
+                if (firstString) {
+                    kinTypeStringInput.setText("");
+                    firstString = false;
+                }
+                kinTypeStringInput.append(currentKinTypeString.trim() + "\n");
+            }
         }
     }
 
     public void addEgoNodes(URI[] egoSelection) {
         graphPanel.setEgoList(egoSelection);
         graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
-        egoSelectionPanel.setEgoNodes(egoSelection);
         graphPanel.drawNodes(graphData);
+        egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
     }
 }
