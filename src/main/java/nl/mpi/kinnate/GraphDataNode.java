@@ -1,6 +1,7 @@
 package nl.mpi.kinnate;
 
 import java.util.ArrayList;
+import nl.mpi.kinnate.KinTypeStringConverter.KinType;
 
 /**
  *  Document   : GraphDataNode
@@ -12,12 +13,13 @@ public class GraphDataNode {
     enum SymbolType {
         // symbol terms are used here to try to keep things agnostic
 
-        square, triangle, circle
+        square, triangle, circle, union, resource
     }
 
     public enum RelationType {
+        // todo: the term sibling is too specific and needs to encompas anything on the same generation such as union
 
-        sibling, ancestor, descendant, union
+        sibling, ancestor, descendant
     }
 
     public static RelationType getOpposingRelationType(RelationType relationType) {
@@ -28,14 +30,14 @@ public class GraphDataNode {
                 return GraphDataNode.RelationType.ancestor;
             case sibling:
                 return GraphDataNode.RelationType.sibling;
-            case union:
-                return GraphDataNode.RelationType.union;
+//            case union:
+//                return GraphDataNode.RelationType.union;
         }
         return GraphDataNode.RelationType.sibling;
     }
     SymbolType symbolType;
     boolean isEgo = false;
-    private String labelString;
+    private String[] labelString;
     private ArrayList<NodeRelation> relatedNodes = new ArrayList<NodeRelation>();
     int xPos;
     int yPos;
@@ -48,7 +50,7 @@ public class GraphDataNode {
         RelationType relationType;
     }
 
-    public GraphDataNode(int symbolIndex, String labelStringLocal) {
+    public GraphDataNode(int symbolIndex, String[] labelStringLocal) {
         switch (symbolIndex) {
             case 0:
                 symbolType = SymbolType.square;
@@ -59,15 +61,26 @@ public class GraphDataNode {
             case 2:
                 symbolType = SymbolType.triangle;
                 break;
+            case 3:
+                symbolType = SymbolType.union;
+                break;
+            case 4:
+                symbolType = SymbolType.resource;
+                break;
         }
         labelString = labelStringLocal;
     }
 
-    public GraphDataNode(String labelStringLocal) {
+    public GraphDataNode(SymbolType symbolIndex, String[] labelStringLocal) {
+        symbolType = symbolIndex;
         labelString = labelStringLocal;
     }
 
-    public String getLabel() {
+    public GraphDataNode(String[] labelStringLocal) {
+        labelString = labelStringLocal;
+    }
+
+    public String[] getLabel() {
         return labelString;
     }
     ArrayList<String> unhandledLinkTypesArray = new ArrayList<String>();
@@ -153,6 +166,12 @@ public class GraphDataNode {
         nodeRelation.relationType = relationType;
         relatedNodes.add(nodeRelation);
         relatedNode.relatedNodes.add(nodeRelation);
+    }
+
+    public boolean relationMatchesType(String alterPath, KinType kinType) {
+        // todo: compare the relation data
+//        return kinType.symbolType == symbolType;
+        return true;
     }
 
     public NodeRelation[] getNodeRelations() {
