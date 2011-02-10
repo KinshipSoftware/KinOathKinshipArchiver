@@ -87,6 +87,7 @@
                                             </xs:complexType>
                                         </xs:element>
                                         <xs:element name="NOTE" minOccurs="0" maxOccurs="unbounded"/>
+                                        <xs:element name="NoteText" minOccurs="0" maxOccurs="unbounded"/>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
