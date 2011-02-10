@@ -98,9 +98,9 @@ public class GraphData {
                         case descendant:
                             targetColumns = descendentColumns;
                             break;
-                        case union:
-                            targetColumns = currentColumns;
-                            break;
+//                        case union:
+//                            targetColumns = currentColumns;
+//                            break;
                     }
                     inputNodes.remove(relatedNode.linkedNode);
                     targetColumns.add(relatedNode.linkedNode);
@@ -124,9 +124,9 @@ public class GraphData {
                     case descendant:
                         targetColumns = ancestorColumns;
                         break;
-                    case union:
-                        targetColumns = currentColumns;
-                        break;
+//                    case union:
+//                        targetColumns = currentColumns;
+//                        break;
                 }
                 inputNodes.remove(relatedNode.sourceNode);
                 targetColumns.add(relatedNode.sourceNode);
