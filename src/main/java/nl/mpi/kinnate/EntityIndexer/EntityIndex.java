@@ -11,6 +11,8 @@ import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.kinnate.GraphDataNode;
+import nl.mpi.kinnate.KinTypeStringConverter;
+import nl.mpi.kinnate.KinTypeStringConverter.KinType;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -31,7 +33,7 @@ public class EntityIndex {
     }
 
     private void getLinksFromDom(URI egoEntityUri, EntityData entityData) {
-        String[] relevantEntityData = {"Kinnate/Gedcom/Entity/SEX", "Kinnate/Gedcom/Entity/GedcomType", "Kinnate/Gedcom/Entity/NAME/NAME"}; // todo: the relevantData array comes from the user via the svg
+        String[] relevantEntityData = {"Kinnate/Gedcom/Entity/NoteText", "Kinnate/Gedcom/Entity/SEX", "Kinnate/Gedcom/Entity/GedcomType", "Kinnate/Gedcom/Entity/NAME/NAME", "Kinnate/Gedcom/Entity/NAME/NPFX"}; // todo: the relevantData array comes from the user via the svg
         String[] relevantLinkData = {"Type"}; // todo: the relevantData array comes from the user via the svg
         try {
             String linkXpath = "/Kinnate/Relation/Link";
@@ -108,14 +110,13 @@ public class EntityIndex {
 
     private GraphDataNode getGraphDataNode(boolean isEgo, URI entityUri) {
         EntityData entityData = knownEntities.get(entityUri.toASCIIString());
-        String labelText = "not found"; // todo: this could be an array so that multiple labels are avaiable
+        ArrayList<String> labelTextList = new ArrayList<String>();
         int entitySymbolIndex = 0;
-        String[] labelFields = {"Kinnate/Gedcom/Entity/NAME/NAME", "Kinnate/Gedcom/Entity/GedcomType"};
+        String[] labelFields = {"Kinnate/Gedcom/Entity/NAME/NAME", "Kinnate/Gedcom/Entity/GedcomType", "Kinnate/Gedcom/Entity/Text", "Kinnate/Gedcom/Entity/NAME/NPFX", "Kinnate/Gedcom/Entity/NoteText"};
         for (String currentLabelField : labelFields) {
             String labelTextTemp = entityData.getEntityField(currentLabelField);
             if (labelTextTemp != null) {
-                labelText = labelTextTemp;
-                break;
+                labelTextList.add(labelTextTemp);
             }
         }
         if (isEgo) {
@@ -131,11 +132,17 @@ public class EntityIndex {
                     if (linkSymbolString.equals("M")) {
                         entitySymbolIndex = 2;
                     }
+                    if (linkSymbolString.equals("FAM")) {
+                        entitySymbolIndex = 3;
+                    }
+                    if (linkSymbolString.equals("NOTE")) {
+                        entitySymbolIndex = 4;
+                    }
                     break;
                 }
             }
         }
-        return new GraphDataNode(entitySymbolIndex, labelText);
+        return new GraphDataNode(entityUri.toASCIIString(), entitySymbolIndex, labelTextList.toArray(new String[]{}));
     }
 
     private void setRelationData(GraphDataNode egoNode, GraphDataNode alterNode, EntityData egoData, String alterPath) {
@@ -177,24 +184,33 @@ public class EntityIndex {
         return graphDataNodeList.toArray(new GraphDataNode[]{});
     }
 
-    private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, String currentEgoPath, GraphDataNode egoNode, String remaningKinTypeString) {
+    private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, String currentEgoPath, GraphDataNode egoNode, ArrayList<KinType> remainingKinTypes) {
         EntityData egoData = knownEntities.get(currentEgoPath);
-        String currentKinType = remaningKinTypeString.substring(0, 1);
-        remaningKinTypeString = remaningKinTypeString.substring(1);
+//        String currentKinType = remaningKinTypeString.substring(0, 1);
+//        remaningKinTypeString = remaningKinTypeString.substring(1);
+        KinType currentKinType = remainingKinTypes.remove(0);
         for (String alterPath : egoData.getRelationPaths()) {
             try {
+                boolean relationAdded = false;
                 GraphDataNode alterNode;
                 if (createdGraphNodes.containsKey(alterPath)) {
                     alterNode = createdGraphNodes.get(alterPath);
                 } else {
-                    alterNode = getGraphDataNode(true, new URI(alterPath));
+                    alterNode = getGraphDataNode(false, new URI(alterPath));
                     createdGraphNodes.put(alterPath, alterNode);
+                    relationAdded = true;
                 }
                 EntityData alterData = knownEntities.get(currentEgoPath);
                 setRelationData(egoNode, alterNode, egoData, alterPath);
                 setRelationData(alterNode, egoNode, alterData, currentEgoPath);
-                if (remaningKinTypeString.length() > 0) {
-                    getNextRelations(createdGraphNodes, alterPath, alterNode, remaningKinTypeString);
+                // todo: either prevent links being added if a node does not match the kin type or remove them when known
+                if (egoNode.relationMatchesType(alterPath, currentKinType)) {
+                    // only traverse if the type matches
+                    if (remainingKinTypes.size() > 0) {
+                        getNextRelations(createdGraphNodes, alterPath, alterNode, remainingKinTypes);
+                    }
+                } else if (relationAdded) {
+                    createdGraphNodes.remove(alterPath);
                 }
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
@@ -203,6 +219,7 @@ public class EntityIndex {
     }
 
     public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) {
+        KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
         HashMap<String, GraphDataNode> createdGraphNodes = new HashMap<String, GraphDataNode>();
         for (URI currentEgoUri : egoNodes) {
             GraphDataNode egoNode;
@@ -212,8 +229,11 @@ public class EntityIndex {
                 egoNode = getGraphDataNode(true, currentEgoUri);
                 createdGraphNodes.put(currentEgoUri.toASCIIString(), egoNode);
             }
-            for (String currentKinString : kinTypeStrings) {
-                getNextRelations(createdGraphNodes, currentEgoUri.toASCIIString(), egoNode, currentKinString);
+            if (kinTypeStrings != null) {
+                for (String currentKinString : kinTypeStrings) {
+                    ArrayList<KinType> kinTypes = kinTypeStringConverter.getKinTypes(currentKinString);
+                    getNextRelations(createdGraphNodes, currentEgoUri.toASCIIString(), egoNode, kinTypes);
+                }
             }
         }
         return createdGraphNodes.values().toArray(new GraphDataNode[]{});
