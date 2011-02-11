@@ -14,7 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.GuiHelper;
+import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.arbil.data.ImdiLoader;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
@@ -44,12 +46,13 @@ public class GraphPanel extends JPanel {
     private Cursor preDragCursor;
     HashSet<URI> egoSet = new HashSet<URI>();
     HashSet<String> kinTypeStringSet = new HashSet<String>();
+    private ImdiTableModel imdiTableModel;
 
     public GraphPanel() {
         this.setLayout(new BorderLayout());
         svgCanvas = new JSVGCanvas();
 //        svgCanvas.setMySize(new Dimension(600, 400));
-        svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
+        svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_INTERACTIVE);
 //        drawNodes();
         svgCanvas.setEnableImageZoomInteractor(true);
         svgCanvas.setEnablePanInteractor(true);
@@ -94,6 +97,10 @@ public class GraphPanel extends JPanel {
         svgCanvas.addMouseMotionListener(mouseInputAdapter);
         jScrollPane = new JScrollPane(svgCanvas);
         this.add(BorderLayout.CENTER, jScrollPane);
+    }
+
+    public void setImdiTableModel(ImdiTableModel imdiTableModelLocal) {
+        imdiTableModel = imdiTableModelLocal;
     }
 
     public void readSvg(File svgFilePath) {
@@ -324,35 +331,6 @@ public class GraphPanel extends JPanel {
             // Attach the rectangle to the root 'svg' element.
             groupNode.appendChild(symbolNode);
 
-            ((EventTarget) symbolNode).addEventListener("mouseover", new EventListener() {
-
-                public void handleEvent(Event evt) {
-                    System.out.println("OnMouseOverCircleAction: " + evt.getCurrentTarget());
-                    if (currentDraggedElement == null) {
-                        ((Element) evt.getCurrentTarget()).setAttribute("fill", "green");
-                    }
-                }
-            }, false);
-            ((EventTarget) symbolNode).addEventListener("mouseout",
-                    new EventListener() {
-
-                        public void handleEvent(Event evt) {
-                            System.out.println("mouseout: " + evt.getCurrentTarget());
-                            if (currentDraggedElement == null) {
-                                ((Element) evt.getCurrentTarget()).setAttribute("fill", "none");
-                            }
-                        }
-                    }, false);
-            ((EventTarget) symbolNode).addEventListener("mousedown",
-                    new EventListener() {
-
-                        public void handleEvent(Event evt) {
-                            System.out.println("mousedrag: " + evt.getCurrentTarget());
-                            currentDraggedElement = ((Element) evt.getCurrentTarget());
-                            preDragCursor = svgCanvas.getCursor();
-                            ((Element) evt.getCurrentTarget()).setAttribute("fill", "red");
-                        }
-                    }, false);
 ////////////////////////////// tspan method appears to fail in batik rendering process unless saved and reloaded ////////////////////////////////////////////////
 //            Element labelText = doc.createElementNS(svgNS, "text");
 ////            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
@@ -399,6 +377,46 @@ public class GraphPanel extends JPanel {
             }
 ////////////////////////////// end alternate method ////////////////////////////////////////////////
             svgRoot.appendChild(groupNode);
+            // set up the mouse listners on the group node
+            ((EventTarget) groupNode).addEventListener("mouseover", new EventListener() {
+
+                public void handleEvent(Event evt) {
+                    System.out.println("OnMouseOverCircleAction: " + evt.getCurrentTarget());
+                    if (currentDraggedElement == null) {
+                        ((Element) evt.getCurrentTarget()).setAttribute("fill", "green");
+                    }
+                }
+            }, false);
+            ((EventTarget) groupNode).addEventListener("mouseout", new EventListener() {
+
+                public void handleEvent(Event evt) {
+                    System.out.println("mouseout: " + evt.getCurrentTarget());
+                    if (currentDraggedElement == null) {
+                        ((Element) evt.getCurrentTarget()).setAttribute("fill", "none");
+                    }
+                }
+            }, false);
+            ((EventTarget) groupNode).addEventListener("mousedown", new EventListener() {
+
+                public void handleEvent(Event evt) {
+                    System.out.println("mousedrag: " + evt.getCurrentTarget());
+                    currentDraggedElement = ((Element) evt.getCurrentTarget());
+                    preDragCursor = svgCanvas.getCursor();
+                    ((Element) evt.getCurrentTarget()).setAttribute("fill", "red");
+                    // get the entityPath
+                    String entityPath = currentDraggedElement.getAttribute("id");
+                    System.out.println("entityPath: " + entityPath);
+                    if (imdiTableModel != null) {
+                        imdiTableModel.removeAllImdiRows();
+                        try {
+                            imdiTableModel.addSingleImdiObject(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(entityPath)));
+                        } catch (URISyntaxException urise) {
+                            GuiHelper.linorgBugCatcher.logError(urise);
+                        }
+                    }
+                }
+            }, false);
+
             // draw links
             for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
                 if (graphLinkNode.sourceNode.equals(currentNode)) {
