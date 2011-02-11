@@ -8,9 +8,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.net.URI;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import nl.mpi.arbil.ImdiTable;
+import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.kinnate.EntityIndexer.EntityIndex;
 
 /**
@@ -20,6 +25,8 @@ import nl.mpi.kinnate.EntityIndexer.EntityIndex;
  */
 public class KinTypeEgoSelectionTestPanel extends JPanel {
 
+    private JList symbolFieldsList;
+    private JList relationFieldsList;
     private JTextArea kinTypeStringInput;
     private GraphPanel graphPanel;
     private GraphData graphData;
@@ -35,8 +42,26 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
         egoSelectionPanel = new EgoSelectionPanel();
         kinTypeStringInput = new JTextArea(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
-        this.add(kinTypeStringInput, BorderLayout.PAGE_START);
-        this.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, egoSelectionPanel, graphPanel), BorderLayout.CENTER);
+        JPanel kinGraphPanel = new JPanel(new BorderLayout());
+        kinGraphPanel.add(kinTypeStringInput, BorderLayout.PAGE_START);
+        kinGraphPanel.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, egoSelectionPanel, graphPanel), BorderLayout.CENTER);
+
+        // todo: add drag drop of field to these lists and initially populate them from the SVG data
+        symbolFieldsList = new JList();
+        relationFieldsList = new JList();
+        JTabbedPane fieldListTabs = new JTabbedPane();
+        fieldListTabs.add("Symbol Fields", symbolFieldsList);
+        fieldListTabs.add("Relation Fields", relationFieldsList);
+
+        ImdiTableModel imdiTableModel = new ImdiTableModel();
+        ImdiTable imdiTable = new ImdiTable(imdiTableModel, "Selected Nodes");
+        graphPanel.setImdiTableModel(imdiTableModel);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, kinGraphPanel,
+                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(imdiTable), fieldListTabs));
+        this.add(splitPane);
+
+
         kinTypeStringInput.addFocusListener(new FocusListener() {
 
             public void focusGained(FocusEvent e) {
