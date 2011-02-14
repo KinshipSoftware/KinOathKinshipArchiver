@@ -244,18 +244,7 @@ public class GraphPanel extends JPanel {
         svgRoot.appendChild(egoRecordNode);
         // end store the selected ego nodes in the dom
         // store the selected kin type strings in the dom
-        Element kinTypesRecordNode = doc.createElementNS(svgNS, "desc");
-        kinTypesRecordNode.setAttributeNS(null, "id", "KinTypeStrings");
-        StringBuilder kinTypeRecordBuilder = new StringBuilder();
-        for (String currentKinType : kinTypeStringSet) {
-            if (kinTypeRecordBuilder.length() > 0) {
-                kinTypeRecordBuilder.append(",");
-            }
-            kinTypeRecordBuilder.append(currentKinType);
-        }
-        Text kinTypeTextNode = doc.createTextNode(kinTypeRecordBuilder.toString());
-        kinTypesRecordNode.appendChild(kinTypeTextNode);
-        svgRoot.appendChild(kinTypesRecordNode);
+        storeParameter(svgRoot, "KinTypeStrings", kinTypeStringSet.toArray(new String[]{}));
         // end store the selected kin type strings nodes in the dom
         storeParameter(svgRoot, "AncestorFields", indexParameters.ancestorFields);
         storeParameter(svgRoot, "DecendantFields", indexParameters.decendantFields);
