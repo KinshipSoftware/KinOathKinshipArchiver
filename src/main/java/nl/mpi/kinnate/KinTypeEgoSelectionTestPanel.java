@@ -2,13 +2,13 @@ package nl.mpi.kinnate;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.net.URI;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -25,8 +25,8 @@ import nl.mpi.kinnate.EntityIndexer.EntityIndex;
  */
 public class KinTypeEgoSelectionTestPanel extends JPanel {
 
-    private JList symbolFieldsList;
-    private JList relationFieldsList;
+    private FieldSelectionList symbolFieldsList;
+    private FieldSelectionList relationFieldsList;
     private JTextArea kinTypeStringInput;
     private GraphPanel graphPanel;
     private GraphData graphData;
@@ -35,8 +35,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
     private String defaultString = "This test panel should provide a kin diagram based on selected egos and the the kintype strings entered here.\nEnter one string per line.";
     private String kinTypeStrings[] = new String[]{};
 
-    public KinTypeEgoSelectionTestPanel(EntityIndex entityIndexLocal, File existingFile) {
-        entityIndex = entityIndexLocal;
+    public KinTypeEgoSelectionTestPanel(File existingFile) {
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel();
         egoSelectionPanel = new EgoSelectionPanel();
@@ -47,18 +46,23 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
         kinGraphPanel.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, egoSelectionPanel, graphPanel), BorderLayout.CENTER);
 
         // todo: add drag drop of field to these lists and initially populate them from the SVG data
-        symbolFieldsList = new JList();
-        relationFieldsList = new JList();
+        symbolFieldsList = new FieldSelectionList();
+        relationFieldsList = new FieldSelectionList();
         JTabbedPane fieldListTabs = new JTabbedPane();
-        fieldListTabs.add("Symbol Fields", symbolFieldsList);
-        fieldListTabs.add("Relation Fields", relationFieldsList);
+        fieldListTabs.add("Symbol Fields", new JScrollPane(symbolFieldsList));
+        fieldListTabs.add("Relation Fields", new JScrollPane(relationFieldsList));
 
         ImdiTableModel imdiTableModel = new ImdiTableModel();
         ImdiTable imdiTable = new ImdiTable(imdiTableModel, "Selected Nodes");
         graphPanel.setImdiTableModel(imdiTableModel);
 
+        JScrollPane tableScrollPane = new JScrollPane(imdiTable);
+//        Dimension minimumSize = new Dimension(0, 0);
+//        fieldListTabs.setMinimumSize(minimumSize);
+//        tableScrollPane.setMinimumSize(minimumSize);
+
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, kinGraphPanel,
-                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(imdiTable), fieldListTabs));
+                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tableScrollPane, fieldListTabs));
         this.add(splitPane);
 
 
@@ -93,6 +97,8 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
                 graphPanel.drawNodes(graphData);
             }
         });
+        entityIndex = new EntityIndex(graphPanel.getIndexParameters());
+        entityIndex.indexEntities();
         graphData = new GraphData();
         URI[] egoSelection = graphPanel.getEgoList();
         graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
@@ -102,6 +108,8 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
             graphPanel.drawNodes(graphData);
         }
         egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
+        symbolFieldsList.setFieldList(graphPanel.getIndexParameters().symbolFieldsFields);
+        relationFieldsList.setFieldList(graphPanel.getIndexParameters().relevantLinkData);
         kinTypeStrings = graphPanel.getKinTypeStrigs();
         boolean firstString = true;
         for (String currentKinTypeString : kinTypeStrings) {
