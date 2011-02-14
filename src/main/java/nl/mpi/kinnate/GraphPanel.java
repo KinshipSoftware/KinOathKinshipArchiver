@@ -17,6 +17,7 @@ import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.arbil.data.ImdiLoader;
+import nl.mpi.kinnate.EntityIndexer.IndexerParameters;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
@@ -46,13 +47,15 @@ public class GraphPanel extends JPanel {
     private Cursor preDragCursor;
     HashSet<URI> egoSet = new HashSet<URI>();
     HashSet<String> kinTypeStringSet = new HashSet<String>();
+    private IndexerParameters indexParameters;
     private ImdiTableModel imdiTableModel;
 
     public GraphPanel() {
+        indexParameters = new IndexerParameters();
         this.setLayout(new BorderLayout());
         svgCanvas = new JSVGCanvas();
 //        svgCanvas.setMySize(new Dimension(600, 400));
-        svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_INTERACTIVE);
+        svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_INTERACTIVE); // JSVGCanvas.ALWAYS_DYNAMIC allows more dynamic updating but introduces concurrency issues
 //        drawNodes();
         svgCanvas.setEnableImageZoomInteractor(true);
         svgCanvas.setEnablePanInteractor(true);
@@ -169,12 +172,31 @@ public class GraphPanel extends JPanel {
         }
     }
 
+    public IndexerParameters getIndexParameters() {
+        return indexParameters;
+    }
+
     public URI[] getEgoList() {
         return egoSet.toArray(new URI[]{});
     }
 
     public void setEgoList(URI[] egoListArray) {
         egoSet = new HashSet<URI>(Arrays.asList(egoListArray));
+    }
+
+    private void storeParameter(Element svgRoot, String parameterName, String[] ParameterValues) {
+        Element kinTypesRecordNode = doc.createElement("desc");
+        kinTypesRecordNode.setAttributeNS(null, "id", parameterName);
+        StringBuilder kinTypeRecordBuilder = new StringBuilder();
+        for (String currentKinType : ParameterValues) {
+            if (kinTypeRecordBuilder.length() > 0) {
+                kinTypeRecordBuilder.append(",");
+            }
+            kinTypeRecordBuilder.append(currentKinType);
+        }
+        Text kinTypeTextNode = doc.createTextNode(kinTypeRecordBuilder.toString());
+        kinTypesRecordNode.appendChild(kinTypeTextNode);
+        svgRoot.appendChild(kinTypesRecordNode);
     }
 
     public void drawNodes(GraphData graphData) {
@@ -235,6 +257,10 @@ public class GraphPanel extends JPanel {
         kinTypesRecordNode.appendChild(kinTypeTextNode);
         svgRoot.appendChild(kinTypesRecordNode);
         // end store the selected kin type strings nodes in the dom
+        storeParameter(svgRoot, "AncestorFields", indexParameters.ancestorFields);
+        storeParameter(svgRoot, "DecendantFields", indexParameters.decendantFields);
+        storeParameter(svgRoot, "LabelFields", indexParameters.labelFields);
+        storeParameter(svgRoot, "SymbolFieldsFields", indexParameters.symbolFieldsFields);
 
         svgCanvas.setSVGDocument(doc);
 //        svgCanvas.setDocument(doc);
