@@ -16,7 +16,8 @@ public class FieldSelectionList extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     }
 
-    public void setFieldList(String[] fieldListArray) {
+    public FieldSelectionList(String[] fieldListArray) {
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.removeAll();
         for (String fieldArray : fieldListArray) {
             JLabel fieldPathLabel = new JLabel(fieldArray);
@@ -27,7 +28,8 @@ public class FieldSelectionList extends JPanel {
         }
     }
 
-    public void setFieldList(String[][] fieldListArray) {
+    public FieldSelectionList(String[][] fieldListArray) {
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.removeAll();
         for (String[] fieldArray : fieldListArray) {
             JLabel fieldPathLabel = new JLabel(fieldArray[0]);
