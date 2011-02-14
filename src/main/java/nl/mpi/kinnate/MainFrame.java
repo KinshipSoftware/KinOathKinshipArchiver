@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.ImdiTree;
@@ -18,7 +19,6 @@ import nl.mpi.arbil.PreviewSplitPanel;
 import nl.mpi.arbil.XsdChecker;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.arbil.data.ImdiTreeObject;
-import nl.mpi.kinnate.EntityIndexer.EntityIndex;
 
 /*
  *  Document   : MainFrame
@@ -32,12 +32,10 @@ public class MainFrame extends javax.swing.JFrame {
 //    private JungGraph jungGraph;
     private ImdiTable previewTable;
     private ImdiTableModel imdiTableModel;
-    private EntityIndex entityIndex;
 
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
-        entityIndex = new EntityIndex();
         leftTree = new ImdiTree();
 //        GraphPanel0 graphPanel0Deprecated;
 //        graphPanel0Deprecated = new GraphPanel0();
@@ -52,7 +50,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         JScrollPane tableScrollPane = new JScrollPane(previewTable);
         jScrollPane1.getViewport().add(leftTree);
-        KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(entityIndex, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/EgoSelection.svg"));
+        KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/EgoSelection.svg"));
         jTabbedPane1.add("EgoSelection", egoSelectionTestPanel);
         jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
         jTabbedPane1.add("Kin Term Mapping for KinType Strings", new KinTypeStringTestPanel());
@@ -73,13 +71,11 @@ public class MainFrame extends javax.swing.JFrame {
                     tempArray.add(currentImdiNode);
                     allEntityUris.add(currentImdiNode.getURI());
                 } catch (URISyntaxException exception) {
-                    System.err.println(exception.getMessage());
-                    exception.printStackTrace();
+                    GuiHelper.linorgBugCatcher.logError(exception);
                 }
             }
             ImdiTreeObject[] allEntities = tempArray.toArray(new ImdiTreeObject[]{});
             leftTree.rootNodeChildren = allEntities;
-            entityIndex.indexEntities(allEntityUris.toArray(new URI[]{}));
             imdiTableModel.removeAllImdiRows();
             imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
         } //else {
@@ -287,7 +283,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDiagramActionPerformed
         for (File selectedFile : LinorgWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false)) {
-            KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(entityIndex, selectedFile);
+            KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(selectedFile);
             jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
         }
     }//GEN-LAST:event_openDiagramActionPerformed
@@ -301,7 +297,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_saveDiagramActionPerformed
 
     private void saveDiagramAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDiagramAsActionPerformed
-        // TODO add your handling code here:
+        //File selectedFile[] = LinorgWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, false, false);
+
     }//GEN-LAST:event_saveDiagramAsActionPerformed
 
     private void exitApplicationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitApplicationActionPerformed
