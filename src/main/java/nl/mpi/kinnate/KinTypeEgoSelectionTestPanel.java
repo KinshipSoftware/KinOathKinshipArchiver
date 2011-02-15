@@ -12,7 +12,6 @@ import java.net.URI;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
@@ -25,8 +24,6 @@ import nl.mpi.kinnate.EntityIndexer.EntityIndex;
  */
 public class KinTypeEgoSelectionTestPanel extends JPanel {
 
-    private FieldSelectionList symbolFieldsList;
-    private FieldSelectionList relationFieldsList;
     private JTextArea kinTypeStringInput;
     private GraphPanel graphPanel;
     private GraphData graphData;
@@ -45,13 +42,6 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
         kinGraphPanel.add(kinTypeStringInput, BorderLayout.PAGE_START);
         kinGraphPanel.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, egoSelectionPanel, graphPanel), BorderLayout.CENTER);
 
-        // todo: add drag drop of field to these lists and initially populate them from the SVG data
-        symbolFieldsList = new FieldSelectionList();
-        relationFieldsList = new FieldSelectionList();
-        JTabbedPane fieldListTabs = new JTabbedPane();
-        fieldListTabs.add("Symbol Fields", new JScrollPane(symbolFieldsList));
-        fieldListTabs.add("Relation Fields", new JScrollPane(relationFieldsList));
-
         ImdiTableModel imdiTableModel = new ImdiTableModel();
         ImdiTable imdiTable = new ImdiTable(imdiTableModel, "Selected Nodes");
         graphPanel.setImdiTableModel(imdiTableModel);
@@ -61,8 +51,22 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
 //        fieldListTabs.setMinimumSize(minimumSize);
 //        tableScrollPane.setMinimumSize(minimumSize);
 
+        entityIndex = new EntityIndex(graphPanel.getIndexParameters());
+        entityIndex.indexEntities();
+
+        graphData = new GraphData();
+        if (existingFile.exists()) {
+            graphPanel.readSvg(existingFile);
+        } else {
+            graphPanel.drawNodes(graphData);
+        }
+        URI[] egoSelection = graphPanel.getEgoList();
+        graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
+        egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
+        kinTypeStrings = graphPanel.getKinTypeStrigs();
+
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, kinGraphPanel,
-                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tableScrollPane, fieldListTabs));
+                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tableScrollPane, new IndexerParametersPanel(graphPanel, entityIndex)));
         this.add(splitPane);
 
 
@@ -97,28 +101,16 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
                 graphPanel.drawNodes(graphData);
             }
         });
-        entityIndex = new EntityIndex(graphPanel.getIndexParameters());
-        entityIndex.indexEntities();
-        graphData = new GraphData();
-        URI[] egoSelection = graphPanel.getEgoList();
-        graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
-        if (existingFile.exists()) {
-            graphPanel.readSvg(existingFile);
-        } else {
-            graphPanel.drawNodes(graphData);
-        }
-        egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
-        symbolFieldsList.setFieldList(graphPanel.getIndexParameters().symbolFieldsFields);
-        relationFieldsList.setFieldList(graphPanel.getIndexParameters().relevantLinkData);
-        kinTypeStrings = graphPanel.getKinTypeStrigs();
         boolean firstString = true;
         for (String currentKinTypeString : kinTypeStrings) {
             if (currentKinTypeString.trim().length() > 0) {
                 if (firstString) {
                     kinTypeStringInput.setText("");
                     firstString = false;
+                } else {
+                    kinTypeStringInput.append("\n");
                 }
-                kinTypeStringInput.append(currentKinTypeString.trim() + "\n");
+                kinTypeStringInput.append(currentKinTypeString.trim());
             }
         }
     }
