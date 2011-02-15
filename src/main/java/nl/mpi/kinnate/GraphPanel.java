@@ -41,12 +41,12 @@ import org.w3c.dom.svg.SVGRect;
 public class GraphPanel extends JPanel {
 
     private JScrollPane jScrollPane;
-    protected JSVGCanvas svgCanvas;
+    private JSVGCanvas svgCanvas;
     private SVGDocument doc;
     private Element currentDraggedElement;
     private Cursor preDragCursor;
-    HashSet<URI> egoSet = new HashSet<URI>();
-    HashSet<String> kinTypeStringSet = new HashSet<String>();
+    private HashSet<URI> egoSet = new HashSet<URI>();
+    private String[] kinTypeStrings = new String[]{};
     private IndexerParameters indexParameters;
     private ImdiTableModel imdiTableModel;
 
@@ -123,6 +123,10 @@ public class GraphPanel extends JPanel {
         new CmdiComponentBuilder().savePrettyFormatting(doc, svgFilePath);
     }
 
+    private String[] readArrayFromEntity(Node currentChild) {
+        return currentChild.getTextContent().split(",");
+    }
+
     private void getParametersFromDom() {
         if (doc != null) {
             Element svgRoot = doc.getDocumentElement();
@@ -144,14 +148,29 @@ public class GraphPanel extends JPanel {
                                 }
                             }
                         }
+//                        if (idAttrubite.getTextContent().equals("KinTypeStrings")) {
+//                            String[] kinTypeStringArray = currentChild.getTextContent().split(",");
+//                            kinTypeStringSet = new HashSet<String>();
+//                            for (String kinTypeString : kinTypeStringArray) {
+//                                if (kinTypeString.length() > 0) {
+//                                    kinTypeStringSet.add(kinTypeString);
+//                                }
+//                            }
+//                        }
                         if (idAttrubite.getTextContent().equals("KinTypeStrings")) {
-                            String[] kinTypeStringArray = currentChild.getTextContent().split(",");
-                            kinTypeStringSet = new HashSet<String>();
-                            for (String kinTypeString : kinTypeStringArray) {
-                                if (kinTypeString.length() > 0) {
-                                    kinTypeStringSet.add(kinTypeString);
-                                }
-                            }
+                            kinTypeStrings = readArrayFromEntity(currentChild);
+                        }
+                        if (idAttrubite.getTextContent().equals("AncestorFields")) {
+                            indexParameters.ancestorFields = readArrayFromEntity(currentChild);
+                        }
+                        if (idAttrubite.getTextContent().equals("DecendantFields")) {
+                            indexParameters.decendantFields = readArrayFromEntity(currentChild);
+                        }
+                        if (idAttrubite.getTextContent().equals("LabelFields")) {
+                            indexParameters.labelFields = readArrayFromEntity(currentChild);
+                        }
+                        if (idAttrubite.getTextContent().equals("SymbolFieldsFields")) {
+                            indexParameters.symbolFieldsFields = readArrayFromEntity(currentChild);
                         }
                     }
                 }
@@ -160,16 +179,18 @@ public class GraphPanel extends JPanel {
     }
 
     public String[] getKinTypeStrigs() {
-        return kinTypeStringSet.toArray(new String[]{});
+        return kinTypeStrings;
     }
 
     public void setKinTypeStrigs(String[] kinTypeStringArray) {
-        kinTypeStringSet = new HashSet<String>();
+        // strip out any white space, blank lines and remove duplicates
+        HashSet<String> kinTypeStringSet = new HashSet<String>();
         for (String kinTypeString : kinTypeStringArray) {
             if (kinTypeString != null && kinTypeString.trim().length() > 0) {
                 kinTypeStringSet.add(kinTypeString.trim());
             }
         }
+        kinTypeStrings = kinTypeStringSet.toArray(new String[]{});
     }
 
     public IndexerParameters getIndexParameters() {
@@ -244,7 +265,7 @@ public class GraphPanel extends JPanel {
         svgRoot.appendChild(egoRecordNode);
         // end store the selected ego nodes in the dom
         // store the selected kin type strings in the dom
-        storeParameter(svgRoot, "KinTypeStrings", kinTypeStringSet.toArray(new String[]{}));
+        storeParameter(svgRoot, "KinTypeStrings", kinTypeStrings);
         // end store the selected kin type strings nodes in the dom
         storeParameter(svgRoot, "AncestorFields", indexParameters.ancestorFields);
         storeParameter(svgRoot, "DecendantFields", indexParameters.decendantFields);
