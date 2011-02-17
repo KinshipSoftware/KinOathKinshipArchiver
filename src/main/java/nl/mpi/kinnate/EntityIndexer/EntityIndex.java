@@ -28,50 +28,65 @@ public class EntityIndex {
 
     IndexerParameters indexParameters;
     private HashMap<String /* url to the ego entity */, EntityData> knownEntities;
+//    private EntityCollection entityCollection;
 
     public EntityIndex(IndexerParameters indexParametersLocal) {
         indexParameters = indexParametersLocal;
+//        entityCollection = new EntityCollection();
         knownEntities = new HashMap<String, EntityData>();
     }
 
-    private void getLinksFromDom(URI egoEntityUri, EntityData entityData) {
-        try {
-            Document linksDom = new CmdiComponentBuilder().getDocument(egoEntityUri);
-            NodeList relationLinkNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, indexParameters.linkPath);
-            for (int nodeCounter = 0; nodeCounter < relationLinkNodeList.getLength(); nodeCounter++) {
-                Node relationLinkNode = relationLinkNodeList.item(nodeCounter);
-                if (relationLinkNode != null) {
-                    entityData.addRelation(relationLinkNode.getTextContent());
-                    // get any requested link data
-                    for (String relevantDataPath : indexParameters.relevantLinkData) {
-                        for (Node linkDataNode = relationLinkNode.getParentNode().getFirstChild(); linkDataNode != null; linkDataNode = linkDataNode.getNextSibling()) {
-                            if (relevantDataPath.equals(linkDataNode.getNodeName())) {
-                                entityData.addRelationData(relationLinkNode.getTextContent(), relevantDataPath, linkDataNode.getTextContent());
+    private EntityData getEntityData(String egoEntityUriString) throws URISyntaxException {
+        URI egoEntityUri = new URI(egoEntityUriString);
+        return getEntityData(egoEntityUri);
+    }
+
+    private EntityData getEntityData(URI egoEntityUri) {
+        EntityData entityData = knownEntities.get(egoEntityUri.toASCIIString());
+        if (entityData != null) {
+            return entityData;
+        } else {
+            entityData = new EntityData();
+            knownEntities.put(egoEntityUri.toASCIIString(), entityData);
+            try {
+                Document linksDom = new CmdiComponentBuilder().getDocument(egoEntityUri);
+                NodeList relationLinkNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, indexParameters.linkPath);
+                for (int nodeCounter = 0; nodeCounter < relationLinkNodeList.getLength(); nodeCounter++) {
+                    Node relationLinkNode = relationLinkNodeList.item(nodeCounter);
+                    if (relationLinkNode != null) {
+                        entityData.addRelation(relationLinkNode.getTextContent());
+                        // get any requested link data
+                        for (String relevantDataPath : indexParameters.relevantLinkData.getValues()) {
+                            for (Node linkDataNode = relationLinkNode.getParentNode().getFirstChild(); linkDataNode != null; linkDataNode = linkDataNode.getNextSibling()) {
+                                if (relevantDataPath.equals(linkDataNode.getNodeName())) {
+                                    entityData.addRelationData(relationLinkNode.getTextContent(), relevantDataPath, linkDataNode.getTextContent());
+                                }
                             }
                         }
                     }
                 }
-            }
-            // get any requested entity data
-            for (String relevantDataPath : indexParameters.relevantEntityData) {
-                NodeList relevantaDataNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, relevantDataPath);
-                for (int dataCounter = 0; dataCounter < relevantaDataNodeList.getLength(); dataCounter++) {
-                    Node dataNode = relevantaDataNodeList.item(dataCounter);
-                    if (dataNode != null) {
-                        entityData.addEntityData(relevantDataPath, dataNode.getTextContent());
+                // get any requested entity data
+                for (String relevantDataPath : indexParameters.relevantEntityData.getValues()) {
+                    NodeList relevantaDataNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, relevantDataPath);
+                    for (int dataCounter = 0; dataCounter < relevantaDataNodeList.getLength(); dataCounter++) {
+                        Node dataNode = relevantaDataNodeList.item(dataCounter);
+                        if (dataNode != null) {
+                            entityData.addEntityData(relevantDataPath, dataNode.getTextContent());
+                        }
                     }
                 }
+            } catch (TransformerException exception) {
+                GuiHelper.linorgBugCatcher.logError(exception);
+            } catch (ParserConfigurationException exception) {
+                GuiHelper.linorgBugCatcher.logError(exception);
+            } catch (DOMException exception) {
+                GuiHelper.linorgBugCatcher.logError(exception);
+            } catch (IOException exception) {
+                GuiHelper.linorgBugCatcher.logError(exception);
+            } catch (SAXException exception) {
+                GuiHelper.linorgBugCatcher.logError(exception);
             }
-        } catch (TransformerException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
-        } catch (ParserConfigurationException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
-        } catch (DOMException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
-        } catch (IOException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
-        } catch (SAXException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            return entityData;
         }
     }
 
@@ -91,21 +106,18 @@ public class EntityIndex {
         }
     }
 
-    public boolean indexEntities() {
+    public void loadAllEntities() {
         String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
         if (treeNodesArray != null) {
             for (String currentNodeString : treeNodesArray) {
                 try {
                     URI egoEntityUri = new URI(currentNodeString);
-                    EntityData entityData = new EntityData();
-                    knownEntities.put(egoEntityUri.toASCIIString(), entityData);
-                    getLinksFromDom(egoEntityUri, entityData);
+                    getEntityData(egoEntityUri);
                 } catch (URISyntaxException exception) {
                     GuiHelper.linorgBugCatcher.logError(exception);
                 }
             }
         }
-        return false;
     }
 
     public void setKinTypeStringTerm(String symbolString, String fieldPath, String fieldValue) {
@@ -114,10 +126,10 @@ public class EntityIndex {
     }
 
     private GraphDataNode getGraphDataNode(boolean isEgo, URI entityUri) {
-        EntityData entityData = knownEntities.get(entityUri.toASCIIString());
+        EntityData entityData = getEntityData(entityUri);
         ArrayList<String> labelTextList = new ArrayList<String>();
         int entitySymbolIndex = 0;
-        for (String currentLabelField : indexParameters.labelFields) {
+        for (String currentLabelField : indexParameters.labelFields.getValues()) {
             String labelTextTemp = entityData.getEntityField(currentLabelField);
             if (labelTextTemp != null) {
                 labelTextList.add(labelTextTemp);
@@ -127,7 +139,7 @@ public class EntityIndex {
             entitySymbolIndex = 0;
         } else {
 
-            for (String currentSymbolField : indexParameters.symbolFieldsFields) {
+            for (String currentSymbolField : indexParameters.symbolFieldsFields.getValues()) {
                 String linkSymbolString = entityData.getEntityField(currentSymbolField);
                 if (linkSymbolString != null) {
                     // todo: move this into a single string or other such that it can be set by the user and stored in the svg
@@ -155,7 +167,7 @@ public class EntityIndex {
         GraphDataNode.RelationType alterType = null;
         String[][] alterRelationFields = egoData.getRelationData(alterPath);
         if (alterRelationFields != null) {
-            for (String ancestorField : indexParameters.ancestorFields) {
+            for (String ancestorField : indexParameters.ancestorFields.getValues()) {
                 for (String[] egoRelationField : alterRelationFields) {
                     if (ancestorField.equals(egoRelationField[1])) {
                         egoType = GraphDataNode.RelationType.ancestor;
@@ -163,7 +175,7 @@ public class EntityIndex {
                     }
                 }
             }
-            for (String ancestorField : indexParameters.decendantFields) {
+            for (String ancestorField : indexParameters.decendantFields.getValues()) {
                 for (String[] egoRelationField : alterRelationFields) {
                     if (ancestorField.equals(egoRelationField[1])) {
                         egoType = GraphDataNode.RelationType.descendant;
@@ -186,8 +198,8 @@ public class EntityIndex {
         return graphDataNodeList.toArray(new GraphDataNode[]{});
     }
 
-    private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, String currentEgoPath, GraphDataNode egoNode, ArrayList<KinType> remainingKinTypes) {
-        EntityData egoData = knownEntities.get(currentEgoPath);
+    private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, String currentEgoPath, GraphDataNode egoNode, ArrayList<KinType> remainingKinTypes) throws URISyntaxException{
+        EntityData egoData = getEntityData(currentEgoPath);
 //        String currentKinType = remaningKinTypeString.substring(0, 1);
 //        remaningKinTypeString = remaningKinTypeString.substring(1);
         KinType currentKinType = remainingKinTypes.remove(0);
@@ -202,7 +214,7 @@ public class EntityIndex {
                     createdGraphNodes.put(alterPath, alterNode);
                     relationAdded = true;
                 }
-                EntityData alterData = knownEntities.get(currentEgoPath);
+                EntityData alterData = getEntityData(currentEgoPath);
                 setRelationData(egoNode, alterNode, egoData, alterPath);
                 setRelationData(alterNode, egoNode, alterData, currentEgoPath);
                 // todo: either prevent links being added if a node does not match the kin type or remove them when known
@@ -220,7 +232,7 @@ public class EntityIndex {
         }
     }
 
-    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) {
+    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) throws URISyntaxException{
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
         HashMap<String, GraphDataNode> createdGraphNodes = new HashMap<String, GraphDataNode>();
         for (URI currentEgoUri : egoNodes) {
@@ -254,7 +266,7 @@ public class EntityIndex {
             uriCounter++;
         }
         EntityIndex testEntityIndex = new EntityIndex(new IndexerParameters());
-        testEntityIndex.indexEntities();
+        testEntityIndex.loadAllEntities();
         testEntityIndex.printKnownEntities();
     }
 }
