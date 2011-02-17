@@ -49,6 +49,7 @@ public class GraphPanel extends JPanel {
     private String[] kinTypeStrings = new String[]{};
     private IndexerParameters indexParameters;
     private ImdiTableModel imdiTableModel;
+    private GraphData graphData;
 
     public GraphPanel() {
         indexParameters = new IndexerParameters();
@@ -161,16 +162,16 @@ public class GraphPanel extends JPanel {
                             kinTypeStrings = readArrayFromEntity(currentChild);
                         }
                         if (idAttrubite.getTextContent().equals("AncestorFields")) {
-                            indexParameters.ancestorFields = readArrayFromEntity(currentChild);
+                            indexParameters.ancestorFields.setValues(readArrayFromEntity(currentChild));
                         }
                         if (idAttrubite.getTextContent().equals("DecendantFields")) {
-                            indexParameters.decendantFields = readArrayFromEntity(currentChild);
+                            indexParameters.decendantFields.setValues(readArrayFromEntity(currentChild));
                         }
                         if (idAttrubite.getTextContent().equals("LabelFields")) {
-                            indexParameters.labelFields = readArrayFromEntity(currentChild);
+                            indexParameters.labelFields.setValues(readArrayFromEntity(currentChild));
                         }
                         if (idAttrubite.getTextContent().equals("SymbolFieldsFields")) {
-                            indexParameters.symbolFieldsFields = readArrayFromEntity(currentChild);
+                            indexParameters.symbolFieldsFields.setValues(readArrayFromEntity(currentChild));
                         }
                     }
                 }
@@ -220,7 +221,12 @@ public class GraphPanel extends JPanel {
         svgRoot.appendChild(kinTypesRecordNode);
     }
 
-    public void drawNodes(GraphData graphData) {
+    public void drawNodes() {
+        drawNodes(graphData);
+    }
+
+    public void drawNodes(GraphData graphDataLocal) {
+        graphData = graphDataLocal;
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
         doc = (SVGDocument) impl.createDocument(svgNS, "svg", null);
@@ -267,10 +273,10 @@ public class GraphPanel extends JPanel {
         // store the selected kin type strings in the dom
         storeParameter(svgRoot, "KinTypeStrings", kinTypeStrings);
         // end store the selected kin type strings nodes in the dom
-        storeParameter(svgRoot, "AncestorFields", indexParameters.ancestorFields);
-        storeParameter(svgRoot, "DecendantFields", indexParameters.decendantFields);
-        storeParameter(svgRoot, "LabelFields", indexParameters.labelFields);
-        storeParameter(svgRoot, "SymbolFieldsFields", indexParameters.symbolFieldsFields);
+        storeParameter(svgRoot, "AncestorFields", indexParameters.ancestorFields.getValues());
+        storeParameter(svgRoot, "DecendantFields", indexParameters.decendantFields.getValues());
+        storeParameter(svgRoot, "LabelFields", indexParameters.labelFields.getValues());
+        storeParameter(svgRoot, "SymbolFieldsFields", indexParameters.symbolFieldsFields.getValues());
 
         svgCanvas.setSVGDocument(doc);
 //        svgCanvas.setDocument(doc);
