@@ -2,19 +2,21 @@ package nl.mpi.kinnate;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.net.URI;
+import java.net.URISyntaxException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
+import nl.mpi.arbil.LinorgWindowManager;
 import nl.mpi.kinnate.EntityIndexer.EntityIndex;
 
 /**
@@ -52,7 +54,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
 //        tableScrollPane.setMinimumSize(minimumSize);
 
         entityIndex = new EntityIndex(graphPanel.getIndexParameters());
-        entityIndex.indexEntities();
+//        entityIndex.indexEntities();
 
         graphData = new GraphData();
         if (existingFile.exists()) {
@@ -61,12 +63,17 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
             graphPanel.drawNodes(graphData);
         }
         URI[] egoSelection = graphPanel.getEgoList();
-        graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
+        try {
+            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
+        } catch (URISyntaxException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+            LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
+        }
         egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
         kinTypeStrings = graphPanel.getKinTypeStrigs();
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, kinGraphPanel,
-                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tableScrollPane, new IndexerParametersPanel(graphPanel, entityIndex)));
+                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tableScrollPane, new IndexerParametersPanel(this, graphPanel, entityIndex)));
         this.add(splitPane);
 
 
@@ -97,8 +104,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
             public void keyReleased(KeyEvent e) {
                 kinTypeStrings = kinTypeStringInput.getText().split("\n");
                 graphPanel.setKinTypeStrigs(kinTypeStrings);
-                graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), kinTypeStrings));
-                graphPanel.drawNodes(graphData);
+                drawGraph();
             }
         });
         boolean firstString = true;
@@ -115,10 +121,19 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
         }
     }
 
+    public void drawGraph() {
+        try {
+            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), kinTypeStrings));
+        } catch (URISyntaxException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+            LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
+        }
+        graphPanel.drawNodes(graphData);
+    }
+
     public void addEgoNodes(URI[] egoSelection) {
         graphPanel.setEgoList(egoSelection);
-        graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
-        graphPanel.drawNodes(graphData);
+        drawGraph();
         egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
     }
 }
