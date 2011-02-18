@@ -474,15 +474,38 @@ public class GraphPanel extends JPanel implements SavePanel {
             // draw links
             for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
                 if (graphLinkNode.sourceNode.equals(currentNode)) {
+//                    System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
+//
+////                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
+//                    Element linkLine = doc.createElementNS(svgNS, "line");
+//                    linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+//                    linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+//
+//                    linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
+//                    linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
+//                    linkLine.setAttributeNS(null, "stroke", "black");
+//                    linkLine.setAttributeNS(null, "stroke-width", "1");
+//                    // Attach the rectangle to the root 'svg' element.
+//                    svgRoot.appendChild(linkLine);
                     System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
 
 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
-                    Element linkLine = doc.createElementNS(svgNS, "line");
-                    linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
-                    linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+                    Element linkLine = doc.createElementNS(svgNS, "path");
+                    String fromX = Integer.toString(currentNode.xPos * hSpacing + hSpacing);
+                    String fromY = Integer.toString(currentNode.yPos * vSpacing + vSpacing);
+                    String toX = Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing);
+                    String toY = Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing);
+                    String fromBezX = fromX;
+                    String fromBezY = toY;
+                    String toBezX = toX;
+                    String toBezY = fromY;
+                    linkLine.setAttributeNS(null, "d", "M " + fromX + "," + fromY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + toX + "," + toY);
 
-                    linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
-                    linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
+//                    linkLine.setAttributeNS(null, "x1", );
+//                    linkLine.setAttributeNS(null, "y1", );
+//
+//                    linkLine.setAttributeNS(null, "x2", );
+                    linkLine.setAttributeNS(null, "fill", "none");
                     linkLine.setAttributeNS(null, "stroke", "black");
                     linkLine.setAttributeNS(null, "stroke-width", "1");
                     // Attach the rectangle to the root 'svg' element.
