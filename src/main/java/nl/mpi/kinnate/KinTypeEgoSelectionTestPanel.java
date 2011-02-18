@@ -24,7 +24,7 @@ import nl.mpi.kinnate.EntityIndexer.EntityIndex;
  *  Created on : Sep 29, 2010, 12:52:01 PM
  *  Author     : Peter Withers
  */
-public class KinTypeEgoSelectionTestPanel extends JPanel {
+public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 
     private JTextArea kinTypeStringInput;
     private GraphPanel graphPanel;
@@ -57,7 +57,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
 //        entityIndex.indexEntities();
 
         graphData = new GraphData();
-        if (existingFile.exists()) {
+        if (existingFile != null && existingFile.exists()) {
             graphPanel.readSvg(existingFile);
         } else {
             graphPanel.drawNodes(graphData);
@@ -102,8 +102,8 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
             }
 
             public void keyReleased(KeyEvent e) {
-                kinTypeStrings = kinTypeStringInput.getText().split("\n");
-                graphPanel.setKinTypeStrigs(kinTypeStrings);
+                graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
+                kinTypeStrings = graphPanel.getKinTypeStrigs();
                 drawGraph();
             }
         });
@@ -135,5 +135,21 @@ public class KinTypeEgoSelectionTestPanel extends JPanel {
         graphPanel.setEgoList(egoSelection);
         drawGraph();
         egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
+    }
+
+    public boolean hasSaveFileName() {
+        return graphPanel.hasSaveFileName();
+    }
+
+    public boolean requiresSave() {
+        return graphPanel.requiresSave();
+    }
+
+    public void saveToFile() {
+        graphPanel.saveToFile();
+    }
+
+    public void saveToFile(File saveFile) {
+        graphPanel.saveToFile(saveFile);
     }
 }
