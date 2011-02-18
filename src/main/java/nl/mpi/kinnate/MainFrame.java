@@ -4,9 +4,11 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import nl.mpi.arbil.GuiHelper;
@@ -50,7 +52,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         JScrollPane tableScrollPane = new JScrollPane(previewTable);
         jScrollPane1.getViewport().add(leftTree);
-        KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/EgoSelection.svg"));
+        KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
         jTabbedPane1.add("EgoSelection", egoSelectionTestPanel);
         jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
         jTabbedPane1.add("Kin Term Mapping for KinType Strings", new KinTypeStringTestPanel());
@@ -95,6 +97,16 @@ public class MainFrame extends javax.swing.JFrame {
 
         this.doLayout();
         this.pack();
+    }
+
+    private SavePanel getSavePanel(int tabIndex) {
+        Object selectedComponent = jTabbedPane1.getComponentAt(tabIndex);
+        SavePanel savePanel = null;
+        if (selectedComponent instanceof SavePanel) {
+            savePanel = (KinTypeEgoSelectionTestPanel) selectedComponent;
+
+        }
+        return savePanel;
     }
 
     private void startImport(final String importFileString) {
@@ -164,12 +176,13 @@ public class MainFrame extends javax.swing.JFrame {
         importGedcomTorture = new javax.swing.JMenuItem();
         importGedcomSimple = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        newDiagramMenuItem = new javax.swing.JMenuItem();
         openDiagram = new javax.swing.JMenuItem();
         openRecentMenu = new javax.swing.JMenu();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         saveDiagram = new javax.swing.JMenuItem();
         saveDiagramAs = new javax.swing.JMenuItem();
+        closeTabMenuItem = new javax.swing.JMenuItem();
         exitApplication = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
 
@@ -181,6 +194,15 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         fileMenu.setText("File");
+        fileMenu.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                fileMenuMenuSelected(evt);
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+        });
         fileMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fileMenuActionPerformed(evt);
@@ -204,9 +226,14 @@ public class MainFrame extends javax.swing.JFrame {
         fileMenu.add(importGedcomSimple);
         fileMenu.add(jSeparator1);
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("New");
-        fileMenu.add(jMenuItem1);
+        newDiagramMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        newDiagramMenuItem.setText("New");
+        newDiagramMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newDiagramMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(newDiagramMenuItem);
 
         openDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         openDiagram.setText("Open");
@@ -248,6 +275,15 @@ public class MainFrame extends javax.swing.JFrame {
         });
         fileMenu.add(saveDiagramAs);
 
+        closeTabMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
+        closeTabMenuItem.setText("Close");
+        closeTabMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeTabMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(closeTabMenuItem);
+
         exitApplication.setText("Exit");
         exitApplication.setActionCommand("exit");
         exitApplication.addActionListener(new java.awt.event.ActionListener() {
@@ -278,13 +314,13 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_importGedcomSimpleActionPerformed
 
     private void fileMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_fileMenuActionPerformed
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDiagramActionPerformed
         for (File selectedFile : LinorgWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false)) {
             KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(selectedFile);
             jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
+            jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
         }
     }//GEN-LAST:event_openDiagramActionPerformed
 
@@ -293,17 +329,93 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_openRecentMenuActionPerformed
 
     private void saveDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDiagramActionPerformed
-        // TODO add your handling code here:
+        int tabIndex = Integer.valueOf(evt.getActionCommand());
+        SavePanel savePanel = getSavePanel(tabIndex);
+        savePanel.saveToFile();
     }//GEN-LAST:event_saveDiagramActionPerformed
 
     private void saveDiagramAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDiagramAsActionPerformed
-        //File selectedFile[] = LinorgWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, false, false);
+        // todo: update the file select to limit to svg and test that a file has been selected
+        // todo: move this into the arbil window manager and get the last used directory
+        // todo: make sure the file has the svg suffix
+        JFileChooser fc = new JFileChooser();
+        fc.addChoosableFileFilter(new FileFilter() {
 
+            @Override
+            public boolean accept(File file) {
+                if (file.isDirectory()) {
+                    return true;
+                }
+                return (file.getName().toLowerCase().endsWith(".svg"));
+            }
+
+            @Override
+            public String getDescription() {
+                return "Scalable Vector Graphics (SVG)";
+            }
+        });
+
+        int returnVal = fc.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            int tabIndex = Integer.valueOf(evt.getActionCommand());
+            SavePanel savePanel = getSavePanel(tabIndex);
+            savePanel.saveToFile(file);
+            jTabbedPane1.setTitleAt(tabIndex, file.getName());
+        } else {
+            // todo: warn user that no file selected and so cannot save
+        }
+//        File selectedFile[] = LinorgWindowManager.getSingleInstance().showFileSelectBox("Save Kin Diagram", false, false, false);
+//        if (selectedFile != null && selectedFile.length > 0) {
+//            int tabIndex = Integer.valueOf(evt.getActionCommand());
+//            SavePanel savePanel = getSavePanel(tabIndex);
+//            savePanel.saveToFile(selectedFile[0]);
+//            jTabbedPane1.setTitleAt(tabIndex, selectedFile[0].getName());
+//        } else {
+//            // todo: warn user that no file selected and so cannot save
+//        }
     }//GEN-LAST:event_saveDiagramAsActionPerformed
 
     private void exitApplicationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitApplicationActionPerformed
-        // TODO add your handling code here:
+        // todo: check that things are saved and ask user if not
+        System.exit(0);
     }//GEN-LAST:event_exitApplicationActionPerformed
+
+    private void fileMenuMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_fileMenuMenuSelected
+        // set the save, save as and close text to include the tab to which the action will occur
+        int selectedIndex = jTabbedPane1.getSelectedIndex();
+        String currentTabText = jTabbedPane1.getTitleAt(selectedIndex);
+        SavePanel savePanel = getSavePanel(selectedIndex);
+        saveDiagramAs.setText("Save As (" + currentTabText + ")");
+        saveDiagramAs.setActionCommand(Integer.toString(selectedIndex));
+        saveDiagram.setText("Save (" + currentTabText + ")");
+        saveDiagram.setActionCommand(Integer.toString(selectedIndex));
+        closeTabMenuItem.setText("Close (" + currentTabText + ")");
+        closeTabMenuItem.setActionCommand(Integer.toString(selectedIndex));
+        if (savePanel != null) {
+            saveDiagram.setEnabled(savePanel.hasSaveFileName() && savePanel.requiresSave());
+            saveDiagramAs.setEnabled(true);
+            closeTabMenuItem.setEnabled(true);
+        } else {
+            saveDiagramAs.setEnabled(false);
+            saveDiagram.setEnabled(false);
+            closeTabMenuItem.setEnabled(false);
+        }
+    }//GEN-LAST:event_fileMenuMenuSelected
+
+    private void closeTabMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeTabMenuItemActionPerformed
+        int tabIndex = Integer.valueOf(evt.getActionCommand());
+        SavePanel savePanel = getSavePanel(tabIndex);
+        if (savePanel.requiresSave()) {
+            // todo: warn user to save
+        }
+        jTabbedPane1.remove(tabIndex);
+    }//GEN-LAST:event_closeTabMenuItemActionPerformed
+
+    private void newDiagramMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newDiagramMenuItemActionPerformed
+        KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
+        jTabbedPane1.add("Unsaved Diagram", egoSelectionTestPanel);
+    }//GEN-LAST:event_newDiagramMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -317,18 +429,19 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem closeTabMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitApplication;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem importGedcomSimple;
     private javax.swing.JMenuItem importGedcomTorture;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JMenuItem newDiagramMenuItem;
     private javax.swing.JMenuItem openDiagram;
     private javax.swing.JMenu openRecentMenu;
     private javax.swing.JMenuItem saveDiagram;
