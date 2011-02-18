@@ -2,6 +2,7 @@ package nl.mpi.kinnate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  *  Document   : GraphData
@@ -68,26 +69,26 @@ public class GraphData {
 ////            currentNode.calculateLinks(graphDataNodeList);
 //        }
 //    }
-    private void sanguineSubnodeSort(ArrayList<ArrayList<GraphDataNode>> generationRows, ArrayList<GraphDataNode> currentColumns, ArrayList<GraphDataNode> inputNodes, GraphDataNode currentNode) {
+    private void sanguineSubnodeSort(ArrayList<HashSet<GraphDataNode>> generationRows, HashSet<GraphDataNode> currentColumns, ArrayList<GraphDataNode> inputNodes, GraphDataNode currentNode) {
         int currentRowIndex = generationRows.indexOf(currentColumns);
-        ArrayList<GraphDataNode> ancestorColumns;
-        ArrayList<GraphDataNode> descendentColumns;
+        HashSet<GraphDataNode> ancestorColumns;
+        HashSet<GraphDataNode> descendentColumns;
         if (currentRowIndex < generationRows.size() - 1) {
             descendentColumns = generationRows.get(currentRowIndex + 1);
         } else {
-            descendentColumns = new ArrayList<GraphDataNode>();
+            descendentColumns = new HashSet<GraphDataNode>();
             generationRows.add(currentRowIndex + 1, descendentColumns);
         }
         if (currentRowIndex > 0) {
             ancestorColumns = generationRows.get(currentRowIndex - 1);
         } else {
-            ancestorColumns = new ArrayList<GraphDataNode>();
+            ancestorColumns = new HashSet<GraphDataNode>();
             generationRows.add(currentRowIndex, ancestorColumns);
         }
         for (GraphDataNode.NodeRelation relatedNode : currentNode.getNodeRelations()) {
             if (relatedNode.sourceNode.equals(currentNode)) {
                 if (inputNodes.contains(relatedNode.linkedNode)) {
-                    ArrayList<GraphDataNode> targetColumns = null;
+                    HashSet<GraphDataNode> targetColumns = null;
                     switch (relatedNode.relationType) {
                         case ancestor:
                             targetColumns = ancestorColumns;
@@ -113,7 +114,7 @@ public class GraphData {
 //            for (GraphDataNode.NodeRelation relatedNode : reverceLinkNode.getNodeRelations()) {
         for (GraphDataNode.NodeRelation relatedNode : currentNode.getNodeRelations()) {
             if (!relatedNode.sourceNode.equals(currentNode)) {
-                ArrayList<GraphDataNode> targetColumns = null;
+                HashSet<GraphDataNode> targetColumns = null;
                 switch (relatedNode.relationType) {
                     case ancestor:
                         targetColumns = descendentColumns;
@@ -139,11 +140,11 @@ public class GraphData {
     protected void sanguineSort() {
         System.out.println("calculateLocations");
         // create an array of rows
-        ArrayList<ArrayList<GraphDataNode>> generationRows = new ArrayList<ArrayList<GraphDataNode>>();
+        ArrayList<HashSet<GraphDataNode>> generationRows = new ArrayList<HashSet<GraphDataNode>>();
         ArrayList<GraphDataNode> inputNodes = new ArrayList<GraphDataNode>();
         inputNodes.addAll(Arrays.asList(graphDataNodeArray));
         // put an array of columns into the current row
-        ArrayList<GraphDataNode> currentColumns = new ArrayList<GraphDataNode>();
+        HashSet<GraphDataNode> currentColumns = new HashSet<GraphDataNode>();
         generationRows.add(currentColumns);
 
         while (inputNodes.size() > 0) {
@@ -154,19 +155,23 @@ public class GraphData {
         }
         gridWidth = 0;
         int yPos = 0;
-        for (ArrayList<GraphDataNode> currentRow : generationRows) {
+        for (HashSet<GraphDataNode> currentRow : generationRows) {
             System.out.println("row: : " + yPos);
-            int xPos = 0;
-            if (gridWidth < currentRow.size()) {
-                gridWidth = currentRow.size();
+            if (currentRow.isEmpty()) {
+                System.out.println("Skipping empty row");
+            } else {
+                int xPos = 0;
+                if (gridWidth < currentRow.size()) {
+                    gridWidth = currentRow.size();
+                }
+                for (GraphDataNode graphDataNode : currentRow) {
+                    System.out.println("updating: " + xPos + " : " + yPos + " : " + graphDataNode.getLabel());
+                    graphDataNode.yPos = yPos;
+                    graphDataNode.xPos = xPos;
+                    xPos++;
+                }
+                yPos++;
             }
-            for (GraphDataNode graphDataNode : currentRow) {
-                System.out.println("updating: " + xPos + " : " + yPos + " : " + graphDataNode.getLabel());
-                graphDataNode.yPos = yPos;
-                graphDataNode.xPos = xPos;
-                xPos++;
-            }
-            yPos++;
         }
         System.out.println("gridWidth: " + gridWidth);
         gridHeight = yPos;
