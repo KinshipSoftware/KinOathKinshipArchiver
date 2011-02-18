@@ -38,7 +38,7 @@ import org.w3c.dom.svg.SVGRect;
  *  Created on : Aug 16, 2010, 5:31:33 PM
  *  Author     : Peter Withers
  */
-public class GraphPanel extends JPanel {
+public class GraphPanel extends JPanel implements SavePanel {
 
     private JScrollPane jScrollPane;
     private JSVGCanvas svgCanvas;
@@ -50,8 +50,12 @@ public class GraphPanel extends JPanel {
     private IndexerParameters indexParameters;
     private ImdiTableModel imdiTableModel;
     private GraphData graphData;
+    private boolean requiresSave = false;
+    private File svgFile = null;
+    private GraphPanelSize graphPanelSize;
 
     public GraphPanel() {
+        graphPanelSize = new GraphPanelSize();
         indexParameters = new IndexerParameters();
         this.setLayout(new BorderLayout());
         svgCanvas = new JSVGCanvas();
@@ -101,6 +105,7 @@ public class GraphPanel extends JPanel {
         svgCanvas.addMouseMotionListener(mouseInputAdapter);
         jScrollPane = new JScrollPane(svgCanvas);
         this.add(BorderLayout.CENTER, jScrollPane);
+        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(this, graphPanelSize));
     }
 
     public void setImdiTableModel(ImdiTableModel imdiTableModelLocal) {
@@ -108,11 +113,13 @@ public class GraphPanel extends JPanel {
     }
 
     public void readSvg(File svgFilePath) {
+        svgFile = svgFilePath;
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
         try {
             doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toURI().toString());
             svgCanvas.setDocument(doc);
+            requiresSave = false;
         } catch (IOException ioe) {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
@@ -120,8 +127,10 @@ public class GraphPanel extends JPanel {
         getParametersFromDom();
     }
 
-    public void saveSvg(File svgFilePath) {
+    private void saveSvg(File svgFilePath) {
+        svgFile = svgFilePath;
         new CmdiComponentBuilder().savePrettyFormatting(doc, svgFilePath);
+        requiresSave = false;
     }
 
     private String[] readArrayFromEntity(Node currentChild) {
@@ -226,6 +235,7 @@ public class GraphPanel extends JPanel {
     }
 
     public void drawNodes(GraphData graphDataLocal) {
+        requiresSave = true;
         graphData = graphDataLocal;
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
@@ -235,26 +245,28 @@ public class GraphPanel extends JPanel {
         // Get the root element (the 'svg' elemen¤t).
         Element svgRoot = doc.getDocumentElement();
         // todo: set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
-        int maxTextLength = 0;
-        for (GraphDataNode currentNode : graphData.getDataNodes()) {
-            if (currentNode.getLabel()[0].length() > maxTextLength) {
-                maxTextLength = currentNode.getLabel()[0].length();
-            }
-        }
-        int vSpacing = 100;
+//        int maxTextLength = 0;
+//        for (GraphDataNode currentNode : graphData.getDataNodes()) {
+//            if (currentNode.getLabel()[0].length() > maxTextLength) {
+//                maxTextLength = currentNode.getLabel()[0].length();
+//            }
+//        }
+        int vSpacing = graphPanelSize.getVerticalSpacing(graphData.gridHeight);
         // todo: find the real text size from batik
-        int hSpacing = maxTextLength * 10 + 100;
+        // todo: get the user selected canvas size and adjust the hSpacing and vSpacing to fit
+//        int hSpacing = maxTextLength * 10 + 100;
+        int hSpacing = graphPanelSize.getHorizontalSpacing(graphData.gridWidth);
         int symbolSize = 10;
         int strokeWidth = 1;
 
-        int preferedWidth = graphData.gridWidth * hSpacing + hSpacing * 2;
-        int preferedHeight = graphData.gridHeight * vSpacing + vSpacing * 2;
+//        int preferedWidth = graphData.gridWidth * hSpacing + hSpacing * 2;
+//        int preferedHeight = graphData.gridHeight * vSpacing + vSpacing * 2;
 
         // Set the width and height attributes on the root 'svg' element.
-        svgRoot.setAttributeNS(null, "width", Integer.toString(preferedWidth));
-        svgRoot.setAttributeNS(null, "height", Integer.toString(preferedHeight));
+        svgRoot.setAttributeNS(null, "width", Integer.toString(graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
+        svgRoot.setAttributeNS(null, "height", Integer.toString(graphPanelSize.getHeight(graphData.gridHeight, vSpacing)));
 
-        this.setPreferredSize(new Dimension(preferedWidth, preferedWidth));
+        this.setPreferredSize(new Dimension(graphPanelSize.getHeight(graphData.gridHeight, vSpacing), graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
 
         // store the selected ego nodes in the dom
         Element egoRecordNode = doc.createElementNS(svgNS, "desc");
@@ -480,5 +492,21 @@ public class GraphPanel extends JPanel {
         }
         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
         svgCanvas.revalidate();
+    }
+
+    public boolean hasSaveFileName() {
+        return svgFile != null;
+    }
+
+    public boolean requiresSave() {
+        return requiresSave;
+    }
+
+    public void saveToFile() {
+        saveSvg(svgFile);
+    }
+
+    public void saveToFile(File saveAsFile) {
+        saveSvg(saveAsFile);
     }
 }
