@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -11,7 +14,6 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTableModel;
@@ -21,6 +23,7 @@ import nl.mpi.kinnate.EntityIndexer.IndexerParameters;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
+import org.apache.batik.swing.JSVGScrollPane;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
@@ -40,7 +43,7 @@ import org.w3c.dom.svg.SVGRect;
  */
 public class GraphPanel extends JPanel implements SavePanel {
 
-    private JScrollPane jScrollPane;
+    private JSVGScrollPane jSVGScrollPane;
     private JSVGCanvas svgCanvas;
     private SVGDocument doc;
     private Element currentDraggedElement;
@@ -54,7 +57,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private File svgFile = null;
     private GraphPanelSize graphPanelSize;
 
-    public GraphPanel() {
+    public GraphPanel(KinTypeEgoSelectionTestPanel egoSelectionPanel) {
         graphPanelSize = new GraphPanelSize();
         indexParameters = new IndexerParameters();
         this.setLayout(new BorderLayout());
@@ -65,8 +68,25 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.setEnableImageZoomInteractor(true);
         svgCanvas.setEnablePanInteractor(true);
         svgCanvas.setEnableRotateInteractor(true);
-        svgCanvas.setEnableZoomInteractor(true);
+//        svgCanvas.setEnableZoomInteractor(true);
+        svgCanvas.addMouseWheelListener(new MouseWheelListener() {
+
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                AffineTransform at = new AffineTransform();
+//                System.out.println("R: " + e.getWheelRotation());
+//                System.out.println("A: " + e.getScrollAmount());
+//                System.out.println("U: " + e.getUnitsToScroll());
+                at.scale(1 + e.getUnitsToScroll() / 10.0, 1 + e.getUnitsToScroll() / 10.0);
+//                at.translate(e.getX()/10.0, e.getY()/10.0);
+//                System.out.println("x: " + e.getX());
+//                System.out.println("y: " + e.getY());
+
+                at.concatenate(svgCanvas.getRenderingTransform());
+                svgCanvas.setRenderingTransform(at);
+            }
+        });
         svgCanvas.setEnableResetTransformInteractor(true);
+//        svgCanvas.setDoubleBufferedRendering(true); // todo: look into reducing the noticable aliasing on the canvas
 
         MouseInputAdapter mouseInputAdapter = new MouseInputAdapter() {
 
@@ -103,9 +123,9 @@ public class GraphPanel extends JPanel implements SavePanel {
         };
         svgCanvas.addMouseListener(mouseInputAdapter);
         svgCanvas.addMouseMotionListener(mouseInputAdapter);
-        jScrollPane = new JScrollPane(svgCanvas);
-        this.add(BorderLayout.CENTER, jScrollPane);
-        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(this, graphPanelSize));
+        jSVGScrollPane = new JSVGScrollPane(svgCanvas);
+        this.add(BorderLayout.CENTER, jSVGScrollPane);
+        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(egoSelectionPanel, this, graphPanelSize));
     }
 
     public void setImdiTableModel(ImdiTableModel imdiTableModelLocal) {
@@ -228,6 +248,13 @@ public class GraphPanel extends JPanel implements SavePanel {
         Text kinTypeTextNode = doc.createTextNode(kinTypeRecordBuilder.toString());
         kinTypesRecordNode.appendChild(kinTypeTextNode);
         svgRoot.appendChild(kinTypesRecordNode);
+    }
+
+    public void resetZoom() {
+        AffineTransform at = new AffineTransform();
+        at.scale(1, 1);
+        at.setToTranslation(1, 1);
+        svgCanvas.setRenderingTransform(at);
     }
 
     public void drawNodes() {
@@ -506,8 +533,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 //
 //                    linkLine.setAttributeNS(null, "x2", );
                     linkLine.setAttributeNS(null, "fill", "none");
-                    linkLine.setAttributeNS(null, "stroke", "black");
-                    linkLine.setAttributeNS(null, "stroke-width", "1");
+                    linkLine.setAttributeNS(null, "stroke", "grey");
+                    linkLine.setAttributeNS(null, "stroke-width", "2");
                     // Attach the rectangle to the root 'svg' element.
                     svgRoot.appendChild(linkLine);
                 }
