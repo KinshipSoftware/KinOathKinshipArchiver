@@ -99,14 +99,14 @@ public class GraphPanel extends JPanel implements SavePanel {
             public void mouseDragged(MouseEvent me) {
 //                System.out.println("mouseDragged: " + me.toString());
                 if (currentDraggedElement != null) {
-                    currentDraggedElement.setAttribute("x", String.valueOf(me.getX()));
-                    currentDraggedElement.setAttribute("y", String.valueOf(me.getY()));
+//                    currentDraggedElement.setAttribute("x", String.valueOf(me.getX()));
+//                    currentDraggedElement.setAttribute("y", String.valueOf(me.getY()));
                     svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
-                    System.out.println("bbox X: " + bbox.getX());
-                    System.out.println("bbox Y: " + bbox.getY());
-                    System.out.println("bbox W: " + bbox.getWidth());
-                    System.out.println("bbox H: " + bbox.getHeight());
+//                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
+//                    System.out.println("bbox X: " + bbox.getX());
+//                    System.out.println("bbox Y: " + bbox.getY());
+//                    System.out.println("bbox W: " + bbox.getWidth());
+//                    System.out.println("bbox H: " + bbox.getHeight());
 //                    todo: look into transform issues when dragging ellements eg when the canvas is scaled or panned
 //                            SVGLocatable.getTransformToElement()
 //                            SVGPoint.matrixTransform()
@@ -118,9 +118,9 @@ public class GraphPanel extends JPanel implements SavePanel {
             public void mouseReleased(MouseEvent me) {
 //                System.out.println("mouseReleased: " + me.toString());
                 if (currentDraggedElement != null) {
-                    currentDraggedElement.setAttribute("x", String.valueOf(me.getX()));
-                    currentDraggedElement.setAttribute("y", String.valueOf(me.getY()));
-                    currentDraggedElement.setAttribute("fill", "none");
+//                    currentDraggedElement.setAttribute("x", String.valueOf(me.getX()));
+//                    currentDraggedElement.setAttribute("y", String.valueOf(me.getY()));
+//                    currentDraggedElement.setAttribute("fill", "none");
                     currentDraggedElement = null;
                     svgCanvas.setCursor(preDragCursor);
                 }
@@ -240,6 +240,10 @@ public class GraphPanel extends JPanel implements SavePanel {
         egoSet = new HashSet<URI>(Arrays.asList(egoListArray));
     }
 
+    public String[] getSelectedPaths() {
+        return selectedGroupElement.toArray(new String[]{});
+    }
+
     private void storeParameter(Element svgRoot, String parameterName, String[] ParameterValues) {
         Element kinTypesRecordNode = doc.createElement("desc");
         kinTypesRecordNode.setAttributeNS(null, "id", parameterName);
@@ -356,7 +360,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         // todo: get the user selected canvas size and adjust the hSpacing and vSpacing to fit
 //        int hSpacing = maxTextLength * 10 + 100;
         int hSpacing = graphPanelSize.getHorizontalSpacing(graphData.gridWidth);
-        int symbolSize = 10;
+        int symbolSize = 15;
         int strokeWidth = 1;
 
 //        int preferedWidth = graphData.gridWidth * hSpacing + hSpacing * 2;
@@ -474,15 +478,14 @@ public class GraphPanel extends JPanel implements SavePanel {
                     symbolNode.setAttributeNS(null, "fill", "none");
                     symbolNode.setAttributeNS(null, "points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
             }
-            if (currentNode.isEgo) {
-                symbolNode.setAttributeNS(null, "fill", "red");
-            } else {
-                symbolNode.setAttributeNS(null, "fill", "none");
-            }
-
+//            if (currentNode.isEgo) {
+//                symbolNode.setAttributeNS(null, "fill", "red");
+//            } else {
+//                symbolNode.setAttributeNS(null, "fill", "none");
+//            }
+            symbolNode.setAttributeNS(null, "fill", "white");
             symbolNode.setAttributeNS(null, "stroke", "black");
             symbolNode.setAttributeNS(null, "stroke-width", "2");
-            // Attach the rectangle to the root 'svg' element.
             groupNode.appendChild(symbolNode);
 
 ////////////////////////////// tspan method appears to fail in batik rendering process unless saved and reloaded ////////////////////////////////////////////////
@@ -604,14 +607,20 @@ public class GraphPanel extends JPanel implements SavePanel {
 
 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
                     Element linkLine = doc.createElementNS(svgNS, "path");
-                    String fromX = Integer.toString(currentNode.xPos * hSpacing + hSpacing);
-                    String fromY = Integer.toString(currentNode.yPos * vSpacing + vSpacing);
-                    String toX = Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing);
-                    String toY = Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing);
-                    String fromBezX = fromX;
-                    String fromBezY = toY;
-                    String toBezX = toX;
-                    String toBezY = fromY;
+                    int fromX = (currentNode.xPos * hSpacing + hSpacing);
+                    int fromY = (currentNode.yPos * vSpacing + vSpacing);
+                    int toX = (graphLinkNode.linkedNode.xPos * hSpacing + hSpacing);
+                    int toY = (graphLinkNode.linkedNode.yPos * vSpacing + vSpacing);
+                    int fromBezX = fromX;
+                    int fromBezY = toY;
+                    int toBezX = toX;
+                    int toBezY = fromY;
+                    if (currentNode.yPos == graphLinkNode.linkedNode.yPos) {
+                        fromBezX = fromX;
+                        fromBezY = toY - vSpacing / 2;
+                        toBezX = toX;
+                        toBezY = fromY - vSpacing / 2;
+                    }
                     linkLine.setAttributeNS(null, "d", "M " + fromX + "," + fromY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + toX + "," + toY);
 
 //                    linkLine.setAttributeNS(null, "x1", );
