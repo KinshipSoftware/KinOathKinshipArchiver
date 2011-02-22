@@ -98,19 +98,9 @@ public class GraphPanel extends JPanel implements SavePanel {
             @Override
             public void mouseDragged(MouseEvent me) {
 //                System.out.println("mouseDragged: " + me.toString());
-                if (currentDraggedElement != null) {
-//                    currentDraggedElement.setAttribute("x", String.valueOf(me.getX()));
-//                    currentDraggedElement.setAttribute("y", String.valueOf(me.getY()));
+                if (currentDraggedElement != null) {          
                     svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-//                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
-//                    System.out.println("bbox X: " + bbox.getX());
-//                    System.out.println("bbox Y: " + bbox.getY());
-//                    System.out.println("bbox W: " + bbox.getWidth());
-//                    System.out.println("bbox H: " + bbox.getHeight());
-//                    todo: look into transform issues when dragging ellements eg when the canvas is scaled or panned
-//                            SVGLocatable.getTransformToElement()
-//                            SVGPoint.matrixTransform()
-
+                    updateDragNode(currentDraggedElement, me.getX(), me.getY());         
                 }
             }
 
@@ -118,11 +108,9 @@ public class GraphPanel extends JPanel implements SavePanel {
             public void mouseReleased(MouseEvent me) {
 //                System.out.println("mouseReleased: " + me.toString());
                 if (currentDraggedElement != null) {
-//                    currentDraggedElement.setAttribute("x", String.valueOf(me.getX()));
-//                    currentDraggedElement.setAttribute("y", String.valueOf(me.getY()));
-//                    currentDraggedElement.setAttribute("fill", "none");
-                    currentDraggedElement = null;
                     svgCanvas.setCursor(preDragCursor);
+                    updateDragNode(currentDraggedElement, me.getX(), me.getY());
+                    currentDraggedElement = null;
                 }
             }
         };
@@ -268,6 +256,27 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void drawNodes() {
         drawNodes(graphData);
+    }
+
+    private void updateDragNode(final Element updateDragNodeElement, final int updateDragNodeX, final int updateDragNodeY) {
+//        UpdateManager updateManager = svgCanvas.getUpdateManager();
+//        updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+//
+//            public void run() {
+//                if (updateDragNodeElement != null) {
+//                    updateDragNodeElement.setAttribute("x", String.valueOf(updateDragNodeX));
+//                    updateDragNodeElement.setAttribute("y", String.valueOf(updateDragNodeY));
+//                }
+//                //                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
+////                    System.out.println("bbox X: " + bbox.getX());
+////                    System.out.println("bbox Y: " + bbox.getY());
+////                    System.out.println("bbox W: " + bbox.getWidth());
+////                    System.out.println("bbox H: " + bbox.getHeight());
+////                    todo: look into transform issues when dragging ellements eg when the canvas is scaled or panned
+////                            SVGLocatable.getTransformToElement()
+////                            SVGPoint.matrixTransform()
+//            }
+//        });
     }
 
     private void addHighlightToGroup() {
