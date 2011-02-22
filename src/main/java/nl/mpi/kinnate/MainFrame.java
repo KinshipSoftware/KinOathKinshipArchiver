@@ -34,6 +34,7 @@ public class MainFrame extends javax.swing.JFrame {
 //    private JungGraph jungGraph;
     private ImdiTable previewTable;
     private ImdiTableModel imdiTableModel;
+    private DragTransferHandler dragTransferHandler;
 
     /** Creates new form MainFrame */
     public MainFrame() {
@@ -90,8 +91,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         jSplitPane1.setDividerLocation(0.25);
 
-//        System.out.println();
-        DragTransferHandler dragTransferHandler = new DragTransferHandler();
+//        System.out.println();        
+        dragTransferHandler = new DragTransferHandler();
         leftTree.setTransferHandler(dragTransferHandler);
         egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
 
@@ -318,6 +319,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDiagramActionPerformed
         for (File selectedFile : LinorgWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false)) {
             KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(selectedFile);
+            egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
             jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
             jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
         }
@@ -413,7 +415,9 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void newDiagramMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newDiagramMenuItemActionPerformed
         KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
+        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         jTabbedPane1.add("Unsaved Diagram", egoSelectionTestPanel);
+        jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
     }//GEN-LAST:event_newDiagramMenuItemActionPerformed
 
     /**
