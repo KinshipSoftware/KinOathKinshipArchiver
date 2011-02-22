@@ -69,8 +69,8 @@ public class KinTypeStringConverter extends GraphData {
 
     public void readKinTypes(String[] inputStringArray) {
         HashMap<String, GraphDataNode> graphDataNodeList = new HashMap<String, GraphDataNode>();
-        GraphDataNode egoDataNode = new GraphDataNode(new String[]{"ego"});
-        egoDataNode.symbolType = GraphDataNode.SymbolType.square;
+        GraphDataNode egoDataNode = new GraphDataNode("ego", GraphDataNode.SymbolType.square, new String[]{"ego"});
+//        egoDataNode.symbolType = GraphDataNode.SymbolType.square;
         egoDataNode.isEgo = true;
         graphDataNodeList.put("ego", egoDataNode);
         for (String inputString : inputStringArray) {
@@ -92,8 +92,7 @@ public class KinTypeStringConverter extends GraphData {
                                 currentGraphDataNode = graphDataNodeList.get(fullKinTypeString);
                                 // add any child nodes?
                             } else {
-                                currentGraphDataNode = new GraphDataNode(new String[]{fullKinTypeString});
-                                currentGraphDataNode.symbolType = currentReferenceKinType.symbolType;
+                                currentGraphDataNode = new GraphDataNode(fullKinTypeString, currentReferenceKinType.symbolType, new String[]{fullKinTypeString});
                                 GraphDataNode.RelationType opposingRelationType = GraphDataNode.getOpposingRelationType(currentReferenceKinType.relationType);
                                 parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType);
                                 currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType);
