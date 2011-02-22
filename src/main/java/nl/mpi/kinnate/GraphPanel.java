@@ -9,25 +9,31 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
+import java.lang.Runnable;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
+import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.kinnate.EntityIndexer.IndexerParameters;
+import org.apache.batik.bridge.UpdateManager;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.JSVGScrollPane;
 import org.apache.batik.util.XMLResourceDescriptor;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
@@ -56,14 +62,16 @@ public class GraphPanel extends JPanel implements SavePanel {
     private boolean requiresSave = false;
     private File svgFile = null;
     private GraphPanelSize graphPanelSize;
+    private ArrayList<Element> selectedGroupElement;
 
     public GraphPanel(KinTypeEgoSelectionTestPanel egoSelectionPanel) {
+        selectedGroupElement = new ArrayList<Element>();
         graphPanelSize = new GraphPanelSize();
         indexParameters = new IndexerParameters();
         this.setLayout(new BorderLayout());
         svgCanvas = new JSVGCanvas();
 //        svgCanvas.setMySize(new Dimension(600, 400));
-        svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_INTERACTIVE); // JSVGCanvas.ALWAYS_DYNAMIC allows more dynamic updating but introduces concurrency issues
+        svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC); // JSVGCanvas.ALWAYS_DYNAMIC allows more dynamic updating but introduces concurrency issues
 //        drawNodes();
         svgCanvas.setEnableImageZoomInteractor(true);
         svgCanvas.setEnablePanInteractor(true);
@@ -259,6 +267,60 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void drawNodes() {
         drawNodes(graphData);
+    }
+
+    private void addHighlightToGroup() {
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+
+            public void run() {
+                // remove all old highlights
+//                try {
+//                    NodeList relevantaDataNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "//svg/g/rect[@id='highlight']");
+//                    for (int dataCounter = 0; dataCounter < relevantaDataNodeList.getLength(); dataCounter++) {
+//                        Node oldHighlightNode = relevantaDataNodeList.item(dataCounter);
+//                        oldHighlightNode.getParentNode().removeChild(oldHighlightNode);
+////                        if (dataNode != null) {
+////                            entityData.addEntityData(relevantDataPath, dataNode.getTextContent());
+////                        }
+//                    }
+//                } catch (DOMException urise) {
+//                    GuiHelper.linorgBugCatcher.logError(urise);
+//                } catch (TransformerException urise) {
+//                    GuiHelper.linorgBugCatcher.logError(urise);
+//                }
+                // add the current highlights
+                for (Element currentHighlighedElement : selectedGroupElement) {
+                    if (currentHighlighedElement != null) {
+                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                        SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
+                        System.out.println("bbox X: " + bbox.getX());
+                        System.out.println("bbox Y: " + bbox.getY());
+                        System.out.println("bbox W: " + bbox.getWidth());
+                        System.out.println("bbox H: " + bbox.getHeight());
+                        Element symbolNode = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "rect");
+                        int paddingDistance = 20;
+                        symbolNode.setAttributeNS(null, "id", "highlight");
+                        symbolNode.setAttributeNS(null, "x", Float.toString(bbox.getX() - paddingDistance));
+                        symbolNode.setAttributeNS(null, "y", Float.toString(bbox.getY() - paddingDistance));
+                        symbolNode.setAttributeNS(null, "width", Float.toString(bbox.getWidth() + paddingDistance * 2));
+                        symbolNode.setAttributeNS(null, "height", Float.toString(bbox.getHeight() + paddingDistance * 2));
+                        symbolNode.setAttributeNS(null, "fill", "none");
+                        symbolNode.setAttributeNS(null, "stroke-width", "1");
+                        symbolNode.setAttributeNS(null, "stroke", "blue");
+                        symbolNode.setAttributeNS(null, "stroke-dasharray", "1");
+                        symbolNode.setAttributeNS(null, "stroke-dashoffset", "0");
+//            symbolNode.setAttributeNS(null, "id", "Highlight");
+//            symbolNode.setAttributeNS(null, "id", "Highlight");
+//            symbolNode.setAttributeNS(null, "id", "Highlight");
+//            symbolNode.setAttributeNS(null, "style", ":none;fill-opacity:1;fill-rule:nonzero;stroke:#6674ff;stroke-opacity:1;stroke-width:1;stroke-miterlimit:4;"
+//                    + "stroke-dasharray:1, 1;stroke-dashoffset:0");
+                        currentHighlighedElement.appendChild(symbolNode);
+                    }
+                }
+            }
+        });
+
     }
 
     public void drawNodes(GraphData graphDataLocal) {
@@ -459,31 +521,34 @@ public class GraphPanel extends JPanel implements SavePanel {
 ////////////////////////////// end alternate method ////////////////////////////////////////////////
             svgRoot.appendChild(groupNode);
             // set up the mouse listners on the group node
-            ((EventTarget) groupNode).addEventListener("mouseover", new EventListener() {
-
-                public void handleEvent(Event evt) {
-                    System.out.println("OnMouseOverCircleAction: " + evt.getCurrentTarget());
-                    if (currentDraggedElement == null) {
-                        ((Element) evt.getCurrentTarget()).setAttribute("fill", "green");
-                    }
-                }
-            }, false);
-            ((EventTarget) groupNode).addEventListener("mouseout", new EventListener() {
-
-                public void handleEvent(Event evt) {
-                    System.out.println("mouseout: " + evt.getCurrentTarget());
-                    if (currentDraggedElement == null) {
-                        ((Element) evt.getCurrentTarget()).setAttribute("fill", "none");
-                    }
-                }
-            }, false);
+//            ((EventTarget) groupNode).addEventListener("mouseover", new EventListener() {
+//
+//                public void handleEvent(Event evt) {
+//                    System.out.println("OnMouseOverCircleAction: " + evt.getCurrentTarget());
+//                    if (currentDraggedElement == null) {
+//                        ((Element) evt.getCurrentTarget()).setAttribute("fill", "green");
+//                    }
+//                }
+//            }, false);
+//            ((EventTarget) groupNode).addEventListener("mouseout", new EventListener() {
+//
+//                public void handleEvent(Event evt) {
+//                    System.out.println("mouseout: " + evt.getCurrentTarget());
+//                    if (currentDraggedElement == null) {
+//                        ((Element) evt.getCurrentTarget()).setAttribute("fill", "none");
+//                    }
+//                }
+//            }, false);
             ((EventTarget) groupNode).addEventListener("mousedown", new EventListener() {
 
                 public void handleEvent(Event evt) {
-                    System.out.println("mousedrag: " + evt.getCurrentTarget());
+                    System.out.println("mousedown: " + evt.getCurrentTarget());
                     currentDraggedElement = ((Element) evt.getCurrentTarget());
+                    selectedGroupElement.clear();
+                    selectedGroupElement.add(currentDraggedElement);
+                    addHighlightToGroup();
                     preDragCursor = svgCanvas.getCursor();
-                    ((Element) evt.getCurrentTarget()).setAttribute("fill", "red");
+//                    ((Element) evt.getCurrentTarget()).setAttribute("fill", "red");
                     // get the entityPath
                     String entityPath = currentDraggedElement.getAttribute("id");
                     System.out.println("entityPath: " + entityPath);
