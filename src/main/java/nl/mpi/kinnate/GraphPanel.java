@@ -492,16 +492,21 @@ public class GraphPanel extends JPanel implements SavePanel {
                 }
                 System.out.println("mousedown: " + evt.getCurrentTarget());
                 currentDraggedElement = ((Element) evt.getCurrentTarget());
-                if (!shiftDown) {
-                    System.out.println("Clear selection");
-                    selectedGroupElement.clear();
-                }
                 preDragCursor = svgCanvas.getCursor();
                 // get the entityPath
                 String entityPath = currentDraggedElement.getAttribute("id");
                 System.out.println("entityPath: " + entityPath);
-                // set the highlight
-                selectedGroupElement.add(entityPath);
+                boolean nodeAlreadySelected = selectedGroupElement.contains(entityPath);
+                if (!shiftDown) {
+                    System.out.println("Clear selection");
+                    selectedGroupElement.clear();
+                }
+                // toggle the highlight
+                if (nodeAlreadySelected) {
+                    selectedGroupElement.remove(entityPath);
+                } else {
+                    selectedGroupElement.add(entityPath);
+                }
                 addHighlightToGroup();
                 // update the table selection
                 if (imdiTableModel != null) {
