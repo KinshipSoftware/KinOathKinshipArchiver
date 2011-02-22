@@ -1,5 +1,6 @@
 package nl.mpi.kinnate;
 
+import java.awt.Component;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class GraphPanelContextMenu extends JPopupMenu {
     KinTypeEgoSelectionTestPanel egoSelectionPanel;
     GraphPanel graphPanel;
     GraphPanelSize graphPanelSize;
+    JMenuItem addRelationEntityMenuItem;
+    String[] selectedPaths = null; // keep the selected paths as shown at the time of the menu intereaction
 
     public GraphPanelContextMenu(KinTypeEgoSelectionTestPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, GraphPanelSize graphPanelSizeLocal) {
         egoSelectionPanel = egoSelectionPanelLocal;
@@ -53,6 +56,33 @@ public class GraphPanelContextMenu extends JPopupMenu {
                 }
             });
             this.add(addEntityMenuItem);
+            addRelationEntityMenuItem = new JMenuItem("Add Relation");
+            addRelationEntityMenuItem.setActionCommand(GraphPanelContextMenu.class.getResource("/xsd/StandardEntity.xsd").toString());
+            addRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    // todo: add the relation to both selected nodes and show the new relation in the table
+                    // todo: this could be simplified by adapting the Arbil code
+//                    String nodeType = evt.getActionCommand();
+//                    URI addedNodePath;
+//                    URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), nodeType);
+//                    CmdiComponentBuilder componentBuilder = new CmdiComponentBuilder();
+//                    try {
+//                        addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
+//                        ArrayList<String> entityArray = new ArrayList<String>(Arrays.asList(LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree")));
+//                        entityArray.add(addedNodePath.toASCIIString());
+//                        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", entityArray.toArray(new String[]{}));
+//                        // todo: update the main entity tree
+//                        ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoList()));
+//                        egoUriList.add(addedNodePath);
+//                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}));
+//                    } catch (URISyntaxException ex) {
+//                        GuiHelper.linorgBugCatcher.logError(ex);
+//                        // todo: warn user with a dialog
+//                    }
+                }
+            });
+            this.add(addRelationEntityMenuItem);
         }
         JMenuItem resetZoomMenuItem = new JMenuItem("Reset Zoom");
         resetZoomMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -81,5 +111,12 @@ public class GraphPanelContextMenu extends JPopupMenu {
     private void setGraphPanelSize(String sizeString) {
         graphPanelSize.setSize(sizeString);
         graphPanel.drawNodes();
+    }
+
+    @Override
+    public void show(Component cmpnt, int i, int i1) {
+        selectedPaths = graphPanel.getSelectedPaths();
+        addRelationEntityMenuItem.setVisible(selectedPaths.length == 2);
+        super.show(cmpnt, i, i1);
     }
 }
