@@ -315,7 +315,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                                         symbolNode.setAttributeNS(null, "fill", "none");
                                         symbolNode.setAttributeNS(null, "stroke-width", "1");
                                         symbolNode.setAttributeNS(null, "stroke", "blue");
-                                        symbolNode.setAttributeNS(null, "stroke-dasharray", "1");
+                                        symbolNode.setAttributeNS(null, "stroke-dasharray", "3");
                                         symbolNode.setAttributeNS(null, "stroke-dashoffset", "0");
 //            symbolNode.setAttributeNS(null, "id", "Highlight");
 //            symbolNode.setAttributeNS(null, "id", "Highlight");
@@ -574,7 +574,9 @@ public class GraphPanel extends JPanel implements SavePanel {
                     if (imdiTableModel != null) {
                         imdiTableModel.removeAllImdiRows();
                         try {
-                            imdiTableModel.addSingleImdiObject(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(entityPath)));
+                            for (String currentSelectedPath : selectedGroupElement) {
+                                imdiTableModel.addSingleImdiObject(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentSelectedPath)));
+                            }
                         } catch (URISyntaxException urise) {
                             GuiHelper.linorgBugCatcher.logError(urise);
                         }
