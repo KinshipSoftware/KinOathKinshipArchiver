@@ -10,7 +10,7 @@ import nl.mpi.kinnate.KinTypeStringConverter.KinType;
  */
 public class GraphDataNode {
 
-    enum SymbolType {
+    public enum SymbolType {
         // symbol terms are used here to try to keep things agnostic
 
         square, triangle, circle, union, resource
@@ -73,15 +73,19 @@ public class GraphDataNode {
         labelString = labelStringLocal;
     }
 
-    public GraphDataNode(SymbolType symbolIndex, String[] labelStringLocal) {
+    public GraphDataNode(String entityPathLocal, SymbolType symbolIndex, String[] labelStringLocal) {
+        entityPath = entityPathLocal;
         symbolType = symbolIndex;
         labelString = labelStringLocal;
     }
+//    public GraphDataNode(SymbolType symbolIndex, String[] labelStringLocal) {
+//        symbolType = symbolIndex;
+//        labelString = labelStringLocal;
+//    }
 
-    public GraphDataNode(String[] labelStringLocal) {
-        labelString = labelStringLocal;
-    }
-
+//    public GraphDataNode(String[] labelStringLocal) {
+//        labelString = labelStringLocal;
+//    }
     public String getEntityPath() {
         return entityPath;
     }
