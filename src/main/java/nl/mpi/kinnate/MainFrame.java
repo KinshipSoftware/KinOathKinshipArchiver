@@ -103,8 +103,7 @@ public class MainFrame extends javax.swing.JFrame {
         Object selectedComponent = jTabbedPane1.getComponentAt(tabIndex);
         SavePanel savePanel = null;
         if (selectedComponent instanceof SavePanel) {
-            savePanel = (KinTypeEgoSelectionTestPanel) selectedComponent;
-
+            savePanel = (SavePanel) selectedComponent;
         }
         return savePanel;
     }
