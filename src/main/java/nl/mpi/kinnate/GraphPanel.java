@@ -578,7 +578,6 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        svgCanvas.setDocument(doc);
 //        int counterTest = 0;
         for (GraphDataNode currentNode : graphData.getDataNodes()) {
-            svgRoot.appendChild(createEntitySymbol(currentNode, hSpacing, vSpacing, symbolSize));
             // set up the mouse listners on the group node
 //            ((EventTarget) groupNode).addEventListener("mouseover", new EventListener() {
 //
@@ -647,6 +646,10 @@ public class GraphPanel extends JPanel implements SavePanel {
                     svgRoot.appendChild(linkLine);
                 }
             }
+        }
+        // add the entity symbols on top of the links
+        for (GraphDataNode currentNode : graphData.getDataNodes()) {
+            svgRoot.appendChild(createEntitySymbol(currentNode, hSpacing, vSpacing, symbolSize));
         }
         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
         svgCanvas.revalidate();
