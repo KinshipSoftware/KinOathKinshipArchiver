@@ -6,6 +6,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -14,7 +15,7 @@ import javax.swing.JTextArea;
  *  Created on : Sep 29, 2010, 12:52:01 PM
  *  Author     : Peter Withers
  */
-public class KinTypeStringTestPanel extends JPanel {
+public class KinTypeStringTestPanel extends JPanel implements SavePanel {
 
     JTextArea kinTypeStringInput;
     GraphPanel graphPanel;
@@ -63,5 +64,21 @@ public class KinTypeStringTestPanel extends JPanel {
 //                }
             }
         });
+    }
+
+    public boolean hasSaveFileName() {
+        return graphPanel.hasSaveFileName();
+    }
+
+    public boolean requiresSave() {
+        return graphPanel.requiresSave();
+    }
+
+    public void saveToFile() {
+        graphPanel.saveToFile();
+    }
+
+    public void saveToFile(File saveFile) {
+        graphPanel.saveToFile(saveFile);
     }
 }
