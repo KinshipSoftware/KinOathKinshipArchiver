@@ -56,22 +56,22 @@ public class EntityIndex {
                     if (relationLinkNode != null) {
                         entityData.addRelation(relationLinkNode.getTextContent());
                         // get any requested link data
-                        for (String relevantDataPath : indexParameters.relevantLinkData.getValues()) {
+                        for (String[] relevantDataPath : indexParameters.relevantLinkData.getValues()) {
                             for (Node linkDataNode = relationLinkNode.getParentNode().getFirstChild(); linkDataNode != null; linkDataNode = linkDataNode.getNextSibling()) {
-                                if (relevantDataPath.equals(linkDataNode.getNodeName())) {
-                                    entityData.addRelationData(relationLinkNode.getTextContent(), relevantDataPath, linkDataNode.getTextContent());
+                                if (relevantDataPath[0].equals(linkDataNode.getNodeName())) {
+                                    entityData.addRelationData(relationLinkNode.getTextContent(), relevantDataPath[0], linkDataNode.getTextContent());
                                 }
                             }
                         }
                     }
                 }
                 // get any requested entity data
-                for (String relevantDataPath : indexParameters.relevantEntityData.getValues()) {
-                    NodeList relevantaDataNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, relevantDataPath);
+                for (String[] relevantDataPath : indexParameters.getRelevantEntityData()) {
+                    NodeList relevantaDataNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, relevantDataPath[0]);
                     for (int dataCounter = 0; dataCounter < relevantaDataNodeList.getLength(); dataCounter++) {
                         Node dataNode = relevantaDataNodeList.item(dataCounter);
                         if (dataNode != null) {
-                            entityData.addEntityData(relevantDataPath, dataNode.getTextContent());
+                            entityData.addEntityData(relevantDataPath[0], dataNode.getTextContent());
                         }
                     }
                 }
@@ -128,38 +128,24 @@ public class EntityIndex {
     private GraphDataNode getGraphDataNode(boolean isEgo, URI entityUri) {
         EntityData entityData = getEntityData(entityUri);
         ArrayList<String> labelTextList = new ArrayList<String>();
-        int entitySymbolIndex = 0;
-        for (String currentLabelField : indexParameters.labelFields.getValues()) {
-            String labelTextTemp = entityData.getEntityField(currentLabelField);
+        for (String[] currentLabelField : indexParameters.labelFields.getValues()) {
+            String labelTextTemp = entityData.getEntityField(currentLabelField[0]);
             if (labelTextTemp != null) {
                 labelTextList.add(labelTextTemp);
             }
         }
         if (isEgo) {
-            entitySymbolIndex = 0;
+            // todo: the ego symbol should be calculated in the graphpanel and at this point just return the normal symbol for the entity
+            return new GraphDataNode(entityUri.toASCIIString(), GraphDataNode.SymbolType.ego, labelTextList.toArray(new String[]{}));
         } else {
-
-            for (String currentSymbolField : indexParameters.symbolFieldsFields.getValues()) {
-                String linkSymbolString = entityData.getEntityField(currentSymbolField);
+            for (String currentSymbolField[] : indexParameters.symbolFieldsFields.getValues()) {
+                String linkSymbolString = entityData.getEntityField(currentSymbolField[0]);
                 if (linkSymbolString != null) {
-                    // todo: move this into a single string or other such that it can be set by the user and stored in the svg
-                    if (linkSymbolString.equals("F")) {
-                        entitySymbolIndex = 1;
-                    }
-                    if (linkSymbolString.equals("M")) {
-                        entitySymbolIndex = 2;
-                    }
-                    if (linkSymbolString.equals("FAM")) {
-                        entitySymbolIndex = 3;
-                    }
-                    if (linkSymbolString.equals("NOTE")) {
-                        entitySymbolIndex = 4;
-                    }
-                    break;
+                    return new GraphDataNode(entityUri.toASCIIString(), currentSymbolField[1], labelTextList.toArray(new String[]{}));
                 }
             }
         }
-        return new GraphDataNode(entityUri.toASCIIString(), entitySymbolIndex, labelTextList.toArray(new String[]{}));
+        return new GraphDataNode(entityUri.toASCIIString(), GraphDataNode.SymbolType.none, labelTextList.toArray(new String[]{}));
     }
 
     private void setRelationData(GraphDataNode egoNode, GraphDataNode alterNode, EntityData egoData, String alterPath) {
@@ -167,17 +153,17 @@ public class EntityIndex {
         GraphDataNode.RelationType alterType = null;
         String[][] alterRelationFields = egoData.getRelationData(alterPath);
         if (alterRelationFields != null) {
-            for (String ancestorField : indexParameters.ancestorFields.getValues()) {
+            for (String[] ancestorField : indexParameters.ancestorFields.getValues()) {
                 for (String[] egoRelationField : alterRelationFields) {
-                    if (ancestorField.equals(egoRelationField[1])) {
+                    if (ancestorField[0].equals(egoRelationField[1])) {
                         egoType = GraphDataNode.RelationType.ancestor;
                         alterType = GraphDataNode.RelationType.descendant;
                     }
                 }
             }
-            for (String ancestorField : indexParameters.decendantFields.getValues()) {
+            for (String[] ancestorField : indexParameters.decendantFields.getValues()) {
                 for (String[] egoRelationField : alterRelationFields) {
-                    if (ancestorField.equals(egoRelationField[1])) {
+                    if (ancestorField[0].equals(egoRelationField[1])) {
                         egoType = GraphDataNode.RelationType.descendant;
                         alterType = GraphDataNode.RelationType.ancestor;
                     }
@@ -198,7 +184,7 @@ public class EntityIndex {
         return graphDataNodeList.toArray(new GraphDataNode[]{});
     }
 
-    private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, String currentEgoPath, GraphDataNode egoNode, ArrayList<KinType> remainingKinTypes) throws URISyntaxException{
+    private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, String currentEgoPath, GraphDataNode egoNode, ArrayList<KinType> remainingKinTypes) throws URISyntaxException {
         EntityData egoData = getEntityData(currentEgoPath);
 //        String currentKinType = remaningKinTypeString.substring(0, 1);
 //        remaningKinTypeString = remaningKinTypeString.substring(1);
@@ -232,7 +218,7 @@ public class EntityIndex {
         }
     }
 
-    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) throws URISyntaxException{
+    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) throws URISyntaxException {
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
         HashMap<String, GraphDataNode> createdGraphNodes = new HashMap<String, GraphDataNode>();
         for (URI currentEgoUri : egoNodes) {
