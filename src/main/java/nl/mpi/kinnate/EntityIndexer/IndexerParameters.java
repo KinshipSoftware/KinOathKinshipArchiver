@@ -49,23 +49,23 @@ public class IndexerParameters {
     public String linkPath = "/Kinnate/Relation/Link";
 //    public IndexerParam relevantEntityData = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/NoteText"}, {"Kinnate/Gedcom/Entity/SEX"}, {"Kinnate/Gedcom/Entity/GedcomType"}, {"Kinnate/Gedcom/Entity/NAME/NAME"}, {"Kinnate/Gedcom/Entity/NAME/NPFX"}}); // todo: the relevantData array comes from the user via the svg
     public IndexerParam relevantLinkData = new IndexerParam(new String[][]{{"Type"}});
-    public IndexerParam labelFields = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/NAME/NAME"}, {"Kinnate/Gedcom/Entity/GedcomType"}, {"Kinnate/Gedcom/Entity/Text"}, {"Kinnate/Gedcom/Entity/NAME/NPFX"}, {"Kinnate/Gedcom/Entity/NoteText"}});
-    public IndexerParam symbolFieldsFields = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/SEX[text()='M']", "triangle"}, {"Kinnate/Gedcom/Entity[SEX='F']", "circle"}, {"Kinnate/Gedcom/Entity/GedcomType[text()='FAM']", "union"}});
+    public IndexerParam labelFields = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/NAME/NAME"}, {"Kinnate/Gedcom/Entity[GedcomType='FAM']/GedcomType"}, {"Kinnate/Gedcom/Entity/Text"}, {"Kinnate/Gedcom/Entity/NAME/NPFX"}, {"Kinnate/Gedcom/Entity/NoteText"}});
+    public IndexerParam symbolFieldsFields = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity[SEX='M']", "triangle"}, {"Kinnate/Gedcom/Entity[SEX='F']", "circle"}, {"Kinnate/Gedcom/Entity[GedcomType='FAM']", "union"}});
     public IndexerParam ancestorFields = new IndexerParam(new String[][]{{"Kinnate.Gedcom.Entity.FAMC"}, {"Kinnate.Gedcom.Entity.HUSB"}, {"Kinnate.Gedcom.Entity.WIFE"}});
 //    public IndexerParam siblingFields = new IndexerParam(new String[]{{"Kinnate.Gedcom.Entity.CHIL"}, {"Kinnate.Gedcom.Entity.FAMS"}});
     public IndexerParam decendantFields = new IndexerParam(new String[][]{{"Kinnate.Gedcom.Entity.CHIL"}, {"Kinnate.Gedcom.Entity.FAMS"}});
-    public IndexerParam showEntityFields = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/GedcomType=INDI"}, {"Kinnate/Gedcom/Entity/GedcomType=FAM"}}); // todo: add fields that can be used to controll which nodes are shown
-    private String[] relevantEntityData = null;
+//    public IndexerParam showEntityFields = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/GedcomType=INDI"}, {"Kinnate/Gedcom/Entity/GedcomType=FAM"}}); // todo: add fields that can be used to controll which nodes are shown
+    private String[][] relevantEntityData = null;
 
-    public String[] getRelevantEntityData() {
+    public String[][] getRelevantEntityData() {
         if (relevantEntityData == null) {
-            ArrayList<String> relevantDataList = new ArrayList<String>();
-            for (IndexerParam currentIndexerParam : new IndexerParam[]{labelFields, symbolFieldsFields, showEntityFields}) {
+            ArrayList<String[]> relevantDataList = new ArrayList<String[]>();
+            for (IndexerParam currentIndexerParam : new IndexerParam[]{labelFields, symbolFieldsFields/*, showEntityFields*/}) {
                 for (String[] currentData : currentIndexerParam.getValues()) {
-                    relevantDataList.add(currentData[0]);
+                    relevantDataList.add(currentData);
                 }
             }
-            relevantEntityData = relevantDataList.toArray(new String[]{});
+            relevantEntityData = relevantDataList.toArray(new String[][]{});
         }
         return relevantEntityData;
     }
