@@ -199,6 +199,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                     }
                 }
             }
+            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
         }
     }
 
@@ -234,18 +235,29 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     private void storeParameter(Element svgRoot, String parameterName, String[] ParameterValues) {
-        Element kinTypesRecordNode = doc.createElement("desc");
-        kinTypesRecordNode.setAttributeNS(null, "id", parameterName);
-        StringBuilder kinTypeRecordBuilder = new StringBuilder();
         for (String currentKinType : ParameterValues) {
-            if (kinTypeRecordBuilder.length() > 0) {
-                kinTypeRecordBuilder.append(",");
-            }
-            kinTypeRecordBuilder.append(currentKinType);
+            Element kinTypesRecordNode = doc.createElement("kinshipdata");
+            kinTypesRecordNode.setAttributeNS(null, "datatype", parameterName);
+            kinTypesRecordNode.setAttributeNS(null, "value", currentKinType);
+            svgRoot.appendChild(kinTypesRecordNode);
         }
-        Text kinTypeTextNode = doc.createTextNode(kinTypeRecordBuilder.toString());
-        kinTypesRecordNode.appendChild(kinTypeTextNode);
-        svgRoot.appendChild(kinTypesRecordNode);
+    }
+
+    private void storeParameter(Element svgRoot, String parameterName, String[][] ParameterValues) {
+        for (String[] currentKinType : ParameterValues) {
+            Element kinTypesRecordNode = doc.createElement("kinshipdata");
+            kinTypesRecordNode.setAttributeNS(null, "datatype", parameterName);
+            if (currentKinType.length == 1) {
+                kinTypesRecordNode.setAttributeNS(null, "value", currentKinType[0]);
+            } else if (currentKinType.length == 2) {
+                kinTypesRecordNode.setAttributeNS(null, "path", currentKinType[0]);
+                kinTypesRecordNode.setAttributeNS(null, "value", currentKinType[1]);
+            } else {
+                // todo: add any other datatypes if required
+                throw new UnsupportedOperationException();
+            }
+            svgRoot.appendChild(kinTypesRecordNode);
+        }
     }
 
     public void resetZoom() {
@@ -352,34 +364,31 @@ public class GraphPanel extends JPanel implements SavePanel {
         groupNode.setAttributeNS(null, "id", currentNode.getEntityPath());
 //        counterTest++;
         Element symbolNode;
-        switch (currentNode.symbolType) {
-            case circle:
-                symbolNode = doc.createElementNS(svgNameSpace, "circle");
-                symbolNode.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
-                symbolNode.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
-                symbolNode.setAttributeNS(null, "r", Integer.toString(symbolSize / 2));
-                symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
+        String symbolType = currentNode.getSymbolType();
+        if ("circle".equals(symbolType)) {
+            symbolNode = doc.createElementNS(svgNameSpace, "circle");
+            symbolNode.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+            symbolNode.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+            symbolNode.setAttributeNS(null, "r", Integer.toString(symbolSize / 2));
+            symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
 //            <circle id="_16" cx="120.0" cy="155.0" r="50" fill="red" stroke="black" stroke-width="1"/>
 //    <polygon id="_17" transform="matrix(0.7457627,0.0,0.0,circle0.6567164,467.339,103.462685)" points="20,10 80,40 40,80" fill="blue" stroke="black" stroke-width="1"/>
-                break;
-            case square:
-                symbolNode = doc.createElementNS(svgNameSpace, "rect");
-                symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
-                symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-                symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
-                symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
-                break;
-            case resource:
-                symbolNode = doc.createElementNS(svgNameSpace, "rect");
-                symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
-                symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-                symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
-                symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
-                symbolNode.setAttributeNS(null, "transform", "rotate(-45 " + Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2) + " " + Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + ")");
-                symbolNode.setAttributeNS(null, "stroke-width", "4");
-                symbolNode.setAttributeNS(null, "fill", "black");
-                break;
-            case union:
+        } else if ("square".equals(symbolType)) {
+            symbolNode = doc.createElementNS(svgNameSpace, "rect");
+            symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
+            symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+            symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
+            symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
+        } else if ("resource".equals(symbolType)) {
+            symbolNode = doc.createElementNS(svgNameSpace, "rect");
+            symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
+            symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+            symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
+            symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
+            symbolNode.setAttributeNS(null, "transform", "rotate(-45 " + Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2) + " " + Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + ")");
+            symbolNode.setAttributeNS(null, "stroke-width", "4");
+            symbolNode.setAttributeNS(null, "fill", "black");
+        } else if ("union".equals(symbolType)) {
 //                    DOMUtilities.deepCloneDocument(doc, doc.getImplementation());
 
 //                    symbolNode = doc.createElementNS(svgNS, "layer");
@@ -395,24 +404,21 @@ public class GraphPanel extends JPanel implements SavePanel {
 //                    lowerNode.setAttributeNS(null, "height", Integer.toString(symbolSize / 3));
 //                    lowerNode.appendChild(upperNode);
 //                    symbolNode.appendChild(lowerNode);
-                symbolNode = doc.createElementNS(svgNameSpace, "polyline");
-                int posXa = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
-                int posYa = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
-                int offsetAmounta = symbolSize / 2;
-                symbolNode.setAttributeNS(null, "fill", "none");
-                symbolNode.setAttributeNS(null, "points", (posXa + offsetAmounta * 3) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa - offsetAmounta) + " " + (posXa + offsetAmounta * 3) + "," + (posYa - offsetAmounta));
-
-                break;
-            case triangle:
-                symbolNode = doc.createElementNS(svgNameSpace, "polygon");
-                int posXt = currentNode.xPos * hSpacing + hSpacing;
-                int posYt = currentNode.yPos * vSpacing + vSpacing;
-                int triangleHeight = (int) (Math.sqrt(3) * symbolSize / 2);
-                symbolNode.setAttributeNS(null, "points",
-                        (posXt - symbolSize / 2) + "," + (posYt + triangleHeight / 2) + " "
-                        + (posXt) + "," + (posYt - +triangleHeight / 2) + " "
-                        + (posXt + symbolSize / 2) + "," + (posYt + triangleHeight / 2));
-                break;
+            symbolNode = doc.createElementNS(svgNameSpace, "polyline");
+            int posXa = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
+            int posYa = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
+            int offsetAmounta = symbolSize / 2;
+            symbolNode.setAttributeNS(null, "fill", "none");
+            symbolNode.setAttributeNS(null, "points", (posXa + offsetAmounta * 3) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa - offsetAmounta) + " " + (posXa + offsetAmounta * 3) + "," + (posYa - offsetAmounta));
+        } else if ("triangle".equals(symbolType)) {
+            symbolNode = doc.createElementNS(svgNameSpace, "polygon");
+            int posXt = currentNode.xPos * hSpacing + hSpacing;
+            int posYt = currentNode.yPos * vSpacing + vSpacing;
+            int triangleHeight = (int) (Math.sqrt(3) * symbolSize / 2);
+            symbolNode.setAttributeNS(null, "points",
+                    (posXt - symbolSize / 2) + "," + (posYt + triangleHeight / 2) + " "
+                    + (posXt) + "," + (posYt - +triangleHeight / 2) + " "
+                    + (posXt + symbolSize / 2) + "," + (posYt + triangleHeight / 2));
 //                case equals:
 //                    symbolNode = doc.createElementNS(svgNS, "rect");
 //                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize));
@@ -420,13 +426,13 @@ public class GraphPanel extends JPanel implements SavePanel {
 //                    symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize / 2));
 //                    symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize / 2));
 //                    break;
-            default:
-                symbolNode = doc.createElementNS(svgNameSpace, "polyline");
-                int posX = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
-                int posY = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
-                int offsetAmount = symbolSize / 2;
-                symbolNode.setAttributeNS(null, "fill", "none");
-                symbolNode.setAttributeNS(null, "points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
+        } else {
+            symbolNode = doc.createElementNS(svgNameSpace, "polyline");
+            int posX = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
+            int posY = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
+            int offsetAmount = symbolSize / 2;
+            symbolNode.setAttributeNS(null, "fill", "none");
+            symbolNode.setAttributeNS(null, "points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
         }
 //            if (currentNode.isEgo) {
 //                symbolNode.setAttributeNS(null, "fill", "red");
@@ -658,6 +664,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         }
         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
         svgCanvas.revalidate();
+        // todo: populate this correctly with the available symbols
+        indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
     }
 
     public boolean hasSaveFileName() {
