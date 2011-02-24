@@ -13,7 +13,7 @@ public class GraphDataNode {
     public enum SymbolType {
         // symbol terms are used here to try to keep things agnostic
 
-        square, triangle, circle, union, resource
+        square, triangle, circle, union, resource, ego, none
     }
 
     public enum RelationType {
@@ -36,7 +36,8 @@ public class GraphDataNode {
         return GraphDataNode.RelationType.sibling;
     }
     private String entityPath;
-    SymbolType symbolType;
+    private SymbolType symbolType;
+    private String symbolTypeString;
     boolean isEgo = false;
     private String[] labelString;
     private ArrayList<NodeRelation> relatedNodes = new ArrayList<NodeRelation>();
@@ -51,32 +52,19 @@ public class GraphDataNode {
         RelationType relationType;
     }
 
-    public GraphDataNode(String entityPathLocal, int symbolIndex, String[] labelStringLocal) {
+    public GraphDataNode(String entityPathLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
         entityPath = entityPathLocal;
-        switch (symbolIndex) {
-            case 0:
-                symbolType = SymbolType.square;
-                break;
-            case 1:
-                symbolType = SymbolType.circle;
-                break;
-            case 2:
-                symbolType = SymbolType.triangle;
-                break;
-            case 3:
-                symbolType = SymbolType.union;
-                break;
-            case 4:
-                symbolType = SymbolType.resource;
-                break;
-        }
+        symbolType = null;
+        symbolTypeString = symbolTypeLocal;
         labelString = labelStringLocal;
+        isEgo = isEgoLocal;
     }
 
-    public GraphDataNode(String entityPathLocal, SymbolType symbolIndex, String[] labelStringLocal) {
+    public GraphDataNode(String entityPathLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
         entityPath = entityPathLocal;
         symbolType = symbolIndex;
         labelString = labelStringLocal;
+        isEgo = isEgoLocal;
     }
 //    public GraphDataNode(SymbolType symbolIndex, String[] labelStringLocal) {
 //        symbolType = symbolIndex;
@@ -86,6 +74,28 @@ public class GraphDataNode {
 //    public GraphDataNode(String[] labelStringLocal) {
 //        labelString = labelStringLocal;
 //    }
+    public String getSymbolType() {
+        if (symbolType != null) {
+            switch (symbolType) {
+                case circle:
+                    return "circle";
+                case ego:
+                    return "square";
+                case none:
+                    return null;
+                case resource:
+                    return "resource";
+                case square:
+                    return "square";
+                case triangle:
+                    return "triangle";
+                case union:
+                    return "union";
+            }
+        }
+        return symbolTypeString;
+    }
+
     public String getEntityPath() {
         return entityPath;
     }
