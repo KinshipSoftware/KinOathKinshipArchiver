@@ -134,18 +134,13 @@ public class EntityIndex {
                 labelTextList.add(labelTextTemp);
             }
         }
-        if (isEgo) {
-            // todo: the ego symbol should be calculated in the graphpanel and at this point just return the normal symbol for the entity
-            return new GraphDataNode(entityUri.toASCIIString(), GraphDataNode.SymbolType.ego, labelTextList.toArray(new String[]{}));
-        } else {
-            for (String currentSymbolField[] : indexParameters.symbolFieldsFields.getValues()) {
-                String linkSymbolString = entityData.getEntityField(currentSymbolField[0]);
-                if (linkSymbolString != null) {
-                    return new GraphDataNode(entityUri.toASCIIString(), currentSymbolField[1], labelTextList.toArray(new String[]{}));
-                }
+        for (String currentSymbolField[] : indexParameters.symbolFieldsFields.getValues()) {
+            String linkSymbolString = entityData.getEntityField(currentSymbolField[0]);
+            if (linkSymbolString != null) {
+                return new GraphDataNode(entityUri.toASCIIString(), currentSymbolField[1], labelTextList.toArray(new String[]{}), isEgo);
             }
         }
-        return new GraphDataNode(entityUri.toASCIIString(), GraphDataNode.SymbolType.none, labelTextList.toArray(new String[]{}));
+        return new GraphDataNode(entityUri.toASCIIString(), GraphDataNode.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
     }
 
     private void setRelationData(GraphDataNode egoNode, GraphDataNode alterNode, EntityData egoData, String alterPath) {
