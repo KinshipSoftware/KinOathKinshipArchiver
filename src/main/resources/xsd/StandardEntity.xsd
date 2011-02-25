@@ -8,6 +8,15 @@
                         <xs:sequence>
                             <xs:element name="Name" ann:displaypriority="1" minOccurs="1" maxOccurs="1"/>
                             <xs:element name="DOB" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="permissions">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="public" ann:label="public"/>
+                                        <xs:enumeration value="private" ann:label="private"/>
+                                        <xs:enumeration value="anonymised" ann:label="anonymised"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
@@ -17,6 +26,15 @@
                             <xs:element name="Link" type="xs:string" ann:displaypriority="1"/>
                             <xs:element name="Type" type="xs:string"/>
                             <xs:element name="TargetName" type="xs:string"/>
+                            <xs:element name="permissions">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="public" ann:label="public"/>
+                                        <xs:enumeration value="private" ann:label="private"/>
+                                        <xs:enumeration value="anonymised" ann:label="anonymised"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
