@@ -23,6 +23,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
     GraphPanel graphPanel;
     GraphPanelSize graphPanelSize;
     JMenuItem addRelationEntityMenuItem;
+    JMenuItem setAsEgoMenuItem;
     String[] selectedPaths = null; // keep the selected paths as shown at the time of the menu intereaction
 
     public GraphPanelContextMenu(KinTypeEgoSelectionTestPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, GraphPanelSize graphPanelSizeLocal) {
@@ -84,6 +85,23 @@ public class GraphPanelContextMenu extends JPopupMenu {
             });
             this.add(addRelationEntityMenuItem);
         }
+        setAsEgoMenuItem = new JMenuItem("Set as Ego");
+        setAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                URI[] selectedUriArray = new URI[selectedPaths.length];
+                for (int currentIndex = 0; currentIndex < selectedPaths.length; currentIndex++) {
+                    try {
+                        selectedUriArray[currentIndex] = new URI(selectedPaths[currentIndex]);
+                    } catch (URISyntaxException ex) {
+                        GuiHelper.linorgBugCatcher.logError(ex);
+                        // todo: warn user with a dialog
+                    }
+                }
+                egoSelectionPanel.addEgoNodes(selectedUriArray);
+            }
+        });
+        this.add(setAsEgoMenuItem);
         JMenuItem resetZoomMenuItem = new JMenuItem("Reset Zoom");
         resetZoomMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -117,6 +135,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
     public void show(Component cmpnt, int i, int i1) {
         selectedPaths = graphPanel.getSelectedPaths();
         addRelationEntityMenuItem.setVisible(selectedPaths.length == 2);
+        setAsEgoMenuItem.setVisible(selectedPaths.length > 0);
         super.show(cmpnt, i, i1);
     }
 }
