@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
+import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
@@ -31,6 +32,7 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
@@ -61,6 +63,8 @@ public class GraphPanel extends JPanel implements SavePanel {
     private GraphPanelSize graphPanelSize;
     private ArrayList<String> selectedGroupElement;
     private String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
+    private String kinDataNameSpace = "kin";
+    private String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
 
     public GraphPanel(KinTypeEgoSelectionTestPanel egoSelectionPanel) {
         selectedGroupElement = new ArrayList<String>();
@@ -69,7 +73,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         this.setLayout(new BorderLayout());
         svgCanvas = new JSVGCanvas();
 //        svgCanvas.setMySize(new Dimension(600, 400));
-        svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC); // JSVGCanvas.ALWAYS_DYNAMIC allows more dynamic updating but introduces concurrency issues
+        svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
 //        drawNodes();
         svgCanvas.setEnableImageZoomInteractor(false);
         svgCanvas.setEnablePanInteractor(false);
@@ -138,7 +142,20 @@ public class GraphPanel extends JPanel implements SavePanel {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
 //        svgCanvas.setURI(svgFilePath.toURI().toString());
-        getParametersFromDom();
+        ArrayList<String> egoStringArray = new ArrayList<String>();
+        egoSet.clear();
+        for (String currentEgoString : getSingleParametersFromDom("EgoList")) {
+            try {
+                egoSet.add(new URI(currentEgoString));
+            } catch (URISyntaxException urise) {
+                GuiHelper.linorgBugCatcher.logError(urise);
+            }
+        }
+        kinTypeStrings = getSingleParametersFromDom("KinTypeStrings");
+        indexParameters.ancestorFields.setValues(getDoubleParametersFromDom("AncestorFields"));
+        indexParameters.decendantFields.setValues(getDoubleParametersFromDom("DecendantFields"));
+        indexParameters.labelFields.setValues(getDoubleParametersFromDom("LabelFields"));
+        indexParameters.symbolFieldsFields.setValues(getDoubleParametersFromDom("SymbolFieldsFields"));
     }
 
     private void saveSvg(File svgFilePath) {
@@ -147,60 +164,55 @@ public class GraphPanel extends JPanel implements SavePanel {
         requiresSave = false;
     }
 
-    private String[] readArrayFromEntity(Node currentChild) {
-        return currentChild.getTextContent().split(",");
+    private void printNodeNames(Node nodeElement) {
+        System.out.println(nodeElement.getLocalName());
+        System.out.println(nodeElement.getNamespaceURI());
+        Node childNode = nodeElement.getFirstChild();
+        while (childNode != null) {
+            printNodeNames(childNode);
+            childNode = childNode.getNextSibling();
+        }
     }
 
-    private void getParametersFromDom() {
+    private String[] getSingleParametersFromDom(String parameterName) {
+        ArrayList<String> parameterList = new ArrayList<String>();
         if (doc != null) {
-            Element svgRoot = doc.getDocumentElement();
-            for (Node currentChild = svgRoot.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
-                if ("desc".equals(currentChild.getLocalName())) {
-                    Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
-                    if (idAttrubite != null) {
-                        System.out.println("Desc idAttrubite: " + idAttrubite.getTextContent());
-                        if (idAttrubite.getTextContent().equals("EgoList")) {
-                            String[] egoPaths = currentChild.getTextContent().split(",");
-                            egoSet = new HashSet<URI>();
-                            for (String egoPath : egoPaths) {
-                                if (egoPath.length() > 0) {
-                                    try {
-                                        egoSet.add(new URI(egoPath));
-                                    } catch (URISyntaxException urise) {
-                                        GuiHelper.linorgBugCatcher.logError(urise);
-                                    }
-                                }
-                            }
-                        }
-//                        if (idAttrubite.getTextContent().equals("KinTypeStrings")) {
-//                            String[] kinTypeStringArray = currentChild.getTextContent().split(",");
-//                            kinTypeStringSet = new HashSet<String>();
-//                            for (String kinTypeString : kinTypeStringArray) {
-//                                if (kinTypeString.length() > 0) {
-//                                    kinTypeStringSet.add(kinTypeString);
-//                                }
-//                            }
-//                        }
-                        if (idAttrubite.getTextContent().equals("KinTypeStrings")) {
-                            kinTypeStrings = readArrayFromEntity(currentChild);
-                        }
-                        if (idAttrubite.getTextContent().equals("AncestorFields")) {
-                            indexParameters.ancestorFields.setValues(readArrayFromEntity(currentChild));
-                        }
-                        if (idAttrubite.getTextContent().equals("DecendantFields")) {
-                            indexParameters.decendantFields.setValues(readArrayFromEntity(currentChild));
-                        }
-                        if (idAttrubite.getTextContent().equals("LabelFields")) {
-                            indexParameters.labelFields.setValues(readArrayFromEntity(currentChild));
-                        }
-                        if (idAttrubite.getTextContent().equals("SymbolFieldsFields")) {
-                            indexParameters.symbolFieldsFields.setValues(readArrayFromEntity(currentChild));
-                        }
+//            printNodeNames(doc);
+            try {
+                // todo: resolve names space issue
+                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/svg/KinDiagramData/" + parameterName);
+                for (int nodeCounter = 0; nodeCounter < parameterNodeList.getLength(); nodeCounter++) {
+                    Node parameterNode = parameterNodeList.item(nodeCounter);
+                    if (parameterNode != null) {
+                        parameterList.add(parameterNode.getAttributes().getNamedItem("value").getNodeValue());
                     }
                 }
+            } catch (TransformerException transformerException) {
+                GuiHelper.linorgBugCatcher.logError(transformerException);
             }
-            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
+//            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
         }
+        return parameterList.toArray(new String[]{});
+    }
+
+    private String[][] getDoubleParametersFromDom(String parameterName) {
+        ArrayList<String[]> parameterList = new ArrayList<String[]>();
+        if (doc != null) {
+            try {
+                // todo: resolve names space issue
+                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/svg/KinDiagramData/" + parameterName);
+                for (int nodeCounter = 0; nodeCounter < parameterNodeList.getLength(); nodeCounter++) {
+                    Node parameterNode = parameterNodeList.item(nodeCounter);
+                    if (parameterNode != null) {
+                        parameterList.add(new String[]{parameterNode.getAttributes().getNamedItem("path").getNodeValue(), parameterNode.getAttributes().getNamedItem("value").getNodeValue()});
+                    }
+                }
+            } catch (TransformerException transformerException) {
+                GuiHelper.linorgBugCatcher.logError(transformerException);
+            }
+//            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
+        }
+        return parameterList.toArray(new String[][]{});
     }
 
     public String[] getKinTypeStrigs() {
@@ -234,29 +246,27 @@ public class GraphPanel extends JPanel implements SavePanel {
         return selectedGroupElement.toArray(new String[]{});
     }
 
-    private void storeParameter(Element svgRoot, String parameterName, String[] ParameterValues) {
+    private void storeParameter(Element dataStoreElement, String parameterName, String[] ParameterValues) {
         for (String currentKinType : ParameterValues) {
-            Element kinTypesRecordNode = doc.createElement("kinshipdata");
-            kinTypesRecordNode.setAttributeNS(null, "datatype", parameterName);
-            kinTypesRecordNode.setAttributeNS(null, "value", currentKinType);
-            svgRoot.appendChild(kinTypesRecordNode);
+            Element dataRecordNode = doc.createElement(parameterName);
+            dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType);
+            dataStoreElement.appendChild(dataRecordNode);
         }
     }
 
-    private void storeParameter(Element svgRoot, String parameterName, String[][] ParameterValues) {
+    private void storeParameter(Element dataStoreElement, String parameterName, String[][] ParameterValues) {
         for (String[] currentKinType : ParameterValues) {
-            Element kinTypesRecordNode = doc.createElement("kinshipdata");
-            kinTypesRecordNode.setAttributeNS(null, "datatype", parameterName);
+            Element dataRecordNode = doc.createElement(parameterName);
             if (currentKinType.length == 1) {
-                kinTypesRecordNode.setAttributeNS(null, "value", currentKinType[0]);
+                dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[0]);
             } else if (currentKinType.length == 2) {
-                kinTypesRecordNode.setAttributeNS(null, "path", currentKinType[0]);
-                kinTypesRecordNode.setAttributeNS(null, "value", currentKinType[1]);
+                dataRecordNode.setAttributeNS(kinDataNameSpace, "path", currentKinType[0]);
+                dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[1]);
             } else {
                 // todo: add any other datatypes if required
                 throw new UnsupportedOperationException();
             }
-            svgRoot.appendChild(kinTypesRecordNode);
+            dataStoreElement.appendChild(dataRecordNode);
         }
     }
 
@@ -333,20 +343,20 @@ public class GraphPanel extends JPanel implements SavePanel {
                                         System.out.println("bbox H: " + bbox.getHeight());
                                         Element symbolNode = doc.createElementNS(svgNameSpace, "rect");
                                         int paddingDistance = 20;
-                                        symbolNode.setAttributeNS(null, "id", "highlight");
-                                        symbolNode.setAttributeNS(null, "x", Float.toString(bbox.getX() - paddingDistance));
-                                        symbolNode.setAttributeNS(null, "y", Float.toString(bbox.getY() - paddingDistance));
-                                        symbolNode.setAttributeNS(null, "width", Float.toString(bbox.getWidth() + paddingDistance * 2));
-                                        symbolNode.setAttributeNS(null, "height", Float.toString(bbox.getHeight() + paddingDistance * 2));
-                                        symbolNode.setAttributeNS(null, "fill", "none");
-                                        symbolNode.setAttributeNS(null, "stroke-width", "1");
-                                        symbolNode.setAttributeNS(null, "stroke", "blue");
-                                        symbolNode.setAttributeNS(null, "stroke-dasharray", "3");
-                                        symbolNode.setAttributeNS(null, "stroke-dashoffset", "0");
-//            symbolNode.setAttributeNS(null, "id", "Highlight");
-//            symbolNode.setAttributeNS(null, "id", "Highlight");
-//            symbolNode.setAttributeNS(null, "id", "Highlight");
-//            symbolNode.setAttributeNS(null, "style", ":none;fill-opacity:1;fill-rule:nonzero;stroke:#6674ff;stroke-opacity:1;stroke-width:1;stroke-miterlimit:4;"
+                                        symbolNode.setAttribute("id", "highlight");
+                                        symbolNode.setAttribute("x", Float.toString(bbox.getX() - paddingDistance));
+                                        symbolNode.setAttribute("y", Float.toString(bbox.getY() - paddingDistance));
+                                        symbolNode.setAttribute("width", Float.toString(bbox.getWidth() + paddingDistance * 2));
+                                        symbolNode.setAttribute("height", Float.toString(bbox.getHeight() + paddingDistance * 2));
+                                        symbolNode.setAttribute("fill", "none");
+                                        symbolNode.setAttribute("stroke-width", "1");
+                                        symbolNode.setAttribute("stroke", "blue");
+                                        symbolNode.setAttribute("stroke-dasharray", "3");
+                                        symbolNode.setAttribute("stroke-dashoffset", "0");
+//            symbolNode.setAttribute("id", "Highlight");
+//            symbolNode.setAttribute("id", "Highlight");
+//            symbolNode.setAttribute("id", "Highlight");
+//            symbolNode.setAttribute("style", ":none;fill-opacity:1;fill-rule:nonzero;stroke:#6674ff;stroke-opacity:1;stroke-width:1;stroke-miterlimit:4;"
 //                    + "stroke-dasharray:1, 1;stroke-dashoffset:0");
                                         currentChild.appendChild(symbolNode);
                                     }
@@ -361,99 +371,104 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     private Element createEntitySymbol(GraphDataNode currentNode, int hSpacing, int vSpacing, int symbolSize) {
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
-        groupNode.setAttributeNS(null, "id", currentNode.getEntityPath());
+        groupNode.setAttribute("id", currentNode.getEntityPath());
 //        counterTest++;
         Element symbolNode;
         String symbolType = currentNode.getSymbolType();
         if ("circle".equals(symbolType)) {
             symbolNode = doc.createElementNS(svgNameSpace, "circle");
-            symbolNode.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
-            symbolNode.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
-            symbolNode.setAttributeNS(null, "r", Integer.toString(symbolSize / 2));
-            symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
+            symbolNode.setAttribute("cx", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+            symbolNode.setAttribute("cy", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+            symbolNode.setAttribute("r", Integer.toString(symbolSize / 2));
+            symbolNode.setAttribute("height", Integer.toString(symbolSize));
 //            <circle id="_16" cx="120.0" cy="155.0" r="50" fill="red" stroke="black" stroke-width="1"/>
 //    <polygon id="_17" transform="matrix(0.7457627,0.0,0.0,circle0.6567164,467.339,103.462685)" points="20,10 80,40 40,80" fill="blue" stroke="black" stroke-width="1"/>
         } else if ("square".equals(symbolType)) {
             symbolNode = doc.createElementNS(svgNameSpace, "rect");
-            symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
-            symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-            symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
-            symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
+            symbolNode.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
+            symbolNode.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+            symbolNode.setAttribute("width", Integer.toString(symbolSize));
+            symbolNode.setAttribute("height", Integer.toString(symbolSize));
         } else if ("resource".equals(symbolType)) {
             symbolNode = doc.createElementNS(svgNameSpace, "rect");
-            symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
-            symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-            symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
-            symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize));
-            symbolNode.setAttributeNS(null, "transform", "rotate(-45 " + Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2) + " " + Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + ")");
-            symbolNode.setAttributeNS(null, "stroke-width", "4");
-            symbolNode.setAttributeNS(null, "fill", "black");
+            symbolNode.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
+            symbolNode.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+            symbolNode.setAttribute("width", Integer.toString(symbolSize));
+            symbolNode.setAttribute("height", Integer.toString(symbolSize));
+            symbolNode.setAttribute("transform", "rotate(-45 " + Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2) + " " + Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + ")");
+            symbolNode.setAttribute("stroke-width", "4");
+            symbolNode.setAttribute("fill", "black");
         } else if ("union".equals(symbolType)) {
 //                    DOMUtilities.deepCloneDocument(doc, doc.getImplementation());
 
 //                    symbolNode = doc.createElementNS(svgNS, "layer");
 //                    Element upperNode = doc.createElementNS(svgNS, "rect");
 //                    Element lowerNode = doc.createElementNS(svgNS, "rect");
-//                    upperNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
-//                    upperNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-//                    upperNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
-//                    upperNode.setAttributeNS(null, "height", Integer.toString(symbolSize / 3));
-//                    lowerNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2 + (symbolSize / 3) * 2));
-//                    lowerNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-//                    lowerNode.setAttributeNS(null, "width", Integer.toString(symbolSize));
-//                    lowerNode.setAttributeNS(null, "height", Integer.toString(symbolSize / 3));
+//                    upperNode.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
+//                    upperNode.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+//                    upperNode.setAttribute("width", Integer.toString(symbolSize));
+//                    upperNode.setAttribute("height", Integer.toString(symbolSize / 3));
+//                    lowerNode.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2 + (symbolSize / 3) * 2));
+//                    lowerNode.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+//                    lowerNode.setAttribute("width", Integer.toString(symbolSize));
+//                    lowerNode.setAttribute("height", Integer.toString(symbolSize / 3));
 //                    lowerNode.appendChild(upperNode);
 //                    symbolNode.appendChild(lowerNode);
             symbolNode = doc.createElementNS(svgNameSpace, "polyline");
             int posXa = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
             int posYa = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
             int offsetAmounta = symbolSize / 2;
-            symbolNode.setAttributeNS(null, "fill", "none");
-            symbolNode.setAttributeNS(null, "points", (posXa + offsetAmounta * 3) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa - offsetAmounta) + " " + (posXa + offsetAmounta * 3) + "," + (posYa - offsetAmounta));
+            symbolNode.setAttribute("fill", "none");
+            symbolNode.setAttribute("points", (posXa + offsetAmounta * 3) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa - offsetAmounta) + " " + (posXa + offsetAmounta * 3) + "," + (posYa - offsetAmounta));
         } else if ("triangle".equals(symbolType)) {
             symbolNode = doc.createElementNS(svgNameSpace, "polygon");
             int posXt = currentNode.xPos * hSpacing + hSpacing;
             int posYt = currentNode.yPos * vSpacing + vSpacing;
             int triangleHeight = (int) (Math.sqrt(3) * symbolSize / 2);
-            symbolNode.setAttributeNS(null, "points",
+            symbolNode.setAttribute("points",
                     (posXt - symbolSize / 2) + "," + (posYt + triangleHeight / 2) + " "
                     + (posXt) + "," + (posYt - +triangleHeight / 2) + " "
                     + (posXt + symbolSize / 2) + "," + (posYt + triangleHeight / 2));
 //                case equals:
 //                    symbolNode = doc.createElementNS(svgNS, "rect");
-//                    symbolNode.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize));
-//                    symbolNode.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
-//                    symbolNode.setAttributeNS(null, "width", Integer.toString(symbolSize / 2));
-//                    symbolNode.setAttributeNS(null, "height", Integer.toString(symbolSize / 2));
+//                    symbolNode.setAttribute("x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize));
+//                    symbolNode.setAttribute("y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+//                    symbolNode.setAttribute("width", Integer.toString(symbolSize / 2));
+//                    symbolNode.setAttribute("height", Integer.toString(symbolSize / 2));
 //                    break;
         } else {
             symbolNode = doc.createElementNS(svgNameSpace, "polyline");
             int posX = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
             int posY = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
             int offsetAmount = symbolSize / 2;
-            symbolNode.setAttributeNS(null, "fill", "none");
-            symbolNode.setAttributeNS(null, "points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
+            symbolNode.setAttribute("fill", "none");
+            symbolNode.setAttribute("points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
         }
 //            if (currentNode.isEgo) {
-//                symbolNode.setAttributeNS(null, "fill", "red");
+//                symbolNode.setAttribute("fill", "red");
 //            } else {
-//                symbolNode.setAttributeNS(null, "fill", "none");
+//                symbolNode.setAttribute("fill", "none");
 //            }
-        symbolNode.setAttributeNS(null, "fill", "white");
-        symbolNode.setAttributeNS(null, "stroke", "black");
-        symbolNode.setAttributeNS(null, "stroke-width", "2");
+        if (currentNode.isEgo) {
+            symbolNode.setAttribute("fill", "black");
+        } else {
+            symbolNode.setAttribute("fill", "white");
+        }
+
+        symbolNode.setAttribute("stroke", "black");
+        symbolNode.setAttribute("stroke-width", "2");
         groupNode.appendChild(symbolNode);
 
 ////////////////////////////// tspan method appears to fail in batik rendering process unless saved and reloaded ////////////////////////////////////////////////
 //            Element labelText = doc.createElementNS(svgNS, "text");
-////            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
-////            labelText.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-//            labelText.setAttributeNS(null, "fill", "black");
-//            labelText.setAttributeNS(null, "fill-opacity", "1");
-//            labelText.setAttributeNS(null, "stroke-width", "0");
-//            labelText.setAttributeNS(null, "font-size", "14px");
-////            labelText.setAttributeNS(null, "text-anchor", "end");
-////            labelText.setAttributeNS(null, "style", "font-size:14px;text-anchor:end;fill:black;fill-opacity:1");
+////            labelText.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
+////            labelText.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
+//            labelText.setAttribute("fill", "black");
+//            labelText.setAttribute("fill-opacity", "1");
+//            labelText.setAttribute("stroke-width", "0");
+//            labelText.setAttribute("font-size", "14px");
+////            labelText.setAttribute("text-anchor", "end");
+////            labelText.setAttribute("style", "font-size:14px;text-anchor:end;fill:black;fill-opacity:1");
 //            //labelText.setNodeValue(currentChild.toString());
 //
 //            //String textWithUni = "\u0041";
@@ -478,11 +493,11 @@ public class GraphPanel extends JPanel implements SavePanel {
         int lineSpacing = 15;
         for (String currentTextLable : currentNode.getLabel()) {
             Element labelText = doc.createElementNS(svgNameSpace, "text");
-            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
-            labelText.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2 + textSpanCounter));
-            labelText.setAttributeNS(null, "fill", "black");
-            labelText.setAttributeNS(null, "stroke-width", "0");
-            labelText.setAttributeNS(null, "font-size", "14");
+            labelText.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
+            labelText.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2 + textSpanCounter));
+            labelText.setAttribute("fill", "black");
+            labelText.setAttribute("stroke-width", "0");
+            labelText.setAttribute("font-size", "14");
             Text textNode = doc.createTextNode(currentTextLable);
             labelText.appendChild(textNode);
             textSpanCounter += lineSpacing;
@@ -558,32 +573,31 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        int preferedHeight = graphData.gridHeight * vSpacing + vSpacing * 2;
 
         // Set the width and height attributes on the root 'svg' element.
-        svgRoot.setAttributeNS(null, "width", Integer.toString(graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
-        svgRoot.setAttributeNS(null, "height", Integer.toString(graphPanelSize.getHeight(graphData.gridHeight, vSpacing)));
+        svgRoot.setAttribute("width", Integer.toString(graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
+        svgRoot.setAttribute("height", Integer.toString(graphPanelSize.getHeight(graphData.gridHeight, vSpacing)));
 
         this.setPreferredSize(new Dimension(graphPanelSize.getHeight(graphData.gridHeight, vSpacing), graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
 
-        // store the selected ego nodes in the dom
-        Element egoRecordNode = doc.createElementNS(svgNameSpace, "desc");
-        egoRecordNode.setAttributeNS(null, "id", "EgoList");
-        StringBuilder egoRecordBuilder = new StringBuilder();
+        // create string array to store the selected ego nodes in the dom
+        ArrayList<String> egoStringArray = new ArrayList<String>();
         for (URI currentEgoUri : egoSet) {
-            if (egoRecordBuilder.length() > 0) {
-                egoRecordBuilder.append(",");
-            }
-            egoRecordBuilder.append(currentEgoUri.toASCIIString());
+            egoStringArray.add(currentEgoUri.toASCIIString());
         }
-        Text egoTextNode = doc.createTextNode(egoRecordBuilder.toString());
-        egoRecordNode.appendChild(egoTextNode);
-        svgRoot.appendChild(egoRecordNode);
-        // end store the selected ego nodes in the dom
-        // store the selected kin type strings in the dom
-        storeParameter(svgRoot, "KinTypeStrings", kinTypeStrings);
-        // end store the selected kin type strings nodes in the dom
-        storeParameter(svgRoot, "AncestorFields", indexParameters.ancestorFields.getValues());
-        storeParameter(svgRoot, "DecendantFields", indexParameters.decendantFields.getValues());
-        storeParameter(svgRoot, "LabelFields", indexParameters.labelFields.getValues());
-        storeParameter(svgRoot, "SymbolFieldsFields", indexParameters.symbolFieldsFields.getValues());
+        // store the selected kin type strings and other data in the dom
+//        Namespace sNS = Namespace.getNamespace("someNS", "someNamespace");
+//        Element element = new Element("SomeElement", sNS);
+
+//        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "KinDiagramData");
+        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
+        kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to do this
+        storeParameter(kinTypesRecordNode, "EgoList", egoStringArray.toArray(new String[]{}));
+        storeParameter(kinTypesRecordNode, "KinTypeStrings", kinTypeStrings);
+        storeParameter(kinTypesRecordNode, "AncestorFields", indexParameters.ancestorFields.getValues());
+        storeParameter(kinTypesRecordNode, "DecendantFields", indexParameters.decendantFields.getValues());
+        storeParameter(kinTypesRecordNode, "LabelFields", indexParameters.labelFields.getValues());
+        storeParameter(kinTypesRecordNode, "SymbolFieldsFields", indexParameters.symbolFieldsFields.getValues());
+        svgRoot.appendChild(kinTypesRecordNode);
+        // end store the selected kin type strings and other data in the dom
 
         svgCanvas.setSVGDocument(doc);
 //        svgCanvas.setDocument(doc);
@@ -617,13 +631,13 @@ public class GraphPanel extends JPanel implements SavePanel {
 //
 ////                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
 //                    Element linkLine = doc.createElementNS(svgNS, "line");
-//                    linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
-//                    linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+//                    linkLine.setAttribute("x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+//                    linkLine.setAttribute("y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
 //
-//                    linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
-//                    linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
-//                    linkLine.setAttributeNS(null, "stroke", "black");
-//                    linkLine.setAttributeNS(null, "stroke-width", "1");
+//                    linkLine.setAttribute("x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
+//                    linkLine.setAttribute("y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
+//                    linkLine.setAttribute("stroke", "black");
+//                    linkLine.setAttribute("stroke-width", "1");
 //                    // Attach the rectangle to the root 'svg' element.
 //                    svgRoot.appendChild(linkLine);
                     System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
@@ -644,15 +658,15 @@ public class GraphPanel extends JPanel implements SavePanel {
                         toBezX = toX;
                         toBezY = fromY - vSpacing / 2;
                     }
-                    linkLine.setAttributeNS(null, "d", "M " + fromX + "," + fromY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + toX + "," + toY);
+                    linkLine.setAttribute("d", "M " + fromX + "," + fromY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + toX + "," + toY);
 
-//                    linkLine.setAttributeNS(null, "x1", );
-//                    linkLine.setAttributeNS(null, "y1", );
+//                    linkLine.setAttribute("x1", );
+//                    linkLine.setAttribute("y1", );
 //
-//                    linkLine.setAttributeNS(null, "x2", );
-                    linkLine.setAttributeNS(null, "fill", "none");
-                    linkLine.setAttributeNS(null, "stroke", "grey");
-                    linkLine.setAttributeNS(null, "stroke-width", "2");
+//                    linkLine.setAttribute("x2", );
+                    linkLine.setAttribute("fill", "none");
+                    linkLine.setAttribute("stroke", "grey");
+                    linkLine.setAttribute("stroke-width", "2");
                     // Attach the rectangle to the root 'svg' element.
                     svgRoot.appendChild(linkLine);
                 }
