@@ -16,6 +16,11 @@ public class GraphDataNode {
         square, triangle, circle, union, resource, ego, none
     }
 
+    public enum RelationLineType {
+
+        square, horizontalCurve, verticalCurve, none
+    }
+
     public enum RelationType {
         // todo: the term sibling is too specific and needs to encompas anything on the same generation such as union
 
@@ -46,10 +51,13 @@ public class GraphDataNode {
 
     public class NodeRelation {
 
+        // todo: private String[] relationPath;
         public GraphDataNode sourceNode;
         public GraphDataNode linkedNode;
         public int generationalDistance;
         RelationType relationType;
+        RelationLineType relationLineType;
+        String labelString;
     }
 
     public GraphDataNode(String entityPathLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
@@ -177,13 +185,15 @@ public class GraphDataNode {
 //            return linkArray.toArray(new String[]{});
 //        }
 //    }
-    public void addRelatedNode(GraphDataNode relatedNode, int generationalDistance, RelationType relationType) {
+    public void addRelatedNode(GraphDataNode relatedNode, int generationalDistance, RelationType relationType, RelationLineType relationLineType, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         NodeRelation nodeRelation = new NodeRelation();
         nodeRelation.sourceNode = this;
         nodeRelation.linkedNode = relatedNode;
         nodeRelation.generationalDistance = generationalDistance;
         nodeRelation.relationType = relationType;
+        nodeRelation.relationLineType = relationLineType;
+        nodeRelation.labelString = labelString;
         relatedNodes.add(nodeRelation);
         relatedNode.relatedNodes.add(nodeRelation);
     }
