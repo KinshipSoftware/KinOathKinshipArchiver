@@ -165,8 +165,8 @@ public class EntityIndex {
                 }
             }
             if (egoType != null && alterType != null) {
-                egoNode.addRelatedNode(alterNode, 0, egoType);
-                alterNode.addRelatedNode(egoNode, 0, alterType);
+                egoNode.addRelatedNode(alterNode, 0, egoType, GraphDataNode.RelationLineType.square, null);
+                alterNode.addRelatedNode(egoNode, 0, alterType, GraphDataNode.RelationLineType.square, null);
             }
         }
     }
