@@ -180,7 +180,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            printNodeNames(doc);
             try {
                 // todo: resolve names space issue
-                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/svg/KinDiagramData/" + parameterName);
+                // todo: try setting the XPath namespaces
+                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/:svg/kin:KinDiagramData/kin:" + parameterName);
                 for (int nodeCounter = 0; nodeCounter < parameterNodeList.getLength(); nodeCounter++) {
                     Node parameterNode = parameterNodeList.item(nodeCounter);
                     if (parameterNode != null) {
@@ -248,7 +249,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     private void storeParameter(Element dataStoreElement, String parameterName, String[] ParameterValues) {
         for (String currentKinType : ParameterValues) {
-            Element dataRecordNode = doc.createElement(parameterName);
+            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
             dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType);
             dataStoreElement.appendChild(dataRecordNode);
         }
@@ -256,7 +257,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     private void storeParameter(Element dataStoreElement, String parameterName, String[][] ParameterValues) {
         for (String[] currentKinType : ParameterValues) {
-            Element dataRecordNode = doc.createElement(parameterName);
+            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
             if (currentKinType.length == 1) {
                 dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[0]);
             } else if (currentKinType.length == 2) {
@@ -567,7 +568,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        int hSpacing = maxTextLength * 10 + 100;
         int hSpacing = graphPanelSize.getHorizontalSpacing(graphData.gridWidth);
         int symbolSize = 15;
-        int strokeWidth = 1;
+        int strokeWidth = 2;
 
 //        int preferedWidth = graphData.gridWidth * hSpacing + hSpacing * 2;
 //        int preferedHeight = graphData.gridHeight * vSpacing + vSpacing * 2;
@@ -589,7 +590,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
 //        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "KinDiagramData");
         Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
-        kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to do this
+        kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to st the namespace
         storeParameter(kinTypesRecordNode, "EgoList", egoStringArray.toArray(new String[]{}));
         storeParameter(kinTypesRecordNode, "KinTypeStrings", kinTypeStrings);
         storeParameter(kinTypesRecordNode, "AncestorFields", indexParameters.ancestorFields.getValues());
@@ -627,6 +628,19 @@ public class GraphPanel extends JPanel implements SavePanel {
             // draw links
             for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
                 if (graphLinkNode.sourceNode.equals(currentNode)) {
+                    Element groupNode = doc.createElementNS(svgNameSpace, "g");
+//                    todo: groupNode.setAttribute("id", currentNode.getEntityPath()+ ";"+and the other end);
+
+                    int fromX = (currentNode.xPos * hSpacing + hSpacing);
+                    int fromY = (currentNode.yPos * vSpacing + vSpacing);
+                    int toX = (graphLinkNode.linkedNode.xPos * hSpacing + hSpacing);
+                    int toY = (graphLinkNode.linkedNode.yPos * vSpacing + vSpacing);
+
+                    switch (graphLinkNode.relationLineType) {
+                        case horizontalCurve:
+                        // this case uses the following case
+                        case verticalCurve:
+                            // todo: groupNode.setAttribute("id", );
 //                    System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
 //
 ////                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
@@ -640,35 +654,75 @@ public class GraphPanel extends JPanel implements SavePanel {
 //                    linkLine.setAttribute("stroke-width", "1");
 //                    // Attach the rectangle to the root 'svg' element.
 //                    svgRoot.appendChild(linkLine);
-                    System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
+                            System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
 
 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
-                    Element linkLine = doc.createElementNS(svgNameSpace, "path");
-                    int fromX = (currentNode.xPos * hSpacing + hSpacing);
-                    int fromY = (currentNode.yPos * vSpacing + vSpacing);
-                    int toX = (graphLinkNode.linkedNode.xPos * hSpacing + hSpacing);
-                    int toY = (graphLinkNode.linkedNode.yPos * vSpacing + vSpacing);
-                    int fromBezX = fromX;
-                    int fromBezY = toY;
-                    int toBezX = toX;
-                    int toBezY = fromY;
-                    if (currentNode.yPos == graphLinkNode.linkedNode.yPos) {
-                        fromBezX = fromX;
-                        fromBezY = toY - vSpacing / 2;
-                        toBezX = toX;
-                        toBezY = fromY - vSpacing / 2;
-                    }
-                    linkLine.setAttribute("d", "M " + fromX + "," + fromY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + toX + "," + toY);
+                            Element linkLine = doc.createElementNS(svgNameSpace, "path");
+                            int fromBezX;
+                            int fromBezY;
+                            int toBezX;
+                            int toBezY;
+                            if (graphLinkNode.relationLineType == GraphDataNode.RelationLineType.verticalCurve) {
+                                fromBezX = fromX;
+                                fromBezY = toY;
+                                toBezX = toX;
+                                toBezY = fromY;
+                                if (currentNode.yPos == graphLinkNode.linkedNode.yPos) {
+                                    fromBezX = fromX;
+                                    fromBezY = toY - vSpacing / 2;
+                                    toBezX = toX;
+                                    toBezY = fromY - vSpacing / 2;
+                                }
+                            } else {
+                                fromBezX = toX;
+                                fromBezY = fromY;
+                                toBezX = fromX;
+                                toBezY = toY;
+                                if (currentNode.yPos == graphLinkNode.linkedNode.yPos) {
+                                    fromBezY = fromY;
+                                    fromBezX = toX - hSpacing / 2;
+                                    toBezY = toY;
+                                    toBezX = fromX - hSpacing / 2;
+                                }
+                            }
+                            linkLine.setAttribute("d", "M " + fromX + "," + fromY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + toX + "," + toY);
 
 //                    linkLine.setAttribute("x1", );
 //                    linkLine.setAttribute("y1", );
 //
 //                    linkLine.setAttribute("x2", );
-                    linkLine.setAttribute("fill", "none");
-                    linkLine.setAttribute("stroke", "grey");
-                    linkLine.setAttribute("stroke-width", "2");
+                            linkLine.setAttribute("fill", "none");
+                            linkLine.setAttribute("stroke", "grey");
+                            linkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
+                            groupNode.appendChild(linkLine);
+                            break;
+                        case square:
+//                            Element squareLinkLine = doc.createElement("line");
+//                            squareLinkLine.setAttribute("x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+//                            squareLinkLine.setAttribute("y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+//
+//                            squareLinkLine.setAttribute("x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
+//                            squareLinkLine.setAttribute("y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
+//                            squareLinkLine.setAttribute("stroke", "grey");
+//                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
+                            Element squareLinkLine = doc.createElementNS(svgNameSpace, "polyline");
+                            int midY = (fromY + toY) / 2;
+
+                            squareLinkLine.setAttribute("points",
+                                    fromX + "," + fromY + " "
+                                    + fromX + "," + midY + " "
+                                    + toX + "," + midY + " "
+                                    + toX + "," + toY);
+
+                            squareLinkLine.setAttribute("fill", "none");
+                            squareLinkLine.setAttribute("stroke", "grey");
+                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
+                            // Attach the rectangle to the root 'svg' element.
+                            groupNode.appendChild(squareLinkLine);
+                            break;
+                    }
                     // Attach the rectangle to the root 'svg' element.
-                    svgRoot.appendChild(linkLine);
+                    svgRoot.appendChild(groupNode);
                 }
             }
         }
