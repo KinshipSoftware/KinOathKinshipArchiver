@@ -692,7 +692,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //
 //                    linkLine.setAttribute("x2", );
                             linkLine.setAttribute("fill", "none");
-                            linkLine.setAttribute("stroke", "grey");
+                            linkLine.setAttribute("stroke", "blue");
                             linkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
                             groupNode.appendChild(linkLine);
                             break;
@@ -707,6 +707,14 @@ public class GraphPanel extends JPanel implements SavePanel {
 //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
                             Element squareLinkLine = doc.createElementNS(svgNameSpace, "polyline");
                             int midY = (fromY + toY) / 2;
+                            if (toY == fromY) {
+                                // make sure that union lines go below the entities and sibling lines go above
+                                if (graphLinkNode.relationType == GraphDataNode.RelationType.sibling) {
+                                    midY = toY - vSpacing / 2;
+                                } else if (graphLinkNode.relationType == GraphDataNode.RelationType.union) {
+                                    midY = toY + vSpacing / 2;
+                                }
+                            }
 
                             squareLinkLine.setAttribute("points",
                                     fromX + "," + fromY + " "
@@ -717,11 +725,21 @@ public class GraphPanel extends JPanel implements SavePanel {
                             squareLinkLine.setAttribute("fill", "none");
                             squareLinkLine.setAttribute("stroke", "grey");
                             squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
-                            // Attach the rectangle to the root 'svg' element.
                             groupNode.appendChild(squareLinkLine);
                             break;
                     }
-                    // Attach the rectangle to the root 'svg' element.
+                    // add the relation label
+                    if (graphLinkNode.labelString != null) {
+                        Element labelText = doc.createElementNS(svgNameSpace, "text");
+                        labelText.setAttribute("x", Integer.toString((fromX + toX) / 2));
+                        labelText.setAttribute("y", Integer.toString((fromY + toY) / 2));
+                        labelText.setAttribute("fill", "blue");
+                        labelText.setAttribute("stroke-width", "0");
+                        labelText.setAttribute("font-size", "14");
+                        Text textNode = doc.createTextNode(graphLinkNode.labelString);
+                        labelText.appendChild(textNode);
+                        groupNode.appendChild(labelText);
+                    }
                     svgRoot.appendChild(groupNode);
                 }
             }
