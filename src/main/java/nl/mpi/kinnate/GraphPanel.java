@@ -181,7 +181,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             try {
                 // todo: resolve names space issue
                 // todo: try setting the XPath namespaces
-                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/:svg/kin:KinDiagramData/kin:" + parameterName);
+                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/svg:svg/kin:KinDiagramData/kin:" + parameterName);
                 for (int nodeCounter = 0; nodeCounter < parameterNodeList.getLength(); nodeCounter++) {
                     Node parameterNode = parameterNodeList.item(nodeCounter);
                     if (parameterNode != null) {
@@ -249,7 +249,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     private void storeParameter(Element dataStoreElement, String parameterName, String[] ParameterValues) {
         for (String currentKinType : ParameterValues) {
-            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
+            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, parameterName);
+//            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
             dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType);
             dataStoreElement.appendChild(dataRecordNode);
         }
@@ -257,7 +258,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     private void storeParameter(Element dataStoreElement, String parameterName, String[][] ParameterValues) {
         for (String[] currentKinType : ParameterValues) {
-            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
+            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, parameterName);
+//            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
             if (currentKinType.length == 1) {
                 dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[0]);
             } else if (currentKinType.length == 2) {
@@ -588,8 +590,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        Namespace sNS = Namespace.getNamespace("someNS", "someNamespace");
 //        Element element = new Element("SomeElement", sNS);
 
-//        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "KinDiagramData");
-        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
+        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "KinDiagramData");
+//        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
         kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to st the namespace
         storeParameter(kinTypesRecordNode, "EgoList", egoStringArray.toArray(new String[]{}));
         storeParameter(kinTypesRecordNode, "KinTypeStrings", kinTypeStrings);
@@ -629,12 +631,18 @@ public class GraphPanel extends JPanel implements SavePanel {
             for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
                 if (graphLinkNode.sourceNode.equals(currentNode)) {
                     Element groupNode = doc.createElementNS(svgNameSpace, "g");
+                    Element defsNode = doc.createElementNS(svgNameSpace, "defs");
+                    String lineIdString = currentNode.getEntityPath() + "-" + graphLinkNode.linkedNode.getEntityPath();
 //                    todo: groupNode.setAttribute("id", currentNode.getEntityPath()+ ";"+and the other end);
 
+                    // set the line end points
                     int fromX = (currentNode.xPos * hSpacing + hSpacing);
                     int fromY = (currentNode.yPos * vSpacing + vSpacing);
                     int toX = (graphLinkNode.linkedNode.xPos * hSpacing + hSpacing);
                     int toY = (graphLinkNode.linkedNode.yPos * vSpacing + vSpacing);
+                    // set the label position
+                    int labelX = (fromX + toX) / 2;
+                    int labelY = (fromY + toY) / 2;
 
                     switch (graphLinkNode.relationLineType) {
                         case horizontalCurve:
@@ -672,17 +680,22 @@ public class GraphPanel extends JPanel implements SavePanel {
                                     fromBezY = toY - vSpacing / 2;
                                     toBezX = toX;
                                     toBezY = fromY - vSpacing / 2;
+                                    // set the label postion and lower it a bit
+                                    labelY = toBezY + vSpacing / 3;
+                                    ;
                                 }
                             } else {
                                 fromBezX = toX;
                                 fromBezY = fromY;
                                 toBezX = fromX;
                                 toBezY = toY;
-                                if (currentNode.yPos == graphLinkNode.linkedNode.yPos) {
+                                if (currentNode.xPos == graphLinkNode.linkedNode.xPos) {
                                     fromBezY = fromY;
                                     fromBezX = toX - hSpacing / 2;
                                     toBezY = toY;
                                     toBezX = fromX - hSpacing / 2;
+                                    // set the label postion
+                                    labelX = toBezX;
                                 }
                             }
                             linkLine.setAttribute("d", "M " + fromX + "," + fromY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + toX + "," + toY);
@@ -694,7 +707,8 @@ public class GraphPanel extends JPanel implements SavePanel {
                             linkLine.setAttribute("fill", "none");
                             linkLine.setAttribute("stroke", "blue");
                             linkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
-                            groupNode.appendChild(linkLine);
+                            linkLine.setAttribute("id", lineIdString);
+                            defsNode.appendChild(linkLine);
                             break;
                         case square:
 //                            Element squareLinkLine = doc.createElement("line");
@@ -725,19 +739,34 @@ public class GraphPanel extends JPanel implements SavePanel {
                             squareLinkLine.setAttribute("fill", "none");
                             squareLinkLine.setAttribute("stroke", "grey");
                             squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
-                            groupNode.appendChild(squareLinkLine);
+                            squareLinkLine.setAttribute("id", lineIdString);
+                            defsNode.appendChild(squareLinkLine);
                             break;
                     }
+                    groupNode.appendChild(defsNode);
+                    Element useNode = doc.createElementNS(svgNameSpace, "use");
+                    useNode.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + lineIdString);
+
+//                    useNode.setAttribute("href", "#" + lineIdString);
+                    groupNode.appendChild(useNode);
+
                     // add the relation label
                     if (graphLinkNode.labelString != null) {
                         Element labelText = doc.createElementNS(svgNameSpace, "text");
-                        labelText.setAttribute("x", Integer.toString((fromX + toX) / 2));
-                        labelText.setAttribute("y", Integer.toString((fromY + toY) / 2));
+                        labelText.setAttribute("text-anchor", "middle");
+//                        labelText.setAttribute("x", Integer.toString(labelX));
+//                        labelText.setAttribute("y", Integer.toString(labelY));
                         labelText.setAttribute("fill", "blue");
                         labelText.setAttribute("stroke-width", "0");
                         labelText.setAttribute("font-size", "14");
+//                        labelText.setAttribute("transform", "rotate(45)");                        
+                        Element textPath = doc.createElementNS(svgNameSpace, "textPath");
+                        textPath.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + lineIdString);
+                        textPath.setAttribute("startOffset", "50%");
+//                        textPath.setAttribute("text-anchor", "middle");
                         Text textNode = doc.createTextNode(graphLinkNode.labelString);
-                        labelText.appendChild(textNode);
+                        textPath.appendChild(textNode);
+                        labelText.appendChild(textPath);
                         groupNode.appendChild(labelText);
                     }
                     svgRoot.appendChild(groupNode);
