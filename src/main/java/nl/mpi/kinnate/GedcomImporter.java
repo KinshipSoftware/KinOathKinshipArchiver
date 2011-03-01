@@ -430,6 +430,7 @@ public class GedcomImporter {
                         Node relationLinkNode = relationLinkNodeList.item(nodeCounter);
                         if (relationLinkNode != null) {
                             // todo: update the links
+                            // todo: create links in ego and alter but but the type info such as famc only in the relevant entity
                             String linkValue = createdNodesTable.get(relationLinkNode.getTextContent());
                             if (linkValue != null) {
                                 relationLinkNode.setTextContent(linkValue);
