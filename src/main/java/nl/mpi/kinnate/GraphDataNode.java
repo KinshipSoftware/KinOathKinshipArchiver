@@ -24,7 +24,7 @@ public class GraphDataNode {
     public enum RelationType {
         // todo: the term sibling is too specific and needs to encompas anything on the same generation such as union
 
-        sibling, ancestor, descendant
+        sibling, ancestor, descendant, union
     }
 
     public static RelationType getOpposingRelationType(RelationType relationType) {
@@ -35,8 +35,8 @@ public class GraphDataNode {
                 return GraphDataNode.RelationType.ancestor;
             case sibling:
                 return GraphDataNode.RelationType.sibling;
-//            case union:
-//                return GraphDataNode.RelationType.union;
+            case union:
+                return GraphDataNode.RelationType.union;
         }
         return GraphDataNode.RelationType.sibling;
     }
