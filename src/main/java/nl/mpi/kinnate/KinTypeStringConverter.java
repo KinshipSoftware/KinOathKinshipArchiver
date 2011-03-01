@@ -29,8 +29,8 @@ public class KinTypeStringConverter extends GraphData {
         new KinType("Si", GraphDataNode.RelationType.sibling, GraphDataNode.SymbolType.circle),
         new KinType("So", GraphDataNode.RelationType.descendant, GraphDataNode.SymbolType.triangle),
         new KinType("Da", GraphDataNode.RelationType.descendant, GraphDataNode.SymbolType.circle),
-        new KinType("Hu", GraphDataNode.RelationType.sibling, GraphDataNode.SymbolType.triangle),
-        new KinType("Wi", GraphDataNode.RelationType.sibling, GraphDataNode.SymbolType.circle),
+        new KinType("Hu", GraphDataNode.RelationType.union, GraphDataNode.SymbolType.triangle),
+        new KinType("Wi", GraphDataNode.RelationType.union, GraphDataNode.SymbolType.circle),
         new KinType("Pa", GraphDataNode.RelationType.ancestor, GraphDataNode.SymbolType.square),
         new KinType("Sb", GraphDataNode.RelationType.sibling, GraphDataNode.SymbolType.square),
         new KinType("Sp", GraphDataNode.RelationType.sibling, GraphDataNode.SymbolType.square),
@@ -42,8 +42,8 @@ public class KinTypeStringConverter extends GraphData {
         new KinType("Z", GraphDataNode.RelationType.sibling, GraphDataNode.SymbolType.circle),
         new KinType("S", GraphDataNode.RelationType.descendant, GraphDataNode.SymbolType.triangle),
         new KinType("D", GraphDataNode.RelationType.descendant, GraphDataNode.SymbolType.circle),
-        new KinType("H", GraphDataNode.RelationType.sibling, GraphDataNode.SymbolType.triangle),
-        new KinType("W", GraphDataNode.RelationType.sibling, GraphDataNode.SymbolType.circle),
+        new KinType("H", GraphDataNode.RelationType.union, GraphDataNode.SymbolType.triangle),
+        new KinType("W", GraphDataNode.RelationType.union, GraphDataNode.SymbolType.circle),
         new KinType("P", GraphDataNode.RelationType.ancestor, GraphDataNode.SymbolType.square),
         new KinType("G", GraphDataNode.RelationType.sibling, GraphDataNode.SymbolType.square),
         new KinType("E", GraphDataNode.RelationType.sibling, GraphDataNode.SymbolType.square),
@@ -92,8 +92,8 @@ public class KinTypeStringConverter extends GraphData {
                             } else {
                                 currentGraphDataNode = new GraphDataNode(fullKinTypeString, currentReferenceKinType.symbolType, new String[]{fullKinTypeString}, false);
                                 GraphDataNode.RelationType opposingRelationType = GraphDataNode.getOpposingRelationType(currentReferenceKinType.relationType);
-                                parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType);
-                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType);
+                                parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, GraphDataNode.RelationLineType.square, null);
+                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, GraphDataNode.RelationLineType.square, null);
                                 graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
                                 // add any child nodes?
                             }
@@ -105,6 +105,31 @@ public class KinTypeStringConverter extends GraphData {
                     if (kinTypeFound == false) {
                         break;
                     }
+                }
+                // todo: the following is a demo/test and should be expanded in a flexable way
+                if (inputString.trim().equals("MM")) {
+                    // todo: this uses the horizontal curve line for testing
+                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.ancestor, GraphDataNode.RelationLineType.horizontalCurve, "Grand Mother");
+                }
+                if (inputString.equals("FF")) {
+                    // todo: this uses the vertical curve line for testing
+                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.ancestor, GraphDataNode.RelationLineType.horizontalCurve, "Grand Father");
+                }
+                if (inputString.equals("SB")) {
+                    // todo: this uses the vertical curve line for testing
+                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.sibling, GraphDataNode.RelationLineType.horizontalCurve, "Sister's Brother");
+                }
+                if (inputString.equals("BB")) {
+                    // todo: this uses the vertical curve line for testing
+                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.sibling, GraphDataNode.RelationLineType.horizontalCurve, "Brother's Brother");
+                }
+                if (inputString.equals("BZ")) {
+                    // todo: this uses the vertical curve line for testing
+                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.sibling, GraphDataNode.RelationLineType.verticalCurve, "Brother's Sister");
+                }
+                if (inputString.equals("ZZ")) {
+                    // todo: this uses the vertical curve line for testing
+                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.sibling, GraphDataNode.RelationLineType.verticalCurve, "Sister's Sister");
                 }
             }
         }
