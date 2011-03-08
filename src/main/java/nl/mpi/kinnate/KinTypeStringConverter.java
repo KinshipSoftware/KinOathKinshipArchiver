@@ -109,28 +109,36 @@ public class KinTypeStringConverter extends GraphData {
                 // todo: the following is a demo/test and should be expanded in a flexable way
                 if (inputString.trim().equals("MM")) {
                     // todo: this uses the horizontal curve line for testing
-                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.ancestor, GraphDataNode.RelationLineType.horizontalCurve, "Grand Mother");
+                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.horizontalCurve, "Grand Mother");
+                }
+                if (inputString.trim().equals("MZ") || inputString.trim().equals("FZ")) {
+                    // todo: this uses the horizontal curve line for testing
+                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.horizontalCurve, "Aunt");
+                }
+                if (inputString.trim().equals("MB") || inputString.trim().equals("FB")) {
+                    // todo: this uses the horizontal curve line for testing
+                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.horizontalCurve, "Uncle");
                 }
                 if (inputString.equals("FF")) {
                     // todo: this uses the vertical curve line for testing
-                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.ancestor, GraphDataNode.RelationLineType.horizontalCurve, "Grand Father");
+                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.horizontalCurve, "Grand Father");
                 }
-                if (inputString.equals("SB")) {
-                    // todo: this uses the vertical curve line for testing
-                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.sibling, GraphDataNode.RelationLineType.horizontalCurve, "Sister's Brother");
-                }
-                if (inputString.equals("BB")) {
-                    // todo: this uses the vertical curve line for testing
-                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.sibling, GraphDataNode.RelationLineType.horizontalCurve, "Brother's Brother");
-                }
-                if (inputString.equals("BZ")) {
-                    // todo: this uses the vertical curve line for testing
-                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.sibling, GraphDataNode.RelationLineType.verticalCurve, "Brother's Sister");
-                }
-                if (inputString.equals("ZZ")) {
-                    // todo: this uses the vertical curve line for testing
-                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.sibling, GraphDataNode.RelationLineType.verticalCurve, "Sister's Sister");
-                }
+//                if (inputString.equals("MZS")) {
+//                    // todo: this uses the vertical curve line for testing
+//                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.horizontalCurve, "Sister's Brother");
+//                }
+//                if (inputString.equals("BB")) {
+//                    // todo: this uses the vertical curve line for testing
+//                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.horizontalCurve, "Brother's Brother");
+//                }
+//                if (inputString.equals("BZ")) {
+//                    // todo: this uses the vertical curve line for testing
+//                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.verticalCurve, "Brother's Sister V");
+//                }
+//                if (inputString.equals("ZZ")) {
+//                    // todo: this uses the vertical curve line for testing
+//                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.verticalCurve, "Sister's Sister V");
+//                }
             }
         }
         graphDataNodeArray = graphDataNodeList.values().toArray(new GraphDataNode[]{});
