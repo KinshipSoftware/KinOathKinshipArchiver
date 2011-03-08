@@ -1,7 +1,7 @@
 package nl.mpi.kinnate.svg;
 
 import java.util.ArrayList;
-import nl.mpi.kinnate.KinTypeStringConverter.KinType;
+import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
 
 /**
  *  Document   : GraphDataNode
