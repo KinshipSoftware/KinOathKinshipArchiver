@@ -29,7 +29,7 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel {
     public KinTypeStringTestPanel() {
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel(null);
-        kinTermPanel = new KinTermPanel(this, graphPanel);
+        kinTermPanel = new KinTermPanel(this, graphPanel.getkinTerms());
         kinTypeStringInput = new JTextArea(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
 
@@ -68,10 +68,7 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel {
 
             public void keyReleased(KeyEvent e) {
 //                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                KinTypeStringConverter graphData = new KinTypeStringConverter();
-                graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTerms());
-                graphPanel.drawNodes(graphData);
-                KinTypeStringTestPanel.this.doLayout();
+                KinTypeStringTestPanel.this.updateGraph();
 //                }
             }
         });
@@ -94,6 +91,9 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel {
     }
 
     public void updateGraph() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        KinTypeStringConverter graphData = new KinTypeStringConverter();
+        graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTerms());
+        graphPanel.drawNodes(graphData);
+        KinTypeStringTestPanel.this.doLayout();
     }
 }
