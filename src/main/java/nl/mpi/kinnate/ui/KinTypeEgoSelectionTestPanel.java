@@ -42,7 +42,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel(this);
         egoSelectionPanel = new EgoSelectionPanel();
-        kinTermPanel = new KinTermPanel(this, graphPanel);
+        kinTermPanel = new KinTermPanel(this, graphPanel.getkinTerms());
         kinTypeStringInput = new JTextArea(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
         JPanel kinGraphPanel = new JPanel(new BorderLayout());
