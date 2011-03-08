@@ -23,7 +23,6 @@ import nl.mpi.arbil.XsdChecker;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.arbil.data.ImdiTreeObject;
 import nl.mpi.kinnate.GedcomImporter;
-import nl.mpi.kinnate.KinTypeStringTestPanel;
 import nl.mpi.kinnate.SavePanel;
 
 /*
