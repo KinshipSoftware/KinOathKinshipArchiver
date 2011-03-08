@@ -745,7 +745,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                     }
                     groupNode.appendChild(defsNode);
                     Element useNode = doc.createElementNS(svgNameSpace, "use");
-                    useNode.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + lineIdString);
+                    useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
 
 //                    useNode.setAttribute("href", "#" + lineIdString);
                     groupNode.appendChild(useNode);
@@ -761,7 +761,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                         labelText.setAttribute("font-size", "14");
 //                        labelText.setAttribute("transform", "rotate(45)");                        
                         Element textPath = doc.createElementNS(svgNameSpace, "textPath");
-                        textPath.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + lineIdString);
+                        textPath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
                         textPath.setAttribute("startOffset", "50%");
 //                        textPath.setAttribute("text-anchor", "middle");
                         Text textNode = doc.createTextNode(graphLinkNode.labelString);
