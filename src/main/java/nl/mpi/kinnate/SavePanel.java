@@ -16,4 +16,6 @@ public interface SavePanel {
     public void saveToFile();
 
     public void saveToFile(File saveFile);
+
+    public void updateGraph();
 }
