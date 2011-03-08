@@ -22,8 +22,6 @@ import nl.mpi.arbil.PreviewSplitPanel;
 import nl.mpi.arbil.XsdChecker;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.arbil.data.ImdiTreeObject;
-import nl.mpi.kinnate.ArchiveEntityLinkerPanel;
-import nl.mpi.kinnate.DragTransferHandler;
 import nl.mpi.kinnate.GedcomImporter;
 import nl.mpi.kinnate.KinTypeStringTestPanel;
 import nl.mpi.kinnate.SavePanel;

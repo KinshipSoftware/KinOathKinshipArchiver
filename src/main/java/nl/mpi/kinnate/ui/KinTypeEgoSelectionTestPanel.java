@@ -19,8 +19,8 @@ import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.LinorgWindowManager;
 import nl.mpi.kinnate.EntityIndexer.EntityIndex;
-import nl.mpi.kinnate.GraphData;
-import nl.mpi.kinnate.GraphPanel;
+import nl.mpi.kinnate.svg.GraphData;
+import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.SavePanel;
 
 /**
