@@ -22,9 +22,9 @@ public class GraphDataNode {
     }
 
     public enum RelationType {
-        // todo: the term sibling is too specific and needs to encompas anything on the same generation such as union
+        // the term sibling is too specific and needs to encompas anything on the same generation such as union
 
-        sibling, ancestor, descendant, union
+        sibling, ancestor, descendant, union, none
     }
 
     public static RelationType getOpposingRelationType(RelationType relationType) {
