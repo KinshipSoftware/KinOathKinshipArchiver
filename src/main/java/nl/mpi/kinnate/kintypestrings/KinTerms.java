@@ -1,5 +1,7 @@
 package nl.mpi.kinnate.kintypestrings;
 
+import java.util.ArrayList;
+
 /**
  *  Document   : KinTerms
  *  Created on : Mar 8, 2011, 2:13:30 PM
@@ -7,40 +9,51 @@ package nl.mpi.kinnate.kintypestrings;
  */
 public class KinTerms {
 
+    ArrayList<String[]> kinTermArray;
+
+    public KinTerms() {
+        //todo: sample kin terms to put into a sensible defaults place
+        kinTermArray = new ArrayList<String[]>();
+        kinTermArray.add(new String[]{"MM", "Grand Mother"});
+        kinTermArray.add(new String[]{"MZ" + "|" + "FZ", "Aunt"});
+        kinTermArray.add(new String[]{"MB" + "|" + "FB", "Uncle"});
+        kinTermArray.add(new String[]{"FF", "Grand Father"});
+    }
+
+    public void addKinTerm(String kinTypeStrings, String kinTermLabel) {
+        kinTermArray.add(new String[]{kinTypeStrings, kinTermLabel});
+    }
+
+    public void updateKinTerm(String kinTypeStrings, String kinTermLabel) {
+        for (String[] kinTermItem : kinTermArray) {
+            if (kinTermItem[1].equals(kinTermLabel)) {
+                kinTermItem[0] = kinTypeStrings;
+            }
+        }
+    }
+
+    public void removeKinTerm(String kinTermLabel) {
+        ArrayList<String[]> removeTermArray = new ArrayList<String[]>();
+        for (String[] kinTermItem : kinTermArray) {
+            if (kinTermItem[1].equals(kinTermLabel)) {
+                removeTermArray.add(kinTermItem);
+            }
+        }
+        kinTermArray.removeAll(removeTermArray);
+    }
+
+    public String[][] getKinTerms() {
+        return kinTermArray.toArray(new String[][]{});
+    }
+
     public String getTermLabel(String kinTypeString) {
-// todo: the following is a demo/test and should be expanded in a flexable way
-        if (kinTypeString.trim().equals("MM")) {
-            // todo: this uses the horizontal curve line for testing
-            return ("Grand Mother");
+        for (String[] kinTermItem : kinTermArray) {
+            for (String kinType : kinTermItem[0].split("\\|")) {
+                if (kinTypeString.trim().equals(kinType.trim())) {
+                    return kinTermItem[1];
+                }
+            }
         }
-        if (kinTypeString.trim().equals("MZ") || kinTypeString.trim().equals("FZ")) {
-            // todo: this uses the horizontal curve line for testing
-            return ("Aunt");
-        }
-        if (kinTypeString.trim().equals("MB") || kinTypeString.trim().equals("FB")) {
-            // todo: this uses the horizontal curve line for testing
-            return ("Uncle");
-        }
-        if (kinTypeString.equals("FF")) {
-            // todo: this uses the vertical curve line for testing
-            return ("Grand Father");
-        }
-//                if (inputString.equals("MZS")) {
-//                    // todo: this uses the vertical curve line for testing
-//                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.horizontalCurve, "Sister's Brother");
-//                }
-//                if (inputString.equals("BB")) {
-//                    // todo: this uses the vertical curve line for testing
-//                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.horizontalCurve, "Brother's Brother");
-//                }
-//                if (inputString.equals("BZ")) {
-//                    // todo: this uses the vertical curve line for testing
-//                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.verticalCurve, "Brother's Sister V");
-//                }
-//                if (inputString.equals("ZZ")) {
-//                    // todo: this uses the vertical curve line for testing
-//                    egoDataNode.addRelatedNode(parentDataNode, 2, GraphDataNode.RelationType.none, GraphDataNode.RelationLineType.verticalCurve, "Sister's Sister V");
-//                }
         return null;
     }
 }
