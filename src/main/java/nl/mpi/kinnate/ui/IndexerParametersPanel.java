@@ -3,7 +3,7 @@ package nl.mpi.kinnate.ui;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import nl.mpi.kinnate.EntityIndexer.EntityIndex;
+import nl.mpi.kinnate.entityindexer.EntityIndex;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**

@@ -7,7 +7,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import nl.mpi.kinnate.EntityIndexer.IndexerParameters.IndexerParam;
+import nl.mpi.kinnate.entityindexer.IndexerParameters.IndexerParam;
 
 /**
  *  Document   : FieldSelectionList
