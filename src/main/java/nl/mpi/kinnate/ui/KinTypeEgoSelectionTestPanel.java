@@ -21,7 +21,6 @@ import nl.mpi.arbil.LinorgWindowManager;
 import nl.mpi.kinnate.EntityIndexer.EntityIndex;
 import nl.mpi.kinnate.GraphData;
 import nl.mpi.kinnate.GraphPanel;
-import nl.mpi.kinnate.IndexerParametersPanel;
 import nl.mpi.kinnate.SavePanel;
 
 /**
