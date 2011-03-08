@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.kinnate.ui.EgoSelectionPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
@@ -34,6 +33,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
     private GraphPanel graphPanel;
     private GraphData graphData;
     private EgoSelectionPanel egoSelectionPanel;
+    private KinTermPanel kinTermPanel;
     private EntityIndex entityIndex;
     private String defaultString = "This test panel should provide a kin diagram based on selected egos and the the kintype strings entered here.\nEnter one string per line.";
     private String kinTypeStrings[] = new String[]{};
@@ -42,11 +42,20 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel(this);
         egoSelectionPanel = new EgoSelectionPanel();
+        kinTermPanel = new KinTermPanel(this, graphPanel);
         kinTypeStringInput = new JTextArea(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
         JPanel kinGraphPanel = new JPanel(new BorderLayout());
         kinGraphPanel.add(kinTypeStringInput, BorderLayout.PAGE_START);
-        kinGraphPanel.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, egoSelectionPanel, graphPanel), BorderLayout.CENTER);
+
+        JSplitPane egoSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        JSplitPane kintermSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        kinGraphPanel.add(egoSplitPane, BorderLayout.CENTER);
+//        outerSplitPane.setDividerLocation(0.5); // todo: add this to its parent so that the divider position sticks
+        egoSplitPane.setLeftComponent(egoSelectionPanel);
+        kintermSplitPane.setLeftComponent(graphPanel);
+        kintermSplitPane.setRightComponent(kinTermPanel);
+        egoSplitPane.setRightComponent(kintermSplitPane);
 
         ImdiTableModel imdiTableModel = new ImdiTableModel();
         ImdiTable imdiTable = new ImdiTable(imdiTableModel, "Selected Nodes");
@@ -155,5 +164,9 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 
     public void saveToFile(File saveFile) {
         graphPanel.saveToFile(saveFile);
+    }
+
+    public void updateGraph() {
+        this.drawGraph();
     }
 }
