@@ -23,7 +23,7 @@ import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.arbil.data.ImdiLoader;
-import nl.mpi.kinnate.EntityIndexer.IndexerParameters;
+import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
 import org.apache.batik.bridge.UpdateManager;
 import org.apache.batik.dom.events.DOMMouseEvent;
