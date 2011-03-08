@@ -25,6 +25,7 @@ import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.kintypestrings.KinTerms;
 import org.apache.batik.bridge.UpdateManager;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
@@ -59,6 +60,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private HashSet<URI> egoSet = new HashSet<URI>();
     private String[] kinTypeStrings = new String[]{};
     private IndexerParameters indexParameters;
+    private KinTerms kinTerms;
     private ImdiTableModel imdiTableModel;
     private GraphData graphData;
     private boolean requiresSave = false;
@@ -73,6 +75,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         selectedGroupElement = new ArrayList<String>();
         graphPanelSize = new GraphPanelSize();
         indexParameters = new IndexerParameters();
+        kinTerms = new KinTerms();
         this.setLayout(new BorderLayout());
         svgCanvas = new JSVGCanvas();
 //        svgCanvas.setMySize(new Dimension(600, 400));
@@ -236,6 +239,10 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public IndexerParameters getIndexParameters() {
         return indexParameters;
+    }
+
+    public KinTerms getkinTerms() {
+        return kinTerms;
     }
 
     public URI[] getEgoList() {
@@ -800,5 +807,9 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void saveToFile(File saveAsFile) {
         saveSvg(saveAsFile);
+    }
+
+    public void updateGraph() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
