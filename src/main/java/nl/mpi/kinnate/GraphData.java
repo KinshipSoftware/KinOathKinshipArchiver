@@ -86,9 +86,10 @@ public class GraphData {
             generationRows.add(currentRowIndex, ancestorColumns);
         }
         for (GraphDataNode.NodeRelation relatedNode : currentNode.getNodeRelations()) {
+            // todo: what happens here if there are multiple relations specified?
             if (relatedNode.sourceNode.equals(currentNode)) {
                 if (inputNodes.contains(relatedNode.linkedNode)) {
-                    HashSet<GraphDataNode> targetColumns = null;
+                    HashSet<GraphDataNode> targetColumns;
                     switch (relatedNode.relationType) {
                         case ancestor:
                             targetColumns = ancestorColumns;
@@ -102,11 +103,19 @@ public class GraphData {
                         case union:
                             targetColumns = currentColumns;
                             break;
+                        case none:
+                            // this would be a kin term or other so skip when sorting
+                            targetColumns = null;
+                            break;
+                        default:
+                            targetColumns = null;
                     }
-                    inputNodes.remove(relatedNode.linkedNode);
-                    targetColumns.add(relatedNode.linkedNode);
-                    System.out.println("sorted: " + relatedNode.linkedNode.getLabel() + " : " + relatedNode.relationType + " of " + currentNode.getLabel());
-                    sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.linkedNode);
+                    if (targetColumns != null) {
+                        inputNodes.remove(relatedNode.linkedNode);
+                        targetColumns.add(relatedNode.linkedNode);
+                        System.out.println("sorted: " + relatedNode.linkedNode.getLabel() + " : " + relatedNode.relationType + " of " + currentNode.getLabel());
+                        sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.linkedNode);
+                    }
                 }
             }
         }
@@ -114,7 +123,7 @@ public class GraphData {
 //            for (GraphDataNode.NodeRelation relatedNode : reverceLinkNode.getNodeRelations()) {
         for (GraphDataNode.NodeRelation relatedNode : currentNode.getNodeRelations()) {
             if (!relatedNode.sourceNode.equals(currentNode)) {
-                HashSet<GraphDataNode> targetColumns = null;
+                HashSet<GraphDataNode> targetColumns;
                 switch (relatedNode.relationType) {
                     case ancestor:
                         targetColumns = descendentColumns;
@@ -127,12 +136,18 @@ public class GraphData {
                         break;
                     case union:
                         targetColumns = currentColumns;
+                        targetColumns = null;
                         break;
+                    default:
+                        // this would be a kin term or other so skip when sorting
+                        targetColumns = null;
                 }
-                inputNodes.remove(relatedNode.sourceNode);
-                targetColumns.add(relatedNode.sourceNode);
-                System.out.println("sorted: " + relatedNode.sourceNode.getLabel() + " : " + "reverse link" + " of " + currentNode.getLabel());
+                if (targetColumns != null) {
+                    inputNodes.remove(relatedNode.sourceNode);
+                    targetColumns.add(relatedNode.sourceNode);
+                    System.out.println("sorted: " + relatedNode.sourceNode.getLabel() + " : " + "reverse link" + " of " + currentNode.getLabel());
 //                sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.sourceNode);
+                }
             }
         }
     }
