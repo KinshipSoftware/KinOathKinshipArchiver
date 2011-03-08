@@ -47,7 +47,7 @@ public class GraphPanel1 extends JPanel {
 
     public void drawNodes() {
         GraphData graphData = new GraphData();
-        graphData.readData();
+//        graphData.readData();
 
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
@@ -106,7 +106,7 @@ public class GraphPanel1 extends JPanel {
             //labelText.setNodeValue(currentChild.toString());
 
             //String textWithUni = "\u0041";
-            Text textNode = doc.createTextNode(currentNode.getLabel());
+            Text textNode = doc.createTextNode(currentNode.getLabel()[0]);
             labelText.appendChild(textNode);
             svgRoot.appendChild(labelText);
 
