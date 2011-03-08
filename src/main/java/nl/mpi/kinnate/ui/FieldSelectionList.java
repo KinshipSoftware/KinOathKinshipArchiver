@@ -1,12 +1,12 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.IndexerParameters.IndexerParam;
 
 /**
@@ -16,11 +16,11 @@ import nl.mpi.kinnate.entityindexer.IndexerParameters.IndexerParam;
  */
 public class FieldSelectionList extends JPanel {
 
-    KinTypeEgoSelectionTestPanel egoSelectionTestPanel;
+    SavePanel savePanel;
     private IndexerParam indexerParam;
 
-    public FieldSelectionList(KinTypeEgoSelectionTestPanel egoSelectionTestPanelLocal, IndexerParam indexerParamLocal) {
-        egoSelectionTestPanel = egoSelectionTestPanelLocal;
+    public FieldSelectionList(SavePanel savePanelLocal, IndexerParam indexerParamLocal) {
+        savePanel = savePanelLocal;
         indexerParam = indexerParamLocal;
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         populateSelectionList();
@@ -34,6 +34,7 @@ public class FieldSelectionList extends JPanel {
             JPanel fieldPanel = new JPanel();
             fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.LINE_AXIS));
             fieldPanel.add(fieldPathLabel);
+            fieldPanel.add(new JPanel());
             if (fieldArray.length > 1) {
                 String[] availableValues = indexerParam.getAvailableValues();
                 if (availableValues != null) {
@@ -53,10 +54,9 @@ public class FieldSelectionList extends JPanel {
                     indexerParam.removeValue(evt.getActionCommand());
                     populateSelectionList();
                     revalidate();
-                    egoSelectionTestPanel.drawGraph();
+                    savePanel.updateGraph();
                 }
             });
-            fieldPanel.add(new JPanel());
             fieldPanel.add(removeButton);
             this.add(fieldPanel);
         }
