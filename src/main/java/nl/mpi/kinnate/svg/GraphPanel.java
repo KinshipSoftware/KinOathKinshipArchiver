@@ -295,24 +295,30 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     private void updateDragNode(final Element updateDragNodeElement, final int updateDragNodeX, final int updateDragNodeY) {
-//        UpdateManager updateManager = svgCanvas.getUpdateManager();
-//        updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
-//
-//            public void run() {
-//                if (updateDragNodeElement != null) {
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+
+            public void run() {
+                System.out.println("updateDragNodeX: " + updateDragNodeX);
+                System.out.println("updateDragNodeY: " + updateDragNodeY);
+                if (updateDragNodeElement != null) {
+                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
+//                    ((SVGLocatable) currentDraggedElement).g
+                    updateDragNodeElement.setAttribute("transform", "translate(" + String.valueOf(updateDragNodeX * svgCanvas.getRenderingTransform().getScaleX() - bbox.getX()) + ", " + String.valueOf(updateDragNodeY - bbox.getY()) + ")");
 //                    updateDragNodeElement.setAttribute("x", String.valueOf(updateDragNodeX));
 //                    updateDragNodeElement.setAttribute("y", String.valueOf(updateDragNodeY));
-//                }
-//                //                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
-////                    System.out.println("bbox X: " + bbox.getX());
-////                    System.out.println("bbox Y: " + bbox.getY());
-////                    System.out.println("bbox W: " + bbox.getWidth());
-////                    System.out.println("bbox H: " + bbox.getHeight());
-////                    todo: look into transform issues when dragging ellements eg when the canvas is scaled or panned
-////                            SVGLocatable.getTransformToElement()
-////                            SVGPoint.matrixTransform()
-//            }
-//        });
+                }
+                //                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
+//                    System.out.println("bbox X: " + bbox.getX());
+//                    System.out.println("bbox Y: " + bbox.getY());
+//                    System.out.println("bbox W: " + bbox.getWidth());
+//                    System.out.println("bbox H: " + bbox.getHeight());
+//                    todo: look into transform issues when dragging ellements eg when the canvas is scaled or panned
+//                            SVGLocatable.getTransformToElement()
+//                            SVGPoint.matrixTransform()
+                svgCanvas.revalidate();
+            }
+        });
     }
 
     private void addHighlightToGroup() {
