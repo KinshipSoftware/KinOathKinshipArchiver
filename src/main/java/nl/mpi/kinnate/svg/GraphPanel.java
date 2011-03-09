@@ -3,9 +3,7 @@ package nl.mpi.kinnate.svg;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import java.awt.BorderLayout;
-import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -17,17 +15,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import javax.swing.JPanel;
-import javax.swing.event.MouseInputAdapter;
 import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
-import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTerms;
 import org.apache.batik.bridge.UpdateManager;
-import org.apache.batik.dom.events.DOMMouseEvent;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
@@ -38,8 +33,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import org.w3c.dom.events.Event;
-import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.svg.SVGLocatable;
@@ -53,20 +46,18 @@ import org.w3c.dom.svg.SVGRect;
 public class GraphPanel extends JPanel implements SavePanel {
 
     private JSVGScrollPane jSVGScrollPane;
-    private JSVGCanvas svgCanvas;
+    protected JSVGCanvas svgCanvas;
     private SVGDocument doc;
-    private Element currentDraggedElement;
-    private Cursor preDragCursor;
     private HashSet<URI> egoSet = new HashSet<URI>();
     private String[] kinTypeStrings = new String[]{};
     private IndexerParameters indexParameters;
     private KinTerms kinTerms;
-    private ImdiTableModel imdiTableModel;
+    protected ImdiTableModel imdiTableModel;
     private GraphData graphData;
     private boolean requiresSave = false;
     private File svgFile = null;
     private GraphPanelSize graphPanelSize;
-    private ArrayList<String> selectedGroupElement;
+    protected ArrayList<String> selectedGroupElement;
     private String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     private String kinDataNameSpace = "kin";
     private String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
@@ -104,29 +95,9 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        svgCanvas.setEnableResetTransformInteractor(true);
 //        svgCanvas.setDoubleBufferedRendering(true); // todo: look into reducing the noticable aliasing on the canvas
 
-        MouseInputAdapter mouseInputAdapter = new MouseInputAdapter() {
-
-            @Override
-            public void mouseDragged(MouseEvent me) {
-//                System.out.println("mouseDragged: " + me.toString());
-                if (currentDraggedElement != null) {
-                    svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                    updateDragNode(currentDraggedElement, me.getX(), me.getY());
-                }
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent me) {
-//                System.out.println("mouseReleased: " + me.toString());
-                if (currentDraggedElement != null) {
-                    svgCanvas.setCursor(preDragCursor);
-                    updateDragNode(currentDraggedElement, me.getX(), me.getY());
-                    currentDraggedElement = null;
-                }
-            }
-        };
-        svgCanvas.addMouseListener(mouseInputAdapter);
-        svgCanvas.addMouseMotionListener(mouseInputAdapter);
+        MouseListenerSvg mouseListenerSvg = new MouseListenerSvg(this);
+        svgCanvas.addMouseListener(mouseListenerSvg);
+        svgCanvas.addMouseMotionListener(mouseListenerSvg);
         jSVGScrollPane = new JSVGScrollPane(svgCanvas);
         this.add(BorderLayout.CENTER, jSVGScrollPane);
         svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(egoSelectionPanel, this, graphPanelSize));
@@ -294,7 +265,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         drawNodes(graphData);
     }
 
-    private void updateDragNode(final Element updateDragNodeElement, final int updateDragNodeX, final int updateDragNodeY) {
+    protected void updateDragNode(final Element updateDragNodeElement, final int updateDragNodeX, final int updateDragNodeY) {
         UpdateManager updateManager = svgCanvas.getUpdateManager();
         updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
 
@@ -302,7 +273,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                 System.out.println("updateDragNodeX: " + updateDragNodeX);
                 System.out.println("updateDragNodeY: " + updateDragNodeY);
                 if (updateDragNodeElement != null) {
-                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
+                    SVGRect bbox = ((SVGLocatable) updateDragNodeElement).getBBox();
 //                    ((SVGLocatable) currentDraggedElement).g
                     updateDragNodeElement.setAttribute("transform", "translate(" + String.valueOf(updateDragNodeX * svgCanvas.getRenderingTransform().getScaleX() - bbox.getX()) + ", " + String.valueOf(updateDragNodeY - bbox.getY()) + ")");
 //                    updateDragNodeElement.setAttribute("x", String.valueOf(updateDragNodeX));
@@ -321,7 +292,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         });
     }
 
-    private void addHighlightToGroup() {
+    protected void addHighlightToGroup() {
         UpdateManager updateManager = svgCanvas.getUpdateManager();
         updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
 
@@ -354,12 +325,12 @@ public class GraphPanel extends JPanel implements SavePanel {
                                     // add the current highlights
                                 } else {
                                     if (existingHighlight == null) {
-                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+//                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                                         SVGRect bbox = ((SVGLocatable) currentChild).getBBox();
-                                        System.out.println("bbox X: " + bbox.getX());
-                                        System.out.println("bbox Y: " + bbox.getY());
-                                        System.out.println("bbox W: " + bbox.getWidth());
-                                        System.out.println("bbox H: " + bbox.getHeight());
+//                                        System.out.println("bbox X: " + bbox.getX());
+//                                        System.out.println("bbox Y: " + bbox.getY());
+//                                        System.out.println("bbox W: " + bbox.getWidth());
+//                                        System.out.println("bbox H: " + bbox.getHeight());
                                         Element symbolNode = doc.createElementNS(svgNameSpace, "rect");
                                         int paddingDistance = 20;
                                         symbolNode.setAttribute("id", "highlight");
@@ -523,44 +494,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             groupNode.appendChild(labelText);
         }
 ////////////////////////////// end alternate method ////////////////////////////////////////////////
-        ((EventTarget) groupNode).addEventListener("mousedown", new EventListener() {
-
-            public void handleEvent(Event evt) {
-                boolean shiftDown = false;
-                if (evt instanceof DOMMouseEvent) {
-                    shiftDown = ((DOMMouseEvent) evt).getShiftKey();
-                }
-                System.out.println("mousedown: " + evt.getCurrentTarget());
-                currentDraggedElement = ((Element) evt.getCurrentTarget());
-                preDragCursor = svgCanvas.getCursor();
-                // get the entityPath
-                String entityPath = currentDraggedElement.getAttribute("id");
-                System.out.println("entityPath: " + entityPath);
-                boolean nodeAlreadySelected = selectedGroupElement.contains(entityPath);
-                if (!shiftDown) {
-                    System.out.println("Clear selection");
-                    selectedGroupElement.clear();
-                }
-                // toggle the highlight
-                if (nodeAlreadySelected) {
-                    selectedGroupElement.remove(entityPath);
-                } else {
-                    selectedGroupElement.add(entityPath);
-                }
-                addHighlightToGroup();
-                // update the table selection
-                if (imdiTableModel != null) {
-                    imdiTableModel.removeAllImdiRows();
-                    try {
-                        for (String currentSelectedPath : selectedGroupElement) {
-                            imdiTableModel.addSingleImdiObject(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentSelectedPath)));
-                        }
-                    } catch (URISyntaxException urise) {
-                        GuiHelper.linorgBugCatcher.logError(urise);
-                    }
-                }
-            }
-        }, false);
+        ((EventTarget) groupNode).addEventListener("mousedown", new MouseListenerSvg(this), false);
         return groupNode;
     }
 
