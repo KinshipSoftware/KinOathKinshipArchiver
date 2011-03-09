@@ -1,8 +1,10 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -32,7 +34,11 @@ public class KinTermPanel extends JPanel {
         outerPanel = new JPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
         populateKinTermList();
-        this.add(new JScrollPane(outerPanel));
+        // keep the panel items pushed to the top of the page
+        JPanel paddingPanel = new JPanel();
+        paddingPanel.setLayout(new BorderLayout());
+        paddingPanel.add(outerPanel, BorderLayout.PAGE_START);
+        this.add(new JScrollPane(paddingPanel));
     }
 
     private void populateKinTermList() {
@@ -41,7 +47,9 @@ public class KinTermPanel extends JPanel {
         for (String[] currentKinTerm : kinTerms.getKinTerms()) {
             JPanel termPanel = new JPanel();
             termPanel.setLayout(new BoxLayout(termPanel, BoxLayout.Y_AXIS));
-            termPanel.add(new JLabel(currentKinTerm[1]));
+            JPanel labelPanel = new JPanel();
+            labelPanel.setLayout(new BorderLayout());
+            labelPanel.add(new JLabel(currentKinTerm[1]), BorderLayout.CENTER);
             JTextArea kinTypeString = new JTextArea(currentKinTerm[0]);
             final String kinType = currentKinTerm[1];
             kinTypeString.addKeyListener(new KeyAdapter() {
@@ -54,8 +62,10 @@ public class KinTermPanel extends JPanel {
                 }
             });
 
-            termPanel.add(kinTypeString);
-            JButton removeButton = new JButton("remove");
+            JButton removeButton = new JButton("x");
+            removeButton.setToolTipText("delete kin term");
+            int removeButtonSize = removeButton.getFontMetrics(removeButton.getFont()).getHeight();
+            removeButton.setPreferredSize(new Dimension(removeButtonSize, removeButtonSize));
             removeButton.setActionCommand(currentKinTerm[1]);
             removeButton.addActionListener(new java.awt.event.ActionListener() {
 
@@ -66,7 +76,9 @@ public class KinTermPanel extends JPanel {
                     savePanel.updateGraph();
                 }
             });
-            termPanel.add(removeButton);
+            labelPanel.add(removeButton, BorderLayout.LINE_END);
+            termPanel.add(labelPanel);
+            termPanel.add(kinTypeString);
             outerPanel.add(termPanel);
             outerPanel.add(new JSeparator());
         }
@@ -77,8 +89,11 @@ public class KinTermPanel extends JPanel {
         final JTextField addNewKinTerm = new JTextField();
         final JTextField addNewKinType = new JTextField();
         JPanel termPanel = new JPanel();
+        termPanel.setBorder(BorderFactory.createTitledBorder("Create New Kin Term"));
         termPanel.setLayout(new BoxLayout(termPanel, BoxLayout.Y_AXIS));
+        termPanel.add(new JLabel("Kin Term"));
         termPanel.add(addNewKinTerm);
+        termPanel.add(new JLabel("Kin Type Strings"));
         termPanel.add(addNewKinType);
         JButton addButton = new JButton("add");
         addButton.addActionListener(new java.awt.event.ActionListener() {
