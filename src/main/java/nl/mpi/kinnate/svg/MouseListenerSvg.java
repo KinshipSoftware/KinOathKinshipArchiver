@@ -19,7 +19,6 @@ import nl.mpi.arbil.data.ImdiLoader;
  */
 public class MouseListenerSvg extends MouseInputAdapter implements EventListener {
 
-    private Element currentDraggedElement;
     private Cursor preDragCursor;
     private GraphPanel graphPanel;
 
@@ -30,20 +29,16 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     @Override
     public void mouseDragged(MouseEvent me) {
 //                System.out.println("mouseDragged: " + me.toString());
-        if (currentDraggedElement != null) {
+        if (graphPanel.selectedGroupElement.size() > 0) {
             graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-            graphPanel.updateDragNode(currentDraggedElement, me.getX(), me.getY());
+            graphPanel.updateDragNode(me.getX(), me.getY());
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
-//                System.out.println("mouseReleased: " + me.toString());
-        if (currentDraggedElement != null) {
-            graphPanel.svgCanvas.setCursor(preDragCursor);
-            graphPanel.updateDragNode(currentDraggedElement, me.getX(), me.getY());
-            currentDraggedElement = null;
-        }
+//            System.out.println("mouseReleased: " + me.toString());
+        graphPanel.svgCanvas.setCursor(preDragCursor);
     }
 
     @Override
@@ -53,7 +48,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             shiftDown = ((DOMMouseEvent) evt).getShiftKey();
         }
         System.out.println("mousedown: " + evt.getCurrentTarget());
-        currentDraggedElement = ((Element) evt.getCurrentTarget());
+        Element currentDraggedElement = ((Element) evt.getCurrentTarget());
         preDragCursor = graphPanel.svgCanvas.getCursor();
         // get the entityPath
         String entityPath = currentDraggedElement.getAttribute("id");
