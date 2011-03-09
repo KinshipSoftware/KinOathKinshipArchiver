@@ -376,80 +376,10 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        counterTest++;
         Element symbolNode;
         String symbolType = currentNode.getSymbolType();
-        if ("circle".equals(symbolType)) {
-            symbolNode = doc.createElementNS(svgNameSpace, "circle");
-            symbolNode.setAttribute("cx", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
-            symbolNode.setAttribute("cy", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
-            symbolNode.setAttribute("r", Integer.toString(symbolSize / 2));
-            symbolNode.setAttribute("height", Integer.toString(symbolSize));
-//            <circle id="_16" cx="120.0" cy="155.0" r="50" fill="red" stroke="black" stroke-width="1"/>
-//    <polygon id="_17" transform="matrix(0.7457627,0.0,0.0,circle0.6567164,467.339,103.462685)" points="20,10 80,40 40,80" fill="blue" stroke="black" stroke-width="1"/>
-        } else if ("square".equals(symbolType)) {
-            symbolNode = doc.createElementNS(svgNameSpace, "rect");
-            symbolNode.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
-            symbolNode.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-            symbolNode.setAttribute("width", Integer.toString(symbolSize));
-            symbolNode.setAttribute("height", Integer.toString(symbolSize));
-        } else if ("resource".equals(symbolType)) {
-            symbolNode = doc.createElementNS(svgNameSpace, "rect");
-            symbolNode.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
-            symbolNode.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-            symbolNode.setAttribute("width", Integer.toString(symbolSize));
-            symbolNode.setAttribute("height", Integer.toString(symbolSize));
-            symbolNode.setAttribute("transform", "rotate(-45 " + Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2) + " " + Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + ")");
-            symbolNode.setAttribute("stroke-width", "4");
-            symbolNode.setAttribute("fill", "black");
-        } else if ("union".equals(symbolType)) {
-//                    DOMUtilities.deepCloneDocument(doc, doc.getImplementation());
+        symbolNode = doc.createElementNS(svgNameSpace, "use");
+        symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
+        groupNode.setAttribute("transform", "translate(" + Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2) + ", " + Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + ")");
 
-//                    symbolNode = doc.createElementNS(svgNS, "layer");
-//                    Element upperNode = doc.createElementNS(svgNS, "rect");
-//                    Element lowerNode = doc.createElementNS(svgNS, "rect");
-//                    upperNode.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2));
-//                    upperNode.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-//                    upperNode.setAttribute("width", Integer.toString(symbolSize));
-//                    upperNode.setAttribute("height", Integer.toString(symbolSize / 3));
-//                    lowerNode.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2 + (symbolSize / 3) * 2));
-//                    lowerNode.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-//                    lowerNode.setAttribute("width", Integer.toString(symbolSize));
-//                    lowerNode.setAttribute("height", Integer.toString(symbolSize / 3));
-//                    lowerNode.appendChild(upperNode);
-//                    symbolNode.appendChild(lowerNode);
-            symbolNode = doc.createElementNS(svgNameSpace, "polyline");
-            int posXa = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
-            int posYa = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
-            int offsetAmounta = symbolSize / 2;
-            symbolNode.setAttribute("fill", "none");
-            symbolNode.setAttribute("points", (posXa + offsetAmounta * 3) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa - offsetAmounta) + " " + (posXa + offsetAmounta * 3) + "," + (posYa - offsetAmounta));
-        } else if ("triangle".equals(symbolType)) {
-            symbolNode = doc.createElementNS(svgNameSpace, "polygon");
-            int posXt = currentNode.xPos * hSpacing + hSpacing;
-            int posYt = currentNode.yPos * vSpacing + vSpacing;
-            int triangleHeight = (int) (Math.sqrt(3) * symbolSize / 2);
-            symbolNode.setAttribute("points",
-                    (posXt - symbolSize / 2) + "," + (posYt + triangleHeight / 2) + " "
-                    + (posXt) + "," + (posYt - +triangleHeight / 2) + " "
-                    + (posXt + symbolSize / 2) + "," + (posYt + triangleHeight / 2));
-//                case equals:
-//                    symbolNode = doc.createElementNS(svgNS, "rect");
-//                    symbolNode.setAttribute("x", Integer.toString(currentNode.xPos * stepNumber + stepNumber - symbolSize));
-//                    symbolNode.setAttribute("y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
-//                    symbolNode.setAttribute("width", Integer.toString(symbolSize / 2));
-//                    symbolNode.setAttribute("height", Integer.toString(symbolSize / 2));
-//                    break;
-        } else {
-            symbolNode = doc.createElementNS(svgNameSpace, "polyline");
-            int posX = currentNode.xPos * hSpacing + hSpacing - symbolSize / 2;
-            int posY = currentNode.yPos * vSpacing + vSpacing + symbolSize / 2;
-            int offsetAmount = symbolSize / 2;
-            symbolNode.setAttribute("fill", "none");
-            symbolNode.setAttribute("points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
-        }
-//            if (currentNode.isEgo) {
-//                symbolNode.setAttribute("fill", "red");
-//            } else {
-//                symbolNode.setAttribute("fill", "none");
-//            }
         if (currentNode.isEgo) {
             symbolNode.setAttribute("fill", "black");
         } else {
@@ -494,8 +424,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         int lineSpacing = 15;
         for (String currentTextLable : currentNode.getLabel()) {
             Element labelText = doc.createElementNS(svgNameSpace, "text");
-            labelText.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
-            labelText.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2 + textSpanCounter));
+            labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
+            labelText.setAttribute("y", Integer.toString(textSpanCounter));
             labelText.setAttribute("fill", "black");
             labelText.setAttribute("stroke-width", "0");
             labelText.setAttribute("font-size", "14");
@@ -514,6 +444,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         graphData = graphDataLocal;
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         doc = (SVGDocument) impl.createDocument(svgNameSpace, "svg", null);
+        new EntitySvg().insertSymbols(doc, svgNameSpace);
 //        Document doc = impl.createDocument(svgNS, "svg", null);
 //        SVGDocument doc = svgCanvas.getSVGDocument();
         // Get the root element (the 'svg' elemen¤t).
