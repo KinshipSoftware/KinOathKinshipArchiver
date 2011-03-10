@@ -59,6 +59,9 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 
         ImdiTableModel imdiTableModel = new ImdiTableModel();
         ImdiTable imdiTable = new ImdiTable(imdiTableModel, "Selected Nodes");
+        TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
+        imdiTable.setTransferHandler(tableCellDragHandler);
+        imdiTable.setDragEnabled(true);
         graphPanel.setImdiTableModel(imdiTableModel);
 
         JScrollPane tableScrollPane = new JScrollPane(imdiTable);
@@ -85,8 +88,9 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
         egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
         kinTypeStrings = graphPanel.getKinTypeStrigs();
 
+        IndexerParametersPanel indexerParametersPanel = new IndexerParametersPanel(this, graphPanel, entityIndex, tableCellDragHandler);
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, kinGraphPanel,
-                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tableScrollPane, new IndexerParametersPanel(this, graphPanel, entityIndex)));
+                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tableScrollPane, indexerParametersPanel));
         this.add(splitPane);
 
 
