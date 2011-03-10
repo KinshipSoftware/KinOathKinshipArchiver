@@ -1,7 +1,9 @@
 package nl.mpi.kinnate.svg;
 
+import java.util.ArrayList;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  *  Document   : EntitySvg
@@ -151,7 +153,14 @@ public class EntitySvg {
     }
 
     public String[] listSymbolNames(SVGDocument doc) {
-        // todo: get these from the dom
-        return new String[]{"circle", "triangle", "square", "union"};
+        // get the symbol list from the dom
+        ArrayList<String> symbolArray = new ArrayList<String>();
+        Element kinSymbols = doc.getElementById("KinSymbols");
+        if (kinSymbols != null) {
+            for (Node kinSymbolNode = kinSymbols.getFirstChild(); kinSymbolNode != null; kinSymbolNode = kinSymbolNode.getNextSibling()) {
+                symbolArray.add(kinSymbolNode.getAttributes().getNamedItem("id").getNodeValue());
+            }
+        }
+        return symbolArray.toArray(new String[]{});
     }
 }
