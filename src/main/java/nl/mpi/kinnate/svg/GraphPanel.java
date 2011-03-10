@@ -289,6 +289,9 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        counterTest++;
         Element symbolNode;
         String symbolType = currentNode.getSymbolType();
+        if (symbolType == null) {
+            symbolType = "cross";
+        }
         symbolNode = doc.createElementNS(svgNameSpace, "use");
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         groupNode.setAttribute("transform", "translate(" + Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2) + ", " + Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + ")");
