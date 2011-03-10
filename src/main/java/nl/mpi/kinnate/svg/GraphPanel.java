@@ -395,6 +395,10 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.setSVGDocument(doc);
 //        svgCanvas.setDocument(doc);
 //        int counterTest = 0;
+
+        // add the relation symbols in a group below the relation lines
+        Element relationGroupNode = doc.createElementNS(svgNameSpace, "g");
+        relationGroupNode.setAttribute("id", "RelationGroup");
         for (GraphDataNode currentNode : graphData.getDataNodes()) {
             // set up the mouse listners on the group node
 //            ((EventTarget) groupNode).addEventListener("mouseover", new EventListener() {
@@ -417,7 +421,6 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            }, false);
 
 
-            // draw links
             for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
                 if (graphLinkNode.sourceNode.equals(currentNode)) {
                     Element groupNode = doc.createElementNS(svgNameSpace, "g");
@@ -559,14 +562,18 @@ public class GraphPanel extends JPanel implements SavePanel {
                         labelText.appendChild(textPath);
                         groupNode.appendChild(labelText);
                     }
-                    svgRoot.appendChild(groupNode);
+                    relationGroupNode.appendChild(groupNode);
                 }
             }
         }
-        // add the entity symbols on top of the links
+        svgRoot.appendChild(relationGroupNode);
+        // add the entity symbols in a group on top of the relation lines
+        Element entityGroupNode = doc.createElementNS(svgNameSpace, "g");
+        entityGroupNode.setAttribute("id", "EntityGroup");
         for (GraphDataNode currentNode : graphData.getDataNodes()) {
-            svgRoot.appendChild(createEntitySymbol(currentNode, hSpacing, vSpacing, symbolSize));
+            entityGroupNode.appendChild(createEntitySymbol(currentNode, hSpacing, vSpacing, symbolSize));
         }
+        svgRoot.appendChild(entityGroupNode);
         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
         svgCanvas.revalidate();
         // todo: populate this correctly with the available symbols
