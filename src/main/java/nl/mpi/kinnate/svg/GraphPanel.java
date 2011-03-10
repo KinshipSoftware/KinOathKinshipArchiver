@@ -10,12 +10,10 @@ import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import javax.swing.JPanel;
-import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
@@ -31,7 +29,6 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
@@ -388,7 +385,6 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgRoot.setAttribute("height", Integer.toString(graphPanelSize.getHeight(graphData.gridHeight, vSpacing)));
 
         this.setPreferredSize(new Dimension(graphPanelSize.getHeight(graphData.gridHeight, vSpacing), graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
-
 
         // store the selected kin type strings and other data in the dom
         dataStoreSvg.storeAllData(doc);
