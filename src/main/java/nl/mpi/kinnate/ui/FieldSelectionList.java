@@ -46,7 +46,20 @@ public class FieldSelectionList extends JPanel {
                 if (availableValues != null) {
                     JComboBox valueSelect = new JComboBox(availableValues);
                     valueSelect.setSelectedItem(fieldArray[1]);
+                    valueSelect.setActionCommand(fieldArray[0]);
                     fieldPanel.add(valueSelect);
+                    valueSelect.addActionListener(new java.awt.event.ActionListener() {
+
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            indexerParam.setValue(evt.getActionCommand(), ((JComboBox) evt.getSource()).getSelectedItem().toString());
+                            populateSelectionList();
+                            revalidate();
+                            savePanel.updateGraph();
+                        }
+                    });
+
+
+
                 } else {
                     JTextField valueField = new JTextField(fieldArray[1]);
                     fieldPanel.add(valueField);
