@@ -20,9 +20,9 @@ public class FieldSelectionList extends JPanel {
 
     private SavePanel savePanel;
     private JPanel paddingPanel;
-    private IndexerParam indexerParam;
+    protected IndexerParam indexerParam;
 
-    public FieldSelectionList(SavePanel savePanelLocal, IndexerParam indexerParamLocal) {
+    public FieldSelectionList(SavePanel savePanelLocal, IndexerParam indexerParamLocal, TableCellDragHandler tableCellDragHandler) {
         // keep the panel items pushed to the top of the page
         paddingPanel = new JPanel();
         this.setLayout(new BorderLayout());
@@ -30,6 +30,7 @@ public class FieldSelectionList extends JPanel {
         savePanel = savePanelLocal;
         indexerParam = indexerParamLocal;
         populateSelectionList();
+        this.setTransferHandler(tableCellDragHandler);
     }
 
     private void populateSelectionList() {
@@ -98,4 +99,9 @@ public class FieldSelectionList extends JPanel {
 //            paddingPanel.add(fieldPanel);
 //        }
 //    }
+
+    protected void updateUiList() {
+        populateSelectionList();
+        revalidate();
+    }
 }
