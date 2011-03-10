@@ -29,6 +29,18 @@ public class DataStoreSvg {
         indexParameters = new IndexerParameters();
     }
 
+    public String[] getEntitiesForRelations(Node relationGroup) {
+        String[] targetEntityIds = null;
+        for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
+            if ("RelationEntities".equals(currentChild.getLocalName())) {
+                targetEntityIds = new String[]{
+                            currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "from").getNodeValue(),
+                            currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "to").getNodeValue()};
+            }
+        }
+        return targetEntityIds;
+    }
+
     public void storeRelationParameters(SVGDocument doc, Element relationGroup, String fromEntity, String toEntity) {
         Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
         dataRecordNode.setAttributeNS(kinDataNameSpace, "from", fromEntity);

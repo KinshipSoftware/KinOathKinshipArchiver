@@ -161,6 +161,12 @@ public class RelationSvg {
             if ("g".equals(currentChild.getLocalName())) {
                 Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
                 System.out.println("idAttrubite: " + idAttrubite.getNodeValue());
+                String[] targetEntityIds = new DataStoreSvg().getEntitiesForRelations(currentChild);
+                if (targetEntityIds != null) {
+                    // todo: update the relation lines
+                    System.out.println("from: " + targetEntityIds[0]);
+                    System.out.println("to: " + targetEntityIds[1]);
+                }
             }
         }
     }
