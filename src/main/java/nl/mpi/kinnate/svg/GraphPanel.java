@@ -211,7 +211,8 @@ public class GraphPanel extends JPanel implements SavePanel {
                         }
                     }
                 }
-                new RelationSvg().updateRelationLines(doc);
+                new RelationSvg().updateRelationLines(doc, selectedGroupElement);
+                //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                 svgCanvas.revalidate();
             }
         });

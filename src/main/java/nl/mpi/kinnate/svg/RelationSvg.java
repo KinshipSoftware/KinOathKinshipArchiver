@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.svg;
 
+import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -155,7 +156,8 @@ public class RelationSvg {
         relationGroupNode.appendChild(groupNode);
     }
 
-    public void updateRelationLines(SVGDocument doc) {
+    public void updateRelationLines(SVGDocument doc, ArrayList<String> draggedNodeIds) {
+        // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = doc.getElementById("RelationGroup");
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
             if ("g".equals(currentChild.getLocalName())) {
@@ -163,9 +165,13 @@ public class RelationSvg {
                 System.out.println("idAttrubite: " + idAttrubite.getNodeValue());
                 String[] targetEntityIds = new DataStoreSvg().getEntitiesForRelations(currentChild);
                 if (targetEntityIds != null) {
-                    // todo: update the relation lines
-                    System.out.println("from: " + targetEntityIds[0]);
-                    System.out.println("to: " + targetEntityIds[1]);
+                    if (draggedNodeIds.contains(targetEntityIds[0]) || draggedNodeIds.contains(targetEntityIds[1])) {
+                        // todo: update the relation lines
+                        System.out.println("needs update on: " + idAttrubite.getNodeValue());
+                        System.out.println("ego: " + targetEntityIds[0]);
+                        System.out.println("alter: " + targetEntityIds[1]);
+//                        ((Element) currentChild.getFirstChild().getNextSibling().getFirstChild()).setAttribute("stroke", "green");
+                    }
                 }
             }
         }

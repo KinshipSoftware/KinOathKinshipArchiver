@@ -34,8 +34,8 @@ public class DataStoreSvg {
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
             if ("RelationEntities".equals(currentChild.getLocalName())) {
                 targetEntityIds = new String[]{
-                            currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "from").getNodeValue(),
-                            currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "to").getNodeValue()};
+                            currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "ego").getNodeValue(),
+                            currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "alter").getNodeValue()};
             }
         }
         return targetEntityIds;
@@ -43,8 +43,8 @@ public class DataStoreSvg {
 
     public void storeRelationParameters(SVGDocument doc, Element relationGroup, String fromEntity, String toEntity) {
         Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "from", fromEntity);
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "to", toEntity);
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "ego", fromEntity);
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "alter", toEntity);
         relationGroup.appendChild(dataRecordNode);
     }
 
