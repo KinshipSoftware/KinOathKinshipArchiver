@@ -186,8 +186,8 @@ public class GraphPanel extends JPanel implements SavePanel {
                 System.out.println("updateDragNodeX: " + updateDragNodeX);
                 System.out.println("updateDragNodeY: " + updateDragNodeY);
                 if (doc != null) {
-                    Element svgRoot = doc.getDocumentElement();
-                    for (Node currentChild = svgRoot.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
+                    Element entityGroup = doc.getElementById("EntityGroup");
+                    for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
                         if ("g".equals(currentChild.getLocalName())) {
                             Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
                             if (idAttrubite != null) {
@@ -222,8 +222,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 
             public void run() {
                 if (doc != null) {
-                    Element svgRoot = doc.getDocumentElement();
-                    for (Node currentChild = svgRoot.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
+                    Element entityGroup = doc.getElementById("EntityGroup");
+                    for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
                         if ("g".equals(currentChild.getLocalName())) {
                             Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
                             if (idAttrubite != null) {

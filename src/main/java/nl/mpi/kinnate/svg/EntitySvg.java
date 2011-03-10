@@ -111,10 +111,9 @@ public class EntitySvg {
         triangleGroup.setAttribute("id", "triangle");
         Element triangleNode = doc.createElementNS(svgNameSpace, "polygon");
         int triangleHeight = (int) (Math.sqrt(3) * symbolSize / 2);
-        triangleNode.setAttribute("points", (symbolSize / 2) + "," + -(triangleHeight / 2) + " "
-                + 0 + "," + (triangleHeight / 2)
-                + " " + symbolSize + "," + (triangleHeight / 2)
-                + " " + (symbolSize / 2) + "," + -(triangleHeight / 2));
+        triangleNode.setAttribute("points", (symbolSize / 2) + "," + 0 + " "
+                + 0 + "," + triangleHeight
+                + " " + symbolSize + "," + triangleHeight);
         triangleNode.setAttribute("stroke", "black");
         triangleNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
         triangleGroup.appendChild(triangleNode);
