@@ -24,6 +24,16 @@ public class IndexerParameters {
             IndexerParameters.this.relevantEntityData = null;
         }
 
+        public void setValue(String parameterString, String valueString) {
+            ArrayList<String[]> tempArrayList = new ArrayList<String[]>(Arrays.asList(valuesArray));
+            for (String[] currentEntry : valuesArray) {
+                if (currentEntry[0].equals(parameterString)) {
+                    currentEntry[1] = valueString;
+                }
+            }
+            setValues(tempArrayList.toArray(new String[][]{}));
+        }
+
         public void removeValue(String valueToRemove) {
             ArrayList<String[]> tempArrayList = new ArrayList<String[]>(Arrays.asList(valuesArray));
             for (String[] currentEntry : valuesArray) {
