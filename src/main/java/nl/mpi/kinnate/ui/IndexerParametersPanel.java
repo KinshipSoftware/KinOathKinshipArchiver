@@ -13,13 +13,13 @@ import nl.mpi.kinnate.svg.GraphPanel;
  */
 public class IndexerParametersPanel extends JTabbedPane {
 
-    public IndexerParametersPanel(SavePanel savePanel, GraphPanel graphPanel, EntityIndex entityIndex) {
+    public IndexerParametersPanel(SavePanel savePanel, GraphPanel graphPanel, EntityIndex entityIndex, TableCellDragHandler tableCellDragHandler) {
 
         // todo: add drag drop of field to these lists and initially populate them from the SVG data
-        this.add("Symbol Fields", new JScrollPane(new FieldSelectionList(savePanel, graphPanel.getIndexParameters().symbolFieldsFields)));
-//        this.add("Relation Fields", new JScrollPane(new FieldSelectionList(graphPanel.getIndexParameters().relevantLinkData)));
-        this.add("Ancestor Fields", new JScrollPane(new FieldSelectionList(savePanel, graphPanel.getIndexParameters().ancestorFields)));
-        this.add("Decendant Fields", new JScrollPane(new FieldSelectionList(savePanel, graphPanel.getIndexParameters().decendantFields)));
-        this.add("Label Fields", new JScrollPane(new FieldSelectionList(savePanel, graphPanel.getIndexParameters().labelFields)));
+        this.add("Symbol Fields", new JScrollPane(new FieldSelectionList(savePanel, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler)));
+//        this.add("Relation Fields", new JScrollPane(new FieldSelectionList(graphPanel.getIndexParameters().relevantLinkData, tableCellDragHandler)));
+        this.add("Ancestor Fields", new JScrollPane(new FieldSelectionList(savePanel, graphPanel.getIndexParameters().ancestorFields, tableCellDragHandler)));
+        this.add("Decendant Fields", new JScrollPane(new FieldSelectionList(savePanel, graphPanel.getIndexParameters().decendantFields, tableCellDragHandler)));
+        this.add("Label Fields", new JScrollPane(new FieldSelectionList(savePanel, graphPanel.getIndexParameters().labelFields, tableCellDragHandler)));
     }
 }
