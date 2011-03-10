@@ -211,6 +211,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                         }
                     }
                 }
+                new RelationSvg().updateRelationLines(doc);
                 svgCanvas.revalidate();
             }
         });

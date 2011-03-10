@@ -29,10 +29,17 @@ public class DataStoreSvg {
         indexParameters = new IndexerParameters();
     }
 
+    public void storeRelationParameters(SVGDocument doc, Element relationGroup, String fromEntity, String toEntity) {
+        Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "from", fromEntity);
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "to", toEntity);
+        relationGroup.appendChild(dataRecordNode);
+    }
+
     private void storeParameter(SVGDocument doc, Element dataStoreElement, String parameterName, String[] ParameterValues) {
         for (String currentKinType : ParameterValues) {
-            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, parameterName);
-//            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
+            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:" + parameterName);
+            //            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
             dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType);
             dataStoreElement.appendChild(dataRecordNode);
         }
@@ -40,8 +47,8 @@ public class DataStoreSvg {
 
     private void storeParameter(SVGDocument doc, Element dataStoreElement, String parameterName, String[][] ParameterValues) {
         for (String[] currentKinType : ParameterValues) {
-            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, parameterName);
-//            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
+            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:" + parameterName);
+            //            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
             if (currentKinType.length == 1) {
                 dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[0]);
             } else if (currentKinType.length == 2) {
@@ -62,10 +69,10 @@ public class DataStoreSvg {
             egoStringArray.add(currentEgoUri.toASCIIString());
         }
         // store the selected kin type strings and other data in the dom
-//        Namespace sNS = Namespace.getNamespace("someNS", "someNamespace");
-//        Element element = new Element("SomeElement", sNS);
-        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "KinDiagramData");
-//        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
+        //        Namespace sNS = Namespace.getNamespace("someNS", "someNamespace");
+        //        Element element = new Element("SomeElement", sNS);
+        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "kin:KinDiagramData");
+        //        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
         kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to st the namespace
         storeParameter(doc, kinTypesRecordNode, "EgoList", egoStringArray.toArray(new String[]{}));
         storeParameter(doc, kinTypesRecordNode, "KinTypeStrings", kinTypeStrings);
@@ -80,7 +87,7 @@ public class DataStoreSvg {
     private String[] getSingleParametersFromDom(SVGDocument doc, String parameterName) {
         ArrayList<String> parameterList = new ArrayList<String>();
         if (doc != null) {
-//            printNodeNames(doc);
+            //            printNodeNames(doc);
             try {
                 // todo: resolve names space issue
                 // todo: try setting the XPath namespaces
@@ -94,7 +101,7 @@ public class DataStoreSvg {
             } catch (TransformerException transformerException) {
                 GuiHelper.linorgBugCatcher.logError(transformerException);
             }
-//            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
+            //            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
         }
         return parameterList.toArray(new String[]{});
     }
@@ -114,13 +121,13 @@ public class DataStoreSvg {
             } catch (TransformerException transformerException) {
                 GuiHelper.linorgBugCatcher.logError(transformerException);
             }
-//            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
+            //            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
         }
         return parameterList.toArray(new String[][]{});
     }
 
     protected void loadDataFromSvg(SVGDocument doc) {
-        ArrayList<String> egoStringArray = new ArrayList<String>();
+//        ArrayList<String> egoStringArray = new ArrayList<String>();
         egoSet.clear();
         for (String currentEgoString : getSingleParametersFromDom(doc, "EgoList")) {
             try {
