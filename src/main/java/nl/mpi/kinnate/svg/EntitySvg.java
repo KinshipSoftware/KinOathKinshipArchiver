@@ -126,7 +126,7 @@ public class EntitySvg {
         equalsGroup.setAttribute("id", "equals");
         Element equalsNode = doc.createElementNS(svgNameSpace, "polyline");
         int offsetAmounta = symbolSize / 2;
-        int posXa = -symbolSize / 2;
+        int posXa = 0;
         int posYa = +symbolSize / 2;
         equalsNode.setAttribute("points", (posXa + offsetAmounta * 3) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa + offsetAmounta) + " " + (posXa - offsetAmounta) + "," + (posYa - offsetAmounta) + " " + (posXa + offsetAmounta * 3) + "," + (posYa - offsetAmounta));
         equalsNode.setAttribute("fill", "white");
@@ -140,8 +140,8 @@ public class EntitySvg {
         Element crossGroup = doc.createElementNS(svgNameSpace, "g");
         crossGroup.setAttribute("id", "cross");
         Element crossNode = doc.createElementNS(svgNameSpace, "polyline");
-        int posX = -symbolSize / 2;
-        int posY = +symbolSize / 2;
+        int posX = symbolSize / 2;
+        int posY = symbolSize / 2;
         int offsetAmount = symbolSize / 2;
         crossNode.setAttribute("points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
         crossNode.setAttribute("fill", "none");
