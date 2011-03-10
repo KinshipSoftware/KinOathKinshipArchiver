@@ -48,9 +48,6 @@ public class GraphPanel extends JPanel implements SavePanel {
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
     private SVGDocument doc;
-    private HashSet<URI> egoSet = new HashSet<URI>();
-    private String[] kinTypeStrings = new String[]{};
-    private IndexerParameters indexParameters;
     private KinTerms kinTerms;
     protected ImdiTableModel imdiTableModel;
     private GraphData graphData;
@@ -59,13 +56,12 @@ public class GraphPanel extends JPanel implements SavePanel {
     private GraphPanelSize graphPanelSize;
     protected ArrayList<String> selectedGroupElement;
     private String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
-    private String kinDataNameSpace = "kin";
-    private String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
+    private DataStoreSvg dataStoreSvg;
 
     public GraphPanel(KinTypeEgoSelectionTestPanel egoSelectionPanel) {
+        dataStoreSvg = new DataStoreSvg();
         selectedGroupElement = new ArrayList<String>();
         graphPanelSize = new GraphPanelSize();
-        indexParameters = new IndexerParameters();
         kinTerms = new KinTerms();
         this.setLayout(new BorderLayout());
         svgCanvas = new JSVGCanvas();
@@ -119,20 +115,8 @@ public class GraphPanel extends JPanel implements SavePanel {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
 //        svgCanvas.setURI(svgFilePath.toURI().toString());
-        ArrayList<String> egoStringArray = new ArrayList<String>();
-        egoSet.clear();
-        for (String currentEgoString : getSingleParametersFromDom("EgoList")) {
-            try {
-                egoSet.add(new URI(currentEgoString));
-            } catch (URISyntaxException urise) {
-                GuiHelper.linorgBugCatcher.logError(urise);
-            }
-        }
-        kinTypeStrings = getSingleParametersFromDom("KinTypeStrings");
-        indexParameters.ancestorFields.setValues(getDoubleParametersFromDom("AncestorFields"));
-        indexParameters.decendantFields.setValues(getDoubleParametersFromDom("DecendantFields"));
-        indexParameters.labelFields.setValues(getDoubleParametersFromDom("LabelFields"));
-        indexParameters.symbolFieldsFields.setValues(getDoubleParametersFromDom("SymbolFieldsFields"));
+
+        dataStoreSvg.loadDataFromSvg(doc);
     }
 
     private void saveSvg(File svgFilePath) {
@@ -151,50 +135,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         }
     }
 
-    private String[] getSingleParametersFromDom(String parameterName) {
-        ArrayList<String> parameterList = new ArrayList<String>();
-        if (doc != null) {
-//            printNodeNames(doc);
-            try {
-                // todo: resolve names space issue
-                // todo: try setting the XPath namespaces
-                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/svg:svg/kin:KinDiagramData/kin:" + parameterName);
-                for (int nodeCounter = 0; nodeCounter < parameterNodeList.getLength(); nodeCounter++) {
-                    Node parameterNode = parameterNodeList.item(nodeCounter);
-                    if (parameterNode != null) {
-                        parameterList.add(parameterNode.getAttributes().getNamedItem("value").getNodeValue());
-                    }
-                }
-            } catch (TransformerException transformerException) {
-                GuiHelper.linorgBugCatcher.logError(transformerException);
-            }
-//            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
-        }
-        return parameterList.toArray(new String[]{});
-    }
-
-    private String[][] getDoubleParametersFromDom(String parameterName) {
-        ArrayList<String[]> parameterList = new ArrayList<String[]>();
-        if (doc != null) {
-            try {
-                // todo: resolve names space issue
-                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/svg/KinDiagramData/" + parameterName);
-                for (int nodeCounter = 0; nodeCounter < parameterNodeList.getLength(); nodeCounter++) {
-                    Node parameterNode = parameterNodeList.item(nodeCounter);
-                    if (parameterNode != null) {
-                        parameterList.add(new String[]{parameterNode.getAttributes().getNamedItem("path").getNodeValue(), parameterNode.getAttributes().getNamedItem("value").getNodeValue()});
-                    }
-                }
-            } catch (TransformerException transformerException) {
-                GuiHelper.linorgBugCatcher.logError(transformerException);
-            }
-//            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
-        }
-        return parameterList.toArray(new String[][]{});
-    }
-
     public String[] getKinTypeStrigs() {
-        return kinTypeStrings;
+        return dataStoreSvg.kinTypeStrings;
     }
 
     public void setKinTypeStrigs(String[] kinTypeStringArray) {
@@ -205,11 +147,11 @@ public class GraphPanel extends JPanel implements SavePanel {
                 kinTypeStringSet.add(kinTypeString.trim());
             }
         }
-        kinTypeStrings = kinTypeStringSet.toArray(new String[]{});
+        dataStoreSvg.kinTypeStrings = kinTypeStringSet.toArray(new String[]{});
     }
 
     public IndexerParameters getIndexParameters() {
-        return indexParameters;
+        return dataStoreSvg.indexParameters;
     }
 
     public KinTerms getkinTerms() {
@@ -217,41 +159,15 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public URI[] getEgoList() {
-        return egoSet.toArray(new URI[]{});
+        return dataStoreSvg.egoSet.toArray(new URI[]{});
     }
 
     public void setEgoList(URI[] egoListArray) {
-        egoSet = new HashSet<URI>(Arrays.asList(egoListArray));
+        dataStoreSvg.egoSet = new HashSet<URI>(Arrays.asList(egoListArray));
     }
 
     public String[] getSelectedPaths() {
         return selectedGroupElement.toArray(new String[]{});
-    }
-
-    private void storeParameter(Element dataStoreElement, String parameterName, String[] ParameterValues) {
-        for (String currentKinType : ParameterValues) {
-            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, parameterName);
-//            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
-            dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType);
-            dataStoreElement.appendChild(dataRecordNode);
-        }
-    }
-
-    private void storeParameter(Element dataStoreElement, String parameterName, String[][] ParameterValues) {
-        for (String[] currentKinType : ParameterValues) {
-            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, parameterName);
-//            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
-            if (currentKinType.length == 1) {
-                dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[0]);
-            } else if (currentKinType.length == 2) {
-                dataRecordNode.setAttributeNS(kinDataNameSpace, "path", currentKinType[0]);
-                dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[1]);
-            } else {
-                // todo: add any other datatypes if required
-                throw new UnsupportedOperationException();
-            }
-            dataStoreElement.appendChild(dataRecordNode);
-        }
     }
 
     public void resetZoom() {
@@ -473,26 +389,9 @@ public class GraphPanel extends JPanel implements SavePanel {
 
         this.setPreferredSize(new Dimension(graphPanelSize.getHeight(graphData.gridHeight, vSpacing), graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
 
-        // create string array to store the selected ego nodes in the dom
-        ArrayList<String> egoStringArray = new ArrayList<String>();
-        for (URI currentEgoUri : egoSet) {
-            egoStringArray.add(currentEgoUri.toASCIIString());
-        }
-        // store the selected kin type strings and other data in the dom
-//        Namespace sNS = Namespace.getNamespace("someNS", "someNamespace");
-//        Element element = new Element("SomeElement", sNS);
 
-        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "KinDiagramData");
-//        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
-        kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to st the namespace
-        storeParameter(kinTypesRecordNode, "EgoList", egoStringArray.toArray(new String[]{}));
-        storeParameter(kinTypesRecordNode, "KinTypeStrings", kinTypeStrings);
-        storeParameter(kinTypesRecordNode, "AncestorFields", indexParameters.ancestorFields.getValues());
-        storeParameter(kinTypesRecordNode, "DecendantFields", indexParameters.decendantFields.getValues());
-        storeParameter(kinTypesRecordNode, "LabelFields", indexParameters.labelFields.getValues());
-        storeParameter(kinTypesRecordNode, "SymbolFieldsFields", indexParameters.symbolFieldsFields.getValues());
-        svgRoot.appendChild(kinTypesRecordNode);
-        // end store the selected kin type strings and other data in the dom
+        // store the selected kin type strings and other data in the dom
+        dataStoreSvg.storeAllData(doc);
 
         svgCanvas.setSVGDocument(doc);
 //        svgCanvas.setDocument(doc);
@@ -672,7 +571,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
         svgCanvas.revalidate();
         // todo: populate this correctly with the available symbols
-        indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
+        dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(new EntitySvg().listSymbolNames(doc));
     }
 
     public boolean hasSaveFileName() {

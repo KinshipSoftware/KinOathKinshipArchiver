@@ -150,6 +150,8 @@ public class EntitySvg {
         svgRoot.appendChild(defsNode);
     }
 
-    public void listSymbolNames() {
+    public String[] listSymbolNames(SVGDocument doc) {
+        // todo: get these from the dom
+        return new String[]{"circle", "triangle", "square", "union"};
     }
 }
