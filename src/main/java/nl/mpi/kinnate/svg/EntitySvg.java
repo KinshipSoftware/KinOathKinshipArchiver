@@ -138,7 +138,7 @@ public class EntitySvg {
 
         // add the cross symbol
         Element crossGroup = doc.createElementNS(svgNameSpace, "g");
-        crossGroup.setAttribute("id", "triangle");
+        crossGroup.setAttribute("id", "cross");
         Element crossNode = doc.createElementNS(svgNameSpace, "polyline");
         int posX = -symbolSize / 2;
         int posY = +symbolSize / 2;
