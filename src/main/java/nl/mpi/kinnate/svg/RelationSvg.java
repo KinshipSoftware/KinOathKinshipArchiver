@@ -26,6 +26,25 @@ public class RelationSvg {
         targetGroup.appendChild(useNode);
     }
 
+    private void updateLabelNode(SVGDocument doc, String svgNameSpace, String lineIdString, String targetRelationId) {
+        // remove and readd the text on path label so that it updates with the new path
+        String labelNodeId = targetRelationId + "label";
+        Node useNodeOld = doc.getElementById(labelNodeId);
+        if (useNodeOld != null) {
+            Node textParentNode = useNodeOld.getParentNode();
+            String labelText = useNodeOld.getTextContent();
+            useNodeOld.getParentNode().removeChild(useNodeOld);
+
+            Element textPath = doc.createElementNS(svgNameSpace, "textPath");
+            textPath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
+            textPath.setAttribute("startOffset", "50%");
+            textPath.setAttribute("id", labelNodeId);
+            Text textNode = doc.createTextNode(labelText);
+            textPath.appendChild(textNode);
+            textParentNode.appendChild(textPath);
+        }
+    }
+
     private void setPolylinePointsAttribute(Element targetNode, GraphDataNode.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float midY = (egoY + alterY) / 2;
         if (alterY == egoY) {
@@ -86,9 +105,6 @@ public class RelationSvg {
         int fromY = (currentNode.yPos * vSpacing + vSpacing);
         int toX = (graphLinkNode.linkedNode.xPos * hSpacing + hSpacing);
         int toY = (graphLinkNode.linkedNode.yPos * vSpacing + vSpacing);
-        // set the label position
-        int labelX = (fromX + toX) / 2;
-        int labelY = (fromY + toY) / 2;
 
         switch (graphLinkNode.relationLineType) {
             case horizontalCurve:
@@ -162,7 +178,7 @@ public class RelationSvg {
             Element textPath = doc.createElementNS(svgNameSpace, "textPath");
             textPath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
             textPath.setAttribute("startOffset", "50%");
-            //                        textPath.setAttribute("text-anchor", "middle");
+            textPath.setAttribute("id", "relation" + relationLineIndex + "label");
             Text textNode = doc.createTextNode(graphLinkNode.labelString);
             textPath.appendChild(textNode);
             labelText.appendChild(textPath);
@@ -212,6 +228,7 @@ public class RelationSvg {
                             setPathPointsAttribute(relationLineElement, graphRelationData.relationType, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
                         }
                         addUseNode(doc, svgNameSpace, (Element) currentChild, lineElementId);
+                        updateLabelNode(doc, svgNameSpace, lineElementId, idAttrubite.getNodeValue());
                     }
                 }
             }
