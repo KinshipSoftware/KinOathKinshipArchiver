@@ -48,14 +48,14 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
         JPanel kinGraphPanel = new JPanel(new BorderLayout());
         kinGraphPanel.add(kinTypeStringInput, BorderLayout.PAGE_START);
 
-        JSplitPane egoSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        JSplitPane kintermSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        kinGraphPanel.add(egoSplitPane, BorderLayout.CENTER);
+//        JSplitPane egoSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        JPanel kintermSplitPane = new JPanel(new BorderLayout());
+//        kinGraphPanel.add(egoSplitPane, BorderLayout.CENTER);
 //        outerSplitPane.setDividerLocation(0.5); // todo: add this to its parent so that the divider position sticks
-        egoSplitPane.setLeftComponent(egoSelectionPanel);
-        kintermSplitPane.setLeftComponent(graphPanel);
-        kintermSplitPane.setRightComponent(kinTermPanel);
-        egoSplitPane.setRightComponent(kintermSplitPane);
+        kintermSplitPane.add(new HidePane(egoSelectionPanel, "Ego Selection", BorderLayout.LINE_END), BorderLayout.LINE_START);
+        kintermSplitPane.add(graphPanel, BorderLayout.CENTER);
+        kintermSplitPane.add(new HidePane(kinTermPanel, "Kin Terms", BorderLayout.LINE_START), BorderLayout.LINE_END);
+        kinGraphPanel.add(kintermSplitPane);
 
         ImdiTableModel imdiTableModel = new ImdiTableModel();
         ImdiTable imdiTable = new ImdiTable(imdiTableModel, "Selected Nodes");
@@ -89,8 +89,10 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
         kinTypeStrings = graphPanel.getKinTypeStrigs();
 
         IndexerParametersPanel indexerParametersPanel = new IndexerParametersPanel(this, graphPanel, entityIndex, tableCellDragHandler);
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, kinGraphPanel,
-                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tableScrollPane, indexerParametersPanel));
+        JPanel advancedPanel = new JPanel(new BorderLayout());
+        advancedPanel.add(tableScrollPane, BorderLayout.CENTER);
+        advancedPanel.add(new HidePane(indexerParametersPanel, "Indexer Parameters", BorderLayout.LINE_START), BorderLayout.LINE_END);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, kinGraphPanel, advancedPanel);
         this.add(splitPane);
 
 
