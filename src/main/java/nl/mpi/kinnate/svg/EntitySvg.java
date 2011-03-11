@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.svg.SVGLocatable;
+import org.w3c.dom.svg.SVGMatrix;
+import org.w3c.dom.svg.SVGRect;
 
 /**
  *  Document   : EntitySvg
@@ -161,5 +164,31 @@ public class EntitySvg {
             }
         }
         return symbolArray.toArray(new String[]{});
+    }
+
+    public float[] getEntityLocation(SVGDocument doc, String entityId) {
+        Element entitySymbol = doc.getElementById(entityId + "symbol");
+//        Element entitySymbol = doc.getElementById(entityId); // the sybol group node
+        if (entitySymbol != null) {
+            SVGRect bbox = ((SVGLocatable) entitySymbol).getBBox();
+            SVGMatrix sVGMatrix = ((SVGLocatable) entitySymbol).getCTM();
+//            System.out.println("getA: " + sVGMatrix.getA());
+//            System.out.println("getB: " + sVGMatrix.getB());
+//            System.out.println("getC: " + sVGMatrix.getC());
+//            System.out.println("getD: " + sVGMatrix.getD());
+//            System.out.println("getE: " + sVGMatrix.getE());
+//            System.out.println("getF: " + sVGMatrix.getF());
+
+//            System.out.println("bbox X: " + bbox.getX());
+//            System.out.println("bbox Y: " + bbox.getY());
+//            System.out.println("bbox W: " + bbox.getWidth());
+//            System.out.println("bbox H: " + bbox.getHeight());
+            return new float[]{sVGMatrix.getE() + bbox.getWidth() / 2, sVGMatrix.getF() + bbox.getHeight() / 2};
+//            bbox.setX(sVGMatrix.getE());
+//            bbox.setY(sVGMatrix.getF());
+//            return bbox;
+        } else {
+            return null;
+        }
     }
 }

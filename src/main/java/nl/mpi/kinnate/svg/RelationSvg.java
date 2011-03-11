@@ -26,8 +26,8 @@ public class RelationSvg {
         targetGroup.appendChild(useNode);
     }
 
-    private void setPolylinePointsAttribute(Element targetNode, GraphDataNode.RelationType relationType, int vSpacing, int egoX, int egoY, int alterX, int alterY) {
-        int midY = (egoY + alterY) / 2;
+    private void setPolylinePointsAttribute(Element targetNode, GraphDataNode.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+        float midY = (egoY + alterY) / 2;
         if (alterY == egoY) {
             // make sure that union lines go below the entities and sibling lines go above
             if (relationType == GraphDataNode.RelationType.sibling) {
@@ -49,7 +49,7 @@ public class RelationSvg {
         groupNode.setAttribute("id", "relation" + relationLineIndex);
         Element defsNode = doc.createElementNS(svgNameSpace, "defs");
         String lineIdString = "relation" + relationLineIndex + "Line";
-        new DataStoreSvg().storeRelationParameters(doc, groupNode, currentNode.getEntityPath(), graphLinkNode.linkedNode.getEntityPath());
+        new DataStoreSvg().storeRelationParameters(doc, groupNode, graphLinkNode.relationType, currentNode.getEntityPath(), graphLinkNode.linkedNode.getEntityPath());
         // set the line end points
         int fromX = (currentNode.xPos * hSpacing + hSpacing);
         int fromY = (currentNode.yPos * vSpacing + vSpacing);
@@ -171,27 +171,41 @@ public class RelationSvg {
         relationGroupNode.appendChild(groupNode);
     }
 
-    public void updateRelationLines(SVGDocument doc, ArrayList<String> draggedNodeIds, String svgNameSpace) {
+    public void updateRelationLines(SVGDocument doc, ArrayList<String> draggedNodeIds, String svgNameSpace, int vSpacing) {
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = doc.getElementById("RelationGroup");
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
             if ("g".equals(currentChild.getLocalName())) {
                 Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
                 System.out.println("idAttrubite: " + idAttrubite.getNodeValue());
-                String[] targetEntityIds = new DataStoreSvg().getEntitiesForRelations(currentChild);
-                if (targetEntityIds != null) {
-                    if (draggedNodeIds.contains(targetEntityIds[0]) || draggedNodeIds.contains(targetEntityIds[1])) {
+                DataStoreSvg.GraphRelationData graphRelationData = new DataStoreSvg().getEntitiesForRelations(currentChild);
+                if (graphRelationData != null) {
+                    if (draggedNodeIds.contains(graphRelationData.egoNodeId) || draggedNodeIds.contains(graphRelationData.alterNodeId)) {
                         // todo: update the relation lines
                         System.out.println("needs update on: " + idAttrubite.getNodeValue());
-                        System.out.println("ego: " + targetEntityIds[0]);
-                        System.out.println("alter: " + targetEntityIds[1]);
                         String lineElementId = idAttrubite.getNodeValue() + "Line";
                         Element relationLineElement = doc.getElementById(lineElementId);
                         System.out.println("type: " + relationLineElement.getLocalName());
+
+                        float[] egoSymbolPoint = new EntitySvg().getEntityLocation(doc, graphRelationData.egoNodeId);
+                        float[] alterSymbolPoint = new EntitySvg().getEntityLocation(doc, graphRelationData.alterNodeId);
+
+                        float egoX = egoSymbolPoint[0];
+                        float egoY = egoSymbolPoint[1];
+                        float alterX = alterSymbolPoint[0];
+                        float alterY = alterSymbolPoint[1];
+
+//                        SVGRect egoSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.egoNodeId);
+//                        SVGRect alterSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.alterNodeId);
+//
+//                        float egoX = egoSymbolRect.getX() + egoSymbolRect.getWidth() / 2;
+//                        float egoY = egoSymbolRect.getY() + egoSymbolRect.getHeight() / 2;
+//                        float alterX = alterSymbolRect.getX() + alterSymbolRect.getWidth() / 2;
+//                        float alterY = alterSymbolRect.getY() + alterSymbolRect.getHeight() / 2;
+
                         if ("polyline".equals(relationLineElement.getLocalName())) {
-                            System.out.println("polyline to update: " + relationLineElement.getLocalName());
-                            relationLineElement.setAttribute("stroke", "green");
-                            relationLineElement.setAttribute("points", "450,150 450,225 450,225 450,350");
+                            System.out.println("polyline to update: " + lineElementId);
+                            setPolylinePointsAttribute(relationLineElement, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
                         }
                         if ("path".equals(relationLineElement.getLocalName())) {
                             System.out.println("path to update: " + relationLineElement.getLocalName());

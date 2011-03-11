@@ -25,26 +25,35 @@ public class DataStoreSvg {
     protected String[] kinTypeStrings = new String[]{};
     protected IndexerParameters indexParameters;
 
+    public class GraphRelationData {
+
+        public String egoNodeId;
+        public String alterNodeId;
+        public GraphDataNode.RelationType relationType;
+    }
+
     public DataStoreSvg() {
         indexParameters = new IndexerParameters();
     }
 
-    public String[] getEntitiesForRelations(Node relationGroup) {
-        String[] targetEntityIds = null;
+    public GraphRelationData getEntitiesForRelations(Node relationGroup) {
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
             if ("RelationEntities".equals(currentChild.getLocalName())) {
-                targetEntityIds = new String[]{
-                            currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "ego").getNodeValue(),
-                            currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "alter").getNodeValue()};
+                GraphRelationData graphRelationData = new GraphRelationData();
+                graphRelationData.egoNodeId = currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "ego").getNodeValue();
+                graphRelationData.alterNodeId = currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "alter").getNodeValue();
+                graphRelationData.relationType = GraphDataNode.RelationType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "relation").getNodeValue());
+                return graphRelationData;
             }
         }
-        return targetEntityIds;
+        return null;
     }
 
-    public void storeRelationParameters(SVGDocument doc, Element relationGroup, String fromEntity, String toEntity) {
+    public void storeRelationParameters(SVGDocument doc, Element relationGroup, GraphDataNode.RelationType relationType, String egoEntity, String alterEntity) {
         Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "ego", fromEntity);
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "alter", toEntity);
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "relation", relationType.name());
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "ego", egoEntity);
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "alter", alterEntity);
         relationGroup.appendChild(dataRecordNode);
     }
 

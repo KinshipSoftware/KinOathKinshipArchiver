@@ -210,8 +210,9 @@ public class GraphPanel extends JPanel implements SavePanel {
                             }
                         }
                     }
-                    new RelationSvg().updateRelationLines(doc, selectedGroupElement, svgNameSpace);
-//                    new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+                    int vSpacing = graphPanelSize.getVerticalSpacing(graphData.gridHeight);
+                    new RelationSvg().updateRelationLines(doc, selectedGroupElement, svgNameSpace, vSpacing);
+                    //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                 }
             }
         });
@@ -294,6 +295,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             symbolType = "cross";
         }
         symbolNode = doc.createElementNS(svgNameSpace, "use");
+        symbolNode.setAttribute("id", currentNode.getEntityPath() + "symbol");
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         groupNode.setAttribute("transform", "translate(" + Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2) + ", " + Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + ")");
 
