@@ -26,6 +26,23 @@ public class RelationSvg {
         targetGroup.appendChild(useNode);
     }
 
+    private void setPolylinePointsAttribute(Element targetNode, GraphDataNode.RelationType relationType, int vSpacing, int egoX, int egoY, int alterX, int alterY) {
+        int midY = (egoY + alterY) / 2;
+        if (alterY == egoY) {
+            // make sure that union lines go below the entities and sibling lines go above
+            if (relationType == GraphDataNode.RelationType.sibling) {
+                midY = alterY - vSpacing / 2;
+            } else if (relationType == GraphDataNode.RelationType.union) {
+                midY = alterY + vSpacing / 2;
+            }
+        }
+        targetNode.setAttribute("points",
+                egoX + "," + egoY + " "
+                + egoX + "," + midY + " "
+                + alterX + "," + midY + " "
+                + alterX + "," + alterY);
+    }
+
     protected void insertRelation(SVGDocument doc, String svgNameSpace, Element relationGroupNode, GraphDataNode currentNode, GraphDataNode.NodeRelation graphLinkNode, int hSpacing, int vSpacing, int strokeWidth) {
         int relationLineIndex = relationGroupNode.getChildNodes().getLength();
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
@@ -117,21 +134,8 @@ public class RelationSvg {
                 //                            squareLinkLine.setAttribute("stroke", "grey");
                 //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
                 Element squareLinkLine = doc.createElementNS(svgNameSpace, "polyline");
-                int midY = (fromY + toY) / 2;
-                if (toY == fromY) {
-                    // make sure that union lines go below the entities and sibling lines go above
-                    if (graphLinkNode.relationType == GraphDataNode.RelationType.sibling) {
-                        midY = toY - vSpacing / 2;
-                    } else if (graphLinkNode.relationType == GraphDataNode.RelationType.union) {
-                        midY = toY + vSpacing / 2;
-                    }
-                }
 
-                squareLinkLine.setAttribute("points",
-                        fromX + "," + fromY + " "
-                        + fromX + "," + midY + " "
-                        + toX + "," + midY + " "
-                        + toX + "," + toY);
+                setPolylinePointsAttribute(squareLinkLine, graphLinkNode.relationType, vSpacing, fromX, fromY, toX, toY);
 
                 squareLinkLine.setAttribute("fill", "none");
                 squareLinkLine.setAttribute("stroke", "grey");
