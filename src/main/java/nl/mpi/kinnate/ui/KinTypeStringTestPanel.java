@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.SavePanel;
@@ -33,9 +32,9 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel {
         kinTypeStringInput = new JTextArea(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
 
-        JSplitPane kintermSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        kintermSplitPane.setLeftComponent(graphPanel);
-        kintermSplitPane.setRightComponent(kinTermPanel);
+        JPanel kintermSplitPane = new JPanel(new BorderLayout());
+        kintermSplitPane.add(graphPanel, BorderLayout.CENTER);
+        kintermSplitPane.add(new HidePane(kinTermPanel, "Kin Terms", BorderLayout.LINE_START), BorderLayout.LINE_END);
 
         this.add(kinTypeStringInput, BorderLayout.PAGE_START);
         this.add(kintermSplitPane, BorderLayout.CENTER);
