@@ -43,13 +43,44 @@ public class RelationSvg {
                 + alterX + "," + alterY);
     }
 
+    private void setPathPointsAttribute(Element targetNode, GraphDataNode.RelationType relationType, GraphDataNode.RelationLineType relationLineType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+        float fromBezX;
+        float fromBezY;
+        float toBezX;
+        float toBezY;
+        if (relationLineType == GraphDataNode.RelationLineType.verticalCurve) {
+            fromBezX = egoX;
+            fromBezY = alterY;
+            toBezX = alterX;
+            toBezY = egoY;
+            if (egoY == alterY) {
+                fromBezX = egoX;
+                fromBezY = alterY - vSpacing / 2;
+                toBezX = alterX;
+                toBezY = egoY - vSpacing / 2;
+            }
+        } else {
+            fromBezX = alterX;
+            fromBezY = egoY;
+            toBezX = egoX;
+            toBezY = alterY;
+            if (egoX == alterX) {
+                fromBezY = egoY;
+                fromBezX = alterX - hSpacing / 2;
+                toBezY = alterY;
+                toBezX = egoX - hSpacing / 2;
+            }
+        }
+        targetNode.setAttribute("d", "M " + egoX + "," + egoY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + alterX + "," + alterY);
+    }
+
     protected void insertRelation(SVGDocument doc, String svgNameSpace, Element relationGroupNode, GraphDataNode currentNode, GraphDataNode.NodeRelation graphLinkNode, int hSpacing, int vSpacing, int strokeWidth) {
         int relationLineIndex = relationGroupNode.getChildNodes().getLength();
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
         groupNode.setAttribute("id", "relation" + relationLineIndex);
         Element defsNode = doc.createElementNS(svgNameSpace, "defs");
         String lineIdString = "relation" + relationLineIndex + "Line";
-        new DataStoreSvg().storeRelationParameters(doc, groupNode, graphLinkNode.relationType, currentNode.getEntityPath(), graphLinkNode.linkedNode.getEntityPath());
+        new DataStoreSvg().storeRelationParameters(doc, groupNode, graphLinkNode.relationType, graphLinkNode.relationLineType, currentNode.getEntityPath(), graphLinkNode.linkedNode.getEntityPath());
         // set the line end points
         int fromX = (currentNode.xPos * hSpacing + hSpacing);
         int fromY = (currentNode.yPos * vSpacing + vSpacing);
@@ -81,39 +112,8 @@ public class RelationSvg {
 
                 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
                 Element linkLine = doc.createElementNS(svgNameSpace, "path");
-                int fromBezX;
-                int fromBezY;
-                int toBezX;
-                int toBezY;
-                if (graphLinkNode.relationLineType == GraphDataNode.RelationLineType.verticalCurve) {
-                    fromBezX = fromX;
-                    fromBezY = toY;
-                    toBezX = toX;
-                    toBezY = fromY;
-                    if (currentNode.yPos == graphLinkNode.linkedNode.yPos) {
-                        fromBezX = fromX;
-                        fromBezY = toY - vSpacing / 2;
-                        toBezX = toX;
-                        toBezY = fromY - vSpacing / 2;
-                        // set the label postion and lower it a bit
-                        labelY = toBezY + vSpacing / 3;
-                    }
-                } else {
-                    fromBezX = toX;
-                    fromBezY = fromY;
-                    toBezX = fromX;
-                    toBezY = toY;
-                    if (currentNode.xPos == graphLinkNode.linkedNode.xPos) {
-                        fromBezY = fromY;
-                        fromBezX = toX - hSpacing / 2;
-                        toBezY = toY;
-                        toBezX = fromX - hSpacing / 2;
-                        // set the label postion
-                        labelX = toBezX;
-                    }
-                }
-                linkLine.setAttribute("d", "M " + fromX + "," + fromY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + toX + "," + toY);
 
+                setPathPointsAttribute(linkLine, graphLinkNode.relationType, graphLinkNode.relationLineType, hSpacing, vSpacing, fromX, fromY, toX, toY);
                 //                    linkLine.setAttribute("x1", );
                 //                    linkLine.setAttribute("y1", );
                 //
@@ -171,7 +171,7 @@ public class RelationSvg {
         relationGroupNode.appendChild(groupNode);
     }
 
-    public void updateRelationLines(SVGDocument doc, ArrayList<String> draggedNodeIds, String svgNameSpace, int vSpacing) {
+    public void updateRelationLines(SVGDocument doc, ArrayList<String> draggedNodeIds, String svgNameSpace, int hSpacing, int vSpacing) {
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = doc.getElementById("RelationGroup");
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
@@ -209,9 +209,7 @@ public class RelationSvg {
                         }
                         if ("path".equals(relationLineElement.getLocalName())) {
                             System.out.println("path to update: " + relationLineElement.getLocalName());
-                            relationLineElement.setAttribute("stroke", "green");
-                            relationLineElement.setAttribute("points", "450,150 450,225 450,225 450,350");
-//                            relationLineElement.setAttribute("transform", "translate(rotate(45))");
+                            setPathPointsAttribute(relationLineElement, graphRelationData.relationType, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
                         }
                         addUseNode(doc, svgNameSpace, (Element) currentChild, lineElementId);
                     }

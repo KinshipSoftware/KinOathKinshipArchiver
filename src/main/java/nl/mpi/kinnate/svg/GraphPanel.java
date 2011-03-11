@@ -211,7 +211,8 @@ public class GraphPanel extends JPanel implements SavePanel {
                         }
                     }
                     int vSpacing = graphPanelSize.getVerticalSpacing(graphData.gridHeight);
-                    new RelationSvg().updateRelationLines(doc, selectedGroupElement, svgNameSpace, vSpacing);
+                    int hSpacing = graphPanelSize.getHorizontalSpacing(graphData.gridWidth);
+                    new RelationSvg().updateRelationLines(doc, selectedGroupElement, svgNameSpace, hSpacing, vSpacing);
                     //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                 }
             }
