@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -127,6 +128,31 @@ public class GraphPanelContextMenu extends JPopupMenu {
             diagramSizeMenuItem.add(currentMenuItem);
         }
         this.add(diagramSizeMenuItem);
+        JCheckBoxMenuItem showSanguinLinesMenuItem = new JCheckBoxMenuItem("Show Sanguin Lines");
+        showSanguinLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // todo: Hide/Show Sanguin Lines on the graph
+            }
+        });
+        this.add(showSanguinLinesMenuItem);
+        JCheckBoxMenuItem showKinTermsMenuItem = new JCheckBoxMenuItem("Show Kin Terms");
+        showKinTermsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // todo: Hide/Show Kin Terms on the graph
+            }
+        });
+        this.add(showKinTermsMenuItem);
+        JMenuItem searchEntityServiceMenuItem = new JMenuItem("Search Entity Service");
+        searchEntityServiceMenuItem.setToolTipText("Search the entity database for entities matching the current kin terms and populate he diagram with the results");
+        searchEntityServiceMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // todo: Search the entity database for entities matching the current kin terms and populate he diagram with the results
+            }
+        });
+        this.add(searchEntityServiceMenuItem);
     }
 
     private void setGraphPanelSize(String sizeString) {
