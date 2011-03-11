@@ -83,6 +83,7 @@ public class RelationSvg {
             fromBezY = egoY;
             toBezX = egoX;
             toBezY = alterY;
+            // todo: if the nodes are almost in align then this test fails and it should insted check for proximity not equality
             if (egoX == alterX) {
                 fromBezY = egoY;
                 fromBezX = alterX - hSpacing / 2;

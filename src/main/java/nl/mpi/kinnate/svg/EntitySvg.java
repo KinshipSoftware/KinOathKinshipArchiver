@@ -191,4 +191,14 @@ public class EntitySvg {
             return null;
         }
     }
+
+    public void moveEntity(SVGDocument doc, String entityId, int shiftX, int shiftY) {
+        Element entitySymbol = doc.getElementById(entityId);
+        if (entitySymbol != null) {
+            SVGMatrix sVGMatrix = ((SVGLocatable) entitySymbol).getCTM();
+//            sVGMatrix.setE(sVGMatrix.getE() + shiftX);
+//            sVGMatrix.setE(sVGMatrix.getF() + shiftY);
+            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + sVGMatrix.getF() + ")");
+        }
+    }
 }
