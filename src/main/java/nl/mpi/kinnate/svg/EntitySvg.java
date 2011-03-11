@@ -199,6 +199,7 @@ public class EntitySvg {
 //            sVGMatrix.setE(sVGMatrix.getE() + shiftX);
 //            sVGMatrix.setE(sVGMatrix.getF() + shiftY);
             ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + sVGMatrix.getF() + ")");
+//            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + (sVGMatrix.getF() + shiftY) + ")");
         }
     }
 }

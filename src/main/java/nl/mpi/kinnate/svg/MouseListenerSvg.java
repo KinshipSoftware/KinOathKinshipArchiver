@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.Cursor;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,6 +22,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     private Cursor preDragCursor;
     private GraphPanel graphPanel;
+    private Point startDragPoint = null;
 
     public MouseListenerSvg(GraphPanel graphPanelLocal) {
         graphPanel = graphPanelLocal;
@@ -28,17 +30,22 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void mouseDragged(MouseEvent me) {
+        if (startDragPoint != null) {
 //                System.out.println("mouseDragged: " + me.toString());
-        if (graphPanel.selectedGroupElement.size() > 0) {
-            graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-            graphPanel.updateDragNode(me.getX(), me.getY());
+            if (graphPanel.selectedGroupElement.size() > 0) {
+                graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                // limit the drag to the distance draged not the location
+                graphPanel.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
+            }
         }
+        startDragPoint = me.getPoint();
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
 //            System.out.println("mouseReleased: " + me.toString());
         graphPanel.svgCanvas.setCursor(preDragCursor);
+        startDragPoint = null;
     }
 
     @Override
