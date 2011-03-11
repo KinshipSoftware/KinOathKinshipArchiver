@@ -210,10 +210,9 @@ public class GraphPanel extends JPanel implements SavePanel {
                             }
                         }
                     }
+                    new RelationSvg().updateRelationLines(doc, selectedGroupElement, svgNameSpace);
+//                    new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                 }
-                new RelationSvg().updateRelationLines(doc, selectedGroupElement);
-                //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
-                svgCanvas.revalidate();
             }
         });
     }
@@ -438,7 +437,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         }
         svgRoot.appendChild(entityGroupNode);
         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
-        svgCanvas.revalidate();
+//        svgCanvas.revalidate();
         // todo: populate this correctly with the available symbols
         dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(new EntitySvg().listSymbolNames(doc));
     }

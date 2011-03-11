@@ -13,12 +13,25 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class RelationSvg {
 
+    private void addUseNode(SVGDocument doc, String svgNameSpace, Element targetGroup, String targetDefId) {
+        String useNodeId = targetDefId + "use";
+        Node useNodeOld = doc.getElementById(useNodeId);
+        if (useNodeOld != null) {
+            useNodeOld.getParentNode().removeChild(useNodeOld);
+        }
+        Element useNode = doc.createElementNS(svgNameSpace, "use");
+        useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + targetDefId); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
+        //                    useNode.setAttribute("href", "#" + lineIdString);
+        useNode.setAttribute("id", useNodeId);
+        targetGroup.appendChild(useNode);
+    }
+
     protected void insertRelation(SVGDocument doc, String svgNameSpace, Element relationGroupNode, GraphDataNode currentNode, GraphDataNode.NodeRelation graphLinkNode, int hSpacing, int vSpacing, int strokeWidth) {
         int relationLineIndex = relationGroupNode.getChildNodes().getLength();
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
         groupNode.setAttribute("id", "relation" + relationLineIndex);
         Element defsNode = doc.createElementNS(svgNameSpace, "defs");
-        String lineIdString = "relationLine" + relationLineIndex;
+        String lineIdString = "relation" + relationLineIndex + "Line";
         new DataStoreSvg().storeRelationParameters(doc, groupNode, currentNode.getEntityPath(), graphLinkNode.linkedNode.getEntityPath());
         // set the line end points
         int fromX = (currentNode.xPos * hSpacing + hSpacing);
@@ -128,11 +141,9 @@ public class RelationSvg {
                 break;
         }
         groupNode.appendChild(defsNode);
-        Element useNode = doc.createElementNS(svgNameSpace, "use");
-        useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
 
-        //                    useNode.setAttribute("href", "#" + lineIdString);
-        groupNode.appendChild(useNode);
+        // insert the node that uses the above definition
+        addUseNode(doc, svgNameSpace, groupNode, lineIdString);
 
         // add the relation label
         if (graphLinkNode.labelString != null) {
@@ -156,7 +167,7 @@ public class RelationSvg {
         relationGroupNode.appendChild(groupNode);
     }
 
-    public void updateRelationLines(SVGDocument doc, ArrayList<String> draggedNodeIds) {
+    public void updateRelationLines(SVGDocument doc, ArrayList<String> draggedNodeIds, String svgNameSpace) {
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = doc.getElementById("RelationGroup");
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
@@ -170,10 +181,36 @@ public class RelationSvg {
                         System.out.println("needs update on: " + idAttrubite.getNodeValue());
                         System.out.println("ego: " + targetEntityIds[0]);
                         System.out.println("alter: " + targetEntityIds[1]);
-//                        ((Element) currentChild.getFirstChild().getNextSibling().getFirstChild()).setAttribute("stroke", "green");
+                        String lineElementId = idAttrubite.getNodeValue() + "Line";
+                        Element relationLineElement = doc.getElementById(lineElementId);
+                        System.out.println("type: " + relationLineElement.getLocalName());
+                        if ("polyline".equals(relationLineElement.getLocalName())) {
+                            System.out.println("polyline to update: " + relationLineElement.getLocalName());
+                            relationLineElement.setAttribute("stroke", "green");
+                            relationLineElement.setAttribute("points", "450,150 450,225 450,225 450,350");
+                        }
+                        if ("path".equals(relationLineElement.getLocalName())) {
+                            System.out.println("path to update: " + relationLineElement.getLocalName());
+                            relationLineElement.setAttribute("stroke", "green");
+                            relationLineElement.setAttribute("points", "450,150 450,225 450,225 450,350");
+//                            relationLineElement.setAttribute("transform", "translate(rotate(45))");
+                        }
+                        addUseNode(doc, svgNameSpace, (Element) currentChild, lineElementId);
                     }
                 }
             }
         }
     }
+//                            new RelationSvg().addTestNode(doc, (Element) relationLineElement.getParentNode().getParentNode(), svgNameSpace);
+//    public void addTestNode(SVGDocument doc, Element addTarget, String svgNameSpace) {
+//        Element squareNode = doc.createElementNS(svgNameSpace, "rect");
+//        squareNode.setAttribute("x", "100");
+//        squareNode.setAttribute("y", "100");
+//        squareNode.setAttribute("width", "20");
+//        squareNode.setAttribute("height", "20");
+//        squareNode.setAttribute("fill", "green");
+//        squareNode.setAttribute("stroke", "black");
+//        squareNode.setAttribute("stroke-width", "2");
+//        addTarget.appendChild(squareNode);
+//    }
 }
