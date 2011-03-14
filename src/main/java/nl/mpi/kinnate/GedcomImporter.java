@@ -5,6 +5,10 @@
 package nl.mpi.kinnate;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -41,12 +45,27 @@ public class GedcomImporter {
         importTextArea.setCaretPosition(importTextArea.getText().length());
     }
 
+    public void importTestFile(JTextArea importTextArea, File testFile) {
+        try {
+            FileInputStream fstream = new FileInputStream(testFile);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            importTestFile(importTextArea, bufferedReader);
+        } catch (FileNotFoundException exception) {
+            // todo: handle this
+        }
+    }
+
     public void importTestFile(JTextArea importTextArea, String testFileString) {
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString)));
+        importTestFile(importTextArea, bufferedReader);
+    }
+
+    public void importTestFile(JTextArea importTextArea, BufferedReader bufferedReader) {
         ArrayList<ImdiTreeObject> createdNodes = new ArrayList<ImdiTreeObject>();
         Hashtable<String, String> createdNodesTable = new Hashtable<String, String>();
 //        ArrayList<ImdiTreeObject> linkNodes = new ArrayList<ImdiTreeObject>();
-
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString)));
         // really should close the file properly but this is only for testing at this stage
 
 //        URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), gedcomXsdLocation);
