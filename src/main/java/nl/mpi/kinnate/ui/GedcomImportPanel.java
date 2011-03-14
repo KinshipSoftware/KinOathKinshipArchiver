@@ -1,9 +1,11 @@
 package nl.mpi.kinnate.ui;
 
+import java.awt.BorderLayout;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -20,7 +22,7 @@ import nl.mpi.kinnate.gedcomimport.GedcomImporter;
  *  Created on : Mar 14, 2011, 8:38:36 AM
  *  Author     : Peter Withers
  */
-public class GedcomImportPanel {
+public class GedcomImportPanel extends JPanel {
 
     private ImdiTree leftTree;
     private JTabbedPane jTabbedPane1;
@@ -52,14 +54,19 @@ public class GedcomImportPanel {
             public void run() {
                 JTextArea importTextArea = new JTextArea();
                 JScrollPane importScrollPane = new JScrollPane(importTextArea);
-                jTabbedPane1.add("Import", importScrollPane);
-                jTabbedPane1.setSelectedComponent(importScrollPane);
-                JProgressBar progressBar = new JProgressBar();
+                GedcomImportPanel.this.setLayout(new BorderLayout());
+                GedcomImportPanel.this.add(importScrollPane, BorderLayout.CENTER);
+                jTabbedPane1.add("Import", GedcomImportPanel.this);
+                jTabbedPane1.setSelectedComponent(GedcomImportPanel.this);
+                JProgressBar progressBar = new JProgressBar(0, 100);
+                GedcomImportPanel.this.add(progressBar, BorderLayout.PAGE_END);
                 progressBar.setVisible(true);
+                GedcomImporter gedcomImporter = new GedcomImporter();
+                gedcomImporter.setProgressBar(progressBar);
                 if (importFileString != null) {
-                    new GedcomImporter().importTestFile(importTextArea, importFileString);
+                    gedcomImporter.importTestFile(importTextArea, importFileString);
                 } else {
-                    new GedcomImporter().importTestFile(importTextArea, importFile);
+                    gedcomImporter.importTestFile(importTextArea, importFile);
                 }
                 progressBar.setVisible(false);
                 String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
