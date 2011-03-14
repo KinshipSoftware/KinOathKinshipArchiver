@@ -92,7 +92,10 @@ public class GedcomImportPanel extends JPanel {
                         // todo: possibly create a new diagram with a sample of the imported entities for the user
                     }
                     // todo: it might be more efficient to only update the new files
+                    importTextArea.append("starting update of entity database" + "\n");
                     entityCollection.createDatabase();
+                    importTextArea.append("updated entity database" + "\n");
+                    importTextArea.setCaretPosition(importTextArea.getText().length());
                     System.out.println("created new database");
 //                    leftTree.rootNodeChildren = tempArray.toArray(new ImdiTreeObject[]{});
 //                    imdiTableModel.removeAllImdiRows();
