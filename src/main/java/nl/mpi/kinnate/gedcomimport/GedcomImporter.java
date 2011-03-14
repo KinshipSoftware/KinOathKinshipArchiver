@@ -76,21 +76,22 @@ public class GedcomImporter {
         return fileName.replaceAll("[^A-z0-9]", "_") + ".cmdi";
     }
 
-    public void importTestFile(JTextArea importTextArea, File testFile) {
+    public String[] importTestFile(JTextArea importTextArea, File testFile) {
         try {
             calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
-            importTestFile(importTextArea, new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
+            return importTestFile(importTextArea, new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
         } catch (FileNotFoundException exception) {
             // todo: handle this
+            return null;
         }
     }
 
-    public void importTestFile(JTextArea importTextArea, String testFileString) {
+    public String[] importTestFile(JTextArea importTextArea, String testFileString) {
         calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
-        importTestFile(importTextArea, new InputStreamReader(getClass().getResourceAsStream(testFileString)));
+        return importTestFile(importTextArea, new InputStreamReader(getClass().getResourceAsStream(testFileString)));
     }
 
-    public void importTestFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
+    public String[] importTestFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
 //        Hashtable<String, URI> createdNodesTable = new Hashtable<String, URI>();
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -151,13 +152,21 @@ public class GedcomImporter {
                 if (lineParts[1].equals("CONT")) {
                     if (previousField != null) {
                         // todo: if the previous field is null this should be caught and handled as an error in the source file
-                        previousField.setTextContent(previousField.getTextContent() + "\n" + lineParts[2]);
+                        String lineContents = "";
+                        if (lineParts.length > 2) {
+                            lineContents = lineParts[2];
+                        }
+                        previousField.setTextContent(previousField.getTextContent() + "\n" + lineContents);
                     }
                     lastFieldContinued = true;
                 } else if (lineParts[1].equals("CONC")) {
                     if (previousField != null) {
                         // todo: if the previous field is null this should be caught and handled as an error in the source file
-                        previousField.setTextContent(previousField.getTextContent() + lineParts[2]);
+                        String lineContents = "";
+                        if (lineParts.length > 2) {
+                            lineContents = lineParts[2];
+                        }
+                        previousField.setTextContent(previousField.getTextContent() + lineContents);
                     }
                     lastFieldContinued = true;
                 }
@@ -184,7 +193,7 @@ public class GedcomImporter {
                             } catch (URISyntaxException ex) {
                                 GuiHelper.linorgBugCatcher.logError(ex);
                                 appendToTaskOutput(importTextArea, "error: " + ex.getMessage());
-                                return;
+                                return null;
 //                            } catch (org.apache.xmlbeans.XmlException ex) {
 //                                GuiHelper.linorgBugCatcher.logError(ex);
 //                                appendToTaskOutput(importTextArea, "error: " + ex.getMessage());
@@ -538,5 +547,6 @@ public class GedcomImporter {
             createdNodeCounter++;
         }
         LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", createdNodePaths);
+        return createdNodePaths;
     }
 }
