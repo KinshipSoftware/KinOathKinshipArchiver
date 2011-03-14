@@ -397,7 +397,8 @@ public class GedcomImporter {
                                         "Kinnate.Gedcom.Entity.DEAT",
                                         "Kinnate.Gedcom.Entity.OBJE",
                                         "Kinnate.Gedcom.HEAD.SOUR.CORP",
-                                        "Kinnate.Gedcom.HEAD.SOUR.CORP.ADDR"});
+                                        "Kinnate.Gedcom.HEAD.SOUR.CORP.ADDR",
+                                        "Kinnate.Gedcom.Entity.ANUL"});
                             Element addedExtraElement = null;
                             if (swapList.contains(gedcomPath)) {
                                 gedcomPath += "." + lineParts[1];
