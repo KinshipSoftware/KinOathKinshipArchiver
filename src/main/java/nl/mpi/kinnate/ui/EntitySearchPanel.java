@@ -1,13 +1,21 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import nl.mpi.arbil.ImdiTree;
+import nl.mpi.arbil.LinorgBugCatcher;
+import nl.mpi.arbil.data.ImdiLoader;
+import nl.mpi.arbil.data.ImdiTreeObject;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
  *  Document   : EntitySearchPanel
@@ -16,9 +24,13 @@ import nl.mpi.arbil.ImdiTree;
  */
 public class EntitySearchPanel extends JPanel {
 
-    ImdiTree leftTree;
+    private EntityCollection entityCollection;
+    private ImdiTree leftTree;
+    private JTextArea resultsArea = new JTextArea();
+    private JTextField searchField;
 
-    public EntitySearchPanel() {
+    public EntitySearchPanel(EntityCollection entityCollectionLocal) {
+        entityCollection = entityCollectionLocal;
         this.setLayout(new BorderLayout());
         leftTree = new ImdiTree();
         leftTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
@@ -44,8 +56,29 @@ public class EntitySearchPanel extends JPanel {
 //        // }
         leftTree.requestResort();
         JLabel searchLabel = new JLabel("Search Entity Names");
-        JTextField searchField = new JTextField();
+        searchField = new JTextField();
         JButton searchButton = new JButton("Search");
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ArrayList<ImdiTreeObject> resultsArray = new ArrayList<ImdiTreeObject>();
+                resultsArea.setText("query:" + searchField.getText() + "\n");
+                for (String resultLine : entityCollection.searchByName(searchField.getText())) {
+                    resultsArea.append(resultLine + "\n");
+                    try {
+                        if (resultsArray.size() < 10) {
+                            ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(resultLine));
+                            currentImdiObject.reloadNode();
+                            resultsArray.add(currentImdiObject);
+                        }
+                    } catch (URISyntaxException exception) {
+                        new LinorgBugCatcher().logError(exception);
+                    }
+                }
+                leftTree.rootNodeChildren = resultsArray.toArray(new ImdiTreeObject[]{});
+                leftTree.requestResort();
+            }
+        });
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new BorderLayout());
         searchPanel.add(searchLabel, BorderLayout.PAGE_START);
@@ -53,6 +86,7 @@ public class EntitySearchPanel extends JPanel {
         searchPanel.add(searchButton, BorderLayout.PAGE_END);
         this.add(searchPanel, BorderLayout.PAGE_START);
         this.add(leftTree, BorderLayout.CENTER);
+        this.add(resultsArea, BorderLayout.PAGE_END);
     }
 
     public void setTransferHandler(DragTransferHandler dragTransferHandler) {
