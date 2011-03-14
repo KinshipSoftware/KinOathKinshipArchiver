@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -62,17 +63,21 @@ public class EntitySearchPanel extends JPanel {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ArrayList<ImdiTreeObject> resultsArray = new ArrayList<ImdiTreeObject>();
-                resultsArea.setText("query:" + searchField.getText() + "\n");
-                for (String resultLine : entityCollection.searchByName(searchField.getText())) {
-                    resultsArea.append(resultLine + "\n");
+                String[] rawResultsArray = entityCollection.searchByName(searchField.getText());
+                resultsArea.setText("found " + rawResultsArray.length + " results\n");
+                for (String resultLine : rawResultsArray) {
                     try {
-                        if (resultsArray.size() < 10) {
+                        if (resultsArray.size() < 100) {
                             ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(resultLine));
                             currentImdiObject.reloadNode();
                             resultsArray.add(currentImdiObject);
+                        } else {
+                            resultsArea.append("results limited to 100\n");
+                            break;
                         }
                     } catch (URISyntaxException exception) {
                         new LinorgBugCatcher().logError(exception);
+                        resultsArea.append(resultLine + "\n");
                     }
                 }
                 leftTree.rootNodeChildren = resultsArray.toArray(new ImdiTreeObject[]{});
@@ -85,7 +90,7 @@ public class EntitySearchPanel extends JPanel {
         searchPanel.add(searchField, BorderLayout.CENTER);
         searchPanel.add(searchButton, BorderLayout.PAGE_END);
         this.add(searchPanel, BorderLayout.PAGE_START);
-        this.add(leftTree, BorderLayout.CENTER);
+        this.add(new JScrollPane(leftTree), BorderLayout.CENTER);
         this.add(resultsArea, BorderLayout.PAGE_END);
     }
 
