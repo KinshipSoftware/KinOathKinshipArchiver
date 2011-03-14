@@ -13,10 +13,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
+import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -40,15 +43,54 @@ import org.xml.sax.SAXException;
  */
 public class GedcomImporter {
 
+    private int inputLineCounter;
+    private int currntLineCounter;
+    private int currentProgressPercent = 0;
+    private String inputFileMd5Sim;
+    JProgressBar progressBar = null;
+
     private void appendToTaskOutput(JTextArea importTextArea, String lineOfText) {
         importTextArea.append(lineOfText + "\n");
         importTextArea.setCaretPosition(importTextArea.getText().length());
+    }
+
+    public int getProgress() {
+        return currentProgressPercent; // return percent of progress
+    }
+
+    public void setProgressBar(JProgressBar progressBarLocal) {
+        progressBar = progressBarLocal;
+    }
+
+    private void calculateFileNameAndFileLength(BufferedReader bufferedReader) {
+        // count the lines in the file (for progress) and calculate the md5 sum (for unique file naming)
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            StringBuilder hexString = new StringBuilder();
+            String strLine;
+            inputLineCounter = 0;
+            currntLineCounter = 0;
+            while ((strLine = bufferedReader.readLine()) != null) {
+                digest.update(strLine.getBytes());
+                inputLineCounter++;
+            }
+            byte[] md5sum = digest.digest();
+            for (int byteCounter = 0; byteCounter < md5sum.length; ++byteCounter) {
+                hexString.append(Integer.toHexString(0x0100 + (md5sum[byteCounter] & 0x00FF)).substring(1));
+            }
+            inputFileMd5Sim = hexString.toString();
+        } catch (NoSuchAlgorithmException algorithmException) {
+            GuiHelper.linorgBugCatcher.logError(algorithmException);
+        } catch (IOException iOException) {
+            GuiHelper.linorgBugCatcher.logError(iOException);
+        }
     }
 
     public void importTestFile(JTextArea importTextArea, File testFile) {
         try {
             FileInputStream fstream = new FileInputStream(testFile);
             DataInputStream in = new DataInputStream(fstream);
+            calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(in)));
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
             importTestFile(importTextArea, bufferedReader);
         } catch (FileNotFoundException exception) {
@@ -57,7 +99,7 @@ public class GedcomImporter {
     }
 
     public void importTestFile(JTextArea importTextArea, String testFileString) {
-
+        calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString)));
         importTestFile(importTextArea, bufferedReader);
     }
@@ -427,6 +469,11 @@ public class GedcomImporter {
                         }
                     }
                 }
+                currntLineCounter++;
+                currentProgressPercent = (int) ((double) currntLineCounter / (double) inputLineCounter * 100);
+                if (progressBar != null) {
+                    progressBar.setValue(currentProgressPercent / 2);
+                }
             }
 
             if (metadataDom != null) {
@@ -439,6 +486,7 @@ public class GedcomImporter {
 
             appendToTaskOutput(importTextArea, "xsdString:\n" + xsdString);
 
+            int linkNodesUpdated = 0;
             for (ImdiTreeObject currentImdiObject : createdNodes) {
                 appendToTaskOutput(importTextArea, "linkParent: " + currentImdiObject.getUrlString());
                 try {
@@ -460,6 +508,10 @@ public class GedcomImporter {
                     new CmdiComponentBuilder().savePrettyFormatting(linksDom, currentImdiObject.getFile());
                 } catch (TransformerException exception) {
                     GuiHelper.linorgBugCatcher.logError(exception);
+                }
+                linkNodesUpdated++;
+                if (progressBar != null) {
+                    progressBar.setValue((int) ((double) linkNodesUpdated / (double) createdNodes.size() * 100 / 2 + 50));
                 }
             }
             appendToTaskOutput(importTextArea, "import finished with a node count of: " + createdNodes.size());
