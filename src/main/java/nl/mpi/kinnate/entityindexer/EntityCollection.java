@@ -40,7 +40,8 @@ public class EntityCollection {
         ArrayList<String> resultPaths = new ArrayList<String>();
         try {
             //for $doc in collection('nl-mpi-kinnate')  where $doc//NAME="Bob /Cox/" return base-uri($doc)
-            String query = "for $doc in collection('nl-mpi-kinnate') where contains($doc//NAME/text(), \"" + namePartString + "\") return base-uri($doc)";
+            String query = "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + namePartString + "\") return base-uri($doc)";
+//            String query = "for $doc in collection('nl-mpi-kinnate') where $doc//NAME = \"" + namePartString + "\" return base-uri($doc)";
             QueryProcessor proc = new QueryProcessor(query, context);//Emp[contains(Ename,"AR")]
             Iter iter = proc.iter();
             Item item;
