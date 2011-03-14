@@ -178,6 +178,7 @@ public class MainFrame extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         importGedcomTorture = new javax.swing.JMenuItem();
         importGedcomSimple = new javax.swing.JMenuItem();
+        ImportGedcomUrl = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
         openDiagram = new javax.swing.JMenuItem();
@@ -227,6 +228,14 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         fileMenu.add(importGedcomSimple);
+
+        ImportGedcomUrl.setText("Import Gedcom URL");
+        ImportGedcomUrl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ImportGedcomUrlActionPerformed(evt);
+            }
+        });
+        fileMenu.add(ImportGedcomUrl);
         fileMenu.add(jSeparator1);
 
         newDiagramMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
@@ -423,6 +432,24 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
     }//GEN-LAST:event_newDiagramMenuItemActionPerformed
 
+    private void ImportGedcomUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImportGedcomUrlActionPerformed
+// http://gedcomlibrary.com/gedcoms.html
+//http://GedcomLibrary.com/gedcoms/gl120365.ged	Tammy Carter Inman
+//http://GedcomLibrary.com/gedcoms/gl120366.ged	Luis Lemonnier
+//http://GedcomLibrary.com/gedcoms/gl120367.ged	Cheryl Marion Follansbee
+//New England Genealogical Detective
+//http://GedcomLibrary.com/gedcoms/gl120368.ged	Phil Willaims
+//http://GedcomLibrary.com/gedcoms/gl120369.ged	Francisco Casta–eda
+//http://GedcomLibrary.com/gedcoms/gl120370.ged	Kim Carter
+//http://GedcomLibrary.com/gedcoms/gl120371.ged	Maria Perusia
+//http://GedcomLibrary.com/gedcoms/gl120372.ged	R. J. Bosman
+//http://GedcomLibrary.com/gedcoms/liverpool.ged	William Robinette
+//http://GedcomLibrary.com/gedcoms/misc2a.ged	William Robinette
+//http://GedcomLibrary.com/gedcoms/myline.ged	William Robinette
+        File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache("http://gedcomlibrary.com/gedcoms/gl120368.ged", 30);
+        startImport(cachedFile);
+    }//GEN-LAST:event_ImportGedcomUrlActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -435,6 +462,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem ImportGedcomUrl;
     private javax.swing.JMenuItem closeTabMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitApplication;
