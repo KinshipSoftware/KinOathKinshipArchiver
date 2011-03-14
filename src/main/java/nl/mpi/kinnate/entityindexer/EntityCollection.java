@@ -1,12 +1,19 @@
 package nl.mpi.kinnate.entityindexer;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import nl.mpi.arbil.GuiHelper;
+import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.arbil.LinorgSessionStorage;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Set;
 import org.basex.core.cmd.CreateDB;
 import org.basex.core.cmd.DropDB;
+import org.basex.query.QueryException;
+import org.basex.query.QueryProcessor;
+import org.basex.query.item.Item;
+import org.basex.query.iter.Iter;
 
 /**
  *  Document   : EntityCollection
@@ -30,6 +37,25 @@ public class EntityCollection {
     }
 
     public String[] searchByName(String namePartString) {
-        return LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree"); // todo: perform the query
+        ArrayList<String> resultPaths = new ArrayList<String>();
+        try {
+            //for $doc in collection('nl-mpi-kinnate')  where $doc//NAME="Bob /Cox/" return base-uri($doc)
+            String query = "for $doc in collection('nl-mpi-kinnate')  where $doc//NAME=\"" + namePartString + "\" return base-uri($doc)";
+            QueryProcessor proc = new QueryProcessor(query, context);
+            Iter iter = proc.iter();
+            Item item;
+            while ((item = iter.next()) != null) {
+//                System.out.println(item.toJava());
+                resultPaths.add(item.toJava().toString());
+            }
+            proc.close();
+        } catch (QueryException exception) {
+            new LinorgBugCatcher().logError(exception);
+            resultPaths.add(exception.getMessage());
+        } catch (IOException exception) {
+            new LinorgBugCatcher().logError(exception);
+            resultPaths.add(exception.getMessage());
+        }
+        return resultPaths.toArray(new String[]{});
     }
 }
