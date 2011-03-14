@@ -1,14 +1,11 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -19,10 +16,8 @@ import nl.mpi.arbil.ImdiTree;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.LinorgWindowManager;
 import nl.mpi.arbil.PreviewSplitPanel;
-import nl.mpi.arbil.XsdChecker;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.arbil.data.ImdiTreeObject;
-import nl.mpi.kinnate.GedcomImporter;
 import nl.mpi.kinnate.SavePanel;
 
 /*
@@ -110,57 +105,6 @@ public class MainFrame extends javax.swing.JFrame {
             savePanel = (SavePanel) selectedComponent;
         }
         return savePanel;
-    }
-
-    private void startImport(final String importFileString) {
-        new Thread() {
-
-            @Override
-            public void run() {
-                JTextArea importTextArea = new JTextArea();
-                JScrollPane importScrollPane = new JScrollPane(importTextArea);
-                jTabbedPane1.add("Import", importScrollPane);
-                jTabbedPane1.setSelectedComponent(importScrollPane);
-                JProgressBar progressBar = new JProgressBar();
-                progressBar.setVisible(true);
-                new GedcomImporter().importTestFile(importTextArea, importFileString);
-                progressBar.setVisible(false);
-                String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
-                if (treeNodesArray != null) {
-                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
-                    for (String currentNodeString : treeNodesArray) {
-                        try {
-                            ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
-                            tempArray.add(currentImdiObject);
-//                            JTextPane fileText = new JTextPane();
-                            XsdChecker xsdChecker = new XsdChecker();
-                            if (xsdChecker.simpleCheck(currentImdiObject.getFile(), currentImdiObject.getURI()) != null) {
-                                jTabbedPane1.add("XSD Error on Import", xsdChecker);
-                                xsdChecker.checkXML(currentImdiObject);
-                                xsdChecker.setDividerLocation(0.5);
-                            }
-                            currentImdiObject.reloadNode();
-//                            try {
-//                                fileText.setPage(currentNodeString);
-//                            } catch (IOException iOException) {
-//                                fileText.setText(iOException.getMessage());
-//                            }
-//                            jTabbedPane1.add("ImportedFile", fileText);
-                        } catch (URISyntaxException exception) {
-                            System.err.println(exception.getMessage());
-                            exception.printStackTrace();
-                        }
-                    }
-                    leftTree.rootNodeChildren = tempArray.toArray(new ImdiTreeObject[]{});
-                    imdiTableModel.removeAllImdiRows();
-                    imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
-                }
-                leftTree.requestResort();
-//                GraphData graphData = new GraphData();
-//                graphData.readData();
-//                graphPanel.drawNodes(graphData);
-            }
-        }.start();
     }
 
     /** This method is called from within the constructor to
@@ -317,12 +261,12 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void importGedcomTortureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importGedcomTortureActionPerformed
         // TODO add your handling code here:
-        startImport("/TestGED/TGC55C.ged");
+        new GedcomImportPanel(leftTree, jTabbedPane1).startImport("/TestGED/TGC55C.ged");
     }//GEN-LAST:event_importGedcomTortureActionPerformed
 
     private void importGedcomSimpleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importGedcomSimpleActionPerformed
         // TODO add your handling code here:
-        startImport("/TestGED/wiki-test-ged.ged");
+        new GedcomImportPanel(leftTree, jTabbedPane1).startImport("/TestGED/wiki-test-ged.ged");
     }//GEN-LAST:event_importGedcomSimpleActionPerformed
 
     private void fileMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuActionPerformed
@@ -447,7 +391,7 @@ public class MainFrame extends javax.swing.JFrame {
 //http://GedcomLibrary.com/gedcoms/misc2a.ged	William Robinette
 //http://GedcomLibrary.com/gedcoms/myline.ged	William Robinette
         File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache("http://gedcomlibrary.com/gedcoms/gl120368.ged", 30);
-        startImport(cachedFile);
+        new GedcomImportPanel(leftTree, jTabbedPane1).startImport(cachedFile);
     }//GEN-LAST:event_ImportGedcomUrlActionPerformed
 
     /**
