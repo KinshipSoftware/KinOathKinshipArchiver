@@ -93,6 +93,7 @@ public class GedcomImportPanel extends JPanel {
                     }
                     // todo: it might be more efficient to only update the new files
                     entityCollection.createDatabase();
+                    System.out.println("created new database");
 //                    leftTree.rootNodeChildren = tempArray.toArray(new ImdiTreeObject[]{});
 //                    imdiTableModel.removeAllImdiRows();
 //                    imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
