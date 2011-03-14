@@ -1,24 +1,17 @@
 package nl.mpi.kinnate.ui;
 
+import java.awt.BorderLayout;
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
-import nl.mpi.arbil.ImdiTree;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.LinorgWindowManager;
 import nl.mpi.arbil.PreviewSplitPanel;
-import nl.mpi.arbil.data.ImdiLoader;
-import nl.mpi.arbil.data.ImdiTreeObject;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.entityindexer.basex.EntityCollection;
 
 /*
  *  Document   : MainFrame
@@ -27,17 +20,19 @@ import nl.mpi.kinnate.SavePanel;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    private ImdiTree leftTree;
+    private EntitySearchPanel entitySearchPanel;
 //    private GraphPanel graphPanel;
 //    private JungGraph jungGraph;
     private ImdiTable previewTable;
     private ImdiTableModel imdiTableModel;
     private DragTransferHandler dragTransferHandler;
+    private EntityCollection entityCollection;
 
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
-        leftTree = new ImdiTree();
+        entityCollection = new EntityCollection();
+        entitySearchPanel = new EntitySearchPanel();
 //        GraphPanel0 graphPanel0Deprecated;
 //        graphPanel0Deprecated = new GraphPanel0();
 //        graphPanel = new GraphPanel();
@@ -50,7 +45,8 @@ public class MainFrame extends javax.swing.JFrame {
         previewTable = new ImdiTable(imdiTableModel, "Preview Table");
 
         JScrollPane tableScrollPane = new JScrollPane(previewTable);
-        jScrollPane1.getViewport().add(leftTree);
+        this.add(new HidePane(entitySearchPanel, "Search Entities", BorderLayout.LINE_END), BorderLayout.LINE_START);
+        this.add(jTabbedPane1, BorderLayout.CENTER);
         KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
         jTabbedPane1.add("EgoSelection", egoSelectionTestPanel);
         jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
@@ -61,37 +57,12 @@ public class MainFrame extends javax.swing.JFrame {
 //        jTabbedPane1.add("Jung", jungGraph);
         jTabbedPane1.add("Table", tableScrollPane);
 //        jTabbedPane1.add("SVG (deprecated)", graphPanel0Deprecated);
-        ArrayList<URI> allEntityUris = new ArrayList<URI>();
-        leftTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
-        String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
-        if (treeNodesArray != null) {
-            ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
-            for (String currentNodeString : treeNodesArray) {
-                try {
-                    ImdiTreeObject currentImdiNode = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
-                    tempArray.add(currentImdiNode);
-                    allEntityUris.add(currentImdiNode.getURI());
-                } catch (URISyntaxException exception) {
-                    GuiHelper.linorgBugCatcher.logError(exception);
-                }
-            }
-            ImdiTreeObject[] allEntities = tempArray.toArray(new ImdiTreeObject[]{});
-            leftTree.rootNodeChildren = allEntities;
-            imdiTableModel.removeAllImdiRows();
-            imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
-        } //else {
-        //   leftTree.rootNodeChildren = new ImdiTreeObject[]{graphPanel.imdiNode};
-        // }
-        leftTree.requestResort();
-
         PreviewSplitPanel.previewTable = previewTable;
         PreviewSplitPanel.previewTableShown = true;
 
-        jSplitPane1.setDividerLocation(0.25);
-
 //        System.out.println();        
         dragTransferHandler = new DragTransferHandler();
-        leftTree.setTransferHandler(dragTransferHandler);
+        entitySearchPanel.setTransferHandler(dragTransferHandler);
         egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
 
         this.doLayout();
@@ -115,8 +86,6 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -135,11 +104,7 @@ public class MainFrame extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jSplitPane1.setLeftComponent(jScrollPane1);
-        jSplitPane1.setRightComponent(jTabbedPane1);
-
-        getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.PAGE_START);
 
         fileMenu.setText("File");
         fileMenu.addMenuListener(new javax.swing.event.MenuListener() {
@@ -261,12 +226,12 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void importGedcomTortureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importGedcomTortureActionPerformed
         // TODO add your handling code here:
-        new GedcomImportPanel(leftTree, jTabbedPane1).startImport("/TestGED/TGC55C.ged");
+        new GedcomImportPanel(entityCollection, jTabbedPane1).startImport("/TestGED/TGC55C.ged");
     }//GEN-LAST:event_importGedcomTortureActionPerformed
 
     private void importGedcomSimpleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importGedcomSimpleActionPerformed
         // TODO add your handling code here:
-        new GedcomImportPanel(leftTree, jTabbedPane1).startImport("/TestGED/wiki-test-ged.ged");
+        new GedcomImportPanel(entityCollection, jTabbedPane1).startImport("/TestGED/wiki-test-ged.ged");
     }//GEN-LAST:event_importGedcomSimpleActionPerformed
 
     private void fileMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuActionPerformed
@@ -390,8 +355,13 @@ public class MainFrame extends javax.swing.JFrame {
 //http://GedcomLibrary.com/gedcoms/liverpool.ged	William Robinette
 //http://GedcomLibrary.com/gedcoms/misc2a.ged	William Robinette
 //http://GedcomLibrary.com/gedcoms/myline.ged	William Robinette
-        File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache("http://gedcomlibrary.com/gedcoms/gl120368.ged", 30);
-        new GedcomImportPanel(leftTree, jTabbedPane1).startImport(cachedFile);
+
+
+        // also look into http://gedcomlibrary.com/list.html for sample files
+//        File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache("http://gedcomlibrary.com/gedcoms/gl120368.ged", 30);
+        File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache("http://GedcomLibrary.com/gedcoms/gl120367.ged", 30);
+//        File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache("http://GedcomLibrary.com/gedcoms/liverpool.ged", 30);
+        new GedcomImportPanel(entityCollection, jTabbedPane1).startImport(cachedFile);
     }//GEN-LAST:event_ImportGedcomUrlActionPerformed
 
     /**
@@ -414,10 +384,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem importGedcomSimple;
     private javax.swing.JMenuItem importGedcomTorture;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JMenuItem newDiagramMenuItem;
     private javax.swing.JMenuItem openDiagram;
