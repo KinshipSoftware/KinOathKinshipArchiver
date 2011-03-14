@@ -43,19 +43,13 @@ import org.xml.sax.SAXException;
  */
 public class GedcomImporter {
 
-    private int inputLineCounter;
-    private int currntLineCounter;
-    private int currentProgressPercent = 0;
+    private int inputLineCount;
     private String inputFileMd5Sim;
     JProgressBar progressBar = null;
 
     private void appendToTaskOutput(JTextArea importTextArea, String lineOfText) {
         importTextArea.append(lineOfText + "\n");
         importTextArea.setCaretPosition(importTextArea.getText().length());
-    }
-
-    public int getProgress() {
-        return currentProgressPercent; // return percent of progress
     }
 
     public void setProgressBar(JProgressBar progressBarLocal) {
@@ -68,11 +62,10 @@ public class GedcomImporter {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             StringBuilder hexString = new StringBuilder();
             String strLine;
-            inputLineCounter = 0;
-            currntLineCounter = 0;
+            inputLineCount = 0;
             while ((strLine = bufferedReader.readLine()) != null) {
                 digest.update(strLine.getBytes());
-                inputLineCounter++;
+                inputLineCount++;
             }
             byte[] md5sum = digest.digest();
             for (int byteCounter = 0; byteCounter < md5sum.length; ++byteCounter) {
@@ -91,8 +84,7 @@ public class GedcomImporter {
             FileInputStream fstream = new FileInputStream(testFile);
             DataInputStream in = new DataInputStream(fstream);
             calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(in)));
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            importTestFile(importTextArea, bufferedReader);
+            importTestFile(importTextArea, new InputStreamReader(in));
         } catch (FileNotFoundException exception) {
             // todo: handle this
         }
@@ -100,13 +92,13 @@ public class GedcomImporter {
 
     public void importTestFile(JTextArea importTextArea, String testFileString) {
         calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString)));
-        importTestFile(importTextArea, bufferedReader);
+        importTestFile(importTextArea, new InputStreamReader(getClass().getResourceAsStream(testFileString)));
     }
 
-    public void importTestFile(JTextArea importTextArea, BufferedReader bufferedReader) {
+    public void importTestFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
         ArrayList<ImdiTreeObject> createdNodes = new ArrayList<ImdiTreeObject>();
         Hashtable<String, String> createdNodesTable = new Hashtable<String, String>();
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 //        ArrayList<ImdiTreeObject> linkNodes = new ArrayList<ImdiTreeObject>();
         // really should close the file properly but this is only for testing at this stage
 
@@ -138,6 +130,7 @@ public class GedcomImporter {
             Node currentDomNode = null;
 
             String gedcomPreviousPath = "";
+            int currntLineCounter = 0;
             while ((strLine = bufferedReader.readLine()) != null) {
                 String[] lineParts = strLine.split(" ", 3);
                 gedcomLevel = Integer.parseInt(lineParts[0]);
@@ -470,7 +463,7 @@ public class GedcomImporter {
                     }
                 }
                 currntLineCounter++;
-                currentProgressPercent = (int) ((double) currntLineCounter / (double) inputLineCounter * 100);
+                int currentProgressPercent = (int) ((double) currntLineCounter / (double) inputLineCount * 100);
                 if (progressBar != null) {
                     progressBar.setValue(currentProgressPercent / 2);
                 }
