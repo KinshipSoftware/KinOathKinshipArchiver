@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -20,11 +21,13 @@ import nl.mpi.kinnate.gedcomimport.GedcomImporter;
  *  Author     : Peter Withers
  */
 public class GedcomImportPanel {
+
     private ImdiTree leftTree;
     private JTabbedPane jTabbedPane1;
-    public GedcomImportPanel(ImdiTree leftTreeLocal, JTabbedPane jTabbedPaneLocal){
+
+    public GedcomImportPanel(ImdiTree leftTreeLocal, JTabbedPane jTabbedPaneLocal) {
         jTabbedPane1 = jTabbedPaneLocal;
-    leftTree=leftTreeLocal;
+        leftTree = leftTreeLocal;
 
 //        private ImdiTree leftTree;
 ////    private GraphPanel graphPanel;
@@ -34,7 +37,15 @@ public class GedcomImportPanel {
 //    private DragTransferHandler dragTransferHandler;
     }
 
-    public void startImport(final String importFileString) {
+    public void startImport(File importFile) {
+        startImport(importFile, null);
+    }
+
+    public void startImport(String importFileString) {
+        startImport(null, importFileString);
+    }
+
+    public void startImport(final File importFile, final String importFileString) {
         new Thread() {
 
             @Override
@@ -45,7 +56,11 @@ public class GedcomImportPanel {
                 jTabbedPane1.setSelectedComponent(importScrollPane);
                 JProgressBar progressBar = new JProgressBar();
                 progressBar.setVisible(true);
-                new GedcomImporter().importTestFile(importTextArea, importFileString);
+                if (importFileString != null) {
+                    new GedcomImporter().importTestFile(importTextArea, importFileString);
+                } else {
+                    new GedcomImporter().importTestFile(importTextArea, importFile);
+                }
                 progressBar.setVisible(false);
                 String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
                 if (treeNodesArray != null) {
@@ -84,5 +99,4 @@ public class GedcomImportPanel {
             }
         }.start();
     }
-
 }
