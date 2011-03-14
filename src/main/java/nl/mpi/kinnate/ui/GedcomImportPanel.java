@@ -10,8 +10,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTree;
-import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.XsdChecker;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.arbil.data.ImdiTreeObject;
@@ -63,13 +63,13 @@ public class GedcomImportPanel extends JPanel {
                 progressBar.setVisible(true);
                 GedcomImporter gedcomImporter = new GedcomImporter();
                 gedcomImporter.setProgressBar(progressBar);
+                String[] treeNodesArray;
                 if (importFileString != null) {
-                    gedcomImporter.importTestFile(importTextArea, importFileString);
+                    treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFileString);
                 } else {
-                    gedcomImporter.importTestFile(importTextArea, importFile);
+                    treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFile);
                 }
                 progressBar.setVisible(false);
-                String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
                 if (treeNodesArray != null) {
                     ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
                     for (String currentNodeString : treeNodesArray) {
@@ -91,8 +91,7 @@ public class GedcomImportPanel extends JPanel {
 //                            }
 //                            jTabbedPane1.add("ImportedFile", fileText);
                         } catch (URISyntaxException exception) {
-                            System.err.println(exception.getMessage());
-                            exception.printStackTrace();
+                            GuiHelper.linorgBugCatcher.logError(exception);
                         }
                     }
                     leftTree.rootNodeChildren = tempArray.toArray(new ImdiTreeObject[]{});
