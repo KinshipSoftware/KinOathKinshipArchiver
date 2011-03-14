@@ -11,7 +11,7 @@ import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.LinorgWindowManager;
 import nl.mpi.arbil.PreviewSplitPanel;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.entityindexer.basex.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /*
  *  Document   : MainFrame
