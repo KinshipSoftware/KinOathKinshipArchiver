@@ -81,10 +81,8 @@ public class GedcomImporter {
 
     public void importTestFile(JTextArea importTextArea, File testFile) {
         try {
-            FileInputStream fstream = new FileInputStream(testFile);
-            DataInputStream in = new DataInputStream(fstream);
-            calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(in)));
-            importTestFile(importTextArea, new InputStreamReader(in));
+            calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
+            importTestFile(importTextArea, new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
         } catch (FileNotFoundException exception) {
             // todo: handle this
         }
