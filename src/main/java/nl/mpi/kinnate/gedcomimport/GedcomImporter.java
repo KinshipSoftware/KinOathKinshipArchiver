@@ -76,7 +76,7 @@ public class GedcomImporter {
         return fileName.replaceAll("[^A-z0-9]", "_") + ".cmdi";
     }
 
-    public String[] importTestFile(JTextArea importTextArea, File testFile) {
+    public URI[] importTestFile(JTextArea importTextArea, File testFile) {
         try {
             calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
             return importTestFile(importTextArea, new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
@@ -86,12 +86,12 @@ public class GedcomImporter {
         }
     }
 
-    public String[] importTestFile(JTextArea importTextArea, String testFileString) {
+    public URI[] importTestFile(JTextArea importTextArea, String testFileString) {
         calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
         return importTestFile(importTextArea, new InputStreamReader(getClass().getResourceAsStream(testFileString)));
     }
 
-    public String[] importTestFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
+    public URI[] importTestFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
 //        Hashtable<String, URI> createdNodesTable = new Hashtable<String, URI>();
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -540,13 +540,13 @@ public class GedcomImporter {
             appendToTaskOutput(importTextArea, "error: " + sAXException.getMessage());
         }
 //        LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
-        String[] createdNodePaths = new String[createdNodes.size()];
-        int createdNodeCounter = 0;
-        for (URI currentUri : createdNodes) {
-            createdNodePaths[createdNodeCounter] = currentUri.toASCIIString();
-            createdNodeCounter++;
-        }
-        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", createdNodePaths);
-        return createdNodePaths;
+//        String[] createdNodePaths = new String[createdNodes.size()];
+//        int createdNodeCounter = 0;
+//        for (URI currentUri : createdNodes) {
+//            createdNodePaths[createdNodeCounter] = currentUri.toASCIIString();
+////            createdNodeCounter++;
+//        }
+//        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", createdNodePaths);
+        return createdNodes.toArray(new URI[]{});
     }
 }
