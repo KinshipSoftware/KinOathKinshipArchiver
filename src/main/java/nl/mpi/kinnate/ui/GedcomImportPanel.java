@@ -3,18 +3,14 @@ package nl.mpi.kinnate.ui;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import nl.mpi.arbil.GuiHelper;
-import nl.mpi.arbil.ImdiTree;
 import nl.mpi.arbil.XsdChecker;
 import nl.mpi.arbil.data.ImdiLoader;
-import nl.mpi.arbil.data.ImdiTreeObject;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.GedcomImporter;
 
 /**
@@ -24,12 +20,12 @@ import nl.mpi.kinnate.gedcomimport.GedcomImporter;
  */
 public class GedcomImportPanel extends JPanel {
 
-    private ImdiTree leftTree;
+    private EntityCollection entityCollection;
     private JTabbedPane jTabbedPane1;
 
-    public GedcomImportPanel(ImdiTree leftTreeLocal, JTabbedPane jTabbedPaneLocal) {
+    public GedcomImportPanel(EntityCollection entityCollectionLocal, JTabbedPane jTabbedPaneLocal) {
         jTabbedPane1 = jTabbedPaneLocal;
-        leftTree = leftTreeLocal;
+        entityCollection = entityCollectionLocal;
 
 //        private ImdiTree leftTree;
 ////    private GraphPanel graphPanel;
@@ -63,7 +59,7 @@ public class GedcomImportPanel extends JPanel {
                 progressBar.setVisible(true);
                 GedcomImporter gedcomImporter = new GedcomImporter();
                 gedcomImporter.setProgressBar(progressBar);
-                String[] treeNodesArray;
+                URI[] treeNodesArray;
                 if (importFileString != null) {
                     treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFileString);
                 } else {
@@ -71,34 +67,37 @@ public class GedcomImportPanel extends JPanel {
                 }
                 progressBar.setVisible(false);
                 if (treeNodesArray != null) {
-                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
-                    for (String currentNodeString : treeNodesArray) {
-                        try {
-                            ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
-                            tempArray.add(currentImdiObject);
+//                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
+                    for (URI currentNodeUri : treeNodesArray) {
+//                        try {
+//                            ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
+//                            tempArray.add(currentImdiObject);
 //                            JTextPane fileText = new JTextPane();
                             XsdChecker xsdChecker = new XsdChecker();
-                            if (xsdChecker.simpleCheck(currentImdiObject.getFile(), currentImdiObject.getURI()) != null) {
+                            if (xsdChecker.simpleCheck(new File(currentNodeUri), currentNodeUri) != null) {
                                 jTabbedPane1.add("XSD Error on Import", xsdChecker);
-                                xsdChecker.checkXML(currentImdiObject);
+                                xsdChecker.checkXML(ImdiLoader.getSingleInstance().getImdiObject(null, currentNodeUri));
                                 xsdChecker.setDividerLocation(0.5);
                             }
-                            currentImdiObject.reloadNode();
+//                            currentImdiObject.reloadNode();
 //                            try {
 //                                fileText.setPage(currentNodeString);
 //                            } catch (IOException iOException) {
 //                                fileText.setText(iOException.getMessage());
 //                            }
 //                            jTabbedPane1.add("ImportedFile", fileText);
-                        } catch (URISyntaxException exception) {
-                            GuiHelper.linorgBugCatcher.logError(exception);
-                        }
+//                        } catch (URISyntaxException exception) {
+//                            GuiHelper.linorgBugCatcher.logError(exception);
+//                        }
+                        // todo: possibly create a new diagram with a sample of the imported entities for the user
                     }
-                    leftTree.rootNodeChildren = tempArray.toArray(new ImdiTreeObject[]{});
+                    // todo: it might be more efficient to only update the new files
+                    entityCollection.createDatabase();
+//                    leftTree.rootNodeChildren = tempArray.toArray(new ImdiTreeObject[]{});
 //                    imdiTableModel.removeAllImdiRows();
 //                    imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
                 }
-                leftTree.requestResort();
+//                leftTree.requestResort();
 //                GraphData graphData = new GraphData();
 //                graphData.readData();
 //                graphPanel.drawNodes(graphData);
