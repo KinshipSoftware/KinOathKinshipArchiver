@@ -67,8 +67,10 @@ public class GedcomImportPanel extends JPanel {
                 }
                 progressBar.setVisible(false);
                 if (treeNodesArray != null) {
-//                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
+//                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();                    
+                    int maxXsdErrorToShow = 3;
                     for (URI currentNodeUri : treeNodesArray) {
+                        if (maxXsdErrorToShow > 0) {
 //                        try {
 //                            ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
 //                            tempArray.add(currentImdiObject);
@@ -78,6 +80,10 @@ public class GedcomImportPanel extends JPanel {
                                 jTabbedPane1.add("XSD Error on Import", xsdChecker);
                                 xsdChecker.checkXML(ImdiLoader.getSingleInstance().getImdiObject(null, currentNodeUri));
                                 xsdChecker.setDividerLocation(0.5);
+                                maxXsdErrorToShow--;
+                                if (maxXsdErrorToShow == 0) {
+                                    importTextArea.append("maximum xsd errors shown, no more files will be tested" + "\n");
+                                }
                             }
 //                            currentImdiObject.reloadNode();
 //                            try {
@@ -89,7 +95,8 @@ public class GedcomImportPanel extends JPanel {
 //                        } catch (URISyntaxException exception) {
 //                            GuiHelper.linorgBugCatcher.logError(exception);
 //                        }
-                        // todo: possibly create a new diagram with a sample of the imported entities for the user
+                            // todo: possibly create a new diagram with a sample of the imported entities for the user
+                        }
                     }
                     // todo: it might be more efficient to only update the new files
                     importTextArea.append("starting update of entity database" + "\n");
