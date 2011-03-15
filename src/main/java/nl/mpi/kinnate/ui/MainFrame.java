@@ -32,7 +32,7 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         entityCollection = new EntityCollection();
-        entitySearchPanel = new EntitySearchPanel();
+        entitySearchPanel = new EntitySearchPanel(entityCollection);
 //        GraphPanel0 graphPanel0Deprecated;
 //        graphPanel0Deprecated = new GraphPanel0();
 //        graphPanel = new GraphPanel();
