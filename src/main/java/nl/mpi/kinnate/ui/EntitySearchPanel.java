@@ -63,8 +63,9 @@ public class EntitySearchPanel extends JPanel {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ArrayList<ImdiTreeObject> resultsArray = new ArrayList<ImdiTreeObject>();
-                String[] rawResultsArray = entityCollection.searchByName(searchField.getText());
-                resultsArea.setText("found " + rawResultsArray.length + " results\n");
+                EntityCollection.SearchResults searchResults = entityCollection.searchByName(searchField.getText());
+                String[] rawResultsArray = searchResults.resultsPathArray;
+                resultsArea.setText(searchResults.statusMessage + "\n");
                 for (String resultLine : rawResultsArray) {
                     try {
                         if (resultsArray.size() < 100) {
@@ -77,7 +78,7 @@ public class EntitySearchPanel extends JPanel {
                         }
                     } catch (URISyntaxException exception) {
                         new LinorgBugCatcher().logError(exception);
-                        resultsArea.append(resultLine + "\n");
+                        resultsArea.append("error: " + resultLine + "\n");
                     }
                 }
                 leftTree.rootNodeChildren = resultsArray.toArray(new ImdiTreeObject[]{});
