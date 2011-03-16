@@ -25,6 +25,13 @@ public class EntityCollection {
     private String databaseName = "nl-mpi-kinnate";
     static Context context = new Context();
 
+    public class SearchResults {
+
+        public String[] resultsPathArray;
+        public String statusMessage;
+        public int resultCount = 0;
+    }
+
     public void createDatabase() {
         try {
             new DropDB(databaseName).execute(context);
@@ -36,28 +43,34 @@ public class EntityCollection {
         }
     }
 
-    public String[] searchByName(String namePartString) {
+    public SearchResults searchByName(String namePartString) {
+        String queryString = "";
+        SearchResults searchResults = new SearchResults();
         ArrayList<String> resultPaths = new ArrayList<String>();
         try {
             //for $doc in collection('nl-mpi-kinnate')  where $doc//NAME="Bob /Cox/" return base-uri($doc)
-            String query = "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + namePartString + "\") return base-uri($doc)";
+            queryString = "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + namePartString + "\") return base-uri($doc)";
 //            String query = "for $doc in collection('nl-mpi-kinnate') where $doc//NAME = \"" + namePartString + "\" return base-uri($doc)";
-            QueryProcessor proc = new QueryProcessor(query, context);//Emp[contains(Ename,"AR")]
+            QueryProcessor proc = new QueryProcessor(queryString, context);//Emp[contains(Ename,"AR")]
             Iter iter = proc.iter();
             Item item;
-            resultPaths.add(query);
             while ((item = iter.next()) != null) {
 //                System.out.println(item.toJava());
                 resultPaths.add(item.toJava().toString());
+                searchResults.resultCount++;
             }
             proc.close();
+
+            searchResults.statusMessage = "found " + searchResults.resultCount + " records";
         } catch (QueryException exception) {
             new LinorgBugCatcher().logError(exception);
-            resultPaths.add(exception.getMessage());
+            searchResults.statusMessage = exception.getMessage();
         } catch (IOException exception) {
             new LinorgBugCatcher().logError(exception);
-            resultPaths.add(exception.getMessage());
+            searchResults.statusMessage = exception.getMessage();
         }
-        return resultPaths.toArray(new String[]{});
+        searchResults.resultsPathArray = resultPaths.toArray(new String[]{});
+        searchResults.statusMessage = searchResults.statusMessage + "\n query: " + queryString;
+        return searchResults;
     }
 }
