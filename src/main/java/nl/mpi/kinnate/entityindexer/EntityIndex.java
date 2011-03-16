@@ -54,12 +54,14 @@ public class EntityIndex {
                 for (int nodeCounter = 0; nodeCounter < relationLinkNodeList.getLength(); nodeCounter++) {
                     Node relationLinkNode = relationLinkNodeList.item(nodeCounter);
                     if (relationLinkNode != null) {
-                        entityData.addRelation(relationLinkNode.getTextContent());
+                        // resolve the alter URL against its ego URI
+                        URI alterUri = egoEntityUri.resolve(relationLinkNode.getTextContent());
+                        entityData.addRelation(alterUri.toASCIIString());
                         // get any requested link data
                         for (String[] relevantDataPath : indexParameters.relevantLinkData.getValues()) {
                             for (Node linkDataNode = relationLinkNode.getParentNode().getFirstChild(); linkDataNode != null; linkDataNode = linkDataNode.getNextSibling()) {
                                 if (relevantDataPath[0].equals(linkDataNode.getNodeName())) {
-                                    entityData.addRelationData(relationLinkNode.getTextContent(), relevantDataPath[0], linkDataNode.getTextContent());
+                                    entityData.addRelationData(alterUri.toASCIIString(), relevantDataPath[0], linkDataNode.getTextContent());
                                 }
                             }
                         }
