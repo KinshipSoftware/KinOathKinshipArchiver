@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
@@ -69,6 +70,21 @@ public class GedcomImporter {
         } catch (IOException iOException) {
             GuiHelper.linorgBugCatcher.logError(iOException);
         }
+    }
+
+    private String getUniqueIdentifier(File entityFile) {
+        StringBuilder hexString = new StringBuilder();
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            digest.update(entityFile.toString().getBytes());
+            byte[] md5sum = digest.digest();
+            for (int byteCounter = 0; byteCounter < md5sum.length; ++byteCounter) {
+                hexString.append(Integer.toHexString(0x0100 + (md5sum[byteCounter] & 0x00FF)).substring(1));
+            }
+        } catch (NoSuchAlgorithmException algorithmException) {
+            GuiHelper.linorgBugCatcher.logError(algorithmException);
+        }
+        return hexString.toString();
     }
 
     private String cleanFileName(String fileName) {
@@ -207,51 +223,77 @@ public class GedcomImporter {
                             createdNodes.add(entityUri);
                             metadataDom = new CmdiComponentBuilder().getDocument(entityUri);
                             currentDomNode = metadataDom.getDocumentElement();
-                            // find the deepest element node to start adding child nodes to
-                            for (Node childNode = currentDomNode.getFirstChild(); childNode != null; childNode = childNode.getNextSibling()) {
-                                System.out.println("childNode: " + childNode);
-                                System.out.println("childNodeType: " + childNode.getNodeType());
-                                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                                    System.out.println("entering node");
-                                    currentDomNode = childNode;
-                                    childNode = childNode.getFirstChild();
-                                    if (childNode == null) {
-                                        break;
-                                    }
-                                }
+//                            // find the deepest element node to start adding child nodes to
+//                            for (Node childNode = currentDomNode.getFirstChild(); childNode != null; childNode = childNode.getNextSibling()) {
+//                                System.out.println("childNode: " + childNode);
+//                                System.out.println("childNodeType: " + childNode.getNodeType());
+//                                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+//                                    System.out.println("entering node");
+//                                    currentDomNode = childNode;
+//                                    childNode = childNode.getFirstChild();
+//                                    if (childNode == null) {
+//                                        break;
+//                                    }
+//                                }
+//                            }
+                            try {
+                                // add a unique identifier to the entity node
+                                Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
+                                localIdentifierElement.setTextContent(getUniqueIdentifier(entityFile));
+                                Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/UniqueIdentifier");
+                                uniqueIdentifierNode.appendChild(localIdentifierElement);
+                            } catch (DOMException exception) {
+                                GuiHelper.linorgBugCatcher.logError(exception);
+                            } catch (TransformerException exception) {
+                                GuiHelper.linorgBugCatcher.logError(exception);
                             }
                             if (lineParts[1].equals("HEAD")) {
                                 // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
-                                Node headElement = currentDomNode;
+//                                Node headElement = currentDomNode;
 //                                Element headElement = metadataDom.createElement("HEAD");
 //                                currentDomNode.appendChild(headElement);
-                                currentDomNode = headElement;
+                                try {
+                                    currentDomNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/HEAD");
+                                } catch (DOMException exception) {
+                                    GuiHelper.linorgBugCatcher.logError(exception);
+                                } catch (TransformerException exception) {
+                                    GuiHelper.linorgBugCatcher.logError(exception);
+                                }
                             } else {
                                 // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
-                                Node entityElement = null;
-                                for (Node siblingNode = currentDomNode.getNextSibling(); siblingNode != null; siblingNode = siblingNode.getNextSibling()) {
-                                    if (siblingNode.getNodeName().equals("Entity")) {
-                                        entityElement = siblingNode;
-                                        break;
-                                    }
+//                                Node entityElement = null;
+//                                for (Node siblingNode = currentDomNode.getNextSibling(); siblingNode != null; siblingNode = siblingNode.getNextSibling()) {
+//                                    if (siblingNode.getNodeName().equals("Entity")) {
+//                                        entityElement = siblingNode;
+//                                        break;
+//                                    }
+//                                }
+                                Node gedcomIdElement = null; // metadataDom.createElement("GedcomId");
+                                Node gedcomTypeElement = null; // metadataDom.createElement("GedcomType");
+                                try {
+                                    currentDomNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/Entity");
+                                    gedcomIdElement = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/Entity/GedcomId");
+                                    gedcomTypeElement = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/Entity/GedcomType");
+                                } catch (DOMException exception) {
+                                    GuiHelper.linorgBugCatcher.logError(exception);
+                                } catch (TransformerException exception) {
+                                    GuiHelper.linorgBugCatcher.logError(exception);
                                 }
 //                                Element entityElement = metadataDom.createElement("Entity");
 //                                currentDomNode.appendChild(entityElement);
-                                currentDomNode = entityElement;
+//                                currentDomNode = entityElement;
 //                                Element nameElement = metadataDom.createElement("NAME");
 //                                currentDomNode.appendChild(nameElement);
-                                System.out.println("currentDomElement: " + currentDomNode);
-                                Node gedcomIdElement = null; // metadataDom.createElement("GedcomId");
-                                Node gedcomTypeElement = null; // metadataDom.createElement("GedcomType");
+//                                System.out.println("currentDomElement: " + currentDomNode);
 //                                currentDomNode.appendChild(gedcomIdElement);
-                                for (Node siblingNode = currentDomNode.getFirstChild(); siblingNode != null; siblingNode = siblingNode.getNextSibling()) {
-                                    if (siblingNode.getNodeName().equals("GedcomId")) {
-                                        gedcomIdElement = siblingNode;
-                                    }
-                                    if (siblingNode.getNodeName().equals("GedcomType")) {
-                                        gedcomTypeElement = siblingNode;
-                                    }
-                                }
+//                                for (Node siblingNode = currentDomNode.getFirstChild(); siblingNode != null; siblingNode = siblingNode.getNextSibling()) {
+//                                    if (siblingNode.getNodeName().equals("GedcomId")) {
+//                                        gedcomIdElement = siblingNode;
+//                                    }
+//                                    if (siblingNode.getNodeName().equals("GedcomType")) {
+//                                        gedcomTypeElement = siblingNode;
+//                                    }
+//                                }
                                 gedcomIdElement.setTextContent(lineParts[1]);
                                 if (lineParts.length > 2) {
                                     gedcomTypeElement.setTextContent(lineParts[2]);
@@ -457,6 +499,13 @@ public class GedcomImporter {
                                 Element linkElement = metadataDom.createElement("Link");
                                 linkElement.setTextContent("./" + cleanFileName(lineParts[2]));
                                 relationElement.appendChild(linkElement);
+
+                                // add a unique identifier of the target entity to the link
+                                Element uniqueIdentifierElement = metadataDom.createElement("UniqueIdentifier");
+                                Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
+                                localIdentifierElement.setTextContent(getUniqueIdentifier(new File(entityFile.getParentFile(), cleanFileName(lineParts[2]))));
+                                uniqueIdentifierElement.appendChild(localIdentifierElement);
+                                relationElement.appendChild(uniqueIdentifierElement);
 
                                 Element typeElement = metadataDom.createElement("Type");
                                 typeElement.setTextContent(gedcomPath);
