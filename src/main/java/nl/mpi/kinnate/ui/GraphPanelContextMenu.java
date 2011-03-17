@@ -47,9 +47,9 @@ public class GraphPanelContextMenu extends JPopupMenu {
                     CmdiComponentBuilder componentBuilder = new CmdiComponentBuilder();
                     try {
                         addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
-                        ArrayList<String> entityArray = new ArrayList<String>(Arrays.asList(LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree")));
-                        entityArray.add(addedNodePath.toASCIIString());
-                        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", entityArray.toArray(new String[]{}));
+//                        ArrayList<String> entityArray = new ArrayList<String>(Arrays.asList(LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree")));
+//                        entityArray.add(addedNodePath.toASCIIString());
+//                        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", entityArray.toArray(new String[]{}));
                         // todo: update the main entity tree
                         ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoList()));
                         egoUriList.add(addedNodePath);
