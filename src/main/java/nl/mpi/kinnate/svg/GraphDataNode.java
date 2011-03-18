@@ -40,6 +40,7 @@ public class GraphDataNode {
         }
         return GraphDataNode.RelationType.sibling;
     }
+    private String uniqueIdentifier;
     private String entityPath;
     private SymbolType symbolType;
     private String symbolTypeString;
@@ -60,7 +61,8 @@ public class GraphDataNode {
         String labelString;
     }
 
-    public GraphDataNode(String entityPathLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
+    public GraphDataNode(String uniqueIdentifierLocal, String entityPathLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
+        uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = entityPathLocal;
         symbolType = null;
         symbolTypeString = symbolTypeLocal;
@@ -68,20 +70,14 @@ public class GraphDataNode {
         isEgo = isEgoLocal;
     }
 
-    public GraphDataNode(String entityPathLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
+    public GraphDataNode(String uniqueIdentifierLocal, String entityPathLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
+        uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = entityPathLocal;
         symbolType = symbolIndex;
         labelString = labelStringLocal;
         isEgo = isEgoLocal;
     }
-//    public GraphDataNode(SymbolType symbolIndex, String[] labelStringLocal) {
-//        symbolType = symbolIndex;
-//        labelString = labelStringLocal;
-//    }
 
-//    public GraphDataNode(String[] labelStringLocal) {
-//        labelString = labelStringLocal;
-//    }
     public String getSymbolType() {
         if (symbolType != null) {
             switch (symbolType) {
@@ -206,5 +202,9 @@ public class GraphDataNode {
 
     public NodeRelation[] getNodeRelations() {
         return relatedNodes.toArray(new NodeRelation[]{});
+    }
+
+    public String getUniqueIdentifier() {
+        return uniqueIdentifier;
     }
 }
