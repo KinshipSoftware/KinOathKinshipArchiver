@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JButton;
@@ -11,6 +12,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.arbil.LinorgSessionStorage;
@@ -36,10 +44,22 @@ public class EntityCollection {
     private String databaseName = "nl-mpi-kinnate";
     static Context context = new Context();
 
-    public class RelationData{
-        GraphDataNode.RelationType relationType;
-        String realationPath;
+    @XmlRootElement(name = "outer")
+    static public class RelationResults {
+
+        @XmlElementWrapper(name = "results")
+        @XmlElement(name = "relation")
+        RelationData[] relationArray;
     }
+
+    static public class RelationData {
+
+        @XmlElement
+        GraphDataNode.RelationType type;
+        @XmlElement
+        String path;
+    }
+
     public class SearchResults {
 
         public String[] resultsPathArray;
@@ -58,16 +78,16 @@ public class EntityCollection {
         }
     }
 
-    public String[] getRelatedNodes(String uniqueIdentifier, IndexerParameters indexerParameters) {
+    public RelationData[] getRelatedNodes(String uniqueIdentifier, IndexerParameters indexerParameters) {
         // todo: it would seem that entityPath is not going to be adequate because of resolved vs unresolved paths, it would seem best at this point to implement an ID or even persistent identifier if posible
         // there are two parts required to get all relations of an ego: check the ego entity for relations to others and then check the relations of all other entities for references to the ego entity
         // for now maybe use an md5 sum the full path url or something and put it into both the entity and linking entities
         String ancestorSequence = indexerParameters.ancestorFields.asSequenceString();
         String decendantSequence = indexerParameters.decendantFields.asSequenceString();
-        
+
         String query1String = "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
-                + "let $isAncestor := $relationNode/Type/text() = " +ancestorSequence +"\n"
-                + "let $isDecendant := $relationNode/Type/text() = " + decendantSequence+"\n"
+                + "let $isAncestor := $relationNode/Type/text() = " + ancestorSequence + "\n"
+                + "let $isDecendant := $relationNode/Type/text() = " + decendantSequence + "\n"
                 + "where $isAncestor or $isDecendant \n"
                 + "return \n"
                 + "<relation>{\n"
@@ -92,13 +112,43 @@ public class EntityCollection {
 //                + "     and $docInner/Kinnate/Relation/Type = " + displayLinks + "\n"
 //                + "     return base-uri($docInner)\n";
         System.out.println("query1String: " + query1String);
+
+        ArrayList<RelationData> resultsArray = new ArrayList<RelationData>();
+        try {
+
+//            String xmlString = "<relation>"
+//                    + "<type>ancestor</type>"
+//                    + "<path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a0d39c01f0e75d5364bfe643635aa48d/_F1_.cmdi</path>"
+//                    + "</relation>";
+//            StringReader xmlReader = new StringReader(xmlString);
+//            StreamSource xmlSource = new StreamSource(xmlReader);
+//            JAXBContext jaxbContext1 = JAXBContext.newInstance(RelationData.class);
+//            Unmarshaller unmarshaller1 = jaxbContext1.createUnmarshaller();
+//            RelationData data = unmarshaller1.unmarshal(xmlSource, RelationData.class).getValue();
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(RelationResults.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            String queryResult = new XQuery(query1String).execute(context);
+            RelationResults relationResults = (RelationResults) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), RelationResults.class).getValue();
+
+            resultsArray.addAll(Arrays.asList(relationResults.relationArray));
+            //final String xmlString = "<string>value</string>";
+            //final StringReader xmlReader = new StringReader(xmlString);
+            //final StreamSource xmlSource = new StreamSource(xmlReader);
+            //final JAXBContext jaxbContext = JAXBContext.newInstance(String.class);
+            //final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            //final String stringValue = unmarshaller.unmarshal(xmlSource, String.class).getValue();
+        } catch (JAXBException exception) {
+            new LinorgBugCatcher().logError(exception);
+        } catch (BaseXException exception) {
+            new LinorgBugCatcher().logError(exception);
+        }
+
 //        System.out.println("query2String: " + query2String);
-        ArrayList<String> resultsArray = new ArrayList<String>();
-        resultsArray.addAll(Arrays.asList(performQuery(query1String).resultsPathArray));
 //        resultsArray.addAll(Arrays.asList(performQuery(query2String).resultsPathArray));
-        return resultsArray.toArray(new String[]{});
-        
-        
+        return resultsArray.toArray(new RelationData[]{});
+
+
 //        collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = "e0b35b77be28bec69dbc1ece9ba3faed"]/Type/text()
 //       for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = "e0b35b77be28bec69dbc1ece9ba3faed"]
 //return
@@ -174,9 +224,9 @@ public class EntityCollection {
 
             public void actionPerformed(ActionEvent e) {
                 resultsText.setText(queryText.getText() + "\n");
-                try{
-                resultsText.append(new XQuery(queryText.getText()).execute(context));
-                }catch(BaseXException exception){
+                try {
+                    resultsText.append(new XQuery(queryText.getText()).execute(context));
+                } catch (BaseXException exception) {
                     resultsText.append(exception.getMessage());
                 }
 //                SearchResults results = entityCollection.performQuery(queryText.getText());
@@ -193,5 +243,30 @@ public class EntityCollection {
         jFrame.setContentPane(new JScrollPane(jPanel));
         jFrame.pack();
         jFrame.setVisible(true);
+        try {
+            String xmlString = "<outer><results>"
+                    + "<relation>"
+                    + "<type>ancestor</type>"
+                    + "<path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a0d39c01f0e75d5364bfe643635aa48d/_F1_.cmdi</path>"
+                    + "</relation>"
+                    + "<relation>"
+                    + "<type>another ancestor</type>"
+                    + "<path>another path</path>"
+                    + "</relation>"
+                    + "</results></outer>";
+
+            StringReader xmlReader = new StringReader(xmlString);
+            StreamSource xmlSource = new StreamSource(xmlReader);
+            JAXBContext jaxbContext1 = JAXBContext.newInstance(RelationResults.class);
+            Unmarshaller unmarshaller1 = jaxbContext1.createUnmarshaller();
+            RelationResults data = unmarshaller1.unmarshal(xmlSource, RelationResults.class).getValue();
+            System.out.println(data.relationArray[0].path + " : " + data.relationArray[0].type);
+        } catch (JAXBException exception) {
+            System.out.println(exception.getMessage());
+            System.out.println(exception.getLocalizedMessage());
+            System.out.println(exception.getErrorCode());
+            System.out.println(exception.toString());
+            System.out.println(exception.getMessage());
+        }
     }
 }
