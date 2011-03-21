@@ -44,11 +44,11 @@ public class EntityCollection {
     private String databaseName = "nl-mpi-kinnate";
     static Context context = new Context();
 
-    @XmlRootElement(name = "outer")
+    @XmlRootElement(name = "results")
     static public class RelationResults {
 
-        @XmlElementWrapper(name = "results")
-        @XmlElement(name = "relation")
+        @XmlElementWrapper(name = "relations")
+        @XmlElement(name = "entity")
         RelationData[] relationArray;
     }
 
@@ -85,12 +85,14 @@ public class EntityCollection {
         String ancestorSequence = indexerParameters.ancestorFields.asSequenceString();
         String decendantSequence = indexerParameters.decendantFields.asSequenceString();
 
-        String query1String = "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
+        String query1String = "<results>"
+                + "<relations>{"
+                + "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
                 + "let $isAncestor := $relationNode/Type/text() = " + ancestorSequence + "\n"
                 + "let $isDecendant := $relationNode/Type/text() = " + decendantSequence + "\n"
                 + "where $isAncestor or $isDecendant \n"
                 + "return \n"
-                + "<relation>{\n"
+                + "<entity>{\n"
                 + "if ($isAncestor)\n"
                 + "then <type>ancestor</type>\n"
                 + "else if ($isDecendant)\n"
@@ -98,7 +100,9 @@ public class EntityCollection {
                 + "else <type>none</type>,\n"
                 // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
                 + "<path>{base-uri($relationNode)}</path>\n"
-                + "}</relation>\n";
+                + "}</entity>"
+                + "}</relations>"
+                + "</results>\n";
 
 //                "for $doc in collection('nl-mpi-kinnate')\n"
 //                + "where /Kinnate/Relation/UniqueIdentifier/* = \"" + uniqueIdentifier + "\"\n"
@@ -244,16 +248,18 @@ public class EntityCollection {
         jFrame.pack();
         jFrame.setVisible(true);
         try {
-            String xmlString = "<outer><results>"
-                    + "<relation>"
+            String xmlString = "<results>"
+                    + "<relations>"
+                    + "<entity>"
                     + "<type>ancestor</type>"
                     + "<path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a0d39c01f0e75d5364bfe643635aa48d/_F1_.cmdi</path>"
-                    + "</relation>"
-                    + "<relation>"
+                    + "</entity>"
+                    + "<entity>"
                     + "<type>another ancestor</type>"
                     + "<path>another path</path>"
-                    + "</relation>"
-                    + "</results></outer>";
+                    + "</entity>"
+                    + "</relations>"
+                    + "</results>";
 
             StringReader xmlReader = new StringReader(xmlString);
             StreamSource xmlSource = new StreamSource(xmlReader);
