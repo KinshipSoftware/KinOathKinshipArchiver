@@ -14,11 +14,13 @@ import javax.swing.JTextArea;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.arbil.LinorgSessionStorage;
+import nl.mpi.kinnate.svg.GraphDataNode;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Set;
 import org.basex.core.cmd.CreateDB;
 import org.basex.core.cmd.DropDB;
+import org.basex.core.cmd.XQuery;
 import org.basex.query.QueryException;
 import org.basex.query.QueryProcessor;
 import org.basex.query.item.Item;
@@ -34,6 +36,10 @@ public class EntityCollection {
     private String databaseName = "nl-mpi-kinnate";
     static Context context = new Context();
 
+    public class RelationData{
+        GraphDataNode.RelationType relationType;
+        String realationPath;
+    }
     public class SearchResults {
 
         public String[] resultsPathArray;
@@ -52,37 +58,68 @@ public class EntityCollection {
         }
     }
 
-    public String[] getRelatedNodes(String uniqueIdentifier) {
+    public String[] getRelatedNodes(String uniqueIdentifier, IndexerParameters indexerParameters) {
         // todo: it would seem that entityPath is not going to be adequate because of resolved vs unresolved paths, it would seem best at this point to implement an ID or even persistent identifier if posible
         // there are two parts required to get all relations of an ego: check the ego entity for relations to others and then check the relations of all other entities for references to the ego entity
         // for now maybe use an md5 sum the full path url or something and put it into both the entity and linking entities
-        String displayLinks = "(\"Kinnate.Gedcom.Entity.HUSB\","
-                + "\"Kinnate.Gedcom.Entity.WIFE\","
-                + "\"Kinnate.Gedcom.Entity.CHIL\","
-                + "\"Kinnate.Gedcom.Entity.FAMS\","
-                + "\"Kinnate.Gedcom.Entity.FAMC\","
-                + "\"Kinnate.Gedcom.Entity.BIRT.FAMC\","
-                + "\"Kinnate.Gedcom.Entity.CHR.FAMC\","
-                + "\"Kinnate.Gedcom.Entity.ADOP.FAMC\","
-                + "\"Kinnate.Gedcom.Entity.SLGC.FAMC\")";
+        String ancestorSequence = indexerParameters.ancestorFields.asSequenceString();
+        String decendantSequence = indexerParameters.decendantFields.asSequenceString();
+        
+        String query1String = "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
+                + "let $isAncestor := $relationNode/Type/text() = " +ancestorSequence +"\n"
+                + "let $isDecendant := $relationNode/Type/text() = " + decendantSequence+"\n"
+                + "where $isAncestor or $isDecendant \n"
+                + "return \n"
+                + "<relation>{\n"
+                + "if ($isAncestor)\n"
+                + "then <type>ancestor</type>\n"
+                + "else if ($isDecendant)\n"
+                + "then <type>descendant</type>\n"
+                + "else <type>none</type>,\n"
+                // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
+                + "<path>{base-uri($relationNode)}</path>\n"
+                + "}</relation>\n";
 
-        String query1String = "for $doc in collection('nl-mpi-kinnate')\n"
-                + "where /Kinnate/Relation/UniqueIdentifier/* = \"" + uniqueIdentifier + "\"\n"
-                + "and /Kinnate/Relation/Type = " + displayLinks + "\n"
-                + "return base-uri($doc)\n";
-        String query2String = "for $docOuter in collection('nl-mpi-kinnate')\n"
-                + "where $docOuter/Kinnate/(Gedcom, Entity)/UniqueIdentifier/* = \"" + uniqueIdentifier + "\"\n"
-                + "return\n"
-                + "     for $docInner in collection('nl-mpi-kinnate')\n"
-                + "     where $docInner/Kinnate/(Gedcom, Entity)/UniqueIdentifier/* = $docOuter/Kinnate/Relation/UniqueIdentifier/*\n"
-                + "     and $docInner/Kinnate/Relation/Type = " + displayLinks + "\n"
-                + "     return base-uri($docInner)\n";
+//                "for $doc in collection('nl-mpi-kinnate')\n"
+//                + "where /Kinnate/Relation/UniqueIdentifier/* = \"" + uniqueIdentifier + "\"\n"
+//                + "and /Kinnate/Relation/Type = " + displayLinks + "\n"
+//                + "return base-uri($doc)\n";
+//        String query2String = "for $docOuter in collection('nl-mpi-kinnate')\n"
+//                + "where $docOuter/Kinnate/(Gedcom, Entity)/UniqueIdentifier/* = \"" + uniqueIdentifier + "\"\n"
+//                + "return\n"
+//                + "     for $docInner in collection('nl-mpi-kinnate')\n"
+//                + "     where $docInner/Kinnate/(Gedcom, Entity)/UniqueIdentifier/* = $docOuter/Kinnate/Relation/UniqueIdentifier/*\n"
+//                + "     and $docInner/Kinnate/Relation/Type = " + displayLinks + "\n"
+//                + "     return base-uri($docInner)\n";
         System.out.println("query1String: " + query1String);
-        System.out.println("query2String: " + query2String);
+//        System.out.println("query2String: " + query2String);
         ArrayList<String> resultsArray = new ArrayList<String>();
         resultsArray.addAll(Arrays.asList(performQuery(query1String).resultsPathArray));
-        resultsArray.addAll(Arrays.asList(performQuery(query2String).resultsPathArray));
+//        resultsArray.addAll(Arrays.asList(performQuery(query2String).resultsPathArray));
         return resultsArray.toArray(new String[]{});
+        
+        
+//        collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = "e0b35b77be28bec69dbc1ece9ba3faed"]/Type/text()
+//       for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = "e0b35b77be28bec69dbc1ece9ba3faed"]
+//return
+//<r>{
+//$relationNode/Type/text(),
+//base-uri($relationNode)
+//}</r>
+
+//        for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = "e0b35b77be28bec69dbc1ece9ba3faed"]
+//        return
+//        <relation>{
+//        <type>{$relationNode/Type/text()}</type>,
+//        <path>{base-uri($relationNode)}</path>
+//        }</relation>
+//
+//
+//        RelationType getOpposingRelationType(RelationType relationType) {
+//        switch (relationType) {
+//            case ancestor:
+//                return GraphDataNode.RelationType.descendant;
+
     }
 
     public SearchResults listAllRelationTypes() {
@@ -126,7 +163,7 @@ public class EntityCollection {
     }
 
     static public void main(String[] args) {
-        final EntityCollection entityCollection = new EntityCollection();
+//        final EntityCollection entityCollection = new EntityCollection();
         JFrame jFrame = new JFrame("Test Query Window");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final JTextArea queryText = new JTextArea();
@@ -136,18 +173,23 @@ public class EntityCollection {
         jButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                SearchResults results = entityCollection.performQuery(queryText.getText());
-                resultsText.setText(results.statusMessage + "\n");
-                for (String resultLine : results.resultsPathArray) {
-                    resultsText.append(resultLine + "\n");
+                resultsText.setText(queryText.getText() + "\n");
+                try{
+                resultsText.append(new XQuery(queryText.getText()).execute(context));
+                }catch(BaseXException exception){
+                    resultsText.append(exception.getMessage());
                 }
+//                SearchResults results = entityCollection.performQuery(queryText.getText());
+//                for (String resultLine : results.resultsPathArray) {
+//                    resultsText.append(resultLine + "\n");
+//                }
                 resultsText.setVisible(true);
             }
         });
         JPanel jPanel = new JPanel(new BorderLayout());
-        jPanel.add(queryText, BorderLayout.PAGE_START);
-        jPanel.add(resultsText, BorderLayout.CENTER);
-        jPanel.add(jButton, BorderLayout.PAGE_END);
+        jPanel.add(queryText, BorderLayout.CENTER);
+        jPanel.add(resultsText, BorderLayout.PAGE_END);
+        jPanel.add(jButton, BorderLayout.PAGE_START);
         jFrame.setContentPane(new JScrollPane(jPanel));
         jFrame.pack();
         jFrame.setVisible(true);
