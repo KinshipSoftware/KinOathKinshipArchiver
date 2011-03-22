@@ -88,8 +88,8 @@ public class EntityCollection {
         //        uniqueIdentifier = "742243abdb2468b8df65f16ee562ac10";
         String query1String = "<results><relations>{"
                 + "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
-                + "let $isAncestor := $relationNode/Type/text() = " + ancestorSequence + "\n"
-                + "let $isDecendant := $relationNode/Type/text() = " + decendantSequence + "\n"
+                + "let $isAncestor := $relationNode/Type/text() = " + decendantSequence + "\n" // note that the ancestor and decentant are switched for alter compared to ego
+                + "let $isDecendant := $relationNode/Type/text() = " + ancestorSequence + "\n"
                 + "where $isAncestor or $isDecendant \n"
                 + "return \n"
                 + "<entity>{\n"
@@ -104,8 +104,8 @@ public class EntityCollection {
                 + "}, {"
                 // for $relationNode in collection('nl-mpi-kinnate')/Kinnate/(Gedcom|Relation|Entity)[UniqueIdentifier/. = "742243abdb2468b8df65f16ee562ac10"]
                 + "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/(Gedcom|Entity)[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
-                + "let $isAncestor := $relationNode/Type/text() = " + decendantSequence + "\n" // note that the ancestor and decentent are switched here
-                + "let $isDecendant := $relationNode/Type/text() = " + ancestorSequence + "\n"
+                + "let $isAncestor := $relationNode/Type/text() = " + ancestorSequence + "\n" // note that the ancestor and decentant are switched for alter compared to ego
+                + "let $isDecendant := $relationNode/Type/text() = " + decendantSequence + "\n"
                 + "where $isAncestor or $isDecendant \n"
                 + "return \n"
                 + "<entity>{\n"
