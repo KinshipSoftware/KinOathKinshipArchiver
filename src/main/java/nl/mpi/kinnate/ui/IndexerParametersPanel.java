@@ -3,7 +3,6 @@ package nl.mpi.kinnate.ui;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.entityindexer.EntityIndex;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
@@ -13,7 +12,7 @@ import nl.mpi.kinnate.svg.GraphPanel;
  */
 public class IndexerParametersPanel extends JTabbedPane {
 
-    public IndexerParametersPanel(SavePanel savePanel, GraphPanel graphPanel, EntityIndex entityIndex, TableCellDragHandler tableCellDragHandler) {
+    public IndexerParametersPanel(SavePanel savePanel, GraphPanel graphPanel, TableCellDragHandler tableCellDragHandler) {
 
         // todo: add drag drop of field to these lists and initially populate them from the SVG data
         this.add("Symbol Fields", new JScrollPane(new FieldSelectionList(savePanel, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler)));
