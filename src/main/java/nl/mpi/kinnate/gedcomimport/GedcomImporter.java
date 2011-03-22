@@ -28,6 +28,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+import uniqueidentifiers.LocalIdentifier;
 
 /**
  *  Document   : GedcomImporter
@@ -70,21 +71,6 @@ public class GedcomImporter {
         } catch (IOException iOException) {
             GuiHelper.linorgBugCatcher.logError(iOException);
         }
-    }
-
-    private String getUniqueIdentifier(File entityFile) {
-        StringBuilder hexString = new StringBuilder();
-        try {
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-            digest.update(entityFile.toString().getBytes());
-            byte[] md5sum = digest.digest();
-            for (int byteCounter = 0; byteCounter < md5sum.length; ++byteCounter) {
-                hexString.append(Integer.toHexString(0x0100 + (md5sum[byteCounter] & 0x00FF)).substring(1));
-            }
-        } catch (NoSuchAlgorithmException algorithmException) {
-            GuiHelper.linorgBugCatcher.logError(algorithmException);
-        }
-        return hexString.toString();
     }
 
     private String cleanFileName(String fileName) {
@@ -239,7 +225,7 @@ public class GedcomImporter {
                             try {
                                 // add a unique identifier to the entity node
                                 Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
-                                localIdentifierElement.setTextContent(getUniqueIdentifier(entityFile));
+                                localIdentifierElement.setTextContent(new LocalIdentifier().getUniqueIdentifier(entityFile));
                                 Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/UniqueIdentifier");
                                 uniqueIdentifierNode.appendChild(localIdentifierElement);
                             } catch (DOMException exception) {
@@ -503,7 +489,7 @@ public class GedcomImporter {
                                 // add a unique identifier of the target entity to the link
                                 Element uniqueIdentifierElement = metadataDom.createElement("UniqueIdentifier");
                                 Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
-                                localIdentifierElement.setTextContent(getUniqueIdentifier(new File(entityFile.getParentFile(), cleanFileName(lineParts[2]))));
+                                localIdentifierElement.setTextContent(new LocalIdentifier().getUniqueIdentifier(new File(entityFile.getParentFile(), cleanFileName(lineParts[2]))));
                                 uniqueIdentifierElement.appendChild(localIdentifierElement);
                                 relationElement.appendChild(uniqueIdentifierElement);
 
