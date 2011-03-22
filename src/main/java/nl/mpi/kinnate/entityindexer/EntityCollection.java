@@ -85,8 +85,8 @@ public class EntityCollection {
         String ancestorSequence = indexerParameters.ancestorFields.asSequenceString();
         String decendantSequence = indexerParameters.decendantFields.asSequenceString();
 
-        String query1String = "<results>"
-                + "<relations>{"
+        //        uniqueIdentifier = "742243abdb2468b8df65f16ee562ac10";
+        String query1String = "<results><relations>{"
                 + "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
                 + "let $isAncestor := $relationNode/Type/text() = " + ancestorSequence + "\n"
                 + "let $isDecendant := $relationNode/Type/text() = " + decendantSequence + "\n"
@@ -101,79 +101,38 @@ public class EntityCollection {
                 // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
                 + "<path>{base-uri($relationNode)}</path>\n"
                 + "}</entity>"
-                + "}</relations>"
-                + "</results>\n";
+                + "}, {"
+                // for $relationNode in collection('nl-mpi-kinnate')/Kinnate/(Gedcom|Relation|Entity)[UniqueIdentifier/. = "742243abdb2468b8df65f16ee562ac10"]
+                + "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/(Gedcom|Entity)[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
+                + "let $isAncestor := $relationNode/Type/text() = " + decendantSequence + "\n" // note that the ancestor and decentent are switched here
+                + "let $isDecendant := $relationNode/Type/text() = " + ancestorSequence + "\n"
+                + "where $isAncestor or $isDecendant \n"
+                + "return \n"
+                + "<entity>{\n"
+                + "if ($isAncestor)\n"
+                + "then <type>ancestor</type>\n"
+                + "else if ($isDecendant)\n"
+                + "then <type>descendant</type>\n"
+                + "else <type>none</type>,\n"
+                // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
+                + "<path>{base-uri($relationNode)}</path>\n"
+                + "}</entity>"
+                + "}</relations></results>\n";
 
-//                "for $doc in collection('nl-mpi-kinnate')\n"
-//                + "where /Kinnate/Relation/UniqueIdentifier/* = \"" + uniqueIdentifier + "\"\n"
-//                + "and /Kinnate/Relation/Type = " + displayLinks + "\n"
-//                + "return base-uri($doc)\n";
-//        String query2String = "for $docOuter in collection('nl-mpi-kinnate')\n"
-//                + "where $docOuter/Kinnate/(Gedcom, Entity)/UniqueIdentifier/* = \"" + uniqueIdentifier + "\"\n"
-//                + "return\n"
-//                + "     for $docInner in collection('nl-mpi-kinnate')\n"
-//                + "     where $docInner/Kinnate/(Gedcom, Entity)/UniqueIdentifier/* = $docOuter/Kinnate/Relation/UniqueIdentifier/*\n"
-//                + "     and $docInner/Kinnate/Relation/Type = " + displayLinks + "\n"
-//                + "     return base-uri($docInner)\n";
         System.out.println("query1String: " + query1String);
-
         ArrayList<RelationData> resultsArray = new ArrayList<RelationData>();
         try {
-
-//            String xmlString = "<relation>"
-//                    + "<type>ancestor</type>"
-//                    + "<path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a0d39c01f0e75d5364bfe643635aa48d/_F1_.cmdi</path>"
-//                    + "</relation>";
-//            StringReader xmlReader = new StringReader(xmlString);
-//            StreamSource xmlSource = new StreamSource(xmlReader);
-//            JAXBContext jaxbContext1 = JAXBContext.newInstance(RelationData.class);
-//            Unmarshaller unmarshaller1 = jaxbContext1.createUnmarshaller();
-//            RelationData data = unmarshaller1.unmarshal(xmlSource, RelationData.class).getValue();
-
             JAXBContext jaxbContext = JAXBContext.newInstance(RelationResults.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String queryResult = new XQuery(query1String).execute(context);
             RelationResults relationResults = (RelationResults) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), RelationResults.class).getValue();
-
             resultsArray.addAll(Arrays.asList(relationResults.relationArray));
-            //final String xmlString = "<string>value</string>";
-            //final StringReader xmlReader = new StringReader(xmlString);
-            //final StreamSource xmlSource = new StreamSource(xmlReader);
-            //final JAXBContext jaxbContext = JAXBContext.newInstance(String.class);
-            //final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            //final String stringValue = unmarshaller.unmarshal(xmlSource, String.class).getValue();
         } catch (JAXBException exception) {
             new LinorgBugCatcher().logError(exception);
         } catch (BaseXException exception) {
             new LinorgBugCatcher().logError(exception);
         }
-
-//        System.out.println("query2String: " + query2String);
-//        resultsArray.addAll(Arrays.asList(performQuery(query2String).resultsPathArray));
         return resultsArray.toArray(new RelationData[]{});
-
-
-//        collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = "e0b35b77be28bec69dbc1ece9ba3faed"]/Type/text()
-//       for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = "e0b35b77be28bec69dbc1ece9ba3faed"]
-//return
-//<r>{
-//$relationNode/Type/text(),
-//base-uri($relationNode)
-//}</r>
-
-//        for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = "e0b35b77be28bec69dbc1ece9ba3faed"]
-//        return
-//        <relation>{
-//        <type>{$relationNode/Type/text()}</type>,
-//        <path>{base-uri($relationNode)}</path>
-//        }</relation>
-//
-//
-//        RelationType getOpposingRelationType(RelationType relationType) {
-//        switch (relationType) {
-//            case ancestor:
-//                return GraphDataNode.RelationType.descendant;
-
     }
 
     public SearchResults listAllRelationTypes() {
@@ -247,32 +206,32 @@ public class EntityCollection {
         jFrame.setContentPane(new JScrollPane(jPanel));
         jFrame.pack();
         jFrame.setVisible(true);
-        try {
-            String xmlString = "<results>"
-                    + "<relations>"
-                    + "<entity>"
-                    + "<type>ancestor</type>"
-                    + "<path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a0d39c01f0e75d5364bfe643635aa48d/_F1_.cmdi</path>"
-                    + "</entity>"
-                    + "<entity>"
-                    + "<type>another ancestor</type>"
-                    + "<path>another path</path>"
-                    + "</entity>"
-                    + "</relations>"
-                    + "</results>";
-
-            StringReader xmlReader = new StringReader(xmlString);
-            StreamSource xmlSource = new StreamSource(xmlReader);
-            JAXBContext jaxbContext1 = JAXBContext.newInstance(RelationResults.class);
-            Unmarshaller unmarshaller1 = jaxbContext1.createUnmarshaller();
-            RelationResults data = unmarshaller1.unmarshal(xmlSource, RelationResults.class).getValue();
-            System.out.println(data.relationArray[0].path + " : " + data.relationArray[0].type);
-        } catch (JAXBException exception) {
-            System.out.println(exception.getMessage());
-            System.out.println(exception.getLocalizedMessage());
-            System.out.println(exception.getErrorCode());
-            System.out.println(exception.toString());
-            System.out.println(exception.getMessage());
-        }
+//        try {
+//            String xmlString = "<results>"
+//                    + "<relations>"
+//                    + "<entity>"
+//                    + "<type>ancestor</type>"
+//                    + "<path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a0d39c01f0e75d5364bfe643635aa48d/_F1_.cmdi</path>"
+//                    + "</entity>"
+//                    + "<entity>"
+//                    + "<type>another ancestor</type>"
+//                    + "<path>another path</path>"
+//                    + "</entity>"
+//                    + "</relations>"
+//                    + "</results>";
+//
+//            StringReader xmlReader = new StringReader(xmlString);
+//            StreamSource xmlSource = new StreamSource(xmlReader);
+//            JAXBContext jaxbContext1 = JAXBContext.newInstance(RelationResults.class);
+//            Unmarshaller unmarshaller1 = jaxbContext1.createUnmarshaller();
+//            RelationResults data = unmarshaller1.unmarshal(xmlSource, RelationResults.class).getValue();
+//            System.out.println(data.relationArray[0].path + " : " + data.relationArray[0].type);
+//        } catch (JAXBException exception) {
+//            System.out.println(exception.getMessage());
+//            System.out.println(exception.getLocalizedMessage());
+//            System.out.println(exception.getErrorCode());
+//            System.out.println(exception.toString());
+//            System.out.println(exception.getMessage());
+//        }
     }
 }
