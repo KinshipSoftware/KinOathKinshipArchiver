@@ -67,10 +67,10 @@ public class DragTransferHandler extends TransferHandler implements Transferable
             return false;
         }
 
-            Component dropLocation = support.getComponent(); // getDropLocation
-            if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
-                return true;
-            }
+        Component dropLocation = support.getComponent(); // getDropLocation
+        if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
+            return true;
+        }
 
 //        boolean actionSupported = (COPY & support.getSourceDropActions()) == COPY;
 //        if (actionSupported) {
@@ -99,10 +99,17 @@ public class DragTransferHandler extends TransferHandler implements Transferable
         if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
             System.out.println("dropped to KinTypeEgoSelectionTestPanel");
             ArrayList<URI> slectedUris = new ArrayList<URI>();
+            ArrayList<String> slectedIdentifiers = new ArrayList<String>();
             for (ImdiTreeObject currentImdiNode : selectedNodes) {
                 slectedUris.add(currentImdiNode.getURI());
+                for (String currentIdentifierType : new String[]{"Kinnate.Gedcom.UniqueIdentifier.LocalIdentifier", "Kinnate.Entity.UniqueIdentifier.LocalIdentifier", "Kinnate.Gedcom.UniqueIdentifier.PersistantIdentifier", "Kinnate.Entity.UniqueIdentifier.PersistantIdentifier"}) {
+                    if (currentImdiNode.getFields().containsKey(currentIdentifierType)) {
+                        slectedIdentifiers.add(currentImdiNode.getFields().get(currentIdentifierType)[0].getFieldValue());
+                        break;
+                    }
+                }
             }
-            ((KinTypeEgoSelectionTestPanel) dropLocation).addEgoNodes(slectedUris.toArray(new URI[]{}));
+            ((KinTypeEgoSelectionTestPanel) dropLocation).addEgoNodes(slectedUris.toArray(new URI[]{}), slectedIdentifiers.toArray(new String[]{}));
             return true;
         }
         return false;
