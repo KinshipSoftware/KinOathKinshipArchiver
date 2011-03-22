@@ -1,7 +1,7 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import java.awt.Component;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.GraphPanelSize;
+import uniqueidentifiers.LocalIdentifier;
 
 /**
  *  Document   : GraphPanelContextMenu
@@ -29,6 +30,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
     JMenuItem addRelationEntityMenuItem;
     JMenuItem setAsEgoMenuItem;
     String[] selectedPaths = null; // keep the selected paths as shown at the time of the menu intereaction
+    String[] selectedIdentifiers = null;
 
     public GraphPanelContextMenu(KinTypeEgoSelectionTestPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, GraphPanelSize graphPanelSizeLocal) {
         egoSelectionPanel = egoSelectionPanelLocal;
@@ -47,13 +49,17 @@ public class GraphPanelContextMenu extends JPopupMenu {
                     CmdiComponentBuilder componentBuilder = new CmdiComponentBuilder();
                     try {
                         addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
+                        String localIdentifier = new LocalIdentifier().setLocalIdentifier(new File(addedNodePath));
 //                        ArrayList<String> entityArray = new ArrayList<String>(Arrays.asList(LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree")));
 //                        entityArray.add(addedNodePath.toASCIIString());
 //                        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", entityArray.toArray(new String[]{}));
                         // todo: update the main entity tree
                         ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoList()));
                         egoUriList.add(addedNodePath);
-                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}));
+                        ArrayList<String> egoIdentifierList = new ArrayList<String>(Arrays.asList(graphPanel.getEgoUniquiIdentifiersList()));
+                        egoUriList.add(addedNodePath);
+                        egoIdentifierList.add(localIdentifier);
+                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}), egoIdentifierList.toArray(new String[]{}));
                     } catch (URISyntaxException ex) {
                         GuiHelper.linorgBugCatcher.logError(ex);
                         // todo: warn user with a dialog
@@ -102,7 +108,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
                         // todo: warn user with a dialog
                     }
                 }
-                egoSelectionPanel.addEgoNodes(selectedUriArray);
+                egoSelectionPanel.addEgoNodes(selectedUriArray, selectedIdentifiers);
             }
         });
         this.add(setAsEgoMenuItem);
@@ -163,6 +169,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
     @Override
     public void show(Component cmpnt, int i, int i1) {
         selectedPaths = graphPanel.getSelectedPaths();
+        selectedIdentifiers = graphPanel.getEgoUniquiIdentifiersList();
         addRelationEntityMenuItem.setVisible(selectedPaths.length == 2);
         setAsEgoMenuItem.setVisible(selectedPaths.length > 0);
         super.show(cmpnt, i, i1);
