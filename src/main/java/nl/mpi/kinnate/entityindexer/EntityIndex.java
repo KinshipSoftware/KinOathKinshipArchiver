@@ -24,12 +24,12 @@ import org.xml.sax.SAXException;
  *  Created on : Feb 2, 2011, 17:29:36 PM
  *  Author     : Peter Withers
  */
-public class EntityIndex {
+public class EntityIndex implements EntityService {
 
     IndexerParameters indexParameters;
     private HashMap<String /* url to the ego entity */, EntityData> knownEntities;
 //    private EntityCollection entityCollection;
-
+    
     public EntityIndex(IndexerParameters indexParametersLocal) {
         indexParameters = indexParametersLocal;
 //        entityCollection = new EntityCollection();
@@ -46,7 +46,7 @@ public class EntityIndex {
         if (entityData != null) {
             return entityData;
         } else {
-            entityData = new EntityData();
+            entityData = new EntityData(null); // todo: while this could pass the identifier it is unlikely that this class will use them as it relies on the url instead
             knownEntities.put(egoEntityUri.toASCIIString(), entityData);
             try {
                 Document linksDom = new CmdiComponentBuilder().getDocument(egoEntityUri);
@@ -139,10 +139,10 @@ public class EntityIndex {
         for (String currentSymbolField[] : indexParameters.symbolFieldsFields.getValues()) {
             String linkSymbolString = entityData.getEntityField(currentSymbolField[0]);
             if (linkSymbolString != null) {
-                return new GraphDataNode(entityUri.toASCIIString(), currentSymbolField[1], labelTextList.toArray(new String[]{}), isEgo);
+                return new GraphDataNode(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), currentSymbolField[1], labelTextList.toArray(new String[]{}), isEgo);
             }
         }
-        return new GraphDataNode(entityUri.toASCIIString(), GraphDataNode.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
+        return new GraphDataNode(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), GraphDataNode.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
     }
 
     private void setRelationData(GraphDataNode egoNode, GraphDataNode alterNode, EntityData egoData, String alterPath) {
@@ -186,6 +186,7 @@ public class EntityIndex {
 //        String currentKinType = remaningKinTypeString.substring(0, 1);
 //        remaningKinTypeString = remaningKinTypeString.substring(1);
         KinType currentKinType = remainingKinTypes.remove(0);
+//        for (String alterPath : entityCollection.getRelatedNodes(egoNode.getUniqueIdentifier())) {
         for (String alterPath : egoData.getRelationPaths()) {
             try {
                 boolean relationAdded = false;
@@ -215,7 +216,7 @@ public class EntityIndex {
         }
     }
 
-    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] kinTypeStrings) throws URISyntaxException {
+    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings) throws EntityServiceException {
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
         HashMap<String, GraphDataNode> createdGraphNodes = new HashMap<String, GraphDataNode>();
         for (URI currentEgoUri : egoNodes) {
@@ -229,7 +230,11 @@ public class EntityIndex {
             if (kinTypeStrings != null) {
                 for (String currentKinString : kinTypeStrings) {
                     ArrayList<KinType> kinTypes = kinTypeStringConverter.getKinTypes(currentKinString);
-                    getNextRelations(createdGraphNodes, currentEgoUri.toASCIIString(), egoNode, kinTypes);
+                    try {
+                        getNextRelations(createdGraphNodes, currentEgoUri.toASCIIString(), egoNode, kinTypes);
+                    } catch (URISyntaxException exception) {
+                        throw new EntityServiceException(exception.getMessage());
+                    }
                 }
             }
         }
