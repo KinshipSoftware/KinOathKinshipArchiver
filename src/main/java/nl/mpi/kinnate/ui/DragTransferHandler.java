@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -21,12 +20,15 @@ import nl.mpi.arbil.data.ImdiTreeObject;
 public class DragTransferHandler extends TransferHandler implements Transferable {
 
     ImdiTreeObject[] selectedNodes;
-    DataFlavor[] dataFlavors = new DataFlavor[]{/*new DataFlavor("ImdiTreeObject"),*/DataFlavor.stringFlavor};
+    DataFlavor dataFlavor = new DataFlavor(ImdiTreeObject[].class, "ImdiTreeObject");
+    DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor};
 
+    @Override
     public int getSourceActions(JComponent comp) {
         return COPY;
     }
 
+    @Override
     public Transferable createTransferable(JComponent comp) {
         selectedNodes = ((ImdiTree) comp).getSelectedNodes();
         if (selectedNodes.length == 0) {
@@ -35,6 +37,7 @@ public class DragTransferHandler extends TransferHandler implements Transferable
         return this;
     }
 
+    @Override
     public void exportDone(JComponent comp, Transferable trans, int action) {
 //        if (action != MOVE) {
 //            return;
@@ -55,13 +58,14 @@ public class DragTransferHandler extends TransferHandler implements Transferable
     }
     //////////////////////////////////////
 
+    @Override
     public boolean canImport(TransferHandler.TransferSupport support) {
 //        if (!support.isDrop()) {
 //            return false;
 //        }
-//        if (!support.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-//            return false;
-//        }
+        if (!support.isDataFlavorSupported(dataFlavor)) {
+            return false;
+        }
 
         Component dropLocation = support.getComponent(); // getDropLocation
         if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
@@ -76,6 +80,7 @@ public class DragTransferHandler extends TransferHandler implements Transferable
         return false;
     }
 
+    @Override
     public boolean importData(TransferHandler.TransferSupport support) {
         // if we can't handle the import, say so
         if (!canImport(support)) {
@@ -94,10 +99,17 @@ public class DragTransferHandler extends TransferHandler implements Transferable
         if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
             System.out.println("dropped to KinTypeEgoSelectionTestPanel");
             ArrayList<URI> slectedUris = new ArrayList<URI>();
+            ArrayList<String> slectedIdentifiers = new ArrayList<String>();
             for (ImdiTreeObject currentImdiNode : selectedNodes) {
                 slectedUris.add(currentImdiNode.getURI());
+                for (String currentIdentifierType : new String[]{"Kinnate.Gedcom.UniqueIdentifier.LocalIdentifier", "Kinnate.Entity.UniqueIdentifier.LocalIdentifier", "Kinnate.Gedcom.UniqueIdentifier.PersistantIdentifier", "Kinnate.Entity.UniqueIdentifier.PersistantIdentifier"}) {
+                    if (currentImdiNode.getFields().containsKey(currentIdentifierType)) {
+                        slectedIdentifiers.add(currentImdiNode.getFields().get(currentIdentifierType)[0].getFieldValue());
+                        break;
+                    }
+                }
             }
-            ((KinTypeEgoSelectionTestPanel) dropLocation).addEgoNodes(slectedUris.toArray(new URI[]{}));
+            ((KinTypeEgoSelectionTestPanel) dropLocation).addEgoNodes(slectedUris.toArray(new URI[]{}), slectedIdentifiers.toArray(new String[]{}));
             return true;
         }
         return false;

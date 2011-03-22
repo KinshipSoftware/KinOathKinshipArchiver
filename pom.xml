@@ -28,6 +28,36 @@
                     </execution>
                 </executions>
             </plugin>-->
+<!--            <plugin>
+                <groupId>org.codehaus.mojo.webstart</groupId>
+                <artifactId>webstart-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>jnlp</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+
+                    <jnlpFiles>
+                        <jnlpFile>
+                            <jarResources>
+                                <jarResource>
+                  <groupId>[some groupId]</groupId>
+                  <artifactId>[some artifactId]</artifactId>
+                  <version>[some version]</version>
+                  <mainClass>[some main class]</mainClass>
+                                </jarResource>
+                            </jarResources>
+                        </jnlpFile>
+                    </jnlpFiles>
+
+                </configuration>
+
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -64,12 +94,22 @@
             <version>1.7</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.basex</groupId>
+            <artifactId>basex</artifactId>
+            <version>6.5</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
             <id>MPI</id>
             <name>MPI LAT Repository</name>
             <url>http://lux15.mpi.nl/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>basex</id>
+            <name>BaseX Maven Repository</name>
+            <url>http://files.basex.org/maven</url>
         </repository>
     </repositories>
 </project>

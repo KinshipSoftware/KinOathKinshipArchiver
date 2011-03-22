@@ -1,12 +1,14 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.IndexerParameters.IndexerParam;
 
 /**
@@ -16,36 +18,58 @@ import nl.mpi.kinnate.entityindexer.IndexerParameters.IndexerParam;
  */
 public class FieldSelectionList extends JPanel {
 
-    KinTypeEgoSelectionTestPanel egoSelectionTestPanel;
-    private IndexerParam indexerParam;
+    private SavePanel savePanel;
+    private JPanel paddingPanel;
+    protected IndexerParam indexerParam;
 
-    public FieldSelectionList(KinTypeEgoSelectionTestPanel egoSelectionTestPanelLocal, IndexerParam indexerParamLocal) {
-        egoSelectionTestPanel = egoSelectionTestPanelLocal;
+    public FieldSelectionList(SavePanel savePanelLocal, IndexerParam indexerParamLocal, TableCellDragHandler tableCellDragHandler) {
+        // keep the panel items pushed to the top of the page
+        paddingPanel = new JPanel();
+        this.setLayout(new BorderLayout());
+        this.add(paddingPanel, BorderLayout.PAGE_START);
+        savePanel = savePanelLocal;
         indexerParam = indexerParamLocal;
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         populateSelectionList();
+        this.setTransferHandler(tableCellDragHandler);
     }
 
     private void populateSelectionList() {
-        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        this.removeAll();
+        paddingPanel.setLayout(new BoxLayout(paddingPanel, BoxLayout.PAGE_AXIS));
+        paddingPanel.removeAll();
         for (String fieldArray[] : indexerParam.getValues()) {
             JLabel fieldPathLabel = new JLabel(fieldArray[0]);
             JPanel fieldPanel = new JPanel();
             fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.LINE_AXIS));
             fieldPanel.add(fieldPathLabel);
+            fieldPanel.add(new JPanel());
             if (fieldArray.length > 1) {
                 String[] availableValues = indexerParam.getAvailableValues();
                 if (availableValues != null) {
                     JComboBox valueSelect = new JComboBox(availableValues);
                     valueSelect.setSelectedItem(fieldArray[1]);
+                    valueSelect.setActionCommand(fieldArray[0]);
                     fieldPanel.add(valueSelect);
+                    valueSelect.addActionListener(new java.awt.event.ActionListener() {
+
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            indexerParam.setValue(evt.getActionCommand(), ((JComboBox) evt.getSource()).getSelectedItem().toString());
+                            populateSelectionList();
+                            revalidate();
+                            savePanel.updateGraph();
+                        }
+                    });
+
+
+
                 } else {
                     JTextField valueField = new JTextField(fieldArray[1]);
                     fieldPanel.add(valueField);
                 }
             }
             JButton removeButton = new JButton("x");
+            removeButton.setToolTipText("delete item");
+            int removeButtonSize = removeButton.getFontMetrics(removeButton.getFont()).getHeight();
+            removeButton.setPreferredSize(new Dimension(removeButtonSize, removeButtonSize));
             removeButton.setActionCommand(fieldArray[0]);
             removeButton.addActionListener(new java.awt.event.ActionListener() {
 
@@ -53,19 +77,17 @@ public class FieldSelectionList extends JPanel {
                     indexerParam.removeValue(evt.getActionCommand());
                     populateSelectionList();
                     revalidate();
-                    egoSelectionTestPanel.drawGraph();
+                    savePanel.updateGraph();
                 }
             });
-            fieldPanel.add(new JPanel());
             fieldPanel.add(removeButton);
-            this.add(fieldPanel);
+            paddingPanel.add(fieldPanel);
         }
-        this.add(new JPanel());
+        paddingPanel.add(new JPanel());
     }
-
 //    private void populateSelectionList(String[][] fieldListArray, String[] availableValues) {
-//        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-//        this.removeAll();
+//        paddingPanel.setLayout(new BoxLayout(paddingPanel, BoxLayout.PAGE_AXIS));
+//        paddingPanel.removeAll();
 //        for (String[] fieldArray : fieldListArray) {
 //            JLabel fieldPathLabel = new JLabel(fieldArray[0]);
 //            JComboBox valueSelect = new JComboBox(availableValues); // todo: get the string list from the svg: new String[]{"circle", "triangle", "square", "resource", "union"}
@@ -74,7 +96,12 @@ public class FieldSelectionList extends JPanel {
 //            fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.LINE_AXIS));
 //            fieldPanel.add(fieldPathLabel);
 //            fieldPanel.add(valueSelect);
-//            this.add(fieldPanel);
+//            paddingPanel.add(fieldPanel);
 //        }
 //    }
+
+    protected void updateUiList() {
+        populateSelectionList();
+        revalidate();
+    }
 }

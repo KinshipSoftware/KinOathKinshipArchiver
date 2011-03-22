@@ -20,17 +20,24 @@ import nl.mpi.kinnate.SavePanel;
  */
 public class KinTypeStringTestPanel extends JPanel implements SavePanel {
 
-    JTextArea kinTypeStringInput;
-    GraphPanel graphPanel;
-    String defaultString = "This test panel should provide a kin diagram of the kintype strings entered here.\nEnter one string per line.\nEach new line (enter/return key) will update the graph.";
+    private JTextArea kinTypeStringInput;
+    private GraphPanel graphPanel;
+    private KinTermPanel kinTermPanel;
+    private String defaultString = "This test panel should provide a kin diagram of the kintype strings entered here.\nEnter one string per line.\nEach new line (enter/return key) will update the graph.";
 
     public KinTypeStringTestPanel() {
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel(null);
+        kinTermPanel = new KinTermPanel(this, graphPanel.getkinTerms());
         kinTypeStringInput = new JTextArea(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
+
+        JPanel kintermSplitPane = new JPanel(new BorderLayout());
+        kintermSplitPane.add(graphPanel, BorderLayout.CENTER);
+        kintermSplitPane.add(new HidePane(kinTermPanel, "Kin Terms", BorderLayout.LINE_START), BorderLayout.LINE_END);
+
         this.add(kinTypeStringInput, BorderLayout.PAGE_START);
-        this.add(graphPanel, BorderLayout.CENTER);
+        this.add(kintermSplitPane, BorderLayout.CENTER);
 //        kinTypeStringInput.setForeground(Color.lightGray);
         kinTypeStringInput.addFocusListener(new FocusListener() {
 
@@ -60,10 +67,7 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel {
 
             public void keyReleased(KeyEvent e) {
 //                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                KinTypeStringConverter graphData = new KinTypeStringConverter();
-                graphData.readKinTypes(kinTypeStringInput.getText().split("\n"));
-                graphPanel.drawNodes(graphData);
-                KinTypeStringTestPanel.this.doLayout();
+                KinTypeStringTestPanel.this.updateGraph();
 //                }
             }
         });
@@ -83,5 +87,12 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel {
 
     public void saveToFile(File saveFile) {
         graphPanel.saveToFile(saveFile);
+    }
+
+    public void updateGraph() {
+        KinTypeStringConverter graphData = new KinTypeStringConverter();
+        graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTerms());
+        graphPanel.drawNodes(graphData);
+        KinTypeStringTestPanel.this.doLayout();
     }
 }

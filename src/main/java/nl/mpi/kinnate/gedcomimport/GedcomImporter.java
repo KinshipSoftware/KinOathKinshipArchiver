@@ -1,18 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package nl.mpi.kinnate;
+package nl.mpi.kinnate.gedcomimport;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.List;
+import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -20,14 +22,13 @@ import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.arbil.data.ImdiLoader;
-import nl.mpi.arbil.data.ImdiTreeObject;
 import nl.mpi.arbil.data.MetadataBuilder;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
 
 /**
  *  Document   : GedcomImporter
@@ -36,17 +37,67 @@ import org.xml.sax.SAXException;
  */
 public class GedcomImporter {
 
+    private int inputLineCount;
+    private String inputFileMd5Sum;
+    JProgressBar progressBar = null;
+
     private void appendToTaskOutput(JTextArea importTextArea, String lineOfText) {
         importTextArea.append(lineOfText + "\n");
         importTextArea.setCaretPosition(importTextArea.getText().length());
     }
 
-    public void importTestFile(JTextArea importTextArea, String testFileString) {
-        ArrayList<ImdiTreeObject> createdNodes = new ArrayList<ImdiTreeObject>();
-        Hashtable<String, String> createdNodesTable = new Hashtable<String, String>();
-//        ArrayList<ImdiTreeObject> linkNodes = new ArrayList<ImdiTreeObject>();
+    public void setProgressBar(JProgressBar progressBarLocal) {
+        progressBar = progressBarLocal;
+    }
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString)));
+    private void calculateFileNameAndFileLength(BufferedReader bufferedReader) {
+        // count the lines in the file (for progress) and calculate the md5 sum (for unique file naming)
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            StringBuilder hexString = new StringBuilder();
+            String strLine;
+            inputLineCount = 0;
+            while ((strLine = bufferedReader.readLine()) != null) {
+                digest.update(strLine.getBytes());
+                inputLineCount++;
+            }
+            byte[] md5sum = digest.digest();
+            for (int byteCounter = 0; byteCounter < md5sum.length; ++byteCounter) {
+                hexString.append(Integer.toHexString(0x0100 + (md5sum[byteCounter] & 0x00FF)).substring(1));
+            }
+            inputFileMd5Sum = hexString.toString();
+        } catch (NoSuchAlgorithmException algorithmException) {
+            GuiHelper.linorgBugCatcher.logError(algorithmException);
+        } catch (IOException iOException) {
+            GuiHelper.linorgBugCatcher.logError(iOException);
+        }
+    }
+
+    private String cleanFileName(String fileName) {
+        // prevent bad file names being created from the gedcom internal name part
+        return fileName.replaceAll("[^A-z0-9]", "_") + ".cmdi";
+    }
+
+    public URI[] importTestFile(JTextArea importTextArea, File testFile) {
+        try {
+            calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
+            return importTestFile(importTextArea, new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
+        } catch (FileNotFoundException exception) {
+            // todo: handle this
+            return null;
+        }
+    }
+
+    public URI[] importTestFile(JTextArea importTextArea, String testFileString) {
+        calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
+        return importTestFile(importTextArea, new InputStreamReader(getClass().getResourceAsStream(testFileString)));
+    }
+
+    public URI[] importTestFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
+        ArrayList<URI> createdNodes = new ArrayList<URI>();
+//        Hashtable<String, URI> createdNodesTable = new Hashtable<String, URI>();
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//        ArrayList<ImdiTreeObject> linkNodes = new ArrayList<ImdiTreeObject>();
         // really should close the file properly but this is only for testing at this stage
 
 //        URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), gedcomXsdLocation);
@@ -71,12 +122,19 @@ public class GedcomImporter {
             ArrayList<String> gedcomLevelStrings = new ArrayList<String>();
             ArrayList<String> xsdLevelStrings = new ArrayList<String>(); // temp array to create the xsd
 
-            ImdiTreeObject gedcomImdiObject = null;
+//            ImdiTreeObject gedcomImdiObject = null;
+            File entityFile = null;
             Document metadataDom = null;
             Element previousField = null;
             Node currentDomNode = null;
 
+            File destinationDirectory = new File(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), inputFileMd5Sum);
+            if (!destinationDirectory.exists()) {
+                destinationDirectory.mkdir();
+            }
+
             String gedcomPreviousPath = "";
+            int currntLineCounter = 0;
             while ((strLine = bufferedReader.readLine()) != null) {
                 String[] lineParts = strLine.split(" ", 3);
                 gedcomLevel = Integer.parseInt(lineParts[0]);
@@ -96,13 +154,21 @@ public class GedcomImporter {
                 if (lineParts[1].equals("CONT")) {
                     if (previousField != null) {
                         // todo: if the previous field is null this should be caught and handled as an error in the source file
-                        previousField.setTextContent(previousField.getTextContent() + "\n" + lineParts[2]);
+                        String lineContents = "";
+                        if (lineParts.length > 2) {
+                            lineContents = lineParts[2];
+                        }
+                        previousField.setTextContent(previousField.getTextContent() + "\n" + lineContents);
                     }
                     lastFieldContinued = true;
                 } else if (lineParts[1].equals("CONC")) {
                     if (previousField != null) {
                         // todo: if the previous field is null this should be caught and handled as an error in the source file
-                        previousField.setTextContent(previousField.getTextContent() + lineParts[2]);
+                        String lineContents = "";
+                        if (lineParts.length > 2) {
+                            lineContents = lineParts[2];
+                        }
+                        previousField.setTextContent(previousField.getTextContent() + lineContents);
                     }
                     lastFieldContinued = true;
                 }
@@ -114,7 +180,7 @@ public class GedcomImporter {
 //                            break;
 //                        }
                         if (metadataDom != null) {
-                            new CmdiComponentBuilder().savePrettyFormatting(metadataDom, gedcomImdiObject.getFile());
+                            new CmdiComponentBuilder().savePrettyFormatting(metadataDom, entityFile);
                             metadataDom = null;
                         }
                         if (lineParts[1].equals("TRLR")) {
@@ -122,71 +188,98 @@ public class GedcomImporter {
                         } else {
 //                        String gedcomXsdLocation = "/xsd/gedcom-import.xsd";
                             String gedcomXsdLocation = "/xsd/gedcom-autogenerated.xsd";
-                            URI eniryFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), gedcomXsdLocation);
+                            URI entityUri;
+                            entityFile = new File(destinationDirectory, cleanFileName(lineParts[1]));
                             try {
-                                eniryFileURI = componentBuilder.createComponentFile(eniryFileURI, this.getClass().getResource(gedcomXsdLocation).toURI(), false);
+                                entityUri = componentBuilder.createComponentFile(entityFile.toURI(), this.getClass().getResource(gedcomXsdLocation).toURI(), false);
                             } catch (URISyntaxException ex) {
                                 GuiHelper.linorgBugCatcher.logError(ex);
                                 appendToTaskOutput(importTextArea, "error: " + ex.getMessage());
-                                return;
+                                return null;
 //                            } catch (org.apache.xmlbeans.XmlException ex) {
 //                                GuiHelper.linorgBugCatcher.logError(ex);
 //                                appendToTaskOutput(importTextArea, "error: " + ex.getMessage());
 //                                return;
                             }
 
-                            gedcomImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, eniryFileURI);
-                            gedcomImdiObject.waitTillLoaded();
-                            appendToTaskOutput(importTextArea, "--> InternalNameT1" + lineParts[1] + " : " + gedcomImdiObject.getUrlString());
-                            createdNodesTable.put(lineParts[1], gedcomImdiObject.getUrlString());
-                            createdNodes.add(gedcomImdiObject);
-                            metadataDom = new CmdiComponentBuilder().getDocument(gedcomImdiObject.getURI());
+//                            gedcomImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, eniryFileURI);
+                            //gedcomImdiObject.waitTillLoaded();
+                            appendToTaskOutput(importTextArea, "--> InternalNameT1" + lineParts[1] + " : " + entityUri);
+//                            createdNodesTable.put(lineParts[1], entityUri);
+                            createdNodes.add(entityUri);
+                            metadataDom = new CmdiComponentBuilder().getDocument(entityUri);
                             currentDomNode = metadataDom.getDocumentElement();
-                            // find the deepest element node to start adding child nodes to
-                            for (Node childNode = currentDomNode.getFirstChild(); childNode != null; childNode = childNode.getNextSibling()) {
-                                System.out.println("childNode: " + childNode);
-                                System.out.println("childNodeType: " + childNode.getNodeType());
-                                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                                    System.out.println("entering node");
-                                    currentDomNode = childNode;
-                                    childNode = childNode.getFirstChild();
-                                    if (childNode == null) {
-                                        break;
-                                    }
-                                }
+//                            // find the deepest element node to start adding child nodes to
+//                            for (Node childNode = currentDomNode.getFirstChild(); childNode != null; childNode = childNode.getNextSibling()) {
+//                                System.out.println("childNode: " + childNode);
+//                                System.out.println("childNodeType: " + childNode.getNodeType());
+//                                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+//                                    System.out.println("entering node");
+//                                    currentDomNode = childNode;
+//                                    childNode = childNode.getFirstChild();
+//                                    if (childNode == null) {
+//                                        break;
+//                                    }
+//                                }
+//                            }
+                            try {
+                                // add a unique identifier to the entity node
+                                Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
+                                localIdentifierElement.setTextContent(new LocalIdentifier().getUniqueIdentifier(entityFile));
+                                Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/UniqueIdentifier");
+                                uniqueIdentifierNode.appendChild(localIdentifierElement);
+                            } catch (DOMException exception) {
+                                GuiHelper.linorgBugCatcher.logError(exception);
+                            } catch (TransformerException exception) {
+                                GuiHelper.linorgBugCatcher.logError(exception);
                             }
                             if (lineParts[1].equals("HEAD")) {
                                 // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
-                                Node headElement = currentDomNode;
+//                                Node headElement = currentDomNode;
 //                                Element headElement = metadataDom.createElement("HEAD");
 //                                currentDomNode.appendChild(headElement);
-                                currentDomNode = headElement;
+                                try {
+                                    currentDomNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/HEAD");
+                                } catch (DOMException exception) {
+                                    GuiHelper.linorgBugCatcher.logError(exception);
+                                } catch (TransformerException exception) {
+                                    GuiHelper.linorgBugCatcher.logError(exception);
+                                }
                             } else {
                                 // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
-                                Node entityElement = null;
-                                for (Node siblingNode = currentDomNode.getNextSibling(); siblingNode != null; siblingNode = siblingNode.getNextSibling()) {
-                                    if (siblingNode.getNodeName().equals("Entity")) {
-                                        entityElement = siblingNode;
-                                        break;
-                                    }
+//                                Node entityElement = null;
+//                                for (Node siblingNode = currentDomNode.getNextSibling(); siblingNode != null; siblingNode = siblingNode.getNextSibling()) {
+//                                    if (siblingNode.getNodeName().equals("Entity")) {
+//                                        entityElement = siblingNode;
+//                                        break;
+//                                    }
+//                                }
+                                Node gedcomIdElement = null; // metadataDom.createElement("GedcomId");
+                                Node gedcomTypeElement = null; // metadataDom.createElement("GedcomType");
+                                try {
+                                    currentDomNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/Entity");
+                                    gedcomIdElement = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/Entity/GedcomId");
+                                    gedcomTypeElement = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/Entity/GedcomType");
+                                } catch (DOMException exception) {
+                                    GuiHelper.linorgBugCatcher.logError(exception);
+                                } catch (TransformerException exception) {
+                                    GuiHelper.linorgBugCatcher.logError(exception);
                                 }
 //                                Element entityElement = metadataDom.createElement("Entity");
 //                                currentDomNode.appendChild(entityElement);
-                                currentDomNode = entityElement;
+//                                currentDomNode = entityElement;
 //                                Element nameElement = metadataDom.createElement("NAME");
 //                                currentDomNode.appendChild(nameElement);
-                                System.out.println("currentDomElement: " + currentDomNode);
-                                Node gedcomIdElement = null; // metadataDom.createElement("GedcomId");
-                                Node gedcomTypeElement = null; // metadataDom.createElement("GedcomType");
+//                                System.out.println("currentDomElement: " + currentDomNode);
 //                                currentDomNode.appendChild(gedcomIdElement);
-                                for (Node siblingNode = currentDomNode.getFirstChild(); siblingNode != null; siblingNode = siblingNode.getNextSibling()) {
-                                    if (siblingNode.getNodeName().equals("GedcomId")) {
-                                        gedcomIdElement = siblingNode;
-                                    }
-                                    if (siblingNode.getNodeName().equals("GedcomType")) {
-                                        gedcomTypeElement = siblingNode;
-                                    }
-                                }
+//                                for (Node siblingNode = currentDomNode.getFirstChild(); siblingNode != null; siblingNode = siblingNode.getNextSibling()) {
+//                                    if (siblingNode.getNodeName().equals("GedcomId")) {
+//                                        gedcomIdElement = siblingNode;
+//                                    }
+//                                    if (siblingNode.getNodeName().equals("GedcomType")) {
+//                                        gedcomTypeElement = siblingNode;
+//                                    }
+//                                }
                                 gedcomIdElement.setTextContent(lineParts[1]);
                                 if (lineParts.length > 2) {
                                     gedcomTypeElement.setTextContent(lineParts[2]);
@@ -341,7 +434,8 @@ public class GedcomImporter {
                                         "Kinnate.Gedcom.Entity.DEAT",
                                         "Kinnate.Gedcom.Entity.OBJE",
                                         "Kinnate.Gedcom.HEAD.SOUR.CORP",
-                                        "Kinnate.Gedcom.HEAD.SOUR.CORP.ADDR"});
+                                        "Kinnate.Gedcom.HEAD.SOUR.CORP.ADDR",
+                                        "Kinnate.Gedcom.Entity.ANUL"});
                             Element addedExtraElement = null;
                             if (swapList.contains(gedcomPath)) {
                                 gedcomPath += "." + lineParts[1];
@@ -389,8 +483,15 @@ public class GedcomImporter {
                                 metadataDom.getDocumentElement().appendChild(relationElement);
 
                                 Element linkElement = metadataDom.createElement("Link");
-                                linkElement.setTextContent(lineParts[2]);
+                                linkElement.setTextContent("./" + cleanFileName(lineParts[2]));
                                 relationElement.appendChild(linkElement);
+
+                                // add a unique identifier of the target entity to the link
+                                Element uniqueIdentifierElement = metadataDom.createElement("UniqueIdentifier");
+                                Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
+                                localIdentifierElement.setTextContent(new LocalIdentifier().getUniqueIdentifier(new File(entityFile.getParentFile(), cleanFileName(lineParts[2]))));
+                                uniqueIdentifierElement.appendChild(localIdentifierElement);
+                                relationElement.appendChild(uniqueIdentifierElement);
 
                                 Element typeElement = metadataDom.createElement("Type");
                                 typeElement.setTextContent(gedcomPath);
@@ -408,41 +509,51 @@ public class GedcomImporter {
                         }
                     }
                 }
+                currntLineCounter++;
+                int currentProgressPercent = (int) ((double) currntLineCounter / (double) inputLineCount * 100);
+                if (progressBar != null) {
+                    progressBar.setValue(currentProgressPercent);
+                }
             }
 
             if (metadataDom != null) {
-                new CmdiComponentBuilder().savePrettyFormatting(metadataDom, gedcomImdiObject.getFile());
+                new CmdiComponentBuilder().savePrettyFormatting(metadataDom, entityFile);
                 metadataDom = null;
             }
 //            ImdiLoader.getSingleInstance().saveNodesNeedingSave(true);
 //            appendToTaskOutput(importTextArea, "--> link count: " + linkFields.size());
             // update all the links now we have the urls for each internal name
 
-            appendToTaskOutput(importTextArea, "xsdString:\n" + xsdString);
+//            appendToTaskOutput(importTextArea, "xsdString:\n" + xsdString);
 
-            for (ImdiTreeObject currentImdiObject : createdNodes) {
-                appendToTaskOutput(importTextArea, "linkParent: " + currentImdiObject.getUrlString());
-                try {
-                    String linkXpath = "/Kinnate/Relation/Link";
-                    Document linksDom = new CmdiComponentBuilder().getDocument(currentImdiObject.getURI());
-                    NodeList relationLinkNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, linkXpath);
-                    for (int nodeCounter = 0; nodeCounter < relationLinkNodeList.getLength(); nodeCounter++) {
-                        Node relationLinkNode = relationLinkNodeList.item(nodeCounter);
-                        if (relationLinkNode != null) {
-                            // todo: update the links
-                            // todo: create links in ego and alter but but the type info such as famc only in the relevant entity
-                            String linkValue = createdNodesTable.get(relationLinkNode.getTextContent());
-                            if (linkValue != null) {
-                                relationLinkNode.setTextContent(linkValue);
-                                appendToTaskOutput(importTextArea, "linkValue: " + linkValue);
-                            }
-                        }
-                    }
-                    new CmdiComponentBuilder().savePrettyFormatting(linksDom, currentImdiObject.getFile());
-                } catch (TransformerException exception) {
-                    GuiHelper.linorgBugCatcher.logError(exception);
-                }
-            }
+//            int linkNodesUpdated = 0;
+//            for (URI currentUri : createdNodes) {
+//                appendToTaskOutput(importTextArea, "linkParent: " + currentUri.toASCIIString());
+//                try {
+//                    String linkXpath = "/Kinnate/Relation/Link";
+//                    Document linksDom = new CmdiComponentBuilder().getDocument(currentUri);
+//                    NodeList relationLinkNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, linkXpath);
+//                    for (int nodeCounter = 0; nodeCounter < relationLinkNodeList.getLength(); nodeCounter++) {
+//                        Node relationLinkNode = relationLinkNodeList.item(nodeCounter);
+//                        if (relationLinkNode != null) {
+//                            // todo: update the links
+//                            // todo: create links in ego and alter but but the type info such as famc only in the relevant entity
+//                            String linkValue = createdNodesTable.get(relationLinkNode.getTextContent());
+//                            if (linkValue != null) {
+//                                relationLinkNode.setTextContent(linkValue);
+//                                appendToTaskOutput(importTextArea, "linkValue: " + linkValue);
+//                            }
+//                        }
+//                    }
+//                    new CmdiComponentBuilder().savePrettyFormatting(linksDom, currentImdiObject.getFile());
+//                } catch (TransformerException exception) {
+//                    GuiHelper.linorgBugCatcher.logError(exception);
+//                }
+//                linkNodesUpdated++;
+//                if (progressBar != null) {
+//                    progressBar.setValue((int) ((double) linkNodesUpdated / (double) createdNodes.size() * 100 / 2 + 50));
+//                }
+//            }
             appendToTaskOutput(importTextArea, "import finished with a node count of: " + createdNodes.size());
 
 //            gedcomImdiObject.saveChangesToCache(true);
@@ -464,12 +575,13 @@ public class GedcomImporter {
             appendToTaskOutput(importTextArea, "error: " + sAXException.getMessage());
         }
 //        LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
-        String[] createdNodePaths = new String[createdNodes.size()];
-        int createdNodeCounter = 0;
-        for (ImdiTreeObject currentImdiObject : createdNodes) {
-            createdNodePaths[createdNodeCounter] = currentImdiObject.getUrlString();
-            createdNodeCounter++;
-        }
-        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", createdNodePaths);
+//        String[] createdNodePaths = new String[createdNodes.size()];
+//        int createdNodeCounter = 0;
+//        for (URI currentUri : createdNodes) {
+//            createdNodePaths[createdNodeCounter] = currentUri.toASCIIString();
+////            createdNodeCounter++;
+//        }
+//        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", createdNodePaths);
+        return createdNodes.toArray(new URI[]{});
     }
 }

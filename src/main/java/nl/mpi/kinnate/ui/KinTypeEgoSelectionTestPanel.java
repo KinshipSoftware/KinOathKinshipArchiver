@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.kinnate.ui.EgoSelectionPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
@@ -9,7 +8,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -22,6 +20,8 @@ import nl.mpi.kinnate.entityindexer.EntityIndex;
 import nl.mpi.kinnate.svg.GraphData;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.entityindexer.EntityService;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -34,22 +34,35 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
     private GraphPanel graphPanel;
     private GraphData graphData;
     private EgoSelectionPanel egoSelectionPanel;
-    private EntityIndex entityIndex;
-    private String defaultString = "This test panel should provide a kin diagram based on selected egos and the the kintype strings entered here.\nEnter one string per line.";
+    private KinTermPanel kinTermPanel;
+    private EntityService entityIndex;
+    private String defaultString = "# This test panel should provide a kin diagram based on selected egos and the the kintype strings entered here.\n# Enter one string per line.\n# By default all relations of the selected entity will be shown.\n";
     private String kinTypeStrings[] = new String[]{};
 
     public KinTypeEgoSelectionTestPanel(File existingFile) {
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel(this);
         egoSelectionPanel = new EgoSelectionPanel();
+        kinTermPanel = new KinTermPanel(this, graphPanel.getkinTerms());
         kinTypeStringInput = new JTextArea(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
         JPanel kinGraphPanel = new JPanel(new BorderLayout());
         kinGraphPanel.add(kinTypeStringInput, BorderLayout.PAGE_START);
-        kinGraphPanel.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, egoSelectionPanel, graphPanel), BorderLayout.CENTER);
+
+//        JSplitPane egoSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        JPanel kintermSplitPane = new JPanel(new BorderLayout());
+//        kinGraphPanel.add(egoSplitPane, BorderLayout.CENTER);
+//        outerSplitPane.setDividerLocation(0.5); // todo: add this to its parent so that the divider position sticks
+        kintermSplitPane.add(new HidePane(egoSelectionPanel, "Ego Selection", BorderLayout.LINE_END), BorderLayout.LINE_START);
+        kintermSplitPane.add(graphPanel, BorderLayout.CENTER);
+        kintermSplitPane.add(new HidePane(kinTermPanel, "Kin Terms", BorderLayout.LINE_START), BorderLayout.LINE_END);
+        kinGraphPanel.add(kintermSplitPane);
 
         ImdiTableModel imdiTableModel = new ImdiTableModel();
         ImdiTable imdiTable = new ImdiTable(imdiTableModel, "Selected Nodes");
+        TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
+        imdiTable.setTransferHandler(tableCellDragHandler);
+        imdiTable.setDragEnabled(true);
         graphPanel.setImdiTableModel(imdiTableModel);
 
         JScrollPane tableScrollPane = new JScrollPane(imdiTable);
@@ -65,19 +78,24 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
             graphPanel.readSvg(existingFile);
         } else {
             graphPanel.drawNodes(graphData);
+            // todo: filter out the noise and only save or use the actual kin type strings
+//            graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
+//            kinTypeStrings = graphPanel.getKinTypeStrigs();
         }
-        URI[] egoSelection = graphPanel.getEgoList();
         try {
-            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(egoSelection, kinTypeStrings));
-        } catch (URISyntaxException exception) {
+            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings));
+        } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
             LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
         }
         egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
         kinTypeStrings = graphPanel.getKinTypeStrigs();
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, kinGraphPanel,
-                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tableScrollPane, new IndexerParametersPanel(this, graphPanel, entityIndex)));
+        IndexerParametersPanel indexerParametersPanel = new IndexerParametersPanel(this, graphPanel, tableCellDragHandler);
+        JPanel advancedPanel = new JPanel(new BorderLayout());
+        advancedPanel.add(tableScrollPane, BorderLayout.CENTER);
+        advancedPanel.add(new HidePane(indexerParametersPanel, "Indexer Parameters", BorderLayout.LINE_START), BorderLayout.LINE_END);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, kinGraphPanel, advancedPanel);
         this.add(splitPane);
 
 
@@ -127,16 +145,16 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 
     public void drawGraph() {
         try {
-            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), kinTypeStrings));
-        } catch (URISyntaxException exception) {
+            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings));
+        } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
             LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
         }
         graphPanel.drawNodes(graphData);
     }
 
-    public void addEgoNodes(URI[] egoSelection) {
-        graphPanel.setEgoList(egoSelection);
+    public void addEgoNodes(URI[] egoSelection, String[] egoIdentifierArray) {
+        graphPanel.setEgoList(egoSelection, egoIdentifierArray);
         drawGraph();
         egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
     }
@@ -155,5 +173,9 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 
     public void saveToFile(File saveFile) {
         graphPanel.saveToFile(saveFile);
+    }
+
+    public void updateGraph() {
+        this.drawGraph();
     }
 }

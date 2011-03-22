@@ -16,6 +16,15 @@ public class EntityData {
     private ArrayList<String[] /* relevant entity data (link vs entity is clear from the data path)
             eg: [link.famc, link.kinterm:uncle,entity.gender:m, entity.age:60, entity.birth.year:1960]
              */> entityFields = new ArrayList<String[]>();
+    private String uniqueIdentifier;
+
+    public EntityData(String uniqueIdentifierLocal) {
+        uniqueIdentifier = uniqueIdentifierLocal;
+    }
+
+    public String getUniqueIdentifier() {
+        return uniqueIdentifier;
+    }
 
     protected String getEntityField(String fieldName) {
         for (String[] currentField : entityFields) {
