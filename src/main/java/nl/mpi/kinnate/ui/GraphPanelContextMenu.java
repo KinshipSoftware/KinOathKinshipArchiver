@@ -15,7 +15,7 @@ import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.GraphPanelSize;
-import uniqueidentifiers.LocalIdentifier;
+import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
 
 /**
  *  Document   : GraphPanelContextMenu
