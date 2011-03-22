@@ -1,6 +1,8 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -58,31 +60,21 @@ public class EntitySearchPanel extends JPanel {
         leftTree.requestResort();
         JLabel searchLabel = new JLabel("Search Entity Names");
         searchField = new JTextField();
+        searchField.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    EntitySearchPanel.this.performSearch();
+                }
+                super.keyReleased(e);
+            }
+        });
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ArrayList<ImdiTreeObject> resultsArray = new ArrayList<ImdiTreeObject>();
-                EntityCollection.SearchResults searchResults = entityCollection.searchByName(searchField.getText());
-                String[] rawResultsArray = searchResults.resultsPathArray;
-                resultsArea.setText(searchResults.statusMessage + "\n");
-                for (String resultLine : rawResultsArray) {
-                    try {
-                        if (resultsArray.size() < 100) {
-                            ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(resultLine));
-                            currentImdiObject.reloadNode();
-                            resultsArray.add(currentImdiObject);
-                        } else {
-                            resultsArea.append("results limited to 100\n");
-                            break;
-                        }
-                    } catch (URISyntaxException exception) {
-                        new LinorgBugCatcher().logError(exception);
-                        resultsArea.append("error: " + resultLine + "\n");
-                    }
-                }
-                leftTree.rootNodeChildren = resultsArray.toArray(new ImdiTreeObject[]{});
-                leftTree.requestResort();
+                EntitySearchPanel.this.performSearch();
             }
         });
         JPanel searchPanel = new JPanel();
@@ -97,5 +89,29 @@ public class EntitySearchPanel extends JPanel {
 
     public void setTransferHandler(DragTransferHandler dragTransferHandler) {
         leftTree.setTransferHandler(dragTransferHandler);
+    }
+
+    protected void performSearch() {
+        ArrayList<ImdiTreeObject> resultsArray = new ArrayList<ImdiTreeObject>();
+        EntityCollection.SearchResults searchResults = entityCollection.searchByName(searchField.getText());
+        String[] rawResultsArray = searchResults.resultsPathArray;
+        resultsArea.setText(searchResults.statusMessage + "\n");
+        for (String resultLine : rawResultsArray) {
+            try {
+                if (resultsArray.size() < 100) {
+                    ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(resultLine));
+                    currentImdiObject.reloadNode();
+                    resultsArray.add(currentImdiObject);
+                } else {
+                    resultsArea.append("results limited to 100\n");
+                    break;
+                }
+            } catch (URISyntaxException exception) {
+                new LinorgBugCatcher().logError(exception);
+                resultsArea.append("error: " + resultLine + "\n");
+            }
+        }
+        leftTree.rootNodeChildren = resultsArray.toArray(new ImdiTreeObject[]{});
+        leftTree.requestResort();
     }
 }
