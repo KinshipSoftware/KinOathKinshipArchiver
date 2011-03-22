@@ -21,7 +21,8 @@ public class DataStoreSvg {
 
     private String kinDataNameSpace = "kin";
     private String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
-    protected HashSet<URI> egoSet = new HashSet<URI>();
+    protected HashSet<URI> egoSet = new HashSet<URI>(); // todo: separate this into manditory entities and ego set
+    protected HashSet<String> egoIdentifierSet = new HashSet<String>(); // todo: add this to the stored data in the svg
     protected String[] kinTypeStrings = new String[]{};
     protected IndexerParameters indexParameters;
 
