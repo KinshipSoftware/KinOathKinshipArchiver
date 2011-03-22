@@ -155,12 +155,17 @@ public class GraphPanel extends JPanel implements SavePanel {
         return kinTerms;
     }
 
+    public String[] getEgoUniquiIdentifiersList() {
+        return dataStoreSvg.egoIdentifierSet.toArray(new String[]{});
+    }
+
     public URI[] getEgoList() {
         return dataStoreSvg.egoSet.toArray(new URI[]{});
     }
 
-    public void setEgoList(URI[] egoListArray) {
+    public void setEgoList(URI[] egoListArray, String[] egoIdentifierArray) {
         dataStoreSvg.egoSet = new HashSet<URI>(Arrays.asList(egoListArray));
+        dataStoreSvg.egoIdentifierSet = new HashSet<String>(Arrays.asList(egoIdentifierArray));
     }
 
     public String[] getSelectedPaths() {
@@ -301,6 +306,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (symbolType == null) {
             symbolType = "cross";
         }
+        // todo: check that if an entity is already placed in which case do not recreate
+        // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
         symbolNode = doc.createElementNS(svgNameSpace, "use");
         symbolNode.setAttribute("id", currentNode.getEntityPath() + "symbol");
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
