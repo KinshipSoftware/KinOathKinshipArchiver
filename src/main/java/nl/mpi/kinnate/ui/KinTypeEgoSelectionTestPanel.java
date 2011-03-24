@@ -16,10 +16,11 @@ import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.LinorgWindowManager;
-import nl.mpi.kinnate.entityindexer.EntityIndex;
 import nl.mpi.kinnate.svg.GraphData;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.entityindexer.EntityIndex;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 
@@ -70,8 +71,10 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 //        fieldListTabs.setMinimumSize(minimumSize);
 //        tableScrollPane.setMinimumSize(minimumSize);
 
-        entityIndex = new EntityIndex(graphPanel.getIndexParameters());
-//        entityIndex.indexEntities();
+        // EntityIndex loads the xml files and reads the document for entity data
+//        entityIndex = new EntityIndex(graphPanel.getIndexParameters());
+        // EntityCollection queries the xml collection to get the entity data
+        entityIndex = new EntityCollection(graphPanel.getIndexParameters());
 
         graphData = new GraphData();
         if (existingFile != null && existingFile.exists()) {
