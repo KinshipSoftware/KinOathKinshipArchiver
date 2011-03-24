@@ -44,13 +44,8 @@ public class EntityCollection implements EntityService {
 
     private String databaseName = "nl-mpi-kinnate";
     static Context context = new Context();
-    IndexerParameters indexParameters;
 
     public EntityCollection() {
-    }
-
-    public EntityCollection(IndexerParameters indexParametersLocal) {
-        indexParameters = indexParametersLocal;
     }
 
     // todo: move this into the graphdatanode
@@ -88,47 +83,12 @@ public class EntityCollection implements EntityService {
         }
     }
 
-    public RelationData[] getRelatedNodes(String uniqueIdentifier, IndexerParameters indexerParameters) {
+    public RelationData[] getRelatedNodes(String uniqueIdentifier, IndexerParameters indexParameters) {
         // todo: it would seem that entityPath is not going to be adequate because of resolved vs unresolved paths, it would seem best at this point to implement an ID or even persistent identifier if posible
         // there are two parts required to get all relations of an ego: check the ego entity for relations to others and then check the relations of all other entities for references to the ego entity
         // for now maybe use an md5 sum the full path url or something and put it into both the entity and linking entities
         QueryBuilder queryBuilder = new QueryBuilder();
-        String ancestorSequence = queryBuilder.asSequenceString(indexerParameters.ancestorFields);
-        String decendantSequence = queryBuilder.asSequenceString(indexerParameters.decendantFields);
-
-        //        uniqueIdentifier = "742243abdb2468b8df65f16ee562ac10";
-        String query1String = "<results><relations>{"
-                + "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
-                + "let $isAncestor := $relationNode/Type/text() = " + decendantSequence + "\n" // note that the ancestor and decentant are switched for alter compared to ego
-                + "let $isDecendant := $relationNode/Type/text() = " + ancestorSequence + "\n"
-                + "where $isAncestor or $isDecendant \n"
-                + "return \n"
-                + "<entity>{\n"
-                + "if ($isAncestor)\n"
-                + "then <type>ancestor</type>\n"
-                + "else if ($isDecendant)\n"
-                + "then <type>descendant</type>\n"
-                + "else <type>none</type>,\n"
-                // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
-                + "<path>{base-uri($relationNode)}</path>\n"
-                + "}</entity>"
-                + "}, {"
-                // for $relationNode in collection('nl-mpi-kinnate')/Kinnate/(Gedcom|Relation|Entity)[UniqueIdentifier/. = "742243abdb2468b8df65f16ee562ac10"]
-                + "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/(Gedcom|Entity)[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
-                + "let $isAncestor := $relationNode/Type/text() = " + ancestorSequence + "\n" // note that the ancestor and decentant are switched for alter compared to ego
-                + "let $isDecendant := $relationNode/Type/text() = " + decendantSequence + "\n"
-                + "where $isAncestor or $isDecendant \n"
-                + "return \n"
-                + "<entity>{\n"
-                + "if ($isAncestor)\n"
-                + "then <type>ancestor</type>\n"
-                + "else if ($isDecendant)\n"
-                + "then <type>descendant</type>\n"
-                + "else <type>none</type>,\n"
-                // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
-                + "<path>{base-uri($relationNode)}</path>\n"
-                + "}</entity>"
-                + "}</relations></results>\n";
+        String query1String = queryBuilder.getRelationQuery(uniqueIdentifier, indexParameters);
 
         System.out.println("query1String: " + query1String);
         ArrayList<RelationData> resultsArray = new ArrayList<RelationData>();
@@ -186,19 +146,9 @@ public class EntityCollection implements EntityService {
         return searchResults;
     }
 
-    public GraphDataNode getEntity(String uniqueIdentifier) {
+    public GraphDataNode getEntity(String uniqueIdentifier, IndexerParameters indexParameters) {
         QueryBuilder queryBuilder = new QueryBuilder();
-        String query1String = "let $entityNode := collection('nl-mpi-kinnate')/Kinnate[(Entity|Gedcom)/UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
-                + "return"
-                + "<Entity>{\n"
-                + "<UniqueIdentifier>" + uniqueIdentifier + "</UniqueIdentifier>,\n"
-                + "<path>{base-uri($entityNode)}</path>,\n"
-                + "<Labels>\n"
-                // loop the label fields and add a node for any that exist
-                + queryBuilder.asIfExistsString(indexParameters.labelFields, "$entityNode")
-                + "</Labels>"
-                + "}</Entity>\n";
-
+        String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
         System.out.println("query1String: " + query1String);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(GraphDataNode.class);
@@ -215,10 +165,10 @@ public class EntityCollection implements EntityService {
         return null;
     }
 
-    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings) throws EntityServiceException {
+    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
         ArrayList<GraphDataNode> graphDataNodes = new ArrayList<GraphDataNode>();
         for (String entityIdentifier : uniqueIdentifiers) {
-            graphDataNodes.add(getEntity(entityIdentifier));
+            graphDataNodes.add(getEntity(entityIdentifier, indexParameters));
         }
         // todo: process the kin type strings
         return graphDataNodes.toArray(new GraphDataNode[]{});
