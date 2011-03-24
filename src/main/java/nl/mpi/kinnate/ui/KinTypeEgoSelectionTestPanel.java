@@ -74,7 +74,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
         // EntityIndex loads the xml files and reads the document for entity data
 //        entityIndex = new EntityIndex(graphPanel.getIndexParameters());
         // EntityCollection queries the xml collection to get the entity data
-        entityIndex = new EntityCollection(graphPanel.getIndexParameters());
+        entityIndex = new EntityCollection();
 
         graphData = new GraphData();
         if (existingFile != null && existingFile.exists()) {
@@ -86,7 +86,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 //            kinTypeStrings = graphPanel.getKinTypeStrigs();
         }
         try {
-            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings));
+            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings, graphPanel.getIndexParameters()));
         } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
             LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
@@ -148,7 +148,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 
     public void drawGraph() {
         try {
-            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings));
+            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings, graphPanel.getIndexParameters()));
         } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
             LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
