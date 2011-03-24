@@ -10,5 +10,5 @@ import nl.mpi.kinnate.svg.GraphDataNode;
  */
 public interface EntityService {
 
-    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings) throws EntityServiceException;
+    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException;
 }
