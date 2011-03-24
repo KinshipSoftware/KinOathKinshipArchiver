@@ -1,6 +1,9 @@
 package nl.mpi.kinnate.svg;
 
 import java.util.ArrayList;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
 
 /**
@@ -8,6 +11,7 @@ import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
  *  Created on : Sep 11, 2010, 4:30:41 PM
  *  Author     : Peter Withers
  */
+@XmlRootElement(name = "Entity")
 public class GraphDataNode {
 
     public enum SymbolType {
@@ -40,11 +44,16 @@ public class GraphDataNode {
         }
         return GraphDataNode.RelationType.sibling;
     }
+    @XmlElement(name = "UniqueIdentifier")
     private String uniqueIdentifier;
+    @XmlElement(name = "Path")
     private String entityPath;
     private SymbolType symbolType;
+    @XmlElement(name = "SymbolType")
     private String symbolTypeString;
     boolean isEgo = false;
+    @XmlElementWrapper(name = "Labels")
+    @XmlElement(name = "String")
     private String[] labelString;
     private ArrayList<NodeRelation> relatedNodes = new ArrayList<NodeRelation>();
     int xPos;
@@ -59,6 +68,9 @@ public class GraphDataNode {
         RelationType relationType;
         RelationLineType relationLineType;
         String labelString;
+    }
+
+    private GraphDataNode() {
     }
 
     public GraphDataNode(String uniqueIdentifierLocal, String entityPathLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
