@@ -40,4 +40,54 @@ public class QueryBuilder {
         }
         return stringBuilder.toString();
     }
+    
+    public String getRelationQuery(String uniqueIdentifier, IndexerParameters indexParameters){
+        String ancestorSequence = this.asSequenceString(indexParameters.ancestorFields);
+        String decendantSequence = this.asSequenceString(indexParameters.decendantFields);
+        return "<results><relations>{"
+                + "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
+                + "let $isAncestor := $relationNode/Type/text() = " + decendantSequence + "\n" // note that the ancestor and decentant are switched for alter compared to ego
+                + "let $isDecendant := $relationNode/Type/text() = " + ancestorSequence + "\n"
+                + "where $isAncestor or $isDecendant \n"
+                + "return \n"
+                + "<entity>{\n"
+                + "if ($isAncestor)\n"
+                + "then <type>ancestor</type>\n"
+                + "else if ($isDecendant)\n"
+                + "then <type>descendant</type>\n"
+                + "else <type>none</type>,\n"
+                // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
+                + "<path>{base-uri($relationNode)}</path>\n"
+                + "}</entity>"
+                + "}, {"
+                // for $relationNode in collection('nl-mpi-kinnate')/Kinnate/(Gedcom|Relation|Entity)[UniqueIdentifier/. = "742243abdb2468b8df65f16ee562ac10"]
+                + "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/(Gedcom|Entity)[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
+                + "let $isAncestor := $relationNode/Type/text() = " + ancestorSequence + "\n" // note that the ancestor and decentant are switched for alter compared to ego
+                + "let $isDecendant := $relationNode/Type/text() = " + decendantSequence + "\n"
+                + "where $isAncestor or $isDecendant \n"
+                + "return \n"
+                + "<entity>{\n"
+                + "if ($isAncestor)\n"
+                + "then <type>ancestor</type>\n"
+                + "else if ($isDecendant)\n"
+                + "then <type>descendant</type>\n"
+                + "else <type>none</type>,\n"
+                // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
+                + "<path>{base-uri($relationNode)}</path>\n"
+                + "}</entity>"
+                + "}</relations></results>\n";
+    }
+
+    public String getEntityQuery(String uniqueIdentifier, IndexerParameters indexParameters){
+    return "let $entityNode := collection('nl-mpi-kinnate')/Kinnate[(Entity|Gedcom)/UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
+                + "return"
+                + "<Entity>{\n"
+                + "<UniqueIdentifier>" + uniqueIdentifier + "</UniqueIdentifier>,\n"
+                + "<path>{base-uri($entityNode)}</path>,\n"
+                + "<Labels>\n"
+                // loop the label fields and add a node for any that exist
+                + this.asIfExistsString(indexParameters.labelFields, "$entityNode")
+                + "</Labels>"
+                + "}</Entity>\n";
+    }
 }
