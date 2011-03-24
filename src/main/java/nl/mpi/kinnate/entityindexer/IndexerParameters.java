@@ -55,22 +55,6 @@ public class IndexerParameters {
         public String[] getAvailableValues() {
             return availableValuesArray;
         }
-
-        public String asSequenceString() {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (String[] currentEntry : valuesArray) {
-                if (stringBuilder.length() > 0) {
-                    stringBuilder.append(",");
-                } else {
-                    stringBuilder.append("(");
-                }
-                stringBuilder.append("\"");
-                stringBuilder.append(currentEntry[0]);
-                stringBuilder.append("\"");
-            }
-            stringBuilder.append(")");
-            return stringBuilder.toString();
-        }
     }
     public String linkPath = "/Kinnate/Relation/Link";
 //    public IndexerParam relevantEntityData = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/NoteText"}, {"Kinnate/Gedcom/Entity/SEX"}, {"Kinnate/Gedcom/Entity/GedcomType"}, {"Kinnate/Gedcom/Entity/NAME/NAME"}, {"Kinnate/Gedcom/Entity/NAME/NPFX"}}); // todo: the relevantData array comes from the user via the svg
@@ -83,6 +67,7 @@ public class IndexerParameters {
     //    public IndexerParam showEntityFields = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/GedcomType=INDI"}, {"Kinnate/Gedcom/Entity/GedcomType=FAM"}}); // todo: add fields that can be used to controll which nodes are shown
     private String[][] relevantEntityData = null;
 
+    @Deprecated // I think this is no longer used or needed
     public String[][] getRelevantEntityData() {
         if (relevantEntityData == null) {
             ArrayList<String[]> relevantDataList = new ArrayList<String[]>();
