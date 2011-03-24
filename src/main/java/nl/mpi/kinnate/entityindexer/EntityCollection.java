@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JButton;
@@ -39,11 +40,20 @@ import org.basex.query.iter.Iter;
  *  Created on : Feb 15, 2011, 5:37:06 PM
  *  Author     : Peter Withers
  */
-public class EntityCollection {
+public class EntityCollection implements EntityService {
 
     private String databaseName = "nl-mpi-kinnate";
     static Context context = new Context();
+    IndexerParameters indexParameters;
 
+    public EntityCollection() {
+    }
+
+    public EntityCollection(IndexerParameters indexParametersLocal) {
+        indexParameters = indexParametersLocal;
+    }
+
+    // todo: move this into the graphdatanode
     @XmlRootElement(name = "results")
     static public class RelationResults {
 
@@ -82,8 +92,9 @@ public class EntityCollection {
         // todo: it would seem that entityPath is not going to be adequate because of resolved vs unresolved paths, it would seem best at this point to implement an ID or even persistent identifier if posible
         // there are two parts required to get all relations of an ego: check the ego entity for relations to others and then check the relations of all other entities for references to the ego entity
         // for now maybe use an md5 sum the full path url or something and put it into both the entity and linking entities
-        String ancestorSequence = indexerParameters.ancestorFields.asSequenceString();
-        String decendantSequence = indexerParameters.decendantFields.asSequenceString();
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String ancestorSequence = queryBuilder.asSequenceString(indexerParameters.ancestorFields);
+        String decendantSequence = queryBuilder.asSequenceString(indexerParameters.decendantFields);
 
         //        uniqueIdentifier = "742243abdb2468b8df65f16ee562ac10";
         String query1String = "<results><relations>{"
@@ -173,6 +184,44 @@ public class EntityCollection {
         searchResults.resultsPathArray = resultPaths.toArray(new String[]{});
         searchResults.statusMessage = searchResults.statusMessage + "\n query: " + queryString;
         return searchResults;
+    }
+
+    public GraphDataNode getEntity(String uniqueIdentifier) {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String query1String = "let $entityNode := collection('nl-mpi-kinnate')/Kinnate[(Entity|Gedcom)/UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
+                + "return"
+                + "<Entity>{\n"
+                + "<UniqueIdentifier>" + uniqueIdentifier + "</UniqueIdentifier>,\n"
+                + "<path>{base-uri($entityNode)}</path>,\n"
+                + "<Labels>\n"
+                // loop the label fields and add a node for any that exist
+                + queryBuilder.asIfExistsString(indexParameters.labelFields, "$entityNode")
+                + "</Labels>"
+                + "}</Entity>\n";
+
+        System.out.println("query1String: " + query1String);
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(GraphDataNode.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            String queryResult = new XQuery(query1String).execute(context);
+            System.out.println("queryResult: " + queryResult);
+            GraphDataNode selectedEntity = (GraphDataNode) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), GraphDataNode.class).getValue();
+            return selectedEntity;
+        } catch (JAXBException exception) {
+            new LinorgBugCatcher().logError(exception);
+        } catch (BaseXException exception) {
+            new LinorgBugCatcher().logError(exception);
+        }
+        return null;
+    }
+
+    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings) throws EntityServiceException {
+        ArrayList<GraphDataNode> graphDataNodes = new ArrayList<GraphDataNode>();
+        for (String entityIdentifier : uniqueIdentifiers) {
+            graphDataNodes.add(getEntity(entityIdentifier));
+        }
+        // todo: process the kin type strings
+        return graphDataNodes.toArray(new GraphDataNode[]{});
     }
 
     static public void main(String[] args) {
