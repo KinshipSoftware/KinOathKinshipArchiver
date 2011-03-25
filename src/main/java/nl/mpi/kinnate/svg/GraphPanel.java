@@ -438,7 +438,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            }, false);
 
 
-            for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
+            for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
                 new RelationSvg().insertRelation(doc, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing, strokeWidth);
             }
         }
