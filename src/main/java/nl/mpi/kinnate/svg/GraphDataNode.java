@@ -59,7 +59,7 @@ public class GraphDataNode {
     private String[] labelString;
     @XmlElementWrapper(name = "Relations")
     @XmlElement(name = "Relation")
-    private NodeRelation[] relatedNodes;
+    private EntityRelation[] relatedNodes;
     protected int xPos;
     protected int yPos;
     public boolean isVisible = false;
@@ -81,7 +81,7 @@ public class GraphDataNode {
 //        String path;
 //        String identifier;
 //    }
-    static public class NodeRelation { // todo: remove the static and put all the defintions into a types class
+    static public class EntityRelation { // todo: remove the static and put all the defintions into a types class
 
         private GraphDataNode alterNode;
         public int generationalDistance;
@@ -233,42 +233,42 @@ public class GraphDataNode {
 //    }
     public void addRelatedNode(GraphDataNode alterNodeLocal, int generationalDistance, RelationType relationType, RelationLineType relationLineType, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
-        NodeRelation nodeRelation = new NodeRelation();
+        EntityRelation nodeRelation = new EntityRelation();
         nodeRelation.alterNode = alterNodeLocal;
         nodeRelation.generationalDistance = generationalDistance;
         nodeRelation.relationType = relationType;
         nodeRelation.relationLineType = relationLineType;
         nodeRelation.labelString = labelString;
         if (relatedNodes != null) {
-            ArrayList<NodeRelation> relatedNodesList = new ArrayList<NodeRelation>();
+            ArrayList<EntityRelation> relatedNodesList = new ArrayList<EntityRelation>();
             relatedNodesList.addAll(Arrays.asList(relatedNodes));
             relatedNodesList.add(nodeRelation);
-            relatedNodes = relatedNodesList.toArray(new NodeRelation[]{});
+            relatedNodes = relatedNodesList.toArray(new EntityRelation[]{});
         } else {
-            relatedNodes = new NodeRelation[]{nodeRelation};
+            relatedNodes = new EntityRelation[]{nodeRelation};
         }
     }
 
-    public boolean relationMatchesType(String alterPath, KinType kinType) {
+    public boolean relationMatchesType(EntityRelation entityRelation, KinType kinType) {
         // todo: compare the relation data
 //        return kinType.symbolType == symbolType;
         throw new UnsupportedOperationException("todo: compare the relation data");
 //        return true;
     }
 
-    public NodeRelation[] getVisiblyRelateNodes() {
-        ArrayList<NodeRelation> visiblyRelatedNodes = new ArrayList<NodeRelation>();
-        for (NodeRelation nodeRelation : relatedNodes) {
+    public EntityRelation[] getVisiblyRelateNodes() {
+        ArrayList<EntityRelation> visiblyRelatedNodes = new ArrayList<EntityRelation>();
+        for (EntityRelation nodeRelation : relatedNodes) {
             if (nodeRelation.alterNode != null) {
                 if (nodeRelation.alterNode.isVisible) {
                     visiblyRelatedNodes.add(nodeRelation);
                 }
             }
         }
-        return visiblyRelatedNodes.toArray(new NodeRelation[]{});
+        return visiblyRelatedNodes.toArray(new EntityRelation[]{});
     }
 
-    public NodeRelation[] getAllRelateNodes() {
+    public EntityRelation[] getAllRelateNodes() {
         return relatedNodes;
     }
 
