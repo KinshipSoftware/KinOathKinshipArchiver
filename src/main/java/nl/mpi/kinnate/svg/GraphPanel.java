@@ -1,5 +1,7 @@
 package nl.mpi.kinnate.svg;
 
+import nl.mpi.kinnate.kindata.GraphData;
+import nl.mpi.kinnate.kindata.GraphDataNode;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import java.awt.BorderLayout;
@@ -311,7 +313,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         symbolNode = doc.createElementNS(svgNameSpace, "use");
         symbolNode.setAttribute("id", currentNode.getEntityPath() + "symbol");
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
-        groupNode.setAttribute("transform", "translate(" + Integer.toString(currentNode.xPos * hSpacing + hSpacing - symbolSize / 2) + ", " + Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + ")");
+        groupNode.setAttribute("transform", "translate(" + Integer.toString(currentNode.getxPos() * hSpacing + hSpacing - symbolSize / 2) + ", " + Integer.toString(currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2) + ")");
 
         if (currentNode.isEgo) {
             symbolNode.setAttribute("fill", "black");
