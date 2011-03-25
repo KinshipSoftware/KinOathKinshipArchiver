@@ -27,26 +27,26 @@ import org.xml.sax.SAXException;
 public class EntityIndex implements EntityService {
 
 //    IndexerParameters indexParameters;
-    private HashMap<String /* url to the ego entity */, EntityData> knownEntities;
+    private HashMap<String, IndexerEntityData> knownEntities;
 //    private EntityCollection entityCollection;
 
     public EntityIndex() {
 //        indexParameters = indexParametersLocal;
 //        entityCollection = new EntityCollection();
-        knownEntities = new HashMap<String, EntityData>();
+        knownEntities = new HashMap<String, IndexerEntityData>();
     }
 
-    private EntityData getEntityData(String egoEntityUriString, IndexerParameters indexParameters) throws URISyntaxException {
+    private IndexerEntityData getEntityData(String egoEntityUriString, IndexerParameters indexParameters) throws URISyntaxException {
         URI egoEntityUri = new URI(egoEntityUriString);
         return getEntityData(egoEntityUri, indexParameters);
     }
 
-    private EntityData getEntityData(URI egoEntityUri, IndexerParameters indexParameters) {
-        EntityData entityData = knownEntities.get(egoEntityUri.toASCIIString());
+    private IndexerEntityData getEntityData(URI egoEntityUri, IndexerParameters indexParameters) {
+        IndexerEntityData entityData = knownEntities.get(egoEntityUri.toASCIIString());
         if (entityData != null) {
             return entityData;
         } else {
-            entityData = new EntityData(null); // todo: while this could pass the identifier it is unlikely that this class will use them as it relies on the url instead
+            entityData = new IndexerEntityData(null); // todo: while this could pass the identifier it is unlikely that this class will use them as it relies on the url instead
             knownEntities.put(egoEntityUri.toASCIIString(), entityData);
             try {
                 Document linksDom = new CmdiComponentBuilder().getDocument(egoEntityUri);
@@ -95,7 +95,7 @@ public class EntityIndex implements EntityService {
     public void printKnownEntities() {
         for (String currentEgo : knownEntities.keySet()) {
             System.out.println("currentEgo: " + currentEgo);
-            EntityData currentEntityData = knownEntities.get(currentEgo);
+            IndexerEntityData currentEntityData = knownEntities.get(currentEgo);
             for (String[] currentRecord : currentEntityData.getEntityFields()) {
                 System.out.println("-> entityField: " + currentRecord[0] + " : " + currentRecord[1]);
             }
@@ -128,7 +128,7 @@ public class EntityIndex implements EntityService {
     }
 
     private GraphDataNode getGraphDataNode(boolean isEgo, URI entityUri, IndexerParameters indexParameters) {
-        EntityData entityData = getEntityData(entityUri, indexParameters);
+        IndexerEntityData entityData = getEntityData(entityUri, indexParameters);
         ArrayList<String> labelTextList = new ArrayList<String>();
         for (String[] currentLabelField : indexParameters.labelFields.getValues()) {
             String labelTextTemp = entityData.getEntityField(currentLabelField[0]);
@@ -145,7 +145,7 @@ public class EntityIndex implements EntityService {
         return new GraphDataNode(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), GraphDataNode.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
     }
 
-    private void setRelationData(GraphDataNode egoNode, GraphDataNode alterNode, EntityData egoData, String alterPath, IndexerParameters indexParameters) {
+    private void setRelationData(GraphDataNode egoNode, GraphDataNode alterNode, IndexerEntityData egoData, String alterPath, IndexerParameters indexParameters) {
         GraphDataNode.RelationType egoType = null;
         GraphDataNode.RelationType alterType = null;
         String[][] alterRelationFields = egoData.getRelationData(alterPath);
@@ -182,7 +182,7 @@ public class EntityIndex implements EntityService {
     }
 
     private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, String currentEgoPath, GraphDataNode egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) throws URISyntaxException {
-        EntityData egoData = getEntityData(currentEgoPath, indexParameters);
+        IndexerEntityData egoData = getEntityData(currentEgoPath, indexParameters);
 //        String currentKinType = remaningKinTypeString.substring(0, 1);
 //        remaningKinTypeString = remaningKinTypeString.substring(1);
         KinType currentKinType = remainingKinTypes.remove(0);
@@ -198,7 +198,7 @@ public class EntityIndex implements EntityService {
                     createdGraphNodes.put(alterPath, alterNode);
                     relationAdded = true;
                 }
-                EntityData alterData = getEntityData(currentEgoPath, indexParameters);
+                IndexerEntityData alterData = getEntityData(currentEgoPath, indexParameters);
                 setRelationData(egoNode, alterNode, egoData, alterPath, indexParameters);
                 setRelationData(alterNode, egoNode, alterData, currentEgoPath, indexParameters);
                 // todo: either prevent links being added if a node does not match the kin type or remove them when known
