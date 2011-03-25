@@ -202,14 +202,14 @@ public class EntityIndex implements EntityService {
                 setRelationData(egoNode, alterNode, egoData, alterPath, indexParameters);
                 setRelationData(alterNode, egoNode, alterData, currentEgoPath, indexParameters);
                 // todo: either prevent links being added if a node does not match the kin type or remove them when known
-                if (egoNode.relationMatchesType(alterPath, currentKinType)) {
+//                if (egoNode.relationMatchesType(alterPath, currentKinType)) {
                     // only traverse if the type matches
                     if (remainingKinTypes.size() > 0) {
                         getNextRelations(createdGraphNodes, alterPath, alterNode, remainingKinTypes, indexParameters);
                     }
-                } else if (relationAdded) {
-                    createdGraphNodes.remove(alterPath);
-                }
+//                } else if (relationAdded) {
+//                    createdGraphNodes.remove(alterPath);
+//                }
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
             }
