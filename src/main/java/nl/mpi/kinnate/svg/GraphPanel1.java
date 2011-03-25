@@ -5,7 +5,7 @@
 package nl.mpi.kinnate.svg;
 
 import nl.mpi.kinnate.kindata.GraphSorter;
-import nl.mpi.kinnate.kindata.GraphDataNode;
+import nl.mpi.kinnate.kindata.EntityData;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
@@ -72,7 +72,7 @@ public class GraphPanel1 extends JPanel {
         svgCanvas.setSVGDocument(doc);
 //        svgCanvas.setDocument(doc);
         int counterTest = 0;
-        for (GraphDataNode currentNode : graphData.getDataNodes()) {
+        for (EntityData currentNode : graphData.getDataNodes()) {
             counterTest++;
             if (counterTest % 2 > 0) {
                 // Create the rectangle.
@@ -113,7 +113,7 @@ public class GraphPanel1 extends JPanel {
             svgRoot.appendChild(labelText);
 
             // draw links
-            for (GraphDataNode.EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
+            for (EntityData.EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
 //                if (graphLinkNode.sourceNode.equals(currentNode)) {
                     System.out.println("link: " + graphLinkNode.getAlterNode().getxPos() + ":" + graphLinkNode.getAlterNode().getyPos());
 

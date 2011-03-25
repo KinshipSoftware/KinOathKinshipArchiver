@@ -1,7 +1,7 @@
 package nl.mpi.kinnate.svg;
 
 import nl.mpi.kinnate.kindata.GraphSorter;
-import nl.mpi.kinnate.kindata.GraphDataNode;
+import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import java.awt.BorderLayout;
@@ -299,7 +299,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         });
     }
 
-    private Element createEntitySymbol(GraphDataNode currentNode, int hSpacing, int vSpacing, int symbolSize) {
+    private Element createEntitySymbol(EntityData currentNode, int hSpacing, int vSpacing, int symbolSize) {
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
         groupNode.setAttribute("id", currentNode.getEntityPath());
 //        counterTest++;
@@ -418,7 +418,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         // add the relation symbols in a group below the relation lines
         Element relationGroupNode = doc.createElementNS(svgNameSpace, "g");
         relationGroupNode.setAttribute("id", "RelationGroup");
-        for (GraphDataNode currentNode : graphData.getDataNodes()) {
+        for (EntityData currentNode : graphData.getDataNodes()) {
             // set up the mouse listners on the group node
 //            ((EventTarget) groupNode).addEventListener("mouseover", new EventListener() {
 //
@@ -440,7 +440,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            }, false);
 
 
-            for (GraphDataNode.EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
+            for (EntityData.EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
                 new RelationSvg().insertRelation(doc, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing, strokeWidth);
             }
         }
@@ -448,7 +448,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         // add the entity symbols in a group on top of the relation lines
         Element entityGroupNode = doc.createElementNS(svgNameSpace, "g");
         entityGroupNode.setAttribute("id", "EntityGroup");
-        for (GraphDataNode currentNode : graphData.getDataNodes()) {
+        for (EntityData currentNode : graphData.getDataNodes()) {
             entityGroupNode.appendChild(createEntitySymbol(currentNode, hSpacing, vSpacing, symbolSize));
         }
         svgRoot.appendChild(entityGroupNode);
