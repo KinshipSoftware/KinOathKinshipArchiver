@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,9 +15,6 @@ import javax.swing.JTextArea;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgBugCatcher;
@@ -48,23 +44,6 @@ public class EntityCollection implements EntityService {
     public EntityCollection() {
     }
 
-    // todo: move this into the graphdatanode
-    @XmlRootElement(name = "results")
-    static public class RelationResults {
-
-        @XmlElementWrapper(name = "relations")
-        @XmlElement(name = "entity")
-        RelationData[] relationArray;
-    }
-
-    static public class RelationData {
-
-        @XmlElement
-        GraphDataNode.RelationType type;
-        @XmlElement
-        String path;
-    }
-
     public class SearchResults {
 
         public String[] resultsPathArray;
@@ -83,28 +62,28 @@ public class EntityCollection implements EntityService {
         }
     }
 
-    public RelationData[] getRelatedNodes(String uniqueIdentifier, IndexerParameters indexParameters) {
-        // todo: it would seem that entityPath is not going to be adequate because of resolved vs unresolved paths, it would seem best at this point to implement an ID or even persistent identifier if posible
-        // there are two parts required to get all relations of an ego: check the ego entity for relations to others and then check the relations of all other entities for references to the ego entity
-        // for now maybe use an md5 sum the full path url or something and put it into both the entity and linking entities
-        QueryBuilder queryBuilder = new QueryBuilder();
-        String query1String = queryBuilder.getRelationQuery(uniqueIdentifier, indexParameters);
-
-        System.out.println("query1String: " + query1String);
-        ArrayList<RelationData> resultsArray = new ArrayList<RelationData>();
-        try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(RelationResults.class);
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            String queryResult = new XQuery(query1String).execute(context);
-            RelationResults relationResults = (RelationResults) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), RelationResults.class).getValue();
-            resultsArray.addAll(Arrays.asList(relationResults.relationArray));
-        } catch (JAXBException exception) {
-            new LinorgBugCatcher().logError(exception);
-        } catch (BaseXException exception) {
-            new LinorgBugCatcher().logError(exception);
-        }
-        return resultsArray.toArray(new RelationData[]{});
-    }
+//    public RelationData[] getRelatedNodes(String uniqueIdentifier, IndexerParameters indexParameters) {
+//        // todo: it would seem that entityPath is not going to be adequate because of resolved vs unresolved paths, it would seem best at this point to implement an ID or even persistent identifier if posible
+//        // there are two parts required to get all relations of an ego: check the ego entity for relations to others and then check the relations of all other entities for references to the ego entity
+//        // for now maybe use an md5 sum the full path url or something and put it into both the entity and linking entities
+//        QueryBuilder queryBuilder = new QueryBuilder();
+//        String query1String = "<results>" + queryBuilder.getRelationQuery(uniqueIdentifier, indexParameters) + "</results>";
+//
+//        System.out.println("query1String: " + query1String);
+//        ArrayList<RelationData> resultsArray = new ArrayList<RelationData>();
+//        try {
+//            JAXBContext jaxbContext = JAXBContext.newInstance(RelationResults.class);
+//            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+//            String queryResult = new XQuery(query1String).execute(context);
+//            RelationResults relationResults = (RelationResults) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), RelationResults.class).getValue();
+//            resultsArray.addAll(Arrays.asList(relationResults.relationArray));
+//        } catch (JAXBException exception) {
+//            new LinorgBugCatcher().logError(exception);
+//        } catch (BaseXException exception) {
+//            new LinorgBugCatcher().logError(exception);
+//        }
+//        return resultsArray.toArray(new RelationData[]{});
+//    }
 
     public SearchResults listAllRelationTypes() {
         // todo: use this to populate the InderParametersFormUI
