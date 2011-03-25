@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,6 +20,7 @@ import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.arbil.LinorgSessionStorage;
+import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.svg.GraphDataNode;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
@@ -61,29 +63,6 @@ public class EntityCollection implements EntityService {
             GuiHelper.linorgBugCatcher.logError(baseXException);
         }
     }
-
-//    public RelationData[] getRelatedNodes(String uniqueIdentifier, IndexerParameters indexParameters) {
-//        // todo: it would seem that entityPath is not going to be adequate because of resolved vs unresolved paths, it would seem best at this point to implement an ID or even persistent identifier if posible
-//        // there are two parts required to get all relations of an ego: check the ego entity for relations to others and then check the relations of all other entities for references to the ego entity
-//        // for now maybe use an md5 sum the full path url or something and put it into both the entity and linking entities
-//        QueryBuilder queryBuilder = new QueryBuilder();
-//        String query1String = "<results>" + queryBuilder.getRelationQuery(uniqueIdentifier, indexParameters) + "</results>";
-//
-//        System.out.println("query1String: " + query1String);
-//        ArrayList<RelationData> resultsArray = new ArrayList<RelationData>();
-//        try {
-//            JAXBContext jaxbContext = JAXBContext.newInstance(RelationResults.class);
-//            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-//            String queryResult = new XQuery(query1String).execute(context);
-//            RelationResults relationResults = (RelationResults) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), RelationResults.class).getValue();
-//            resultsArray.addAll(Arrays.asList(relationResults.relationArray));
-//        } catch (JAXBException exception) {
-//            new LinorgBugCatcher().logError(exception);
-//        } catch (BaseXException exception) {
-//            new LinorgBugCatcher().logError(exception);
-//        }
-//        return resultsArray.toArray(new RelationData[]{});
-//    }
 
     public SearchResults listAllRelationTypes() {
         // todo: use this to populate the InderParametersFormUI
@@ -145,16 +124,48 @@ public class EntityCollection implements EntityService {
     }
 
     public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
-        ArrayList<GraphDataNode> graphDataNodes = new ArrayList<GraphDataNode>();
-        for (String entityIdentifier : uniqueIdentifiers) {
-            graphDataNodes.add(getEntity(entityIdentifier, indexParameters));
+        KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
+        HashMap<String, GraphDataNode> createdGraphNodes = new HashMap<String, GraphDataNode>();
+        for (String currentEgoId : uniqueIdentifiers) {
+            GraphDataNode egoNode;
+            if (createdGraphNodes.containsKey(currentEgoId)) {
+                egoNode = createdGraphNodes.get(currentEgoId);
+            } else {
+                egoNode = getEntity(currentEgoId, indexParameters);
+                createdGraphNodes.put(currentEgoId, egoNode);
+            }
+//            if (kinTypeStrings != null) {
+//                for (String currentKinString : kinTypeStrings) {
+//                    ArrayList<KinType> kinTypes = kinTypeStringConverter.getKinTypes(currentKinString);
+//                    try {
+//                        getNextRelations(createdGraphNodes, currentEgoId, egoNode, kinTypes, indexParameters);
+//                    } catch (URISyntaxException exception) {
+//                        throw new EntityServiceException(exception.getMessage());
+//                    }
+//                }
+//            }
+            // set the alter node object from the unique identifier
+            for (GraphDataNode graphDataNode : createdGraphNodes.values()) {
+                for (GraphDataNode.NodeRelation nodeRelation : graphDataNode.getAllRelateNodes()) {
+                    nodeRelation.setAlterNode(createdGraphNodes.get(nodeRelation.alterUniqueIdentifier));
+                }
+                graphDataNode.isEgo = true;
+                graphDataNode.isVisible = true;
+            }
         }
-        // todo: process the kin type strings
-        return graphDataNodes.toArray(new GraphDataNode[]{});
+        return createdGraphNodes.values().toArray(new GraphDataNode[]{});
+
+
+
+//        ArrayList<GraphDataNode> graphDataNodes = new ArrayList<GraphDataNode>();
+//        for (String entityIdentifier : uniqueIdentifiers) {
+//            graphDataNodes.add(getEntity(entityIdentifier, indexParameters));
+//        }
+//        // todo: process the kin type strings
+//        return graphDataNodes.toArray(new GraphDataNode[]{});
     }
 
     static public void main(String[] args) {
-//        final EntityCollection entityCollection = new EntityCollection();
         JFrame jFrame = new JFrame("Test Query Window");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final JTextArea queryText = new JTextArea();
@@ -164,7 +175,7 @@ public class EntityCollection implements EntityService {
         jButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                resultsText.setText(queryText.getText() + "\n");
+                resultsText.setText("");
                 try {
                     resultsText.append(new XQuery(queryText.getText()).execute(context));
                 } catch (BaseXException exception) {
