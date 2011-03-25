@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.svg;
 
+import nl.mpi.kinnate.kindata.GraphDataNode;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
