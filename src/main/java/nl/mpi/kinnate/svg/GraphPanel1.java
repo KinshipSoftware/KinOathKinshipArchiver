@@ -4,7 +4,7 @@
  */
 package nl.mpi.kinnate.svg;
 
-import nl.mpi.kinnate.kindata.GraphData;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.GraphDataNode;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -48,7 +48,7 @@ public class GraphPanel1 extends JPanel {
     }
 
     public void drawNodes() {
-        GraphData graphData = new GraphData();
+        GraphSorter graphData = new GraphSorter();
 //        graphData.readData();
 
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();

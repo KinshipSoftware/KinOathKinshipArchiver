@@ -1,6 +1,6 @@
 package nl.mpi.kinnate.svg;
 
-import nl.mpi.kinnate.kindata.GraphData;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.GraphDataNode;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
@@ -49,7 +49,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private SVGDocument doc;
     private KinTerms kinTerms;
     protected ImdiTableModel imdiTableModel;
-    private GraphData graphData;
+    private GraphSorter graphData;
     private boolean requiresSave = false;
     private File svgFile = null;
     private GraphPanelSize graphPanelSize;
@@ -374,7 +374,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         return groupNode;
     }
 
-    public void drawNodes(GraphData graphDataLocal) {
+    public void drawNodes(GraphSorter graphDataLocal) {
         requiresSave = true;
         graphData = graphDataLocal;
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
