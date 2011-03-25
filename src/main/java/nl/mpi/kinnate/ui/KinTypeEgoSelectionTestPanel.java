@@ -16,7 +16,7 @@ import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.LinorgWindowManager;
-import nl.mpi.kinnate.svg.GraphData;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityIndex;
@@ -33,7 +33,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 
     private JTextArea kinTypeStringInput;
     private GraphPanel graphPanel;
-    private GraphData graphData;
+    private GraphSorter graphData;
     private EgoSelectionPanel egoSelectionPanel;
     private KinTermPanel kinTermPanel;
     private EntityService entityIndex;
@@ -76,7 +76,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
         // EntityCollection queries the xml collection to get the entity data
         entityIndex = new EntityCollection();
 
-        graphData = new GraphData();
+        graphData = new GraphSorter();
         if (existingFile != null && existingFile.exists()) {
             graphPanel.readSvg(existingFile);
         } else {
