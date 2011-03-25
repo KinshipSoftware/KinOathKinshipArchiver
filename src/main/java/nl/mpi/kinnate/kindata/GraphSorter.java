@@ -11,11 +11,11 @@ import java.util.HashSet;
  */
 public class GraphSorter {
 
-    protected GraphDataNode[] graphDataNodeArray = new GraphDataNode[]{};
+    protected EntityData[] graphDataNodeArray = new EntityData[]{};
     public int gridWidth;
     public int gridHeight;
 
-    public void setEgoNodes(GraphDataNode[] graphDataNodeArrayLocal) {
+    public void setEgoNodes(EntityData[] graphDataNodeArrayLocal) {
         graphDataNodeArray = graphDataNodeArrayLocal;
         sanguineSort();
         printLocations();
@@ -43,26 +43,26 @@ public class GraphSorter {
 //                layouts.put("SimpleRandom", new JGraphSimpleLayout(JGraphSimpleLayout.TYPE_RANDOM));
 //                layouts.put("Spring", new JGraphSpringLayout());
 //                layouts.put("Grid", new SimpleGridLayout());
-    private void sanguineSubnodeSort(ArrayList<HashSet<GraphDataNode>> generationRows, HashSet<GraphDataNode> currentColumns, ArrayList<GraphDataNode> inputNodes, GraphDataNode currentNode) {
+    private void sanguineSubnodeSort(ArrayList<HashSet<EntityData>> generationRows, HashSet<EntityData> currentColumns, ArrayList<EntityData> inputNodes, EntityData currentNode) {
         int currentRowIndex = generationRows.indexOf(currentColumns);
-        HashSet<GraphDataNode> ancestorColumns;
-        HashSet<GraphDataNode> descendentColumns;
+        HashSet<EntityData> ancestorColumns;
+        HashSet<EntityData> descendentColumns;
         if (currentRowIndex < generationRows.size() - 1) {
             descendentColumns = generationRows.get(currentRowIndex + 1);
         } else {
-            descendentColumns = new HashSet<GraphDataNode>();
+            descendentColumns = new HashSet<EntityData>();
             generationRows.add(currentRowIndex + 1, descendentColumns);
         }
         if (currentRowIndex > 0) {
             ancestorColumns = generationRows.get(currentRowIndex - 1);
         } else {
-            ancestorColumns = new HashSet<GraphDataNode>();
+            ancestorColumns = new HashSet<EntityData>();
             generationRows.add(currentRowIndex, ancestorColumns);
         }
-        for (GraphDataNode.EntityRelation relatedNode : currentNode.getVisiblyRelateNodes()) { // todo: here we are soriting only visible nodes, sorting invisible nodes as well might cause issues or might help the layout and this must be tested
+        for (EntityData.EntityRelation relatedNode : currentNode.getVisiblyRelateNodes()) { // todo: here we are soriting only visible nodes, sorting invisible nodes as well might cause issues or might help the layout and this must be tested
             // todo: what happens here if there are multiple relations specified?
             if (inputNodes.contains(relatedNode.getAlterNode())) {
-                HashSet<GraphDataNode> targetColumns;
+                HashSet<EntityData> targetColumns;
                 switch (relatedNode.relationType) {
                     case ancestor:
                         targetColumns = ancestorColumns;
@@ -96,22 +96,22 @@ public class GraphSorter {
     protected void sanguineSort() {
         System.out.println("calculateLocations");
         // create an array of rows
-        ArrayList<HashSet<GraphDataNode>> generationRows = new ArrayList<HashSet<GraphDataNode>>();
-        ArrayList<GraphDataNode> inputNodes = new ArrayList<GraphDataNode>();
+        ArrayList<HashSet<EntityData>> generationRows = new ArrayList<HashSet<EntityData>>();
+        ArrayList<EntityData> inputNodes = new ArrayList<EntityData>();
         inputNodes.addAll(Arrays.asList(graphDataNodeArray));
         // put an array of columns into the current row
-        HashSet<GraphDataNode> currentColumns = new HashSet<GraphDataNode>();
+        HashSet<EntityData> currentColumns = new HashSet<EntityData>();
         generationRows.add(currentColumns);
 
         while (inputNodes.size() > 0) {
-            GraphDataNode currentNode = inputNodes.remove(0);
+            EntityData currentNode = inputNodes.remove(0);
             System.out.println("add as root node: " + currentNode.getLabel());
             currentColumns.add(currentNode);
             sanguineSubnodeSort(generationRows, currentColumns, inputNodes, currentNode);
         }
         gridWidth = 0;
         int yPos = 0;
-        for (HashSet<GraphDataNode> currentRow : generationRows) {
+        for (HashSet<EntityData> currentRow : generationRows) {
             System.out.println("row: : " + yPos);
             if (currentRow.isEmpty()) {
                 System.out.println("Skipping empty row");
@@ -120,7 +120,7 @@ public class GraphSorter {
                 if (gridWidth < currentRow.size()) {
                     gridWidth = currentRow.size();
                 }
-                for (GraphDataNode graphDataNode : currentRow) {
+                for (EntityData graphDataNode : currentRow) {
                     System.out.println("updating: " + xPos + " : " + yPos + " : " + graphDataNode.getLabel());
                     graphDataNode.yPos = yPos;
                     graphDataNode.xPos = xPos;
@@ -136,14 +136,14 @@ public class GraphSorter {
     }
 
     private void sortByLinkDistance() {
-        GraphDataNode[][] graphGrid = new GraphDataNode[gridHeight][gridWidth];
-        for (GraphDataNode graphDataNode : graphDataNodeArray) {
+        EntityData[][] graphGrid = new EntityData[gridHeight][gridWidth];
+        for (EntityData graphDataNode : graphDataNodeArray) {
             graphGrid[graphDataNode.yPos][graphDataNode.xPos] = graphDataNode;
         }
-        for (GraphDataNode graphDataNode : graphDataNodeArray) {
+        for (EntityData graphDataNode : graphDataNodeArray) {
             int relationCounter = 0;
             int totalPositionCounter = 0;
-            for (GraphDataNode.EntityRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
+            for (EntityData.EntityRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
                 relationCounter++;
                 totalPositionCounter += graphLinkNode.getAlterNode().xPos;
                 //totalPositionCounter += Math.abs(graphLinkNode.linkedNode.xPos - graphLinkNode.sourceNode.xPos);
@@ -169,15 +169,15 @@ public class GraphSorter {
         }
     }
 
-    public GraphDataNode[] getDataNodes() {
+    public EntityData[] getDataNodes() {
         return graphDataNodeArray;
     }
 
     private void printLocations() {
         System.out.println("printLocations");
-        for (GraphDataNode graphDataNode : graphDataNodeArray) {
+        for (EntityData graphDataNode : graphDataNodeArray) {
             System.out.println("node: " + graphDataNode.xPos + ":" + graphDataNode.yPos);
-            for (GraphDataNode.EntityRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
+            for (EntityData.EntityRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
                 System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
             }
         }

@@ -13,7 +13,7 @@ import nl.mpi.arbil.LinorgBugCatcher;
  *  Author     : Peter Withers
  */
 @XmlRootElement(name = "Entity")
-public class GraphDataNode {
+public class EntityData {
 
     public enum SymbolType {
         // symbol terms are used here to try to keep things agnostic
@@ -35,15 +35,15 @@ public class GraphDataNode {
     public static RelationType getOpposingRelationType(RelationType relationType) {
         switch (relationType) {
             case ancestor:
-                return GraphDataNode.RelationType.descendant;
+                return EntityData.RelationType.descendant;
             case descendant:
-                return GraphDataNode.RelationType.ancestor;
+                return EntityData.RelationType.ancestor;
             case sibling:
-                return GraphDataNode.RelationType.sibling;
+                return EntityData.RelationType.sibling;
             case union:
-                return GraphDataNode.RelationType.union;
+                return EntityData.RelationType.union;
         }
-        return GraphDataNode.RelationType.sibling;
+        return EntityData.RelationType.sibling;
     }
     @XmlElement(name = "Identifier")
     private String uniqueIdentifier;
@@ -82,7 +82,7 @@ public class GraphDataNode {
 //    }
     static public class EntityRelation { // todo: remove the static and put all the defintions into a types class
 
-        private GraphDataNode alterNode;
+        private EntityData alterNode;
         public int generationalDistance;
         @XmlElement(name = "Identifier")
         public String alterUniqueIdentifier;
@@ -93,13 +93,13 @@ public class GraphDataNode {
         @XmlElement(name = "Label")
         public String labelString;
 
-        public void setAlterNode(GraphDataNode graphDataNode) {
+        public void setAlterNode(EntityData graphDataNode) {
             if (graphDataNode != null) {
                 alterNode = graphDataNode;
             }
         }
 
-        public GraphDataNode getAlterNode() {
+        public EntityData getAlterNode() {
             if (alterNode == null) {
                 new LinorgBugCatcher().logError(new Exception("getAlterNode called but alterNode is null, this should not happen"));
             }
@@ -107,10 +107,10 @@ public class GraphDataNode {
         }
     }
 
-    private GraphDataNode() {
+    private EntityData() {
     }
 
-    public GraphDataNode(String uniqueIdentifierLocal, String entityPathLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
+    public EntityData(String uniqueIdentifierLocal, String entityPathLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = entityPathLocal;
         symbolType = null;
@@ -119,7 +119,7 @@ public class GraphDataNode {
         isEgo = isEgoLocal;
     }
 
-    public GraphDataNode(String uniqueIdentifierLocal, String entityPathLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
+    public EntityData(String uniqueIdentifierLocal, String entityPathLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = entityPathLocal;
         symbolType = symbolIndex;
@@ -247,7 +247,7 @@ public class GraphDataNode {
 //            return linkArray.toArray(new String[]{});
 //        }
 //    }
-    public void addRelatedNode(GraphDataNode alterNodeLocal, int generationalDistance, RelationType relationType, RelationLineType relationLineType, String labelString) {
+    public void addRelatedNode(EntityData alterNodeLocal, int generationalDistance, RelationType relationType, RelationLineType relationLineType, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         EntityRelation nodeRelation = new EntityRelation();
         nodeRelation.alterNode = alterNodeLocal;
