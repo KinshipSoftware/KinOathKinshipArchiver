@@ -100,12 +100,12 @@ public class RelationSvg {
         groupNode.setAttribute("id", "relation" + relationLineIndex);
         Element defsNode = doc.createElementNS(svgNameSpace, "defs");
         String lineIdString = "relation" + relationLineIndex + "Line";
-        new DataStoreSvg().storeRelationParameters(doc, groupNode, graphLinkNode.relationType, graphLinkNode.relationLineType, currentNode.getEntityPath(), graphLinkNode.linkedNode.getEntityPath());
+        new DataStoreSvg().storeRelationParameters(doc, groupNode, graphLinkNode.relationType, graphLinkNode.relationLineType, currentNode.getEntityPath(), graphLinkNode.getAlterNode().getEntityPath());
         // set the line end points
         int fromX = (currentNode.xPos * hSpacing + hSpacing);
         int fromY = (currentNode.yPos * vSpacing + vSpacing);
-        int toX = (graphLinkNode.linkedNode.xPos * hSpacing + hSpacing);
-        int toY = (graphLinkNode.linkedNode.yPos * vSpacing + vSpacing);
+        int toX = (graphLinkNode.getAlterNode().xPos * hSpacing + hSpacing);
+        int toY = (graphLinkNode.getAlterNode().yPos * vSpacing + vSpacing);
 
         switch (graphLinkNode.relationLineType) {
             case horizontalCurve:
@@ -125,7 +125,7 @@ public class RelationSvg {
                 //                    linkLine.setAttribute("stroke-width", "1");
                 //                    // Attach the rectangle to the root 'svg' element.
                 //                    svgRoot.appendChild(linkLine);
-                System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
+                //System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
 
                 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
                 Element linkLine = doc.createElementNS(svgNameSpace, "path");
