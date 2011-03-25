@@ -107,7 +107,7 @@ public class GraphData {
             ancestorColumns = new HashSet<GraphDataNode>();
             generationRows.add(currentRowIndex, ancestorColumns);
         }
-        for (GraphDataNode.NodeRelation relatedNode : currentNode.getVisiblyRelateNodes()) { // todo: here we are soriting only visible nodes, sorting invisible nodes as well might cause issues or might help the layout and this must be tested
+        for (GraphDataNode.EntityRelation relatedNode : currentNode.getVisiblyRelateNodes()) { // todo: here we are soriting only visible nodes, sorting invisible nodes as well might cause issues or might help the layout and this must be tested
             // todo: what happens here if there are multiple relations specified?
             if (inputNodes.contains(relatedNode.getAlterNode())) {
                 HashSet<GraphDataNode> targetColumns;
@@ -191,7 +191,7 @@ public class GraphData {
         for (GraphDataNode graphDataNode : graphDataNodeArray) {
             int relationCounter = 0;
             int totalPositionCounter = 0;
-            for (GraphDataNode.NodeRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
+            for (GraphDataNode.EntityRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
                 relationCounter++;
                 totalPositionCounter += graphLinkNode.getAlterNode().xPos;
                 //totalPositionCounter += Math.abs(graphLinkNode.linkedNode.xPos - graphLinkNode.sourceNode.xPos);
@@ -248,7 +248,7 @@ public class GraphData {
         System.out.println("printLocations");
         for (GraphDataNode graphDataNode : graphDataNodeArray) {
             System.out.println("node: " + graphDataNode.xPos + ":" + graphDataNode.yPos);
-            for (GraphDataNode.NodeRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
+            for (GraphDataNode.EntityRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
                 System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
             }
         }
