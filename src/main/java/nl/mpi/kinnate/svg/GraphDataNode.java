@@ -1,9 +1,11 @@
 package nl.mpi.kinnate.svg;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
 
 /**
@@ -44,20 +46,23 @@ public class GraphDataNode {
         }
         return GraphDataNode.RelationType.sibling;
     }
-    @XmlElement(name = "UniqueIdentifier")
+    @XmlElement(name = "Identifier")
     private String uniqueIdentifier;
     @XmlElement(name = "Path")
     private String entityPath;
     private SymbolType symbolType;
-    @XmlElement(name = "SymbolType")
+    @XmlElement(name = "Symbol")
     private String symbolTypeString;
-    boolean isEgo = false;
+    public boolean isEgo = false;
     @XmlElementWrapper(name = "Labels")
     @XmlElement(name = "String")
     private String[] labelString;
-    private ArrayList<NodeRelation> relatedNodes = new ArrayList<NodeRelation>();
-    int xPos;
-    int yPos;
+    @XmlElementWrapper(name = "Relations")
+    @XmlElement(name = "Relation")
+    private NodeRelation[] relatedNodes;
+    protected int xPos;
+    protected int yPos;
+    public boolean isVisible = false;
 
 //    // todo: move this into the graphdatanode
 //    @XmlRootElement(name = "results")
@@ -76,20 +81,28 @@ public class GraphDataNode {
 //        String path;
 //        String identifier;
 //    }
-    public class NodeRelation {
+    static public class NodeRelation { // todo: remove the static and put all the defintions into a types class
 
         private GraphDataNode alterNode;
         public int generationalDistance;
-        @XmlElement(name = "UniqueIdentifier")
-        String alterUniqueIdentifier;
-        @XmlElement(name = "RelationType")
+        @XmlElement(name = "Identifier")
+        public String alterUniqueIdentifier;
+        @XmlElement(name = "Type")
         RelationType relationType;
+        @XmlElement(name = "Line")
         RelationLineType relationLineType;
+        @XmlElement(name = "Label")
         String labelString;
+
+        public void setAlterNode(GraphDataNode graphDataNode) {
+            if (graphDataNode != null) {
+                alterNode = graphDataNode;
+            }
+        }
 
         public GraphDataNode getAlterNode() {
             if (alterNode == null) {
-                throw new UnsupportedOperationException("get the node from the UniquigeIdentifier");
+                new LinorgBugCatcher().logError(new Exception("getAlterNode called but alterNode is null, this should not happen"));
             }
             return alterNode;
         }
@@ -226,7 +239,14 @@ public class GraphDataNode {
         nodeRelation.relationType = relationType;
         nodeRelation.relationLineType = relationLineType;
         nodeRelation.labelString = labelString;
-        relatedNodes.add(nodeRelation);
+        if (relatedNodes != null) {
+            ArrayList<NodeRelation> relatedNodesList = new ArrayList<NodeRelation>();
+            relatedNodesList.addAll(Arrays.asList(relatedNodes));
+            relatedNodesList.add(nodeRelation);
+            relatedNodes = relatedNodesList.toArray(new NodeRelation[]{});
+        } else {
+            relatedNodes = new NodeRelation[]{nodeRelation};
+        }
     }
 
     public boolean relationMatchesType(String alterPath, KinType kinType) {
@@ -236,8 +256,20 @@ public class GraphDataNode {
 //        return true;
     }
 
-    public NodeRelation[] getNodeRelations() {
-        return relatedNodes.toArray(new NodeRelation[]{});
+    public NodeRelation[] getVisiblyRelateNodes() {
+        ArrayList<NodeRelation> visiblyRelatedNodes = new ArrayList<NodeRelation>();
+        for (NodeRelation nodeRelation : relatedNodes) {
+            if (nodeRelation.alterNode != null) {
+                if (nodeRelation.alterNode.isVisible) {
+                    visiblyRelatedNodes.add(nodeRelation);
+                }
+            }
+        }
+        return visiblyRelatedNodes.toArray(new NodeRelation[]{});
+    }
+
+    public NodeRelation[] getAllRelateNodes() {
+        return relatedNodes;
     }
 
     public String getUniqueIdentifier() {
