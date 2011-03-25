@@ -59,15 +59,40 @@ public class GraphDataNode {
     int xPos;
     int yPos;
 
+//    // todo: move this into the graphdatanode
+//    @XmlRootElement(name = "results")
+//    static public class RelationResults {
+//
+//        @XmlElementWrapper(name = "relations")
+//        @XmlElement(name = "entity")
+//        RelationData[] relationArray;
+//    }
+//
+//    static public class RelationData {
+//
+//        @XmlElement
+//        GraphDataNode.RelationType type;
+//        @XmlElement
+//        String path;
+//        String identifier;
+//    }
     public class NodeRelation {
 
-        // todo: private String[] relationPath;
-        public GraphDataNode sourceNode;
-        public GraphDataNode linkedNode;
+        private GraphDataNode alterNode;
         public int generationalDistance;
+        @XmlElement(name = "UniqueIdentifier")
+        String alterUniqueIdentifier;
+        @XmlElement(name = "RelationType")
         RelationType relationType;
         RelationLineType relationLineType;
         String labelString;
+
+        public GraphDataNode getAlterNode() {
+            if (alterNode == null) {
+                throw new UnsupportedOperationException("get the node from the UniquigeIdentifier");
+            }
+            return alterNode;
+        }
     }
 
     private GraphDataNode() {
@@ -193,23 +218,22 @@ public class GraphDataNode {
 //            return linkArray.toArray(new String[]{});
 //        }
 //    }
-    public void addRelatedNode(GraphDataNode relatedNode, int generationalDistance, RelationType relationType, RelationLineType relationLineType, String labelString) {
+    public void addRelatedNode(GraphDataNode alterNodeLocal, int generationalDistance, RelationType relationType, RelationLineType relationLineType, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         NodeRelation nodeRelation = new NodeRelation();
-        nodeRelation.sourceNode = this;
-        nodeRelation.linkedNode = relatedNode;
+        nodeRelation.alterNode = alterNodeLocal;
         nodeRelation.generationalDistance = generationalDistance;
         nodeRelation.relationType = relationType;
         nodeRelation.relationLineType = relationLineType;
         nodeRelation.labelString = labelString;
         relatedNodes.add(nodeRelation);
-        relatedNode.relatedNodes.add(nodeRelation);
     }
 
     public boolean relationMatchesType(String alterPath, KinType kinType) {
         // todo: compare the relation data
 //        return kinType.symbolType == symbolType;
-        return true;
+        throw new UnsupportedOperationException("todo: compare the relation data");
+//        return true;
     }
 
     public NodeRelation[] getNodeRelations() {
