@@ -22,7 +22,7 @@ import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
-import nl.mpi.kinnate.kindata.GraphDataNode;
+import nl.mpi.kinnate.kindata.EntityData;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Set;
@@ -105,16 +105,16 @@ public class EntityCollection implements EntityService {
         return searchResults;
     }
 
-    public GraphDataNode getEntity(String uniqueIdentifier, IndexerParameters indexParameters) {
+    public EntityData getEntity(String uniqueIdentifier, IndexerParameters indexParameters) {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
         System.out.println("query1String: " + query1String);
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(GraphDataNode.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String queryResult = new XQuery(query1String).execute(context);
             System.out.println("queryResult: " + queryResult);
-            GraphDataNode selectedEntity = (GraphDataNode) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), GraphDataNode.class).getValue();
+            EntityData selectedEntity = (EntityData) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData.class).getValue();
             return selectedEntity;
         } catch (JAXBException exception) {
             new LinorgBugCatcher().logError(exception);
@@ -124,10 +124,10 @@ public class EntityCollection implements EntityService {
         return null;
     }
 
-    private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, GraphDataNode egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) {
+    private void getNextRelations(HashMap<String, EntityData> createdGraphNodes, EntityData egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) {
         KinType currentKinType = remainingKinTypes.remove(0);
-        for (GraphDataNode.EntityRelation entityRelation : egoNode.getAllRelateNodes()) {
-            GraphDataNode alterNode;
+        for (EntityData.EntityRelation entityRelation : egoNode.getAllRelateNodes()) {
+            EntityData alterNode;
             if (createdGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
                 alterNode = createdGraphNodes.get(entityRelation.alterUniqueIdentifier);
             } else {
@@ -145,11 +145,11 @@ public class EntityCollection implements EntityService {
         }
     }
 
-    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
-        HashMap<String, GraphDataNode> createdGraphNodes = new HashMap<String, GraphDataNode>();
+        HashMap<String, EntityData> createdGraphNodes = new HashMap<String, EntityData>();
         for (String currentEgoId : uniqueIdentifiers) {
-            GraphDataNode egoNode;
+            EntityData egoNode;
             if (createdGraphNodes.containsKey(currentEgoId)) {
                 egoNode = createdGraphNodes.get(currentEgoId);
             } else {
@@ -165,13 +165,13 @@ public class EntityCollection implements EntityService {
                 }
             }
             // set the alter node object from the unique identifier
-            for (GraphDataNode graphDataNode : createdGraphNodes.values()) {
-                for (GraphDataNode.EntityRelation nodeRelation : graphDataNode.getAllRelateNodes()) {
+            for (EntityData graphDataNode : createdGraphNodes.values()) {
+                for (EntityData.EntityRelation nodeRelation : graphDataNode.getAllRelateNodes()) {
                     nodeRelation.setAlterNode(createdGraphNodes.get(nodeRelation.alterUniqueIdentifier));
                 }
             }
         }
-        return createdGraphNodes.values().toArray(new GraphDataNode[]{});
+        return createdGraphNodes.values().toArray(new EntityData[]{});
 
 
 
