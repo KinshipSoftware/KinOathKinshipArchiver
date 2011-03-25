@@ -25,9 +25,9 @@ public class QueryBuilder {
         return stringBuilder.toString();
     }
 
-    public String asIfExistsString(IndexerParam indexerParam, String entityNodeVar) {
+    public String getLabelsClause(IndexerParameters indexParameters, String entityNodeVar) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String[] currentEntry : indexerParam.getValues()) {
+        for (String[] currentEntry : indexParameters.labelFields.getValues()) {
             String trimmedXpath = currentEntry[0].substring("Kinnate".length());
             stringBuilder.append("{if (exists(");
             stringBuilder.append(entityNodeVar);
@@ -38,6 +38,22 @@ public class QueryBuilder {
             stringBuilder.append(trimmedXpath);
             stringBuilder.append("/text()}</String>else()}\n");
         }
+        return stringBuilder.toString();
+    }
+
+    public String getSymbolClause(IndexerParameters indexParameters, String entityNodeVar) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<Symbol>{\n");
+        for (String[] currentEntry : indexParameters.symbolFieldsFields.getValues()) {
+            String trimmedXpath = currentEntry[0].substring("Kinnate".length());
+            stringBuilder.append("if (exists(");
+            stringBuilder.append(entityNodeVar);
+            stringBuilder.append(trimmedXpath);
+            stringBuilder.append(")) then \"");
+            stringBuilder.append(currentEntry[1]);
+            stringBuilder.append("\"\n else ");
+        }
+        stringBuilder.append("()\n}</Symbol>,\n");
         return stringBuilder.toString();
     }
 
@@ -59,7 +75,7 @@ public class QueryBuilder {
                 + "<Identifier>{$relationNode/../(Gedcom|Entity)/UniqueIdentifier/(LocalIdentifier|UniqueIdentifier)/text()}</Identifier>,\n"
                 // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
                 + "<Path>{base-uri($relationNode)}</Path>,\n"
-//                + "<Label>a label</Label>,\n"
+                //                + "<Label>a label</Label>,\n"
                 + "<Line>square</Line>\n"
                 + "}</Relation>\n"
                 + "} {\n"
@@ -80,7 +96,7 @@ public class QueryBuilder {
                 // todo: add the alter unique identifier + "<UniqueIdentifier>" + uniqueIdentifier + "</UniqueIdentifier>,\n"
                 // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
                 + "<Path>{base-uri($relationNode)}</Path>,\n"
-//                + "<Label>a label</Label>,\n"
+                //                + "<Label>a label</Label>,\n"
                 + "<Line>square</Line>\n"
                 + "}</Relation>"
                 + "}</Relations>\n";
@@ -92,10 +108,10 @@ public class QueryBuilder {
                 + "<Entity>{\n"
                 + "<Identifier>" + uniqueIdentifier + "</Identifier>,\n"
                 + "<Path>{base-uri($entityNode)}</Path>,\n"
-                + "<Symbol>square</Symbol>,\n"
+                + getSymbolClause(indexParameters, "$entityNode")
                 + "<Labels>\n"
                 // loop the label fields and add a node for any that exist
-                + this.asIfExistsString(indexParameters.labelFields, "$entityNode")
+                + this.getLabelsClause(indexParameters, "$entityNode")
                 + "</Labels>"
                 + "}"
                 + this.getRelationQuery(uniqueIdentifier, indexParameters)
