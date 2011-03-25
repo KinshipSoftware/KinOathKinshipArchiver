@@ -10,7 +10,7 @@ import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
-import nl.mpi.kinnate.kindata.GraphDataNode;
+import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
 import org.w3c.dom.DOMException;
@@ -127,7 +127,7 @@ public class EntityIndex implements EntityService {
         // eg: setKinTypeStringTerm("M", "Kinnate.Gedcom.Entity.SEX", "F");
     }
 
-    private GraphDataNode getGraphDataNode(boolean isEgo, URI entityUri, IndexerParameters indexParameters) {
+    private EntityData getGraphDataNode(boolean isEgo, URI entityUri, IndexerParameters indexParameters) {
         IndexerEntityData entityData = getEntityData(entityUri, indexParameters);
         ArrayList<String> labelTextList = new ArrayList<String>();
         for (String[] currentLabelField : indexParameters.labelFields.getValues()) {
@@ -139,49 +139,49 @@ public class EntityIndex implements EntityService {
         for (String currentSymbolField[] : indexParameters.symbolFieldsFields.getValues()) {
             String linkSymbolString = entityData.getEntityField(currentSymbolField[0]);
             if (linkSymbolString != null) {
-                return new GraphDataNode(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), currentSymbolField[1], labelTextList.toArray(new String[]{}), isEgo);
+                return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), currentSymbolField[1], labelTextList.toArray(new String[]{}), isEgo);
             }
         }
-        return new GraphDataNode(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), GraphDataNode.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
+        return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), EntityData.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
     }
 
-    private void setRelationData(GraphDataNode egoNode, GraphDataNode alterNode, IndexerEntityData egoData, String alterPath, IndexerParameters indexParameters) {
-        GraphDataNode.RelationType egoType = null;
-        GraphDataNode.RelationType alterType = null;
+    private void setRelationData(EntityData egoNode, EntityData alterNode, IndexerEntityData egoData, String alterPath, IndexerParameters indexParameters) {
+        EntityData.RelationType egoType = null;
+        EntityData.RelationType alterType = null;
         String[][] alterRelationFields = egoData.getRelationData(alterPath);
         if (alterRelationFields != null) {
             for (String[] ancestorField : indexParameters.ancestorFields.getValues()) {
                 for (String[] egoRelationField : alterRelationFields) {
                     if (ancestorField[0].equals(egoRelationField[1])) {
-                        egoType = GraphDataNode.RelationType.ancestor;
-                        alterType = GraphDataNode.RelationType.descendant;
+                        egoType = EntityData.RelationType.ancestor;
+                        alterType = EntityData.RelationType.descendant;
                     }
                 }
             }
             for (String[] ancestorField : indexParameters.decendantFields.getValues()) {
                 for (String[] egoRelationField : alterRelationFields) {
                     if (ancestorField[0].equals(egoRelationField[1])) {
-                        egoType = GraphDataNode.RelationType.descendant;
-                        alterType = GraphDataNode.RelationType.ancestor;
+                        egoType = EntityData.RelationType.descendant;
+                        alterType = EntityData.RelationType.ancestor;
                     }
                 }
             }
             if (egoType != null && alterType != null) {
-                egoNode.addRelatedNode(alterNode, 0, egoType, GraphDataNode.RelationLineType.square, null);
-                alterNode.addRelatedNode(egoNode, 0, alterType, GraphDataNode.RelationLineType.square, null);
+                egoNode.addRelatedNode(alterNode, 0, egoType, EntityData.RelationLineType.square, null);
+                alterNode.addRelatedNode(egoNode, 0, alterType, EntityData.RelationLineType.square, null);
             }
         }
     }
 
-    public GraphDataNode[] getEgoGraphData(URI[] egoNodes, IndexerParameters indexParameters) {
-        ArrayList<GraphDataNode> graphDataNodeList = new ArrayList<GraphDataNode>();
+    public EntityData[] getEgoGraphData(URI[] egoNodes, IndexerParameters indexParameters) {
+        ArrayList<EntityData> graphDataNodeList = new ArrayList<EntityData>();
         for (URI currentEgoUri : egoNodes) {
             graphDataNodeList.add(getGraphDataNode(true, currentEgoUri, indexParameters));
         }
-        return graphDataNodeList.toArray(new GraphDataNode[]{});
+        return graphDataNodeList.toArray(new EntityData[]{});
     }
 
-    private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, String currentEgoPath, GraphDataNode egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) throws URISyntaxException {
+    private void getNextRelations(HashMap<String, EntityData> createdGraphNodes, String currentEgoPath, EntityData egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) throws URISyntaxException {
         IndexerEntityData egoData = getEntityData(currentEgoPath, indexParameters);
 //        String currentKinType = remaningKinTypeString.substring(0, 1);
 //        remaningKinTypeString = remaningKinTypeString.substring(1);
@@ -190,7 +190,7 @@ public class EntityIndex implements EntityService {
         for (String alterPath : egoData.getRelationPaths()) {
             try {
                 boolean relationAdded = false;
-                GraphDataNode alterNode;
+                EntityData alterNode;
                 if (createdGraphNodes.containsKey(alterPath)) {
                     alterNode = createdGraphNodes.get(alterPath);
                 } else {
@@ -216,11 +216,11 @@ public class EntityIndex implements EntityService {
         }
     }
 
-    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
-        HashMap<String, GraphDataNode> createdGraphNodes = new HashMap<String, GraphDataNode>();
+        HashMap<String, EntityData> createdGraphNodes = new HashMap<String, EntityData>();
         for (URI currentEgoUri : egoNodes) {
-            GraphDataNode egoNode;
+            EntityData egoNode;
             if (createdGraphNodes.containsKey(currentEgoUri.toASCIIString())) {
                 egoNode = createdGraphNodes.get(currentEgoUri.toASCIIString());
             } else {
@@ -238,7 +238,7 @@ public class EntityIndex implements EntityService {
                 }
             }
         }
-        return createdGraphNodes.values().toArray(new GraphDataNode[]{});
+        return createdGraphNodes.values().toArray(new EntityData[]{});
     }
 
     public static void main(String[] args) {

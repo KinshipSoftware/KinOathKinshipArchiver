@@ -1,7 +1,7 @@
 package nl.mpi.kinnate.entityindexer;
 
 import java.net.URI;
-import nl.mpi.kinnate.kindata.GraphDataNode;
+import nl.mpi.kinnate.kindata.EntityData;
 
 /**
  *  Document   : EntityService
@@ -10,5 +10,5 @@ import nl.mpi.kinnate.kindata.GraphDataNode;
  */
 public interface EntityService {
 
-    public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException;
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException;
 }
