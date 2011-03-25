@@ -69,6 +69,28 @@ public class GraphData {
 ////            currentNode.calculateLinks(graphDataNodeList);
 //        }
 //    }
+    // todo: look into http://www.jgraph.com/jgraph.html
+    // todo: and http://books.google.nl/books?id=diqHjRjMhW0C&pg=PA138&lpg=PA138&dq=SVGDOMImplementation+add+namespace&source=bl&ots=IuqzAz7dsz&sig=e5FW_B1bQbhnth6i2rifalv2LuQ&hl=nl&ei=zYpnTYD3E4KVOuPF2YoL&sa=X&oi=book_result&ct=result&resnum=3&ved=0CC0Q6AEwAg#v=onepage&q&f=false
+    // page 139 shows jgraph layout usage
+    // http://www.jgraph.com/doc/jgraph/com/jgraph/layout/hierarchical/JGraphHierarchicalLayout.html
+    // http://www.jgraph.com/doc/jgraph/com/jgraph/layout/JGraphLayout.html
+    // http://www.jgraph.com/doc/jgraph/com/jgraph/layout/JGraphFacade.html
+    // http://www.jgraph.com/doc/jgraph/org/jgraph/graph/GraphModel.html
+    // and maybe http://www.jgraph.com/doc/jgraph/org/jgraph/graph/GraphLayoutCache.html
+    // todo: lookinto:
+//                    layouts.put("Hierarchical", new JGraphHierarchicalLayout());
+//                layouts.put("Compound", new JGraphCompoundLayout());
+//                layouts.put("CompactTree", new JGraphCompactTreeLayout());
+//                layouts.put("Tree", new JGraphTreeLayout());
+//                layouts.put("RadialTree", new JGraphRadialTreeLayout());
+//                layouts.put("Organic", new JGraphOrganicLayout());
+//                layouts.put("FastOrganic", new JGraphFastOrganicLayout());
+//                layouts.put("SelfOrganizingOrganic", new JGraphSelfOrganizingOrganicLayout());
+//                layouts.put("SimpleCircle", new JGraphSimpleLayout(JGraphSimpleLayout.TYPE_CIRCLE));
+//                layouts.put("SimpleTilt", new JGraphSimpleLayout(JGraphSimpleLayout.TYPE_TILT));
+//                layouts.put("SimpleRandom", new JGraphSimpleLayout(JGraphSimpleLayout.TYPE_RANDOM));
+//                layouts.put("Spring", new JGraphSpringLayout());
+//                layouts.put("Grid", new SimpleGridLayout());
     private void sanguineSubnodeSort(ArrayList<HashSet<GraphDataNode>> generationRows, HashSet<GraphDataNode> currentColumns, ArrayList<GraphDataNode> inputNodes, GraphDataNode currentNode) {
         int currentRowIndex = generationRows.indexOf(currentColumns);
         HashSet<GraphDataNode> ancestorColumns;
@@ -87,66 +109,33 @@ public class GraphData {
         }
         for (GraphDataNode.NodeRelation relatedNode : currentNode.getNodeRelations()) {
             // todo: what happens here if there are multiple relations specified?
-            if (relatedNode.sourceNode.equals(currentNode)) {
-                if (inputNodes.contains(relatedNode.linkedNode)) {
-                    HashSet<GraphDataNode> targetColumns;
-                    switch (relatedNode.relationType) {
-                        case ancestor:
-                            targetColumns = ancestorColumns;
-                            break;
-                        case sibling:
-                            targetColumns = currentColumns;
-                            break;
-                        case descendant:
-                            targetColumns = descendentColumns;
-                            break;
-                        case union:
-                            targetColumns = currentColumns;
-                            break;
-                        case none:
-                            // this would be a kin term or other so skip when sorting
-                            targetColumns = null;
-                            break;
-                        default:
-                            targetColumns = null;
-                    }
-                    if (targetColumns != null) {
-                        inputNodes.remove(relatedNode.linkedNode);
-                        targetColumns.add(relatedNode.linkedNode);
-                        System.out.println("sorted: " + relatedNode.linkedNode.getLabel() + " : " + relatedNode.relationType + " of " + currentNode.getLabel());
-                        sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.linkedNode);
-                    }
-                }
-            }
-        }
-//        for (GraphDataNode reverceLinkNode : inputNodes.toArray(new GraphDataNode[]{})) {
-//            for (GraphDataNode.NodeRelation relatedNode : reverceLinkNode.getNodeRelations()) {
-        for (GraphDataNode.NodeRelation relatedNode : currentNode.getNodeRelations()) {
-            if (!relatedNode.sourceNode.equals(currentNode)) {
+            if (inputNodes.contains(relatedNode.getAlterNode())) {
                 HashSet<GraphDataNode> targetColumns;
                 switch (relatedNode.relationType) {
                     case ancestor:
-                        targetColumns = descendentColumns;
+                        targetColumns = ancestorColumns;
                         break;
                     case sibling:
                         targetColumns = currentColumns;
                         break;
                     case descendant:
-                        targetColumns = ancestorColumns;
+                        targetColumns = descendentColumns;
                         break;
                     case union:
                         targetColumns = currentColumns;
+                        break;
+                    case none:
+                        // this would be a kin term or other so skip when sorting
                         targetColumns = null;
                         break;
                     default:
-                        // this would be a kin term or other so skip when sorting
                         targetColumns = null;
                 }
                 if (targetColumns != null) {
-                    inputNodes.remove(relatedNode.sourceNode);
-                    targetColumns.add(relatedNode.sourceNode);
-                    System.out.println("sorted: " + relatedNode.sourceNode.getLabel() + " : " + "reverse link" + " of " + currentNode.getLabel());
-//                sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.sourceNode);
+                    inputNodes.remove(relatedNode.getAlterNode());
+                    targetColumns.add(relatedNode.getAlterNode());
+                    System.out.println("sorted: " + relatedNode.getAlterNode().getLabel() + " : " + relatedNode.relationType + " of " + currentNode.getLabel());
+                    sanguineSubnodeSort(generationRows, targetColumns, inputNodes, relatedNode.getAlterNode());
                 }
             }
         }
@@ -204,14 +193,10 @@ public class GraphData {
             int totalPositionCounter = 0;
             for (GraphDataNode.NodeRelation graphLinkNode : graphDataNode.getNodeRelations()) {
                 relationCounter++;
-                if (graphLinkNode.sourceNode.equals(graphDataNode)) {
-                    totalPositionCounter += graphLinkNode.linkedNode.xPos;
-                } else {
-                    totalPositionCounter += graphLinkNode.sourceNode.xPos;
-                }
+                totalPositionCounter += graphLinkNode.getAlterNode().xPos;
                 //totalPositionCounter += Math.abs(graphLinkNode.linkedNode.xPos - graphLinkNode.sourceNode.xPos);
 //                totalPositionCounter += Math.abs(graphLinkNode.linkedNode.xPos - graphLinkNode.sourceNode.xPos);
-                System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.sourceNode.xPos);
+                System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().xPos);
                 System.out.println("totalPositionCounter: " + totalPositionCounter);
             }
             if (relationCounter > 0) {
@@ -264,7 +249,7 @@ public class GraphData {
         for (GraphDataNode graphDataNode : graphDataNodeArray) {
             System.out.println("node: " + graphDataNode.xPos + ":" + graphDataNode.yPos);
             for (GraphDataNode.NodeRelation graphLinkNode : graphDataNode.getNodeRelations()) {
-                System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
+                System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
             }
         }
     }
