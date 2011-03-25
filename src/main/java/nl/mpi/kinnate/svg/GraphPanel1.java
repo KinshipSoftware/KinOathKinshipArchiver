@@ -4,6 +4,8 @@
  */
 package nl.mpi.kinnate.svg;
 
+import nl.mpi.kinnate.kindata.GraphData;
+import nl.mpi.kinnate.kindata.GraphDataNode;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
@@ -75,8 +77,8 @@ public class GraphPanel1 extends JPanel {
             if (counterTest % 2 > 0) {
                 // Create the rectangle.
                 Element circle = doc.createElementNS(svgNS, "circle");
-                circle.setAttributeNS(null, "cx", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
-                circle.setAttributeNS(null, "cy", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+                circle.setAttributeNS(null, "cx", Integer.toString(currentNode.getxPos() * stepNumber + stepNumber));
+                circle.setAttributeNS(null, "cy", Integer.toString(currentNode.getyPos() * stepNumber + stepNumber));
                 circle.setAttributeNS(null, "r", "5");
                 circle.setAttributeNS(null, "height", "10");
                 circle.setAttributeNS(null, "fill", "red");
@@ -88,8 +90,8 @@ public class GraphPanel1 extends JPanel {
 
                 // Create the rectangle.
                 Element rectangle = doc.createElementNS(svgNS, "rect");
-                rectangle.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
-                rectangle.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+                rectangle.setAttributeNS(null, "x", Integer.toString(currentNode.getxPos() * stepNumber + stepNumber));
+                rectangle.setAttributeNS(null, "y", Integer.toString(currentNode.getyPos() * stepNumber + stepNumber));
                 rectangle.setAttributeNS(null, "width", "10");
                 rectangle.setAttributeNS(null, "height", "10");
                 rectangle.setAttributeNS(null, "fill", "red");
@@ -98,8 +100,8 @@ public class GraphPanel1 extends JPanel {
             }
             // <text id="_7" x="39.0" y="140.0" fill="black" stroke="black" stroke-width="0" font-size="15">Sample Text</text>
             Element labelText = doc.createElementNS(svgNS, "text");
-            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
-            labelText.setAttributeNS(null, "y", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+            labelText.setAttributeNS(null, "x", Integer.toString(currentNode.getxPos() * stepNumber + stepNumber));
+            labelText.setAttributeNS(null, "y", Integer.toString(currentNode.getyPos() * stepNumber + stepNumber));
             labelText.setAttributeNS(null, "fill", "black");
             labelText.setAttributeNS(null, "stroke-width", "0");
             labelText.setAttributeNS(null, "font-size", "14");
@@ -113,15 +115,15 @@ public class GraphPanel1 extends JPanel {
             // draw links
             for (GraphDataNode.EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
 //                if (graphLinkNode.sourceNode.equals(currentNode)) {
-                    System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
+                    System.out.println("link: " + graphLinkNode.getAlterNode().getxPos() + ":" + graphLinkNode.getAlterNode().getyPos());
 
 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
                     Element linkLine = doc.createElementNS(svgNS, "line");
-                    linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.xPos * stepNumber + stepNumber));
-                    linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.yPos * stepNumber + stepNumber));
+                    linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.getxPos() * stepNumber + stepNumber));
+                    linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.getyPos() * stepNumber + stepNumber));
 
-                    linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.getAlterNode().xPos * stepNumber + stepNumber));
-                    linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.getAlterNode().yPos * stepNumber + stepNumber));
+                    linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.getAlterNode().getxPos() * stepNumber + stepNumber));
+                    linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.getAlterNode().getyPos() * stepNumber + stepNumber));
                     linkLine.setAttributeNS(null, "stroke", "black");
                     linkLine.setAttributeNS(null, "stroke-width", "1");
                     // Attach the rectangle to the root 'svg' element.
