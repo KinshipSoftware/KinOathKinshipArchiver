@@ -22,7 +22,7 @@ import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
-import nl.mpi.kinnate.svg.GraphDataNode;
+import nl.mpi.kinnate.kindata.GraphDataNode;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Set;
