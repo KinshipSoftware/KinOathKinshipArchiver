@@ -138,7 +138,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         fileMenu.add(importGedcomSimple);
 
-        ImportGedcomUrl.setText("Import Gedcom URL");
+        ImportGedcomUrl.setText("Import Gedcom Samples (from internet)");
         ImportGedcomUrl.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ImportGedcomUrlActionPerformed(evt);
