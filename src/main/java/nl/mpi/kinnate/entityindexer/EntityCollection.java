@@ -21,6 +21,7 @@ import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
+import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
 import nl.mpi.kinnate.svg.GraphDataNode;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
@@ -123,6 +124,27 @@ public class EntityCollection implements EntityService {
         return null;
     }
 
+    private void getNextRelations(HashMap<String, GraphDataNode> createdGraphNodes, GraphDataNode egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) {
+        KinType currentKinType = remainingKinTypes.remove(0);
+        for (GraphDataNode.EntityRelation entityRelation : egoNode.getAllRelateNodes()) {
+            GraphDataNode alterNode;
+            if (createdGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
+                alterNode = createdGraphNodes.get(entityRelation.alterUniqueIdentifier);
+            } else {
+                alterNode = getEntity(entityRelation.alterUniqueIdentifier, indexParameters);
+                createdGraphNodes.put(entityRelation.alterUniqueIdentifier, alterNode);
+            }
+            alterNode.isVisible = true;
+
+            if (egoNode.relationMatchesType(entityRelation, currentKinType)) {
+                // only traverse if the type matches
+                if (remainingKinTypes.size() > 0) {
+                    getNextRelations(createdGraphNodes, alterNode, remainingKinTypes, indexParameters);
+                }
+            }
+        }
+    }
+
     public GraphDataNode[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
         HashMap<String, GraphDataNode> createdGraphNodes = new HashMap<String, GraphDataNode>();
@@ -134,23 +156,19 @@ public class EntityCollection implements EntityService {
                 egoNode = getEntity(currentEgoId, indexParameters);
                 createdGraphNodes.put(currentEgoId, egoNode);
             }
-//            if (kinTypeStrings != null) {
-//                for (String currentKinString : kinTypeStrings) {
-//                    ArrayList<KinType> kinTypes = kinTypeStringConverter.getKinTypes(currentKinString);
-//                    try {
-//                        getNextRelations(createdGraphNodes, currentEgoId, egoNode, kinTypes, indexParameters);
-//                    } catch (URISyntaxException exception) {
-//                        throw new EntityServiceException(exception.getMessage());
-//                    }
-//                }
-//            }
+            egoNode.isEgo = true;
+            egoNode.isVisible = true;
+            if (kinTypeStrings != null) {
+                for (String currentKinString : kinTypeStrings) {
+                    ArrayList<KinType> kinTypes = kinTypeStringConverter.getKinTypes(currentKinString);
+                    getNextRelations(createdGraphNodes, egoNode, kinTypes, indexParameters);
+                }
+            }
             // set the alter node object from the unique identifier
             for (GraphDataNode graphDataNode : createdGraphNodes.values()) {
-                for (GraphDataNode.NodeRelation nodeRelation : graphDataNode.getAllRelateNodes()) {
+                for (GraphDataNode.EntityRelation nodeRelation : graphDataNode.getAllRelateNodes()) {
                     nodeRelation.setAlterNode(createdGraphNodes.get(nodeRelation.alterUniqueIdentifier));
                 }
-                graphDataNode.isEgo = true;
-                graphDataNode.isVisible = true;
             }
         }
         return createdGraphNodes.values().toArray(new GraphDataNode[]{});
