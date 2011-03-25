@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.svg;
 
+import nl.mpi.kinnate.kindata.GraphDataNode;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -102,10 +103,10 @@ public class RelationSvg {
         String lineIdString = "relation" + relationLineIndex + "Line";
         new DataStoreSvg().storeRelationParameters(doc, groupNode, graphLinkNode.relationType, graphLinkNode.relationLineType, currentNode.getEntityPath(), graphLinkNode.getAlterNode().getEntityPath());
         // set the line end points
-        int fromX = (currentNode.xPos * hSpacing + hSpacing);
-        int fromY = (currentNode.yPos * vSpacing + vSpacing);
-        int toX = (graphLinkNode.getAlterNode().xPos * hSpacing + hSpacing);
-        int toY = (graphLinkNode.getAlterNode().yPos * vSpacing + vSpacing);
+        int fromX = (currentNode.getxPos() * hSpacing + hSpacing);
+        int fromY = (currentNode.getyPos() * vSpacing + vSpacing);
+        int toX = (graphLinkNode.getAlterNode().getxPos() * hSpacing + hSpacing);
+        int toY = (graphLinkNode.getAlterNode().getyPos() * vSpacing + vSpacing);
 
         switch (graphLinkNode.relationLineType) {
             case horizontalCurve:
