@@ -111,7 +111,7 @@ public class GraphPanel1 extends JPanel {
             svgRoot.appendChild(labelText);
 
             // draw links
-            for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getNodeRelations()) {
+            for (GraphDataNode.NodeRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
 //                if (graphLinkNode.sourceNode.equals(currentNode)) {
                     System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
 
