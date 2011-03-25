@@ -1,8 +1,13 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URI;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -22,6 +27,10 @@ public class GedcomImportPanel extends JPanel {
 
     private EntityCollection entityCollection;
     private JTabbedPane jTabbedPane1;
+    private JTextArea importTextArea;
+    private JProgressBar progressBar;
+    private JCheckBox overwriteOnImport;
+    private JButton startButton;
 
     public GedcomImportPanel(EntityCollection entityCollectionLocal, JTabbedPane jTabbedPaneLocal) {
         jTabbedPane1 = jTabbedPaneLocal;
@@ -35,56 +44,71 @@ public class GedcomImportPanel extends JPanel {
 //    private DragTransferHandler dragTransferHandler;
     }
 
-    public void startImport(File importFile, boolean overwriteExisting) {
-        startImport(importFile, null, overwriteExisting);
+    public void startImport(File importFile) {
+        startImport(importFile, null);
     }
 
-    public void startImport(String importFileString, boolean overwriteExisting) {
-        startImport(null, importFileString, overwriteExisting);
+    public void startImport(String importFileString) {
+        startImport(null, importFileString);
     }
 
-    public void startImport(final File importFile, final String importFileString, final boolean overwriteExisting) {
-        new Thread() {
+    public void startImport(final File importFile, final String importFileString) {
+        if (!importFile.exists()) {
+            GedcomImportPanel.this.add(new JLabel("File not found"));
+        } else {
+            importTextArea = new JTextArea();
+            JScrollPane importScrollPane = new JScrollPane(importTextArea);
+            GedcomImportPanel.this.setLayout(new BorderLayout());
+            GedcomImportPanel.this.add(importScrollPane, BorderLayout.CENTER);
+            jTabbedPane1.add("Import", GedcomImportPanel.this);
+            jTabbedPane1.setSelectedComponent(GedcomImportPanel.this);
+            progressBar = new JProgressBar(0, 100);
+            GedcomImportPanel.this.add(progressBar, BorderLayout.PAGE_END);
+            progressBar.setVisible(true);
+            JPanel topPanel = new JPanel();
+            overwriteOnImport = new JCheckBox("Overwrite Existing");
+            startButton = new JButton("Start");
+            topPanel.add(overwriteOnImport);
+            topPanel.add(startButton);
+            GedcomImportPanel.this.add(topPanel, BorderLayout.PAGE_START);
+            startButton.addActionListener(new ActionListener() {
 
-            @Override
-            public void run() {
-                JTextArea importTextArea = new JTextArea();
-                JScrollPane importScrollPane = new JScrollPane(importTextArea);
-                GedcomImportPanel.this.setLayout(new BorderLayout());
-                GedcomImportPanel.this.add(importScrollPane, BorderLayout.CENTER);
-                jTabbedPane1.add("Import", GedcomImportPanel.this);
-                jTabbedPane1.setSelectedComponent(GedcomImportPanel.this);
-                JProgressBar progressBar = new JProgressBar(0, 100);
-                GedcomImportPanel.this.add(progressBar, BorderLayout.PAGE_END);
-                progressBar.setVisible(true);
-                GedcomImporter gedcomImporter = new GedcomImporter(overwriteExisting);
-                gedcomImporter.setProgressBar(progressBar);
-                URI[] treeNodesArray;
-                if (importFileString != null) {
-                    treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFileString);
-                } else {
-                    treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFile);
-                }
-                progressBar.setVisible(false);
-                if (treeNodesArray != null) {
+                public void actionPerformed(ActionEvent e) {
+                    startButton.setEnabled(false);
+                    overwriteOnImport.setEnabled(false);
+                    new Thread() {
+
+                        @Override
+                        public void run() {
+                            boolean overwriteExisting = overwriteOnImport.isSelected();
+                            GedcomImporter gedcomImporter = new GedcomImporter(overwriteExisting);
+                            gedcomImporter.setProgressBar(progressBar);
+                            URI[] treeNodesArray;
+                            if (importFileString != null) {
+                                treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFileString);
+                            } else {
+                                treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFile);
+                            }
+                            progressBar.setVisible(false);
+                            if (treeNodesArray != null) {
 //                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();                    
-                    int maxXsdErrorToShow = 3;
-                    for (URI currentNodeUri : treeNodesArray) {
-                        if (maxXsdErrorToShow > 0) {
+                                int maxXsdErrorToShow = 3;
+                                for (URI currentNodeUri : treeNodesArray) {
+                                    if (maxXsdErrorToShow > 0) {
 //                        try {
 //                            ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
 //                            tempArray.add(currentImdiObject);
 //                            JTextPane fileText = new JTextPane();
-                            XsdChecker xsdChecker = new XsdChecker();
-                            if (xsdChecker.simpleCheck(new File(currentNodeUri), currentNodeUri) != null) {
-                                jTabbedPane1.add("XSD Error on Import", xsdChecker);
-                                xsdChecker.checkXML(ImdiLoader.getSingleInstance().getImdiObject(null, currentNodeUri));
-                                xsdChecker.setDividerLocation(0.5);
-                                maxXsdErrorToShow--;
-                                if (maxXsdErrorToShow == 0) {
-                                    importTextArea.append("maximum xsd errors shown, no more files will be tested" + "\n");
-                                }
-                            }
+                                        XsdChecker xsdChecker = new XsdChecker();
+                                        if (xsdChecker.simpleCheck(new File(currentNodeUri), currentNodeUri) != null) {
+                                            jTabbedPane1.add("XSD Error on Import", xsdChecker);
+                                            xsdChecker.checkXML(ImdiLoader.getSingleInstance().getImdiObject(null, currentNodeUri));
+                                            xsdChecker.setDividerLocation(0.5);
+                                            maxXsdErrorToShow--;
+                                            if (maxXsdErrorToShow == 0) {
+                                                importTextArea.append("maximum xsd errors shown, no more files will be tested" + "\n");
+                                            }
+                                        }
 //                            currentImdiObject.reloadNode();
 //                            try {
 //                                fileText.setPage(currentNodeString);
@@ -95,24 +119,27 @@ public class GedcomImportPanel extends JPanel {
 //                        } catch (URISyntaxException exception) {
 //                            GuiHelper.linorgBugCatcher.logError(exception);
 //                        }
-                            // todo: possibly create a new diagram with a sample of the imported entities for the user
-                        }
-                    }
-                    // todo: it might be more efficient to only update the new files
-                    importTextArea.append("starting update of entity database" + "\n");
-                    entityCollection.createDatabase();
-                    importTextArea.append("updated entity database" + "\n");
-                    importTextArea.setCaretPosition(importTextArea.getText().length());
-                    System.out.println("created new database");
+                                        // todo: possibly create a new diagram with a sample of the imported entities for the user
+                                    }
+                                }
+                                // todo: it might be more efficient to only update the new files
+                                importTextArea.append("starting update of entity database" + "\n");
+                                entityCollection.createDatabase();
+                                importTextArea.append("updated entity database" + "\n");
+                                importTextArea.setCaretPosition(importTextArea.getText().length());
+                                System.out.println("created new database");
 //                    leftTree.rootNodeChildren = tempArray.toArray(new ImdiTreeObject[]{});
 //                    imdiTableModel.removeAllImdiRows();
 //                    imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
-                }
+                            }
 //                leftTree.requestResort();
 //                GraphData graphData = new GraphData();
 //                graphData.readData();
 //                graphPanel.drawNodes(graphData);
-            }
-        }.start();
+                        }
+                    }.start();
+                }
+            });
+        }
     }
 }
