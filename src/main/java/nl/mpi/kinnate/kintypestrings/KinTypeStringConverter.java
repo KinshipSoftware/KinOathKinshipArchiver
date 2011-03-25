@@ -73,6 +73,7 @@ public class KinTypeStringConverter extends GraphData {
         HashMap<String, GraphDataNode> graphDataNodeList = new HashMap<String, GraphDataNode>();
         GraphDataNode egoDataNode = new GraphDataNode("ego", "ego", GraphDataNode.SymbolType.square, new String[]{"ego"}, true);
         graphDataNodeList.put("ego", egoDataNode);
+        egoDataNode.isVisible = true;
         for (String inputString : inputStringArray) {
             System.out.println("inputString: " + inputString);
             if (inputString != null) {
@@ -97,6 +98,7 @@ public class KinTypeStringConverter extends GraphData {
                                 parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, GraphDataNode.RelationLineType.square, null);
                                 currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, GraphDataNode.RelationLineType.square, null);
                                 graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
+                                currentGraphDataNode.isVisible = true;
                                 // add any child nodes?
                             }
                             parentDataNode = currentGraphDataNode;
