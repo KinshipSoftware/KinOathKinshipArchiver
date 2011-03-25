@@ -35,15 +35,15 @@ public class GedcomImportPanel extends JPanel {
 //    private DragTransferHandler dragTransferHandler;
     }
 
-    public void startImport(File importFile) {
-        startImport(importFile, null);
+    public void startImport(File importFile, boolean overwriteExisting) {
+        startImport(importFile, null, overwriteExisting);
     }
 
-    public void startImport(String importFileString) {
-        startImport(null, importFileString);
+    public void startImport(String importFileString, boolean overwriteExisting) {
+        startImport(null, importFileString, overwriteExisting);
     }
 
-    public void startImport(final File importFile, final String importFileString) {
+    public void startImport(final File importFile, final String importFileString, final boolean overwriteExisting) {
         new Thread() {
 
             @Override
@@ -57,7 +57,7 @@ public class GedcomImportPanel extends JPanel {
                 JProgressBar progressBar = new JProgressBar(0, 100);
                 GedcomImportPanel.this.add(progressBar, BorderLayout.PAGE_END);
                 progressBar.setVisible(true);
-                GedcomImporter gedcomImporter = new GedcomImporter();
+                GedcomImporter gedcomImporter = new GedcomImporter(overwriteExisting);
                 gedcomImporter.setProgressBar(progressBar);
                 URI[] treeNodesArray;
                 if (importFileString != null) {
