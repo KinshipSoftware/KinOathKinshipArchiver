@@ -1,6 +1,6 @@
 package nl.mpi.kinnate.kintypestrings;
 
-import nl.mpi.kinnate.kindata.GraphData;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.GraphDataNode;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.HashMap;
  *  Created on : Sep 29, 2010, 12:52:33 PM
  *  Author     : Peter Withers
  */
-public class KinTypeStringConverter extends GraphData {
+public class KinTypeStringConverter extends GraphSorter {
 
     public class KinType {
 
