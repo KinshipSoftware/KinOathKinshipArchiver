@@ -1,7 +1,7 @@
 package nl.mpi.kinnate.kintypestrings;
 
-import nl.mpi.kinnate.svg.GraphData;
-import nl.mpi.kinnate.svg.GraphDataNode;
+import nl.mpi.kinnate.kindata.GraphData;
+import nl.mpi.kinnate.kindata.GraphDataNode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
