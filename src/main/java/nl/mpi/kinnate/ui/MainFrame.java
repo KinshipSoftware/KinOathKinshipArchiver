@@ -342,26 +342,30 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_newDiagramMenuItemActionPerformed
 
     private void ImportGedcomUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImportGedcomUrlActionPerformed
-// http://gedcomlibrary.com/gedcoms.html
-//http://GedcomLibrary.com/gedcoms/gl120365.ged	Tammy Carter Inman
-//http://GedcomLibrary.com/gedcoms/gl120366.ged	Luis Lemonnier
-//http://GedcomLibrary.com/gedcoms/gl120367.ged	Cheryl Marion Follansbee
-//New England Genealogical Detective
-//http://GedcomLibrary.com/gedcoms/gl120368.ged	Phil Willaims
-//http://GedcomLibrary.com/gedcoms/gl120369.ged	Francisco Casta–eda
-//http://GedcomLibrary.com/gedcoms/gl120370.ged	Kim Carter
-//http://GedcomLibrary.com/gedcoms/gl120371.ged	Maria Perusia
-//http://GedcomLibrary.com/gedcoms/gl120372.ged	R. J. Bosman
-//http://GedcomLibrary.com/gedcoms/liverpool.ged	William Robinette
-//http://GedcomLibrary.com/gedcoms/misc2a.ged	William Robinette
-//http://GedcomLibrary.com/gedcoms/myline.ged	William Robinette
+        String[] importList = new String[]{"http://gedcomlibrary.com/gedcoms.html",
+            "http://GedcomLibrary.com/gedcoms/gl120365.ged", //	Tammy Carter Inman
+            "http://GedcomLibrary.com/gedcoms/gl120366.ged", //	Luis Lemonnier
+            "http://GedcomLibrary.com/gedcoms/gl120367.ged", //	Cheryl Marion Follansbee
+            // New England Genealogical Detective
+            "http://GedcomLibrary.com/gedcoms/gl120368.ged", //	Phil Willaims
+            "http://GedcomLibrary.com/gedcoms/gl120369.ged", //	Francisco Casta–eda
+            "http://GedcomLibrary.com/gedcoms/gl120370.ged", //	Kim Carter
+            "http://GedcomLibrary.com/gedcoms/gl120371.ged", //	Maria Perusia
+            "http://GedcomLibrary.com/gedcoms/gl120372.ged", //	R. J. Bosman
+            "http://GedcomLibrary.com/gedcoms/liverpool.ged", //	William Robinette
+            "http://GedcomLibrary.com/gedcoms/misc2a.ged", //	William Robinette
+            "http://GedcomLibrary.com/gedcoms/myline.ged", //	William Robinette
 
-
-        // also look into http://gedcomlibrary.com/list.html for sample files
-//        File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache("http://gedcomlibrary.com/gedcoms/gl120368.ged", 30);
-        File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache("http://GedcomLibrary.com/gedcoms/gl120367.ged", 30);
-//        File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache("http://GedcomLibrary.com/gedcoms/liverpool.ged", 30);
-        new GedcomImportPanel(entityCollection, jTabbedPane1).startImport(cachedFile);
+            // also look into http://gedcomlibrary.com/list.html for sample files
+            "http://gedcomlibrary.com/gedcoms/gl120368.ged", //
+            "http://GedcomLibrary.com/gedcoms/gl120367.ged", //
+            "http://GedcomLibrary.com/gedcoms/liverpool.ged", //
+            "http://GedcomLibrary.com/gedcoms/misc2a.ged", //
+            "http://GedcomLibrary.com/gedcoms/gl120372.ged"};
+        for (String importUrlString : importList) {
+            File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache(importUrlString, 30);
+            new GedcomImportPanel(entityCollection, jTabbedPane1).startImport(cachedFile);
+        }
     }//GEN-LAST:event_ImportGedcomUrlActionPerformed
 
     /**
