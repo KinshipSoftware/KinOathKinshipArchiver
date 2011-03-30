@@ -7,7 +7,6 @@ import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
-import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.LinorgWindowManager;
 import nl.mpi.arbil.PreviewSplitPanel;
 import nl.mpi.kinnate.SavePanel;
@@ -226,12 +225,12 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void importGedcomTortureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importGedcomTortureActionPerformed
         // TODO add your handling code here:
-        new GedcomImportPanel(entityCollection, jTabbedPane1).startImport("/TestGED/TGC55C.ged");
+        new GedcomImportPanel(entityCollection, jTabbedPane1).startImportJar("/TestGED/TGC55C.ged");
     }//GEN-LAST:event_importGedcomTortureActionPerformed
 
     private void importGedcomSimpleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importGedcomSimpleActionPerformed
         // TODO add your handling code here:
-        new GedcomImportPanel(entityCollection, jTabbedPane1).startImport("/TestGED/wiki-test-ged.ged");
+        new GedcomImportPanel(entityCollection, jTabbedPane1).startImportJar("/TestGED/wiki-test-ged.ged");
     }//GEN-LAST:event_importGedcomSimpleActionPerformed
 
     private void fileMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuActionPerformed
@@ -363,8 +362,7 @@ public class MainFrame extends javax.swing.JFrame {
             "http://GedcomLibrary.com/gedcoms/misc2a.ged", //
             "http://GedcomLibrary.com/gedcoms/gl120372.ged"};
         for (String importUrlString : importList) {
-            File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache(importUrlString, 30);
-            new GedcomImportPanel(entityCollection, jTabbedPane1).startImport(cachedFile);
+            new GedcomImportPanel(entityCollection, jTabbedPane1).startImport(importUrlString);
         }
     }//GEN-LAST:event_ImportGedcomUrlActionPerformed
 
