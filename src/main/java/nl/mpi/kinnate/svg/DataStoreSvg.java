@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.svg;
 
-import nl.mpi.kinnate.kindata.EntityData;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -8,6 +7,7 @@ import java.util.HashSet;
 import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
+import nl.mpi.kinnate.kindata.DataTypes;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -31,8 +31,8 @@ public class DataStoreSvg {
 
         public String egoNodeId;
         public String alterNodeId;
-        public EntityData.RelationType relationType;
-        public EntityData.RelationLineType relationLineType;
+        public DataTypes.RelationType relationType;
+        public DataTypes.RelationLineType relationLineType;
     }
 
     public DataStoreSvg() {
@@ -45,15 +45,15 @@ public class DataStoreSvg {
                 GraphRelationData graphRelationData = new GraphRelationData();
                 graphRelationData.egoNodeId = currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "ego").getNodeValue();
                 graphRelationData.alterNodeId = currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "alter").getNodeValue();
-                graphRelationData.relationType = EntityData.RelationType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "relationType").getNodeValue());
-                graphRelationData.relationLineType = EntityData.RelationLineType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "lineType").getNodeValue());
+                graphRelationData.relationType = DataTypes.RelationType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "relationType").getNodeValue());
+                graphRelationData.relationLineType = DataTypes.RelationLineType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "lineType").getNodeValue());
                 return graphRelationData;
             }
         }
         return null;
     }
 
-    public void storeRelationParameters(SVGDocument doc, Element relationGroup, EntityData.RelationType relationType, EntityData.RelationLineType relationLineType, String egoEntity, String alterEntity) {
+    public void storeRelationParameters(SVGDocument doc, Element relationGroup, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String egoEntity, String alterEntity) {
         Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
         dataRecordNode.setAttributeNS(kinDataNameSpace, "lineType", relationLineType.name());
         dataRecordNode.setAttributeNS(kinDataNameSpace, "relationType", relationType.name());
