@@ -59,7 +59,7 @@ public class GraphSorter {
             ancestorColumns = new HashSet<EntityData>();
             generationRows.add(currentRowIndex, ancestorColumns);
         }
-        for (EntityData.EntityRelation relatedNode : currentNode.getVisiblyRelateNodes()) { // todo: here we are soriting only visible nodes, sorting invisible nodes as well might cause issues or might help the layout and this must be tested
+        for (EntityRelation relatedNode : currentNode.getVisiblyRelateNodes()) { // todo: here we are soriting only visible nodes, sorting invisible nodes as well might cause issues or might help the layout and this must be tested
             // todo: what happens here if there are multiple relations specified?
             if (inputNodes.contains(relatedNode.getAlterNode())) {
                 HashSet<EntityData> targetColumns;
@@ -143,7 +143,7 @@ public class GraphSorter {
         for (EntityData graphDataNode : graphDataNodeArray) {
             int relationCounter = 0;
             int totalPositionCounter = 0;
-            for (EntityData.EntityRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
+            for (EntityRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
                 relationCounter++;
                 totalPositionCounter += graphLinkNode.getAlterNode().xPos;
                 //totalPositionCounter += Math.abs(graphLinkNode.linkedNode.xPos - graphLinkNode.sourceNode.xPos);
@@ -177,7 +177,7 @@ public class GraphSorter {
         System.out.println("printLocations");
         for (EntityData graphDataNode : graphDataNodeArray) {
             System.out.println("node: " + graphDataNode.xPos + ":" + graphDataNode.yPos);
-            for (EntityData.EntityRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
+            for (EntityRelation graphLinkNode : graphDataNode.getVisiblyRelateNodes()) {
                 System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
             }
         }
