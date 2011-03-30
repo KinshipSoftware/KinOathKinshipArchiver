@@ -21,30 +21,6 @@ public class EntityData {
         square, triangle, circle, union, resource, ego, none
     }
 
-    public enum RelationLineType {
-
-        square, horizontalCurve, verticalCurve, none
-    }
-
-    public enum RelationType {
-        // the term sibling is too specific and needs to encompas anything on the same generation such as union
-
-        sibling, ancestor, descendant, union, none
-    }
-
-    public static RelationType getOpposingRelationType(RelationType relationType) {
-        switch (relationType) {
-            case ancestor:
-                return EntityData.RelationType.descendant;
-            case descendant:
-                return EntityData.RelationType.ancestor;
-            case sibling:
-                return EntityData.RelationType.sibling;
-            case union:
-                return EntityData.RelationType.union;
-        }
-        return EntityData.RelationType.sibling;
-    }
     @XmlElement(name = "Identifier")
     private String uniqueIdentifier;
     @XmlElement(name = "Path")
@@ -80,32 +56,6 @@ public class EntityData {
 //        String path;
 //        String identifier;
 //    }
-    static public class EntityRelation { // todo: remove the static and put all the defintions into a types class
-
-        private EntityData alterNode;
-        public int generationalDistance;
-        @XmlElement(name = "Identifier")
-        public String alterUniqueIdentifier;
-        @XmlElement(name = "Type")
-        public RelationType relationType;
-        @XmlElement(name = "Line")
-        public RelationLineType relationLineType;
-        @XmlElement(name = "Label")
-        public String labelString;
-
-        public void setAlterNode(EntityData graphDataNode) {
-            if (graphDataNode != null) {
-                alterNode = graphDataNode;
-            }
-        }
-
-        public EntityData getAlterNode() {
-            if (alterNode == null) {
-                new LinorgBugCatcher().logError(new Exception("getAlterNode called but alterNode is null, this should not happen"));
-            }
-            return alterNode;
-        }
-    }
 
     private EntityData() {
     }
@@ -247,7 +197,7 @@ public class EntityData {
 //            return linkArray.toArray(new String[]{});
 //        }
 //    }
-    public void addRelatedNode(EntityData alterNodeLocal, int generationalDistance, RelationType relationType, RelationLineType relationLineType, String labelString) {
+    public void addRelatedNode(EntityData alterNodeLocal, int generationalDistance, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         EntityRelation nodeRelation = new EntityRelation();
         nodeRelation.alterNode = alterNodeLocal;
