@@ -2,6 +2,8 @@ package nl.mpi.kinnate.svg;
 
 import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
+import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.EntityRelation;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -46,13 +48,13 @@ public class RelationSvg {
         }
     }
 
-    private void setPolylinePointsAttribute(Element targetNode, EntityData.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    private void setPolylinePointsAttribute(Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float midY = (egoY + alterY) / 2;
         if (alterY == egoY) {
             // make sure that union lines go below the entities and sibling lines go above
-            if (relationType == EntityData.RelationType.sibling) {
+            if (relationType == DataTypes.RelationType.sibling) {
                 midY = alterY - vSpacing / 2;
-            } else if (relationType == EntityData.RelationType.union) {
+            } else if (relationType == DataTypes.RelationType.union) {
                 midY = alterY + vSpacing / 2;
             }
         }
@@ -63,12 +65,12 @@ public class RelationSvg {
                 + alterX + "," + alterY);
     }
 
-    private void setPathPointsAttribute(Element targetNode, EntityData.RelationType relationType, EntityData.RelationLineType relationLineType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    private void setPathPointsAttribute(Element targetNode, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float fromBezX;
         float fromBezY;
         float toBezX;
         float toBezY;
-        if (relationLineType == EntityData.RelationLineType.verticalCurve) {
+        if (relationLineType == DataTypes.RelationLineType.verticalCurve) {
             fromBezX = egoX;
             fromBezY = alterY;
             toBezX = alterX;
@@ -95,7 +97,7 @@ public class RelationSvg {
         targetNode.setAttribute("d", "M " + egoX + "," + egoY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + alterX + "," + alterY);
     }
 
-    protected void insertRelation(SVGDocument doc, String svgNameSpace, Element relationGroupNode, EntityData currentNode, EntityData.EntityRelation graphLinkNode, int hSpacing, int vSpacing, int strokeWidth) {
+    protected void insertRelation(SVGDocument doc, String svgNameSpace, Element relationGroupNode, EntityData currentNode, EntityRelation graphLinkNode, int hSpacing, int vSpacing, int strokeWidth) {
         int relationLineIndex = relationGroupNode.getChildNodes().getLength();
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
         groupNode.setAttribute("id", "relation" + relationLineIndex);
