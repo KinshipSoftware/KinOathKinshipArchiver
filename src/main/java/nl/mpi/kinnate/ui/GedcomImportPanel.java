@@ -30,6 +30,7 @@ public class GedcomImportPanel extends JPanel {
     private JTextArea importTextArea;
     private JProgressBar progressBar;
     private JCheckBox overwriteOnImport;
+    private JCheckBox validateImportedXml;
     private JButton startButton;
 
     public GedcomImportPanel(EntityCollection entityCollectionLocal, JTabbedPane jTabbedPaneLocal) {
@@ -53,7 +54,7 @@ public class GedcomImportPanel extends JPanel {
     }
 
     public void startImport(final File importFile, final String importFileString) {
-        if (!importFile.exists()) {
+        if (importFile != null && !importFile.exists()) {
             GedcomImportPanel.this.add(new JLabel("File not found"));
         } else {
             importTextArea = new JTextArea();
@@ -69,6 +70,8 @@ public class GedcomImportPanel extends JPanel {
             overwriteOnImport = new JCheckBox("Overwrite Existing");
             startButton = new JButton("Start");
             topPanel.add(overwriteOnImport);
+            validateImportedXml = new JCheckBox("Validate Xml");
+            topPanel.add(validateImportedXml);
             topPanel.add(startButton);
             GedcomImportPanel.this.add(topPanel, BorderLayout.PAGE_START);
             startButton.addActionListener(new ActionListener() {
@@ -76,6 +79,7 @@ public class GedcomImportPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     startButton.setEnabled(false);
                     overwriteOnImport.setEnabled(false);
+                    validateImportedXml.setEnabled(false);
                     new Thread() {
 
                         @Override
@@ -90,10 +94,13 @@ public class GedcomImportPanel extends JPanel {
                                 treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFile);
                             }
                             progressBar.setVisible(false);
-                            if (treeNodesArray != null) {
+                            boolean checkFilesAfterImport = validateImportedXml.isSelected();
+                            if (treeNodesArray != null && checkFilesAfterImport) {
 //                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();                    
                                 int maxXsdErrorToShow = 3;
+                                progressBar.setValue(0);
                                 for (URI currentNodeUri : treeNodesArray) {
+                                    progressBar.setValue(progressBar.getValue() + 1);
                                     if (maxXsdErrorToShow > 0) {
 //                        try {
 //                            ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
@@ -122,16 +129,16 @@ public class GedcomImportPanel extends JPanel {
                                         // todo: possibly create a new diagram with a sample of the imported entities for the user
                                     }
                                 }
-                                // todo: it might be more efficient to only update the new files
-                                importTextArea.append("starting update of entity database" + "\n");
-                                entityCollection.createDatabase();
-                                importTextArea.append("updated entity database" + "\n");
-                                importTextArea.setCaretPosition(importTextArea.getText().length());
-                                System.out.println("created new database");
 //                    leftTree.rootNodeChildren = tempArray.toArray(new ImdiTreeObject[]{});
 //                    imdiTableModel.removeAllImdiRows();
 //                    imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
                             }
+                            // todo: it might be more efficient to only update the new files
+                            importTextArea.append("Starting update of entity database" + "\n");
+                            entityCollection.createDatabase();
+                            importTextArea.append("Updated entity database" + "\n");
+                            importTextArea.setCaretPosition(importTextArea.getText().length());
+                            System.out.println("created new database");
 //                leftTree.requestResort();
 //                GraphData graphData = new GraphData();
 //                graphData.readData();
