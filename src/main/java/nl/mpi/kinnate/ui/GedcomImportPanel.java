@@ -13,6 +13,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.XsdChecker;
 import nl.mpi.arbil.data.ImdiLoader;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
@@ -45,15 +46,16 @@ public class GedcomImportPanel extends JPanel {
 //    private DragTransferHandler dragTransferHandler;
     }
 
-    public void startImport(File importFile) {
-        startImport(importFile, null);
+    public void startImport(String importUriString) {
+        File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache(importUriString, 30);
+        startImport(cachedFile, null, importUriString);
     }
 
-    public void startImport(String importFileString) {
-        startImport(null, importFileString);
+    public void startImportJar(String importFileString) {
+        startImport(null, importFileString, importFileString);
     }
 
-    public void startImport(final File importFile, final String importFileString) {
+    private void startImport(final File importFile, final String importFileString, String importLabel) {
         if (importFile != null && !importFile.exists()) {
             GedcomImportPanel.this.add(new JLabel("File not found"));
         } else {
@@ -73,7 +75,10 @@ public class GedcomImportPanel extends JPanel {
             validateImportedXml = new JCheckBox("Validate Xml");
             topPanel.add(validateImportedXml);
             topPanel.add(startButton);
-            GedcomImportPanel.this.add(topPanel, BorderLayout.PAGE_START);
+            JPanel topOuterPanel = new JPanel(new BorderLayout());
+            topOuterPanel.add(new JLabel(importLabel, JLabel.CENTER), BorderLayout.PAGE_START);
+            topOuterPanel.add(topPanel, BorderLayout.CENTER);
+            GedcomImportPanel.this.add(topOuterPanel, BorderLayout.PAGE_START);
             startButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
