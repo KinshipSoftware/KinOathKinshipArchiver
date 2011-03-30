@@ -10,6 +10,7 @@ import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
@@ -146,29 +147,29 @@ public class EntityIndex implements EntityService {
     }
 
     private void setRelationData(EntityData egoNode, EntityData alterNode, IndexerEntityData egoData, String alterPath, IndexerParameters indexParameters) {
-        EntityData.RelationType egoType = null;
-        EntityData.RelationType alterType = null;
+        DataTypes.RelationType egoType = null;
+        DataTypes.RelationType alterType = null;
         String[][] alterRelationFields = egoData.getRelationData(alterPath);
         if (alterRelationFields != null) {
             for (String[] ancestorField : indexParameters.ancestorFields.getValues()) {
                 for (String[] egoRelationField : alterRelationFields) {
                     if (ancestorField[0].equals(egoRelationField[1])) {
-                        egoType = EntityData.RelationType.ancestor;
-                        alterType = EntityData.RelationType.descendant;
+                        egoType = DataTypes.RelationType.ancestor;
+                        alterType = DataTypes.RelationType.descendant;
                     }
                 }
             }
             for (String[] ancestorField : indexParameters.decendantFields.getValues()) {
                 for (String[] egoRelationField : alterRelationFields) {
                     if (ancestorField[0].equals(egoRelationField[1])) {
-                        egoType = EntityData.RelationType.descendant;
-                        alterType = EntityData.RelationType.ancestor;
+                        egoType = DataTypes.RelationType.descendant;
+                        alterType = DataTypes.RelationType.ancestor;
                     }
                 }
             }
             if (egoType != null && alterType != null) {
-                egoNode.addRelatedNode(alterNode, 0, egoType, EntityData.RelationLineType.square, null);
-                alterNode.addRelatedNode(egoNode, 0, alterType, EntityData.RelationLineType.square, null);
+                egoNode.addRelatedNode(alterNode, 0, egoType, DataTypes.RelationLineType.square, null);
+                alterNode.addRelatedNode(egoNode, 0, alterType, DataTypes.RelationLineType.square, null);
             }
         }
     }
