@@ -4,6 +4,7 @@ import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
 import java.util.HashMap;
+import nl.mpi.kinnate.kindata.DataTypes;
 
 /**
  *  Document   : KinTypeStringConverter
@@ -14,42 +15,42 @@ public class KinTypeStringConverter extends GraphSorter {
 
     public class KinType {
 
-        private KinType(String codeStringLocal, EntityData.RelationType relationTypeLocal, EntityData.SymbolType symbolTypeLocal) {
+        private KinType(String codeStringLocal, DataTypes.RelationType relationTypeLocal, EntityData.SymbolType symbolTypeLocal) {
             codeString = codeStringLocal;
             relationType = relationTypeLocal;
             symbolType = symbolTypeLocal;
         }
         String codeString;
-        private EntityData.RelationType relationType;
+        private DataTypes.RelationType relationType;
         private EntityData.SymbolType symbolType;
     }
     private KinType[] referenceKinTypes = new KinType[]{
         // type 1
-        new KinType("Fa", EntityData.RelationType.ancestor, EntityData.SymbolType.triangle),
-        new KinType("Mo", EntityData.RelationType.ancestor, EntityData.SymbolType.circle),
-        new KinType("Br", EntityData.RelationType.sibling, EntityData.SymbolType.triangle),
-        new KinType("Si", EntityData.RelationType.sibling, EntityData.SymbolType.circle),
-        new KinType("So", EntityData.RelationType.descendant, EntityData.SymbolType.triangle),
-        new KinType("Da", EntityData.RelationType.descendant, EntityData.SymbolType.circle),
-        new KinType("Hu", EntityData.RelationType.union, EntityData.SymbolType.triangle),
-        new KinType("Wi", EntityData.RelationType.union, EntityData.SymbolType.circle),
-        new KinType("Pa", EntityData.RelationType.ancestor, EntityData.SymbolType.square),
-        new KinType("Sb", EntityData.RelationType.sibling, EntityData.SymbolType.square),
-        new KinType("Sp", EntityData.RelationType.sibling, EntityData.SymbolType.square),
-        new KinType("Ch", EntityData.RelationType.descendant, EntityData.SymbolType.square),
+        new KinType("Fa", DataTypes.RelationType.ancestor, EntityData.SymbolType.triangle),
+        new KinType("Mo", DataTypes.RelationType.ancestor, EntityData.SymbolType.circle),
+        new KinType("Br", DataTypes.RelationType.sibling, EntityData.SymbolType.triangle),
+        new KinType("Si", DataTypes.RelationType.sibling, EntityData.SymbolType.circle),
+        new KinType("So", DataTypes.RelationType.descendant, EntityData.SymbolType.triangle),
+        new KinType("Da", DataTypes.RelationType.descendant, EntityData.SymbolType.circle),
+        new KinType("Hu", DataTypes.RelationType.union, EntityData.SymbolType.triangle),
+        new KinType("Wi", DataTypes.RelationType.union, EntityData.SymbolType.circle),
+        new KinType("Pa", DataTypes.RelationType.ancestor, EntityData.SymbolType.square),
+        new KinType("Sb", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
+        new KinType("Sp", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
+        new KinType("Ch", DataTypes.RelationType.descendant, EntityData.SymbolType.square),
         // type 2
-        new KinType("F", EntityData.RelationType.ancestor, EntityData.SymbolType.triangle),
-        new KinType("M", EntityData.RelationType.ancestor, EntityData.SymbolType.circle),
-        new KinType("B", EntityData.RelationType.sibling, EntityData.SymbolType.triangle),
-        new KinType("Z", EntityData.RelationType.sibling, EntityData.SymbolType.circle),
-        new KinType("S", EntityData.RelationType.descendant, EntityData.SymbolType.triangle),
-        new KinType("D", EntityData.RelationType.descendant, EntityData.SymbolType.circle),
-        new KinType("H", EntityData.RelationType.union, EntityData.SymbolType.triangle),
-        new KinType("W", EntityData.RelationType.union, EntityData.SymbolType.circle),
-        new KinType("P", EntityData.RelationType.ancestor, EntityData.SymbolType.square),
-        new KinType("G", EntityData.RelationType.sibling, EntityData.SymbolType.square),
-        new KinType("E", EntityData.RelationType.sibling, EntityData.SymbolType.square),
-        new KinType("C", EntityData.RelationType.descendant, EntityData.SymbolType.square)
+        new KinType("F", DataTypes.RelationType.ancestor, EntityData.SymbolType.triangle),
+        new KinType("M", DataTypes.RelationType.ancestor, EntityData.SymbolType.circle),
+        new KinType("B", DataTypes.RelationType.sibling, EntityData.SymbolType.triangle),
+        new KinType("Z", DataTypes.RelationType.sibling, EntityData.SymbolType.circle),
+        new KinType("S", DataTypes.RelationType.descendant, EntityData.SymbolType.triangle),
+        new KinType("D", DataTypes.RelationType.descendant, EntityData.SymbolType.circle),
+        new KinType("H", DataTypes.RelationType.union, EntityData.SymbolType.triangle),
+        new KinType("W", DataTypes.RelationType.union, EntityData.SymbolType.circle),
+        new KinType("P", DataTypes.RelationType.ancestor, EntityData.SymbolType.square),
+        new KinType("G", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
+        new KinType("E", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
+        new KinType("C", DataTypes.RelationType.descendant, EntityData.SymbolType.square)
     };
 
     public ArrayList<KinType> getKinTypes(String consumableString) {
@@ -94,9 +95,9 @@ public class KinTypeStringConverter extends GraphSorter {
                                 // add any child nodes?
                             } else {
                                 currentGraphDataNode = new EntityData(fullKinTypeString, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{fullKinTypeString}, false);
-                                EntityData.RelationType opposingRelationType = EntityData.getOpposingRelationType(currentReferenceKinType.relationType);
-                                parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, EntityData.RelationLineType.square, null);
-                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, EntityData.RelationLineType.square, null);
+                                DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
+                                parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.square, null);
+                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.square, null);
                                 graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
                                 currentGraphDataNode.isVisible = true;
                                 // add any child nodes?
@@ -112,7 +113,7 @@ public class KinTypeStringConverter extends GraphSorter {
                 }
                 String kinTermLabel = kinTerms.getTermLabel(inputString);
                 if (kinTermLabel != null) {
-                    egoDataNode.addRelatedNode(parentDataNode, 2, EntityData.RelationType.none, EntityData.RelationLineType.horizontalCurve, kinTermLabel);
+                    egoDataNode.addRelatedNode(parentDataNode, 2, DataTypes.RelationType.none, DataTypes.RelationLineType.horizontalCurve, kinTermLabel);
                 }
             }
         }
