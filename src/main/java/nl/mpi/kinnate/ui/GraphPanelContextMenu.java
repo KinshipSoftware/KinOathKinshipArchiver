@@ -55,12 +55,12 @@ public class GraphPanelContextMenu extends JPopupMenu {
 //                        entityArray.add(addedNodePath.toASCIIString());
 //                        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", entityArray.toArray(new String[]{}));
                         // todo: update the main entity tree
-                        ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoList()));
-                        egoUriList.add(addedNodePath);
+//                        ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoList()));
+//                        egoUriList.add(addedNodePath);
                         ArrayList<String> egoIdentifierList = new ArrayList<String>(Arrays.asList(graphPanel.getEgoUniquiIdentifiersList()));
-                        egoUriList.add(addedNodePath);
+//                        egoUriList.add(addedNodePath);
                         egoIdentifierList.add(localIdentifier);
-                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}), egoIdentifierList.toArray(new String[]{}));
+                        egoSelectionPanel.addEgoNodes(null, egoIdentifierList.toArray(new String[]{}));
                     } catch (URISyntaxException ex) {
                         GuiHelper.linorgBugCatcher.logError(ex);
                         // todo: warn user with a dialog
@@ -190,7 +190,6 @@ public class GraphPanelContextMenu extends JPopupMenu {
     @Override
     public void show(Component cmpnt, int i, int i1) {
         selectedIdentifiers = graphPanel.getSelectedIds();
-        selectedIdentifiers = graphPanel.getEgoUniquiIdentifiersList();
         addRelationEntityMenuItem.setVisible(selectedIdentifiers.length == 2);
         setAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
         addAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
