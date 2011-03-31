@@ -48,20 +48,22 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
-    private SVGDocument doc;
+    protected SVGDocument doc;
     private KinTerms kinTerms;
     protected ImdiTableModel imdiTableModel;
-    private GraphSorter graphData;
+    protected GraphSorter graphData;
     private boolean requiresSave = false;
     private File svgFile = null;
-    private GraphPanelSize graphPanelSize;
+    protected GraphPanelSize graphPanelSize;
     protected ArrayList<String> selectedGroupId;
-    private String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
+    protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     private DataStoreSvg dataStoreSvg;
     private URI[] egoPathsTemp = null;
+    protected SvgUpdateHandler svgUpdateHandler;
 
     public GraphPanel(KinTypeEgoSelectionTestPanel egoSelectionPanel) {
         dataStoreSvg = new DataStoreSvg();
+        svgUpdateHandler = new SvgUpdateHandler(this);
         selectedGroupId = new ArrayList<String>();
         graphPanelSize = new GraphPanelSize();
         kinTerms = new KinTerms();
@@ -230,53 +232,6 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void drawNodes() {
         drawNodes(graphData);
-    }
-
-    protected void updateDragNode(final int updateDragNodeX, final int updateDragNodeY) {
-        UpdateManager updateManager = svgCanvas.getUpdateManager();
-        updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
-
-            public void run() {
-                System.out.println("updateDragNodeX: " + updateDragNodeX);
-                System.out.println("updateDragNodeY: " + updateDragNodeY);
-                if (doc != null) {
-                    for (String entityId : selectedGroupId) {
-                        new EntitySvg().moveEntity(doc, entityId, updateDragNodeX, updateDragNodeY);
-                    }
-//                    Element entityGroup = doc.getElementById("EntityGroup");
-//                    for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
-//                        if ("g".equals(currentChild.getLocalName())) {
-//                            Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
-//                            if (idAttrubite != null) {
-//                                String entityPath = idAttrubite.getTextContent();
-//                                if (selectedGroupElement.contains(entityPath)) {
-//                                    SVGRect bbox = ((SVGLocatable) currentChild).getBBox();
-////                    ((SVGLocatable) currentDraggedElement).g
-//                                    // drageboth x and y
-////                                    ((Element) currentChild).setAttribute("transform", "translate(" + String.valueOf(updateDragNodeX * svgCanvas.getRenderingTransform().getScaleX() - bbox.getX()) + ", " + String.valueOf(updateDragNodeY - bbox.getY()) + ")");
-//                                    // limit drag to x only
-//                                    ((Element) currentChild).setAttribute("transform", "translate(" + String.valueOf(updateDragNodeX * svgCanvas.getRenderingTransform().getScaleX() - bbox.getX()) + ", 0)");
-////                    updateDragNodeElement.setAttribute("x", String.valueOf(updateDragNodeX));
-////                    updateDragNodeElement.setAttribute("y", String.valueOf(updateDragNodeY));
-//                                    //                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
-////                    System.out.println("bbox X: " + bbox.getX());
-////                    System.out.println("bbox Y: " + bbox.getY());
-////                    System.out.println("bbox W: " + bbox.getWidth());
-////                    System.out.println("bbox H: " + bbox.getHeight());
-////                    todo: look into transform issues when dragging ellements eg when the canvas is scaled or panned
-////                            SVGLocatable.getTransformToElement()
-////                            SVGPoint.matrixTransform()
-//                                }
-//                            }
-//                        }
-//                    }
-                    int vSpacing = graphPanelSize.getVerticalSpacing(graphData.gridHeight);
-                    int hSpacing = graphPanelSize.getHorizontalSpacing(graphData.gridWidth);
-                    new RelationSvg().updateRelationLines(doc, selectedGroupId, svgNameSpace, hSpacing, vSpacing);
-                    //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
-                }
-            }
-        });
     }
 
     protected void updateSvgSelectionHighlights() {
