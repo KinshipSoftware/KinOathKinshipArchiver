@@ -29,8 +29,9 @@ public class GraphPanelContextMenu extends JPopupMenu {
     GraphPanelSize graphPanelSize;
     JMenuItem addRelationEntityMenuItem;
     JMenuItem setAsEgoMenuItem;
-    String[] selectedPaths = null; // keep the selected paths as shown at the time of the menu intereaction
-    String[] selectedIdentifiers = null;
+    JMenuItem addAsEgoMenuItem;
+    JMenuItem removeEgoMenuItem;
+    String[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
 
     public GraphPanelContextMenu(KinTypeEgoSelectionTestPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, GraphPanelSize graphPanelSizeLocal) {
         egoSelectionPanel = egoSelectionPanelLocal;
@@ -95,23 +96,30 @@ public class GraphPanelContextMenu extends JPopupMenu {
             });
             this.add(addRelationEntityMenuItem);
         }
-        setAsEgoMenuItem = new JMenuItem("Set as Ego");
+        setAsEgoMenuItem = new JMenuItem("Set as Ego (relacing existing)");
         setAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                URI[] selectedUriArray = new URI[selectedPaths.length];
-                for (int currentIndex = 0; currentIndex < selectedPaths.length; currentIndex++) {
-                    try {
-                        selectedUriArray[currentIndex] = new URI(selectedPaths[currentIndex]);
-                    } catch (URISyntaxException ex) {
-                        GuiHelper.linorgBugCatcher.logError(ex);
-                        // todo: warn user with a dialog
-                    }
-                }
-                egoSelectionPanel.addEgoNodes(selectedUriArray, selectedIdentifiers);
+                egoSelectionPanel.setEgoNodes(getSelectedUriArray(), selectedIdentifiers);
             }
         });
         this.add(setAsEgoMenuItem);
+        addAsEgoMenuItem = new JMenuItem("Add as Ego");
+        addAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                egoSelectionPanel.addEgoNodes(getSelectedUriArray(), selectedIdentifiers);
+            }
+        });
+        this.add(addAsEgoMenuItem);
+        removeEgoMenuItem = new JMenuItem("Remove Ego");
+        removeEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                egoSelectionPanel.removeEgoNodes(getSelectedUriArray(), selectedIdentifiers);
+            }
+        });
+        this.add(removeEgoMenuItem);
         JMenuItem resetZoomMenuItem = new JMenuItem("Reset Zoom");
         resetZoomMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -161,6 +169,19 @@ public class GraphPanelContextMenu extends JPopupMenu {
         this.add(searchEntityServiceMenuItem);
     }
 
+    private URI[] getSelectedUriArray() {
+        URI[] selectedUriArray = new URI[selectedIdentifiers.length];
+        for (int currentIndex = 0; currentIndex < selectedIdentifiers.length; currentIndex++) {
+            try {
+                selectedUriArray[currentIndex] = new URI(graphPanel.getPathForElementId(selectedIdentifiers[currentIndex]));
+            } catch (URISyntaxException ex) {
+                GuiHelper.linorgBugCatcher.logError(ex);
+                // todo: warn user with a dialog
+            }
+        }
+        return selectedUriArray;
+    }
+
     private void setGraphPanelSize(String sizeString) {
         graphPanelSize.setSize(sizeString);
         graphPanel.drawNodes();
@@ -168,10 +189,14 @@ public class GraphPanelContextMenu extends JPopupMenu {
 
     @Override
     public void show(Component cmpnt, int i, int i1) {
-        selectedPaths = graphPanel.getSelectedPaths();
+        selectedIdentifiers = graphPanel.getSelectedIds();
         selectedIdentifiers = graphPanel.getEgoUniquiIdentifiersList();
-        addRelationEntityMenuItem.setVisible(selectedPaths.length == 2);
-        setAsEgoMenuItem.setVisible(selectedPaths.length > 0);
+        addRelationEntityMenuItem.setVisible(selectedIdentifiers.length == 2);
+        setAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
+        addAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
+        // todo: set the remove menu item based on the ego selection but this requires a change to the selected elements so that they use the ID not the path, but this change will affect th way the imdi path is obtained to show the table
+        removeEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
+//        removeEgoMenuItem.setVisible(graphPanel.selectionContainsEgo());
         super.show(cmpnt, i, i1);
     }
 }
