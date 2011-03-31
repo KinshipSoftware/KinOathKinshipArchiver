@@ -3,6 +3,7 @@ package nl.mpi.kinnate.svg;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
@@ -22,8 +23,8 @@ public class DataStoreSvg {
 
     static protected String kinDataNameSpace = "kin";
     static protected String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
-    protected HashSet<URI> egoPathSet = new HashSet<URI>(); // todo: update all useages of this ego path to also update the ego id list
-    protected HashSet<String> egoIdentifierSet = new HashSet<String>(); // todo: add this to the stored data in the svg
+    protected HashSet<URI> egoPathSet = new HashSet<URI>();
+    protected HashSet<String> egoIdentifierSet = new HashSet<String>();
     protected String[] kinTypeStrings = new String[]{};
     protected IndexerParameters indexParameters;
 
@@ -100,7 +101,8 @@ public class DataStoreSvg {
         Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "kin:KinDiagramData");
         //        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
         kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to st the namespace
-        storeParameter(doc, kinTypesRecordNode, "EgoList", egoStringArray.toArray(new String[]{}));
+        storeParameter(doc, kinTypesRecordNode, "EgoPathList", egoStringArray.toArray(new String[]{}));
+        storeParameter(doc, kinTypesRecordNode, "EgoIdList", egoIdentifierSet.toArray(new String[]{}));
         storeParameter(doc, kinTypesRecordNode, "KinTypeStrings", kinTypeStrings);
         storeParameter(doc, kinTypesRecordNode, "AncestorFields", indexParameters.ancestorFields.getValues());
         storeParameter(doc, kinTypesRecordNode, "DecendantFields", indexParameters.decendantFields.getValues());
@@ -155,13 +157,15 @@ public class DataStoreSvg {
     protected void loadDataFromSvg(SVGDocument doc) {
 //        ArrayList<String> egoStringArray = new ArrayList<String>();
         egoPathSet.clear();
-        for (String currentEgoString : getSingleParametersFromDom(doc, "EgoList")) {
+        egoIdentifierSet.clear();
+        for (String currentEgoString : getSingleParametersFromDom(doc, "EgoPathList")) {
             try {
                 egoPathSet.add(new URI(currentEgoString));
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
             }
         }
+        egoIdentifierSet.addAll(Arrays.asList(getSingleParametersFromDom(doc, "EgoIdList")));
         kinTypeStrings = getSingleParametersFromDom(doc, "KinTypeStrings");
         indexParameters.ancestorFields.setValues(getDoubleParametersFromDom(doc, "AncestorFields"));
         indexParameters.decendantFields.setValues(getDoubleParametersFromDom(doc, "DecendantFields"));
