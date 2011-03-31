@@ -38,7 +38,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             if (graphPanel.selectedGroupId.size() > 0) {
                 graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 // limit the drag to the distance draged not the location
-                graphPanel.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
+                graphPanel.svgUpdateHandler.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
             }
             mouseActionIsDrag = true;
         }
@@ -53,7 +53,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         if (!mouseActionIsDrag && !mouseActionIsPopupTrigger && !mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
             System.out.println("Clear selection");
             graphPanel.selectedGroupId.clear();
-            graphPanel.updateSvgSelectionHighlights();
+            graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
         }
         mouseActionOnNode = false;
     }
@@ -91,7 +91,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 graphPanel.selectedGroupId.add(entityIdentifier);
             }
         }
-        graphPanel.updateSvgSelectionHighlights();
+        graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
 //                if (existingHighlight == null) {
 //                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 //                }
