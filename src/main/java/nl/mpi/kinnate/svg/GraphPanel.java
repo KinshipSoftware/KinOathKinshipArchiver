@@ -21,6 +21,7 @@ import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kintypestrings.KinTerms;
 import org.apache.batik.bridge.UpdateManager;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
@@ -53,13 +54,13 @@ public class GraphPanel extends JPanel implements SavePanel {
     private boolean requiresSave = false;
     private File svgFile = null;
     private GraphPanelSize graphPanelSize;
-    protected ArrayList<String> selectedGroupElement;
+    protected ArrayList<String> selectedGroupId;
     private String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     private DataStoreSvg dataStoreSvg;
 
     public GraphPanel(KinTypeEgoSelectionTestPanel egoSelectionPanel) {
         dataStoreSvg = new DataStoreSvg();
-        selectedGroupElement = new ArrayList<String>();
+        selectedGroupId = new ArrayList<String>();
         graphPanelSize = new GraphPanelSize();
         kinTerms = new KinTerms();
         this.setLayout(new BorderLayout());
@@ -162,16 +163,45 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public URI[] getEgoList() {
-        return dataStoreSvg.egoSet.toArray(new URI[]{});
+        return dataStoreSvg.egoPathSet.toArray(new URI[]{});
     }
 
     public void setEgoList(URI[] egoListArray, String[] egoIdentifierArray) {
-        dataStoreSvg.egoSet = new HashSet<URI>(Arrays.asList(egoListArray));
+        dataStoreSvg.egoPathSet = new HashSet<URI>(Arrays.asList(egoListArray));
         dataStoreSvg.egoIdentifierSet = new HashSet<String>(Arrays.asList(egoIdentifierArray));
     }
 
-    public String[] getSelectedPaths() {
-        return selectedGroupElement.toArray(new String[]{});
+    public void addEgo(URI[] egoListArray, String[] egoIdentifierArray) {
+        dataStoreSvg.egoPathSet.addAll(Arrays.asList(egoListArray));
+        dataStoreSvg.egoIdentifierSet.addAll(Arrays.asList(egoIdentifierArray));
+    }
+
+    public void removeEgo(URI[] egoListArray, String[] egoIdentifierArray) {
+        dataStoreSvg.egoPathSet.removeAll(Arrays.asList(egoListArray));
+        dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
+    }
+
+    public String[] getSelectedIds() {
+        return selectedGroupId.toArray(new String[]{});
+    }
+
+    public boolean selectionContainsEgo() {
+        for (String selectedId : selectedGroupId) {
+            if (dataStoreSvg.egoIdentifierSet.contains(selectedId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getPathForElementId(String elementId) {
+//        NamedNodeMap namedNodeMap = doc.getElementById(elementId).getAttributes();
+//        for (int attributeCounter = 0; attributeCounter < namedNodeMap.getLength(); attributeCounter++) {
+//            System.out.println(namedNodeMap.item(attributeCounter).getNodeName());
+//            System.out.println(namedNodeMap.item(attributeCounter).getNamespaceURI());
+//            System.out.println(namedNodeMap.item(attributeCounter).getNodeValue());
+//        }
+        return doc.getElementById(elementId).getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path");
     }
 
     public void resetZoom() {
@@ -193,7 +223,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                 System.out.println("updateDragNodeX: " + updateDragNodeX);
                 System.out.println("updateDragNodeY: " + updateDragNodeY);
                 if (doc != null) {
-                    for (String entityId : selectedGroupElement) {
+                    for (String entityId : selectedGroupId) {
                         new EntitySvg().moveEntity(doc, entityId, updateDragNodeX, updateDragNodeY);
                     }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
@@ -225,14 +255,14 @@ public class GraphPanel extends JPanel implements SavePanel {
 //                    }
                     int vSpacing = graphPanelSize.getVerticalSpacing(graphData.gridHeight);
                     int hSpacing = graphPanelSize.getHorizontalSpacing(graphData.gridWidth);
-                    new RelationSvg().updateRelationLines(doc, selectedGroupElement, svgNameSpace, hSpacing, vSpacing);
+                    new RelationSvg().updateRelationLines(doc, selectedGroupId, svgNameSpace, hSpacing, vSpacing);
                     //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                 }
             }
         });
     }
 
-    protected void addHighlightToGroup() {
+    protected void updateSvgSelectionHighlights() {
         UpdateManager updateManager = svgCanvas.getUpdateManager();
         updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
 
@@ -243,8 +273,8 @@ public class GraphPanel extends JPanel implements SavePanel {
                         if ("g".equals(currentChild.getLocalName())) {
                             Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
                             if (idAttrubite != null) {
-                                String entityPath = idAttrubite.getTextContent();
-                                System.out.println("group id (entityPath): " + entityPath);
+                                String entityId = idAttrubite.getTextContent();
+                                System.out.println("group id: " + entityId);
                                 Node existingHighlight = null;
                                 // find any existing highlight
                                 for (Node subGoupNode = currentChild.getFirstChild(); subGoupNode != null; subGoupNode = subGoupNode.getNextSibling()) {
@@ -257,7 +287,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                                         }
                                     }
                                 }
-                                if (!selectedGroupElement.contains(entityPath)) {
+                                if (!selectedGroupId.contains(entityId)) {
                                     // remove all old highlights
                                     if (existingHighlight != null) {
                                         currentChild.removeChild(existingHighlight);
@@ -301,17 +331,18 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     private Element createEntitySymbol(EntityData currentNode, int hSpacing, int vSpacing, int symbolSize) {
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
-        groupNode.setAttribute("id", currentNode.getEntityPath());
+        groupNode.setAttribute("id", currentNode.getUniqueIdentifier());
+        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
 //        counterTest++;
         Element symbolNode;
         String symbolType = currentNode.getSymbolType();
-        if (symbolType == null) {
-            symbolType = "cross";
+        if (symbolType == null || symbolType.length() == 0) {
+            symbolType = "square";
         }
         // todo: check that if an entity is already placed in which case do not recreate
         // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
         symbolNode = doc.createElementNS(svgNameSpace, "use");
-        symbolNode.setAttribute("id", currentNode.getEntityPath() + "symbol");
+        symbolNode.setAttribute("id", currentNode.getUniqueIdentifier() + "symbol");
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         groupNode.setAttribute("transform", "translate(" + Integer.toString(currentNode.getxPos() * hSpacing + hSpacing - symbolSize / 2) + ", " + Integer.toString(currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2) + ")");
 
@@ -440,8 +471,10 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            }, false);
 
 
-            for (EntityData.EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
-                new RelationSvg().insertRelation(doc, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing, strokeWidth);
+            if (currentNode.isVisible) {
+                for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
+                    new RelationSvg().insertRelation(doc, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing, strokeWidth);
+                }
             }
         }
         svgRoot.appendChild(relationGroupNode);
@@ -449,7 +482,9 @@ public class GraphPanel extends JPanel implements SavePanel {
         Element entityGroupNode = doc.createElementNS(svgNameSpace, "g");
         entityGroupNode.setAttribute("id", "EntityGroup");
         for (EntityData currentNode : graphData.getDataNodes()) {
-            entityGroupNode.appendChild(createEntitySymbol(currentNode, hSpacing, vSpacing, symbolSize));
+            if (currentNode.isVisible) {
+                entityGroupNode.appendChild(createEntitySymbol(currentNode, hSpacing, vSpacing, symbolSize));
+            }
         }
         svgRoot.appendChild(entityGroupNode);
         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
