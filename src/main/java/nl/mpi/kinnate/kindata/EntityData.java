@@ -5,7 +5,6 @@ import java.util.Arrays;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import nl.mpi.arbil.LinorgBugCatcher;
 
 /**
  *  Document   : GraphDataNode
@@ -20,7 +19,6 @@ public class EntityData {
 
         square, triangle, circle, union, resource, ego, none
     }
-
     @XmlElement(name = "Identifier")
     private String uniqueIdentifier;
     @XmlElement(name = "Path")
@@ -38,6 +36,8 @@ public class EntityData {
     protected int xPos;
     protected int yPos;
     public boolean isVisible = false;
+    private EntityRelation[] visiblyRelateNodes = null;
+    private EntityRelation[] distinctRelateNodes = null;
 
 //    // todo: move this into the graphdatanode
 //    @XmlRootElement(name = "results")
@@ -56,7 +56,6 @@ public class EntityData {
 //        String path;
 //        String identifier;
 //    }
-
     private EntityData() {
     }
 
@@ -93,7 +92,6 @@ public class EntityData {
 //        // todo: y position cannot be set in the default layout of vertical generations
 //        // this.yPos = yPos;
 //    }
-
     public String getSymbolType() {
         if (symbolType != null) {
             switch (symbolType) {
@@ -215,20 +213,41 @@ public class EntityData {
         }
     }
 
-    public EntityRelation[] getVisiblyRelateNodes() {
-        ArrayList<EntityRelation> visiblyRelatedNodes = new ArrayList<EntityRelation>();
-        for (EntityRelation nodeRelation : relatedNodes) {
-            if (nodeRelation.alterNode != null) {
-                if (nodeRelation.alterNode.isVisible) {
-                    visiblyRelatedNodes.add(nodeRelation);
-                }
-            }
-        }
-        return visiblyRelatedNodes.toArray(new EntityRelation[]{});
+    public void clearVisibility() {
+        isVisible = false;
+        isEgo = false;
+        visiblyRelateNodes = null;
+        distinctRelateNodes = null;
     }
 
-    public EntityRelation[] getAllRelateNodes() {
-        return relatedNodes;
+    public EntityRelation[] getVisiblyRelateNodes() {
+        if (visiblyRelateNodes == null) {
+            ArrayList<EntityRelation> visiblyRelatedNodes = new ArrayList<EntityRelation>();
+            for (EntityRelation nodeRelation : getDistinctRelateNodes()) {
+                if (nodeRelation.alterNode != null) {
+                    if (nodeRelation.alterNode.isVisible) {
+                        visiblyRelatedNodes.add(nodeRelation);
+                    }
+                }
+            }
+            visiblyRelateNodes = visiblyRelatedNodes.toArray(new EntityRelation[]{});
+        }
+        return visiblyRelateNodes;
+    }
+
+    public EntityRelation[] getDistinctRelateNodes() {
+        if (distinctRelateNodes == null) {
+            ArrayList<String> processedIds = new ArrayList<String>();
+            ArrayList<EntityRelation> uniqueNodes = new ArrayList<EntityRelation>();
+            for (EntityRelation nodeRelation : relatedNodes) {
+                if (!processedIds.contains(nodeRelation.alterUniqueIdentifier)) {
+                    uniqueNodes.add(nodeRelation);
+                    processedIds.add(nodeRelation.alterUniqueIdentifier);
+                }
+            }
+            distinctRelateNodes = uniqueNodes.toArray(new EntityRelation[]{});
+        }
+        return distinctRelateNodes;
     }
 
     public String getUniqueIdentifier() {
