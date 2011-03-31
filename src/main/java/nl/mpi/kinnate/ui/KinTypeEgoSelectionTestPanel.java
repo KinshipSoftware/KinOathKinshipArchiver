@@ -160,8 +160,8 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
         drawGraph();
     }
 
-    public void removeEgoNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
-        graphPanel.removeEgo(egoPathArray, egoIdentifierArray);
+    public void removeEgoNodes(String[] egoIdentifierArray) {
+        graphPanel.removeEgo(egoIdentifierArray);
         drawGraph();
     }
 
