@@ -85,14 +85,6 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 //            graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
 //            kinTypeStrings = graphPanel.getKinTypeStrigs();
         }
-        try {
-            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings, graphPanel.getIndexParameters()));
-        } catch (EntityServiceException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
-            LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
-        }
-        egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
-        kinTypeStrings = graphPanel.getKinTypeStrigs();
 
         IndexerParametersPanel indexerParametersPanel = new IndexerParametersPanel(this, graphPanel, tableCellDragHandler);
         JPanel advancedPanel = new JPanel(new BorderLayout());
@@ -153,13 +145,24 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
             GuiHelper.linorgBugCatcher.logError(exception);
             LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
         }
+        egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
+        kinTypeStrings = graphPanel.getKinTypeStrigs();
         graphPanel.drawNodes(graphData);
     }
 
-    public void addEgoNodes(URI[] egoSelection, String[] egoIdentifierArray) {
+    public void setEgoNodes(URI[] egoSelection, String[] egoIdentifierArray) {
         graphPanel.setEgoList(egoSelection, egoIdentifierArray);
         drawGraph();
-        egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
+    }
+
+    public void addEgoNodes(URI[] egoSelection, String[] egoIdentifierArray) {
+        graphPanel.addEgo(egoSelection, egoIdentifierArray);
+        drawGraph();
+    }
+
+    public void removeEgoNodes(URI[] egoSelection, String[] egoIdentifierArray) {
+        graphPanel.removeEgo(egoSelection, egoIdentifierArray);
+        drawGraph();
     }
 
     public boolean hasSaveFileName() {
