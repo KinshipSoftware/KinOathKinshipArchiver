@@ -1,7 +1,5 @@
 package nl.mpi.kinnate.svg;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,7 +21,6 @@ public class DataStoreSvg {
 
     static protected String kinDataNameSpace = "kin";
     static protected String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
-    protected HashSet<URI> egoPathSet = new HashSet<URI>();
     protected HashSet<String> egoIdentifierSet = new HashSet<String>();
     protected String[] kinTypeStrings = new String[]{};
     protected IndexerParameters indexParameters;
@@ -91,17 +88,17 @@ public class DataStoreSvg {
 
     protected void storeAllData(SVGDocument doc) {
         // create string array to store the selected ego nodes in the dom
-        ArrayList<String> egoStringArray = new ArrayList<String>();
-        for (URI currentEgoUri : egoPathSet) {
-            egoStringArray.add(currentEgoUri.toASCIIString());
-        }
+//        ArrayList<String> egoStringArray = new ArrayList<String>();
+//        for (URI currentEgoUri : egoPathSet) {
+//            egoStringArray.add(currentEgoUri.toASCIIString());
+//        }
         // store the selected kin type strings and other data in the dom
         //        Namespace sNS = Namespace.getNamespace("someNS", "someNamespace");
         //        Element element = new Element("SomeElement", sNS);
         Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "kin:KinDiagramData");
         //        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
         kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to st the namespace
-        storeParameter(doc, kinTypesRecordNode, "EgoPathList", egoStringArray.toArray(new String[]{}));
+//        storeParameter(doc, kinTypesRecordNode, "EgoPathList", egoStringArray.toArray(new String[]{}));
         storeParameter(doc, kinTypesRecordNode, "EgoIdList", egoIdentifierSet.toArray(new String[]{}));
         storeParameter(doc, kinTypesRecordNode, "KinTypeStrings", kinTypeStrings);
         storeParameter(doc, kinTypesRecordNode, "AncestorFields", indexParameters.ancestorFields.getValues());
@@ -156,15 +153,15 @@ public class DataStoreSvg {
 
     protected void loadDataFromSvg(SVGDocument doc) {
 //        ArrayList<String> egoStringArray = new ArrayList<String>();
-        egoPathSet.clear();
+//        egoPathSet.clear();
         egoIdentifierSet.clear();
-        for (String currentEgoString : getSingleParametersFromDom(doc, "EgoPathList")) {
-            try {
-                egoPathSet.add(new URI(currentEgoString));
-            } catch (URISyntaxException urise) {
-                GuiHelper.linorgBugCatcher.logError(urise);
-            }
-        }
+//        for (String currentEgoString : getSingleParametersFromDom(doc, "EgoPathList")) {
+//            try {
+//                egoPathSet.add(new URI(currentEgoString));
+//            } catch (URISyntaxException urise) {
+//                GuiHelper.linorgBugCatcher.logError(urise);
+//            }
+//        }
         egoIdentifierSet.addAll(Arrays.asList(getSingleParametersFromDom(doc, "EgoIdList")));
         kinTypeStrings = getSingleParametersFromDom(doc, "KinTypeStrings");
         indexParameters.ancestorFields.setValues(getDoubleParametersFromDom(doc, "AncestorFields"));
