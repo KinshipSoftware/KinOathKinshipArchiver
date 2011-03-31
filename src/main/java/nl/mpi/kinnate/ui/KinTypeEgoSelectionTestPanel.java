@@ -33,7 +33,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 
     private JTextArea kinTypeStringInput;
     private GraphPanel graphPanel;
-    private GraphSorter graphData;
+    private GraphSorter graphSorter;
     private EgoSelectionPanel egoSelectionPanel;
     private KinTermPanel kinTermPanel;
     private EntityService entityIndex;
@@ -76,11 +76,11 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
         // EntityCollection queries the xml collection to get the entity data
         entityIndex = new EntityCollection();
 
-        graphData = new GraphSorter();
+        graphSorter = new GraphSorter();
         if (existingFile != null && existingFile.exists()) {
             graphPanel.readSvg(existingFile);
         } else {
-            graphPanel.drawNodes(graphData);
+            graphPanel.drawNodes(graphSorter);
             // todo: filter out the noise and only save or use the actual kin type strings
 //            graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
 //            kinTypeStrings = graphPanel.getKinTypeStrigs();
@@ -140,28 +140,28 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 
     public void drawGraph() {
         try {
-            graphData.setEgoNodes(entityIndex.getRelationsOfEgo(graphPanel.getEgoList(), graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings, graphPanel.getIndexParameters()));
+            graphSorter.setEntitys(entityIndex.getRelationsOfEgo(null, graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings, graphPanel.getIndexParameters()));
         } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
             LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
         }
-        egoSelectionPanel.setEgoNodes(graphPanel.getEgoList());
+        egoSelectionPanel.setEgoNodes(graphPanel.getEgoPaths());
         kinTypeStrings = graphPanel.getKinTypeStrigs();
-        graphPanel.drawNodes(graphData);
+        graphPanel.drawNodes(graphSorter);
     }
 
-    public void setEgoNodes(URI[] egoSelection, String[] egoIdentifierArray) {
-        graphPanel.setEgoList(egoSelection, egoIdentifierArray);
+    public void setEgoNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
+        graphPanel.setEgoList(egoPathArray, egoIdentifierArray);
         drawGraph();
     }
 
-    public void addEgoNodes(URI[] egoSelection, String[] egoIdentifierArray) {
-        graphPanel.addEgo(egoSelection, egoIdentifierArray);
+    public void addEgoNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
+        graphPanel.addEgo(egoPathArray, egoIdentifierArray);
         drawGraph();
     }
 
-    public void removeEgoNodes(URI[] egoSelection, String[] egoIdentifierArray) {
-        graphPanel.removeEgo(egoSelection, egoIdentifierArray);
+    public void removeEgoNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
+        graphPanel.removeEgo(egoPathArray, egoIdentifierArray);
         drawGraph();
     }
 
