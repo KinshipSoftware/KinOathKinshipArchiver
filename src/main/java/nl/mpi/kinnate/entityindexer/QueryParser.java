@@ -1,5 +1,7 @@
 package nl.mpi.kinnate.entityindexer;
 
+import java.util.ArrayList;
+
 /**
  *  Document   : QueryParser
  *  Created on : Mar 31, 2011, 2:38:20 PM
@@ -7,9 +9,24 @@ package nl.mpi.kinnate.entityindexer;
  */
 public class QueryParser {
 
-    public String[] getQueryStrings(String kinTypeString) {
+    public String[][] getQueryStrings(String kinTypeString) {
+        ArrayList<String[]> queryTerms = new ArrayList<String[]>();
         //String[] queryParts = kinTypeString.split("=\\[");
-        String[] queryParts = kinTypeString.split(",");
-        return queryParts;
+        String[] queryParts = kinTypeString.split("\n");
+        for (String queryText : queryParts) {
+            if (!queryText.contains("=")) {
+                if (queryText.length() > 2) {
+                    queryTerms.add(new String[]{"*", queryText});
+                }
+            } else {
+                String[] queryTerm = queryText.split("=");
+                if (queryTerm.length == 2) {
+                    if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
+                        queryTerms.add(new String[]{queryTerm[0], queryTerm[1]});
+                    }
+                }
+            }
+        }
+        return queryTerms.toArray(new String[][]{});
     }
 }
