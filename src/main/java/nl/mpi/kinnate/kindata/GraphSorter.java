@@ -15,10 +15,10 @@ public class GraphSorter {
     public int gridWidth;
     public int gridHeight;
 
-    public void setEgoNodes(EntityData[] graphDataNodeArrayLocal) {
+    public void setEntitys(EntityData[] graphDataNodeArrayLocal) {
         graphDataNodeArray = graphDataNodeArrayLocal;
         sanguineSort();
-        printLocations();
+        //printLocations(); // todo: remove this and maybe add a label of x,y post for each node to better see the sorting
     }
 
     // todo: look into http://www.jgraph.com/jgraph.html
