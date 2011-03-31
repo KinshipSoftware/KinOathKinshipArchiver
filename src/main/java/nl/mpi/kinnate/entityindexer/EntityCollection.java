@@ -23,6 +23,7 @@ import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityRelation;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Set;
@@ -43,6 +44,7 @@ public class EntityCollection implements EntityService {
 
     private String databaseName = "nl-mpi-kinnate";
     static Context context = new Context();
+    HashMap<String, EntityData> loadedGraphNodes = new HashMap<String, EntityData>();
 
     public EntityCollection() {
     }
@@ -126,7 +128,7 @@ public class EntityCollection implements EntityService {
 
     private void getNextRelations(HashMap<String, EntityData> createdGraphNodes, EntityData egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) {
         KinType currentKinType = remainingKinTypes.remove(0);
-        for (EntityData.EntityRelation entityRelation : egoNode.getAllRelateNodes()) {
+        for (EntityRelation entityRelation : egoNode.getDistinctRelateNodes()) {
             EntityData alterNode;
             if (createdGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
                 alterNode = createdGraphNodes.get(entityRelation.alterUniqueIdentifier);
@@ -137,41 +139,43 @@ public class EntityCollection implements EntityService {
             alterNode.isVisible = true;
 
             if (egoNode.relationMatchesType(entityRelation, currentKinType)) {
-                // only traverse if the type matches
-                if (remainingKinTypes.size() > 0) {
-                    getNextRelations(createdGraphNodes, alterNode, remainingKinTypes, indexParameters);
-                }
+            // only traverse if the type matches
+            if (remainingKinTypes.size() > 0) {
+                getNextRelations(createdGraphNodes, alterNode, remainingKinTypes, indexParameters);
+            }
             }
         }
     }
 
     public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
-        HashMap<String, EntityData> createdGraphNodes = new HashMap<String, EntityData>();
+        for (EntityData graphDataNode : loadedGraphNodes.values()) {
+            graphDataNode.clearVisibility();
+        }
         for (String currentEgoId : uniqueIdentifiers) {
             EntityData egoNode;
-            if (createdGraphNodes.containsKey(currentEgoId)) {
-                egoNode = createdGraphNodes.get(currentEgoId);
+            if (loadedGraphNodes.containsKey(currentEgoId)) {
+                egoNode = loadedGraphNodes.get(currentEgoId);
             } else {
                 egoNode = getEntity(currentEgoId, indexParameters);
-                createdGraphNodes.put(currentEgoId, egoNode);
+                loadedGraphNodes.put(currentEgoId, egoNode);
             }
             egoNode.isEgo = true;
             egoNode.isVisible = true;
             if (kinTypeStrings != null) {
                 for (String currentKinString : kinTypeStrings) {
                     ArrayList<KinType> kinTypes = kinTypeStringConverter.getKinTypes(currentKinString);
-                    getNextRelations(createdGraphNodes, egoNode, kinTypes, indexParameters);
+                    getNextRelations(loadedGraphNodes, egoNode, kinTypes, indexParameters);
                 }
             }
             // set the alter node object from the unique identifier
-            for (EntityData graphDataNode : createdGraphNodes.values()) {
-                for (EntityData.EntityRelation nodeRelation : graphDataNode.getAllRelateNodes()) {
-                    nodeRelation.setAlterNode(createdGraphNodes.get(nodeRelation.alterUniqueIdentifier));
+            for (EntityData graphDataNode : loadedGraphNodes.values()) {
+                for (EntityRelation nodeRelation : graphDataNode.getDistinctRelateNodes()) {
+                    nodeRelation.setAlterNode(loadedGraphNodes.get(nodeRelation.alterUniqueIdentifier));
                 }
             }
         }
-        return createdGraphNodes.values().toArray(new EntityData[]{});
+        return loadedGraphNodes.values().toArray(new EntityData[]{});
 
 
 
@@ -187,6 +191,8 @@ public class EntityCollection implements EntityService {
         JFrame jFrame = new JFrame("Test Query Window");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final JTextArea queryText = new JTextArea();
+//        queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
+        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
         final JTextArea resultsText = new JTextArea();
         resultsText.setVisible(false);
         JButton jButton = new JButton("run query");
