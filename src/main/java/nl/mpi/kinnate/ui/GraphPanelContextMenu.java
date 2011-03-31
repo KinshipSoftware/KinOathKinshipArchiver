@@ -194,9 +194,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
         addRelationEntityMenuItem.setVisible(selectedIdentifiers.length == 2);
         setAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
         addAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
-        // todo: set the remove menu item based on the ego selection but this requires a change to the selected elements so that they use the ID not the path, but this change will affect th way the imdi path is obtained to show the table
-        removeEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
-//        removeEgoMenuItem.setVisible(graphPanel.selectionContainsEgo());
+        removeEgoMenuItem.setVisible(graphPanel.selectionContainsEgo());
         super.show(cmpnt, i, i1);
     }
 }
