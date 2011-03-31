@@ -107,6 +107,22 @@ public class EntityCollection implements EntityService {
         return searchResults;
     }
 
+    public String[] getEntityIdByTerm(String[] queryTerms) {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String queryString = queryBuilder.getTermQuery(queryTerms);
+        System.out.println("query1String: " + queryString);
+        String[] searchResults = new String[]{};
+        try {
+            searchResults = new XQuery(queryString).execute(context).split("\n");
+        } catch (BaseXException exception) {
+            new LinorgBugCatcher().logError(exception);
+        }
+        for (String resultLine : searchResults) {
+            System.out.println("resultLine: " + resultLine);
+        }
+        return searchResults;
+    }
+
     public EntityData getEntity(String uniqueIdentifier, IndexerParameters indexParameters) {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
@@ -149,8 +165,21 @@ public class EntityCollection implements EntityService {
 
     public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
+        QueryParser queryParser = new QueryParser();
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
             graphDataNode.clearVisibility();
+        }
+        for (String currentKinString : kinTypeStrings) {
+            for (String currentFoundId : getEntityIdByTerm(queryParser.getQueryStrings(currentKinString))) {
+                EntityData queryNode;
+                if (loadedGraphNodes.containsKey(currentFoundId)) {
+                    queryNode = loadedGraphNodes.get(currentFoundId);
+                } else {
+                    queryNode = getEntity(currentFoundId, indexParameters);
+                    loadedGraphNodes.put(currentFoundId, queryNode);
+                }
+                queryNode.isVisible = true;
+            }
         }
         for (String currentEgoId : uniqueIdentifiers) {
             EntityData egoNode;
