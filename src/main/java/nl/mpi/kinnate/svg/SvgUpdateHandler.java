@@ -14,11 +14,15 @@ import org.w3c.dom.svg.SVGRect;
 public class SvgUpdateHandler {
 
     GraphPanel graphPanel;
+    private boolean dragUpdateRequired = false;
+    private boolean threadRunning = false;
+    private int updateDragNodeX = 0;
+    private int updateDragNodeY = 0;
 
     protected SvgUpdateHandler(GraphPanel graphPanelLocal) {
         graphPanel = graphPanelLocal;
     }
-    
+
     protected void updateSvgSelectionHighlights() {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
@@ -86,17 +90,41 @@ public class SvgUpdateHandler {
         });
     }
 
-    protected void updateDragNode(final int updateDragNodeX, final int updateDragNodeY) {
+    protected void updateDragNode(int updateDragNodeXLocal, int updateDragNodeYLocal) {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
-        updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+        synchronized (SvgUpdateHandler.this) {
+            dragUpdateRequired = true;
+            updateDragNodeX += updateDragNodeXLocal;
+            updateDragNodeY += updateDragNodeYLocal;
+            if (!threadRunning) {
+                threadRunning = true;
+                updateManager.getUpdateRunnableQueue().invokeLater(getRunnable());
+            }
+        }
+    }
+
+    private Runnable getRunnable() {
+        return new Runnable() {
 
             public void run() {
-                System.out.println("updateDragNodeX: " + updateDragNodeX);
-                System.out.println("updateDragNodeY: " + updateDragNodeY);
-                if (graphPanel.doc != null) {
-                    for (String entityId : graphPanel.selectedGroupId) {
-                        new EntitySvg().moveEntity(graphPanel.doc, entityId, updateDragNodeX, updateDragNodeY);
+                boolean continueUpdating = true;
+                while (continueUpdating) {
+                    continueUpdating = false;
+                    int updateDragNodeXInner;
+                    int updateDragNodeYInner;
+                    synchronized (SvgUpdateHandler.this) {
+                        dragUpdateRequired = false;
+                        updateDragNodeXInner = updateDragNodeX;
+                        updateDragNodeYInner = updateDragNodeY;
+                        updateDragNodeX = 0;
+                        updateDragNodeY = 0;
                     }
+                    System.out.println("updateDragNodeX: " + updateDragNodeXInner);
+                    System.out.println("updateDragNodeY: " + updateDragNodeYInner);
+                    if (graphPanel.doc != null) {
+                        for (String entityId : graphPanel.selectedGroupId) {
+                            new EntitySvg().moveEntity(graphPanel.doc, entityId, updateDragNodeXInner, updateDragNodeYInner);
+                        }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
 //                    for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
 //                        if ("g".equals(currentChild.getLocalName())) {
@@ -107,11 +135,11 @@ public class SvgUpdateHandler {
 //                                    SVGRect bbox = ((SVGLocatable) currentChild).getBBox();
 ////                    ((SVGLocatable) currentDraggedElement).g
 //                                    // drageboth x and y
-////                                    ((Element) currentChild).setAttribute("transform", "translate(" + String.valueOf(updateDragNodeX * svgCanvas.getRenderingTransform().getScaleX() - bbox.getX()) + ", " + String.valueOf(updateDragNodeY - bbox.getY()) + ")");
+////                                    ((Element) currentChild).setAttribute("transform", "translate(" + String.valueOf(updateDragNodeXInner * svgCanvas.getRenderingTransform().getScaleX() - bbox.getX()) + ", " + String.valueOf(updateDragNodeYInner - bbox.getY()) + ")");
 //                                    // limit drag to x only
-//                                    ((Element) currentChild).setAttribute("transform", "translate(" + String.valueOf(updateDragNodeX * svgCanvas.getRenderingTransform().getScaleX() - bbox.getX()) + ", 0)");
-////                    updateDragNodeElement.setAttribute("x", String.valueOf(updateDragNodeX));
-////                    updateDragNodeElement.setAttribute("y", String.valueOf(updateDragNodeY));
+//                                    ((Element) currentChild).setAttribute("transform", "translate(" + String.valueOf(updateDragNodeXInner * svgCanvas.getRenderingTransform().getScaleX() - bbox.getX()) + ", 0)");
+////                    updateDragNodeElement.setAttribute("x", String.valueOf(updateDragNodeXInner));
+////                    updateDragNodeElement.setAttribute("y", String.valueOf(updateDragNodeYInner));
 //                                    //                    SVGRect bbox = ((SVGLocatable) currentDraggedElement).getBBox();
 ////                    System.out.println("bbox X: " + bbox.getX());
 ////                    System.out.println("bbox Y: " + bbox.getY());
@@ -124,12 +152,19 @@ public class SvgUpdateHandler {
 //                            }
 //                        }
 //                    }
-                    int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(graphPanel.graphData.gridHeight);
-                    int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(graphPanel.graphData.gridWidth);
-                    new RelationSvg().updateRelationLines(graphPanel.doc, graphPanel.selectedGroupId, graphPanel.svgNameSpace, hSpacing, vSpacing);
-                    //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+                        int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(graphPanel.graphData.gridHeight);
+                        int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(graphPanel.graphData.gridWidth);
+                        new RelationSvg().updateRelationLines(graphPanel.doc, graphPanel.selectedGroupId, graphPanel.svgNameSpace, hSpacing, vSpacing);
+                        //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+                    }
+                    synchronized (SvgUpdateHandler.this) {
+                        continueUpdating = dragUpdateRequired;
+                        if (!continueUpdating) {
+                            threadRunning = false;
+                        }
+                    }
                 }
             }
-        });
+        };
     }
 }
