@@ -20,9 +20,9 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class DataStoreSvg {
 
-    private String kinDataNameSpace = "kin";
-    private String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
-    protected HashSet<URI> egoSet = new HashSet<URI>(); // todo: separate this into manditory entities and ego set
+    static protected String kinDataNameSpace = "kin";
+    static protected String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
+    protected HashSet<URI> egoPathSet = new HashSet<URI>(); // todo: update all useages of this ego path to also update the ego id list
     protected HashSet<String> egoIdentifierSet = new HashSet<String>(); // todo: add this to the stored data in the svg
     protected String[] kinTypeStrings = new String[]{};
     protected IndexerParameters indexParameters;
@@ -91,7 +91,7 @@ public class DataStoreSvg {
     protected void storeAllData(SVGDocument doc) {
         // create string array to store the selected ego nodes in the dom
         ArrayList<String> egoStringArray = new ArrayList<String>();
-        for (URI currentEgoUri : egoSet) {
+        for (URI currentEgoUri : egoPathSet) {
             egoStringArray.add(currentEgoUri.toASCIIString());
         }
         // store the selected kin type strings and other data in the dom
@@ -154,10 +154,10 @@ public class DataStoreSvg {
 
     protected void loadDataFromSvg(SVGDocument doc) {
 //        ArrayList<String> egoStringArray = new ArrayList<String>();
-        egoSet.clear();
+        egoPathSet.clear();
         for (String currentEgoString : getSingleParametersFromDom(doc, "EgoList")) {
             try {
-                egoSet.add(new URI(currentEgoString));
+                egoPathSet.add(new URI(currentEgoString));
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
             }
