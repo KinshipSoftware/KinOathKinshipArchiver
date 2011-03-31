@@ -60,7 +60,7 @@ public class QueryBuilder {
     public String getRelationQuery(String uniqueIdentifier, IndexerParameters indexParameters) {
         String ancestorSequence = this.asSequenceString(indexParameters.ancestorFields);
         String decendantSequence = this.asSequenceString(indexParameters.decendantFields);
-        return "<Relations>{"
+        return "<Relations>{" // todo: make the results here distinct and preferably only calculate each type once (this is currently handled in the entity data class)
                 + "for $relationNode in collection('nl-mpi-kinnate')/Kinnate/Relation[UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
                 + "let $isAncestor := $relationNode/Type/text() = " + decendantSequence + "\n" // note that the ancestor and decentant are switched for alter compared to ego
                 + "let $isDecendant := $relationNode/Type/text() = " + ancestorSequence + "\n"
