@@ -107,13 +107,13 @@ public class EntityCollection implements EntityService {
         return searchResults;
     }
 
-    public String[] getEntityIdByTerm(String[] queryTerms) {
+    public String[] getEntityIdByTerm(String[][] queryTerms) {
         QueryBuilder queryBuilder = new QueryBuilder();
         String queryString = queryBuilder.getTermQuery(queryTerms);
         System.out.println("query1String: " + queryString);
         String[] searchResults = new String[]{};
         try {
-            searchResults = new XQuery(queryString).execute(context).split("\n");
+            searchResults = new XQuery(queryString).execute(context).split("\\|");
         } catch (BaseXException exception) {
             new LinorgBugCatcher().logError(exception);
         }
@@ -172,13 +172,16 @@ public class EntityCollection implements EntityService {
         for (String currentKinString : kinTypeStrings) {
             for (String currentFoundId : getEntityIdByTerm(queryParser.getQueryStrings(currentKinString))) {
                 EntityData queryNode;
-                if (loadedGraphNodes.containsKey(currentFoundId)) {
-                    queryNode = loadedGraphNodes.get(currentFoundId);
-                } else {
-                    queryNode = getEntity(currentFoundId, indexParameters);
-                    loadedGraphNodes.put(currentFoundId, queryNode);
+                currentFoundId = currentFoundId.trim();
+                if (currentFoundId.length() > 0 /* make sure that non results do not get mistaken for an identifier */) {
+                    if (loadedGraphNodes.containsKey(currentFoundId)) {
+                        queryNode = loadedGraphNodes.get(currentFoundId);
+                    } else {
+                        queryNode = getEntity(currentFoundId, indexParameters);
+                        loadedGraphNodes.put(currentFoundId, queryNode);
+                    }
+                    queryNode.isVisible = true;
                 }
-                queryNode.isVisible = true;
             }
         }
         for (String currentEgoId : uniqueIdentifiers) {
