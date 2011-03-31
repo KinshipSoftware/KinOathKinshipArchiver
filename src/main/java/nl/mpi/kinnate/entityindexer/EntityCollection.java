@@ -44,9 +44,10 @@ public class EntityCollection implements EntityService {
 
     private String databaseName = "nl-mpi-kinnate";
     static Context context = new Context();
-    HashMap<String, EntityData> loadedGraphNodes = new HashMap<String, EntityData>();
+    HashMap<String, EntityData> loadedGraphNodes;
 
     public EntityCollection() {
+        loadedGraphNodes = new HashMap<String, EntityData>();
     }
 
     public class SearchResults {
@@ -164,6 +165,10 @@ public class EntityCollection implements EntityService {
     }
 
     public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
+        if (indexParameters.valuesChanged) {
+            indexParameters.valuesChanged = false;
+            loadedGraphNodes = new HashMap<String, EntityData>();
+        }
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
         QueryParser queryParser = new QueryParser();
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
