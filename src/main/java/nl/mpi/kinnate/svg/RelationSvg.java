@@ -103,7 +103,7 @@ public class RelationSvg {
         groupNode.setAttribute("id", "relation" + relationLineIndex);
         Element defsNode = doc.createElementNS(svgNameSpace, "defs");
         String lineIdString = "relation" + relationLineIndex + "Line";
-        new DataStoreSvg().storeRelationParameters(doc, groupNode, graphLinkNode.relationType, graphLinkNode.relationLineType, currentNode.getEntityPath(), graphLinkNode.getAlterNode().getEntityPath());
+        new DataStoreSvg().storeRelationParameters(doc, groupNode, graphLinkNode.relationType, graphLinkNode.relationLineType, currentNode.getUniqueIdentifier(), graphLinkNode.getAlterNode().getUniqueIdentifier());
         // set the line end points
         int fromX = (currentNode.getxPos() * hSpacing + hSpacing);
         int fromY = (currentNode.getyPos() * vSpacing + vSpacing);
