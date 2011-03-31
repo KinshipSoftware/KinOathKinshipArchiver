@@ -23,6 +23,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     private Cursor preDragCursor;
     private GraphPanel graphPanel;
     private Point startDragPoint = null;
+    static boolean mouseActionOnNode = false;
 
     public MouseListenerSvg(GraphPanel graphPanelLocal) {
         graphPanel = graphPanelLocal;
@@ -32,7 +33,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     public void mouseDragged(MouseEvent me) {
         if (startDragPoint != null) {
 //                System.out.println("mouseDragged: " + me.toString());
-            if (graphPanel.selectedGroupElement.size() > 0) {
+            if (graphPanel.selectedGroupId.size() > 0) {
                 graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 // limit the drag to the distance draged not the location
                 graphPanel.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
@@ -43,47 +44,67 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void mouseReleased(MouseEvent me) {
-//            System.out.println("mouseReleased: " + me.toString());
-        graphPanel.svgCanvas.setCursor(preDragCursor);
-        startDragPoint = null;
+        synchronized (this) {
+            System.out.println("mouseReleased: " + me.toString());
+            graphPanel.svgCanvas.setCursor(preDragCursor);
+            startDragPoint = null;
+            if (!mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
+                System.out.println("Clear selection");
+                graphPanel.selectedGroupId.clear();
+                graphPanel.updateSvgSelectionHighlights();
+            }
+            mouseActionOnNode = false;
+        }
     }
+
+//    @Override
+//    public void mousePressed(MouseEvent e) {
+//        System.out.println("mousePressed: " + e.toString());
+//    }
 
     @Override
     public void handleEvent(Event evt) {
-        boolean shiftDown = false;
-        if (evt instanceof DOMMouseEvent) {
-            shiftDown = ((DOMMouseEvent) evt).getShiftKey();
-        }
-        System.out.println("mousedown: " + evt.getCurrentTarget());
-        Element currentDraggedElement = ((Element) evt.getCurrentTarget());
-        preDragCursor = graphPanel.svgCanvas.getCursor();
-        // get the entityPath
-        String entityPath = currentDraggedElement.getAttribute("id");
-        System.out.println("entityPath: " + entityPath);
-        boolean nodeAlreadySelected = graphPanel.selectedGroupElement.contains(entityPath);
-        if (!shiftDown) {
-            System.out.println("Clear selection");
-            graphPanel.selectedGroupElement.clear();
-        }
-        // toggle the highlight
-        if (nodeAlreadySelected) {
-            graphPanel.selectedGroupElement.remove(entityPath);
-        } else {
-            graphPanel.selectedGroupElement.add(entityPath);
-        }
-        graphPanel.addHighlightToGroup();
+        synchronized (this) {
+            mouseActionOnNode = true;
+            boolean shiftDown = false;
+            if (evt instanceof DOMMouseEvent) {
+                shiftDown = ((DOMMouseEvent) evt).getShiftKey();
+            }
+            System.out.println("dom mouse event: " + evt.getCurrentTarget());
+            Element currentDraggedElement = ((Element) evt.getCurrentTarget());
+            preDragCursor = graphPanel.svgCanvas.getCursor();
+            // get the entityPath
+            // todo: change selected elements to use the ID not the path, but this change will affect th way the imdi path is obtained to show the table
+            String entityIdentifier = currentDraggedElement.getAttribute("id");
+            System.out.println("entityPath: " + entityIdentifier);
+            boolean nodeAlreadySelected = graphPanel.selectedGroupId.contains(entityIdentifier);
+            if (!shiftDown) {
+                System.out.println("Clear selection");
+                graphPanel.selectedGroupId.clear();
+                graphPanel.selectedGroupId.add(entityIdentifier);
+            } else {
+                // toggle the highlight
+                if (nodeAlreadySelected) {
+                    graphPanel.selectedGroupId.remove(entityIdentifier);
+                } else {
+                    graphPanel.selectedGroupId.add(entityIdentifier);
+                }
+            }
+            graphPanel.updateSvgSelectionHighlights();
 //                if (existingHighlight == null) {
 //                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 //                }
-        // update the table selection
-        if (graphPanel.imdiTableModel != null) {
-            graphPanel.imdiTableModel.removeAllImdiRows();
-            try {
-                for (String currentSelectedPath : graphPanel.selectedGroupElement) {
-                    graphPanel.imdiTableModel.addSingleImdiObject(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentSelectedPath)));
+            // update the table selection
+            if (graphPanel.imdiTableModel != null) {
+                graphPanel.imdiTableModel.removeAllImdiRows();
+                try {
+                    for (String currentSelectedId : graphPanel.selectedGroupId) {
+                        String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
+                        graphPanel.imdiTableModel.addSingleImdiObject(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentSelectedPath)));
+                    }
+                } catch (URISyntaxException urise) {
+                    GuiHelper.linorgBugCatcher.logError(urise);
                 }
-            } catch (URISyntaxException urise) {
-                GuiHelper.linorgBugCatcher.logError(urise);
             }
         }
     }
