@@ -12,6 +12,7 @@ import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -57,6 +58,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     protected ArrayList<String> selectedGroupId;
     private String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     private DataStoreSvg dataStoreSvg;
+    private URI[] egoPathsTemp = null;
 
     public GraphPanel(KinTypeEgoSelectionTestPanel egoSelectionPanel) {
         dataStoreSvg = new DataStoreSvg();
@@ -162,22 +164,37 @@ public class GraphPanel extends JPanel implements SavePanel {
         return dataStoreSvg.egoIdentifierSet.toArray(new String[]{});
     }
 
-    public URI[] getEgoList() {
-        return dataStoreSvg.egoPathSet.toArray(new URI[]{});
+    public String[] getEgoIdList() {
+        return dataStoreSvg.egoIdentifierSet.toArray(new String[]{});
     }
 
-    public void setEgoList(URI[] egoListArray, String[] egoIdentifierArray) {
-        dataStoreSvg.egoPathSet = new HashSet<URI>(Arrays.asList(egoListArray));
+    public URI[] getEgoPaths() {
+        if (egoPathsTemp != null) {
+            return egoPathsTemp;
+        }
+        ArrayList<URI> returnPaths = new ArrayList<URI>();
+        for (String egoId : dataStoreSvg.egoIdentifierSet) {
+            try {
+                returnPaths.add(new URI(getPathForElementId(egoId)));
+            } catch (URISyntaxException ex) {
+                GuiHelper.linorgBugCatcher.logError(ex);
+                // todo: warn user with a dialog
+            }
+        }
+        return returnPaths.toArray(new URI[]{});
+    }
+
+    public void setEgoList(URI[] egoPathArray, String[] egoIdentifierArray) {
+        egoPathsTemp = egoPathArray; // egoPathsTemp is only required if the ego nodes are not already on the graph (otherwise the path can be obtained from the graph elements)
         dataStoreSvg.egoIdentifierSet = new HashSet<String>(Arrays.asList(egoIdentifierArray));
     }
 
-    public void addEgo(URI[] egoListArray, String[] egoIdentifierArray) {
-        dataStoreSvg.egoPathSet.addAll(Arrays.asList(egoListArray));
+    public void addEgo(URI[] egoPathArray, String[] egoIdentifierArray) {
+        egoPathsTemp = egoPathArray; // egoPathsTemp is only required if the ego nodes are not already on the graph (otherwise the path can be obtained from the graph elements)
         dataStoreSvg.egoIdentifierSet.addAll(Arrays.asList(egoIdentifierArray));
     }
 
-    public void removeEgo(URI[] egoListArray, String[] egoIdentifierArray) {
-        dataStoreSvg.egoPathSet.removeAll(Arrays.asList(egoListArray));
+    public void removeEgo(String[] egoIdentifierArray) {
         dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
     }
 
