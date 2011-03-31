@@ -118,26 +118,28 @@ public class QueryBuilder {
                 + "</Entity>\n";
     }
 
-    public String getTermQuery(String[] queryTerms) {
+    public String getTermQuery(String[][] queryTerms) {
 //        for $entityNode in collection('nl-mpi-kinnate')/Kinnate[(Entity|Gedcom)]
 //        where $entityNode//*="Bob /Cox/"
 //        return
 //        $entityNode/(Entity|Gedcom)/UniqueIdentifier/*/text()
         StringBuilder stringBuilder = new StringBuilder();
-        for (String term : queryTerms) {
+        for (String[] term : queryTerms) {
             if (stringBuilder.length() > 0) {
                 stringBuilder.append(" and ");
             } else {
 //                stringBuilder.append("(");
             }
-            stringBuilder.append("$entityNode");
-            stringBuilder.append(term);
-//            stringBuilder.append("\"");
+            stringBuilder.append("$entityNode//");
+            stringBuilder.append(term[0]);
+            stringBuilder.append("[text() contains text \"");
+            stringBuilder.append(term[1]);
+            stringBuilder.append("\"]");
         }
 //        stringBuilder.append(")");
         return "for $entityNode in collection('nl-mpi-kinnate')/Kinnate[(Entity|Gedcom)]\n"
                 + "where " + stringBuilder.toString() + "\n"
                 + "return\n"
-                + "$entityNode/(Entity|Gedcom)/UniqueIdentifier/*/text()\n";
+                + "concat($entityNode/(Entity|Gedcom)/UniqueIdentifier/*/text(), '|')\n";
     }
 }
