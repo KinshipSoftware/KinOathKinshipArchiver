@@ -116,7 +116,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
         removeEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                egoSelectionPanel.removeEgoNodes(getSelectedUriArray(), selectedIdentifiers);
+                egoSelectionPanel.removeEgoNodes(selectedIdentifiers);
             }
         });
         this.add(removeEgoMenuItem);
