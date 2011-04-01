@@ -4,6 +4,7 @@ import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
 import java.util.HashMap;
+import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 import nl.mpi.kinnate.kindata.DataTypes;
 
 /**
@@ -65,18 +66,36 @@ public class KinTypeStringConverter extends GraphSorter {
         public EntityData entityData;
     }
 
-    public ArrayList<KinTypeElement> getKinTypeElements(String consumableString) {
+    public void highlightComments(String[] kinTypeStrings, ParserHighlight[][] parserHighlight) {
+        int lineCounter = 0;
+        for (String currentString : kinTypeStrings) {
+            parserHighlight[lineCounter] = new ParserHighlight[currentString.length()];
+            ParserHighlight currentHighlight = ParserHighlight.Unknown;
+            for (int charCounter = 0; charCounter < currentString.length(); charCounter++) {
+                if (currentHighlight != ParserHighlight.Comment && currentString.charAt(charCounter) == '#') {
+                    currentHighlight = ParserHighlight.Comment;
+                }
+                parserHighlight[lineCounter][charCounter] = currentHighlight;
+            }
+
+            lineCounter++;
+        }
+    }
+
+    public ArrayList<KinTypeElement> getKinTypeElements(String consumableString, ParserHighlight[] parserHighlight) {
         ArrayList<KinTypeElement> kinTypeElementList = new ArrayList<KinTypeElement>();
         boolean foundKinType = true;
         while (foundKinType && consumableString.length() > 0) {
             for (KinType currentReferenceKinType : referenceKinTypes) {
                 foundKinType = false;
                 if (consumableString.startsWith(currentReferenceKinType.codeString)) {
+                    parserHighlight[parserHighlight.length - consumableString.length()] = ParserHighlight.KinType;
                     KinTypeElement currentElement = new KinTypeElement();
                     currentElement.kinType = currentReferenceKinType;
                     consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
 
                     if (consumableString.startsWith("=[")) {
+                        parserHighlight[parserHighlight.length - consumableString.length()] = ParserHighlight.Query;
                         consumableString = consumableString.substring("=".length());
                         while (consumableString.startsWith("[")) {
                             // todo: allow multiple terms such as "=[foo][bar]" or "=[foo][bar][NAME=Bob]"
