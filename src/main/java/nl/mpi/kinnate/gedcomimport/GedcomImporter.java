@@ -13,6 +13,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
@@ -41,6 +42,7 @@ public class GedcomImporter {
     private String inputFileMd5Sum;
     JProgressBar progressBar = null;
     private boolean overwriteExisting;
+    public HashMap<String, ArrayList<String>> createdNodeIds;
 
     public GedcomImporter(boolean overwriteExistingLocal) {
         overwriteExisting = overwriteExistingLocal;
@@ -100,6 +102,7 @@ public class GedcomImporter {
 
     public URI[] importTestFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
+        createdNodeIds = new HashMap<String, ArrayList<String>>();
 //        Hashtable<String, URI> createdNodesTable = new Hashtable<String, URI>();
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 //        ArrayList<ImdiTreeObject> linkNodes = new ArrayList<ImdiTreeObject>();
@@ -243,9 +246,23 @@ public class GedcomImporter {
                                 try {
                                     // add a unique identifier to the entity node
                                     Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
-                                    localIdentifierElement.setTextContent(new LocalIdentifier().getUniqueIdentifier(entityFile));
+                                    String uniquieIdentifier = new LocalIdentifier().getUniqueIdentifier(entityFile);
+                                    localIdentifierElement.setTextContent(uniquieIdentifier);
                                     Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/UniqueIdentifier");
                                     uniqueIdentifierNode.appendChild(localIdentifierElement);
+                                    String typeString;
+                                    if (lineParts.length > 2) {
+                                        typeString = lineParts[2];
+                                    } else {
+                                        typeString = lineParts[1];
+                                    }
+                                    if (createdNodeIds.get(typeString) == null) {
+                                        ArrayList<String> idArray = new ArrayList<String>();
+                                        idArray.add(uniquieIdentifier);
+                                        createdNodeIds.put(typeString, idArray);
+                                    } else {
+                                        createdNodeIds.get(typeString).add(uniquieIdentifier);
+                                    }
                                 } catch (DOMException exception) {
                                     GuiHelper.linorgBugCatcher.logError(exception);
                                 } catch (TransformerException exception) {
