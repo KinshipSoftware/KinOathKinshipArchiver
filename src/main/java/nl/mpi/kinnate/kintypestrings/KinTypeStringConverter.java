@@ -54,7 +54,8 @@ public class KinTypeStringConverter extends GraphSorter {
         new KinType("P", DataTypes.RelationType.ancestor, EntityData.SymbolType.square),
         new KinType("G", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
         new KinType("E", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
-        new KinType("C", DataTypes.RelationType.descendant, EntityData.SymbolType.square)
+        new KinType("C", DataTypes.RelationType.descendant, EntityData.SymbolType.square),
+        new KinType("X", DataTypes.RelationType.none, EntityData.SymbolType.none) // X is intended to indicate unknown or no type, for instance this is used after import to add all nodes to the graph
     };
 
     public class KinTypeElement {
