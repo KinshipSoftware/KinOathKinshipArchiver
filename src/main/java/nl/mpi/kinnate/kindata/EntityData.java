@@ -29,7 +29,7 @@ public class EntityData {
     public boolean isEgo = false;
     @XmlElementWrapper(name = "Labels")
     @XmlElement(name = "String")
-    private String[] labelString;
+    private String[] labelStringArray;
     @XmlElementWrapper(name = "Relations")
     @XmlElement(name = "Relation")
     private EntityRelation[] relatedNodes;
@@ -39,23 +39,6 @@ public class EntityData {
     private EntityRelation[] visiblyRelateNodes = null;
     private EntityRelation[] distinctRelateNodes = null;
 
-//    // todo: move this into the graphdatanode
-//    @XmlRootElement(name = "results")
-//    static public class RelationResults {
-//
-//        @XmlElementWrapper(name = "relations")
-//        @XmlElement(name = "entity")
-//        RelationData[] relationArray;
-//    }
-//
-//    static public class RelationData {
-//
-//        @XmlElement
-//        GraphDataNode.RelationType type;
-//        @XmlElement
-//        String path;
-//        String identifier;
-//    }
     private EntityData() {
     }
 
@@ -64,7 +47,7 @@ public class EntityData {
         entityPath = entityPathLocal;
         symbolType = null;
         symbolTypeString = symbolTypeLocal;
-        labelString = labelStringLocal;
+        labelStringArray = labelStringLocal;
         isEgo = isEgoLocal;
     }
 
@@ -72,7 +55,7 @@ public class EntityData {
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = entityPathLocal;
         symbolType = symbolIndex;
-        labelString = labelStringLocal;
+        labelStringArray = labelStringLocal;
         isEgo = isEgoLocal;
     }
 
@@ -119,82 +102,17 @@ public class EntityData {
     }
 
     public String[] getLabel() {
-        return labelString;
+        return labelStringArray;
     }
-    ArrayList<String> unhandledLinkTypesArray = new ArrayList<String>();
 
-//    protected void calculateLinks(HashMap<String, GraphDataNode> graphDataNodeList) {
-//        if (this.imdiTreeObject != null) {
-//            this.imdiTreeObject.waitTillLoaded();
-//
-//
-//            for (ImdiTreeObject childNode : this.imdiTreeObject.getAllChildren()) {
-//                ImdiField[] currentField = childNode.getFields().get("Link");
-//
-//
-//                if (currentField != null && currentField.length > 0) {
-//                    GraphDataNode.RelationType relationType = GraphDataNode.RelationType.sibling;
-//                    ImdiField[] relationTypeField = childNode.getFields().get("Type"); //todo: this RELA field might not be the best nor the only one to gather relation types from
-//
-//
-//                    if (relationTypeField != null && relationTypeField.length > 0) {
-//                        String typeString = relationTypeField[0].getFieldValue();
-//                        System.out.println("link type field: " + relationTypeField[0].getFieldValue());
-//                        List<String> ancestorTerms = Arrays.asList(new String[]{"SUBN", "_HME", "WIFE", "CHIL", "HUSB", "REPO", "OBJE", "NOTE", "FAMC", "FAMS", "SOUR", "ASSO", "SUBM", "ANCI", "DESI", "ALIA"});
-//
-//
-//                        if (("Kinnate.Gedcom.Entity." + ancestorTerms).contains(typeString)) {
-//                            relationType = GraphDataNode.RelationType.ancestor;
-//
-//
-//                        } else {
-//                            unhandledLinkTypesArray.add(typeString);
-//
-//
-//                        }
-//
-////                        if ("Father".equals(typeString)) {
-////                            relationType = GraphDataNode.RelationType.ancestor;
-////                        } else if ("Mother".equals(typeString)) {
-////                            relationType = GraphDataNode.RelationType.ancestor;
-////                        }
-//                    }
-//                    System.out.println("link field: " + currentField[0].getFieldValue());
-////                    linkArray.add(currentField[0].getFieldValue());
-//                    GraphDataNode linkedNode = graphDataNodeList.get(currentField[0].getFieldValue());
-//
-//
-//                    if (linkedNode != null) {
-//                        this.addRelatedNode(linkedNode, 0, relationType);
-//
-//
-//                    }
-//                }
-//            }
-//        }
-//        if (unhandledLinkTypesArray.size() > 0) {
-//            System.err.println("unhandledLinkTypes: " + unhandledLinkTypesArray.toString());
-//
-//
-//        }
-//    }
-//    public GraphDataNode[] getLinks() {
-//        if (imdiTreeObject == null) {
-//            return linkStringsArray;
-//        } else {
-//            ArrayList<String> linkArray = new ArrayList<String>();
-//            imdiTreeObject.waitTillLoaded();
-//            for (ImdiTreeObject childNode : imdiTreeObject.getAllChildren()) {
-////            System.out.println("getAllChildren: " + childNode.getUrlString());
-//                ImdiField[] currentField = childNode.getFields().get("Link");
-//                if (currentField != null && currentField.length > 0) {
-//                    System.out.println("link field: " + currentField[0].getFieldValue());
-//                    linkArray.add(currentField[0].getFieldValue());
-//                }
-//            }
-//            return linkArray.toArray(new String[]{});
-//        }
-//    }
+    public void appendLabel(String labelString) {
+        ArrayList<String> tempArrayList = new ArrayList<String>(Arrays.asList(labelStringArray));
+        if (!tempArrayList.contains(labelString)) {
+            tempArrayList.add(labelString);
+            labelStringArray = tempArrayList.toArray(new String[]{});
+        }
+    }
+
     public void addRelatedNode(EntityData alterNodeLocal, int generationalDistance, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         EntityRelation nodeRelation = new EntityRelation();
