@@ -174,7 +174,10 @@ public class GraphPanel extends JPanel implements SavePanel {
         ArrayList<URI> returnPaths = new ArrayList<URI>();
         for (String egoId : dataStoreSvg.egoIdentifierSet) {
             try {
-                returnPaths.add(new URI(getPathForElementId(egoId)));
+                String entityPath = getPathForElementId(egoId);
+//                if (entityPath != null) {
+                returnPaths.add(new URI(entityPath));
+//                }
             } catch (URISyntaxException ex) {
                 GuiHelper.linorgBugCatcher.logError(ex);
                 // todo: warn user with a dialog
@@ -217,7 +220,12 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            System.out.println(namedNodeMap.item(attributeCounter).getNamespaceURI());
 //            System.out.println(namedNodeMap.item(attributeCounter).getNodeValue());
 //        }
-        return doc.getElementById(elementId).getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path");
+        Element entityElement = doc.getElementById(elementId);
+//        if (entityElement == null) {
+//            return null;
+//        } else {
+        return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path");
+//        }
     }
 
     public void resetZoom() {
