@@ -20,9 +20,13 @@ public class KinTypeStringConverter extends GraphSorter {
             relationType = relationTypeLocal;
             symbolType = symbolTypeLocal;
         }
-        String codeString;
+        private String codeString;
         private DataTypes.RelationType relationType;
         private EntityData.SymbolType symbolType;
+
+        public String getCodeString() {
+            return codeString;
+        }
     }
     private KinType[] referenceKinTypes = new KinType[]{
         // type 1
@@ -72,26 +76,31 @@ public class KinTypeStringConverter extends GraphSorter {
                     consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
 
                     if (consumableString.startsWith("=[")) {
-                        // todo: allow multiple terms such as "=[foo][bar]" or "=[foo][bar][NAME=Bob]"
-                        int queryStart = "=[".length();
-                        int queryEnd = consumableString.indexOf("]");
-                        if (queryEnd == -1) {
-                            // if the terms are incomplete then ignore the rest of the line
-                            consumableString = "";
-                            break;
-                        }
-                        currentElement.queryTerm = new ArrayList<String[]>();
-                        String queryText = consumableString.substring(queryStart, queryEnd);
-                        consumableString = consumableString.substring(queryEnd+1);
-                        if (!queryText.contains("=")) {
-                            if (queryText.length() > 2) {
-                                currentElement.queryTerm.add(new String[]{"*", queryText});
+                        consumableString = consumableString.substring("=".length());
+                        while (consumableString.startsWith("[")) {
+                            // todo: allow multiple terms such as "=[foo][bar]" or "=[foo][bar][NAME=Bob]"
+                            int queryStart = "[".length();
+                            int queryEnd = consumableString.indexOf("]");
+                            if (queryEnd == -1) {
+                                // if the terms are incomplete then ignore the rest of the line
+                                foundKinType = false;
+                                break;
                             }
-                        } else {
-                            String[] queryTerm = queryText.split("=");
-                            if (queryTerm.length == 2) {
-                                if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
-                                    currentElement.queryTerm.add(new String[]{queryTerm[0], queryTerm[1]});
+                            if (currentElement.queryTerm == null) {
+                                currentElement.queryTerm = new ArrayList<String[]>();
+                            }
+                            String queryText = consumableString.substring(queryStart, queryEnd);
+                            consumableString = consumableString.substring(queryEnd + 1);
+                            if (!queryText.contains("=")) {
+                                if (queryText.length() > 2) {
+                                    currentElement.queryTerm.add(new String[]{"*", queryText});
+                                }
+                            } else {
+                                String[] queryTerm = queryText.split("=");
+                                if (queryTerm.length == 2) {
+                                    if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
+                                        currentElement.queryTerm.add(new String[]{queryTerm[0], queryTerm[1]});
+                                    }
                                 }
                             }
                         }
