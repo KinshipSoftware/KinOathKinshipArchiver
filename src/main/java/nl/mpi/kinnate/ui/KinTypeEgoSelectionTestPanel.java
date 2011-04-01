@@ -23,6 +23,7 @@ import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
+import nl.mpi.kinnate.entityindexer.QueryParser;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -76,7 +77,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         // EntityIndex loads the xml files and reads the document for entity data
 //        entityIndex = new EntityIndex(graphPanel.getIndexParameters());
         // EntityCollection queries the xml collection to get the entity data
-        entityIndex = new EntityCollection();
+        entityIndex = new QueryParser();
 
         graphSorter = new GraphSorter();
         if (existingFile != null && existingFile.exists()) {
