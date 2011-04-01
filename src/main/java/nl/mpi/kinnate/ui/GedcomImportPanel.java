@@ -72,7 +72,7 @@ public class GedcomImportPanel extends JPanel {
                         }
                     }
                     KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
-                    egoSelectionTestPanel.setDisplayNodes(selectedIds.toArray(new String[]{}));
+                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
                     jTabbedPane1.add("Imported Entities", egoSelectionTestPanel);
                 }
             });
