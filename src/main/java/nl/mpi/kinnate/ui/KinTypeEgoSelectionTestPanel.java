@@ -16,10 +16,10 @@ import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.LinorgWindowManager;
+import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.entityindexer.EntityIndex;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
@@ -29,12 +29,13 @@ import nl.mpi.kinnate.entityindexer.EntityServiceException;
  *  Created on : Sep 29, 2010, 12:52:01 PM
  *  Author     : Peter Withers
  */
-public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
+public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, KinTermSavePanel {
 
     private JTextArea kinTypeStringInput;
     private GraphPanel graphPanel;
     private GraphSorter graphSorter;
     private EgoSelectionPanel egoSelectionPanel;
+    private HidePane kinTermHidePane;
     private KinTermPanel kinTermPanel;
     private EntityService entityIndex;
     private String defaultString = "# This test panel should provide a kin diagram based on selected egos and the the kintype strings entered here.\n# Enter one string per line.\n# By default all relations of the selected entity will be shown.\n";
@@ -56,7 +57,8 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 //        outerSplitPane.setDividerLocation(0.5); // todo: add this to its parent so that the divider position sticks
         kintermSplitPane.add(new HidePane(egoSelectionPanel, "Ego Selection", BorderLayout.LINE_END), BorderLayout.LINE_START);
         kintermSplitPane.add(graphPanel, BorderLayout.CENTER);
-        kintermSplitPane.add(new HidePane(kinTermPanel, "Kin Terms", BorderLayout.LINE_START), BorderLayout.LINE_END);
+        kinTermHidePane = new HidePane(kinTermPanel, "Kin Terms", BorderLayout.LINE_START);
+        kintermSplitPane.add(kinTermHidePane, BorderLayout.LINE_END);
         kinGraphPanel.add(kintermSplitPane);
 
         ImdiTableModel imdiTableModel = new ImdiTableModel();
@@ -183,5 +185,21 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel {
 
     public void updateGraph() {
         this.drawGraph();
+    }
+
+    public void exportKinTerms() {
+        kinTermPanel.exportKinTerms();
+    }
+
+    public void hideShow() {
+        kinTermHidePane.toggleHiddenState();
+    }
+
+    public void importKinTerms() {
+        kinTermPanel.importKinTerms();
+    }
+
+    public boolean isHidden() {
+        return kinTermHidePane.isHidden();
     }
 }
