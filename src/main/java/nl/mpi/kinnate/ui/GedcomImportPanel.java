@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -44,6 +46,34 @@ public class GedcomImportPanel extends JPanel {
 //    private ImdiTable previewTable;
 //    private ImdiTableModel imdiTableModel;
 //    private DragTransferHandler dragTransferHandler;
+    }
+
+    protected JPanel getCreatedNodesPane(final GedcomImporter gedcomImporter) {
+        JPanel createdNodesPanel = new JPanel();
+        createdNodesPanel.setLayout(new BoxLayout(createdNodesPanel, BoxLayout.PAGE_AXIS));
+        if (gedcomImporter.createdNodeIds.isEmpty()) {
+            createdNodesPanel.add(new JLabel("No new data was imported, nothing to show in the graph."));
+        } else {
+            final ArrayList<JCheckBox> checkBoxArray = new ArrayList<JCheckBox>();
+            for (String typeString : gedcomImporter.createdNodeIds.keySet()) {
+                JCheckBox currentCheckBox = new JCheckBox(typeString + " ( x " + gedcomImporter.createdNodeIds.get(typeString).size() + ")");
+                currentCheckBox.setActionCommand(typeString);
+                createdNodesPanel.add(currentCheckBox);
+            }
+            JButton showButton = new JButton("Show selected types in graph");
+            showButton.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    ArrayList<String> selectedIds = new ArrayList<String>();
+                    for (JCheckBox currentCheckBox : checkBoxArray) {
+                        selectedIds.addAll((gedcomImporter.createdNodeIds.get(currentCheckBox.getActionCommand())));
+                    }
+                    jTabbedPane1.add("Imported Entities", new JTextArea("Imported Entities"));
+                }
+            });
+            createdNodesPanel.add(showButton);
+        }
+        return createdNodesPanel;
     }
 
     public void startImport(String importUriString) {
@@ -148,6 +178,8 @@ public class GedcomImportPanel extends JPanel {
 //                GraphData graphData = new GraphData();
 //                graphData.readData();
 //                graphPanel.drawNodes(graphData);
+                            GedcomImportPanel.this.add(GedcomImportPanel.this.getCreatedNodesPane(gedcomImporter), BorderLayout.PAGE_END);
+                            GedcomImportPanel.this.revalidate();
                         }
                     }.start();
                 }
