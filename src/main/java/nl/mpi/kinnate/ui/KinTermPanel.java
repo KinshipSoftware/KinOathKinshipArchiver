@@ -4,15 +4,24 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.StringTokenizer;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import nl.mpi.arbil.LinorgBugCatcher;
+import nl.mpi.arbil.LinorgWindowManager;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTerms;
 
@@ -38,7 +47,10 @@ public class KinTermPanel extends JPanel {
         JPanel paddingPanel = new JPanel();
         paddingPanel.setLayout(new BorderLayout());
         paddingPanel.add(outerPanel, BorderLayout.PAGE_START);
-        this.add(new JScrollPane(paddingPanel));
+        JMenuBar kintermMenuBar = new JMenuBar();
+        kintermMenuBar.add(new KinTermsMenu());
+        this.add(kintermMenuBar, BorderLayout.PAGE_START);
+        this.add(new JScrollPane(paddingPanel), BorderLayout.CENTER);
     }
 
     private void populateKinTermList() {
@@ -107,5 +119,59 @@ public class KinTermPanel extends JPanel {
         });
         termPanel.add(addButton);
         outerPanel.add(termPanel);
+    }
+
+    public void exportKinTerms() {
+        File[] exportFile = LinorgWindowManager.getSingleInstance().showFileSelectBox("Export Kin Terms", false, false, false);
+        if (exportFile.length != 1) {
+            LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Export file not selected", "Export Kin Terms");
+        } else {
+            if (exportFile[0].exists()) {
+                if (!LinorgWindowManager.getSingleInstance().showMessageDialogBox("Export file already exists, overwrite?", "Export Kin Terms")) {
+                    return;
+                }
+            }
+            try {
+                FileWriter fileWriter = new FileWriter(exportFile[0]);
+                // todo: complete the export and resolve issues using the Arbil file select for export files
+                fileWriter.write("wookies are lovely on toast.");
+                fileWriter.close();
+            } catch (IOException exception) {
+                new LinorgBugCatcher().logError(exception);
+            }
+        }
+    }
+
+    public void importKinTerms() {
+        File[] importFiles = LinorgWindowManager.getSingleInstance().showFileSelectBox("Import Kin Terms", false, true, false);
+        if (importFiles.length == 0) {
+            LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("No files selected for import", "Import Kin Terms");
+        }
+        for (File currentFile : importFiles) {
+            int importCount = 0;
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(currentFile));
+                String currentLine = null;
+                while ((currentLine = bufferedReader.readLine()) != null) {
+                    StringTokenizer stringTokenizer = new StringTokenizer(currentLine, ",");
+                    if (stringTokenizer.countTokens() > 1) {
+                        String kinTypeStrings = stringTokenizer.nextToken();
+                        String kinTermLabel = stringTokenizer.nextToken();
+                        kinTypeStrings = kinTypeStrings.trim();
+                        kinTermLabel = kinTermLabel.trim();
+                        kinTerms.addKinTerm(kinTypeStrings, kinTermLabel);
+                        importCount++;
+                    }
+                }
+                bufferedReader.close();
+                populateKinTermList();
+                revalidate();
+                savePanel.updateGraph();
+            } catch (IOException exception) {
+                new LinorgBugCatcher().logError(exception);
+            }
+            // todo: resolve why this dialogue does not show
+            LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
+        }
     }
 }
