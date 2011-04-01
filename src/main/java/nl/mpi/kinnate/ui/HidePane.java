@@ -15,15 +15,17 @@ import javax.swing.JPanel;
  */
 public class HidePane extends JPanel {
 
-    Component contentComponent;
-    boolean hiddenState = true;
-    JButton removeButton;
-    int shownWidth = 300;
-    String openLabel;
-    String closeLabel;
-    boolean blockNextMouseUp = false;
+    private Component contentComponent;
+    private boolean hiddenState = true;
+    private JButton removeButton;
+    private int shownWidth = 300;
+    private String openLabel;
+    private String closeLabel;
+    private boolean blockNextMouseUp = false;
+    private String borderPosition;
 
-    public HidePane(Component contentComponentLocal, String labelStringLocal, final String borderPosition) {
+    public HidePane(Component contentComponentLocal, String labelStringLocal, String borderPositionLocal) {
+        borderPosition = borderPositionLocal;
         if (borderPosition.equals(BorderLayout.LINE_END)) {
             openLabel = ">"; //labelStringLocal;
             closeLabel = "<";
@@ -71,23 +73,31 @@ public class HidePane extends JPanel {
                 if (blockNextMouseUp) {
                     blockNextMouseUp = false;
                 } else {
-                    if (!hiddenState) {
-                        HidePane.this.remove(contentComponent);
-                        removeButton.setText(openLabel);
-                        HidePane.this.add(removeButton, BorderLayout.CENTER);
-                        HidePane.this.setPreferredSize(new Dimension(removeButton.getPreferredSize().width, HidePane.this.getPreferredSize().height));
-                    } else {
-                        HidePane.this.add(removeButton, borderPosition);
-                        HidePane.this.add(contentComponent, BorderLayout.CENTER);
-                        removeButton.setText(closeLabel);
-                        HidePane.this.setPreferredSize(new Dimension(shownWidth, HidePane.this.getPreferredSize().height));
-                    }
-                    hiddenState = !hiddenState;
-                    HidePane.this.revalidate();
-                    HidePane.this.repaint();
+                    toggleHiddenState();
                 }
             }
         });
         this.add(removeButton, BorderLayout.CENTER);
+    }
+
+    public void toggleHiddenState() {
+        if (!hiddenState) {
+            HidePane.this.remove(contentComponent);
+            removeButton.setText(openLabel);
+            HidePane.this.add(removeButton, BorderLayout.CENTER);
+            HidePane.this.setPreferredSize(new Dimension(removeButton.getPreferredSize().width, HidePane.this.getPreferredSize().height));
+        } else {
+            HidePane.this.add(removeButton, borderPosition);
+            HidePane.this.add(contentComponent, BorderLayout.CENTER);
+            removeButton.setText(closeLabel);
+            HidePane.this.setPreferredSize(new Dimension(shownWidth, HidePane.this.getPreferredSize().height));
+        }
+        hiddenState = !hiddenState;
+        HidePane.this.revalidate();
+        HidePane.this.repaint();
+    }
+
+    public boolean isHidden() {
+        return hiddenState;
     }
 }
