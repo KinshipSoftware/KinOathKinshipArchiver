@@ -42,6 +42,14 @@ public class HidePane extends JPanel {
 
             @Override
             public void mouseDragged(MouseEvent e) {
+                if (hiddenState) {
+                    // if the user drags when closed then open to allow the drag
+                    HidePane.this.add(removeButton, borderPosition);
+                    HidePane.this.add(contentComponent, BorderLayout.CENTER);
+                    removeButton.setText(closeLabel);
+                    hiddenState = !hiddenState;
+                    shownWidth = 0;
+                }
                 if (!hiddenState) {
                     if (borderPosition.equals(BorderLayout.LINE_END)) {
                         shownWidth = shownWidth - lastXpos + e.getX();
