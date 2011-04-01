@@ -96,6 +96,8 @@ public class QueryParser implements EntityService {
                                 loadedGraphNodes.put(currentFoundId, queryNode);
                             }
                             queryNode.isVisible = true;
+                            kinTypeElement.entityData = queryNode;
+                            queryNode.appendLabel(kinTypeElement.kinType.getCodeString());
                         }
                     }
                 } // todo: else get relations of x
