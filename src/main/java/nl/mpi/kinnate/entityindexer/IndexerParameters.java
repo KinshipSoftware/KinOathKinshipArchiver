@@ -9,6 +9,7 @@ import java.util.Arrays;
  *  Author     : Peter Withers
  */
 public class IndexerParameters {
+    public boolean valuesChanged = false;
 
     public class IndexerParam {
 
@@ -22,6 +23,8 @@ public class IndexerParameters {
         public void setValues(String[][] valuesArrayLocal) {
             valuesArray = valuesArrayLocal;
             IndexerParameters.this.relevantEntityData = null;
+            // cause the entity index and entity collection to update based on the new indexer values
+            valuesChanged = true;
         }
 
         public void setValue(String parameterString, String valueString) {
@@ -32,6 +35,8 @@ public class IndexerParameters {
                 }
             }
             setValues(tempArrayList.toArray(new String[][]{}));
+            // cause the entity index and entity collection to update based on the new indexer values
+            valuesChanged = true;
         }
 
         public void removeValue(String valueToRemove) {
@@ -42,6 +47,8 @@ public class IndexerParameters {
                 }
             }
             setValues(tempArrayList.toArray(new String[][]{}));
+            // cause the entity index and entity collection to update based on the new indexer values
+            valuesChanged = true;
         }
 
         public String[][] getValues() {
