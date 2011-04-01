@@ -11,7 +11,10 @@ import java.net.URI;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
@@ -20,10 +23,10 @@ import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
+import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -32,11 +35,12 @@ import nl.mpi.kinnate.entityindexer.QueryParser;
  */
 public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, KinTermSavePanel {
 
-    private JTextArea kinTypeStringInput;
+    private JTextPane kinTypeStringInput;
     private GraphPanel graphPanel;
     private GraphSorter graphSorter;
     private EgoSelectionPanel egoSelectionPanel;
     private HidePane kinTermHidePane;
+    private HidePane kinTypeHidePane;
     private KinTermPanel kinTermPanel;
     private EntityService entityIndex;
     private String defaultString = "# This test panel should provide a kin diagram based on selected egos and the the kintype strings entered here.\n# Enter one string per line.\n# By default all relations of the selected entity will be shown.\n";
@@ -47,13 +51,28 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         graphPanel = new GraphPanel(this);
         egoSelectionPanel = new EgoSelectionPanel();
         kinTermPanel = new KinTermPanel(this, graphPanel.getkinTerms());
-        kinTypeStringInput = new JTextArea(defaultString);
+        kinTypeStringInput = new JTextPane();
+        // set the styles for the kin type string text
+        Style styleComment = kinTypeStringInput.addStyle("Comment", null);
+        StyleConstants.setForeground(styleComment, Color.GRAY);
+        Style styleKinType = kinTypeStringInput.addStyle("KinType", null);
+        StyleConstants.setForeground(styleKinType, Color.BLUE);
+        Style styleQuery = kinTypeStringInput.addStyle("Query", null);
+        StyleConstants.setForeground(styleQuery, Color.CYAN);
+        Style styleError = kinTypeStringInput.addStyle("Error", null);
+        StyleConstants.setForeground(styleError, Color.RED);
+        Style styleUnknown = kinTypeStringInput.addStyle("Unknown", null);
+        StyleConstants.setForeground(styleUnknown, Color.BLACK);
+
+        kinTypeStringInput.setText(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
         JPanel kinGraphPanel = new JPanel(new BorderLayout());
-        kinGraphPanel.add(kinTypeStringInput, BorderLayout.PAGE_START);
+//        kinGraphPanel.add(kinTypeStringInput, BorderLayout.PAGE_START);
 
-//        JSplitPane egoSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         JPanel kintermSplitPane = new JPanel(new BorderLayout());
+        kinTypeHidePane = new HidePane(kinTypeStringInput, "Kin Type Strings", BorderLayout.PAGE_END);
+        kintermSplitPane.add(kinTypeHidePane, BorderLayout.PAGE_START);
+//        JSplitPane egoSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 //        kinGraphPanel.add(egoSplitPane, BorderLayout.CENTER);
 //        outerSplitPane.setDividerLocation(0.5); // todo: add this to its parent so that the divider position sticks
         kintermSplitPane.add(new HidePane(egoSelectionPanel, "Ego Selection", BorderLayout.LINE_END), BorderLayout.LINE_START);
@@ -127,23 +146,34 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
                 drawGraph();
             }
         });
-        boolean firstString = true;
+        String kinTermContents = null;
         for (String currentKinTypeString : graphPanel.getKinTypeStrigs()) {
             if (currentKinTypeString.trim().length() > 0) {
-                if (firstString) {
-                    kinTypeStringInput.setText("");
-                    firstString = false;
+                if (kinTermContents == null) {
+                    kinTermContents = "";
                 } else {
-                    kinTypeStringInput.append("\n");
+                    kinTermContents = kinTermContents + "\n";
                 }
-                kinTypeStringInput.append(currentKinTypeString.trim());
+                kinTermContents = kinTermContents + currentKinTypeString.trim();
             }
         }
+        kinTypeStringInput.setText(kinTermContents);
     }
 
     public void drawGraph() {
         try {
-            graphSorter.setEntitys(entityIndex.getRelationsOfEgo(null, graphPanel.getEgoUniquiIdentifiersList(), graphPanel.getKinTypeStrigs(), graphPanel.getIndexParameters()));
+            String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
+            ParserHighlight[][] parserHighlight = new ParserHighlight[kinTypeStrings.length][];
+            graphSorter.setEntitys(entityIndex.getRelationsOfEgo(null, graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings, parserHighlight, graphPanel.getIndexParameters()));
+            StyledDocument styledDocument = kinTypeStringInput.getStyledDocument();
+            int charCounter = 0;
+            for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
+                for (int columnCounter = 0; columnCounter < parserHighlight[lineCounter].length; columnCounter++) {
+                    String styleName = parserHighlight[lineCounter][columnCounter].name();
+                    styledDocument.setCharacterAttributes(charCounter, 1, kinTypeStringInput.getStyle(styleName), true);
+                    charCounter++;
+                }
+            }
         } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
             LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
@@ -162,9 +192,11 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         if (kinTypeStringInput.getText().equals(defaultString)) {
             kinTypeStringInput.setText("");
         }
+        String kinTermContents = kinTypeStringInput.getText();
         for (String currentId : egoIdentifierArray) {
-            kinTypeStringInput.append(typeString + "=[" + currentId + "]\n");
+            kinTermContents = kinTermContents + typeString + "=[" + currentId + "]\n";
         }
+        kinTypeStringInput.setText(kinTermContents);
         graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
         drawGraph();
