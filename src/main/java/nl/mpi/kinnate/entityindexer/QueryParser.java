@@ -18,6 +18,11 @@ public class QueryParser implements EntityService {
     HashMap<String, EntityData> loadedGraphNodes;
     EntityCollection entityCollection;
 
+    public enum ParserHighlight {
+
+        KinType, Comment, Error, Query, Unknown
+    }
+
     public QueryParser() {
         entityCollection = new EntityCollection();
         loadedGraphNodes = new HashMap<String, EntityData>();
@@ -72,18 +77,20 @@ public class QueryParser implements EntityService {
         }
     }
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[][] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
         if (indexParameters.valuesChanged) {
             indexParameters.valuesChanged = false;
             loadedGraphNodes = new HashMap<String, EntityData>();
         }
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
-        QueryParser queryParser = new QueryParser();
+        kinTypeStringConverter.highlightComments(kinTypeStrings, parserHighlight);
+//        QueryParser queryParser = new QueryParser();
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
             graphDataNode.clearVisibility();
         }
+        int lineCounter = 0;
         for (String currentKinString : kinTypeStrings) {
-            for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeStringConverter.getKinTypeElements(currentKinString)) {
+            for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeStringConverter.getKinTypeElements(currentKinString, parserHighlight[lineCounter])) {
                 if (kinTypeElement.queryTerm != null) {
                     for (String currentFoundId : entityCollection.getEntityIdByTerm(kinTypeElement)) {
                         EntityData queryNode;
@@ -103,6 +110,7 @@ public class QueryParser implements EntityService {
                 } // todo: else get relations of x
                 // todo: filter on the kin types
             }
+            lineCounter++;
         }
         for (String currentEgoId : uniqueIdentifiers) {
             EntityData egoNode;
