@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.entityindexer;
 
 import nl.mpi.kinnate.entityindexer.IndexerParameters.IndexerParam;
+import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 
 /**
  *  Document   : QueryBuilder
@@ -118,13 +119,13 @@ public class QueryBuilder {
                 + "</Entity>\n";
     }
 
-    public String getTermQuery(String[][] queryTerms) {
+    public String getTermQuery(KinTypeStringConverter.KinTypeElement queryTerms) {
 //        for $entityNode in collection('nl-mpi-kinnate')/Kinnate[(Entity|Gedcom)]
 //        where $entityNode//*="Bob /Cox/"
 //        return
 //        $entityNode/(Entity|Gedcom)/UniqueIdentifier/*/text()
         StringBuilder stringBuilder = new StringBuilder();
-        for (String[] term : queryTerms) {
+        for (String[] term : queryTerms.queryTerm) {
             if (stringBuilder.length() > 0) {
                 stringBuilder.append(" and ");
             } else {
