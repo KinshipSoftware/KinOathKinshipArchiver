@@ -23,35 +23,34 @@ public class QueryParser implements EntityService {
         loadedGraphNodes = new HashMap<String, EntityData>();
     }
 
-    public String[][] getQueryStrings(String kinTypeString) {
-        String kinType = null;
-        ArrayList<String[]> queryTerms = new ArrayList<String[]>();
-//        String[] queryParts = kinTypeString.split("(=\\[)|([\\]])");
-        String[] queryParts = kinTypeString.split("[\\]]");
-//        String[] queryParts = kinTypeString.split("\n");
-        for (String querySection : queryParts) {
-            String[] subParts = querySection.split("=\\[");
-            if (subParts.length == 2) {
-                String queryText = subParts[1];
-                kinType = subParts[0];
-                //queryText = queryText.split("\\]")[0];
-                if (!queryText.contains("=")) {
-                    if (queryText.length() > 2) {
-                        queryTerms.add(new String[]{"*", queryText});
-                    }
-                } else {
-                    String[] queryTerm = queryText.split("=");
-                    if (queryTerm.length == 2) {
-                        if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
-                            queryTerms.add(new String[]{queryTerm[0], queryTerm[1]});
-                        }
-                    }
-                }
-            }
-        }
-        return queryTerms.toArray(new String[][]{});
-    }
-
+//    public String[][] getQueryStrings(String kinTypeString) {
+//        String kinType = null;
+//        ArrayList<String[]> queryTerms = new ArrayList<String[]>();
+////        String[] queryParts = kinTypeString.split("(=\\[)|([\\]])");
+//        String[] queryParts = kinTypeString.split("[\\]]");
+////        String[] queryParts = kinTypeString.split("\n");
+//        for (String querySection : queryParts) {
+//            String[] subParts = querySection.split("=\\[");
+//            if (subParts.length == 2) {
+//                String queryText = subParts[1];
+//                kinType = subParts[0];
+//                //queryText = queryText.split("\\]")[0];
+//                if (!queryText.contains("=")) {
+//                    if (queryText.length() > 2) {
+//                        queryTerms.add(new String[]{"*", queryText});
+//                    }
+//                } else {
+//                    String[] queryTerm = queryText.split("=");
+//                    if (queryTerm.length == 2) {
+//                        if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
+//                            queryTerms.add(new String[]{queryTerm[0], queryTerm[1]});
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return queryTerms.toArray(new String[][]{});
+//    }
     private void getNextRelations(HashMap<String, EntityData> createdGraphNodes, EntityData egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) {
         KinType currentKinType = remainingKinTypes.remove(0);
         for (EntityRelation entityRelation : egoNode.getDistinctRelateNodes()) {
@@ -84,18 +83,23 @@ public class QueryParser implements EntityService {
             graphDataNode.clearVisibility();
         }
         for (String currentKinString : kinTypeStrings) {
-            for (String currentFoundId : entityCollection.getEntityIdByTerm(queryParser.getQueryStrings(currentKinString))) {
-                EntityData queryNode;
-                currentFoundId = currentFoundId.trim();
-                if (currentFoundId.length() > 0 /* make sure that non results do not get mistaken for an identifier */) {
-                    if (loadedGraphNodes.containsKey(currentFoundId)) {
-                        queryNode = loadedGraphNodes.get(currentFoundId);
-                    } else {
-                        queryNode = entityCollection.getEntity(currentFoundId, indexParameters);
-                        loadedGraphNodes.put(currentFoundId, queryNode);
+            for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeStringConverter.getKinTypeElements(currentKinString)) {
+                if (kinTypeElement.queryTerm != null) {
+                    for (String currentFoundId : entityCollection.getEntityIdByTerm(kinTypeElement)) {
+                        EntityData queryNode;
+                        currentFoundId = currentFoundId.trim();
+                        if (currentFoundId.length() > 0 /* make sure that non results do not get mistaken for an identifier */) {
+                            if (loadedGraphNodes.containsKey(currentFoundId)) {
+                                queryNode = loadedGraphNodes.get(currentFoundId);
+                            } else {
+                                queryNode = entityCollection.getEntity(currentFoundId, indexParameters);
+                                loadedGraphNodes.put(currentFoundId, queryNode);
+                            }
+                            queryNode.isVisible = true;
+                        }
                     }
-                    queryNode.isVisible = true;
-                }
+                } // todo: else get relations of x
+                // todo: filter on the kin types
             }
         }
         for (String currentEgoId : uniqueIdentifiers) {
