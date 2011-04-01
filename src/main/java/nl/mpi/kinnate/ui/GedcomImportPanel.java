@@ -58,6 +58,7 @@ public class GedcomImportPanel extends JPanel {
             for (String typeString : gedcomImporter.createdNodeIds.keySet()) {
                 JCheckBox currentCheckBox = new JCheckBox(typeString + " ( x " + gedcomImporter.createdNodeIds.get(typeString).size() + ")");
                 currentCheckBox.setActionCommand(typeString);
+                checkBoxArray.add(currentCheckBox);
                 createdNodesPanel.add(currentCheckBox);
             }
             JButton showButton = new JButton("Show selected types in graph");
@@ -66,9 +67,13 @@ public class GedcomImportPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     ArrayList<String> selectedIds = new ArrayList<String>();
                     for (JCheckBox currentCheckBox : checkBoxArray) {
-                        selectedIds.addAll((gedcomImporter.createdNodeIds.get(currentCheckBox.getActionCommand())));
+                        if (currentCheckBox.isSelected()) {
+                            selectedIds.addAll((gedcomImporter.createdNodeIds.get(currentCheckBox.getActionCommand())));
+                        }
                     }
-                    jTabbedPane1.add("Imported Entities", new JTextArea("Imported Entities"));
+                    KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
+                    egoSelectionTestPanel.setEgoNodes(null, selectedIds.toArray(new String[]{}));
+                    jTabbedPane1.add("Imported Entities", egoSelectionTestPanel);
                 }
             });
             createdNodesPanel.add(showButton);
