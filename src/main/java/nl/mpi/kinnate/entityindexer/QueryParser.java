@@ -120,11 +120,11 @@ public class QueryParser implements EntityService {
                     getNextRelations(loadedGraphNodes, egoNode, kinTypes, indexParameters);
                 }
             }
-            // set the alter node object from the unique identifier
-            for (EntityData graphDataNode : loadedGraphNodes.values()) {
-                for (EntityRelation nodeRelation : graphDataNode.getDistinctRelateNodes()) {
-                    nodeRelation.setAlterNode(loadedGraphNodes.get(nodeRelation.alterUniqueIdentifier));
-                }
+        }
+        // set the alter node object from the unique identifier
+        for (EntityData graphDataNode : loadedGraphNodes.values()) {
+            for (EntityRelation nodeRelation : graphDataNode.getDistinctRelateNodes()) {
+                nodeRelation.setAlterNode(loadedGraphNodes.get(nodeRelation.alterUniqueIdentifier));
             }
         }
         return loadedGraphNodes.values().toArray(new EntityData[]{});
