@@ -9,6 +9,7 @@ import nl.mpi.arbil.ImdiTable;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.LinorgWindowManager;
 import nl.mpi.arbil.PreviewSplitPanel;
+import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 
@@ -63,7 +64,7 @@ public class MainFrame extends javax.swing.JFrame {
         dragTransferHandler = new DragTransferHandler();
         entitySearchPanel.setTransferHandler(dragTransferHandler);
         egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
-
+        jMenuBar1.add(new KinTermsMenu(this)); // the main frame is stored in the kin term menu for later use
         this.doLayout();
         this.pack();
     }
@@ -75,6 +76,15 @@ public class MainFrame extends javax.swing.JFrame {
             savePanel = (SavePanel) selectedComponent;
         }
         return savePanel;
+    }
+
+    public KinTermSavePanel getKinTermPanel() {
+        Object selectedComponent = jTabbedPane1.getComponentAt(jTabbedPane1.getSelectedIndex());
+        KinTermSavePanel kinTermSavePanel = null;
+        if (selectedComponent instanceof KinTermSavePanel) {
+            kinTermSavePanel = (KinTermSavePanel) selectedComponent;
+        }
+        return kinTermSavePanel;
     }
 
     /** This method is called from within the constructor to
