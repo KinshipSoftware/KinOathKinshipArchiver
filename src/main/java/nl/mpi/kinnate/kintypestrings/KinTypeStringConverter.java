@@ -53,6 +53,58 @@ public class KinTypeStringConverter extends GraphSorter {
         new KinType("C", DataTypes.RelationType.descendant, EntityData.SymbolType.square)
     };
 
+    public class KinTypeElement {
+
+        public KinType kinType;
+        public ArrayList<String[]> queryTerm;
+        public EntityData entityData;
+    }
+
+    public ArrayList<KinTypeElement> getKinTypeElements(String consumableString) {
+        ArrayList<KinTypeElement> kinTypeElementList = new ArrayList<KinTypeElement>();
+        boolean foundKinType = true;
+        while (foundKinType && consumableString.length() > 0) {
+            for (KinType currentReferenceKinType : referenceKinTypes) {
+                foundKinType = false;
+                if (consumableString.startsWith(currentReferenceKinType.codeString)) {
+                    KinTypeElement currentElement = new KinTypeElement();
+                    currentElement.kinType = currentReferenceKinType;
+                    consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
+
+                    if (consumableString.startsWith("=[")) {
+                        // todo: allow multiple terms such as "=[foo][bar]" or "=[foo][bar][NAME=Bob]"
+                        int queryStart = "=[".length();
+                        int queryEnd = consumableString.indexOf("]");
+                        if (queryEnd == -1) {
+                            // if the terms are incomplete then ignore the rest of the line
+                            consumableString = "";
+                            break;
+                        }
+                        currentElement.queryTerm = new ArrayList<String[]>();
+                        String queryText = consumableString.substring(queryStart, queryEnd);
+                        consumableString = consumableString.substring(queryEnd+1);
+                        if (!queryText.contains("=")) {
+                            if (queryText.length() > 2) {
+                                currentElement.queryTerm.add(new String[]{"*", queryText});
+                            }
+                        } else {
+                            String[] queryTerm = queryText.split("=");
+                            if (queryTerm.length == 2) {
+                                if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
+                                    currentElement.queryTerm.add(new String[]{queryTerm[0], queryTerm[1]});
+                                }
+                            }
+                        }
+                    }
+                    kinTypeElementList.add(currentElement);
+                    foundKinType = true;
+                    break;
+                }
+            }
+        }
+        return kinTypeElementList;
+    }
+
     public ArrayList<KinType> getKinTypes(String consumableString) {
         ArrayList<KinType> kinTypeList = new ArrayList<KinType>();
         boolean foundKinType = true;
