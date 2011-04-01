@@ -19,6 +19,7 @@ import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Set;
@@ -98,7 +99,7 @@ public class EntityCollection {
         return searchResults;
     }
 
-    public String[] getEntityIdByTerm(String[][] queryTerms) {
+    public String[] getEntityIdByTerm(KinTypeStringConverter.KinTypeElement queryTerms) {
         QueryBuilder queryBuilder = new QueryBuilder();
         String queryString = queryBuilder.getTermQuery(queryTerms);
         System.out.println("query1String: " + queryString);
