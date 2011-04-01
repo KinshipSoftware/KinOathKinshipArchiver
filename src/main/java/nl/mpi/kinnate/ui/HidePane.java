@@ -23,9 +23,11 @@ public class HidePane extends JPanel {
     private String closeLabel;
     private boolean blockNextMouseUp = false;
     private String borderPosition;
+    private boolean horizontalDivider;
 
     public HidePane(Component contentComponentLocal, String labelStringLocal, String borderPositionLocal) {
         borderPosition = borderPositionLocal;
+        horizontalDivider = (!borderPosition.equals(BorderLayout.LINE_END) && !borderPosition.equals(BorderLayout.LINE_START));
         if (borderPosition.equals(BorderLayout.LINE_END)) {
             openLabel = ">"; //labelStringLocal;
             closeLabel = "<";
@@ -51,17 +53,31 @@ public class HidePane extends JPanel {
                     shownWidth = 0;
                 }
                 if (!hiddenState) {
-                    if (borderPosition.equals(BorderLayout.LINE_END)) {
-                        shownWidth = shownWidth - lastXpos + e.getX();
+                    if (horizontalDivider) {
+                        if (borderPosition.equals(BorderLayout.PAGE_END)) {
+                            shownWidth = shownWidth - lastXpos + e.getY();
+                        } else {
+                            shownWidth = shownWidth - lastXpos - e.getY();
+                        }
+                        if (shownWidth < removeButton.getPreferredSize().height * 2) {
+                            shownWidth = removeButton.getPreferredSize().height * 2;
+                        } else if (shownWidth > HidePane.this.getParent().getHeight()) {
+                            shownWidth = HidePane.this.getParent().getHeight() - removeButton.getPreferredSize().height;
+                        }
+                        HidePane.this.setPreferredSize(new Dimension(HidePane.this.getPreferredSize().width, shownWidth));
                     } else {
-                        shownWidth = shownWidth - lastXpos - e.getX();
+                        if (borderPosition.equals(BorderLayout.LINE_END)) {
+                            shownWidth = shownWidth - lastXpos + e.getX();
+                        } else {
+                            shownWidth = shownWidth - lastXpos - e.getX();
+                        }
+                        if (shownWidth < removeButton.getPreferredSize().width * 2) {
+                            shownWidth = removeButton.getPreferredSize().width * 2;
+                        } else if (shownWidth > HidePane.this.getParent().getWidth()) {
+                            shownWidth = HidePane.this.getParent().getWidth() - removeButton.getPreferredSize().width;
+                        }
+                        HidePane.this.setPreferredSize(new Dimension(shownWidth, HidePane.this.getPreferredSize().height));
                     }
-                    if (shownWidth < removeButton.getPreferredSize().width * 2) {
-                        shownWidth = removeButton.getPreferredSize().width * 2;
-                    } else if (shownWidth > HidePane.this.getParent().getWidth()) {
-                        shownWidth = HidePane.this.getParent().getWidth() - removeButton.getPreferredSize().width;
-                    }
-                    HidePane.this.setPreferredSize(new Dimension(shownWidth, HidePane.this.getPreferredSize().height));
                     HidePane.this.revalidate();
                     HidePane.this.repaint();
                     blockNextMouseUp = true;
@@ -70,7 +86,11 @@ public class HidePane extends JPanel {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                lastXpos = e.getX();
+                if (horizontalDivider) {
+                    lastXpos = e.getY();
+                } else {
+                    lastXpos = e.getX();
+                }
             }
         });
         removeButton.setToolTipText("hide/show");
@@ -93,12 +113,20 @@ public class HidePane extends JPanel {
             HidePane.this.remove(contentComponent);
             removeButton.setText(openLabel);
             HidePane.this.add(removeButton, BorderLayout.CENTER);
-            HidePane.this.setPreferredSize(new Dimension(removeButton.getPreferredSize().width, HidePane.this.getPreferredSize().height));
+            if (horizontalDivider) {
+                HidePane.this.setPreferredSize(new Dimension(HidePane.this.getPreferredSize().width, removeButton.getPreferredSize().height));
+            } else {
+                HidePane.this.setPreferredSize(new Dimension(removeButton.getPreferredSize().width, HidePane.this.getPreferredSize().height));
+            }
         } else {
             HidePane.this.add(removeButton, borderPosition);
             HidePane.this.add(contentComponent, BorderLayout.CENTER);
             removeButton.setText(closeLabel);
-            HidePane.this.setPreferredSize(new Dimension(shownWidth, HidePane.this.getPreferredSize().height));
+            if (horizontalDivider) {
+                HidePane.this.setPreferredSize(new Dimension(HidePane.this.getPreferredSize().width, shownWidth));
+            } else {
+                HidePane.this.setPreferredSize(new Dimension(shownWidth, HidePane.this.getPreferredSize().height));
+            }
         }
         hiddenState = !hiddenState;
         HidePane.this.revalidate();
