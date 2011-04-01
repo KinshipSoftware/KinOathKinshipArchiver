@@ -40,7 +40,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     private KinTermPanel kinTermPanel;
     private EntityService entityIndex;
     private String defaultString = "# This test panel should provide a kin diagram based on selected egos and the the kintype strings entered here.\n# Enter one string per line.\n# By default all relations of the selected entity will be shown.\n";
-    private String kinTypeStrings[] = new String[]{};
+//    private String kinTypeStrings[] = new String[]{};
 
     public KinTypeEgoSelectionTestPanel(File existingFile) {
         this.setLayout(new BorderLayout());
@@ -123,12 +123,12 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
 
             public void keyReleased(KeyEvent e) {
                 graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
-                kinTypeStrings = graphPanel.getKinTypeStrigs();
+//                kinTypeStrings = graphPanel.getKinTypeStrigs();
                 drawGraph();
             }
         });
         boolean firstString = true;
-        for (String currentKinTypeString : kinTypeStrings) {
+        for (String currentKinTypeString : graphPanel.getKinTypeStrigs()) {
             if (currentKinTypeString.trim().length() > 0) {
                 if (firstString) {
                     kinTypeStringInput.setText("");
@@ -143,18 +143,30 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
 
     public void drawGraph() {
         try {
-            graphSorter.setEntitys(entityIndex.getRelationsOfEgo(null, graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings, graphPanel.getIndexParameters()));
+            graphSorter.setEntitys(entityIndex.getRelationsOfEgo(null, graphPanel.getEgoUniquiIdentifiersList(), graphPanel.getKinTypeStrigs(), graphPanel.getIndexParameters()));
         } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
             LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
         }
         egoSelectionPanel.setEgoNodes(graphPanel.getEgoPaths());
-        kinTypeStrings = graphPanel.getKinTypeStrigs();
+//        kinTypeStrings = graphPanel.getKinTypeStrigs();
         graphPanel.drawNodes(graphSorter);
     }
 
     public void setEgoNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
         graphPanel.setEgoList(egoPathArray, egoIdentifierArray);
+        drawGraph();
+    }
+
+    public void setDisplayNodes(String typeString, String[] egoIdentifierArray) {
+        if (kinTypeStringInput.getText().equals(defaultString)) {
+            kinTypeStringInput.setText("");
+        }
+        for (String currentId : egoIdentifierArray) {
+            kinTypeStringInput.append(typeString + "=[" + currentId + "]\n");
+        }
+        graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
+//        kinTypeStrings = graphPanel.getKinTypeStrigs();
         drawGraph();
     }
 
