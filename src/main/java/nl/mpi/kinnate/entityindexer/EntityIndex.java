@@ -10,6 +10,7 @@ import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
@@ -204,10 +205,10 @@ public class EntityIndex implements EntityService {
                 setRelationData(alterNode, egoNode, alterData, currentEgoPath, indexParameters);
                 // todo: either prevent links being added if a node does not match the kin type or remove them when known
 //                if (egoNode.relationMatchesType(alterPath, currentKinType)) {
-                    // only traverse if the type matches
-                    if (remainingKinTypes.size() > 0) {
-                        getNextRelations(createdGraphNodes, alterPath, alterNode, remainingKinTypes, indexParameters);
-                    }
+                // only traverse if the type matches
+                if (remainingKinTypes.size() > 0) {
+                    getNextRelations(createdGraphNodes, alterPath, alterNode, remainingKinTypes, indexParameters);
+                }
 //                } else if (relationAdded) {
 //                    createdGraphNodes.remove(alterPath);
 //                }
@@ -217,7 +218,7 @@ public class EntityIndex implements EntityService {
         }
     }
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[][] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
         HashMap<String, EntityData> createdGraphNodes = new HashMap<String, EntityData>();
         for (URI currentEgoUri : egoNodes) {
