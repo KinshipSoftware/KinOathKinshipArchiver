@@ -52,7 +52,7 @@ public class GedcomImportPanel extends JPanel {
         JPanel createdNodesPanel = new JPanel();
         createdNodesPanel.setLayout(new BoxLayout(createdNodesPanel, BoxLayout.PAGE_AXIS));
         if (gedcomImporter.createdNodeIds.isEmpty()) {
-            createdNodesPanel.add(new JLabel("No new data was imported, nothing to show in the graph."));
+            createdNodesPanel.add(new JLabel("No data was imported, nothing to show in the graph."));
         } else {
             final ArrayList<JCheckBox> checkBoxArray = new ArrayList<JCheckBox>();
             for (String typeString : gedcomImporter.createdNodeIds.keySet()) {
