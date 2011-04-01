@@ -72,11 +72,13 @@ public class KinTermsMenu extends JMenu {
         exportMenu.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                currentKinTermSavePanel.exportKinTerms();
             }
         });
         importMenu.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                currentKinTermSavePanel.importKinTerms();
             }
         });
     }
