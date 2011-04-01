@@ -10,6 +10,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.SavePanel;
 
@@ -18,11 +19,12 @@ import nl.mpi.kinnate.SavePanel;
  *  Created on : Sep 29, 2010, 12:52:01 PM
  *  Author     : Peter Withers
  */
-public class KinTypeStringTestPanel extends JPanel implements SavePanel {
+public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTermSavePanel {
 
     private JTextArea kinTypeStringInput;
     private GraphPanel graphPanel;
     private KinTermPanel kinTermPanel;
+    private HidePane kinTermHidePane;
     private String defaultString = "This test panel should provide a kin diagram of the kintype strings entered here.\nEnter one string per line.\nEach new line (enter/return key) will update the graph.";
 
     public KinTypeStringTestPanel() {
@@ -34,8 +36,8 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel {
 
         JPanel kintermSplitPane = new JPanel(new BorderLayout());
         kintermSplitPane.add(graphPanel, BorderLayout.CENTER);
-        kintermSplitPane.add(new HidePane(kinTermPanel, "Kin Terms", BorderLayout.LINE_START), BorderLayout.LINE_END);
-
+        kinTermHidePane = new HidePane(kinTermPanel, "Kin Terms", BorderLayout.LINE_START);
+        kintermSplitPane.add(kinTermHidePane, BorderLayout.LINE_END);
         this.add(kinTypeStringInput, BorderLayout.PAGE_START);
         this.add(kintermSplitPane, BorderLayout.CENTER);
 //        kinTypeStringInput.setForeground(Color.lightGray);
@@ -94,5 +96,21 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel {
         graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTerms());
         graphPanel.drawNodes(graphData);
         KinTypeStringTestPanel.this.doLayout();
+    }
+
+    public void exportKinTerms() {
+        kinTermPanel.exportKinTerms();
+    }
+
+    public void hideShow() {
+        kinTermHidePane.toggleHiddenState();
+    }
+
+    public void importKinTerms() {
+        kinTermPanel.importKinTerms();
+    }
+
+    public boolean isHidden() {
+        return kinTermHidePane.isHidden();
     }
 }
