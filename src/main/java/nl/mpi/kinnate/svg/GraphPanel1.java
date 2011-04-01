@@ -13,6 +13,7 @@ import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.kinnate.kindata.EntityRelation;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.DOMImplementation;
@@ -113,7 +114,7 @@ public class GraphPanel1 extends JPanel {
             svgRoot.appendChild(labelText);
 
             // draw links
-            for (EntityData.EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
+            for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
 //                if (graphLinkNode.sourceNode.equals(currentNode)) {
                     System.out.println("link: " + graphLinkNode.getAlterNode().getxPos() + ":" + graphLinkNode.getAlterNode().getyPos());
 
