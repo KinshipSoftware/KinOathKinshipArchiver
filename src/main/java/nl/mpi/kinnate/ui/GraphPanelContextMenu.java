@@ -200,10 +200,16 @@ public class GraphPanelContextMenu extends JPopupMenu {
     @Override
     public void show(Component cmpnt, int i, int i1) {
         selectedIdentifiers = graphPanel.getSelectedIds();
-        addRelationEntityMenuItem.setVisible(selectedIdentifiers.length == 2);
-        setAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
-        addAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
-        removeEgoMenuItem.setVisible(graphPanel.selectionContainsEgo());
+        if (addRelationEntityMenuItem != null) {
+            addRelationEntityMenuItem.setVisible(selectedIdentifiers.length == 2);
+            setAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
+            addAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
+            removeEgoMenuItem.setVisible(graphPanel.selectionContainsEgo());
+        } else {
+            setAsEgoMenuItem.setVisible(false);
+            addAsEgoMenuItem.setVisible(false);
+            removeEgoMenuItem.setVisible(false);
+        }
         super.show(cmpnt, i, i1);
     }
 }
