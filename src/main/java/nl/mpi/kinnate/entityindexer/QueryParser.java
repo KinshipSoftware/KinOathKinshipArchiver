@@ -122,6 +122,9 @@ public class QueryParser implements EntityService {
                             queryNode.isVisible = true;
                             kinTypeElement.entityData = queryNode;
                             queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
+                            if (kinTypeElement.kinType.isEgoType()) {
+                                queryNode.isEgo = true; // there might be multiple types for a single entitiy
+                            }
                         }
                     }
                 } // todo: else get relations of x
