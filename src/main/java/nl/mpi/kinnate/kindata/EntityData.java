@@ -30,6 +30,7 @@ public class EntityData {
     @XmlElementWrapper(name = "Labels")
     @XmlElement(name = "String")
     private String[] labelStringArray;
+    ArrayList<String> tempLabelsList = null;
     @XmlElementWrapper(name = "Relations")
     @XmlElement(name = "Relation")
     private EntityRelation[] relatedNodes;
@@ -102,14 +103,23 @@ public class EntityData {
     }
 
     public String[] getLabel() {
-        return labelStringArray;
+        if (tempLabelsList != null) {
+            return tempLabelsList.toArray(new String[]{});
+        } else {
+            return labelStringArray;
+        }
     }
 
-    public void appendLabel(String labelString) {
-        ArrayList<String> tempArrayList = new ArrayList<String>(Arrays.asList(labelStringArray));
-        if (!tempArrayList.contains(labelString)) {
-            tempArrayList.add(labelString);
-            labelStringArray = tempArrayList.toArray(new String[]{});
+    public void clearTempLabels() {
+        tempLabelsList = null;
+    }
+
+    public void appendTempLabel(String labelString) {
+        if (tempLabelsList == null) {
+            tempLabelsList = new ArrayList<String>(Arrays.asList(labelStringArray));
+        }
+        if (!tempLabelsList.contains(labelString)) {
+            tempLabelsList.add(labelString);
         }
     }
 
