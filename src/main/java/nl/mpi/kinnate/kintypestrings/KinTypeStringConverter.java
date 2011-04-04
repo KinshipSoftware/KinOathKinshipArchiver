@@ -88,11 +88,6 @@ public class KinTypeStringConverter extends GraphSorter {
         ArrayList<KinTypeElement> kinTypeElementList = new ArrayList<KinTypeElement>();
         boolean foundKinType = true;
         while (foundKinType && consumableString.length() > 0) {
-            if (consumableString.startsWith("#")) {
-                // abort processing if the line starts with a comment
-                parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length());
-                return kinTypeElementList;
-            }
             for (KinType currentReferenceKinType : referenceKinTypes) {
                 foundKinType = false;
                 if (consumableString.startsWith(currentReferenceKinType.codeString)) {
@@ -138,11 +133,11 @@ public class KinTypeStringConverter extends GraphSorter {
                 }
             }
         }
-        if (!foundKinType) {
+        if (!foundKinType && !consumableString.startsWith("#")) {
             parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - consumableString.length());
         }
         if (consumableString.contains("#")) {
-            // check for any additional comments
+            // check for any comments
             parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length() + consumableString.indexOf("#"));
         }
         return kinTypeElementList;
