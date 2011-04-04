@@ -54,12 +54,14 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         kinTypeStringInput = new JTextPane();
         // set the styles for the kin type string text
         Style styleComment = kinTypeStringInput.addStyle("Comment", null);
+//        StyleConstants.setForeground(styleComment, new Color(247,158,9));
         StyleConstants.setForeground(styleComment, Color.GRAY);
         Style styleKinType = kinTypeStringInput.addStyle("KinType", null);
-        StyleConstants.setForeground(styleKinType, Color.BLUE);
+        StyleConstants.setForeground(styleKinType, new Color(43,32,161));
         Style styleQuery = kinTypeStringInput.addStyle("Query", null);
-        StyleConstants.setForeground(styleQuery, Color.CYAN);
+        StyleConstants.setForeground(styleQuery, new Color(183,7,140));
         Style styleError = kinTypeStringInput.addStyle("Error", null);
+//        StyleConstants.setForeground(styleError, new Color(172,3,57));
         StyleConstants.setForeground(styleError, Color.RED);
         Style styleUnknown = kinTypeStringInput.addStyle("Unknown", null);
         StyleConstants.setForeground(styleUnknown, Color.BLACK);
@@ -163,16 +165,29 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     public void drawGraph() {
         try {
             String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
-            ParserHighlight[][] parserHighlight = new ParserHighlight[kinTypeStrings.length][];
+            ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
             graphSorter.setEntitys(entityIndex.getRelationsOfEgo(null, graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings, parserHighlight, graphPanel.getIndexParameters()));
             StyledDocument styledDocument = kinTypeStringInput.getStyledDocument();
-            int charCounter = 0;
+            int lineStart = 0;
             for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
-                for (int columnCounter = 0; columnCounter < parserHighlight[lineCounter].length; columnCounter++) {
-                    String styleName = parserHighlight[lineCounter][columnCounter].name();
-                    styledDocument.setCharacterAttributes(charCounter, 1, kinTypeStringInput.getStyle(styleName), true);
-                    charCounter++;
+                ParserHighlight currentHighlight = parserHighlight[lineCounter];
+//                int lineStart = styledDocument.getParagraphElement(lineCounter).getStartOffset();
+//                int lineEnd = styledDocument.getParagraphElement(lineCounter).getEndOffset();
+                int lineEnd = lineStart + kinTypeStrings[lineCounter].length();
+                styledDocument.setCharacterAttributes(lineStart, lineEnd, kinTypeStringInput.getStyle("Unknown"), true);
+                while (currentHighlight.highlight != null) {
+                    int startPos = lineStart + currentHighlight.startChar;
+                    int charCount = lineEnd - lineStart;
+                    if (currentHighlight.nextHighlight.highlight != null) {
+                        charCount = currentHighlight.nextHighlight.startChar - currentHighlight.startChar;
+                    }
+                    if (currentHighlight.highlight != null) {
+                        String styleName = currentHighlight.highlight.name();
+                        styledDocument.setCharacterAttributes(startPos, charCount, kinTypeStringInput.getStyle(styleName), true);
+                    }
+                    currentHighlight = currentHighlight.nextHighlight;
                 }
+                lineStart += kinTypeStrings[lineCounter].length() + 1;
             }
         } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
