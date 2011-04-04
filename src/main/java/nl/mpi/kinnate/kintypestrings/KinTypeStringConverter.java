@@ -29,6 +29,10 @@ public class KinTypeStringConverter extends GraphSorter {
         public String getCodeString() {
             return codeString;
         }
+
+        public boolean isEgoType() {
+            return codeString.equals("E");
+        }
     }
     private KinType[] referenceKinTypes = new KinType[]{
         // type 1
