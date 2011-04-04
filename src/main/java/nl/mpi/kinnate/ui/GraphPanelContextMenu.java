@@ -95,6 +95,16 @@ public class GraphPanelContextMenu extends JPopupMenu {
                 }
             });
             this.add(addRelationEntityMenuItem);
+            JMenu shapeSubMenu = new JMenu("Add Geometry");
+            for (String currentType : new String[]{"Label", "Circle", "Square", "Polyline"}) {
+                JMenuItem addLabel = new JMenuItem("Add " + currentType);
+                addLabel.setActionCommand(currentType);
+                shapeSubMenu.add(addLabel);
+                addLabel.setEnabled(false);
+                // todo: addthese into a layer behind the entities, athought lables could be above
+                // todo: when geometry is selected construct an arbildatanode to allow the geometries attributes to be edited
+            }
+            this.add(shapeSubMenu);
         }
         setAsEgoMenuItem = new JMenuItem("Set as Ego (relacing existing)");
         setAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
