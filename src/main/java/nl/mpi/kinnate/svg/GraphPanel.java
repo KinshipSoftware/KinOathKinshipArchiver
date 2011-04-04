@@ -5,7 +5,9 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -35,6 +37,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
+import org.w3c.dom.svg.SVGLocatable;
+import org.w3c.dom.svg.SVGRect;
 
 /**
  *  Document   : GraphPanel
@@ -57,6 +61,9 @@ public class GraphPanel extends JPanel implements SavePanel {
     private DataStoreSvg dataStoreSvg;
     private URI[] egoPathsTemp = null;
     protected SvgUpdateHandler svgUpdateHandler;
+    private int currentZoom = 0;
+    private int currentWidth = 0;
+    private int currentHeight = 0;
 
     public GraphPanel(KinTypeEgoSelectionTestPanel egoSelectionPanel) {
         dataStoreSvg = new DataStoreSvg();
@@ -76,17 +83,22 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.addMouseWheelListener(new MouseWheelListener() {
 
             public void mouseWheelMoved(MouseWheelEvent e) {
+                currentZoom = currentZoom + e.getUnitsToScroll();
+                if (currentZoom > 8) {
+                    currentZoom = 8;
+                }
+                if (currentZoom < -6) {
+                    currentZoom = -6;
+                }
+                double scale = 1 - e.getUnitsToScroll() / 10.0;
+                double tx = -e.getX() * (scale - 1);
+                double ty = -e.getY() * (scale - 1);
                 AffineTransform at = new AffineTransform();
-//                System.out.println("R: " + e.getWheelRotation());
-//                System.out.println("A: " + e.getScrollAmount());
-//                System.out.println("U: " + e.getUnitsToScroll());
-                at.scale(1 + e.getUnitsToScroll() / 10.0, 1 + e.getUnitsToScroll() / 10.0);
-//                at.translate(e.getX()/10.0, e.getY()/10.0);
-//                System.out.println("x: " + e.getX());
-//                System.out.println("y: " + e.getY());
-
+                at.translate(tx, ty);
+                at.scale(scale, scale);
                 at.concatenate(svgCanvas.getRenderingTransform());
                 svgCanvas.setRenderingTransform(at);
+//                zoomDrawing();
             }
         });
 //        svgCanvas.setEnableResetTransformInteractor(true);
@@ -96,8 +108,30 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.addMouseListener(mouseListenerSvg);
         svgCanvas.addMouseMotionListener(mouseListenerSvg);
         jSVGScrollPane = new JSVGScrollPane(svgCanvas);
+//        svgCanvas.setBackground(Color.LIGHT_GRAY);
         this.add(BorderLayout.CENTER, jSVGScrollPane);
         svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(egoSelectionPanel, this, graphPanelSize));
+    }
+
+    private void zoomDrawing() {
+        AffineTransform scaleTransform = new AffineTransform();
+        scaleTransform.scale(1 - currentZoom / 10.0, 1 - currentZoom / 10.0);
+        System.out.println("currentZoom: " + currentZoom);
+//        svgCanvas.setRenderingTransform(scaleTransform);
+        Rectangle canvasBounds = this.getBounds();
+        SVGRect bbox = ((SVGLocatable) doc.getRootElement()).getBBox();
+        if (bbox != null) {
+            System.out.println("previousZoomedWith: " + bbox.getWidth());
+        }
+//        SVGElement rootElement = doc.getRootElement();
+//        if (currentWidth < canvasBounds.width) {
+        float drawingCenter = (currentWidth / 2);
+//                float drawingCenter = (bbox.getX() + (bbox.getWidth() / 2));
+        float canvasCenter = (canvasBounds.width / 2);
+        AffineTransform at = new AffineTransform();
+        at.translate((canvasCenter - drawingCenter), 1);
+        at.concatenate(scaleTransform);
+        svgCanvas.setRenderingTransform(at);
     }
 
     public void setImdiTableModel(ImdiTableModel imdiTableModelLocal) {
@@ -237,10 +271,6 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.setRenderingTransform(at);
     }
 
-    public void drawNodes() {
-        drawNodes(graphData);
-    }
-
     private Element createEntitySymbol(EntityData currentNode, int hSpacing, int vSpacing, int symbolSize) {
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
         groupNode.setAttribute("id", currentNode.getUniqueIdentifier());
@@ -317,6 +347,10 @@ public class GraphPanel extends JPanel implements SavePanel {
         return groupNode;
     }
 
+    public void drawNodes() {
+        drawNodes(graphData);
+    }
+
     public void drawNodes(GraphSorter graphDataLocal) {
         requiresSave = true;
         graphData = graphDataLocal;
@@ -344,10 +378,11 @@ public class GraphPanel extends JPanel implements SavePanel {
 
 //        int preferedWidth = graphData.gridWidth * hSpacing + hSpacing * 2;
 //        int preferedHeight = graphData.gridHeight * vSpacing + vSpacing * 2;
-
+        currentWidth = graphPanelSize.getWidth(graphData.gridWidth, hSpacing);
+        currentHeight = graphPanelSize.getHeight(graphData.gridHeight, vSpacing);
         // Set the width and height attributes on the root 'svg' element.
-        svgRoot.setAttribute("width", Integer.toString(graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
-        svgRoot.setAttribute("height", Integer.toString(graphPanelSize.getHeight(graphData.gridHeight, vSpacing)));
+        svgRoot.setAttribute("width", Integer.toString(currentWidth));
+        svgRoot.setAttribute("height", Integer.toString(currentHeight));
 
         this.setPreferredSize(new Dimension(graphPanelSize.getHeight(graphData.gridHeight, vSpacing), graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
 
@@ -401,8 +436,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgRoot.appendChild(entityGroupNode);
         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
-        // todo: populate this correctly with the available symbols
         dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(new EntitySvg().listSymbolNames(doc));
+//        zoomDrawing();
     }
 
     public boolean hasSaveFileName() {
