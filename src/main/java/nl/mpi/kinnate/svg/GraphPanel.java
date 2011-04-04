@@ -142,13 +142,15 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void setKinTypeStrigs(String[] kinTypeStringArray) {
         // strip out any white space, blank lines and remove duplicates
-        HashSet<String> kinTypeStringSet = new HashSet<String>();
-        for (String kinTypeString : kinTypeStringArray) {
-            if (kinTypeString != null && kinTypeString.trim().length() > 0) {
-                kinTypeStringSet.add(kinTypeString.trim());
-            }
-        }
-        dataStoreSvg.kinTypeStrings = kinTypeStringSet.toArray(new String[]{});
+        // this has set has been removed because it creates a discrepancy between what the user types and what is processed
+//        HashSet<String> kinTypeStringSet = new HashSet<String>();
+//        for (String kinTypeString : kinTypeStringArray) {
+//            if (kinTypeString != null && kinTypeString.trim().length() > 0) {
+//                kinTypeStringSet.add(kinTypeString.trim());
+//            }
+//        }
+//        dataStoreSvg.kinTypeStrings = kinTypeStringSet.toArray(new String[]{});
+        dataStoreSvg.kinTypeStrings = kinTypeStringArray;
     }
 
     public IndexerParameters getIndexParameters() {
