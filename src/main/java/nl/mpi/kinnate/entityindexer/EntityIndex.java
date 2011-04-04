@@ -218,7 +218,7 @@ public class EntityIndex implements EntityService {
         }
     }
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[][] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
         HashMap<String, EntityData> createdGraphNodes = new HashMap<String, EntityData>();
         for (URI currentEgoUri : egoNodes) {
