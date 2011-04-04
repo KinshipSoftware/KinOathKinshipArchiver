@@ -39,6 +39,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 // limit the drag to the distance draged not the location
                 graphPanel.svgUpdateHandler.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
+            } else {
+                graphPanel.svgUpdateHandler.dragCanvas(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
             }
             mouseActionIsDrag = true;
         }
@@ -47,7 +49,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        System.out.println("mouseReleased: " + me.toString());
+//        System.out.println("mouseReleased: " + me.toString());
         graphPanel.svgCanvas.setCursor(preDragCursor);
         startDragPoint = null;
         if (!mouseActionIsDrag && !mouseActionIsPopupTrigger && !mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
