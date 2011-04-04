@@ -43,10 +43,11 @@ public class GraphPanelSize {
     };
 
     public String[] getPreferredSizes() {
-        String[] returnArray = new String[preferredSizeArray.length];
+        String[] returnArray = new String[preferredSizeArray.length + 1];
         for (int currentCount = 0; currentCount < preferredSizeArray.length; currentCount++) {
             returnArray[currentCount] = preferredSizeArray[currentCount][0];
         }
+        returnArray[preferredSizeArray.length] = "Auto";
         return returnArray;
     }
 
