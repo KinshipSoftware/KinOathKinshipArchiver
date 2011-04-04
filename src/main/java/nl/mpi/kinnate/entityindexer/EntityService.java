@@ -11,5 +11,5 @@ import nl.mpi.kinnate.kindata.EntityData;
  */
 public interface EntityService {
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[][] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException;
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException;
 }
