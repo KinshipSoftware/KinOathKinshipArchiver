@@ -43,7 +43,15 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     private HidePane kinTypeHidePane;
     private KinTermPanel kinTermPanel;
     private EntityService entityIndex;
-    private String defaultString = "# This test panel should provide a kin diagram based on selected egos and the the kintype strings entered here.\n# Enter one string per line.\n# By default all relations of the selected entity will be shown.\n";
+    private String defaultString = "# The kin type strings entered here will determine the entities show on the graph below\n"
+            + "# Enter one string per line.\n"
+            //+ "# By default all relations of the selected entity will be shown.\n"
+            + "# for example:\n"
+            + "E=[Bob]MFM\n"
+            + "E=[Bob]MZ\n"
+            + "E=[Bob]F\n"
+            + "E=[Bob]M\n"
+            + "E=[Bob]S";
 //    private String kinTypeStrings[] = new String[]{};
 
     public KinTypeEgoSelectionTestPanel(File existingFile) {
@@ -57,22 +65,22 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
 //        StyleConstants.setForeground(styleComment, new Color(247,158,9));
         StyleConstants.setForeground(styleComment, Color.GRAY);
         Style styleKinType = kinTypeStringInput.addStyle("KinType", null);
-        StyleConstants.setForeground(styleKinType, new Color(43,32,161));
+        StyleConstants.setForeground(styleKinType, new Color(43, 32, 161));
         Style styleQuery = kinTypeStringInput.addStyle("Query", null);
-        StyleConstants.setForeground(styleQuery, new Color(183,7,140));
+        StyleConstants.setForeground(styleQuery, new Color(183, 7, 140));
         Style styleError = kinTypeStringInput.addStyle("Error", null);
 //        StyleConstants.setForeground(styleError, new Color(172,3,57));
         StyleConstants.setForeground(styleError, Color.RED);
         Style styleUnknown = kinTypeStringInput.addStyle("Unknown", null);
         StyleConstants.setForeground(styleUnknown, Color.BLACK);
 
-        kinTypeStringInput.setText(defaultString);
-        kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
+//        kinTypeStringInput.setText(defaultString);
+//        kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
         JPanel kinGraphPanel = new JPanel(new BorderLayout());
 //        kinGraphPanel.add(kinTypeStringInput, BorderLayout.PAGE_START);
 
         JPanel kintermSplitPane = new JPanel(new BorderLayout());
-        kinTypeHidePane = new HidePane(kinTypeStringInput, "Kin Type Strings", BorderLayout.PAGE_END);
+        kinTypeHidePane = new HidePane(new JScrollPane(kinTypeStringInput), "Kin Type Strings", BorderLayout.PAGE_END);
         kintermSplitPane.add(kinTypeHidePane, BorderLayout.PAGE_START);
 //        JSplitPane egoSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 //        kinGraphPanel.add(egoSplitPane, BorderLayout.CENTER);
@@ -103,8 +111,22 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         graphSorter = new GraphSorter();
         if (existingFile != null && existingFile.exists()) {
             graphPanel.readSvg(existingFile);
+            String kinTermContents = null;
+            for (String currentKinTypeString : graphPanel.getKinTypeStrigs()) {
+                if (currentKinTypeString.trim().length() > 0) {
+                    if (kinTermContents == null) {
+                        kinTermContents = "";
+                    } else {
+                        kinTermContents = kinTermContents + "\n";
+                    }
+                    kinTermContents = kinTermContents + currentKinTypeString.trim();
+                }
+            }
+            kinTypeStringInput.setText(kinTermContents);
         } else {
-            graphPanel.drawNodes(graphSorter);
+            kinTypeStringInput.setText(defaultString);
+            graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
+            drawGraph();
             // todo: filter out the noise and only save or use the actual kin type strings
 //            graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
 //            kinTypeStrings = graphPanel.getKinTypeStrigs();
@@ -123,14 +145,14 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             public void focusGained(FocusEvent e) {
                 if (kinTypeStringInput.getText().equals(defaultString)) {
                     kinTypeStringInput.setText("");
-                    kinTypeStringInput.setForeground(Color.BLACK);
+//                    kinTypeStringInput.setForeground(Color.BLACK);
                 }
             }
 
             public void focusLost(FocusEvent e) {
                 if (kinTypeStringInput.getText().length() == 0) {
                     kinTypeStringInput.setText(defaultString);
-                    kinTypeStringInput.setForeground(Color.lightGray);
+//                    kinTypeStringInput.setForeground(Color.lightGray);
                 }
             }
         });
@@ -148,18 +170,6 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
                 drawGraph();
             }
         });
-        String kinTermContents = null;
-        for (String currentKinTypeString : graphPanel.getKinTypeStrigs()) {
-            if (currentKinTypeString.trim().length() > 0) {
-                if (kinTermContents == null) {
-                    kinTermContents = "";
-                } else {
-                    kinTermContents = kinTermContents + "\n";
-                }
-                kinTermContents = kinTermContents + currentKinTypeString.trim();
-            }
-        }
-        kinTypeStringInput.setText(kinTermContents);
     }
 
     public void drawGraph() {
