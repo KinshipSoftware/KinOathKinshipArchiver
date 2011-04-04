@@ -48,6 +48,7 @@ public class MainFrame extends javax.swing.JFrame {
         this.add(new HidePane(entitySearchPanel, "Search Entities", BorderLayout.LINE_END), BorderLayout.LINE_START);
         this.add(jTabbedPane1, BorderLayout.CENTER);
         KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
+        egoSelectionTestPanel.createDefaultGraph(KinTypeEgoSelectionTestPanel.defaultGraphString);
         jTabbedPane1.add("EgoSelection", egoSelectionTestPanel);
         jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
         jTabbedPane1.add("Kin Term Mapping for KinType Strings", new KinTypeStringTestPanel());
