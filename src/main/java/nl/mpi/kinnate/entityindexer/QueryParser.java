@@ -102,6 +102,7 @@ public class QueryParser implements EntityService {
 //        QueryParser queryParser = new QueryParser();
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
             graphDataNode.clearVisibility();
+            graphDataNode.clearTempLabels();
         }
         int lineCounter = 0;
         for (String currentKinString : kinTypeStrings) {
@@ -120,7 +121,7 @@ public class QueryParser implements EntityService {
                             }
                             queryNode.isVisible = true;
                             kinTypeElement.entityData = queryNode;
-                            queryNode.appendLabel(kinTypeElement.kinType.getCodeString());
+                            queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
                         }
                     }
                 } // todo: else get relations of x
