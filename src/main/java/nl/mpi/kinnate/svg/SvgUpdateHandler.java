@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.svg;
 
+import java.awt.geom.AffineTransform;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -88,6 +89,13 @@ public class SvgUpdateHandler {
                 }
             }
         });
+    }
+
+    protected void dragCanvas(int updateDragNodeXLocal, int updateDragNodeYLocal) {
+        AffineTransform at = new AffineTransform();
+        at.translate(updateDragNodeXLocal, updateDragNodeYLocal);
+        at.concatenate(graphPanel.svgCanvas.getRenderingTransform());
+        graphPanel.svgCanvas.setRenderingTransform(at);
     }
 
     protected void updateDragNode(int updateDragNodeXLocal, int updateDragNodeYLocal) {
