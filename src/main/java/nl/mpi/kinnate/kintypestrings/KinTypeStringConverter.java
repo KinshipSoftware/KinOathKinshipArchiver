@@ -5,6 +5,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
+import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlightType;
 import nl.mpi.kinnate.kindata.DataTypes;
 
 /**
@@ -64,38 +65,44 @@ public class KinTypeStringConverter extends GraphSorter {
         public KinType kinType;
         public ArrayList<String[]> queryTerm;
         public EntityData entityData;
+        ParserHighlight[] highlightLocs;
     }
 
-    public void highlightComments(String[] kinTypeStrings, ParserHighlight[][] parserHighlight) {
-        int lineCounter = 0;
-        for (String currentString : kinTypeStrings) {
-            parserHighlight[lineCounter] = new ParserHighlight[currentString.length()];
-            ParserHighlight currentHighlight = ParserHighlight.Unknown;
-            for (int charCounter = 0; charCounter < currentString.length(); charCounter++) {
-                if (currentHighlight != ParserHighlight.Comment && currentString.charAt(charCounter) == '#') {
-                    currentHighlight = ParserHighlight.Comment;
-                }
-                parserHighlight[lineCounter][charCounter] = currentHighlight;
-            }
-
-            lineCounter++;
-        }
-    }
-
-    public ArrayList<KinTypeElement> getKinTypeElements(String consumableString, ParserHighlight[] parserHighlight) {
+//    public void highlightComments(String[] kinTypeStrings, ParserHighlight[][] parserHighlight) {
+//        int lineCounter = 0;
+//        for (String currentString : kinTypeStrings) {
+//            parserHighlight[lineCounter] = new ParserHighlight[currentString.length()];
+//            ParserHighlight currentHighlight = ParserHighlight.Unknown;
+//            for (int charCounter = 0; charCounter < currentString.length(); charCounter++) {
+//                if (currentHighlight != ParserHighlight.Comment && currentString.charAt(charCounter) == '#') {
+//                    currentHighlight = ParserHighlight.Comment;
+//                }
+//                parserHighlight[lineCounter][charCounter] = currentHighlight;
+//            }
+//
+//            lineCounter++;
+//        }
+//    }
+    public ArrayList<KinTypeElement> getKinTypeElements(String consumableString, ParserHighlight parserHighlight) {
+        int initialLength = consumableString.length();
         ArrayList<KinTypeElement> kinTypeElementList = new ArrayList<KinTypeElement>();
         boolean foundKinType = true;
         while (foundKinType && consumableString.length() > 0) {
+            if (consumableString.startsWith("#")) {
+                // abort processing if the line starts with a comment
+                parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length());
+                return kinTypeElementList;
+            }
             for (KinType currentReferenceKinType : referenceKinTypes) {
                 foundKinType = false;
                 if (consumableString.startsWith(currentReferenceKinType.codeString)) {
-                    parserHighlight[parserHighlight.length - consumableString.length()] = ParserHighlight.KinType;
+                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, initialLength - consumableString.length());
                     KinTypeElement currentElement = new KinTypeElement();
                     currentElement.kinType = currentReferenceKinType;
                     consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
 
                     if (consumableString.startsWith("=[")) {
-                        parserHighlight[parserHighlight.length - consumableString.length()] = ParserHighlight.Query;
+                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length());
                         consumableString = consumableString.substring("=".length());
                         while (consumableString.startsWith("[")) {
                             // todo: allow multiple terms such as "=[foo][bar]" or "=[foo][bar][NAME=Bob]"
@@ -130,6 +137,13 @@ public class KinTypeStringConverter extends GraphSorter {
                     break;
                 }
             }
+        }
+        if (!foundKinType) {
+            parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - consumableString.length());
+        }
+        if (consumableString.contains("#")) {
+            // check for any additional comments
+            parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length() + consumableString.indexOf("#"));
         }
         return kinTypeElementList;
     }
