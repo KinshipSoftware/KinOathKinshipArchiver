@@ -18,9 +18,24 @@ public class QueryParser implements EntityService {
     HashMap<String, EntityData> loadedGraphNodes;
     EntityCollection entityCollection;
 
-    public enum ParserHighlight {
+    public enum ParserHighlightType {
 
         KinType, Comment, Error, Query, Unknown
+    }
+
+    public class ParserHighlight {
+
+        public ParserHighlight nextHighlight = null;
+        public ParserHighlightType highlight;
+        public int startChar = 0;
+
+        public ParserHighlight addHighlight(ParserHighlightType highlightType, int startChar) {
+
+            this.highlight = highlightType;
+            this.startChar = startChar;
+            this.nextHighlight = new ParserHighlight();
+            return this.nextHighlight;
+        }
     }
 
     public QueryParser() {
@@ -77,19 +92,20 @@ public class QueryParser implements EntityService {
         }
     }
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[][] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
         if (indexParameters.valuesChanged) {
             indexParameters.valuesChanged = false;
             loadedGraphNodes = new HashMap<String, EntityData>();
         }
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
-        kinTypeStringConverter.highlightComments(kinTypeStrings, parserHighlight);
+//        kinTypeStringConverter.highlightComments(kinTypeStrings, parserHighlight);
 //        QueryParser queryParser = new QueryParser();
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
             graphDataNode.clearVisibility();
         }
         int lineCounter = 0;
         for (String currentKinString : kinTypeStrings) {
+            parserHighlight[lineCounter] = new ParserHighlight();
             for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeStringConverter.getKinTypeElements(currentKinString, parserHighlight[lineCounter])) {
                 if (kinTypeElement.queryTerm != null) {
                     for (String currentFoundId : entityCollection.getEntityIdByTerm(kinTypeElement)) {
