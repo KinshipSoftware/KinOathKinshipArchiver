@@ -92,6 +92,26 @@ public class QueryParser implements EntityService {
         }
     }
 
+    private void loadMatchingRelations(EntityData currentEntity, KinTypeStringConverter.KinTypeElement adjacentKinType, IndexerParameters indexParameters) { //EntityRelation entityRelation
+        for (EntityRelation entityRelation : currentEntity.getDistinctRelateNodes()) {
+            EntityData alterNode;
+            if (loadedGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
+                alterNode = loadedGraphNodes.get(entityRelation.alterUniqueIdentifier);
+            } else {
+                alterNode = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexParameters);
+                loadedGraphNodes.put(entityRelation.alterUniqueIdentifier, alterNode);
+            }
+            entityRelation.setAlterNode(alterNode);
+            adjacentKinType.entityData.add(alterNode);
+            if (new KinTypeStringConverter().compareRelationsToKinType(currentEntity, alterNode, adjacentKinType.kinType, entityRelation)) {
+                // todo assess if the found node is of the correct kin type
+                // todo: maybe add a chain so the prev and next of each loaded node can be reached here
+                alterNode.isVisible = true;
+                alterNode.appendTempLabel(adjacentKinType.kinType.getCodeString());
+            }
+        }
+    }
+
     public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
         if (indexParameters.valuesChanged) {
             indexParameters.valuesChanged = false;
@@ -136,23 +156,10 @@ public class QueryParser implements EntityService {
                 // get all entities before and after each entity that has already found
                 if (!kinTypeElement.entityData.isEmpty()) {
                     System.out.println("already loaded: " + kinTypeElement.kinType.getCodeString() + " : " + kinTypeElement.queryTerm);
-                    for (KinTypeStringConverter.KinTypeElement adjacentKinType : new KinTypeStringConverter.KinTypeElement[]{kinTypeElement.prevType, kinTypeElement.nextType}) {
+                    for (KinTypeStringConverter.KinTypeElement adjacentKinType : new KinTypeStringConverter.KinTypeElement[]{kinTypeElement.prevType, kinTypeElement.nextType}) { // todo: this array will get the kin type reversed for one of the adjacent entities
                         if (adjacentKinType != null && adjacentKinType.entityData.isEmpty()) {
                             for (EntityData currentEntity : kinTypeElement.entityData) {
-                                for (EntityRelation entityRelation : currentEntity.getDistinctRelateNodes()) {
-                                    EntityData alterNode;
-                                    if (loadedGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
-                                        alterNode = loadedGraphNodes.get(entityRelation.alterUniqueIdentifier);
-                                    } else {
-                                        alterNode = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexParameters);
-                                        loadedGraphNodes.put(entityRelation.alterUniqueIdentifier, alterNode);
-                                    }
-                                    // todo assess if the found node is of the correct kin type
-                                    // todo: maybe add a chain so the prev and next of each loaded node can be reached here
-                                    alterNode.isVisible = true;
-                                    adjacentKinType.entityData.add(alterNode);
-                                    alterNode.appendTempLabel(adjacentKinType.kinType.getCodeString());
-                                }
+                                loadMatchingRelations(currentEntity, adjacentKinType, indexParameters);
                             }
                         }
                     }
@@ -160,6 +167,7 @@ public class QueryParser implements EntityService {
             }
             lineCounter++;
         }
+        // todo: the following could be removed if the ego nodes are replaces with the equavelent kin type string eg "E=Identifier"
         for (String currentEgoId : uniqueIdentifiers) {
             EntityData egoNode;
             if (loadedGraphNodes.containsKey(currentEgoId)) {
