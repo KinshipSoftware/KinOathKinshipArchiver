@@ -19,6 +19,7 @@ public class SvgUpdateHandler {
     private boolean threadRunning = false;
     private int updateDragNodeX = 0;
     private int updateDragNodeY = 0;
+    private float[] dragRemainders = null;
 
     protected SvgUpdateHandler(GraphPanel graphPanelLocal) {
         graphPanel = graphPanelLocal;
@@ -98,6 +99,11 @@ public class SvgUpdateHandler {
         graphPanel.svgCanvas.setRenderingTransform(at);
     }
 
+    protected void startDrag() {
+        // dragRemainders is used to store the remainder after snap between drag updates
+        dragRemainders = null;
+    }
+
     protected void updateDragNode(int updateDragNodeXLocal, int updateDragNodeYLocal) {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         synchronized (SvgUpdateHandler.this) {
@@ -115,6 +121,12 @@ public class SvgUpdateHandler {
         return new Runnable() {
 
             public void run() {
+                if (dragRemainders == null) {
+                    dragRemainders = new float[graphPanel.selectedGroupId.size()];
+                    for (int dragCounter = 0; dragCounter < dragRemainders.length; dragCounter++) {
+                        dragRemainders[dragCounter] = 0;
+                    }
+                }
                 boolean continueUpdating = true;
                 while (continueUpdating) {
                     continueUpdating = false;
@@ -130,8 +142,11 @@ public class SvgUpdateHandler {
                     System.out.println("updateDragNodeX: " + updateDragNodeXInner);
                     System.out.println("updateDragNodeY: " + updateDragNodeYInner);
                     if (graphPanel.doc != null) {
+                        int dragCounter = 0;
                         for (String entityId : graphPanel.selectedGroupId) {
-                            new EntitySvg().moveEntity(graphPanel.doc, entityId, updateDragNodeXInner, updateDragNodeYInner);
+                            // store the remainder after snap for re use on each update
+                            dragRemainders[dragCounter] = new EntitySvg().moveEntity(graphPanel.doc, entityId, updateDragNodeXInner + dragRemainders[dragCounter], updateDragNodeYInner, graphPanel.snapToGrid);
+                            dragCounter++;
                         }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
 //                    for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
