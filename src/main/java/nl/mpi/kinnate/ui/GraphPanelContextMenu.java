@@ -31,6 +31,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
     JMenuItem setAsEgoMenuItem;
     JMenuItem addAsEgoMenuItem;
     JMenuItem removeEgoMenuItem;
+    JCheckBoxMenuItem snapToGridMenuItem;
     String[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
 
     public GraphPanelContextMenu(KinTypeEgoSelectionTestPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, GraphPanelSize graphPanelSizeLocal) {
@@ -139,6 +140,15 @@ public class GraphPanelContextMenu extends JPopupMenu {
         });
         this.add(resetZoomMenuItem);
 
+        snapToGridMenuItem = new JCheckBoxMenuItem("Snap To Grid");
+        snapToGridMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                graphPanel.snapToGrid = !graphPanel.snapToGrid;
+            }
+        });
+        this.add(snapToGridMenuItem);
+
         JMenu diagramSizeMenuItem = new JMenu("Diagram Size");
         for (String currentString : graphPanelSize.getPreferredSizes()) {
             JMenuItem currentMenuItem = new JMenuItem(currentString);
@@ -210,6 +220,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
             addAsEgoMenuItem.setVisible(false);
             removeEgoMenuItem.setVisible(false);
         }
+        snapToGridMenuItem.setSelected(graphPanel.snapToGrid);
         super.show(cmpnt, i, i1);
     }
 }
