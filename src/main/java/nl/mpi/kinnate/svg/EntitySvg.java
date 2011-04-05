@@ -192,14 +192,28 @@ public class EntitySvg {
         }
     }
 
-    public void moveEntity(SVGDocument doc, String entityId, int shiftX, int shiftY) {
+    public float moveEntity(SVGDocument doc, String entityId, float shiftX, float shiftY, boolean snapToGrid) {
         Element entitySymbol = doc.getElementById(entityId);
+        float remainderAfterSnap = 0;
         if (entitySymbol != null) {
             SVGMatrix sVGMatrix = ((SVGLocatable) entitySymbol).getCTM();
 //            sVGMatrix.setE(sVGMatrix.getE() + shiftX);
 //            sVGMatrix.setE(sVGMatrix.getF() + shiftY);
-            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + sVGMatrix.getF() + ")");
+//            System.out.println("shiftX: " + shiftX);
+            float updatedPosition = sVGMatrix.getE() + shiftX;
+//            System.out.println("updatedPosition: " + updatedPosition);
+            if (snapToGrid) {
+                float updatedSnapPosition = Math.round(updatedPosition / 10) * 10; // limit movement to the grid
+                remainderAfterSnap = updatedPosition - updatedSnapPosition;
+                updatedPosition = updatedSnapPosition;
+            } else {
+                updatedPosition = (int) updatedPosition;  // prevent uncorrectable but visible variations in the position of entities to each other
+            }
+//            System.out.println("updatedPosition after snap: " + updatedPosition);
+            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(updatedPosition) + ", " + sVGMatrix.getF() + ")");
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + (sVGMatrix.getF() + shiftY) + ")");
         }
+//        System.out.println("remainderAfterSnap: " + remainderAfterSnap);
+        return remainderAfterSnap;
     }
 }
