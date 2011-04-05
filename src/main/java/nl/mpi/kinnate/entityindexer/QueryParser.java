@@ -107,7 +107,9 @@ public class QueryParser implements EntityService {
         int lineCounter = 0;
         for (String currentKinString : kinTypeStrings) {
             parserHighlight[lineCounter] = new ParserHighlight();
-            for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeStringConverter.getKinTypeElements(currentKinString, parserHighlight[lineCounter])) {
+            ArrayList<KinTypeStringConverter.KinTypeElement> kinTypeElementArray = kinTypeStringConverter.getKinTypeElements(currentKinString, parserHighlight[lineCounter]);
+            for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeElementArray) {
+                // get all the entities with queries attached
                 if (kinTypeElement.queryTerm != null) {
                     for (String currentFoundId : entityCollection.getEntityIdByTerm(kinTypeElement)) {
                         EntityData queryNode;
@@ -120,7 +122,7 @@ public class QueryParser implements EntityService {
                                 loadedGraphNodes.put(currentFoundId, queryNode);
                             }
                             queryNode.isVisible = true;
-                            kinTypeElement.entityData = queryNode;
+                            kinTypeElement.entityData.add(queryNode);
                             queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
                             if (kinTypeElement.kinType.isEgoType()) {
                                 queryNode.isEgo = true; // there might be multiple types for a single entitiy
@@ -129,6 +131,32 @@ public class QueryParser implements EntityService {
                     }
                 } // todo: else get relations of x
                 // todo: filter on the kin types
+            }
+            for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeElementArray) {
+                // get all entities before and after each entity that has already found
+                if (!kinTypeElement.entityData.isEmpty()) {
+                    System.out.println("already loaded: " + kinTypeElement.kinType.getCodeString() + " : " + kinTypeElement.queryTerm);
+                    for (KinTypeStringConverter.KinTypeElement adjacentKinType : new KinTypeStringConverter.KinTypeElement[]{kinTypeElement.prevType, kinTypeElement.nextType}) {
+                        if (adjacentKinType != null && adjacentKinType.entityData.isEmpty()) {
+                            for (EntityData currentEntity : kinTypeElement.entityData) {
+                                for (EntityRelation entityRelation : currentEntity.getDistinctRelateNodes()) {
+                                    EntityData alterNode;
+                                    if (loadedGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
+                                        alterNode = loadedGraphNodes.get(entityRelation.alterUniqueIdentifier);
+                                    } else {
+                                        alterNode = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexParameters);
+                                        loadedGraphNodes.put(entityRelation.alterUniqueIdentifier, alterNode);
+                                    }
+                                    // todo assess if the found node is of the correct kin type
+                                    // todo: maybe add a chain so the prev and next of each loaded node can be reached here
+                                    alterNode.isVisible = true;
+                                    adjacentKinType.entityData.add(alterNode);
+                                    alterNode.appendTempLabel(adjacentKinType.kinType.getCodeString());
+                                }
+                            }
+                        }
+                    }
+                }
             }
             lineCounter++;
         }
