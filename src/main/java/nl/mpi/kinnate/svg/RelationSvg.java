@@ -197,15 +197,15 @@ public class RelationSvg {
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
             if ("g".equals(currentChild.getLocalName())) {
                 Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
-                System.out.println("idAttrubite: " + idAttrubite.getNodeValue());
+                //System.out.println("idAttrubite: " + idAttrubite.getNodeValue());
                 DataStoreSvg.GraphRelationData graphRelationData = new DataStoreSvg().getEntitiesForRelations(currentChild);
                 if (graphRelationData != null) {
                     if (draggedNodeIds.contains(graphRelationData.egoNodeId) || draggedNodeIds.contains(graphRelationData.alterNodeId)) {
                         // todo: update the relation lines
-                        System.out.println("needs update on: " + idAttrubite.getNodeValue());
+                        //System.out.println("needs update on: " + idAttrubite.getNodeValue());
                         String lineElementId = idAttrubite.getNodeValue() + "Line";
                         Element relationLineElement = doc.getElementById(lineElementId);
-                        System.out.println("type: " + relationLineElement.getLocalName());
+                        //System.out.println("type: " + relationLineElement.getLocalName());
 
                         float[] egoSymbolPoint = new EntitySvg().getEntityLocation(doc, graphRelationData.egoNodeId);
                         float[] alterSymbolPoint = new EntitySvg().getEntityLocation(doc, graphRelationData.alterNodeId);
@@ -224,11 +224,11 @@ public class RelationSvg {
 //                        float alterY = alterSymbolRect.getY() + alterSymbolRect.getHeight() / 2;
 
                         if ("polyline".equals(relationLineElement.getLocalName())) {
-                            System.out.println("polyline to update: " + lineElementId);
+                            //System.out.println("polyline to update: " + lineElementId);
                             setPolylinePointsAttribute(relationLineElement, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
                         }
                         if ("path".equals(relationLineElement.getLocalName())) {
-                            System.out.println("path to update: " + relationLineElement.getLocalName());
+                            //System.out.println("path to update: " + relationLineElement.getLocalName());
                             setPathPointsAttribute(relationLineElement, graphRelationData.relationType, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
                         }
                         addUseNode(doc, svgNameSpace, (Element) currentChild, lineElementId);
