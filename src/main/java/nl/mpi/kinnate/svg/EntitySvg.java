@@ -203,7 +203,7 @@ public class EntitySvg {
             float updatedPosition = sVGMatrix.getE() + shiftX;
 //            System.out.println("updatedPosition: " + updatedPosition);
             if (snapToGrid) {
-                float updatedSnapPosition = Math.round(updatedPosition / 10) * 10; // limit movement to the grid
+                float updatedSnapPosition = Math.round(updatedPosition / 50) * 50; // limit movement to the grid
                 remainderAfterSnap = updatedPosition - updatedSnapPosition;
                 updatedPosition = updatedSnapPosition;
             } else {
