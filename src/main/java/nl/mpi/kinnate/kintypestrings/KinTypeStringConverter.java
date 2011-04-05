@@ -66,9 +66,14 @@ public class KinTypeStringConverter extends GraphSorter {
 
     public class KinTypeElement {
 
+        public KinTypeElement() {
+            entityData = new ArrayList<EntityData>();
+        }
+        public KinTypeElement prevType;
+        public KinTypeElement nextType;
         public KinType kinType;
         public ArrayList<String[]> queryTerm;
-        public EntityData entityData;
+        public ArrayList<EntityData> entityData; // there may be multiple entities for each kin term
         ParserHighlight[] highlightLocs;
     }
 
@@ -90,6 +95,7 @@ public class KinTypeStringConverter extends GraphSorter {
     public ArrayList<KinTypeElement> getKinTypeElements(String consumableString, ParserHighlight parserHighlight) {
         int initialLength = consumableString.length();
         ArrayList<KinTypeElement> kinTypeElementList = new ArrayList<KinTypeElement>();
+        KinTypeElement previousElement = null;
         boolean foundKinType = true;
         while (foundKinType && consumableString.length() > 0) {
             for (KinType currentReferenceKinType : referenceKinTypes) {
@@ -97,6 +103,11 @@ public class KinTypeStringConverter extends GraphSorter {
                 if (consumableString.startsWith(currentReferenceKinType.codeString)) {
                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, initialLength - consumableString.length());
                     KinTypeElement currentElement = new KinTypeElement();
+                    if (previousElement != null) {
+                        previousElement.nextType = currentElement;
+                        currentElement.prevType = previousElement;
+                    }
+                    previousElement = currentElement;
                     currentElement.kinType = currentReferenceKinType;
                     consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
 
