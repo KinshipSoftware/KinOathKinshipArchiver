@@ -43,6 +43,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 graphPanel.svgUpdateHandler.dragCanvas(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
             }
             mouseActionIsDrag = true;
+        } else {
+            graphPanel.svgUpdateHandler.startDrag();
         }
         startDragPoint = me.getPoint();
     }
