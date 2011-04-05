@@ -3,6 +3,7 @@ package nl.mpi.kinnate.entityindexer;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
@@ -92,7 +93,8 @@ public class QueryParser implements EntityService {
         }
     }
 
-    private void loadMatchingRelations(EntityData currentEntity, KinTypeStringConverter.KinTypeElement adjacentKinType, IndexerParameters indexParameters) { //EntityRelation entityRelation
+    private boolean loadMatchingRelations(EntityData currentEntity, KinTypeStringConverter.KinTypeElement adjacentKinType, IndexerParameters indexParameters, int generationalDistance, int foundOrder) { //EntityRelation entityRelation
+        boolean visibleEntityFound = false;
         for (EntityRelation entityRelation : currentEntity.getDistinctRelateNodes()) {
             EntityData alterNode;
             if (loadedGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
@@ -102,14 +104,30 @@ public class QueryParser implements EntityService {
                 loadedGraphNodes.put(entityRelation.alterUniqueIdentifier, alterNode);
             }
             entityRelation.setAlterNode(alterNode);
+            if (entityRelation.relationType.equals(DataTypes.RelationType.ancestor)) {
+                generationalDistance--;
+            }
+            if (entityRelation.relationType.equals(DataTypes.RelationType.descendant)) {
+                generationalDistance++;
+            }
             adjacentKinType.entityData.add(alterNode);
-            if (new KinTypeStringConverter().compareRelationsToKinType(currentEntity, alterNode, adjacentKinType.kinType, entityRelation)) {
+            if (new KinTypeStringConverter().compareRequiresNextRelation(alterNode, adjacentKinType.kinType, entityRelation)) {
+                if (loadMatchingRelations(alterNode, adjacentKinType, indexParameters, generationalDistance, foundOrder)) {
+                    alterNode.isVisible = true;
+                    alterNode.appendTempLabel("Meta G:" + generationalDistance + "F: " + foundOrder);
+                    visibleEntityFound = true;
+                    foundOrder++;
+                }
+            } else if (new KinTypeStringConverter().compareRelationsToKinType(currentEntity, alterNode, adjacentKinType.kinType, entityRelation, generationalDistance)) {
                 // todo assess if the found node is of the correct kin type
                 // todo: maybe add a chain so the prev and next of each loaded node can be reached here
                 alterNode.isVisible = true;
-                alterNode.appendTempLabel(adjacentKinType.kinType.getCodeString());
+                alterNode.appendTempLabel(adjacentKinType.kinType.getCodeString() + " G:" + generationalDistance + "F: " + foundOrder);
+                visibleEntityFound = true;
+                foundOrder++;
             }
         }
+        return visibleEntityFound;
     }
 
     public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
@@ -156,10 +174,11 @@ public class QueryParser implements EntityService {
                 // get all entities before and after each entity that has already found
                 if (!kinTypeElement.entityData.isEmpty()) {
                     System.out.println("already loaded: " + kinTypeElement.kinType.getCodeString() + " : " + kinTypeElement.queryTerm);
-                    for (KinTypeStringConverter.KinTypeElement adjacentKinType : new KinTypeStringConverter.KinTypeElement[]{kinTypeElement.prevType, kinTypeElement.nextType}) { // todo: this array will get the kin type reversed for one of the adjacent entities
+                    for (KinTypeStringConverter.KinTypeElement adjacentKinType : new KinTypeStringConverter.KinTypeElement[]{kinTypeElement.prevType, kinTypeElement.nextType}) {
+                        // note that this will reverse the kin type for one of the adjacent entities and this must be accounted for in the kin type comparison
                         if (adjacentKinType != null && adjacentKinType.entityData.isEmpty()) {
                             for (EntityData currentEntity : kinTypeElement.entityData) {
-                                loadMatchingRelations(currentEntity, adjacentKinType, indexParameters);
+                                loadMatchingRelations(currentEntity, adjacentKinType, indexParameters, 0, 0);
                             }
                         }
                     }
