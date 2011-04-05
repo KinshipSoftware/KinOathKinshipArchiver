@@ -93,15 +93,30 @@ public class KinTypeStringConverter extends GraphSorter {
 //            lineCounter++;
 //        }
 //    }
-    public boolean compareRelationsToKinType(EntityData ego, EntityData alter, KinType kinType, EntityRelation entityRelation) {
-        System.out.println("ego.isEgo: " + ego.isEgo);
-        System.out.println("alter.isEgo: " + alter.isEgo);
-        System.out.println("ego.symbol: " + ego.getSymbolType());
-        System.out.println("alter.symbol: " + alter.getSymbolType());
+    public boolean compareRequiresNextRelation(EntityData unknownEntity, KinType requiredKinType, EntityRelation entityRelation) {
+        if (unknownEntity.getSymbolType().equals(EntityData.SymbolType.union.name())) {
+            return true;
+        }
+        if (requiredKinType.relationType.equals(DataTypes.RelationType.ancestor) && entityRelation.relationType.equals(DataTypes.RelationType.sibling)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean compareRelationsToKinType(EntityData knownEntity, EntityData unknownEntity, KinType requiredKinType, EntityRelation entityRelation, int generationalDistance) {
+        System.out.println("knownEntity.isEgo: " + knownEntity.isEgo);
+        System.out.println("unknownEntity.isEgo: " + unknownEntity.isEgo);
+        System.out.println("knownEntity.symbol: " + knownEntity.getSymbolType());
+        System.out.println("unknownEntity.symbol: " + unknownEntity.getSymbolType());
         System.out.println("entityRelation.relationType: " + entityRelation.relationType);
         System.out.println("entityRelation.symgenerationalDistancebol: " + entityRelation.generationalDistance);
-
-        if (ego.isEgo) {// && alter.getSymbolType().equals(EntityData.SymbolType.triangle.name())) {
+        // note that this will get the kin type reversed for one of the adjacent entities and this must be accounted for in the kin type comparison
+        // todo: note that the ego and alter are not correct labels
+        // this array will get the kin type reversed for one of the adjacent entities
+        if (knownEntity.isEgo) {// && alter.getSymbolType().equals(EntityData.SymbolType.triangle.name())) {
+            return true;
+        }
+        if (requiredKinType.relationType.equals(entityRelation.relationType)) {
             return true;
         }
         return false;
