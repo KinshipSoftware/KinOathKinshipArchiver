@@ -7,6 +7,7 @@ import java.util.HashMap;
 import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlightType;
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.EntityRelation;
 
 /**
  *  Document   : KinTypeStringConverter
@@ -92,6 +93,20 @@ public class KinTypeStringConverter extends GraphSorter {
 //            lineCounter++;
 //        }
 //    }
+    public boolean compareRelationsToKinType(EntityData ego, EntityData alter, KinType kinType, EntityRelation entityRelation) {
+        System.out.println("ego.isEgo: " + ego.isEgo);
+        System.out.println("alter.isEgo: " + alter.isEgo);
+        System.out.println("ego.symbol: " + ego.getSymbolType());
+        System.out.println("alter.symbol: " + alter.getSymbolType());
+        System.out.println("entityRelation.relationType: " + entityRelation.relationType);
+        System.out.println("entityRelation.symgenerationalDistancebol: " + entityRelation.generationalDistance);
+
+        if (ego.isEgo) {// && alter.getSymbolType().equals(EntityData.SymbolType.triangle.name())) {
+            return true;
+        }
+        return false;
+    }
+
     public ArrayList<KinTypeElement> getKinTypeElements(String consumableString, ParserHighlight parserHighlight) {
         int initialLength = consumableString.length();
         ArrayList<KinTypeElement> kinTypeElementList = new ArrayList<KinTypeElement>();
