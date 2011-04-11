@@ -13,8 +13,9 @@ import java.util.StringTokenizer;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -34,11 +35,17 @@ public class KinTermPanel extends JPanel {
 
     KinTerms kinTerms;
     SavePanel savePanel;
+    JCheckBox autoGenerateCheckBox;
+    JCheckBox showOnGraphCheckBox;
+    JComboBox colourSelectBox;
     JPanel outerPanel;
 
     public KinTermPanel(SavePanel savePanelLocal, KinTerms kinTermsLocal) {
         kinTerms = kinTermsLocal;
         savePanel = savePanelLocal;
+        colourSelectBox = new JComboBox(new String[]{"#FF0000", "#FFAA00", "#00FF95", "#62D9A7", "#8000FF", "#FF00D4"});
+        showOnGraphCheckBox = new JCheckBox("Show On Graph");
+        autoGenerateCheckBox = new JCheckBox("Generate Example Entities");
         this.setLayout(new BorderLayout());
         outerPanel = new JPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
@@ -47,14 +54,14 @@ public class KinTermPanel extends JPanel {
         JPanel paddingPanel = new JPanel();
         paddingPanel.setLayout(new BorderLayout());
         paddingPanel.add(outerPanel, BorderLayout.PAGE_START);
-        JMenuBar kintermMenuBar = new JMenuBar();
-        kintermMenuBar.add(new KinTermsMenu());
-        this.add(kintermMenuBar, BorderLayout.PAGE_START);
         this.add(new JScrollPane(paddingPanel), BorderLayout.CENTER);
     }
 
     private void populateKinTermList() {
         outerPanel.removeAll();
+        outerPanel.add(showOnGraphCheckBox);
+        outerPanel.add(colourSelectBox);
+        outerPanel.add(autoGenerateCheckBox);
 //        this.add(new JLabel("KinTerms"));
         for (String[] currentKinTerm : kinTerms.getKinTerms()) {
             JPanel termPanel = new JPanel();
