@@ -26,6 +26,7 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
     private KinTermTabPane kinTermPanel;
     private HidePane kinTermHidePane;
     private String defaultString = "This test panel should provide a kin diagram of the kintype strings entered here.\nEnter one string per line.\nEach new line (enter/return key) will update the graph.";
+    private String lastKinTypeStringInput = null;
 
     public KinTypeStringTestPanel() {
         this.setLayout(new BorderLayout());
@@ -69,7 +70,10 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
 
             public void keyReleased(KeyEvent e) {
 //                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                KinTypeStringTestPanel.this.updateGraph();
+                if (lastKinTypeStringInput == null || !lastKinTypeStringInput.equals(kinTypeStringInput.getText())) {
+                    KinTypeStringTestPanel.this.updateGraph();
+                }
+                lastKinTypeStringInput = kinTypeStringInput.getText();
 //                }
             }
         });
