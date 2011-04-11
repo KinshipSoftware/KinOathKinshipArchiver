@@ -108,7 +108,7 @@ public class KinTypeStringConverter extends GraphSorter {
     public boolean compareRelationsToKinType(EntityData egoEntity, EntityData alterEntity, KinType requiredKinType, EntityRelation entityRelation, int generationalDistance) {
         egoEntity.appendTempLabel("compareRelationsToKinType-egoEntity" + "F: " + QueryParser.foundOrder++);
         alterEntity.appendTempLabel("compareRelationsToKinType-alterEntity" + "F: " + QueryParser.foundOrder++);
-         // temp for testing // todo: remove testing labels
+        // temp for testing // todo: remove testing labels
         System.out.println("egoEntity.isEgo: " + egoEntity.isEgo);
         System.out.println("alterEntity.isEgo: " + alterEntity.isEgo);
         System.out.println("egoEntity.symbol: " + egoEntity.getSymbolType());
@@ -236,8 +236,8 @@ public class KinTypeStringConverter extends GraphSorter {
                             } else {
                                 currentGraphDataNode = new EntityData(fullKinTypeString, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{fullKinTypeString}, false);
                                 DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
-                                parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.square, null);
-                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.square, null);
+                                parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.square, null, null);
+                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.square, null, null);
                                 graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
                                 currentGraphDataNode.isVisible = true;
                                 // add any child nodes?
@@ -254,8 +254,7 @@ public class KinTypeStringConverter extends GraphSorter {
                 for (KinTerms kinTerms : kinTermsArray) {
                     String kinTermLabel = kinTerms.getTermLabel(inputString);
                     if (kinTermLabel != null) {
-                        // todo add colour
-                        egoDataNode.addRelatedNode(parentDataNode, 2, DataTypes.RelationType.none, DataTypes.RelationLineType.horizontalCurve, kinTermLabel);
+                        egoDataNode.addRelatedNode(parentDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.horizontalCurve, kinTerms.graphColour, kinTermLabel);
                     }
                 }
             }
