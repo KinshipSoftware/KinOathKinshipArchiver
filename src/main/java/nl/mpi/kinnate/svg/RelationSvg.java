@@ -75,7 +75,8 @@ public class RelationSvg {
             fromBezY = alterY;
             toBezX = alterX;
             toBezY = egoY;
-            if (egoY == alterY) {
+            // todo: update the bezier positions similar to in the follwing else statement
+            if (1 / (egoY - alterY) < vSpacing) {
                 fromBezX = egoX;
                 fromBezY = alterY - vSpacing / 2;
                 toBezX = alterX;
@@ -87,12 +88,26 @@ public class RelationSvg {
             toBezX = egoX;
             toBezY = alterY;
             // todo: if the nodes are almost in align then this test fails and it should insted check for proximity not equality
-            if (egoX == alterX) {
-                fromBezY = egoY;
-                fromBezX = alterX - hSpacing / 2;
-                toBezY = alterY;
-                toBezX = egoX - hSpacing / 2;
+//            System.out.println(1 / (egoX - alterX));
+//            if (1 / (egoX - alterX) < vSpacing) {              
+            if (egoX > alterX) {
+                if (egoX - alterX < hSpacing / 4) {
+                    fromBezX = egoX - hSpacing / 4;
+                    toBezX = alterX - hSpacing / 4;
+                } else {
+                    fromBezX = (egoX - alterX) / 2 + alterX;
+                    toBezX = (egoX - alterX) / 2 + alterX;
+                }
+            } else {
+                if (alterX - egoX < hSpacing / 4) {
+                    fromBezX = egoX + hSpacing / 4;
+                    toBezX = alterX + hSpacing / 4;
+                } else {
+                    fromBezX = (alterX - egoX) / 2 + egoX;
+                    toBezX = (alterX - egoX) / 2 + egoX;
+                }
             }
+
         }
         targetNode.setAttribute("d", "M " + egoX + "," + egoY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + alterX + "," + alterY);
     }
