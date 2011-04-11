@@ -273,7 +273,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         kinTermPanel.getSelectedKinTermPanel().importKinTerms();
     }
 
-    public void newKinTerms() {
+    public void addKinTermGroup() {
         graphPanel.newKinTerms();
         kinTermPanel.updateKinTerms(graphPanel.getkinTerms());
     }
