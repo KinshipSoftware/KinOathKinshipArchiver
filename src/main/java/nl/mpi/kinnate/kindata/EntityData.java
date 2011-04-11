@@ -123,14 +123,15 @@ public class EntityData {
         }
     }
 
-    public void addRelatedNode(EntityData alterNodeLocal, int generationalDistance, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String labelString) {
+    public void addRelatedNode(EntityData alterNodeLocal, int generationalDistance, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String lineColourLocal, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         EntityRelation nodeRelation = new EntityRelation();
-        nodeRelation.alterNode = alterNodeLocal;
+        nodeRelation.setAlterNode(alterNodeLocal);
         nodeRelation.generationalDistance = generationalDistance;
         nodeRelation.relationType = relationType;
         nodeRelation.relationLineType = relationLineType;
         nodeRelation.labelString = labelString;
+        nodeRelation.lineColour = lineColourLocal;
         if (relatedNodes != null) {
             ArrayList<EntityRelation> relatedNodesList = new ArrayList<EntityRelation>();
             relatedNodesList.addAll(Arrays.asList(relatedNodes));
@@ -152,8 +153,8 @@ public class EntityData {
         if (visiblyRelateNodes == null) {
             ArrayList<EntityRelation> visiblyRelatedNodes = new ArrayList<EntityRelation>();
             for (EntityRelation nodeRelation : getDistinctRelateNodes()) {
-                if (nodeRelation.alterNode != null) {
-                    if (nodeRelation.alterNode.isVisible) {
+                if (nodeRelation.getAlterNode() != null) {
+                    if (nodeRelation.getAlterNode().isVisible) {
                         visiblyRelatedNodes.add(nodeRelation);
                     }
                 }
