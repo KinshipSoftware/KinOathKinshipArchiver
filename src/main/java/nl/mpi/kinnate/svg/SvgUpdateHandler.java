@@ -27,7 +27,7 @@ public class SvgUpdateHandler {
 
     protected void updateSvgSelectionHighlights() {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
-        if (updateManager != null) {
+        if (updateManager != null) { // todo: there may be issues related to the updateManager being null, this should be looked into if symptoms arise.
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
 
                 public void run() {
