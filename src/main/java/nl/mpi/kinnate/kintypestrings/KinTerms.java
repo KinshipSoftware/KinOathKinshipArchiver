@@ -10,10 +10,12 @@ import java.util.ArrayList;
 public class KinTerms {
 
     public String titleString;
+    public String graphColour;
     ArrayList<String[]> kinTermArray;
 
     public KinTerms() {
         titleString="Sample Kin Terms";
+        graphColour = "blue";
         //todo: sample kin terms to put into a sensible defaults place
         kinTermArray = new ArrayList<String[]>();
         kinTermArray.add(new String[]{"MM", "Grand Mother"});
