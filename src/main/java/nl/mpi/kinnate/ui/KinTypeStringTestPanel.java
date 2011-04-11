@@ -23,14 +23,14 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
 
     private JTextArea kinTypeStringInput;
     private GraphPanel graphPanel;
-    private KinTermPanel kinTermPanel;
+    private KinTermTabPane kinTermPanel;
     private HidePane kinTermHidePane;
     private String defaultString = "This test panel should provide a kin diagram of the kintype strings entered here.\nEnter one string per line.\nEach new line (enter/return key) will update the graph.";
 
     public KinTypeStringTestPanel() {
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel(null);
-        kinTermPanel = new KinTermPanel(this, graphPanel.getkinTerms());
+        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
         kinTypeStringInput = new JTextArea(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
 
@@ -93,13 +93,13 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
 
     public void updateGraph() {
         KinTypeStringConverter graphData = new KinTypeStringConverter();
-        graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTerms());
+        graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTermGroups());
         graphPanel.drawNodes(graphData);
         KinTypeStringTestPanel.this.doLayout();
     }
 
     public void exportKinTerms() {
-        kinTermPanel.exportKinTerms();
+        kinTermPanel.getSelectedKinTermPanel().exportKinTerms();
     }
 
     public void hideShow() {
@@ -107,7 +107,11 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
     }
 
     public void importKinTerms() {
-        kinTermPanel.importKinTerms();
+        kinTermPanel.getSelectedKinTermPanel().importKinTerms();
+    }
+
+    public void addKinTermGroup() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public boolean isHidden() {
