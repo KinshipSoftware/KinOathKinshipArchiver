@@ -5,7 +5,6 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
@@ -50,7 +49,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
     protected SVGDocument doc;
-    private KinTerms kinTerms;
+    private KinTerms[] kinTermGroups;
     protected ImdiTableModel imdiTableModel;
     protected GraphSorter graphData;
     private boolean requiresSave = false;
@@ -71,7 +70,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgUpdateHandler = new SvgUpdateHandler(this);
         selectedGroupId = new ArrayList<String>();
         graphPanelSize = new GraphPanelSize();
-        kinTerms = new KinTerms();
+        kinTermGroups = new KinTerms[]{new KinTerms()};
         this.setLayout(new BorderLayout());
         svgCanvas = new JSVGCanvas();
 //        svgCanvas.setMySize(new Dimension(600, 400));
@@ -192,8 +191,14 @@ public class GraphPanel extends JPanel implements SavePanel {
         return dataStoreSvg.indexParameters;
     }
 
-    public KinTerms getkinTerms() {
-        return kinTerms;
+    public KinTerms[] getkinTermGroups() {
+        return kinTermGroups;
+    }
+
+    public void addKinTermGroup() {
+        ArrayList<KinTerms> kinTermsList = new ArrayList<KinTerms>(Arrays.asList(kinTermGroups));
+        kinTermsList.add(new KinTerms());
+        kinTermGroups = kinTermsList.toArray(new KinTerms[]{});
     }
 
     public String[] getEgoUniquiIdentifiersList() {
