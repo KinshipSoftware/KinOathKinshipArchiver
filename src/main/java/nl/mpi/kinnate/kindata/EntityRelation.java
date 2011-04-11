@@ -1,7 +1,6 @@
 package nl.mpi.kinnate.kindata;
 
 import javax.xml.bind.annotation.XmlElement;
-import nl.mpi.arbil.LinorgBugCatcher;
 
 /**
  *  Document   : EntityRelation
@@ -10,27 +9,28 @@ import nl.mpi.arbil.LinorgBugCatcher;
  */
 public class EntityRelation {
 
-        protected EntityData alterNode;
-        public int generationalDistance;
-        @XmlElement(name = "Identifier")
-        public String alterUniqueIdentifier;
-        @XmlElement(name = "Type")
-        public DataTypes.RelationType relationType;
-        @XmlElement(name = "Line")
-        public DataTypes.RelationLineType relationLineType;
-        @XmlElement(name = "Label")
-        public String labelString;
+    private EntityData alterNode;
+    public int generationalDistance;
+    @XmlElement(name = "Identifier")
+    public String alterUniqueIdentifier = null;
+    @XmlElement(name = "Type")
+    public DataTypes.RelationType relationType;
+    @XmlElement(name = "Line")
+    public DataTypes.RelationLineType relationLineType;
+    @XmlElement(name = "Label")
+    public String labelString;
+    public String lineColour = null;
 
-        public void setAlterNode(EntityData graphDataNode) {
-            if (graphDataNode != null) {
-                alterNode = graphDataNode;
+    public void setAlterNode(EntityData graphDataNode) {
+        if (graphDataNode != null) {
+            alterNode = graphDataNode;
+            if (alterUniqueIdentifier == null) {
+                alterUniqueIdentifier = alterNode.getUniqueIdentifier();
             }
         }
+    }
 
-        public EntityData getAlterNode() {
-            if (alterNode == null) {
-                new LinorgBugCatcher().logError(new Exception("getAlterNode called but alterNode is null, this should not happen"));
-            }
-            return alterNode;
-        }
+    public EntityData getAlterNode() {
+        return alterNode;
+    }
 }
