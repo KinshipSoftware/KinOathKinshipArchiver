@@ -41,7 +41,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     private EgoSelectionPanel egoSelectionPanel;
     private HidePane kinTermHidePane;
     private HidePane kinTypeHidePane;
-    private KinTermPanel kinTermPanel;
+    private KinTermTabPane kinTermPanel;
     private EntityService entityIndex;
     private String defaultString = "# The kin type strings entered here will determine the entities show on the graph below\n";
     public static String defaultGraphString = "# The kin type strings entered here will determine the entities show on the graph below\n"
@@ -59,7 +59,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel(this);
         egoSelectionPanel = new EgoSelectionPanel();
-        kinTermPanel = new KinTermPanel(this, graphPanel.getkinTerms());
+        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTerms());
         kinTypeStringInput = new JTextPane();
         // set the styles for the kin type string text
         Style styleComment = kinTypeStringInput.addStyle("Comment", null);
@@ -262,7 +262,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     }
 
     public void exportKinTerms() {
-        kinTermPanel.exportKinTerms();
+        kinTermPanel.getSelectedKinTermPanel().exportKinTerms();
     }
 
     public void hideShow() {
@@ -270,7 +270,12 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     }
 
     public void importKinTerms() {
-        kinTermPanel.importKinTerms();
+        kinTermPanel.getSelectedKinTermPanel().importKinTerms();
+    }
+
+    public void newKinTerms() {
+        graphPanel.newKinTerms();
+        kinTermPanel.updateKinTerms(graphPanel.getkinTerms());
     }
 
     public boolean isHidden() {
