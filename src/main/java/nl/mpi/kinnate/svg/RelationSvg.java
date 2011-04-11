@@ -139,7 +139,11 @@ public class RelationSvg {
                 //
                 //                    linkLine.setAttribute("x2", );
                 linkLine.setAttribute("fill", "none");
-                linkLine.setAttribute("stroke", "blue");
+                if (graphLinkNode.lineColour != null) {
+                    linkLine.setAttribute("stroke", graphLinkNode.lineColour);
+                } else {
+                    linkLine.setAttribute("stroke", "blue");
+                }
                 linkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
                 linkLine.setAttribute("id", lineIdString);
                 defsNode.appendChild(linkLine);
@@ -175,7 +179,11 @@ public class RelationSvg {
             labelText.setAttribute("text-anchor", "middle");
             //                        labelText.setAttribute("x", Integer.toString(labelX));
             //                        labelText.setAttribute("y", Integer.toString(labelY));
-            labelText.setAttribute("fill", "blue");
+            if (graphLinkNode.lineColour != null) {
+                labelText.setAttribute("fill", graphLinkNode.lineColour);
+            } else {
+                labelText.setAttribute("fill", "blue");
+            }
             labelText.setAttribute("stroke-width", "0");
             labelText.setAttribute("font-size", "14");
             //                        labelText.setAttribute("transform", "rotate(45)");
