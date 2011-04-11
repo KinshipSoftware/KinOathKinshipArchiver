@@ -141,8 +141,8 @@ public class SvgUpdateHandler {
                         updateDragNodeX = 0;
                         updateDragNodeY = 0;
                     }
-                    System.out.println("updateDragNodeX: " + updateDragNodeXInner);
-                    System.out.println("updateDragNodeY: " + updateDragNodeYInner);
+//                    System.out.println("updateDragNodeX: " + updateDragNodeXInner);
+//                    System.out.println("updateDragNodeY: " + updateDragNodeYInner);
                     if (graphPanel.doc != null) {
                         int dragCounter = 0;
                         for (String entityId : graphPanel.selectedGroupId) {
