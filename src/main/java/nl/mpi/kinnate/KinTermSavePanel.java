@@ -9,6 +9,8 @@ public interface KinTermSavePanel {
 
     public void hideShow();
 
+    public void addKinTermGroup();
+
     public void importKinTerms();
 
     public void exportKinTerms();
