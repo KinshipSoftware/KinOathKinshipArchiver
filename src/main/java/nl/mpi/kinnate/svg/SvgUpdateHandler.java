@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.geom.AffineTransform;
+import nl.mpi.kinnate.KinTermSavePanel;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -14,18 +15,32 @@ import org.w3c.dom.svg.SVGRect;
  */
 public class SvgUpdateHandler {
 
-    GraphPanel graphPanel;
+    private GraphPanel graphPanel;
+    private KinTermSavePanel kinTermSavePanel;
     private boolean dragUpdateRequired = false;
     private boolean threadRunning = false;
     private int updateDragNodeX = 0;
     private int updateDragNodeY = 0;
     private float[] dragRemainders = null;
 
-    protected SvgUpdateHandler(GraphPanel graphPanelLocal) {
+    protected SvgUpdateHandler(GraphPanel graphPanelLocal, KinTermSavePanel kinTermSavePanelLocal) {
         graphPanel = graphPanelLocal;
+        kinTermSavePanel = kinTermSavePanelLocal;
     }
 
     protected void updateSvgSelectionHighlights() {
+        if (kinTermSavePanel != null) {
+            String kinTypeStrings = "";
+            for (String entityID : graphPanel.selectedGroupId) {
+                if (kinTypeStrings.length() != 0) {
+                    kinTypeStrings = kinTypeStrings + "|";
+                }
+                kinTypeStrings = kinTypeStrings + graphPanel.getKinTypeForElementId(entityID);
+            }
+            if (kinTypeStrings != null) {
+                kinTermSavePanel.setSelectedKinTypeSting(kinTypeStrings);
+            }
+        }
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         if (updateManager != null) { // todo: there may be issues related to the updateManager being null, this should be looked into if symptoms arise.
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
