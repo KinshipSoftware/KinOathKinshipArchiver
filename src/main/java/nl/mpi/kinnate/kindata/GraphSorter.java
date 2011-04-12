@@ -103,7 +103,7 @@ public class GraphSorter {
         HashSet<EntityData> currentColumns = new HashSet<EntityData>();
         generationRows.add(currentColumns);
 
-        while (inputNodes.size() > 0) {
+        while (inputNodes.size() > 0) { // this loop checks all nodes provided for display, but the sanguineSubnodeSort will remove any related nodes before we return to this loop, so this loop would only run once if all nodes are related
             EntityData currentNode = inputNodes.remove(0);
             System.out.println("add as root node: " + currentNode.getLabel());
             currentColumns.add(currentNode);
@@ -124,6 +124,7 @@ public class GraphSorter {
                     System.out.println("updating: " + xPos + " : " + yPos + " : " + graphDataNode.getLabel());
                     graphDataNode.yPos = yPos;
                     graphDataNode.xPos = xPos;
+                    //graphDataNode.appendTempLabel("X:" + xPos + " Y:" + yPos);
                     xPos++;
                 }
                 yPos++;
