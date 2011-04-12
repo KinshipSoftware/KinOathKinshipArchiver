@@ -3,7 +3,6 @@ package nl.mpi.kinnate.svg;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
-import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -21,10 +20,12 @@ import javax.swing.JPanel;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kintypestrings.KinTerms;
+import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
@@ -65,9 +66,9 @@ public class GraphPanel extends JPanel implements SavePanel {
     private int currentHeight = 0;
     public boolean snapToGrid = false;
 
-    public GraphPanel(KinTypeEgoSelectionTestPanel egoSelectionPanel) {
+    public GraphPanel(KinTermSavePanel egoSelectionPanel) {
         dataStoreSvg = new DataStoreSvg();
-        svgUpdateHandler = new SvgUpdateHandler(this);
+        svgUpdateHandler = new SvgUpdateHandler(this, egoSelectionPanel);
         selectedGroupId = new ArrayList<String>();
         graphPanelSize = new GraphPanelSize();
         kinTermGroups = new KinTerms[]{new KinTerms()};
@@ -110,7 +111,11 @@ public class GraphPanel extends JPanel implements SavePanel {
         jSVGScrollPane = new JSVGScrollPane(svgCanvas);
 //        svgCanvas.setBackground(Color.LIGHT_GRAY);
         this.add(BorderLayout.CENTER, jSVGScrollPane);
-        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(egoSelectionPanel, this, graphPanelSize));
+        if (egoSelectionPanel instanceof KinTypeEgoSelectionTestPanel) {
+            svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu((KinTypeEgoSelectionTestPanel) egoSelectionPanel, this, graphPanelSize));
+        } else {
+            svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(null, this, graphPanelSize));
+        }
     }
 
     private void zoomDrawing() {
@@ -270,6 +275,11 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        }
     }
 
+    public String getKinTypeForElementId(String elementId) {
+        Element entityElement = doc.getElementById(elementId);
+        return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kintype");
+    }
+
     public void resetZoom() {
         AffineTransform at = new AffineTransform();
         at.scale(1, 1);
@@ -281,6 +291,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
         groupNode.setAttribute("id", currentNode.getUniqueIdentifier());
         groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
+        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
 //        counterTest++;
         Element symbolNode;
         String symbolType = currentNode.getSymbolType();
