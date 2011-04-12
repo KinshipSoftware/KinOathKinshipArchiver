@@ -100,6 +100,7 @@ public class EntityCollection {
     }
 
     public String[] getEntityIdByTerm(KinTypeStringConverter.KinTypeElement queryTerms) {
+        // todo: add a query cache or determine that the xml database does the job of caching adequately
         QueryBuilder queryBuilder = new QueryBuilder();
         String queryString = queryBuilder.getTermQuery(queryTerms);
         System.out.println("query1String: " + queryString);
