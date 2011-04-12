@@ -39,11 +39,23 @@ public class KinTermPanel extends JPanel {
     JCheckBox showOnGraphCheckBox;
     JComboBox colourSelectBox;
     JPanel outerPanel;
+    JTextField addNewKinTerm;
+    JTextField addNewKinType;
+    String defaultKinType = "";
 
-    public KinTermPanel(SavePanel savePanelLocal, KinTerms kinTermsLocal) {
+    public KinTermPanel(SavePanel savePanelLocal, KinTerms kinTermsLocal, String defaultKinTypeLocal) {
         kinTerms = kinTermsLocal;
         savePanel = savePanelLocal;
-        colourSelectBox = new JComboBox(new String[]{"#FF0000", "#FFAA00", "#00FF95", "#62D9A7", "#8000FF", "#FF00D4"});
+        defaultKinType = defaultKinTypeLocal;
+        colourSelectBox = new JComboBox(new String[]{"red", "blue", "#FF0000", "#FFAA00", "#00FF95", "#62D9A7", "#8000FF", "#FF00D4"});
+        colourSelectBox.setSelectedItem(kinTerms.graphColour);
+        colourSelectBox.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kinTerms.graphColour = colourSelectBox.getSelectedItem().toString();
+                savePanel.updateGraph();
+            }
+        });
         showOnGraphCheckBox = new JCheckBox("Show On Graph");
         autoGenerateCheckBox = new JCheckBox("Generate Example Entities");
         this.setLayout(new BorderLayout());
@@ -104,9 +116,15 @@ public class KinTermPanel extends JPanel {
         populateAddForm();
     }
 
+    public void setDefaultKinType(String kinTypeString) {
+        defaultKinType = kinTypeString;
+        addNewKinType.setText(defaultKinType);
+    }
+
     private void populateAddForm() {
-        final JTextField addNewKinTerm = new JTextField();
-        final JTextField addNewKinType = new JTextField();
+        addNewKinTerm = new JTextField();
+        addNewKinType = new JTextField();
+        addNewKinType.setText(defaultKinType);
         JPanel termPanel = new JPanel();
         termPanel.setBorder(BorderFactory.createTitledBorder("Create New Kin Term"));
         termPanel.setLayout(new BoxLayout(termPanel, BoxLayout.Y_AXIS));
