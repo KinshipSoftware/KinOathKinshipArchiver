@@ -30,7 +30,7 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
 
     public KinTypeStringTestPanel() {
         this.setLayout(new BorderLayout());
-        graphPanel = new GraphPanel(null);
+        graphPanel = new GraphPanel(this);
         kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
         kinTypeStringInput = new JTextArea(defaultString);
         kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
@@ -115,7 +115,12 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
     }
 
     public void addKinTermGroup() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        graphPanel.addKinTermGroup();
+        kinTermPanel.updateKinTerms(graphPanel.getkinTermGroups());
+    }
+
+    public void setSelectedKinTypeSting(String kinTypeStrings) {
+        kinTermPanel.setAddableKinTypeSting(kinTypeStrings);
     }
 
     public boolean isHidden() {
