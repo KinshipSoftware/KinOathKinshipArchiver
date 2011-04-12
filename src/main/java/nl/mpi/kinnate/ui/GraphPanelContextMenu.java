@@ -61,7 +61,8 @@ public class GraphPanelContextMenu extends JPopupMenu {
                         ArrayList<String> egoIdentifierList = new ArrayList<String>(Arrays.asList(graphPanel.getEgoUniquiIdentifiersList()));
 //                        egoUriList.add(addedNodePath);
                         egoIdentifierList.add(localIdentifier);
-                        egoSelectionPanel.addEgoNodes(null, egoIdentifierList.toArray(new String[]{}));
+                        // todo: look into the need or not of adding ego nodes, on one hand they should not be added as ego nodes but as working nodes, also it is likely that the jlist that is updated by this could better be updaed by the selection listner
+                       egoSelectionPanel.addEgoNodes(null, egoIdentifierList.toArray(new String[]{}));
                     } catch (URISyntaxException ex) {
                         GuiHelper.linorgBugCatcher.logError(ex);
                         // todo: warn user with a dialog
