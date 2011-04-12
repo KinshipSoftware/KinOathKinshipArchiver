@@ -212,7 +212,7 @@ public class KinTypeStringConverter extends GraphSorter {
 
     public void readKinTypes(String[] inputStringArray, KinTerms[] kinTermsArray) {
         HashMap<String, EntityData> graphDataNodeList = new HashMap<String, EntityData>();
-        EntityData egoDataNode = new EntityData("ego", "ego", EntityData.SymbolType.square, new String[]{"ego"}, true);
+        EntityData egoDataNode = new EntityData("ego", "ego", "E", EntityData.SymbolType.square, new String[]{"ego"}, true);
         graphDataNodeList.put("ego", egoDataNode);
         egoDataNode.isVisible = true;
         for (String inputString : inputStringArray) {
@@ -234,7 +234,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                 currentGraphDataNode = graphDataNodeList.get(fullKinTypeString);
                                 // add any child nodes?
                             } else {
-                                currentGraphDataNode = new EntityData(fullKinTypeString, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{fullKinTypeString}, false);
+                                currentGraphDataNode = new EntityData(fullKinTypeString, fullKinTypeString, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{fullKinTypeString}, false);
                                 DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
                                 parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.square, null, null);
                                 currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.square, null, null);
