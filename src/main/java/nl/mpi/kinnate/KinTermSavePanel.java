@@ -15,5 +15,7 @@ public interface KinTermSavePanel {
 
     public void exportKinTerms();
 
+    public void setSelectedKinTypeSting(String kinTypeStrings);
+
     public boolean isHidden();
 }
