@@ -141,10 +141,10 @@ public class EntityIndex implements EntityService {
         for (String currentSymbolField[] : indexParameters.symbolFieldsFields.getValues()) {
             String linkSymbolString = entityData.getEntityField(currentSymbolField[0]);
             if (linkSymbolString != null) {
-                return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), currentSymbolField[1], labelTextList.toArray(new String[]{}), isEgo);
+                return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), null, currentSymbolField[1], labelTextList.toArray(new String[]{}), isEgo);
             }
         }
-        return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), EntityData.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
+        return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), null, EntityData.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
     }
 
     private void setRelationData(EntityData egoNode, EntityData alterNode, IndexerEntityData egoData, String alterPath, IndexerParameters indexParameters) {
