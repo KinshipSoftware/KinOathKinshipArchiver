@@ -23,6 +23,7 @@ public class EntityData {
     private String uniqueIdentifier;
     @XmlElement(name = "Path")
     private String entityPath;
+    private String kinTypeString = null;
     private SymbolType symbolType;
     @XmlElement(name = "Symbol")
     private String symbolTypeString;
@@ -43,18 +44,20 @@ public class EntityData {
     private EntityData() {
     }
 
-    public EntityData(String uniqueIdentifierLocal, String entityPathLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
+    public EntityData(String uniqueIdentifierLocal, String entityPathLocal, String kinTypeStringLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = entityPathLocal;
+        kinTypeString = kinTypeStringLocal;
         symbolType = null;
         symbolTypeString = symbolTypeLocal;
         labelStringArray = labelStringLocal;
         isEgo = isEgoLocal;
     }
 
-    public EntityData(String uniqueIdentifierLocal, String entityPathLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
+    public EntityData(String uniqueIdentifierLocal, String entityPathLocal, String kinTypeStringLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = entityPathLocal;
+        kinTypeString = kinTypeStringLocal;
         symbolType = symbolIndex;
         labelStringArray = labelStringLocal;
         isEgo = isEgoLocal;
@@ -100,6 +103,10 @@ public class EntityData {
 
     public String getEntityPath() {
         return entityPath;
+    }
+
+    public String getKinTypeString() {
+        return kinTypeString;
     }
 
     public String[] getLabel() {
