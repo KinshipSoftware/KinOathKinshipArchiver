@@ -59,7 +59,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         this.setLayout(new BorderLayout());
         graphPanel = new GraphPanel(this);
         egoSelectionPanel = new EgoSelectionPanel();
-        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTerms());
+        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
         kinTypeStringInput = new JTextPane();
         // set the styles for the kin type string text
         Style styleComment = kinTypeStringInput.addStyle("Comment", null);
@@ -274,8 +274,12 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     }
 
     public void addKinTermGroup() {
-        graphPanel.newKinTerms();
-        kinTermPanel.updateKinTerms(graphPanel.getkinTerms());
+        graphPanel.addKinTermGroup();
+        kinTermPanel.updateKinTerms(graphPanel.getkinTermGroups());
+    }
+
+    public void setSelectedKinTypeSting(String kinTypeStrings) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public boolean isHidden() {
