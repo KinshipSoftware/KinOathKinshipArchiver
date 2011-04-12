@@ -73,20 +73,21 @@ public class QueryParser implements EntityService {
 //        return queryTerms.toArray(new String[][]{});
 //    }
     private void getNextRelations(HashMap<String, EntityData> createdGraphNodes, EntityData egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) {
-        KinType currentKinType = remainingKinTypes.remove(0);
-        for (EntityRelation entityRelation : egoNode.getDistinctRelateNodes()) {
-            EntityData alterNode;
-            if (createdGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
-                alterNode = createdGraphNodes.get(entityRelation.alterUniqueIdentifier);
-            } else {
-                alterNode = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexParameters);
-                createdGraphNodes.put(entityRelation.alterUniqueIdentifier, alterNode);
-            }
-            alterNode.isVisible = true;
+        if (remainingKinTypes.size() > 0) {
+            KinType currentKinType = remainingKinTypes.remove(0);
+            for (EntityRelation entityRelation : egoNode.getDistinctRelateNodes()) {
+                EntityData alterNode;
+                if (createdGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
+                    alterNode = createdGraphNodes.get(entityRelation.alterUniqueIdentifier);
+                } else {
+                    alterNode = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexParameters);
+                    createdGraphNodes.put(entityRelation.alterUniqueIdentifier, alterNode);
+                }
+                alterNode.isVisible = true;
 
 //            if (egoNode.relationMatchesType(entityRelation, currentKinType)) {
-            // only traverse if the type matches
-            if (remainingKinTypes.size() > 0) {
+                // only traverse if the type matches
+
                 getNextRelations(createdGraphNodes, alterNode, remainingKinTypes, indexParameters);
             }
 //            }
