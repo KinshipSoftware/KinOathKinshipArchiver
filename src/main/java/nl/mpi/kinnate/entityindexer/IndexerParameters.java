@@ -16,9 +16,12 @@ public class IndexerParameters {
     public IndexerParam relevantLinkData = new IndexerParam(this, new String[][]{{"Type"}});
     @XmlElement(name = "kin:LabelFields")
     public IndexerParam labelFields = new IndexerParam(this, new String[][]{{"Kinnate/Gedcom/Entity/NAME/NAME"}, {"Kinnate/Gedcom/Entity[GedcomType='FAM']/GedcomType"}, {"Kinnate/Gedcom/Entity/Text"}, {"Kinnate/Gedcom/Entity/NAME/NPFX"}, {"Kinnate/Gedcom/Entity/NoteText"}});
+    @XmlElement(name = "kin:SymbolFieldsFields")
     public IndexerParam symbolFieldsFields = new IndexerParam(this, new String[][]{{"Kinnate/Gedcom/Entity[SEX='M']", "triangle"}, {"Kinnate/Gedcom/Entity[SEX='F']", "circle"}, {"Kinnate/Gedcom/Entity[GedcomType='FAM']", "union"}});
+    @XmlElement(name = "kin:AncestorFields")
     public IndexerParam ancestorFields = new IndexerParam(this, new String[][]{{"Kinnate.Gedcom.Entity.FAMC"}, {"Kinnate.Gedcom.Entity.BIRT.FAMC"}, {"Kinnate.Gedcom.Entity.CHR.FAMC"}, {"Kinnate.Gedcom.Entity.ADOP.FAMC"}, {"Kinnate.Gedcom.Entity.SLGC.FAMC"}, {"Kinnate.Gedcom.Entity.HUSB"}, {"Kinnate.Gedcom.Entity.WIFE"}});
 //    public IndexerParam siblingFields = new IndexerParam(new String[]{{"Kinnate.Gedcom.Entity.CHIL"}, {"Kinnate.Gedcom.Entity.FAMS"}});
+    @XmlElement(name = "kin:DecendantFields")
     public IndexerParam decendantFields = new IndexerParam(this, new String[][]{{"Kinnate.Gedcom.Entity.CHIL"}, {"Kinnate.Gedcom.Entity.FAMS"}});
     //    public IndexerParam showEntityFields = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/GedcomType=INDI"}, {"Kinnate/Gedcom/Entity/GedcomType=FAM"}}); // todo: add fields that can be used to controll which nodes are shown
     @Deprecated // I think this is no longer used or needed
