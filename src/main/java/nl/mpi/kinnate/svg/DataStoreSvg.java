@@ -3,8 +3,14 @@ package nl.mpi.kinnate.svg;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.GuiHelper;
+import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import org.w3c.dom.Element;
@@ -17,12 +23,19 @@ import org.w3c.dom.svg.SVGDocument;
  *  Created on : Mar 10, 2011, 8:37:26 AM
  *  Author     : Peter Withers
  */
+@XmlRootElement(name = "kin:KinDiagramData", namespace = "http://mpi.nl/tla/kin")
 public class DataStoreSvg {
 
     static protected String kinDataNameSpace = "kin";
     static protected String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
+//    @XmlElement(name = "EgoIdList", namespace = "http://mpi.nl/tla/kin")
+//    @XmlElementWrapper(name = "kin:EgoIdList")
+    @XmlElement(name = "kin:EgoId")
     protected HashSet<String> egoIdentifierSet = new HashSet<String>();
+//        @XmlElementWrapper(name = "kin:KinTypeStrings")
+    @XmlElement(name = "kin:KinTypeString")
     protected String[] kinTypeStrings = new String[]{};
+    @XmlElement(name = "kin:IndexParameters")
     protected IndexerParameters indexParameters;
 
     public class GraphRelationData {
@@ -60,32 +73,30 @@ public class DataStoreSvg {
         relationGroup.appendChild(dataRecordNode);
     }
 
-    private void storeParameter(SVGDocument doc, Element dataStoreElement, String parameterName, String[] ParameterValues) {
-        for (String currentKinType : ParameterValues) {
-            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:" + parameterName);
-            //            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
-            dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType);
-            dataStoreElement.appendChild(dataRecordNode);
-        }
-    }
-
-    private void storeParameter(SVGDocument doc, Element dataStoreElement, String parameterName, String[][] ParameterValues) {
-        for (String[] currentKinType : ParameterValues) {
-            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:" + parameterName);
-            //            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
-            if (currentKinType.length == 1) {
-                dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[0]);
-            } else if (currentKinType.length == 2) {
-                dataRecordNode.setAttributeNS(kinDataNameSpace, "path", currentKinType[0]);
-                dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[1]);
-            } else {
-                // todo: add any other datatypes if required
-                throw new UnsupportedOperationException();
-            }
-            dataStoreElement.appendChild(dataRecordNode);
-        }
-    }
-
+//    private void storeParameter(SVGDocument doc, Element dataStoreElement, String parameterName, String[] ParameterValues) {
+//        for (String currentKinType : ParameterValues) {
+//            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:" + parameterName);
+//            //            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
+//            dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType);
+//            dataStoreElement.appendChild(dataRecordNode);
+//        }
+//    }
+//    private void storeParameter(SVGDocument doc, Element dataStoreElement, String parameterName, String[][] ParameterValues) {
+//        for (String[] currentKinType : ParameterValues) {
+//            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:" + parameterName);
+//            //            Element dataRecordNode = doc.createElement(kinDataNameSpace + ":" + parameterName);
+//            if (currentKinType.length == 1) {
+//                dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[0]);
+//            } else if (currentKinType.length == 2) {
+//                dataRecordNode.setAttributeNS(kinDataNameSpace, "path", currentKinType[0]);
+//                dataRecordNode.setAttributeNS(kinDataNameSpace, "value", currentKinType[1]);
+//            } else {
+//                // todo: add any other datatypes if required
+//                throw new UnsupportedOperationException();
+//            }
+//            dataStoreElement.appendChild(dataRecordNode);
+//        }
+//    }
     protected void storeAllData(SVGDocument doc) {
         // create string array to store the selected ego nodes in the dom
 //        ArrayList<String> egoStringArray = new ArrayList<String>();
@@ -95,17 +106,28 @@ public class DataStoreSvg {
         // store the selected kin type strings and other data in the dom
         //        Namespace sNS = Namespace.getNamespace("someNS", "someNamespace");
         //        Element element = new Element("SomeElement", sNS);
-        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "kin:KinDiagramData");
-        //        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
-        kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to st the namespace
+//        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "kin:KinDiagramData");
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(DataStoreSvg.class);
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.marshal(this, doc.getRootElement());
+        } catch (JAXBException exception) {
+            new LinorgBugCatcher().logError(exception);
+//        } catch (BaseXException exception) {
+//            new LinorgBugCatcher().logError(exception);
+        }
+
+
+//        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
+//        kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to st the namespace
 //        storeParameter(doc, kinTypesRecordNode, "EgoPathList", egoStringArray.toArray(new String[]{}));
-        storeParameter(doc, kinTypesRecordNode, "EgoIdList", egoIdentifierSet.toArray(new String[]{}));
-        storeParameter(doc, kinTypesRecordNode, "KinTypeStrings", kinTypeStrings);
-        storeParameter(doc, kinTypesRecordNode, "AncestorFields", indexParameters.ancestorFields.getValues());
-        storeParameter(doc, kinTypesRecordNode, "DecendantFields", indexParameters.decendantFields.getValues());
-        storeParameter(doc, kinTypesRecordNode, "LabelFields", indexParameters.labelFields.getValues());
-        storeParameter(doc, kinTypesRecordNode, "SymbolFieldsFields", indexParameters.symbolFieldsFields.getValues());
-        doc.getRootElement().appendChild(kinTypesRecordNode);
+//        storeParameter(doc, kinTypesRecordNode, "EgoIdList", egoIdentifierSet.toArray(new String[]{}));
+//        storeParameter(doc, kinTypesRecordNode, "KinTypeStrings", kinTypeStrings);
+//        storeParameter(doc, kinTypesRecordNode, "AncestorFields", indexParameters.ancestorFields.getValues());
+//        storeParameter(doc, kinTypesRecordNode, "DecendantFields", indexParameters.decendantFields.getValues());
+//        storeParameter(doc, kinTypesRecordNode, "LabelFields", indexParameters.labelFields.getValues());
+//        storeParameter(doc, kinTypesRecordNode, "SymbolFieldsFields", indexParameters.symbolFieldsFields.getValues());
+//        doc.getRootElement().appendChild(kinTypesRecordNode);
         // end store the selected kin type strings and other data in the dom
     }
 
