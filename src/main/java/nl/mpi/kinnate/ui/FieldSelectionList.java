@@ -59,9 +59,6 @@ public class FieldSelectionList extends JPanel {
                             savePanel.updateGraph();
                         }
                     });
-
-
-
                 } else {
                     JTextField valueField = new JTextField(parameterElement.getSelectedValue());
                     fieldPanel.add(valueField);
