@@ -145,7 +145,7 @@ public class DataStoreSvg {
 //            } catch (TransformerException transformerException) {
 //                GuiHelper.linorgBugCatcher.logError(transformerException);
 //            }
-//            //            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
+ todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
 //        }
 //        return parameterList.toArray(new String[]{});
 //    }
