@@ -1,15 +1,12 @@
 package nl.mpi.kinnate.svg;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.transform.TransformerException;
-import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -23,19 +20,19 @@ import org.w3c.dom.svg.SVGDocument;
  *  Created on : Mar 10, 2011, 8:37:26 AM
  *  Author     : Peter Withers
  */
-@XmlRootElement(name = "kin:KinDiagramData", namespace = "http://mpi.nl/tla/kin")
+@XmlRootElement(name = "KinDiagramData", namespace = "http://mpi.nl/tla/kin")
 public class DataStoreSvg {
 
     static protected String kinDataNameSpace = "kin";
     static protected String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
 //    @XmlElement(name = "EgoIdList", namespace = "http://mpi.nl/tla/kin")
 //    @XmlElementWrapper(name = "kin:EgoIdList")
-    @XmlElement(name = "kin:EgoId")
+    @XmlElement(name = "EgoId", namespace = "http://mpi.nl/tla/kin")
     protected HashSet<String> egoIdentifierSet = new HashSet<String>();
 //        @XmlElementWrapper(name = "kin:KinTypeStrings")
-    @XmlElement(name = "kin:KinTypeString")
+    @XmlElement(name = "KinTypeString", namespace = "http://mpi.nl/tla/kin")
     protected String[] kinTypeStrings = new String[]{};
-    @XmlElement(name = "kin:IndexParameters")
+    @XmlElement(name = "IndexParameters", namespace = "http://mpi.nl/tla/kin")
     protected IndexerParameters indexParameters;
 
     public class GraphRelationData {
@@ -106,7 +103,7 @@ public class DataStoreSvg {
         // store the selected kin type strings and other data in the dom
         //        Namespace sNS = Namespace.getNamespace("someNS", "someNamespace");
         //        Element element = new Element("SomeElement", sNS);
-//        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpace, "kin:KinDiagramData");
+//        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpaceLocation, "kin:KinDiagramData");
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(DataStoreSvg.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
@@ -131,64 +128,58 @@ public class DataStoreSvg {
         // end store the selected kin type strings and other data in the dom
     }
 
-    private String[] getSingleParametersFromDom(SVGDocument doc, String parameterName) {
-        ArrayList<String> parameterList = new ArrayList<String>();
-        if (doc != null) {
-            //            printNodeNames(doc);
-            try {
-                // todo: resolve names space issue
-                // todo: try setting the XPath namespaces
-                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/svg:svg/kin:KinDiagramData/kin:" + parameterName);
-                for (int nodeCounter = 0; nodeCounter < parameterNodeList.getLength(); nodeCounter++) {
-                    Node parameterNode = parameterNodeList.item(nodeCounter);
-                    if (parameterNode != null) {
-                        parameterList.add(parameterNode.getAttributes().getNamedItem("value").getNodeValue());
-                    }
-                }
-            } catch (TransformerException transformerException) {
-                GuiHelper.linorgBugCatcher.logError(transformerException);
-            }
-            //            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
-        }
-        return parameterList.toArray(new String[]{});
-    }
-
-    private String[][] getDoubleParametersFromDom(SVGDocument doc, String parameterName) {
-        ArrayList<String[]> parameterList = new ArrayList<String[]>();
-        if (doc != null) {
-            try {
-                // todo: resolve names space issue
-                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/svg/KinDiagramData/" + parameterName);
-                for (int nodeCounter = 0; nodeCounter < parameterNodeList.getLength(); nodeCounter++) {
-                    Node parameterNode = parameterNodeList.item(nodeCounter);
-                    if (parameterNode != null) {
-                        parameterList.add(new String[]{parameterNode.getAttributes().getNamedItem("path").getNodeValue(), parameterNode.getAttributes().getNamedItem("value").getNodeValue()});
-                    }
-                }
-            } catch (TransformerException transformerException) {
-                GuiHelper.linorgBugCatcher.logError(transformerException);
-            }
-            //            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
-        }
-        return parameterList.toArray(new String[][]{});
-    }
-
-    protected void loadDataFromSvg(SVGDocument doc) {
-//        ArrayList<String> egoStringArray = new ArrayList<String>();
-//        egoPathSet.clear();
-        egoIdentifierSet.clear();
-//        for (String currentEgoString : getSingleParametersFromDom(doc, "EgoPathList")) {
+//    private String[] getSingleParametersFromDom(SVGDocument doc, String parameterName) {
+//        ArrayList<String> parameterList = new ArrayList<String>();
+//        if (doc != null) {
+//            //            printNodeNames(doc);
 //            try {
-//                egoPathSet.add(new URI(currentEgoString));
-//            } catch (URISyntaxException urise) {
-//                GuiHelper.linorgBugCatcher.logError(urise);
+//                // todo: resolve names space issue
+//                // todo: try setting the XPath namespaces
+//                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/svg:svg/kin:KinDiagramData/kin:" + parameterName);
+//                for (int nodeCounter = 0; nodeCounter < parameterNodeList.getLength(); nodeCounter++) {
+//                    Node parameterNode = parameterNodeList.item(nodeCounter);
+//                    if (parameterNode != null) {
+//                        parameterList.add(parameterNode.getAttributes().getNamedItem("value").getNodeValue());
+//                    }
+//                }
+//            } catch (TransformerException transformerException) {
+//                GuiHelper.linorgBugCatcher.logError(transformerException);
 //            }
+//            //            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
 //        }
-        egoIdentifierSet.addAll(Arrays.asList(getSingleParametersFromDom(doc, "EgoIdList")));
-        kinTypeStrings = getSingleParametersFromDom(doc, "KinTypeStrings");
-        indexParameters.ancestorFields.setValues(getDoubleParametersFromDom(doc, "AncestorFields"));
-        indexParameters.decendantFields.setValues(getDoubleParametersFromDom(doc, "DecendantFields"));
-        indexParameters.labelFields.setValues(getDoubleParametersFromDom(doc, "LabelFields"));
-        indexParameters.symbolFieldsFields.setValues(getDoubleParametersFromDom(doc, "SymbolFieldsFields"));
+//        return parameterList.toArray(new String[]{});
+//    }
+//    private String[][] getDoubleParametersFromDom(SVGDocument doc, String parameterName) {
+//        ArrayList<String[]> parameterList = new ArrayList<String[]>();
+//        if (doc != null) {
+//            try {
+//                // todo: resolve names space issue
+//                NodeList parameterNodeList = org.apache.xpath.XPathAPI.selectNodeList(doc, "/svg/KinDiagramData/" + parameterName);
+//                for (int nodeCounter = 0; nodeCounter < parameterNodeList.getLength(); nodeCounter++) {
+//                    Node parameterNode = parameterNodeList.item(nodeCounter);
+//                    if (parameterNode != null) {
+//                        parameterList.add(new String[]{parameterNode.getAttributes().getNamedItem("path").getNodeValue(), parameterNode.getAttributes().getNamedItem("value").getNodeValue()});
+//                    }
+//                }
+//            } catch (TransformerException transformerException) {
+//                GuiHelper.linorgBugCatcher.logError(transformerException);
+//            }
+//            //            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
+//        }
+//        return parameterList.toArray(new String[][]{});
+//    }
+    static protected DataStoreSvg loadDataFromSvg(SVGDocument doc) {
+        DataStoreSvg dataStoreSvg = new DataStoreSvg();
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(DataStoreSvg.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            NodeList dataStoreNodeList = doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
+            if (dataStoreNodeList.getLength() > 0) {
+                dataStoreSvg = (DataStoreSvg) unmarshaller.unmarshal(dataStoreNodeList.item(0), DataStoreSvg.class).getValue();
+            }
+        } catch (JAXBException exception) {
+            new LinorgBugCatcher().logError(exception);
+        }
+        return dataStoreSvg;
     }
 }
