@@ -5,13 +5,11 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import nl.mpi.arbil.ImdiField;
 import nl.mpi.arbil.ImdiTable;
-import nl.mpi.kinnate.entityindexer.IndexerParameters.IndexerParam;
+import nl.mpi.kinnate.entityindexer.IndexerParam;
 
 /**
  *  Document   : TableCellDragHandler
@@ -68,12 +66,11 @@ public class TableCellDragHandler extends TransferHandler implements Transferabl
     @Override
     public boolean importData(TransferSupport ts) {
         IndexerParam indexerParam = ((FieldSelectionList) ts.getComponent()).indexerParam;
-        ArrayList<String[]> paramValues = new ArrayList<String[]>(Arrays.asList(indexerParam.getValues()));
+//        ArrayList<String[]> paramValues = new ArrayList<String[]>(Arrays.asList(indexerParam.getValues()));
         //for (ImdiField imdiField : (ImdiField[]) ts.getTransferable().getTransferData(dataFlavor)) {
         for (ImdiField imdiField : selectedFields) {
-            paramValues.add(new String[]{imdiField.getFullXmlPath(), imdiField.getFieldValue()});
+            indexerParam.setValue(imdiField.getFullXmlPath(), imdiField.getFieldValue());
         }
-        indexerParam.setValues(paramValues.toArray(new String[][]{}));
         ((FieldSelectionList) ts.getComponent()).updateUiList();
         return true;
     }
