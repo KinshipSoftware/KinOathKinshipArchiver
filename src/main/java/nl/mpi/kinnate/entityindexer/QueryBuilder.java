@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.entityindexer;
 
-import nl.mpi.kinnate.entityindexer.IndexerParameters.IndexerParam;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 
 /**
@@ -12,14 +11,14 @@ public class QueryBuilder {
 
     public String asSequenceString(IndexerParam indexerParam) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String[] currentEntry : indexerParam.getValues()) {
+        for (ParameterElement currentEntry : indexerParam.getValues()) {
             if (stringBuilder.length() > 0) {
                 stringBuilder.append(",");
             } else {
                 stringBuilder.append("(");
             }
             stringBuilder.append("\"");
-            stringBuilder.append(currentEntry[0]);
+            stringBuilder.append(currentEntry.getXpathString());
             stringBuilder.append("\"");
         }
         stringBuilder.append(")");
@@ -28,8 +27,8 @@ public class QueryBuilder {
 
     public String getLabelsClause(IndexerParameters indexParameters, String entityNodeVar) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String[] currentEntry : indexParameters.labelFields.getValues()) {
-            String trimmedXpath = currentEntry[0].substring("Kinnate".length());
+        for (ParameterElement currentEntry : indexParameters.labelFields.getValues()) {
+            String trimmedXpath = currentEntry.getXpathString().substring("Kinnate".length());
             stringBuilder.append("{if (exists(");
             stringBuilder.append(entityNodeVar);
             stringBuilder.append(trimmedXpath);
@@ -45,13 +44,13 @@ public class QueryBuilder {
     public String getSymbolClause(IndexerParameters indexParameters, String entityNodeVar) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<Symbol>{\n");
-        for (String[] currentEntry : indexParameters.symbolFieldsFields.getValues()) {
-            String trimmedXpath = currentEntry[0].substring("Kinnate".length());
+        for (ParameterElement currentEntry : indexParameters.symbolFieldsFields.getValues()) {
+            String trimmedXpath = currentEntry.getXpathString().substring("Kinnate".length());
             stringBuilder.append("if (exists(");
             stringBuilder.append(entityNodeVar);
             stringBuilder.append(trimmedXpath);
             stringBuilder.append(")) then \"");
-            stringBuilder.append(currentEntry[1]);
+            stringBuilder.append(currentEntry.getSelectedValue());
             stringBuilder.append("\"\n else ");
         }
         stringBuilder.append("()\n}</Symbol>,\n");
