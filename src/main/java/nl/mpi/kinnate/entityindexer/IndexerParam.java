@@ -1,8 +1,8 @@
 package nl.mpi.kinnate.entityindexer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *  Document   : IndexerParam
@@ -12,8 +12,9 @@ import javax.xml.bind.annotation.XmlElement;
 public class IndexerParam {
 
     IndexerParameters indexerParameters;
-    @XmlElement(name = "kin:PathEntry")
-    private String[][] valuesArray;
+    @XmlElement(name = "IndexerParam", namespace = "http://mpi.nl/tla/kin")
+    private ArrayList<ParameterElement> parametersList;
+    @XmlTransient
     private String[] availableValuesArray = null;
 
     public IndexerParam() {
@@ -21,42 +22,47 @@ public class IndexerParam {
 
     public IndexerParam(IndexerParameters indexerParametersLocal, String[][] valuesArrayLocal) {
         indexerParameters = indexerParametersLocal;
-        valuesArray = valuesArrayLocal;
+        parametersList = new ArrayList<ParameterElement>();
+        for (String[] currentValue : valuesArrayLocal) {
+            parametersList.add(new ParameterElement(currentValue));
+        }
     }
 
     public void setValues(String[][] valuesArrayLocal) {
-        valuesArray = valuesArrayLocal;
+        parametersList.clear();
+        for (String[] currentValue : valuesArrayLocal) {
+            parametersList.add(new ParameterElement(currentValue[0], currentValue[1]));
+        }
 //        IndexerParameters.this.relevantEntityData = null;
         // cause the entity index and entity collection to update based on the new indexer values
         indexerParameters.valuesChanged = true;
     }
 
     public void setValue(String parameterString, String valueString) {
-        ArrayList<String[]> tempArrayList = new ArrayList<String[]>(Arrays.asList(valuesArray));
-        for (String[] currentEntry : valuesArray) {
-            if (currentEntry[0].equals(parameterString)) {
-                currentEntry[1] = valueString;
+        // cause the entity index and entity collection to update based on the new indexer values
+        indexerParameters.valuesChanged = true;
+        for (ParameterElement currentEntry : parametersList) {
+            if (currentEntry.xpathString.equals(parameterString)) {
+                currentEntry.selectedValue = valueString;
+                return;
             }
         }
-        setValues(tempArrayList.toArray(new String[][]{}));
+        // if the value has not been found then add it
+        parametersList.add(new ParameterElement(parameterString, valueString));
+    }
+
+    public void removeValue(String pathToRemove) {
+        for (ParameterElement currentEntry : parametersList) {
+            if (currentEntry.getXpathString().equals(pathToRemove)) {
+                parametersList.remove(currentEntry);
+            }
+        }
         // cause the entity index and entity collection to update based on the new indexer values
         indexerParameters.valuesChanged = true;
     }
 
-    public void removeValue(String valueToRemove) {
-        ArrayList<String[]> tempArrayList = new ArrayList<String[]>(Arrays.asList(valuesArray));
-        for (String[] currentEntry : valuesArray) {
-            if (currentEntry[0].equals(valueToRemove)) {
-                tempArrayList.remove(currentEntry); // todo: will array list remove use the value of the array or the pointer to the array?????
-            }
-        }
-        setValues(tempArrayList.toArray(new String[][]{}));
-        // cause the entity index and entity collection to update based on the new indexer values
-        indexerParameters.valuesChanged = true;
-    }
-
-    public String[][] getValues() {
-        return valuesArray;
+    public ParameterElement[] getValues() {
+        return parametersList.toArray(new ParameterElement[]{});
     }
 
     public void setAvailableValues(String[] availableValuesArrayLocal) {
