@@ -9,7 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.entityindexer.IndexerParameters.IndexerParam;
+import nl.mpi.kinnate.entityindexer.IndexerParam;
+import nl.mpi.kinnate.entityindexer.ParameterElement;
 
 /**
  *  Document   : FieldSelectionList
@@ -36,18 +37,18 @@ public class FieldSelectionList extends JPanel {
     private void populateSelectionList() {
         paddingPanel.setLayout(new BoxLayout(paddingPanel, BoxLayout.PAGE_AXIS));
         paddingPanel.removeAll();
-        for (String fieldArray[] : indexerParam.getValues()) {
-            JLabel fieldPathLabel = new JLabel(fieldArray[0]);
+        for (ParameterElement parameterElement : indexerParam.getValues()) {
+            JLabel fieldPathLabel = new JLabel(parameterElement.getXpathString());
             JPanel fieldPanel = new JPanel();
             fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.LINE_AXIS));
             fieldPanel.add(fieldPathLabel);
             fieldPanel.add(new JPanel());
-            if (fieldArray.length > 1) {
+            if (parameterElement.hasSelectedValue()) {
                 String[] availableValues = indexerParam.getAvailableValues();
                 if (availableValues != null) {
                     JComboBox valueSelect = new JComboBox(availableValues);
-                    valueSelect.setSelectedItem(fieldArray[1]);
-                    valueSelect.setActionCommand(fieldArray[0]);
+                    valueSelect.setSelectedItem(parameterElement.getSelectedValue());
+                    valueSelect.setActionCommand(parameterElement.getXpathString());
                     fieldPanel.add(valueSelect);
                     valueSelect.addActionListener(new java.awt.event.ActionListener() {
 
@@ -62,7 +63,7 @@ public class FieldSelectionList extends JPanel {
 
 
                 } else {
-                    JTextField valueField = new JTextField(fieldArray[1]);
+                    JTextField valueField = new JTextField(parameterElement.getSelectedValue());
                     fieldPanel.add(valueField);
                 }
             }
@@ -70,7 +71,7 @@ public class FieldSelectionList extends JPanel {
             removeButton.setToolTipText("delete item");
             int removeButtonSize = removeButton.getFontMetrics(removeButton.getFont()).getHeight();
             removeButton.setPreferredSize(new Dimension(removeButtonSize, removeButtonSize));
-            removeButton.setActionCommand(fieldArray[0]);
+            removeButton.setActionCommand(parameterElement.getXpathString());
             removeButton.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
