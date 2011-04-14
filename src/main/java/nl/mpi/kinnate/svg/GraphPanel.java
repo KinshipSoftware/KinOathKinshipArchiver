@@ -11,12 +11,14 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import javax.swing.JPanel;
+import javax.xml.parsers.DocumentBuilderFactory;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.ImdiTableModel;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
@@ -31,7 +33,7 @@ import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.JSVGScrollPane;
 import org.apache.batik.util.XMLResourceDescriptor;
-import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -370,53 +372,66 @@ public class GraphPanel extends JPanel implements SavePanel {
     public void drawNodes(GraphSorter graphDataLocal) {
         requiresSave = true;
         graphData = graphDataLocal;
-        DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
-        doc = (SVGDocument) impl.createDocument(svgNameSpace, "svg", null);
-        // todo: look into how to add the extra namespaces to the svg document - doc.getDomConfig()
-        doc.getDocumentElement().setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:version", "");
-        doc.getDocumentElement().setAttribute("xmlns:" + DataStoreSvg.kinDataNameSpace, DataStoreSvg.kinDataNameSpaceLocation); // this method of declaring multiple namespaces looks to me to be wrong but it is the only method that does not get stripped out by the transformer on save
-        new EntitySvg().insertSymbols(doc, svgNameSpace);
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        try {
+            String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                    + "<svg xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:kin=\"http://mpi.nl/tla/kin\" "
+                    + "xmlns=\"http://www.w3.org/2000/svg\" contentScriptType=\"text/ecmascript\" "
+                    + " zoomAndPan=\"magnify\" contentStyleType=\"text/css\" "
+                    + "preserveAspectRatio=\"xMidYMid meet\" version=\"1.0\"/>";
+//        DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
+//        doc = (SVGDocument) impl.createDocument(svgNameSpace, "svg", null);
+
+            String parser = XMLResourceDescriptor.getXMLParserClassName();
+            SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
+            doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
+
+//            // todo: look into how to add the extra namespaces to the svg document - doc.getDomConfig()
+//            doc.getDocumentElement().setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:version", "");
+//            doc.getDocumentElement().setAttribute("xmlns:" + DataStoreSvg.kinDataNameSpace, DataStoreSvg.kinDataNameSpaceLocation); // this method of declaring multiple namespaces looks to me to be wrong but it is the only method that does not get stripped out by the transformer on save
+            new EntitySvg().insertSymbols(doc, svgNameSpace);
 //        Document doc = impl.createDocument(svgNS, "svg", null);
 //        SVGDocument doc = svgCanvas.getSVGDocument();
-        // Get the root element (the 'svg' elemen¤t).
-        Element svgRoot = doc.getDocumentElement();
-        // todo: set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
+            // Get the root element (the 'svg' elemen¤t).
+            Element svgRoot = doc.getDocumentElement();
+            // todo: set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
 //        int maxTextLength = 0;
 //        for (GraphDataNode currentNode : graphData.getDataNodes()) {
 //            if (currentNode.getLabel()[0].length() > maxTextLength) {
 //                maxTextLength = currentNode.getLabel()[0].length();
 //            }
 //        }
-        int vSpacing = graphPanelSize.getVerticalSpacing(graphData.gridHeight);
-        // todo: find the real text size from batik
-        // todo: get the user selected canvas size and adjust the hSpacing and vSpacing to fit
+            int vSpacing = graphPanelSize.getVerticalSpacing(graphData.gridHeight);
+            // todo: find the real text size from batik
+            // todo: get the user selected canvas size and adjust the hSpacing and vSpacing to fit
 //        int hSpacing = maxTextLength * 10 + 100;
-        int hSpacing = graphPanelSize.getHorizontalSpacing(graphData.gridWidth);
-        int symbolSize = 15;
-        int strokeWidth = 2;
+            int hSpacing = graphPanelSize.getHorizontalSpacing(graphData.gridWidth);
+            int symbolSize = 15;
+            int strokeWidth = 2;
 
 //        int preferedWidth = graphData.gridWidth * hSpacing + hSpacing * 2;
 //        int preferedHeight = graphData.gridHeight * vSpacing + vSpacing * 2;
-        currentWidth = graphPanelSize.getWidth(graphData.gridWidth, hSpacing);
-        currentHeight = graphPanelSize.getHeight(graphData.gridHeight, vSpacing);
-        // Set the width and height attributes on the root 'svg' element.
-        svgRoot.setAttribute("width", Integer.toString(currentWidth));
-        svgRoot.setAttribute("height", Integer.toString(currentHeight));
+            currentWidth = graphPanelSize.getWidth(graphData.gridWidth, hSpacing);
+            currentHeight = graphPanelSize.getHeight(graphData.gridHeight, vSpacing);
+            // Set the width and height attributes on the root 'svg' element.
+            svgRoot.setAttribute("width", Integer.toString(currentWidth));
+            svgRoot.setAttribute("height", Integer.toString(currentHeight));
 
-        this.setPreferredSize(new Dimension(graphPanelSize.getHeight(graphData.gridHeight, vSpacing), graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
+            this.setPreferredSize(new Dimension(graphPanelSize.getHeight(graphData.gridHeight, vSpacing), graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
 
-        // store the selected kin type strings and other data in the dom
-        dataStoreSvg.storeAllData(doc);
+            // store the selected kin type strings and other data in the dom
+            dataStoreSvg.storeAllData(doc);
 
-        svgCanvas.setSVGDocument(doc);
+            svgCanvas.setSVGDocument(doc);
 //        svgCanvas.setDocument(doc);
 //        int counterTest = 0;
 
-        // add the relation symbols in a group below the relation lines
-        Element relationGroupNode = doc.createElementNS(svgNameSpace, "g");
-        relationGroupNode.setAttribute("id", "RelationGroup");
-        for (EntityData currentNode : graphData.getDataNodes()) {
-            // set up the mouse listners on the group node
+            // add the relation symbols in a group below the relation lines
+            Element relationGroupNode = doc.createElementNS(svgNameSpace, "g");
+            relationGroupNode.setAttribute("id", "RelationGroup");
+            for (EntityData currentNode : graphData.getDataNodes()) {
+                // set up the mouse listners on the group node
 //            ((EventTarget) groupNode).addEventListener("mouseover", new EventListener() {
 //
 //                public void handleEvent(Event evt) {
@@ -437,26 +452,31 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            }, false);
 
 
-            if (currentNode.isVisible) {
-                for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
-                    new RelationSvg().insertRelation(doc, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing, strokeWidth);
+                if (currentNode.isVisible) {
+                    for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
+                        new RelationSvg().insertRelation(doc, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing, strokeWidth);
+                    }
                 }
             }
-        }
-        svgRoot.appendChild(relationGroupNode);
-        // add the entity symbols in a group on top of the relation lines
-        Element entityGroupNode = doc.createElementNS(svgNameSpace, "g");
-        entityGroupNode.setAttribute("id", "EntityGroup");
-        for (EntityData currentNode : graphData.getDataNodes()) {
-            if (currentNode.isVisible) {
-                entityGroupNode.appendChild(createEntitySymbol(currentNode, hSpacing, vSpacing, symbolSize));
+            svgRoot.appendChild(relationGroupNode);
+            // add the entity symbols in a group on top of the relation lines
+            Element entityGroupNode = doc.createElementNS(svgNameSpace, "g");
+            entityGroupNode.setAttribute("id", "EntityGroup");
+            for (EntityData currentNode : graphData.getDataNodes()) {
+                if (currentNode.isVisible) {
+                    entityGroupNode.appendChild(createEntitySymbol(currentNode, hSpacing, vSpacing, symbolSize));
+                }
             }
-        }
-        svgRoot.appendChild(entityGroupNode);
-        //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+            svgRoot.appendChild(entityGroupNode);
+            //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
-        dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(new EntitySvg().listSymbolNames(doc));
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(new EntitySvg().listSymbolNames(doc));
 //        zoomDrawing();
+        } catch (DOMException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+        } catch (IOException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+        }
     }
 
     public boolean hasSaveFileName() {
