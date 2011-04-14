@@ -60,25 +60,26 @@ public class EntityIndex implements EntityService {
                         URI alterUri = egoEntityUri.resolve(relationLinkNode.getTextContent());
                         entityData.addRelation(alterUri.toASCIIString());
                         // get any requested link data
-                        for (String[] relevantDataPath : indexParameters.relevantLinkData.getValues()) {
+                        for (ParameterElement relevantDataPath : indexParameters.relevantLinkData.getValues()) {
                             for (Node linkDataNode = relationLinkNode.getParentNode().getFirstChild(); linkDataNode != null; linkDataNode = linkDataNode.getNextSibling()) {
-                                if (relevantDataPath[0].equals(linkDataNode.getNodeName())) {
-                                    entityData.addRelationData(alterUri.toASCIIString(), relevantDataPath[0], linkDataNode.getTextContent());
+                                if (relevantDataPath.getXpathString().equals(linkDataNode.getNodeName())) {
+                                    entityData.addRelationData(alterUri.toASCIIString(), relevantDataPath.getXpathString(), linkDataNode.getTextContent());
                                 }
                             }
                         }
                     }
                 }
                 // get any requested entity data
-                for (String[] relevantDataPath : indexParameters.getRelevantEntityData()) {
-                    NodeList relevantaDataNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, relevantDataPath[0]);
-                    for (int dataCounter = 0; dataCounter < relevantaDataNodeList.getLength(); dataCounter++) {
-                        Node dataNode = relevantaDataNodeList.item(dataCounter);
-                        if (dataNode != null) {
-                            entityData.addEntityData(relevantDataPath[0], dataNode.getTextContent());
-                        }
-                    }
-                }
+                // todo: this has been removed due to changes in the data storage and would have to be replaced if this class comes back into use
+//                for (String[] relevantDataPath : indexParameters.getRelevantEntityData()) {
+//                    NodeList relevantaDataNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, relevantDataPath[0]);
+//                    for (int dataCounter = 0; dataCounter < relevantaDataNodeList.getLength(); dataCounter++) {
+//                        Node dataNode = relevantaDataNodeList.item(dataCounter);
+//                        if (dataNode != null) {
+//                            entityData.addEntityData(relevantDataPath[0], dataNode.getTextContent());
+//                        }
+//                    }
+//                }
             } catch (TransformerException exception) {
                 GuiHelper.linorgBugCatcher.logError(exception);
             } catch (ParserConfigurationException exception) {
@@ -132,16 +133,16 @@ public class EntityIndex implements EntityService {
     private EntityData getGraphDataNode(boolean isEgo, URI entityUri, IndexerParameters indexParameters) {
         IndexerEntityData entityData = getEntityData(entityUri, indexParameters);
         ArrayList<String> labelTextList = new ArrayList<String>();
-        for (String[] currentLabelField : indexParameters.labelFields.getValues()) {
-            String labelTextTemp = entityData.getEntityField(currentLabelField[0]);
+        for (ParameterElement currentLabelField : indexParameters.labelFields.getValues()) {
+            String labelTextTemp = entityData.getEntityField(currentLabelField.getXpathString());
             if (labelTextTemp != null) {
                 labelTextList.add(labelTextTemp);
             }
         }
-        for (String currentSymbolField[] : indexParameters.symbolFieldsFields.getValues()) {
-            String linkSymbolString = entityData.getEntityField(currentSymbolField[0]);
+        for (ParameterElement currentSymbolField : indexParameters.symbolFieldsFields.getValues()) {
+            String linkSymbolString = entityData.getEntityField(currentSymbolField.getXpathString());
             if (linkSymbolString != null) {
-                return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), null, currentSymbolField[1], labelTextList.toArray(new String[]{}), isEgo);
+                return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), null, currentSymbolField.getSelectedValue(), labelTextList.toArray(new String[]{}), isEgo);
             }
         }
         return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), null, EntityData.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
@@ -152,17 +153,17 @@ public class EntityIndex implements EntityService {
         DataTypes.RelationType alterType = null;
         String[][] alterRelationFields = egoData.getRelationData(alterPath);
         if (alterRelationFields != null) {
-            for (String[] ancestorField : indexParameters.ancestorFields.getValues()) {
+            for (ParameterElement ancestorField : indexParameters.ancestorFields.getValues()) {
                 for (String[] egoRelationField : alterRelationFields) {
-                    if (ancestorField[0].equals(egoRelationField[1])) {
+                    if (ancestorField.getXpathString().equals(egoRelationField)) {
                         egoType = DataTypes.RelationType.ancestor;
                         alterType = DataTypes.RelationType.descendant;
                     }
                 }
             }
-            for (String[] ancestorField : indexParameters.decendantFields.getValues()) {
+            for (ParameterElement ancestorField : indexParameters.decendantFields.getValues()) {
                 for (String[] egoRelationField : alterRelationFields) {
-                    if (ancestorField[0].equals(egoRelationField[1])) {
+                    if (ancestorField.getXpathString().equals(egoRelationField[1])) {
                         egoType = DataTypes.RelationType.descendant;
                         alterType = DataTypes.RelationType.ancestor;
                     }
