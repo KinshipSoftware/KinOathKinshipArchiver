@@ -150,13 +150,12 @@ public class GraphPanel extends JPanel implements SavePanel {
         try {
             doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toURI().toString());
             svgCanvas.setDocument(doc);
+            dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc);
             requiresSave = false;
         } catch (IOException ioe) {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
 //        svgCanvas.setURI(svgFilePath.toURI().toString());
-
-        dataStoreSvg.loadDataFromSvg(doc);
     }
 
     private void saveSvg(File svgFilePath) {
@@ -373,6 +372,9 @@ public class GraphPanel extends JPanel implements SavePanel {
         graphData = graphDataLocal;
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         doc = (SVGDocument) impl.createDocument(svgNameSpace, "svg", null);
+        // todo: look into how to add the extra namespaces to the svg document - doc.getDomConfig()
+        doc.getDocumentElement().setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:version", "");
+        doc.getDocumentElement().setAttribute("xmlns:" + DataStoreSvg.kinDataNameSpace, DataStoreSvg.kinDataNameSpaceLocation); // this method of declaring multiple namespaces looks to me to be wrong but it is the only method that does not get stripped out by the transformer on save
         new EntitySvg().insertSymbols(doc, svgNameSpace);
 //        Document doc = impl.createDocument(svgNS, "svg", null);
 //        SVGDocument doc = svgCanvas.getSVGDocument();
