@@ -26,7 +26,7 @@ import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.EntityRelation;
-import nl.mpi.kinnate.kintypestrings.KinTerms;
+import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
@@ -52,7 +52,6 @@ public class GraphPanel extends JPanel implements SavePanel {
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
     protected SVGDocument doc;
-    private KinTerms[] kinTermGroups;
     protected ImdiTableModel imdiTableModel;
     protected GraphSorter graphData;
     private boolean requiresSave = false;
@@ -73,7 +72,6 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgUpdateHandler = new SvgUpdateHandler(this, egoSelectionPanel);
         selectedGroupId = new ArrayList<String>();
         graphPanelSize = new GraphPanelSize();
-        kinTermGroups = new KinTerms[]{new KinTerms()};
         this.setLayout(new BorderLayout());
         svgCanvas = new JSVGCanvas();
 //        svgCanvas.setMySize(new Dimension(600, 400));
@@ -197,14 +195,14 @@ public class GraphPanel extends JPanel implements SavePanel {
         return dataStoreSvg.indexParameters;
     }
 
-    public KinTerms[] getkinTermGroups() {
-        return kinTermGroups;
+    public KinTermGroup[] getkinTermGroups() {
+        return dataStoreSvg.kinTermGroups;
     }
 
     public void addKinTermGroup() {
-        ArrayList<KinTerms> kinTermsList = new ArrayList<KinTerms>(Arrays.asList(kinTermGroups));
-        kinTermsList.add(new KinTerms());
-        kinTermGroups = kinTermsList.toArray(new KinTerms[]{});
+        ArrayList<KinTermGroup> kinTermsList = new ArrayList<KinTermGroup>(Arrays.asList(dataStoreSvg.kinTermGroups));
+        kinTermsList.add(new KinTermGroup());
+        dataStoreSvg.kinTermGroups = kinTermsList.toArray(new KinTermGroup[]{});
     }
 
     public String[] getEgoUniquiIdentifiersList() {
