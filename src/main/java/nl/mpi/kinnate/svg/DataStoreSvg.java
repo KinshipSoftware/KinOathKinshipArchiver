@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,6 +35,8 @@ public class DataStoreSvg {
     protected String[] kinTypeStrings = new String[]{};
     @XmlElement(name = "IndexParameters", namespace = "http://mpi.nl/tla/kin")
     protected IndexerParameters indexParameters;
+    @XmlElement(name = "KinTermGroups", namespace = "http://mpi.nl/tla/kin")
+    protected KinTermGroup[] kinTermGroups;
 
     public class GraphRelationData {
 
@@ -44,6 +47,7 @@ public class DataStoreSvg {
     }
 
     public DataStoreSvg() {
+        kinTermGroups = new KinTermGroup[]{new KinTermGroup()};
         indexParameters = new IndexerParameters();
     }
 
@@ -145,7 +149,7 @@ public class DataStoreSvg {
 //            } catch (TransformerException transformerException) {
 //                GuiHelper.linorgBugCatcher.logError(transformerException);
 //            }
- todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
+// done: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
 //        }
 //        return parameterList.toArray(new String[]{});
 //    }
