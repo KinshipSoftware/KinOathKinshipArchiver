@@ -25,7 +25,7 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
     private GraphPanel graphPanel;
     private KinTermTabPane kinTermPanel;
     private HidePane kinTermHidePane;
-    private String defaultString = "This test panel should provide a kin diagram of the kintype strings entered here.\nEnter one string per line.\nEach new line (enter/return key) will update the graph.";
+    private String defaultString = "# This test panel should provide a kin diagram of the kintype strings entered here.\n# Enter one string per line.\n# Each new line (enter/return key) will update the graph.";
     private String lastKinTypeStringInput = null;
 
     public KinTypeStringTestPanel() {
