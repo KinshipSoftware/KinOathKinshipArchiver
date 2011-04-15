@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.arbil.LinorgWindowManager;
@@ -36,7 +35,7 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
  */
 public class KinTermPanel extends JPanel {
 
-    JTextArea kinTypeGroupName;
+    JTextField kinTypeGroupName;
     KinTermGroup kinTerms;
     SavePanel savePanel;
     JCheckBox autoGenerateCheckBox;
@@ -44,20 +43,24 @@ public class KinTermPanel extends JPanel {
     JComboBox colourSelectBox;
     JPanel outerPanel;
     JTextField addNewKinTerm;
-    JTextField addNewKinType;
+    JTextField addEgoKinType;
+    JTextField addKinTermDescription;
+    JTextField addAlterKinType;
+    JTextField addPropositusKinType;
+    JTextField addAnchorKinType;
     String defaultKinType = "";
 
     public KinTermPanel(SavePanel savePanelLocal, KinTermGroup kinTermsLocal, String defaultKinTypeLocal) {
         kinTerms = kinTermsLocal;
         savePanel = savePanelLocal;
         defaultKinType = defaultKinTypeLocal;
-        kinTypeGroupName = new JTextArea(kinTerms.titleString);
+        kinTypeGroupName = new JTextField(kinTerms.titleString);
         kinTypeGroupName.addKeyListener(new KeyAdapter() {
 
             @Override
             public void keyReleased(KeyEvent ke) {
                 super.keyReleased(ke);
-                kinTerms.titleString = ((JTextArea) ke.getComponent()).getText();
+                kinTerms.titleString = ((JTextField) ke.getComponent()).getText();
                 Component parentComponent = KinTermPanel.this.getParent();
                 if (parentComponent instanceof JTabbedPane) {
                     ((JTabbedPane) parentComponent).setTitleAt(((JTabbedPane) parentComponent).getSelectedIndex(), kinTerms.titleString);
@@ -93,7 +96,7 @@ public class KinTermPanel extends JPanel {
         outerPanel.add(colourSelectBox);
         outerPanel.add(autoGenerateCheckBox);
 //        this.add(new JLabel("KinTerms"));
-        for (KinTerm currentKinTerm : kinTerms.getKinTerms()) {
+        for (final KinTerm currentKinTerm : kinTerms.getKinTerms()) {
             JPanel termPanel = new JPanel();
             termPanel.setBorder(BorderFactory.createTitledBorder(currentKinTerm.kinTerm));
             termPanel.setLayout(new BoxLayout(termPanel, BoxLayout.Y_AXIS));
@@ -115,19 +118,77 @@ public class KinTermPanel extends JPanel {
                 }
             });
             labelPanel.add(removeButton, BorderLayout.LINE_END);
-            termPanel.add(labelPanel);
-            JTextArea kinTypeString = new JTextArea(currentKinTerm.alterKinTypeStrings);
-            final String kinType = currentKinTerm.kinTerm;
-            kinTypeString.addKeyListener(new KeyAdapter() {
+            if (currentKinTerm.kinTermDescription != null) {
+                termPanel.add(new JLabel("Description"));
+                JTextField kinTypeString = new JTextField(currentKinTerm.kinTermDescription);
+                kinTypeString.addKeyListener(new KeyAdapter() {
 
-                @Override
-                public void keyReleased(KeyEvent ke) {
-                    super.keyReleased(ke);
-                    kinTerms.updateKinTerm(((JTextArea) ke.getComponent()).getText(), kinType);
-                    savePanel.updateGraph();
-                }
-            });
-            termPanel.add(kinTypeString);
+                    @Override
+                    public void keyReleased(KeyEvent ke) {
+                        super.keyReleased(ke);
+                        currentKinTerm.kinTermDescription = ((JTextField) ke.getComponent()).getText();
+                        savePanel.updateGraph();
+                    }
+                });
+                termPanel.add(kinTypeString);
+            }
+            if (currentKinTerm.egoType != null) {
+                termPanel.add(new JLabel("Ego Kin Type"));
+                JTextField kinTypeString = new JTextField(currentKinTerm.egoType);
+                kinTypeString.addKeyListener(new KeyAdapter() {
+
+                    @Override
+                    public void keyReleased(KeyEvent ke) {
+                        super.keyReleased(ke);
+                        currentKinTerm.egoType = ((JTextField) ke.getComponent()).getText();
+                        savePanel.updateGraph();
+                    }
+                });
+                termPanel.add(kinTypeString);
+            }
+            if (currentKinTerm.alterKinTypeStrings != null) {
+                termPanel.add(new JLabel("Alter Kin Type Strings"));
+                JTextField kinTypeString = new JTextField(currentKinTerm.alterKinTypeStrings);
+                kinTypeString.addKeyListener(new KeyAdapter() {
+
+                    @Override
+                    public void keyReleased(KeyEvent ke) {
+                        super.keyReleased(ke);
+                        currentKinTerm.alterKinTypeStrings = ((JTextField) ke.getComponent()).getText();
+                        savePanel.updateGraph();
+                    }
+                });
+                termPanel.add(kinTypeString);
+            }
+            if (currentKinTerm.propositusKinTypeStrings != null) {
+                termPanel.add(new JLabel("Propositus Kin Type Strings"));
+                JTextField kinTypeString = new JTextField(currentKinTerm.propositusKinTypeStrings);
+                kinTypeString.addKeyListener(new KeyAdapter() {
+
+                    @Override
+                    public void keyReleased(KeyEvent ke) {
+                        super.keyReleased(ke);
+                        currentKinTerm.propositusKinTypeStrings = ((JTextField) ke.getComponent()).getText();
+                        savePanel.updateGraph();
+                    }
+                });
+                termPanel.add(kinTypeString);
+            }
+            if (currentKinTerm.anchorKinTypeStrings != null) {
+                termPanel.add(new JLabel("Anchor Kin Type Strings"));
+                JTextField kinTypeString = new JTextField(currentKinTerm.anchorKinTypeStrings);
+                kinTypeString.addKeyListener(new KeyAdapter() {
+
+                    @Override
+                    public void keyReleased(KeyEvent ke) {
+                        super.keyReleased(ke);
+                        currentKinTerm.anchorKinTypeStrings = ((JTextField) ke.getComponent()).getText();
+                        savePanel.updateGraph();
+                    }
+                });
+                termPanel.add(kinTypeString);
+            }
+            termPanel.add(labelPanel);
             outerPanel.add(termPanel);
 //            outerPanel.add(new JSeparator());
         }
@@ -145,25 +206,37 @@ public class KinTermPanel extends JPanel {
 
     public void setDefaultKinType(String kinTypeString) {
         defaultKinType = kinTypeString;
-        addNewKinType.setText(defaultKinType);
+        addAlterKinType.setText(defaultKinType);
     }
 
     private void populateAddForm() {
         addNewKinTerm = new JTextField();
-        addNewKinType = new JTextField();
-        addNewKinType.setText(defaultKinType);
+        addKinTermDescription = new JTextField();
+        addEgoKinType = new JTextField();
+        addAlterKinType = new JTextField(defaultKinType);
+        addPropositusKinType = new JTextField();
+        addAnchorKinType = new JTextField();
         JPanel termPanel = new JPanel();
         termPanel.setBorder(BorderFactory.createTitledBorder("Create New Kin Term"));
         termPanel.setLayout(new BoxLayout(termPanel, BoxLayout.Y_AXIS));
         termPanel.add(new JLabel("Kin Term"));
         termPanel.add(addNewKinTerm);
-        termPanel.add(new JLabel("Kin Type Strings"));
-        termPanel.add(addNewKinType);
+        termPanel.add(new JLabel("Description"));
+        termPanel.add(addKinTermDescription);
+        termPanel.add(new JLabel("Ego Kin Type"));
+        termPanel.add(addEgoKinType);
+        termPanel.add(new JLabel("Alter Kin Type Strings"));
+        termPanel.add(addAlterKinType);
+        termPanel.add(new JLabel("Propositus Kin Type Strings"));
+        termPanel.add(addPropositusKinType);
+        termPanel.add(new JLabel("Anchor Kin Type Strings"));
+        termPanel.add(addAnchorKinType);
         JButton addButton = new JButton("add");
         addButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kinTerms.addKinTerm(addNewKinType.getText(), addNewKinTerm.getText());
+                KinTerm kinTerm = new KinTerm(addNewKinTerm.getText(), addKinTermDescription.getText(), addEgoKinType.getText(), addAlterKinType.getText(), addPropositusKinType.getText(), addAnchorKinType.getText());
+                kinTerms.addKinTerm(kinTerm);
                 populateKinTermList();
                 revalidate();
                 savePanel.updateGraph();
