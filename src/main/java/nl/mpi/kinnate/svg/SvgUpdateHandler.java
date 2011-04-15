@@ -89,9 +89,14 @@ public class SvgUpdateHandler {
                                             symbolNode.setAttribute("height", Float.toString(bbox.getHeight() + paddingDistance * 2));
                                             symbolNode.setAttribute("fill", "none");
                                             symbolNode.setAttribute("stroke-width", "1");
+                                            if (graphPanel.selectedGroupId.indexOf(entityId) == 0) {
+                                                symbolNode.setAttribute("stroke-dasharray", "3");
+                                                symbolNode.setAttribute("stroke-dashoffset", "0");
+                                            } else {
+                                                symbolNode.setAttribute("stroke-dasharray", "6");
+                                                symbolNode.setAttribute("stroke-dashoffset", "0");
+                                            }
                                             symbolNode.setAttribute("stroke", "blue");
-                                            symbolNode.setAttribute("stroke-dasharray", "3");
-                                            symbolNode.setAttribute("stroke-dashoffset", "0");
 //            symbolNode.setAttribute("id", "Highlight");
 //            symbolNode.setAttribute("id", "Highlight");
 //            symbolNode.setAttribute("id", "Highlight");
