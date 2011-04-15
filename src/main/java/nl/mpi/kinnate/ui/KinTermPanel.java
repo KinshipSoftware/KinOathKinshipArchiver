@@ -114,6 +114,15 @@ public class KinTermPanel extends JPanel {
             outerPanel.add(termPanel);
             outerPanel.add(new JSeparator());
         }
+//        JButton saveButton = new JButton("save");
+//        saveButton.setToolTipText("save changes");
+//        saveButton.addActionListener(new java.awt.event.ActionListener() {
+//
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                savePanel.updateGraph();
+//            }
+//        });
+//        outerPanel.add(saveButton, BorderLayout.LINE_END);
         populateAddForm();
     }
 
