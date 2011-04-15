@@ -100,18 +100,6 @@ public class KinTermPanel extends JPanel {
             JPanel labelPanel = new JPanel();
             labelPanel.setLayout(new BorderLayout());
 //            labelPanel.add(new JLabel(currentKinTerm.kinTerm), BorderLayout.CENTER);
-            JTextArea kinTypeString = new JTextArea(currentKinTerm.alterKinTypeStrings);
-            final String kinType = currentKinTerm.kinTerm;
-            kinTypeString.addKeyListener(new KeyAdapter() {
-
-                @Override
-                public void keyReleased(KeyEvent ke) {
-                    super.keyReleased(ke);
-                    kinTerms.updateKinTerm(((JTextArea) ke.getComponent()).getText(), kinType);
-                    savePanel.updateGraph();
-                }
-            });
-
             JButton removeButton = new JButton("x");
             removeButton.setToolTipText("delete kin term");
             int removeButtonSize = removeButton.getFontMetrics(removeButton.getFont()).getHeight();
@@ -128,6 +116,17 @@ public class KinTermPanel extends JPanel {
             });
             labelPanel.add(removeButton, BorderLayout.LINE_END);
             termPanel.add(labelPanel);
+            JTextArea kinTypeString = new JTextArea(currentKinTerm.alterKinTypeStrings);
+            final String kinType = currentKinTerm.kinTerm;
+            kinTypeString.addKeyListener(new KeyAdapter() {
+
+                @Override
+                public void keyReleased(KeyEvent ke) {
+                    super.keyReleased(ke);
+                    kinTerms.updateKinTerm(((JTextArea) ke.getComponent()).getText(), kinType);
+                    savePanel.updateGraph();
+                }
+            });
             termPanel.add(kinTypeString);
             outerPanel.add(termPanel);
 //            outerPanel.add(new JSeparator());
