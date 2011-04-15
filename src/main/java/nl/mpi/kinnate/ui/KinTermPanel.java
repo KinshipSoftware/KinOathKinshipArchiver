@@ -235,7 +235,26 @@ public class KinTermPanel extends JPanel {
         addButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                KinTerm kinTerm = new KinTerm(addNewKinTerm.getText(), addKinTermDescription.getText(), addEgoKinType.getText(), addAlterKinType.getText(), addPropositusKinType.getText(), addAnchorKinType.getText());
+                KinTerm kinTerm = new KinTerm();
+                if (addNewKinTerm.getText().length() > 0) {
+                    kinTerm.kinTerm = addNewKinTerm.getText();
+                }
+//                if (addKinTermDescription.getText().length() > 0) {
+                kinTerm.kinTermDescription = addKinTermDescription.getText();
+//                }
+                if (addEgoKinType.getText().length() > 0) {
+                    kinTerm.egoType = addEgoKinType.getText();
+                }
+                // description and alter are basic requirements
+//                if (addAlterKinType.getText().length() > 0) {
+                kinTerm.alterKinTypeStrings = addAlterKinType.getText();
+//                }
+                if (addPropositusKinType.getText().length() > 0) {
+                    kinTerm.propositusKinTypeStrings = addPropositusKinType.getText();
+                }
+                if (addAnchorKinType.getText().length() > 0) {
+                    kinTerm.anchorKinTypeStrings = addAnchorKinType.getText();
+                }
                 kinTerms.addKinTerm(kinTerm);
                 populateKinTermList();
                 revalidate();
