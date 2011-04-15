@@ -43,8 +43,8 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     private HidePane kinTypeHidePane;
     private KinTermTabPane kinTermPanel;
     private EntityService entityIndex;
-    private String defaultString = "# The kin type strings entered here will determine the entities show on the graph below\n";
-    public static String defaultGraphString = "# The kin type strings entered here will determine the entities show on the graph below\n"
+    private String defaultString = "# The kin type strings entered here will determine how the entities show on the graph below\n";
+    public static String defaultGraphString = "# The kin type strings entered here will determine how the entities show on the graph below\n"
             + "# Enter one string per line.\n"
             //+ "# By default all relations of the selected entity will be shown.\n"
             + "# for example:\n"
@@ -279,7 +279,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     }
 
     public void setSelectedKinTypeSting(String kinTypeStrings) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        kinTermPanel.setAddableKinTypeSting(kinTypeStrings);
     }
 
     public boolean isHidden() {
