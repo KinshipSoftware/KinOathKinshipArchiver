@@ -13,6 +13,8 @@ import javax.swing.JPopupMenu;
 import nl.mpi.arbil.GuiHelper;
 import nl.mpi.arbil.LinorgSessionStorage;
 import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.kinnate.entityindexer.RelationLinker;
+import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.GraphPanelSize;
 import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
@@ -27,7 +29,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
     KinTypeEgoSelectionTestPanel egoSelectionPanel;
     GraphPanel graphPanel;
     GraphPanelSize graphPanelSize;
-    JMenuItem addRelationEntityMenuItem;
+    JMenuItem addRelationEntityMenu;
     JMenuItem setAsEgoMenuItem;
     JMenuItem addAsEgoMenuItem;
     JMenuItem removeEgoMenuItem;
@@ -61,8 +63,10 @@ public class GraphPanelContextMenu extends JPopupMenu {
                         ArrayList<String> egoIdentifierList = new ArrayList<String>(Arrays.asList(graphPanel.getEgoUniquiIdentifiersList()));
 //                        egoUriList.add(addedNodePath);
                         egoIdentifierList.add(localIdentifier);
+                        ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoPaths()));
+                        egoUriList.add(addedNodePath);
                         // todo: look into the need or not of adding ego nodes, on one hand they should not be added as ego nodes but as working nodes, also it is likely that the jlist that is updated by this could better be updaed by the selection listner
-                       egoSelectionPanel.addEgoNodes(null, egoIdentifierList.toArray(new String[]{}));
+                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}), egoIdentifierList.toArray(new String[]{}));
                     } catch (URISyntaxException ex) {
                         GuiHelper.linorgBugCatcher.logError(ex);
                         // todo: warn user with a dialog
@@ -70,13 +74,20 @@ public class GraphPanelContextMenu extends JPopupMenu {
                 }
             });
             this.add(addEntityMenuItem);
-            addRelationEntityMenuItem = new JMenuItem("Add Relation");
-            addRelationEntityMenuItem.setActionCommand(GraphPanelContextMenu.class.getResource("/xsd/StandardEntity.xsd").toString());
-            addRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            addRelationEntityMenu = new JMenu("Add Relation");
+            this.add(addRelationEntityMenu);
+            for (RelationType relationType : RelationType.values()) {
+                JMenuItem addRelationEntityMenuItem = new JMenuItem(relationType.name());
+                addRelationEntityMenuItem.setActionCommand(relationType.name());
+                addRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    // todo: add the relation to both selected nodes and show the new relation in the table
-                    // todo: this could be simplified by adapting the Arbil code
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        new RelationLinker().linkEntities(graphPanel, selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()));
+//                    graphPanel.
+//                    selectedIdentifiers
+//                            graphPanel.getPathForElementId()
+                        // todo: add the relation to both selected nodes and show the new relation in the table
+                        // todo: this could be simplified by adapting the Arbil code
 //                    String nodeType = evt.getActionCommand();
 //                    URI addedNodePath;
 //                    URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), nodeType);
@@ -94,9 +105,10 @@ public class GraphPanelContextMenu extends JPopupMenu {
 //                        GuiHelper.linorgBugCatcher.logError(ex);
 //                        // todo: warn user with a dialog
 //                    }
-                }
-            });
-            this.add(addRelationEntityMenuItem);
+                    }
+                });
+                addRelationEntityMenu.add(addRelationEntityMenuItem);
+            }
             JMenu shapeSubMenu = new JMenu("Add Geometry");
             for (String currentType : new String[]{"Label", "Circle", "Square", "Polyline"}) {
                 JMenuItem addLabel = new JMenuItem("Add " + currentType);
@@ -211,8 +223,8 @@ public class GraphPanelContextMenu extends JPopupMenu {
     @Override
     public void show(Component cmpnt, int i, int i1) {
         selectedIdentifiers = graphPanel.getSelectedIds();
-        if (addRelationEntityMenuItem != null) {
-            addRelationEntityMenuItem.setVisible(selectedIdentifiers.length == 2);
+        if (addRelationEntityMenu != null) {
+            addRelationEntityMenu.setVisible(selectedIdentifiers.length == 2);
             setAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
             addAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
             removeEgoMenuItem.setVisible(graphPanel.selectionContainsEgo());
