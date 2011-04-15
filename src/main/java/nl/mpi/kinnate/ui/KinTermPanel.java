@@ -95,10 +95,11 @@ public class KinTermPanel extends JPanel {
 //        this.add(new JLabel("KinTerms"));
         for (KinTerm currentKinTerm : kinTerms.getKinTerms()) {
             JPanel termPanel = new JPanel();
+            termPanel.setBorder(BorderFactory.createTitledBorder(currentKinTerm.kinTerm));
             termPanel.setLayout(new BoxLayout(termPanel, BoxLayout.Y_AXIS));
             JPanel labelPanel = new JPanel();
             labelPanel.setLayout(new BorderLayout());
-            labelPanel.add(new JLabel(currentKinTerm.kinTerm), BorderLayout.CENTER);
+//            labelPanel.add(new JLabel(currentKinTerm.kinTerm), BorderLayout.CENTER);
             JTextArea kinTypeString = new JTextArea(currentKinTerm.alterKinTypeStrings);
             final String kinType = currentKinTerm.kinTerm;
             kinTypeString.addKeyListener(new KeyAdapter() {
@@ -129,7 +130,7 @@ public class KinTermPanel extends JPanel {
             termPanel.add(labelPanel);
             termPanel.add(kinTypeString);
             outerPanel.add(termPanel);
-            outerPanel.add(new JSeparator());
+//            outerPanel.add(new JSeparator());
         }
 //        JButton saveButton = new JButton("save");
 //        saveButton.setToolTipText("save changes");
