@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 public class IndexerParam {
 
+    @XmlTransient
     IndexerParameters indexerParameters;
     @XmlElement(name = "IndexerParam", namespace = "http://mpi.nl/tla/kin")
     private ArrayList<ParameterElement> parametersList;
@@ -61,10 +62,12 @@ public class IndexerParam {
         indexerParameters.valuesChanged = true;
     }
 
+    @XmlTransient
     public ParameterElement[] getValues() {
         return parametersList.toArray(new ParameterElement[]{});
     }
 
+    @XmlTransient
     public void setAvailableValues(String[] availableValuesArrayLocal) {
         availableValuesArray = availableValuesArrayLocal;
     }
