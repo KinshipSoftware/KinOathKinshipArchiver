@@ -65,7 +65,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private int currentZoom = 0;
     private int currentWidth = 0;
     private int currentHeight = 0;
-    public boolean snapToGrid = false;
+    public boolean snapToGrid = true;
 
     public GraphPanel(KinTermSavePanel egoSelectionPanel) {
         dataStoreSvg = new DataStoreSvg();
