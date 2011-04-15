@@ -16,21 +16,25 @@ public class KinTermGroup {
     @XmlAttribute(name = "GroupColour", namespace = "http://mpi.nl/tla/kin")
     public String graphColour;
     @XmlElement(name = "KinTerm", namespace = "http://mpi.nl/tla/kin")
-    ArrayList<KinTerm> kinTermArray;
+    private ArrayList<KinTerm> kinTermArray;
 
     public KinTermGroup() {
-        titleString = "Sample Kin Terms";
+        titleString = "Unnamed Kin Term Group";
         graphColour = "blue";
         //todo: sample kin terms to put into a sensible defaults place
         kinTermArray = new ArrayList<KinTerm>();
-        kinTermArray.add(new KinTerm("Grand Mother", null, "MM", null, null));
-        kinTermArray.add(new KinTerm("Aunt", null, "MZ" + "|" + "FZ", null, null));
-        kinTermArray.add(new KinTerm("Uncle", null, "MB" + "|" + "FB", null, null));
-        kinTermArray.add(new KinTerm("Grand Father", null, "FF", null, null));
+        kinTermArray.add(new KinTerm("Grand Mother", null, null, "MM", null, null));
+        kinTermArray.add(new KinTerm("Aunt", null, null, "MZ" + "|" + "FZ", null, null));
+        kinTermArray.add(new KinTerm("Uncle", null, null, "MB" + "|" + "FB", null, null));
+        kinTermArray.add(new KinTerm("Grand Father", null, null, "FF", null, null));
     }
 
     public void addKinTerm(String kinTypeStrings, String kinTerm) {
-        kinTermArray.add(new KinTerm(kinTerm, null, kinTypeStrings, null, null));
+        kinTermArray.add(new KinTerm(kinTerm, null, null, kinTypeStrings, null, null));
+    }
+
+    public void addKinTerm(KinTerm kinTerm) {
+        kinTermArray.add(kinTerm);
     }
 
     public void updateKinTerm(String kinTypeStrings, String kinTerm) {
