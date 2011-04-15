@@ -3,8 +3,8 @@ package nl.mpi.kinnate.kintypestrings;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlightType;
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -95,7 +95,7 @@ public class KinTypeStringConverter extends GraphSorter {
 //        }
 //    }
     public boolean compareRequiresNextRelation(EntityData adjacentEntity, KinType requiredKinType, EntityRelation entityRelation) {
-        adjacentEntity.appendTempLabel("compareRequiresNextRelation" + "F: " + QueryParser.foundOrder++); // temp for testing // todo: remove testing labels
+//        adjacentEntity.appendTempLabel("compareRequiresNextRelation" + "F: " + QueryParser.foundOrder++); // temp for testing // todo: remove testing labels
         if (adjacentEntity.getSymbolType().equals(EntityData.SymbolType.union.name())) {
             return true;
         }
@@ -106,15 +106,15 @@ public class KinTypeStringConverter extends GraphSorter {
     }
 
     public boolean compareRelationsToKinType(EntityData egoEntity, EntityData alterEntity, KinType requiredKinType, EntityRelation entityRelation, int generationalDistance) {
-        egoEntity.appendTempLabel("compareRelationsToKinType-egoEntity" + "F: " + QueryParser.foundOrder++);
-        alterEntity.appendTempLabel("compareRelationsToKinType-alterEntity" + "F: " + QueryParser.foundOrder++);
+//        egoEntity.appendTempLabel("compareRelationsToKinType-egoEntity" + "F: " + QueryParser.foundOrder++);
+//        alterEntity.appendTempLabel("compareRelationsToKinType-alterEntity" + "F: " + QueryParser.foundOrder++);
         // temp for testing // todo: remove testing labels
-        System.out.println("egoEntity.isEgo: " + egoEntity.isEgo);
-        System.out.println("alterEntity.isEgo: " + alterEntity.isEgo);
-        System.out.println("egoEntity.symbol: " + egoEntity.getSymbolType());
-        System.out.println("alterEntity.symbol: " + alterEntity.getSymbolType());
-        System.out.println("entityRelation.relationType: " + entityRelation.relationType);
-        System.out.println("entityRelation.symgenerationalDistancebol: " + entityRelation.generationalDistance);
+//        System.out.println("egoEntity.isEgo: " + egoEntity.isEgo);
+//        System.out.println("alterEntity.isEgo: " + alterEntity.isEgo);
+//        System.out.println("egoEntity.symbol: " + egoEntity.getSymbolType());
+//        System.out.println("alterEntity.symbol: " + alterEntity.getSymbolType());
+//        System.out.println("entityRelation.relationType: " + entityRelation.relationType);
+//        System.out.println("entityRelation.symgenerationalDistancebol: " + entityRelation.generationalDistance);
         // note that this will get the kin type reversed for one of the adjacent entities and this must be accounted for in the kin type comparison
         // todo: note that the ego and alter are not correct labels
         // this array will get the kin type reversed for one of the adjacent entities
@@ -210,14 +210,25 @@ public class KinTypeStringConverter extends GraphSorter {
         return kinTypeList;
     }
 
-    public void readKinTypes(String[] inputStringArray, KinTerms[] kinTermsArray) {
+    public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray) {
         HashMap<String, EntityData> graphDataNodeList = new HashMap<String, EntityData>();
-        EntityData egoDataNode = new EntityData("ego", "ego", "E", EntityData.SymbolType.square, new String[]{"ego"}, true);
-        graphDataNodeList.put("ego", egoDataNode);
+        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{"E"}, true);
+        graphDataNodeList.put("E", egoDataNode);
         egoDataNode.isVisible = true;
-        for (String inputString : inputStringArray) {
+        ArrayList<String> inputStringList = new ArrayList<String>();
+        inputStringList.addAll(Arrays.asList(inputStringArray));
+        for (KinTermGroup kinTerms : kinTermsArray) {
+            if (kinTerms.graphGenerate) {
+                for (KinTerm kinTerm : kinTerms.getKinTerms()) {
+                    String[] kinTypeStrings = kinTerm.alterKinTypeStrings.split("\\|");
+                    inputStringList.addAll(Arrays.asList(kinTypeStrings));
+                }
+            }
+        }
+        for (String inputString : inputStringList) {
             System.out.println("inputString: " + inputString);
             if (inputString != null) {
+                inputString = inputString.trim();
                 String consumableString = inputString;
                 EntityData parentDataNode = egoDataNode;
                 while (consumableString.length() > 0) {
@@ -241,6 +252,14 @@ public class KinTypeStringConverter extends GraphSorter {
                                 graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
                                 currentGraphDataNode.isVisible = true;
                                 // add any child nodes?
+                                for (KinTermGroup kinTerms : kinTermsArray) {
+                                    if (kinTerms.graphShow) {
+                                        String kinTermLabel = kinTerms.getTermLabel(fullKinTypeString);
+                                        if (kinTermLabel != null) {
+                                            egoDataNode.addRelatedNode(currentGraphDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.horizontalCurve, kinTerms.graphColour, kinTermLabel);
+                                        }
+                                    }
+                                }
                             }
                             parentDataNode = currentGraphDataNode;
                             kinTypeFound = true;
@@ -249,12 +268,6 @@ public class KinTypeStringConverter extends GraphSorter {
                     }
                     if (kinTypeFound == false) {
                         break;
-                    }
-                }
-                for (KinTerms kinTerms : kinTermsArray) {
-                    String kinTermLabel = kinTerms.getTermLabel(inputString);
-                    if (kinTermLabel != null) {
-                        egoDataNode.addRelatedNode(parentDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.horizontalCurve, kinTerms.graphColour, kinTermLabel);
                     }
                 }
             }
