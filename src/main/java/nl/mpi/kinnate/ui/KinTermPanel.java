@@ -77,7 +77,23 @@ public class KinTermPanel extends JPanel {
             }
         });
         showOnGraphCheckBox = new JCheckBox("Show On Graph");
+        showOnGraphCheckBox.setSelected(kinTerms.graphShow);
+        showOnGraphCheckBox.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kinTerms.graphShow = showOnGraphCheckBox.isSelected();
+                savePanel.updateGraph();
+            }
+        });
         autoGenerateCheckBox = new JCheckBox("Generate Example Entities");
+        autoGenerateCheckBox.setSelected(kinTerms.graphGenerate);
+        autoGenerateCheckBox.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kinTerms.graphGenerate = autoGenerateCheckBox.isSelected();
+                savePanel.updateGraph();
+            }
+        });
         this.setLayout(new BorderLayout());
         outerPanel = new JPanel();
         outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
