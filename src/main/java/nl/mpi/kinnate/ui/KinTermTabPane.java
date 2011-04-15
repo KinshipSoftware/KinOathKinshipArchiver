@@ -6,7 +6,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.kintypestrings.KinTerms;
+import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 
 /**
  *  Document   : KinTermTabPane
@@ -19,7 +19,7 @@ public class KinTermTabPane extends JPanel {
     SavePanel savePanel;
     String defaultKinType = "";
 
-    public KinTermTabPane(SavePanel savePanelLocal, KinTerms[] kinTermsArray) {
+    public KinTermTabPane(SavePanel savePanelLocal, KinTermGroup[] kinTermsArray) {
         savePanel = savePanelLocal;
         tabbedPane = new JTabbedPane();
         this.setLayout(new BorderLayout());
@@ -27,16 +27,16 @@ public class KinTermTabPane extends JPanel {
         kintermMenuBar.add(new KinTermsMenu());
         this.add(kintermMenuBar, BorderLayout.PAGE_START);
         this.add(tabbedPane, BorderLayout.CENTER);
-        for (KinTerms kinTerms : kinTermsArray) {
+        for (KinTermGroup kinTerms : kinTermsArray) {
             tabbedPane.add(kinTerms.titleString, new KinTermPanel(savePanelLocal, kinTerms, defaultKinType));
         }
     }
 
-    public void updateKinTerms(KinTerms[] kinTermsArray) {
+    public void updateKinTerms(KinTermGroup[] kinTermsArray) {
         int lastSelectedIndex = tabbedPane.getSelectedIndex();
         int lastTabCount = tabbedPane.getTabCount();
         tabbedPane.removeAll();
-        for (KinTerms kinTerms : kinTermsArray) {
+        for (KinTermGroup kinTerms : kinTermsArray) {
             tabbedPane.add(kinTerms.titleString, new KinTermPanel(savePanel, kinTerms, defaultKinType));
         }
         if (lastTabCount != tabbedPane.getTabCount()) {
@@ -46,7 +46,7 @@ public class KinTermTabPane extends JPanel {
         }
     }
 
-    public KinTerms getSelectedKinTerms() {
+    public KinTermGroup getSelectedKinTerms() {
         return ((KinTermPanel) tabbedPane.getSelectedComponent()).kinTerms;
     }
 
