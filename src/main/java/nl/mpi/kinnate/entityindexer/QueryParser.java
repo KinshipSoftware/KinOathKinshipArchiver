@@ -129,14 +129,15 @@ public class QueryParser implements EntityService {
             if (new KinTypeStringConverter().compareRequiresNextRelation(adjacentEntity, adjacentKinType.kinType, entityRelation)) {
                 if (loadMatchingRelations(adjacentEntity, adjacentKinType, indexParameters, generationalDistance)) {
                     alterEntity.isVisible = true;
-                    alterEntity.appendTempLabel("Meta G:" + generationalDistance + "F: " + foundOrder++);
+                    //alterEntity.appendTempLabel("Meta G:" + generationalDistance + "F: " + foundOrder++);
                     visibleEntityFound = true;
                 }
             } else if (new KinTypeStringConverter().compareRelationsToKinType(egoEntity, alterEntity, adjacentKinType.kinType, entityRelation, generationalDistance)) {
                 // todo assess if the found node is of the correct kin type
                 // todo: maybe add a chain so the prev and next of each loaded node can be reached here
                 alterEntity.isVisible = true;
-                alterEntity.appendTempLabel(adjacentKinType.kinType.getCodeString() + " G:" + generationalDistance + "F: " + foundOrder++);
+                //alterEntity.appendTempLabel(adjacentKinType.kinType.getCodeString() + " G:" + generationalDistance + "F: " + foundOrder++);
+//                alterEntity.appendTempLabel(adjacentKinType.kinType.getCodeString());
                 visibleEntityFound = true;
             }
         }
@@ -175,7 +176,7 @@ public class QueryParser implements EntityService {
                             }
                             queryNode.isVisible = true;
                             kinTypeElement.entityData.add(queryNode);
-                            queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
+//                            queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
                             if (kinTypeElement.kinType.isEgoType()) {
                                 queryNode.isEgo = true; // there might be multiple types for a single entitiy
                             }
