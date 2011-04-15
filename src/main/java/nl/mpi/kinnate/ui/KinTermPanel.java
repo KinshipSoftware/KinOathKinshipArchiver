@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -19,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import nl.mpi.arbil.LinorgBugCatcher;
@@ -34,6 +36,7 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
  */
 public class KinTermPanel extends JPanel {
 
+    JTextArea kinTypeGroupName;
     KinTermGroup kinTerms;
     SavePanel savePanel;
     JCheckBox autoGenerateCheckBox;
@@ -48,6 +51,19 @@ public class KinTermPanel extends JPanel {
         kinTerms = kinTermsLocal;
         savePanel = savePanelLocal;
         defaultKinType = defaultKinTypeLocal;
+        kinTypeGroupName = new JTextArea(kinTerms.titleString);
+        kinTypeGroupName.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                super.keyReleased(ke);
+                kinTerms.titleString = ((JTextArea) ke.getComponent()).getText();
+                Component parentComponent = KinTermPanel.this.getParent();
+                if (parentComponent instanceof JTabbedPane) {
+                    ((JTabbedPane) parentComponent).setTitleAt(((JTabbedPane) parentComponent).getSelectedIndex(), kinTerms.titleString);
+                }
+            }
+        });
         colourSelectBox = new JComboBox(new String[]{"red", "blue", "#FF0000", "#FFAA00", "#00FF95", "#62D9A7", "#8000FF", "#FF00D4"});
         colourSelectBox.setSelectedItem(kinTerms.graphColour);
         colourSelectBox.addActionListener(new java.awt.event.ActionListener() {
@@ -72,6 +88,7 @@ public class KinTermPanel extends JPanel {
 
     private void populateKinTermList() {
         outerPanel.removeAll();
+        outerPanel.add(kinTypeGroupName);
         outerPanel.add(showOnGraphCheckBox);
         outerPanel.add(colourSelectBox);
         outerPanel.add(autoGenerateCheckBox);
