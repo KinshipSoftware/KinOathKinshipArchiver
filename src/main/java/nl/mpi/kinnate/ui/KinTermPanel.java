@@ -24,7 +24,8 @@ import javax.swing.JTextField;
 import nl.mpi.arbil.LinorgBugCatcher;
 import nl.mpi.arbil.LinorgWindowManager;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.kintypestrings.KinTerms;
+import nl.mpi.kinnate.kintypestrings.KinTerm;
+import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 
 /**
  *  Document   : KinTermPanel
@@ -33,7 +34,7 @@ import nl.mpi.kinnate.kintypestrings.KinTerms;
  */
 public class KinTermPanel extends JPanel {
 
-    KinTerms kinTerms;
+    KinTermGroup kinTerms;
     SavePanel savePanel;
     JCheckBox autoGenerateCheckBox;
     JCheckBox showOnGraphCheckBox;
@@ -43,7 +44,7 @@ public class KinTermPanel extends JPanel {
     JTextField addNewKinType;
     String defaultKinType = "";
 
-    public KinTermPanel(SavePanel savePanelLocal, KinTerms kinTermsLocal, String defaultKinTypeLocal) {
+    public KinTermPanel(SavePanel savePanelLocal, KinTermGroup kinTermsLocal, String defaultKinTypeLocal) {
         kinTerms = kinTermsLocal;
         savePanel = savePanelLocal;
         defaultKinType = defaultKinTypeLocal;
@@ -75,14 +76,14 @@ public class KinTermPanel extends JPanel {
         outerPanel.add(colourSelectBox);
         outerPanel.add(autoGenerateCheckBox);
 //        this.add(new JLabel("KinTerms"));
-        for (String[] currentKinTerm : kinTerms.getKinTerms()) {
+        for (KinTerm currentKinTerm : kinTerms.getKinTerms()) {
             JPanel termPanel = new JPanel();
             termPanel.setLayout(new BoxLayout(termPanel, BoxLayout.Y_AXIS));
             JPanel labelPanel = new JPanel();
             labelPanel.setLayout(new BorderLayout());
-            labelPanel.add(new JLabel(currentKinTerm[1]), BorderLayout.CENTER);
-            JTextArea kinTypeString = new JTextArea(currentKinTerm[0]);
-            final String kinType = currentKinTerm[1];
+            labelPanel.add(new JLabel(currentKinTerm.kinTerm), BorderLayout.CENTER);
+            JTextArea kinTypeString = new JTextArea(currentKinTerm.alterKinTypeStrings);
+            final String kinType = currentKinTerm.kinTerm;
             kinTypeString.addKeyListener(new KeyAdapter() {
 
                 @Override
@@ -97,7 +98,7 @@ public class KinTermPanel extends JPanel {
             removeButton.setToolTipText("delete kin term");
             int removeButtonSize = removeButton.getFontMetrics(removeButton.getFont()).getHeight();
             removeButton.setPreferredSize(new Dimension(removeButtonSize, removeButtonSize));
-            removeButton.setActionCommand(currentKinTerm[1]);
+            removeButton.setActionCommand(currentKinTerm.kinTerm);
             removeButton.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
