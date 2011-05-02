@@ -47,7 +47,7 @@ public class DataStoreSvg {
     }
 
     public DataStoreSvg() {
-        kinTermGroups = new KinTermGroup[]{new KinTermGroup()};
+        kinTermGroups = new KinTermGroup[]{new KinTermGroup(0), new KinTermGroup(1)};
         indexParameters = new IndexerParameters();
     }
 
