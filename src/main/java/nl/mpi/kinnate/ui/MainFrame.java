@@ -27,10 +27,12 @@ public class MainFrame extends javax.swing.JFrame {
     private ImdiTableModel imdiTableModel;
     private DragTransferHandler dragTransferHandler;
     private EntityCollection entityCollection;
+    protected RecentFileMenu recentFileMenu;
 
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
+        recentFileMenu = new RecentFileMenu();
         entityCollection = new EntityCollection();
         entitySearchPanel = new EntitySearchPanel(entityCollection);
 //        GraphPanel0 graphPanel0Deprecated;
@@ -293,6 +295,7 @@ public class MainFrame extends javax.swing.JFrame {
             int tabIndex = Integer.valueOf(evt.getActionCommand());
             SavePanel savePanel = getSavePanel(tabIndex);
             savePanel.saveToFile(file);
+            recentFileMenu.addRecentFile(file.getAbsolutePath());
             jTabbedPane1.setTitleAt(tabIndex, file.getName());
         } else {
             // todo: warn user that no file selected and so cannot save
