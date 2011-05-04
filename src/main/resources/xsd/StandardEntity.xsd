@@ -31,7 +31,7 @@
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
-                            <xs:element name="ResourceLink" minOccurs="1" maxOccurs="1"/>
+<!--                            <xs:element name="ResourceLink" minOccurs="1" maxOccurs="1"/>-->
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
@@ -54,6 +54,7 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
+                <xs:element name="CorpusLink" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="CMDVersion" fixed="1.1" use="required"/>
         </xs:complexType>
