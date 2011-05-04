@@ -7,7 +7,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import nl.mpi.arbil.LinorgBugCatcher;
+import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
@@ -113,9 +113,9 @@ public class DataStoreSvg {
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.marshal(this, doc.getRootElement());
         } catch (JAXBException exception) {
-            new LinorgBugCatcher().logError(exception);
+            new ArbilBugCatcher().logError(exception);
 //        } catch (BaseXException exception) {
-//            new LinorgBugCatcher().logError(exception);
+//            new ArbilBugCatcher().logError(exception);
         }
 
 
@@ -147,7 +147,7 @@ public class DataStoreSvg {
 //                    }
 //                }
 //            } catch (TransformerException transformerException) {
-//                GuiHelper.linorgBugCatcher.logError(transformerException);
+//                new ArbilBugCatcher().logError(transformerException);
 //            }
 // done: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
 //        }
@@ -166,7 +166,7 @@ public class DataStoreSvg {
 //                    }
 //                }
 //            } catch (TransformerException transformerException) {
-//                GuiHelper.linorgBugCatcher.logError(transformerException);
+//                new ArbilBugCatcher().logError(transformerException);
 //            }
 //            //            // todo: populate the avaiable symbols indexParameters.symbolFieldsFields.setAvailableValues(new String[]{"circle", "triangle", "square", "union"});
 //        }
@@ -182,7 +182,7 @@ public class DataStoreSvg {
                 dataStoreSvg = (DataStoreSvg) unmarshaller.unmarshal(dataStoreNodeList.item(0), DataStoreSvg.class).getValue();
             }
         } catch (JAXBException exception) {
-            new LinorgBugCatcher().logError(exception);
+            new ArbilBugCatcher().logError(exception);
         }
         return dataStoreSvg;
     }
