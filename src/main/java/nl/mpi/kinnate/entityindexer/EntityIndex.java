@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import nl.mpi.arbil.GuiHelper;
-import nl.mpi.arbil.LinorgSessionStorage;
-import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
+import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -51,7 +51,7 @@ public class EntityIndex implements EntityService {
             entityData = new IndexerEntityData(null); // todo: while this could pass the identifier it is unlikely that this class will use them as it relies on the url instead
             knownEntities.put(egoEntityUri.toASCIIString(), entityData);
             try {
-                Document linksDom = new CmdiComponentBuilder().getDocument(egoEntityUri);
+                Document linksDom = ArbilComponentBuilder.getDocument(egoEntityUri);
                 NodeList relationLinkNodeList = org.apache.xpath.XPathAPI.selectNodeList(linksDom, indexParameters.linkPath);
                 for (int nodeCounter = 0; nodeCounter < relationLinkNodeList.getLength(); nodeCounter++) {
                     Node relationLinkNode = relationLinkNodeList.item(nodeCounter);
@@ -112,7 +112,7 @@ public class EntityIndex implements EntityService {
     }
 
     public void loadAllEntities(IndexerParameters indexParameters) {
-        String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
+        String[] treeNodesArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
         if (treeNodesArray != null) {
             for (String currentNodeString : treeNodesArray) {
                 try {
@@ -245,7 +245,7 @@ public class EntityIndex implements EntityService {
     }
 
     public static void main(String[] args) {
-        String[] entityStringArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
+        String[] entityStringArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
         URI[] entityUriArray = new URI[entityStringArray.length];
         int uriCounter = 0;
         for (String currentEntityString : entityStringArray) {
