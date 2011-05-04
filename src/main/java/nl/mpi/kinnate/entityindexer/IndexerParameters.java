@@ -18,9 +18,9 @@ public class IndexerParameters {
     @XmlTransient
     public IndexerParam relevantLinkData = new IndexerParam(this, new String[][]{{"Type"}});
     @XmlElement(name = "LabelFields", namespace = "http://mpi.nl/tla/kin")
-    public IndexerParam labelFields = new IndexerParam(this, new String[][]{{"Kinnate/Gedcom/Entity/NAME/NAME"}, {"Kinnate/Gedcom/Entity[GedcomType='FAM']/GedcomType"}, {"Kinnate/Gedcom/Entity/Text"}, {"Kinnate/Gedcom/Entity/NAME/NPFX"}, {"Kinnate/Gedcom/Entity/NoteText"}});
+    public IndexerParam labelFields = new IndexerParam(this, new String[][]{{"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"}, {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"}, {"*:Kinnate/*:Gedcom/*:Entity/*:Text"}, {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"}, {"*:Kinnate/*:Gedcom/*:Entity/*:NoteText"}});
     @XmlElement(name = "SymbolFieldsFields", namespace = "http://mpi.nl/tla/kin")
-    public IndexerParam symbolFieldsFields = new IndexerParam(this, new String[][]{{"Kinnate/Gedcom/Entity[SEX='M']", "triangle"}, {"Kinnate/Gedcom/Entity[SEX='F']", "circle"}, {"Kinnate/Gedcom/Entity[GedcomType='FAM']", "union"}});
+    public IndexerParam symbolFieldsFields = new IndexerParam(this, new String[][]{{"*:Kinnate/*:Gedcom/*:Entity[*:SEX='M']", "triangle"}, {"*:Kinnate/*:Gedcom/*:Entity[*:SEX='F']", "circle"}, {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']", "union"}});
     @XmlElement(name = "AncestorFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam ancestorFields = new IndexerParam(this, new String[][]{{"Kinnate.Gedcom.Entity.FAMC"}, {"Kinnate.Gedcom.Entity.BIRT.FAMC"}, {"Kinnate.Gedcom.Entity.CHR.FAMC"}, {"Kinnate.Gedcom.Entity.ADOP.FAMC"}, {"Kinnate.Gedcom.Entity.SLGC.FAMC"}, {"Kinnate.Gedcom.Entity.HUSB"}, {"Kinnate.Gedcom.Entity.WIFE"}});
 //    public IndexerParam siblingFields = new IndexerParam(new String[]{{"Kinnate.Gedcom.Entity.CHIL"}, {"Kinnate.Gedcom.Entity.FAMS"}});
