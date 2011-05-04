@@ -32,9 +32,9 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
 //    ArbilNodeSearchPanel archiveSearch = new ArbilNodeSearchPanel();
 
     public ArchiveEntityLinkerPanel() {
-        ArchiveEntityLinkerDragHandler linkerDragHandler = new ArchiveEntityLinkerDragHandler();
         kinTree = new ArbilTree();
         archiveTree = new ArbilTree();
+        ArchiveEntityLinkerDragHandler linkerDragHandler = new ArchiveEntityLinkerDragHandler(kinTree);
         kinTree.setTransferHandler(linkerDragHandler);
         archiveTree.setTransferHandler(linkerDragHandler);
         this.setLayout(new BorderLayout());
