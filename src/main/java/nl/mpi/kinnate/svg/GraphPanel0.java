@@ -11,14 +11,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JPanel;
-import nl.mpi.arbil.LinorgSessionStorage;
-import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
+import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
-import nl.mpi.arbil.data.ImdiLoader;
-import nl.mpi.arbil.data.ImdiTreeObject;
 import org.w3c.dom.Text;
 import org.w3c.dom.svg.SVGDocument;
 
@@ -69,12 +69,12 @@ public class GraphPanel0 extends JPanel {
     }
 
     public void drawNodes() {
-        String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
-        ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
+        String[] treeNodesArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
+        ArrayList<ArbilDataNode> tempArray = new ArrayList<ArbilDataNode>();
         if (treeNodesArray != null) {
             for (String currentNodeString : treeNodesArray) {
                 try {
-                    tempArray.add(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString)));
+                    tempArray.add(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentNodeString)));
                 } catch (URISyntaxException exception) {
                     System.err.println(exception.getMessage());
                     exception.printStackTrace();
@@ -104,7 +104,7 @@ public class GraphPanel0 extends JPanel {
         svgCanvas.setSVGDocument(doc);
         int xPos = stepNumber;
         int yPos = stepNumber;
-        for (ImdiTreeObject currentChild : tempArray) {
+        for (ArbilDataNode currentChild : tempArray) {
             currentChild.waitTillLoaded();
             if (!currentChild.isEmptyMetaNode()) {
                 // Create the rectangle.
@@ -140,13 +140,13 @@ public class GraphPanel0 extends JPanel {
 
 
         this.add(BorderLayout.CENTER, svgCanvas);
-        new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/KinGraph/KinGraph2/src/main/resources/output.svg"));
+        ArbilComponentBuilder.savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/KinGraph/KinGraph2/src/main/resources/output.svg"));
     }
 
     public void doTest() {
-        ImdiTreeObject imdiNode = null;
+        ArbilDataNode imdiNode = null;
         try {
-            imdiNode = ImdiLoader.getSingleInstance().getImdiObject(null, new URI("file:/Users/petwit/.arbil/ArbilWorkingFiles/20100817152236/20100817152236.cmdi"));
+            imdiNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI("file:/Users/petwit/.arbil/ArbilWorkingFiles/20100817152236/20100817152236.cmdi"));
             //"file:/Users/petwit/.arbil/ArbilWorkingFiles/http/corpus1.mpi.nl/qfs1/media-archive/echo_data/sign_language/SSL/SSL_Poetry/Metadata/SSL_JM_poem_cayak_2.imdi"
             imdiNode.waitTillLoaded();
         } catch (URISyntaxException exception) {
@@ -172,7 +172,7 @@ public class GraphPanel0 extends JPanel {
         int xPos = 10;
         int yPos = 10;
         if (imdiNode != null) {
-            for (ImdiTreeObject currentChild : imdiNode.getAllChildren()) {
+            for (ArbilDataNode currentChild : imdiNode.getAllChildren()) {
                 if (!currentChild.isEmptyMetaNode()) {
                     // Create the rectangle.
                     Element rectangle = doc.createElementNS(svgNS, "rect");
@@ -224,6 +224,6 @@ public class GraphPanel0 extends JPanel {
 //            ex.printStackTrace();
 //        }
         this.add(BorderLayout.CENTER, svgCanvas);
-        new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output0.svg"));
+        new ArbilComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output0.svg"));
     }
 }
