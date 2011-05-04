@@ -7,8 +7,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
-import nl.mpi.arbil.ImdiField;
-import nl.mpi.arbil.ImdiTable;
+import nl.mpi.arbil.data.ArbilField;
+import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.kinnate.entityindexer.IndexerParam;
 
 /**
@@ -18,8 +18,8 @@ import nl.mpi.kinnate.entityindexer.IndexerParam;
  */
 public class TableCellDragHandler extends TransferHandler implements Transferable {
 
-    private ImdiField[] selectedFields = null;
-    private DataFlavor dataFlavor = new DataFlavor(ImdiField[].class, "ImdiField");
+    private ArbilField[] selectedFields = null;
+    private DataFlavor dataFlavor = new DataFlavor(ArbilField[].class, "ArbilField");
 
     public Object getTransferData(DataFlavor df) throws UnsupportedFlavorException, IOException {
         //if (!df.match(dataFlavor)) {
@@ -53,7 +53,7 @@ public class TableCellDragHandler extends TransferHandler implements Transferabl
 
     @Override
     protected Transferable createTransferable(JComponent jc) {
-        selectedFields = ((ImdiTable) jc).getSelectedFields();
+        selectedFields = ((ArbilTable) jc).getSelectedFields();
         return this;
 //        return super.createTransferable(jc);
     }
@@ -67,8 +67,8 @@ public class TableCellDragHandler extends TransferHandler implements Transferabl
     public boolean importData(TransferSupport ts) {
         IndexerParam indexerParam = ((FieldSelectionList) ts.getComponent()).indexerParam;
 //        ArrayList<String[]> paramValues = new ArrayList<String[]>(Arrays.asList(indexerParam.getValues()));
-        //for (ImdiField imdiField : (ImdiField[]) ts.getTransferable().getTransferData(dataFlavor)) {
-        for (ImdiField imdiField : selectedFields) {
+        //for (ArbilField imdiField : (ArbilField[]) ts.getTransferable().getTransferData(dataFlavor)) {
+        for (ArbilField imdiField : selectedFields) {
             indexerParam.setValue(imdiField.getFullXmlPath(), imdiField.getFieldValue());
         }
         ((FieldSelectionList) ts.getComponent()).updateUiList();
