@@ -12,9 +12,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JPanel;
-import nl.mpi.arbil.LinorgSessionStorage;
-import nl.mpi.arbil.data.ImdiLoader;
-import nl.mpi.arbil.data.ImdiTreeObject;
+import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 
 /**
  *  Document   : JungGraph
@@ -48,19 +48,19 @@ public class JungGraph extends JPanel {
         g.addEdge("Edge-B", 2, 3);
 
 
-        String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
-        ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
+        String[] treeNodesArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
+        ArrayList<ArbilDataNode> tempArray = new ArrayList<ArbilDataNode>();
         if (treeNodesArray != null) {
             for (String currentNodeString : treeNodesArray) {
                 try {
-                    tempArray.add(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString)));
+                    tempArray.add(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentNodeString)));
                 } catch (URISyntaxException exception) {
                     System.err.println(exception.getMessage());
                     exception.printStackTrace();
                 }
             }
         }
-        for (ImdiTreeObject currentChild : tempArray) {
+        for (ArbilDataNode currentChild : tempArray) {
             currentChild.waitTillLoaded();
             if (!currentChild.isEmptyMetaNode()) {
                 Integer currentIndex = g.getVertexCount() + 1;
