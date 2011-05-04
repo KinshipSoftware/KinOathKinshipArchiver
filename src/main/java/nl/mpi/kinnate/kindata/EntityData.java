@@ -87,7 +87,7 @@ public class EntityData {
                 case ego:
                     return "square";
                 case none:
-                    return null;
+                    return "none";
                 case resource:
                     return "resource";
                 case square:
@@ -175,10 +175,12 @@ public class EntityData {
         if (distinctRelateNodes == null) {
             ArrayList<String> processedIds = new ArrayList<String>();
             ArrayList<EntityRelation> uniqueNodes = new ArrayList<EntityRelation>();
-            for (EntityRelation nodeRelation : relatedNodes) {
-                if (!processedIds.contains(nodeRelation.alterUniqueIdentifier)) {
-                    uniqueNodes.add(nodeRelation);
-                    processedIds.add(nodeRelation.alterUniqueIdentifier);
+            if (relatedNodes != null) {
+                for (EntityRelation nodeRelation : relatedNodes) {
+                    if (!processedIds.contains(nodeRelation.alterUniqueIdentifier)) {
+                        uniqueNodes.add(nodeRelation);
+                        processedIds.add(nodeRelation.alterUniqueIdentifier);
+                    }
                 }
             }
             distinctRelateNodes = uniqueNodes.toArray(new EntityRelation[]{});
