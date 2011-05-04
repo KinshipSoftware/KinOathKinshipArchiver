@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,16 +18,18 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
-import nl.mpi.arbil.GuiHelper;
-import nl.mpi.arbil.LinorgBugCatcher;
-import nl.mpi.arbil.LinorgSessionStorage;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
+import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
+import org.basex.core.cmd.Add;
 import org.basex.core.cmd.Set;
 import org.basex.core.cmd.CreateDB;
 import org.basex.core.cmd.DropDB;
+import org.basex.core.cmd.Open;
+import org.basex.core.cmd.Optimize;
 import org.basex.core.cmd.XQuery;
 import org.basex.query.QueryException;
 import org.basex.query.QueryProcessor;
@@ -52,10 +57,20 @@ public class EntityCollection {
         try {
             new DropDB(databaseName).execute(context);
             new Set("CREATEFILTER", "*.cmdi").execute(context);
-            new CreateDB(databaseName, LinorgSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
+            new CreateDB(databaseName, ArbilSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
 //            context.close();
         } catch (BaseXException baseXException) {
-            GuiHelper.linorgBugCatcher.logError(baseXException);
+            new ArbilBugCatcher().logError(baseXException);
+        }
+    }
+
+    public void updateDatabase(URI updatedFile) {
+        try {
+            new Open(databaseName).execute(context);
+            new Add(updatedFile.toString()).execute(context);
+            new Optimize().execute(context);
+        } catch (BaseXException baseXException) {
+            new ArbilBugCatcher().logError(baseXException);
         }
     }
 
@@ -88,10 +103,10 @@ public class EntityCollection {
 
             searchResults.statusMessage = "found " + searchResults.resultCount + " records";
         } catch (QueryException exception) {
-            new LinorgBugCatcher().logError(exception);
+            new ArbilBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
         } catch (IOException exception) {
-            new LinorgBugCatcher().logError(exception);
+            new ArbilBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
         }
         searchResults.resultsPathArray = resultPaths.toArray(new String[]{});
@@ -108,7 +123,7 @@ public class EntityCollection {
         try {
             searchResults = new XQuery(queryString).execute(context).split("\\|");
         } catch (BaseXException exception) {
-            new LinorgBugCatcher().logError(exception);
+            new ArbilBugCatcher().logError(exception);
         }
         for (String resultLine : searchResults) {
             System.out.println("resultLine: " + resultLine);
@@ -128,9 +143,9 @@ public class EntityCollection {
             EntityData selectedEntity = (EntityData) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData.class).getValue();
             return selectedEntity;
         } catch (JAXBException exception) {
-            new LinorgBugCatcher().logError(exception);
+            new ArbilBugCatcher().logError(exception);
         } catch (BaseXException exception) {
-            new LinorgBugCatcher().logError(exception);
+            new ArbilBugCatcher().logError(exception);
         }
         return null;
     }
@@ -160,10 +175,27 @@ public class EntityCollection {
                 resultsText.setVisible(true);
             }
         });
+        JButton updateButton = new JButton("update file");
+        updateButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                resultsText.setText("");
+                try {
+                    new EntityCollection().updateDatabase(new URI("file:///Users/petwit/.arbil/ArbilWorkingFiles/a0d39c01f0e75d5364bfe643635aa48d/_I3_.cmdi"));
+                } catch (URISyntaxException exception) {
+                    resultsText.append(exception.getMessage());
+                }
+                resultsText.setVisible(true);
+            }
+        });
+
         JPanel jPanel = new JPanel(new BorderLayout());
         jPanel.add(queryText, BorderLayout.CENTER);
         jPanel.add(resultsText, BorderLayout.PAGE_END);
-        jPanel.add(jButton, BorderLayout.PAGE_START);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(jButton);
+        buttonPanel.add(updateButton);
+        jPanel.add(buttonPanel, BorderLayout.PAGE_START);
         jFrame.setContentPane(new JScrollPane(jPanel));
         jFrame.pack();
         jFrame.setVisible(true);
