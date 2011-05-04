@@ -10,9 +10,9 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import nl.mpi.arbil.ImdiTreeRenderer;
-import nl.mpi.arbil.data.ImdiLoader;
-import nl.mpi.arbil.data.ImdiTreeObject;
+import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.ui.ArbilTreeRenderer;
 
 /**
  *  Document   : EgoSelectionPanel
@@ -29,7 +29,7 @@ public class EgoSelectionPanel extends JPanel {
         rootEgoNode = new DefaultMutableTreeNode("Selected Ego Nodes");
         egoModel = new DefaultTreeModel(rootEgoNode);
         egoTree = new JTree(egoModel);
-        egoTree.setCellRenderer(new ImdiTreeRenderer());
+        egoTree.setCellRenderer(new ArbilTreeRenderer());
         egoTree.setRootVisible(false);
         this.setLayout(new BorderLayout());
         JScrollPane outerScrolPane = new JScrollPane();
@@ -40,35 +40,35 @@ public class EgoSelectionPanel extends JPanel {
 
     public void setEgoNodes(String[] egoNodes) {
         if (egoNodes != null) {
-            ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
+            ArrayList<ArbilDataNode> tempArray = new ArrayList<ArbilDataNode>();
             for (String currentNodeString : egoNodes) {
                 System.out.println("ego tree: " + currentNodeString);
                 try {
-                    tempArray.add(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString)));
+                    tempArray.add(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentNodeString)));
                 } catch (URISyntaxException exception) {
                     System.err.println(exception.getMessage());
                 }
             }
-            setEgoNodes(tempArray.toArray(new ImdiTreeObject[]{}));
+            setEgoNodes(tempArray.toArray(new ArbilDataNode[]{}));
         }
     }
 
     public void setEgoNodes(URI[] egoNodes) {
         if (egoNodes != null) {
-            ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
+            ArrayList<ArbilDataNode> tempArray = new ArrayList<ArbilDataNode>();
             for (URI currentNodeUri : egoNodes) {
                 System.out.println("ego tree: " + currentNodeUri);
-                tempArray.add(ImdiLoader.getSingleInstance().getImdiObject(null, currentNodeUri));
+                tempArray.add(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, currentNodeUri));
             }
-            setEgoNodes(tempArray.toArray(new ImdiTreeObject[]{}));
+            setEgoNodes(tempArray.toArray(new ArbilDataNode[]{}));
         }
     }
 
-    public void setEgoNodes(ImdiTreeObject[] egoNodes) {
+    public void setEgoNodes(ArbilDataNode[] egoNodes) {
         rootEgoNode.removeAllChildren();
         egoModel.nodeStructureChanged(rootEgoNode);
         if (egoNodes != null) {
-            for (ImdiTreeObject imdiTreeObject : egoNodes) {
+            for (ArbilDataNode imdiTreeObject : egoNodes) {
                 System.out.println("adding ego: " + imdiTreeObject.toString());
                 egoModel.insertNodeInto(new DefaultMutableTreeNode(imdiTreeObject), rootEgoNode, 0);
             }
