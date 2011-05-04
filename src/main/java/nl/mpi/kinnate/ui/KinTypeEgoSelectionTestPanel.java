@@ -15,10 +15,10 @@ import javax.swing.JTextPane;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import nl.mpi.arbil.GuiHelper;
-import nl.mpi.arbil.ImdiTable;
-import nl.mpi.arbil.ImdiTableModel;
-import nl.mpi.arbil.LinorgWindowManager;
+import nl.mpi.arbil.ui.ArbilTable;
+import nl.mpi.arbil.ui.ArbilTableModel;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -92,12 +92,12 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         kintermSplitPane.add(kinTermHidePane, BorderLayout.LINE_END);
         kinGraphPanel.add(kintermSplitPane);
 
-        ImdiTableModel imdiTableModel = new ImdiTableModel();
-        ImdiTable imdiTable = new ImdiTable(imdiTableModel, "Selected Nodes");
+        ArbilTableModel imdiTableModel = new ArbilTableModel();
+        ArbilTable imdiTable = new ArbilTable(imdiTableModel, "Selected Nodes");
         TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
         imdiTable.setTransferHandler(tableCellDragHandler);
         imdiTable.setDragEnabled(true);
-        graphPanel.setImdiTableModel(imdiTableModel);
+        graphPanel.setArbilTableModel(imdiTableModel);
 
         JScrollPane tableScrollPane = new JScrollPane(imdiTable);
 //        Dimension minimumSize = new Dimension(0, 0);
@@ -205,7 +205,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             }
         } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
-            LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
         }
         egoSelectionPanel.setEgoNodes(graphPanel.getEgoPaths());
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
