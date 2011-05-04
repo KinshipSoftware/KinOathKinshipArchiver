@@ -19,11 +19,11 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import nl.mpi.arbil.GuiHelper;
-import nl.mpi.arbil.LinorgSessionStorage;
-import nl.mpi.arbil.clarin.CmdiComponentBuilder;
-import nl.mpi.arbil.data.ImdiLoader;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.MetadataBuilder;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
+import nl.mpi.arbil.util.ArbilBugCatcher;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -74,9 +74,9 @@ public class GedcomImporter {
             }
             inputFileMd5Sum = hexString.toString();
         } catch (NoSuchAlgorithmException algorithmException) {
-            GuiHelper.linorgBugCatcher.logError(algorithmException);
+            new ArbilBugCatcher().logError(algorithmException);
         } catch (IOException iOException) {
-            GuiHelper.linorgBugCatcher.logError(iOException);
+            new ArbilBugCatcher().logError(iOException);
         }
     }
 
@@ -109,11 +109,10 @@ public class GedcomImporter {
         // really should close the file properly but this is only for testing at this stage
 
 //        URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), gedcomXsdLocation);
-        CmdiComponentBuilder componentBuilder = new CmdiComponentBuilder();
 //        try {
 //            targetFileURI = componentBuilder.createComponentFile(targetFileURI, this.getClass().getResource(gedcomXsdLocation).toURI(), false);
 //        } catch (URISyntaxException ex) {
-//            GuiHelper.linorgBugCatcher.logError(ex);
+//            new ArbilBugCatcher().logError(ex);
 //            return;
 //        }
 
@@ -136,7 +135,7 @@ public class GedcomImporter {
             Element previousField = null;
             Node currentDomNode = null;
 
-            File destinationDirectory = new File(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), inputFileMd5Sum);
+            File destinationDirectory = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), inputFileMd5Sum);
             if (!destinationDirectory.exists()) {
                 destinationDirectory.mkdir();
             }
@@ -197,7 +196,7 @@ public class GedcomImporter {
 //                            break;
 //                        }
                         if (metadataDom != null) {
-                            new CmdiComponentBuilder().savePrettyFormatting(metadataDom, entityFile);
+                            ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
                             metadataDom = null;
                         }
                         if (lineParts[1].equals("TRLR")) {
@@ -226,13 +225,13 @@ public class GedcomImporter {
                                 appendToTaskOutput(importTextArea, "Skipping existing entity file");
                             } else { // start skip overwrite 
                                 try {
-                                    entityUri = componentBuilder.createComponentFile(entityFile.toURI(), this.getClass().getResource(gedcomXsdLocation).toURI(), false);
+                                    entityUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), this.getClass().getResource(gedcomXsdLocation).toURI(), false);
                                 } catch (URISyntaxException ex) {
-                                    GuiHelper.linorgBugCatcher.logError(ex);
+                                    new ArbilBugCatcher().logError(ex);
                                     appendToTaskOutput(importTextArea, "Error: " + ex.getMessage());
                                     return null;
 //                            } catch (org.apache.xmlbeans.XmlException ex) {
-//                                GuiHelper.linorgBugCatcher.logError(ex);
+//                                new ArbilBugCatcher().logError(ex);
 //                                appendToTaskOutput(importTextArea, "error: " + ex.getMessage());
 //                                return;
                                 }
@@ -242,7 +241,7 @@ public class GedcomImporter {
 //                                appendToTaskOutput(importTextArea, "--> InternalNameT1" + lineParts[1] + " : " + entityUri);
 //                            createdNodesTable.put(lineParts[1], entityUri);
                                 createdNodes.add(entityUri);
-                                metadataDom = new CmdiComponentBuilder().getDocument(entityUri);
+                                metadataDom = ArbilComponentBuilder.getDocument(entityUri);
                                 currentDomNode = metadataDom.getDocumentElement();
 //                            // find the deepest element node to start adding child nodes to
 //                            for (Node childNode = currentDomNode.getFirstChild(); childNode != null; childNode = childNode.getNextSibling()) {
@@ -261,12 +260,12 @@ public class GedcomImporter {
                                     // add a unique identifier to the entity node
                                     Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
                                     localIdentifierElement.setTextContent(uniquieIdentifier);
-                                    Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/UniqueIdentifier");
+                                    Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Gedcom/:UniqueIdentifier");
                                     uniqueIdentifierNode.appendChild(localIdentifierElement);
                                 } catch (DOMException exception) {
-                                    GuiHelper.linorgBugCatcher.logError(exception);
+                                    new ArbilBugCatcher().logError(exception);
                                 } catch (TransformerException exception) {
-                                    GuiHelper.linorgBugCatcher.logError(exception);
+                                    new ArbilBugCatcher().logError(exception);
                                 }
                                 if (lineParts[1].equals("HEAD")) {
                                     // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
@@ -274,11 +273,11 @@ public class GedcomImporter {
 //                                Element headElement = metadataDom.createElement("HEAD");
 //                                currentDomNode.appendChild(headElement);
                                     try {
-                                        currentDomNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/HEAD");
+                                        currentDomNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Gedcom/:HEAD");
                                     } catch (DOMException exception) {
-                                        GuiHelper.linorgBugCatcher.logError(exception);
+                                        new ArbilBugCatcher().logError(exception);
                                     } catch (TransformerException exception) {
-                                        GuiHelper.linorgBugCatcher.logError(exception);
+                                        new ArbilBugCatcher().logError(exception);
                                     }
                                     appendToTaskOutput(importTextArea, "Reading Gedcom Header");
                                 } else {
@@ -293,13 +292,13 @@ public class GedcomImporter {
                                     Node gedcomIdElement = null; // metadataDom.createElement("GedcomId");
                                     Node gedcomTypeElement = null; // metadataDom.createElement("GedcomType");
                                     try {
-                                        currentDomNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/Entity");
-                                        gedcomIdElement = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/Entity/GedcomId");
-                                        gedcomTypeElement = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Gedcom/Entity/GedcomType");
+                                        currentDomNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Gedcom/:Entity");
+                                        gedcomIdElement = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Gedcom/:Entity/:GedcomId");
+                                        gedcomTypeElement = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Gedcom/:Entity/:GedcomType");
                                     } catch (DOMException exception) {
-                                        GuiHelper.linorgBugCatcher.logError(exception);
+                                        new ArbilBugCatcher().logError(exception);
                                     } catch (TransformerException exception) {
-                                        GuiHelper.linorgBugCatcher.logError(exception);
+                                        new ArbilBugCatcher().logError(exception);
                                     }
 //                                Element entityElement = metadataDom.createElement("Entity");
 //                                currentDomNode.appendChild(entityElement);
@@ -554,7 +553,7 @@ public class GedcomImporter {
             }
 
             if (metadataDom != null) {
-                new CmdiComponentBuilder().savePrettyFormatting(metadataDom, entityFile);
+                ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
                 metadataDom = null;
             }
 //            ImdiLoader.getSingleInstance().saveNodesNeedingSave(true);
@@ -584,7 +583,7 @@ public class GedcomImporter {
 //                    }
 //                    new CmdiComponentBuilder().savePrettyFormatting(linksDom, currentImdiObject.getFile());
 //                } catch (TransformerException exception) {
-//                    GuiHelper.linorgBugCatcher.logError(exception);
+//                    new ArbilBugCatcher().logError(exception);
 //                }
 //                linkNodesUpdated++;
 //                if (progressBar != null) {
@@ -597,18 +596,18 @@ public class GedcomImporter {
 //            gedcomImdiObject.loadImdiDom();
 //            gedcomImdiObject.clearChildIcons();
 //            gedcomImdiObject.clearIcon();
-            ImdiLoader.getSingleInstance().saveNodesNeedingSave(true);
+            ArbilDataNodeLoader.getSingleInstance().saveNodesNeedingSave(true);
         } catch (IOException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            new ArbilBugCatcher().logError(exception);
             appendToTaskOutput(importTextArea, "Error: " + exception.getMessage());
         } catch (ParserConfigurationException parserConfigurationException) {
-            GuiHelper.linorgBugCatcher.logError(parserConfigurationException);
+            new ArbilBugCatcher().logError(parserConfigurationException);
             appendToTaskOutput(importTextArea, "Error: " + parserConfigurationException.getMessage());
         } catch (DOMException dOMException) {
-            GuiHelper.linorgBugCatcher.logError(dOMException);
+            new ArbilBugCatcher().logError(dOMException);
             appendToTaskOutput(importTextArea, "Error: " + dOMException.getMessage());
         } catch (SAXException sAXException) {
-            GuiHelper.linorgBugCatcher.logError(sAXException);
+            new ArbilBugCatcher().logError(sAXException);
             appendToTaskOutput(importTextArea, "Error: " + sAXException.getMessage());
         }
 //        LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
