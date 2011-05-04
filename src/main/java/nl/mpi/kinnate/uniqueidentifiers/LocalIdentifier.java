@@ -6,8 +6,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import nl.mpi.arbil.GuiHelper;
-import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
+import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.util.ArbilBugCatcher;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,23 +40,24 @@ public class LocalIdentifier {
     public String setLocalIdentifier(File entityFile) {
         String localIdentifier = getUniqueIdentifier(entityFile);
         try {
-            Document metadataDom = new CmdiComponentBuilder().getDocument(entityFile.toURI());
+            Document metadataDom = ArbilComponentBuilder.getDocument(entityFile.toURI());
             // add a unique identifier to the entity node
             Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
             localIdentifierElement.setTextContent(localIdentifier);
-            Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/Kinnate/Entity/UniqueIdentifier");
+//            Node uniqueIdentifierNode = metadataDom.getElementsByTagName("UniqueIdentifier").item(0); // todo: this assumes there will only be one and always one, generally this will be fine though
+            Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity/:UniqueIdentifier");
             uniqueIdentifierNode.appendChild(localIdentifierElement);
-            new CmdiComponentBuilder().savePrettyFormatting(metadataDom, entityFile);
+            ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
         } catch (DOMException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            new ArbilBugCatcher().logError(exception);
         } catch (TransformerException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            new ArbilBugCatcher().logError(exception);
         } catch (IOException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            new ArbilBugCatcher().logError(exception);
         } catch (ParserConfigurationException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            new ArbilBugCatcher().logError(exception);
         } catch (SAXException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            new ArbilBugCatcher().logError(exception);
         }
         return localIdentifier;
     }
