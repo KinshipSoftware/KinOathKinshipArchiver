@@ -12,7 +12,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
-import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
@@ -116,23 +116,23 @@ public class GraphPanel1 extends JPanel {
             // draw links
             for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
 //                if (graphLinkNode.sourceNode.equals(currentNode)) {
-                    System.out.println("link: " + graphLinkNode.getAlterNode().getxPos() + ":" + graphLinkNode.getAlterNode().getyPos());
+                System.out.println("link: " + graphLinkNode.getAlterNode().getxPos() + ":" + graphLinkNode.getAlterNode().getyPos());
 
 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
-                    Element linkLine = doc.createElementNS(svgNS, "line");
-                    linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.getxPos() * stepNumber + stepNumber));
-                    linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.getyPos() * stepNumber + stepNumber));
+                Element linkLine = doc.createElementNS(svgNS, "line");
+                linkLine.setAttributeNS(null, "x1", Integer.toString(currentNode.getxPos() * stepNumber + stepNumber));
+                linkLine.setAttributeNS(null, "y1", Integer.toString(currentNode.getyPos() * stepNumber + stepNumber));
 
-                    linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.getAlterNode().getxPos() * stepNumber + stepNumber));
-                    linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.getAlterNode().getyPos() * stepNumber + stepNumber));
-                    linkLine.setAttributeNS(null, "stroke", "black");
-                    linkLine.setAttributeNS(null, "stroke-width", "1");
-                    // Attach the rectangle to the root 'svg' element.
-                    svgRoot.appendChild(linkLine);
+                linkLine.setAttributeNS(null, "x2", Integer.toString(graphLinkNode.getAlterNode().getxPos() * stepNumber + stepNumber));
+                linkLine.setAttributeNS(null, "y2", Integer.toString(graphLinkNode.getAlterNode().getyPos() * stepNumber + stepNumber));
+                linkLine.setAttributeNS(null, "stroke", "black");
+                linkLine.setAttributeNS(null, "stroke-width", "1");
+                // Attach the rectangle to the root 'svg' element.
+                svgRoot.appendChild(linkLine);
 //                }
             }
         }
         this.add(BorderLayout.CENTER, svgCanvas);
-        new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output1.svg"));
+        ArbilComponentBuilder.savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output1.svg"));
     }
 }
