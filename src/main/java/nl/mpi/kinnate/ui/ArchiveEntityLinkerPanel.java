@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
@@ -25,12 +26,19 @@ import nl.mpi.arbil.ui.ArbilTree;
 public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
 
     private JTabbedPane tabbedPane;
-    private ArbilTree archiveTree = new ArbilTree();
+    private ArbilTree kinTree;
+    private ArbilTree archiveTree;
     private JButton nextButton;
 //    ArbilNodeSearchPanel archiveSearch = new ArbilNodeSearchPanel();
 
     public ArchiveEntityLinkerPanel() {
+        ArchiveEntityLinkerDragHandler linkerDragHandler = new ArchiveEntityLinkerDragHandler();
+        kinTree = new ArbilTree();
+        archiveTree = new ArbilTree();
+        kinTree.setTransferHandler(linkerDragHandler);
+        archiveTree.setTransferHandler(linkerDragHandler);
         this.setLayout(new BorderLayout());
+        this.add(new HidePane(kinTree, "Kin Entities", BorderLayout.LINE_END), BorderLayout.LINE_START);
         JPanel treePanel = new JPanel(new BorderLayout());
         tabbedPane = new JTabbedPane();
         tabbedPane.add("Archive Branch Selection", treePanel);
@@ -38,7 +46,7 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         nextButton = new JButton("Search Selected");
         nextButton.setActionCommand("Search");
         nextButton.addActionListener(this);
-        treePanel.add(archiveTree, BorderLayout.CENTER);
+        treePanel.add(new JScrollPane(archiveTree), BorderLayout.CENTER);
         treePanel.add(nextButton, BorderLayout.PAGE_END);
         loadTreeNodes();
     }
@@ -65,16 +73,23 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         JInternalFrame searchFrame = new JInternalFrame();
         searchPanel.add(new ArbilNodeSearchPanel(searchFrame, resultsTableModel, archiveTree.getSelectedNodes()), BorderLayout.PAGE_START);
         searchPanel.add(imdiSplitPanel, BorderLayout.CENTER);
+        JButton closeSearch = new JButton("Close Search");
+        closeSearch.setActionCommand("Close Search");
+        closeSearch.addActionListener(this);
+        searchPanel.add(closeSearch, BorderLayout.PAGE_END);
         imdiSplitPanel.setSplitDisplay();
 //        imdiSplitPanel.addFocusListener(searchFrame);
 //        searchFrame.pack();
         tabbedPane.add("Archive Branch Search", searchPanel);
-        tabbedPane.setSelectedIndex(1);
+        tabbedPane.setSelectedComponent(searchPanel);
     }
 
     public void actionPerformed(ActionEvent ae) {
         if (ae.getActionCommand().equals("Search")) {
             getSeachPanel();
+        }
+        if (ae.getActionCommand().equals("Close Search")) {
+            tabbedPane.remove(tabbedPane.getSelectedComponent());
         }
     }
 }
