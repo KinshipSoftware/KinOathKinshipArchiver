@@ -15,9 +15,9 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import nl.mpi.arbil.LinorgSessionStorage;
-import nl.mpi.arbil.XsdChecker;
-import nl.mpi.arbil.data.ImdiLoader;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
+import nl.mpi.arbil.util.XsdChecker;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.GedcomImporter;
 
@@ -35,6 +35,7 @@ public class GedcomImportPanel extends JPanel {
     private JCheckBox overwriteOnImport;
     private JCheckBox validateImportedXml;
     private JButton startButton;
+    private JPanel endPagePanel;
 
     public GedcomImportPanel(EntityCollection entityCollectionLocal, JTabbedPane jTabbedPaneLocal) {
         jTabbedPane1 = jTabbedPaneLocal;
@@ -74,6 +75,7 @@ public class GedcomImportPanel extends JPanel {
                     KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
                     egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
                     jTabbedPane1.add("Imported Entities", egoSelectionTestPanel);
+                    jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
                 }
             });
             createdNodesPanel.add(showButton);
@@ -82,7 +84,7 @@ public class GedcomImportPanel extends JPanel {
     }
 
     public void startImport(String importUriString) {
-        File cachedFile = LinorgSessionStorage.getSingleInstance().updateCache(importUriString, 30);
+        File cachedFile = ArbilSessionStorage.getSingleInstance().updateCache(importUriString, 30);
         startImport(cachedFile, null, importUriString);
     }
 
@@ -101,7 +103,9 @@ public class GedcomImportPanel extends JPanel {
             jTabbedPane1.add("Import", GedcomImportPanel.this);
             jTabbedPane1.setSelectedComponent(GedcomImportPanel.this);
             progressBar = new JProgressBar(0, 100);
-            GedcomImportPanel.this.add(progressBar, BorderLayout.PAGE_END);
+            endPagePanel = new JPanel(new BorderLayout());
+            endPagePanel.add(progressBar, BorderLayout.PAGE_START);
+            GedcomImportPanel.this.add(endPagePanel, BorderLayout.PAGE_END);
             progressBar.setVisible(true);
             JPanel topPanel = new JPanel();
             overwriteOnImport = new JCheckBox("Overwrite Existing");
@@ -133,12 +137,13 @@ public class GedcomImportPanel extends JPanel {
                             } else {
                                 treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFile);
                             }
-                            progressBar.setVisible(false);
                             boolean checkFilesAfterImport = validateImportedXml.isSelected();
                             if (treeNodesArray != null && checkFilesAfterImport) {
 //                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();                    
                                 int maxXsdErrorToShow = 3;
+                                        importTextArea.append("Checking XML of imported data\n");
                                 progressBar.setValue(0);
+                                progressBar.setMaximum(treeNodesArray.length + 1);
                                 for (URI currentNodeUri : treeNodesArray) {
                                     progressBar.setValue(progressBar.getValue() + 1);
                                     if (maxXsdErrorToShow > 0) {
@@ -149,7 +154,7 @@ public class GedcomImportPanel extends JPanel {
                                         XsdChecker xsdChecker = new XsdChecker();
                                         if (xsdChecker.simpleCheck(new File(currentNodeUri), currentNodeUri) != null) {
                                             jTabbedPane1.add("XSD Error on Import", xsdChecker);
-                                            xsdChecker.checkXML(ImdiLoader.getSingleInstance().getImdiObject(null, currentNodeUri));
+                                            xsdChecker.checkXML(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, currentNodeUri));
                                             xsdChecker.setDividerLocation(0.5);
                                             maxXsdErrorToShow--;
                                             if (maxXsdErrorToShow == 0) {
@@ -173,6 +178,7 @@ public class GedcomImportPanel extends JPanel {
 //                    imdiTableModel.removeAllImdiRows();
 //                    imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
                             }
+                            progressBar.setVisible(false);
                             // todo: it might be more efficient to only update the new files
                             importTextArea.append("Starting update of entity database" + "\n");
                             entityCollection.createDatabase();
@@ -183,7 +189,7 @@ public class GedcomImportPanel extends JPanel {
 //                GraphData graphData = new GraphData();
 //                graphData.readData();
 //                graphPanel.drawNodes(graphData);
-                            GedcomImportPanel.this.add(GedcomImportPanel.this.getCreatedNodesPane(gedcomImporter), BorderLayout.PAGE_END);
+                            GedcomImportPanel.this.endPagePanel.add(GedcomImportPanel.this.getCreatedNodesPane(gedcomImporter), BorderLayout.CENTER);
                             GedcomImportPanel.this.revalidate();
                         }
                     }.start();
