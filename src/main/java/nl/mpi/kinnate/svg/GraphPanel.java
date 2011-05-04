@@ -19,9 +19,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.xml.parsers.DocumentBuilderFactory;
-import nl.mpi.arbil.GuiHelper;
-import nl.mpi.arbil.ImdiTableModel;
-import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
+import nl.mpi.arbil.ui.ArbilTableModel;
+import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
@@ -52,7 +52,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
     protected SVGDocument doc;
-    protected ImdiTableModel imdiTableModel;
+    protected ArbilTableModel arbilTableModel;
     protected GraphSorter graphData;
     private boolean requiresSave = false;
     private File svgFile = null;
@@ -139,8 +139,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.setRenderingTransform(at);
     }
 
-    public void setImdiTableModel(ImdiTableModel imdiTableModelLocal) {
-        imdiTableModel = imdiTableModelLocal;
+    public void setArbilTableModel(ArbilTableModel arbilTableModelLocal) {
+        arbilTableModel = arbilTableModelLocal;
     }
 
     public void readSvg(File svgFilePath) {
@@ -160,7 +160,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     private void saveSvg(File svgFilePath) {
         svgFile = svgFilePath;
-        new CmdiComponentBuilder().savePrettyFormatting(doc, svgFilePath);
+        ArbilComponentBuilder.savePrettyFormatting(doc, svgFilePath);
         requiresSave = false;
     }
 
