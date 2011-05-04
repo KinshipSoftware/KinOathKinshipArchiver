@@ -4,13 +4,29 @@ import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilTree;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
+import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  * Document   : ArchiveEntityLinkerDragHandler
@@ -22,6 +38,11 @@ public class ArchiveEntityLinkerDragHandler extends TransferHandler implements T
     ArbilDataNode[] selectedNodes;
     DataFlavor dataFlavor = new DataFlavor(ArbilDataNode[].class, "ArbilTreeObject");
     DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor};
+    ArbilTree kinTree;
+
+    public ArchiveEntityLinkerDragHandler(ArbilTree kinTreeLocal) {
+        kinTree = kinTreeLocal;
+    }
 
     @Override
     public int getSourceActions(JComponent comp) {
@@ -68,8 +89,13 @@ public class ArchiveEntityLinkerDragHandler extends TransferHandler implements T
         }
 
         Component dropLocation = support.getComponent(); // getDropLocation
-        if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
-            return true;
+        if (dropLocation.equals(kinTree)) {
+            for (ArbilDataNode arbilDataNode : selectedNodes) {
+                // if there is at least one valid node selected then allow the process to continue
+                if (arbilDataNode.getParentDomNode().isSession()) {
+                    return true;
+                }
+            }
         }
 
 //        boolean actionSupported = (COPY & support.getSourceDropActions()) == COPY;
@@ -96,20 +122,59 @@ public class ArchiveEntityLinkerDragHandler extends TransferHandler implements T
 //        }
 
         Component dropLocation = support.getComponent();
-        if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
-            System.out.println("dropped to KinTypeEgoSelectionTestPanel");
-            ArrayList<URI> slectedUris = new ArrayList<URI>();
-            ArrayList<String> slectedIdentifiers = new ArrayList<String>();
+        URI addedNodePath = null;
+        if (dropLocation.equals(kinTree)) {
+            System.out.println("dropped to the kinTree");
             for (ArbilDataNode currentArbilNode : selectedNodes) {
-                slectedUris.add(currentArbilNode.getURI());
-                for (String currentIdentifierType : new String[]{"Kinnate.Gedcom.UniqueIdentifier.LocalIdentifier", "Kinnate.Entity.UniqueIdentifier.LocalIdentifier", "Kinnate.Gedcom.UniqueIdentifier.PersistantIdentifier", "Kinnate.Entity.UniqueIdentifier.PersistantIdentifier"}) {
-                    if (currentArbilNode.getFields().containsKey(currentIdentifierType)) {
-                        slectedIdentifiers.add(currentArbilNode.getFields().get(currentIdentifierType)[0].getFieldValue());
-                        break;
+                // todo: if the dropped archive node alreay is linked in the kin database then show that kin entity, if the node is dragged from the archive tree or from one kin entity to another then add or move it to the new target
+                String nodeType = ArchiveEntityLinkerDragHandler.class.getResource("/xsd/StandardEntity.xsd").toString();
+                URI targetFileURI = ArbilSessionStorage.getSingleInstance().getNewArbilFileName(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), nodeType);
+                ArbilComponentBuilder componentBuilder = new ArbilComponentBuilder();
+                try {
+                    addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
+                    // set the unique idntifier
+                    String localIdentifier = new LocalIdentifier().setLocalIdentifier(new File(addedNodePath));
+                    try {
+                        // set the name node
+                        Document metadataDom = ArbilComponentBuilder.getDocument(addedNodePath);
+                        Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity/:Name");
+                        uniqueIdentifierNode.setTextContent(currentArbilNode.toString());
+                        // create and set the link node
+                        Element linkPathElement = metadataDom.createElement("CorpusLink"); // todo: this might well be updated at a later date, or even use the cmdi link type although that is more complex than required
+                        linkPathElement.setTextContent(currentArbilNode.getUrlString());
+                        metadataDom.getDocumentElement().appendChild(linkPathElement);
+                        // save the changes
+                        ArbilComponentBuilder.savePrettyFormatting(metadataDom, new File(addedNodePath));
+                    } catch (DOMException exception) {
+                        new ArbilBugCatcher().logError(exception);
+                    } catch (TransformerException exception) {
+                        new ArbilBugCatcher().logError(exception);
+                    } catch (IOException exception) {
+                        new ArbilBugCatcher().logError(exception);
+                    } catch (ParserConfigurationException exception) {
+                        new ArbilBugCatcher().logError(exception);
+                    } catch (SAXException exception) {
+                        new ArbilBugCatcher().logError(exception);
                     }
+                    ArbilDataNode kinArbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, addedNodePath);
+                    // cmdi link types have been considered here but they are very complex and not well suited to kinship needs so we are using the corpus link type for now
+//                    new ArbilComponentBuilder().insertResourceProxy(kinArbilDataNode, currentArbilNode);
+                    ArrayList<ArbilDataNode> kinTreeNodes = new ArrayList<ArbilDataNode>();
+                    if (kinTree.rootNodeChildren != null) {
+                        kinTreeNodes.addAll(Arrays.asList(kinTree.rootNodeChildren));
+                    }
+                    kinTreeNodes.add(kinArbilDataNode);
+                    kinTree.rootNodeChildren = kinTreeNodes.toArray(new ArbilDataNode[]{});
+                    kinTree.requestResort();
+                } catch (URISyntaxException ex) {
+                    new ArbilBugCatcher().logError(ex);
+                    // todo: warn user with a dialog
+                    return false;
                 }
             }
-            ((KinTypeEgoSelectionTestPanel) dropLocation).addEgoNodes(slectedUris.toArray(new URI[]{}), slectedIdentifiers.toArray(new String[]{}));
+            if (addedNodePath != null) {
+                new EntityCollection().updateDatabase(addedNodePath);
+            }
             return true;
         }
         return false;
