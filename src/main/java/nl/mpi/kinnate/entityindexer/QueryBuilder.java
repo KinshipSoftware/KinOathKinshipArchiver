@@ -80,8 +80,8 @@ public class QueryBuilder {
                 + "}</Relation>\n"
                 + "} {\n"
                 // for $relationNode in collection('nl-mpi-kinnate')/Kinnate/(Gedcom|Relation|Entity)[UniqueIdentifier/. = "742243abdb2468b8df65f16ee562ac10"]
-                + "for $relationNode in collection('nl-mpi-kinnate')/*:Kinnate/(*:Gedcom|*:Entity)[*:UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
-                // todo: this second relation clause is not getting triggered, is this due to the data I am testing or due to an error
+                // + "for $relationNode in collection('nl-mpi-kinnate')/*:Kinnate/(*:Gedcom|*:Entity)[*:UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
+                + "for $relationNode in $entityNode/*:Relation\n"
                 + "let $isAncestor := $relationNode/*:Type/text() = " + ancestorSequence + "\n" // note that the ancestor and decentant are switched for alter compared to ego
                 + "let $isDecendant := $relationNode/*:Type/text() = " + decendantSequence + "\n"
                 + "where $isAncestor or $isDecendant \n"
@@ -92,10 +92,10 @@ public class QueryBuilder {
                 + "else if ($isDecendant)\n"
                 + "then <Type>descendant</Type>\n"
                 + "else <Type>none</Type>,\n"
-                + "<Identifier>{$relationNode/../*:Relation/*:UniqueIdentifier/(*:LocalIdentifier|*:UniqueIdentifier)/text()}</Identifier>,\n" // todo: check this path to the identifier
+                + "<Identifier>{$relationNode/*:UniqueIdentifier/(*:LocalIdentifier|*:UniqueIdentifier)/text()}</Identifier>,\n" // todo: check this path to the identifier
                 // todo: add the alter unique identifier + "<UniqueIdentifier>" + uniqueIdentifier + "</UniqueIdentifier>,\n"
                 // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
-                + "<Path>{base-uri($relationNode)}</Path>,\n"
+                + "<Path>{base-uri(collection('nl-mpi-kinnate')/*:Kinnate[(*:Entity|*:Gedcom)/*:UniqueIdentifier/./text() = $relationNode/*:UniqueIdentifier/(*:LocalIdentifier|*:UniqueIdentifier)/text()])}</Path>,\n"
                 //                + "<Label>a label</Label>,\n"
                 + "<Line>square</Line>\n"
                 + "}</Relation>"
