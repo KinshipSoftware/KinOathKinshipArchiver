@@ -65,13 +65,15 @@ public class EntityCollection {
     }
 
     public void updateDatabase(URI updatedFile) {
-        try {
-            new Open(databaseName).execute(context);
-            new Add(updatedFile.toString()).execute(context);
-            new Optimize().execute(context);
-        } catch (BaseXException baseXException) {
-            new ArbilBugCatcher().logError(baseXException);
-        }
+        // todo: it would appear that a re adding a file does not remove the old entries so for now we will dump and recreate the entire database
+        createDatabase();
+//        try {
+//            new Open(databaseName).execute(context);
+//            new Add(updatedFile.toString()).execute(context);
+//            new Optimize().execute(context);
+//        } catch (BaseXException baseXException) {
+//            new ArbilBugCatcher().logError(baseXException);
+//        }
     }
 
     public SearchResults listAllRelationTypes() {
@@ -147,7 +149,7 @@ public class EntityCollection {
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
         }
-        return null;
+        return new EntityData(uniqueIdentifier, "", "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
     }
 
     static public void main(String[] args) {
