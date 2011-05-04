@@ -86,7 +86,7 @@
             <!-- this dependency can be produced and installed by: "ant -f arbil.xml maven-deploy" -->
             <groupId>nl.mpi</groupId>
             <artifactId>arbil</artifactId>
-            <version>2.2.23631</version>
+            <version>2.2.23859</version>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
