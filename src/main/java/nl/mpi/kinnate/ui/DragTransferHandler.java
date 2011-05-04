@@ -9,8 +9,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
-import nl.mpi.arbil.ImdiTree;
-import nl.mpi.arbil.data.ImdiTreeObject;
+import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.ui.ArbilTree;
 
 /**
  * Document   : DragTransferHandler
@@ -19,8 +19,8 @@ import nl.mpi.arbil.data.ImdiTreeObject;
  */
 public class DragTransferHandler extends TransferHandler implements Transferable {
 
-    ImdiTreeObject[] selectedNodes;
-    DataFlavor dataFlavor = new DataFlavor(ImdiTreeObject[].class, "ImdiTreeObject");
+    ArbilDataNode[] selectedNodes;
+    DataFlavor dataFlavor = new DataFlavor(ArbilDataNode[].class, "ArbilTreeObject");
     DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor};
 
     @Override
@@ -30,7 +30,7 @@ public class DragTransferHandler extends TransferHandler implements Transferable
 
     @Override
     public Transferable createTransferable(JComponent comp) {
-        selectedNodes = ((ImdiTree) comp).getSelectedNodes();
+        selectedNodes = ((ArbilTree) comp).getSelectedNodes();
         if (selectedNodes.length == 0) {
             return null;
         }
@@ -45,7 +45,7 @@ public class DragTransferHandler extends TransferHandler implements Transferable
     }
     //////////////////////////////////////
 
-    public Object /*ImdiTreeObject[]*/ getTransferData(DataFlavor df) throws UnsupportedFlavorException, IOException {
+    public Object /*ArbilTreeObject[]*/ getTransferData(DataFlavor df) throws UnsupportedFlavorException, IOException {
         return ""; //selectedNodes;
     }
 
@@ -100,11 +100,11 @@ public class DragTransferHandler extends TransferHandler implements Transferable
             System.out.println("dropped to KinTypeEgoSelectionTestPanel");
             ArrayList<URI> slectedUris = new ArrayList<URI>();
             ArrayList<String> slectedIdentifiers = new ArrayList<String>();
-            for (ImdiTreeObject currentImdiNode : selectedNodes) {
-                slectedUris.add(currentImdiNode.getURI());
+            for (ArbilDataNode currentArbilNode : selectedNodes) {
+                slectedUris.add(currentArbilNode.getURI());
                 for (String currentIdentifierType : new String[]{"Kinnate.Gedcom.UniqueIdentifier.LocalIdentifier", "Kinnate.Entity.UniqueIdentifier.LocalIdentifier", "Kinnate.Gedcom.UniqueIdentifier.PersistantIdentifier", "Kinnate.Entity.UniqueIdentifier.PersistantIdentifier"}) {
-                    if (currentImdiNode.getFields().containsKey(currentIdentifierType)) {
-                        slectedIdentifiers.add(currentImdiNode.getFields().get(currentIdentifierType)[0].getFieldValue());
+                    if (currentArbilNode.getFields().containsKey(currentIdentifierType)) {
+                        slectedIdentifiers.add(currentArbilNode.getFields().get(currentIdentifierType)[0].getFieldValue());
                         break;
                     }
                 }
