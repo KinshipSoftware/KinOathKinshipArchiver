@@ -14,10 +14,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import nl.mpi.arbil.ImdiTree;
-import nl.mpi.arbil.LinorgBugCatcher;
-import nl.mpi.arbil.data.ImdiLoader;
-import nl.mpi.arbil.data.ImdiTreeObject;
+import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.ui.ArbilTree;
+import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
@@ -28,34 +28,34 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 public class EntitySearchPanel extends JPanel {
 
     private EntityCollection entityCollection;
-    private ImdiTree leftTree;
+    private ArbilTree leftTree;
     private JTextArea resultsArea = new JTextArea();
     private JTextField searchField;
 
     public EntitySearchPanel(EntityCollection entityCollectionLocal) {
         entityCollection = entityCollectionLocal;
         this.setLayout(new BorderLayout());
-        leftTree = new ImdiTree();
+        leftTree = new ArbilTree();
         leftTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
 //                ArrayList<URI> allEntityUris = new ArrayList<URI>();
 //        String[] treeNodesArray = LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
 //        if (treeNodesArray != null) {
-//            ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();
+//            ArrayList<ArbilTreeObject> tempArray = new ArrayList<ArbilTreeObject>();
 //            for (String currentNodeString : treeNodesArray) {
 //                try {
-//                    ImdiTreeObject currentImdiNode = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
-//                    tempArray.add(currentImdiNode);
-//                    allEntityUris.add(currentImdiNode.getURI());
+//                    ArbilTreeObject currentArbilNode = ArbilLoader.getSingleInstance().getArbilObject(null, new URI(currentNodeString));
+//                    tempArray.add(currentArbilNode);
+//                    allEntityUris.add(currentArbilNode.getURI());
 //                } catch (URISyntaxException exception) {
 //                    GuiHelper.linorgBugCatcher.logError(exception);
 //                }
 //            }
-//            ImdiTreeObject[] allEntities = tempArray.toArray(new ImdiTreeObject[]{});
+//            ArbilTreeObject[] allEntities = tempArray.toArray(new ArbilTreeObject[]{});
 //            leftTree.rootNodeChildren = allEntities;
-//            imdiTableModel.removeAllImdiRows();
-//            imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
+//            imdiTableModel.removeAllArbilRows();
+//            imdiTableModel.addArbilObjects(leftTree.rootNodeChildren);
 //        } //else {
-//        //   leftTree.rootNodeChildren = new ImdiTreeObject[]{graphPanel.imdiNode};
+//        //   leftTree.rootNodeChildren = new ArbilTreeObject[]{graphPanel.imdiNode};
 //        // }
         leftTree.requestResort();
         JLabel searchLabel = new JLabel("Search Entity Names");
@@ -92,26 +92,26 @@ public class EntitySearchPanel extends JPanel {
     }
 
     protected void performSearch() {
-        ArrayList<ImdiTreeObject> resultsArray = new ArrayList<ImdiTreeObject>();
+        ArrayList<ArbilDataNode> resultsArray = new ArrayList<ArbilDataNode>();
         EntityCollection.SearchResults searchResults = entityCollection.searchByName(searchField.getText());
         String[] rawResultsArray = searchResults.resultsPathArray;
         resultsArea.setText(searchResults.statusMessage + "\n");
         for (String resultLine : rawResultsArray) {
             try {
                 if (resultsArray.size() < 100) {
-                    ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(resultLine));
-                    currentImdiObject.reloadNode();
-                    resultsArray.add(currentImdiObject);
+                    ArbilDataNode currentArbilObject = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(resultLine));
+                    currentArbilObject.reloadNode();
+                    resultsArray.add(currentArbilObject);
                 } else {
                     resultsArea.append("results limited to 100\n");
                     break;
                 }
             } catch (URISyntaxException exception) {
-                new LinorgBugCatcher().logError(exception);
+                new ArbilBugCatcher().logError(exception);
                 resultsArea.append("error: " + resultLine + "\n");
             }
         }
-        leftTree.rootNodeChildren = resultsArray.toArray(new ImdiTreeObject[]{});
+        leftTree.rootNodeChildren = resultsArray.toArray(new ArbilDataNode[]{});
         leftTree.requestResort();
     }
 }
