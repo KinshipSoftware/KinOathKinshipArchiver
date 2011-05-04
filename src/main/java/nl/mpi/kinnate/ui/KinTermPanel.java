@@ -19,11 +19,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import nl.mpi.arbil.LinorgBugCatcher;
-import nl.mpi.arbil.LinorgWindowManager;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTerm;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
@@ -293,12 +292,12 @@ public class KinTermPanel extends JPanel {
     }
 
     public void exportKinTerms() {
-        File[] exportFile = LinorgWindowManager.getSingleInstance().showFileSelectBox("Export Kin Terms", false, false, false);
+        File[] exportFile = ArbilWindowManager.getSingleInstance().showFileSelectBox("Export Kin Terms", false, false, false);
         if (exportFile.length != 1) {
-            LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Export file not selected", "Export Kin Terms");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Export file not selected", "Export Kin Terms");
         } else {
             if (exportFile[0].exists()) {
-                if (!LinorgWindowManager.getSingleInstance().showMessageDialogBox("Export file already exists, overwrite?", "Export Kin Terms")) {
+                if (!ArbilWindowManager.getSingleInstance().showConfirmDialogBox("Export file already exists, overwrite?", "Export Kin Terms")) {
                     return;
                 }
             }
@@ -308,15 +307,15 @@ public class KinTermPanel extends JPanel {
                 fileWriter.write("wookies are lovely on toast.");
                 fileWriter.close();
             } catch (IOException exception) {
-                new LinorgBugCatcher().logError(exception);
+                new ArbilBugCatcher().logError(exception);
             }
         }
     }
 
     public void importKinTerms() {
-        File[] importFiles = LinorgWindowManager.getSingleInstance().showFileSelectBox("Import Kin Terms", false, true, false);
+        File[] importFiles = ArbilWindowManager.getSingleInstance().showFileSelectBox("Import Kin Terms", false, true, false);
         if (importFiles.length == 0) {
-            LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("No files selected for import", "Import Kin Terms");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("No files selected for import", "Import Kin Terms");
         }
         for (File currentFile : importFiles) {
             int importCount = 0;
@@ -339,10 +338,10 @@ public class KinTermPanel extends JPanel {
                 revalidate();
                 savePanel.updateGraph();
             } catch (IOException exception) {
-                new LinorgBugCatcher().logError(exception);
+                new ArbilBugCatcher().logError(exception);
             }
             // todo: resolve why this dialogue does not show
-            LinorgWindowManager.getSingleInstance().addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
         }
     }
 }
