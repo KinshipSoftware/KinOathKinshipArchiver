@@ -10,9 +10,10 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import nl.mpi.arbil.GuiHelper;
-import nl.mpi.arbil.LinorgSessionStorage;
-import nl.mpi.arbil.clarin.CmdiComponentBuilder;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
+import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.RelationLinker;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -49,11 +50,12 @@ public class GraphPanelContextMenu extends JPopupMenu {
                     // todo: this could be simplified by adapting the Arbil code
                     String nodeType = evt.getActionCommand();
                     URI addedNodePath;
-                    URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), nodeType);
-                    CmdiComponentBuilder componentBuilder = new CmdiComponentBuilder();
+                    URI targetFileURI = ArbilSessionStorage.getSingleInstance().getNewArbilFileName(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), nodeType);
+                    ArbilComponentBuilder componentBuilder = new ArbilComponentBuilder();
                     try {
                         addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
                         String localIdentifier = new LocalIdentifier().setLocalIdentifier(new File(addedNodePath));
+                        new EntityCollection().updateDatabase(addedNodePath);
 //                        ArrayList<String> entityArray = new ArrayList<String>(Arrays.asList(LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree")));
 //                        entityArray.add(addedNodePath.toASCIIString());
 //                        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", entityArray.toArray(new String[]{}));
@@ -68,7 +70,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
                         // todo: look into the need or not of adding ego nodes, on one hand they should not be added as ego nodes but as working nodes, also it is likely that the jlist that is updated by this could better be updaed by the selection listner
                         egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}), egoIdentifierList.toArray(new String[]{}));
                     } catch (URISyntaxException ex) {
-                        GuiHelper.linorgBugCatcher.logError(ex);
+                        new ArbilBugCatcher().logError(ex);
                         // todo: warn user with a dialog
                     }
                 }
@@ -102,7 +104,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
 //                        egoUriList.add(addedNodePath);
 //                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}));
 //                    } catch (URISyntaxException ex) {
-//                        GuiHelper.linorgBugCatcher.logError(ex);
+//                        new ArbilBugCatcher().logError(ex);
 //                        // todo: warn user with a dialog
 //                    }
                     }
@@ -183,14 +185,24 @@ public class GraphPanelContextMenu extends JPopupMenu {
             }
         });
         this.add(showSanguinLinesMenuItem);
-        JCheckBoxMenuItem showKinTermsMenuItem = new JCheckBoxMenuItem("Show Kin Terms");
-        showKinTermsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        JCheckBoxMenuItem showKinTermLinesMenuItem = new JCheckBoxMenuItem("Show Kin Term Lines");
+        showKinTermLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // todo: move this into the kin term panel
                 // todo: Hide/Show Kin Terms on the graph
             }
         });
-        this.add(showKinTermsMenuItem);
+        this.add(showSanguinLinesMenuItem);
+        JCheckBoxMenuItem showKinTermLabelssMenuItem = new JCheckBoxMenuItem("Show Kin Term Lables");
+        showKinTermLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // todo: move this into the kin term panel
+                // todo: Hide/Show Kin Terms on the graph
+            }
+        });
+        this.add(showKinTermLabelssMenuItem);
         JMenuItem searchEntityServiceMenuItem = new JMenuItem("Search Entity Service");
         searchEntityServiceMenuItem.setToolTipText("Search the entity database for entities matching the current kin terms and populate he diagram with the results");
         searchEntityServiceMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -208,7 +220,7 @@ public class GraphPanelContextMenu extends JPopupMenu {
             try {
                 selectedUriArray[currentIndex] = new URI(graphPanel.getPathForElementId(selectedIdentifiers[currentIndex]));
             } catch (URISyntaxException ex) {
-                GuiHelper.linorgBugCatcher.logError(ex);
+                new ArbilBugCatcher().logError(ex);
                 // todo: warn user with a dialog
             }
         }
