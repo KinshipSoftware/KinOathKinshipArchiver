@@ -5,10 +5,10 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
-import nl.mpi.arbil.ImdiTable;
-import nl.mpi.arbil.ImdiTableModel;
-import nl.mpi.arbil.LinorgWindowManager;
-import nl.mpi.arbil.PreviewSplitPanel;
+import nl.mpi.arbil.ui.ArbilTable;
+import nl.mpi.arbil.ui.ArbilTableModel;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.ui.PreviewSplitPanel;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
@@ -23,8 +23,8 @@ public class MainFrame extends javax.swing.JFrame {
     private EntitySearchPanel entitySearchPanel;
 //    private GraphPanel graphPanel;
 //    private JungGraph jungGraph;
-    private ImdiTable previewTable;
-    private ImdiTableModel imdiTableModel;
+    private ArbilTable previewTable;
+    private ArbilTableModel imdiTableModel;
     private DragTransferHandler dragTransferHandler;
     private EntityCollection entityCollection;
     protected RecentFileMenu recentFileMenu;
@@ -32,6 +32,7 @@ public class MainFrame extends javax.swing.JFrame {
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
+        nl.mpi.kinnate.ArbilInjector.injectHandlers();
         recentFileMenu = new RecentFileMenu();
         entityCollection = new EntityCollection();
         entitySearchPanel = new EntitySearchPanel(entityCollection);
@@ -43,8 +44,8 @@ public class MainFrame extends javax.swing.JFrame {
 //        graphData.readData();
 //        graphPanel.drawNodes(graphData);
 //        jungGraph = new JungGraph();
-        imdiTableModel = new ImdiTableModel();
-        previewTable = new ImdiTable(imdiTableModel, "Preview Table");
+        imdiTableModel = new ArbilTableModel();
+        previewTable = new ArbilTable(imdiTableModel, "Preview Table");
 
         JScrollPane tableScrollPane = new JScrollPane(previewTable);
         this.add(new HidePane(entitySearchPanel, "Search Entities", BorderLayout.LINE_END), BorderLayout.LINE_START);
@@ -250,7 +251,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_fileMenuActionPerformed
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDiagramActionPerformed
-        for (File selectedFile : LinorgWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false)) {
+        for (File selectedFile : ArbilWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false)) {
             KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(selectedFile);
             egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
             jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
