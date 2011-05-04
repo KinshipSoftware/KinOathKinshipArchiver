@@ -9,9 +9,9 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
-import nl.mpi.arbil.GuiHelper;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.ui.GuiHelper;
 import org.w3c.dom.Element;
-import nl.mpi.arbil.data.ImdiLoader;
 
 /**
  *  Document   : MouseListenerSvg
@@ -100,12 +100,12 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 //                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 //                }
         // update the table selection
-        if (graphPanel.imdiTableModel != null) {
-            graphPanel.imdiTableModel.removeAllImdiRows();
+        if (graphPanel.arbilTableModel != null) {
+            graphPanel.arbilTableModel.removeAllArbilDataNodeRows();
             try {
                 for (String currentSelectedId : graphPanel.selectedGroupId) {
                     String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
-                    graphPanel.imdiTableModel.addSingleImdiObject(ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentSelectedPath)));
+                    graphPanel.arbilTableModel.addSingleArbilDataNode(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentSelectedPath)));
                 }
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
