@@ -170,8 +170,8 @@ public class EntityIndex implements EntityService {
                 }
             }
             if (egoType != null && alterType != null) {
-                egoNode.addRelatedNode(alterNode, 0, egoType, DataTypes.RelationLineType.square, null, null);
-                alterNode.addRelatedNode(egoNode, 0, alterType, DataTypes.RelationLineType.square, null, null);
+                egoNode.addRelatedNode(alterNode, 0, egoType, DataTypes.RelationLineType.sanguineLine, null, null);
+                alterNode.addRelatedNode(egoNode, 0, alterType, DataTypes.RelationLineType.sanguineLine, null, null);
             }
         }
     }
