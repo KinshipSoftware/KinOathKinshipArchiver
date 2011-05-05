@@ -34,6 +34,8 @@ public class GraphPanelContextMenu extends JPopupMenu {
     JMenuItem setAsEgoMenuItem;
     JMenuItem addAsEgoMenuItem;
     JMenuItem removeEgoMenuItem;
+    JMenuItem addAsRequiredMenuItem;
+    JMenuItem removeRequiredMenuItem;
     JCheckBoxMenuItem snapToGridMenuItem;
     JCheckBoxMenuItem showKinTermLinesMenuItem;
     JCheckBoxMenuItem showSanguineLinesMenuItem;
@@ -67,13 +69,14 @@ public class GraphPanelContextMenu extends JPopupMenu {
                         // todo: update the main entity tree
 //                        ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoList()));
 //                        egoUriList.add(addedNodePath);
-                        ArrayList<String> egoIdentifierList = new ArrayList<String>(Arrays.asList(graphPanel.getEgoUniquiIdentifiersList()));
+//                        ArrayList<String> egoIdentifierList = new ArrayList<String>(Arrays.asList(graphPanel.getEgoUniquiIdentifiersList()));
 //                        egoUriList.add(addedNodePath);
-                        egoIdentifierList.add(localIdentifier);
-                        ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoPaths()));
-                        egoUriList.add(addedNodePath);
+//                        egoIdentifierList.add(localIdentifier);
+//                        ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoPaths()));
+//                        egoUriList.add(addedNodePath);
                         // todo: look into the need or not of adding ego nodes, on one hand they should not be added as ego nodes but as working nodes, also it is likely that the jlist that is updated by this could better be updaed by the selection listner
-                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}), egoIdentifierList.toArray(new String[]{}));
+//                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}), egoIdentifierList.toArray(new String[]{}));
+                        egoSelectionPanel.addRequiredNodes(new URI[]{addedNodePath}, new String[]{localIdentifier});
                     } catch (URISyntaxException ex) {
                         new ArbilBugCatcher().logError(ex);
                         // todo: warn user with a dialog
@@ -152,6 +155,22 @@ public class GraphPanelContextMenu extends JPopupMenu {
             }
         });
         this.add(removeEgoMenuItem);
+        addAsRequiredMenuItem = new JMenuItem("Set as required");
+        addAsRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                egoSelectionPanel.addRequiredNodes(getSelectedUriArray(), selectedIdentifiers);
+            }
+        });
+        this.add(addAsRequiredMenuItem);
+        removeRequiredMenuItem = new JMenuItem("Remove requirement");
+        removeRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                egoSelectionPanel.removeRequiredNodes(selectedIdentifiers);
+            }
+        });
+        this.add(removeRequiredMenuItem);
         JMenuItem resetZoomMenuItem = new JMenuItem("Reset Zoom");
         resetZoomMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -270,11 +289,15 @@ public class GraphPanelContextMenu extends JPopupMenu {
             addRelationEntityMenu.setVisible(selectedIdentifiers.length == 2);
             setAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
             addAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
-            removeEgoMenuItem.setVisible(graphPanel.selectionContainsEgo());
+            removeEgoMenuItem.setVisible(selectedIdentifiers.length > 0); // todo: set these items based on the state of the selected entities, //graphPanel.selectionContainsEgo());
+            addAsRequiredMenuItem.setVisible(selectedIdentifiers.length > 0);
+            removeRequiredMenuItem.setVisible(selectedIdentifiers.length > 0);
         } else {
             setAsEgoMenuItem.setVisible(false);
             addAsEgoMenuItem.setVisible(false);
             removeEgoMenuItem.setVisible(false);
+            addAsRequiredMenuItem.setVisible(false);
+            removeRequiredMenuItem.setVisible(false);
         }
         snapToGridMenuItem.setSelected(graphPanel.dataStoreSvg.snapToGrid);
         showSanguineLinesMenuItem.setSelected(graphPanel.dataStoreSvg.showSanguineLines);
