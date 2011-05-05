@@ -37,6 +37,16 @@ public class DataStoreSvg {
     protected IndexerParameters indexParameters;
     @XmlElement(name = "KinTermGroups", namespace = "http://mpi.nl/tla/kin")
     protected KinTermGroup[] kinTermGroups;
+    @XmlElement(name = "ShowKinTypeLabels", namespace = "http://mpi.nl/tla/kin")
+    public boolean showKinTypeLables = false;
+    @XmlElement(name = "ShowKinTermLabels", namespace = "http://mpi.nl/tla/kin")
+    public boolean showKinTermLabels = false;
+    @XmlElement(name = "ShowKinTermLines", namespace = "http://mpi.nl/tla/kin")
+    public boolean showKinTermLines = true;
+    @XmlElement(name = "SnapToGrid", namespace = "http://mpi.nl/tla/kin")
+    public boolean snapToGrid = true;
+    @XmlElement(name = "ShowSanguineLines", namespace = "http://mpi.nl/tla/kin")
+    public boolean showSanguineLines = true;
 
     public class GraphRelationData {
 
