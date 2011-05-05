@@ -73,7 +73,8 @@ public class GedcomImportPanel extends JPanel {
                         }
                     }
                     KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
-                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
+//                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
+                    egoSelectionTestPanel.addRequiredNodes(null, selectedIds.toArray(new String[]{}));
                     jTabbedPane1.add("Imported Entities", egoSelectionTestPanel);
                     jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
                 }
@@ -141,7 +142,7 @@ public class GedcomImportPanel extends JPanel {
                             if (treeNodesArray != null && checkFilesAfterImport) {
 //                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();                    
                                 int maxXsdErrorToShow = 3;
-                                        importTextArea.append("Checking XML of imported data\n");
+                                importTextArea.append("Checking XML of imported data\n");
                                 progressBar.setValue(0);
                                 progressBar.setMaximum(treeNodesArray.length + 1);
                                 for (URI currentNodeUri : treeNodesArray) {
@@ -178,13 +179,15 @@ public class GedcomImportPanel extends JPanel {
 //                    imdiTableModel.removeAllImdiRows();
 //                    imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
                             }
-                            progressBar.setVisible(false);
+                            progressBar.setIndeterminate(true);
                             // todo: it might be more efficient to only update the new files
                             importTextArea.append("Starting update of entity database" + "\n");
                             entityCollection.createDatabase();
                             importTextArea.append("Updated entity database" + "\n");
                             importTextArea.setCaretPosition(importTextArea.getText().length());
                             System.out.println("created new database");
+                            progressBar.setIndeterminate(false);
+                            progressBar.setVisible(false);
 //                leftTree.requestResort();
 //                GraphData graphData = new GraphData();
 //                graphData.readData();
