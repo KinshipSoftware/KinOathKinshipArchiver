@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
@@ -217,6 +218,10 @@ public class EntityIndex implements EntityService {
                 GuiHelper.linorgBugCatcher.logError(urise);
             }
         }
+    }
+
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, HashSet<String> egoIdentifiers, HashSet<String> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
