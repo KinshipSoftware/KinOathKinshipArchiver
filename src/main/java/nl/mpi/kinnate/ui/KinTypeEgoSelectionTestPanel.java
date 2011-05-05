@@ -8,6 +8,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -15,6 +17,9 @@ import javax.swing.JTextPane;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeContainer;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
@@ -23,17 +28,19 @@ import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
+import nl.mpi.kinnate.kindata.EntityData;
 
 /**
  *  Document   : KinTypeStringTestPanel
  *  Created on : Sep 29, 2010, 12:52:01 PM
  *  Author     : Peter Withers
  */
-public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, KinTermSavePanel {
+public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, KinTermSavePanel, ArbilDataNodeContainer {
 
     private JTextPane kinTypeStringInput;
     private GraphPanel graphPanel;
@@ -43,6 +50,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     private HidePane kinTypeHidePane;
     private KinTermTabPane kinTermPanel;
     private EntityService entityIndex;
+    private ArrayList<String> registeredEntityIds;
     private String defaultString = "# The kin type strings entered here will determine how the entities show on the graph below\n";
     public static String defaultGraphString = "# The kin type strings entered here will determine how the entities show on the graph below\n"
             + "# Enter one string per line.\n"
@@ -57,6 +65,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
 
     public KinTypeEgoSelectionTestPanel(File existingFile) {
         this.setLayout(new BorderLayout());
+        registeredEntityIds = new ArrayList<String>();
         graphPanel = new GraphPanel(this);
         egoSelectionPanel = new EgoSelectionPanel();
         kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
@@ -209,6 +218,8 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         }
         egoSelectionPanel.setEgoNodes(graphPanel.getEgoPaths());
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
+        // register interest Arbil updates and update the graph when data is edited in the table
+        registerCurrentNodes(graphSorter.getDataNodes());
         graphPanel.drawNodes(graphSorter);
     }
 
@@ -284,5 +295,36 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
 
     public boolean isHidden() {
         return kinTermHidePane.isHidden();
+    }
+
+    private void registerCurrentNodes(EntityData[] currentEntities) {
+        // todo: update the graph when data is edited in the table
+        // todo: resolve issue where arbil nodes update frequency is too high and breaks basex
+//        for (EntityData entityData : currentEntities) {
+//            if (!registeredEntityIds.contains(entityData.getUniqueIdentifier())) {
+//                try {
+//                    registeredEntityIds.add(entityData.getUniqueIdentifier());
+//                    ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityData.getEntityPath()));
+//                    arbilDataNode.registerContainer(this);
+////                // todo: keep track of registered nodes and remove the unrequired ones here
+//                } catch (URISyntaxException exception) {
+//                    GuiHelper.linorgBugCatcher.logError(exception);
+//                }
+//            }
+//        }
+    }
+
+    public void dataNodeIconCleared(ArbilDataNode arbilDataNode) {
+        if (arbilDataNode != null) {
+            new EntityCollection().updateDatabase(arbilDataNode.getURI());
+        } else {
+            new EntityCollection().createDatabase();
+        }
+        graphPanel.getIndexParameters().valuesChanged = true;
+        drawGraph();
+    }
+
+    public void dataNodeRemoved(ArbilDataNode adn) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
