@@ -8,8 +8,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -19,7 +20,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeContainer;
-import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
@@ -189,7 +189,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         try {
             String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
             ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
-            graphSorter.setEntitys(entityIndex.getRelationsOfEgo(null, graphPanel.getEgoUniquiIdentifiersList(), kinTypeStrings, parserHighlight, graphPanel.getIndexParameters()));
+            graphSorter.setEntitys(entityIndex.getRelationsOfEgo(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters()));
             StyledDocument styledDocument = kinTypeStringInput.getStyledDocument();
             int lineStart = 0;
             for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
@@ -216,19 +216,16 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             GuiHelper.linorgBugCatcher.logError(exception);
             ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
         }
-        egoSelectionPanel.setEgoNodes(graphPanel.getEgoPaths());
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
         // register interest Arbil updates and update the graph when data is edited in the table
         registerCurrentNodes(graphSorter.getDataNodes());
         graphPanel.drawNodes(graphSorter);
+        egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes());
     }
 
-    public void setEgoNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
-        graphPanel.setEgoList(egoPathArray, egoIdentifierArray);
-        drawGraph();
-    }
-
+    @Deprecated
     public void setDisplayNodes(String typeString, String[] egoIdentifierArray) {
+        // todo: should this be replaced by the required nodes?
         if (kinTypeStringInput.getText().equals(defaultString)) {
             kinTypeStringInput.setText("");
         }
@@ -242,13 +239,28 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         drawGraph();
     }
 
+    public void setEgoNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
+        graphPanel.dataStoreSvg.egoEntities = new HashSet<String>(Arrays.asList(egoIdentifierArray));
+        drawGraph();
+    }
+
     public void addEgoNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
-        graphPanel.addEgo(egoPathArray, egoIdentifierArray);
+        graphPanel.dataStoreSvg.egoEntities.addAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
     public void removeEgoNodes(String[] egoIdentifierArray) {
-        graphPanel.removeEgo(egoIdentifierArray);
+        graphPanel.dataStoreSvg.egoEntities.removeAll(Arrays.asList(egoIdentifierArray));
+        drawGraph();
+    }
+
+    public void addRequiredNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
+        graphPanel.dataStoreSvg.requiredEntities.addAll(Arrays.asList(egoIdentifierArray));
+        drawGraph();
+    }
+
+    public void removeRequiredNodes(String[] egoIdentifierArray) {
+        graphPanel.dataStoreSvg.requiredEntities.removeAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
