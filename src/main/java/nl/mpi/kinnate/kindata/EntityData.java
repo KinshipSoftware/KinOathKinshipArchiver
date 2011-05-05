@@ -23,7 +23,8 @@ public class EntityData {
     private String uniqueIdentifier;
     @XmlElement(name = "Path")
     private String entityPath;
-    private String kinTypeString = null;
+    private String[] kinTypeArray = new String[]{};
+    private String[] kinTermArray = new String[]{};
     private SymbolType symbolType;
     @XmlElement(name = "Symbol")
     private String symbolTypeString;
@@ -47,7 +48,7 @@ public class EntityData {
     public EntityData(String uniqueIdentifierLocal, String entityPathLocal, String kinTypeStringLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = entityPathLocal;
-        kinTypeString = kinTypeStringLocal;
+        kinTypeArray = new String[]{kinTypeStringLocal};
         symbolType = null;
         symbolTypeString = symbolTypeLocal;
         labelStringArray = labelStringLocal;
@@ -57,7 +58,7 @@ public class EntityData {
     public EntityData(String uniqueIdentifierLocal, String entityPathLocal, String kinTypeStringLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = entityPathLocal;
-        kinTypeString = kinTypeStringLocal;
+        kinTypeArray = new String[]{kinTypeStringLocal};
         symbolType = symbolIndex;
         labelStringArray = labelStringLocal;
         isEgo = isEgoLocal;
@@ -105,8 +106,24 @@ public class EntityData {
         return entityPath;
     }
 
-    public String getKinTypeString() {
-        return kinTypeString;
+    public void addKinTypeString(String kinTypeString) {
+        ArrayList<String> tempList = new ArrayList<String>(Arrays.asList(kinTypeArray));
+        tempList.add(kinTypeString);
+        kinTypeArray = tempList.toArray(new String[]{});
+    }
+
+    public String[] getKinTypeStrings() {
+        return kinTypeArray;
+    }
+
+    public void addKinTermString(String kinTermString) {
+        ArrayList<String> tempList = new ArrayList<String>(Arrays.asList(kinTermArray));
+        tempList.add(kinTermString);
+        kinTermArray = tempList.toArray(new String[]{});
+    }
+
+    public String[] getKinTermStrings() {
+        return kinTermArray;
     }
 
     public String[] getLabel() {
