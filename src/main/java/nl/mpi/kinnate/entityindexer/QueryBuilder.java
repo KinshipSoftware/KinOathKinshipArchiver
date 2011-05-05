@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.entityindexer;
 
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 
 /**
@@ -76,7 +77,7 @@ public class QueryBuilder {
                 // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
                 + "<Path>{base-uri($relationNode)}</Path>,\n"
                 //                + "<Label>a label</Label>,\n"
-                + "<Line>square</Line>\n"
+                + "<Line>" + DataTypes.RelationLineType.sanguineLine.name() + "</Line>\n"
                 + "}</Relation>\n"
                 + "} {\n"
                 // for $relationNode in collection('nl-mpi-kinnate')/Kinnate/(Gedcom|Relation|Entity)[UniqueIdentifier/. = "742243abdb2468b8df65f16ee562ac10"]
@@ -97,7 +98,7 @@ public class QueryBuilder {
                 // with the type value we are looking for one of GraphDataNode.RelationType: sibling, ancestor, descendant, union, none
                 + "<Path>{base-uri(collection('nl-mpi-kinnate')/*:Kinnate[(*:Entity|*:Gedcom)/*:UniqueIdentifier/./text() = $relationNode/*:UniqueIdentifier/(*:LocalIdentifier|*:UniqueIdentifier)/text()])}</Path>,\n"
                 //                + "<Label>a label</Label>,\n"
-                + "<Line>square</Line>\n"
+                + "<Line>" + DataTypes.RelationLineType.sanguineLine.name() + "</Line>\n"
                 + "}</Relation>"
                 + "}</Relations>\n";
     }
