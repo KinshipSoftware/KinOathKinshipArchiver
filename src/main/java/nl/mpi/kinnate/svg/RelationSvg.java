@@ -135,7 +135,7 @@ public class RelationSvg {
         int toY = (graphLinkNode.getAlterNode().getyPos() * vSpacing + vSpacing);
 
         switch (graphLinkNode.relationLineType) {
-            case horizontalCurve:
+            case kinTermLine:
             // this case uses the following case
             case verticalCurve:
                 // todo: groupNode.setAttribute("id", );
@@ -172,7 +172,7 @@ public class RelationSvg {
                 linkLine.setAttribute("id", lineIdString);
                 defsNode.appendChild(linkLine);
                 break;
-            case square:
+            case sanguineLine:
                 //                            Element squareLinkLine = doc.createElement("line");
                 //                            squareLinkLine.setAttribute("x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
                 //                            squareLinkLine.setAttribute("y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
