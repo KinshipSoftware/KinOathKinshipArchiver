@@ -25,6 +25,7 @@ import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
@@ -451,7 +452,10 @@ public class GraphPanel extends JPanel implements SavePanel {
 
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
-                        new RelationSvg().insertRelation(doc, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing, strokeWidth);
+                        if ((dataStoreSvg.showKinTermLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.kinTermLine)
+                                && (dataStoreSvg.showSanguineLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.sanguineLine)) {
+                            new RelationSvg().insertRelation(doc, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing, strokeWidth);
+                        }
                     }
                 }
             }
