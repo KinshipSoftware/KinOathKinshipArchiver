@@ -4,15 +4,20 @@ import java.awt.BorderLayout;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilTreeRenderer;
+import nl.mpi.kinnate.kindata.EntityData;
 
 /**
  *  Document   : EgoSelectionPanel
@@ -23,56 +28,76 @@ public class EgoSelectionPanel extends JPanel {
 
     private JTree egoTree;
     DefaultTreeModel egoModel;
-    DefaultMutableTreeNode rootEgoNode;
+    DefaultMutableTreeNode egoRootNode;
+    private JTree requiredTree;
+    DefaultTreeModel requiredModel;
+    DefaultMutableTreeNode requiredRootNode;
+    private JTree impliedTree;
+    DefaultTreeModel impliedModel;
+    DefaultMutableTreeNode impliedRootNode;
 
     public EgoSelectionPanel() {
-        rootEgoNode = new DefaultMutableTreeNode("Selected Ego Nodes");
-        egoModel = new DefaultTreeModel(rootEgoNode);
+        DefaultTreeCellRenderer cellRenderer = new DefaultTreeCellRenderer();
+
+        egoRootNode = new DefaultMutableTreeNode(new JLabel("Ego", cellRenderer.getDefaultOpenIcon(), JLabel.LEFT));
+        egoModel = new DefaultTreeModel(egoRootNode);
         egoTree = new JTree(egoModel);
         egoTree.setCellRenderer(new ArbilTreeRenderer());
-        egoTree.setRootVisible(false);
+
+        requiredRootNode = new DefaultMutableTreeNode(new JLabel("Required", cellRenderer.getDefaultOpenIcon(), JLabel.LEFT));
+        requiredModel = new DefaultTreeModel(requiredRootNode);
+        requiredTree = new JTree(requiredModel);
+        requiredTree.setCellRenderer(new ArbilTreeRenderer());
+
+        impliedRootNode = new DefaultMutableTreeNode(new JLabel("Implied", cellRenderer.getDefaultOpenIcon(), JLabel.LEFT));
+        impliedModel = new DefaultTreeModel(impliedRootNode);
+        impliedTree = new JTree(impliedModel);
+        impliedTree.setCellRenderer(new ArbilTreeRenderer());
+
+//        egoTree.setRootVisible(false);
         this.setLayout(new BorderLayout());
-        JScrollPane outerScrolPane = new JScrollPane();
-        this.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected Ego"));
-        outerScrolPane.getViewport().add(egoTree);
+        JPanel treePanel = new JPanel();
+        treePanel.setLayout(new BoxLayout(treePanel, BoxLayout.PAGE_AXIS));
+        JScrollPane outerScrolPane = new JScrollPane(treePanel);
+//        this.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected Ego"));
+        treePanel.add(egoTree, BorderLayout.PAGE_START);
+        treePanel.add(requiredTree, BorderLayout.CENTER);
+        treePanel.add(impliedTree, BorderLayout.PAGE_END);
         this.add(outerScrolPane, BorderLayout.CENTER);
     }
 
-    public void setEgoNodes(String[] egoNodes) {
-        if (egoNodes != null) {
-            ArrayList<ArbilDataNode> tempArray = new ArrayList<ArbilDataNode>();
-            for (String currentNodeString : egoNodes) {
-                System.out.println("ego tree: " + currentNodeString);
-                try {
-                    tempArray.add(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentNodeString)));
-                } catch (URISyntaxException exception) {
-                    System.err.println(exception.getMessage());
+    public void setTreeNodes(HashSet<String> egoIdentifiers, HashSet<String> requiredEntityIdentifiers, EntityData[] allEntities) {
+        ArrayList<ArbilDataNode> egoNodeArray = new ArrayList<ArbilDataNode>();
+        ArrayList<ArbilDataNode> requiredNodeArray = new ArrayList<ArbilDataNode>();
+        ArrayList<ArbilDataNode> remainingNodeArray = new ArrayList<ArbilDataNode>();
+        for (EntityData entityData : allEntities) {
+            try {
+                ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityData.getEntityPath()));
+                if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                    egoNodeArray.add(arbilDataNode);
+                } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                    requiredNodeArray.add(arbilDataNode);
+                } else {
+                    remainingNodeArray.add(arbilDataNode);
                 }
+            } catch (URISyntaxException exception) {
+                System.err.println(exception.getMessage());
             }
-            setEgoNodes(tempArray.toArray(new ArbilDataNode[]{}));
+            setEgoNodes(egoNodeArray, egoTree, egoModel, egoRootNode);
+            setEgoNodes(requiredNodeArray, requiredTree, requiredModel, requiredRootNode);
+            setEgoNodes(remainingNodeArray, impliedTree, impliedModel, impliedRootNode);
         }
     }
 
-    public void setEgoNodes(URI[] egoNodes) {
-        if (egoNodes != null) {
-            ArrayList<ArbilDataNode> tempArray = new ArrayList<ArbilDataNode>();
-            for (URI currentNodeUri : egoNodes) {
-                System.out.println("ego tree: " + currentNodeUri);
-                tempArray.add(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, currentNodeUri));
+    private void setEgoNodes(ArrayList<ArbilDataNode> selectedNodes, JTree currentTree, DefaultTreeModel currentModel, DefaultMutableTreeNode currentRootNode) {
+        currentRootNode.removeAllChildren();
+        currentModel.nodeStructureChanged(currentRootNode);
+        if (selectedNodes != null) {
+            for (ArbilDataNode imdiTreeObject : selectedNodes) {
+//                System.out.println("adding node: " + imdiTreeObject.toString());
+                currentModel.insertNodeInto(new DefaultMutableTreeNode(imdiTreeObject), currentRootNode, 0);
             }
-            setEgoNodes(tempArray.toArray(new ArbilDataNode[]{}));
-        }
-    }
-
-    public void setEgoNodes(ArbilDataNode[] egoNodes) {
-        rootEgoNode.removeAllChildren();
-        egoModel.nodeStructureChanged(rootEgoNode);
-        if (egoNodes != null) {
-            for (ArbilDataNode imdiTreeObject : egoNodes) {
-                System.out.println("adding ego: " + imdiTreeObject.toString());
-                egoModel.insertNodeInto(new DefaultMutableTreeNode(imdiTreeObject), rootEgoNode, 0);
-            }
-            egoTree.expandPath(new TreePath(rootEgoNode.getPath()));
+            currentTree.expandPath(new TreePath(currentRootNode.getPath()));
         }
     }
 }
