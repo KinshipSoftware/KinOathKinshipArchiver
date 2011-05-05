@@ -290,7 +290,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
         groupNode.setAttribute("id", currentNode.getUniqueIdentifier());
         groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
-        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
+        // todo: assess if the kin type strings or the kin terms should be stored in the svg entity node
+//        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
 //        counterTest++;
         Element symbolNode;
         String symbolType = currentNode.getSymbolType();
@@ -343,10 +344,20 @@ public class GraphPanel extends JPanel implements SavePanel {
 ////////////////////////////// end tspan method appears to fail in batik rendering process ////////////////////////////////////////////////
 
 ////////////////////////////// alternate method ////////////////////////////////////////////////
+        ArrayList<String> labelList = new ArrayList<String>();
+        if (dataStoreSvg.showLabels) {
+            labelList.addAll(Arrays.asList(currentNode.getLabel()));
+        }
+        if (dataStoreSvg.showKinTypeLabels) {
+            labelList.addAll(Arrays.asList(currentNode.getKinTypeStrings()));
+        }
+        if (dataStoreSvg.showKinTermLabels) {
+            labelList.addAll(Arrays.asList(currentNode.getKinTermStrings()));
+        }
         // todo: this method has the draw back that the text is not selectable as a block
         int textSpanCounter = 0;
         int lineSpacing = 15;
-        for (String currentTextLable : currentNode.getLabel()) {
+        for (String currentTextLable : labelList) {
             Element labelText = doc.createElementNS(svgNameSpace, "text");
             labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
             labelText.setAttribute("y", Integer.toString(textSpanCounter));
