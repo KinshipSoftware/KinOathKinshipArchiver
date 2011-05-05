@@ -59,13 +59,12 @@ public class GraphPanel extends JPanel implements SavePanel {
     protected GraphPanelSize graphPanelSize;
     protected ArrayList<String> selectedGroupId;
     protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
-    private DataStoreSvg dataStoreSvg;
+    public DataStoreSvg dataStoreSvg;
     private URI[] egoPathsTemp = null;
     protected SvgUpdateHandler svgUpdateHandler;
     private int currentZoom = 0;
     private int currentWidth = 0;
     private int currentHeight = 0;
-    public boolean snapToGrid = true;
 
     public GraphPanel(KinTermSavePanel egoSelectionPanel) {
         dataStoreSvg = new DataStoreSvg();
