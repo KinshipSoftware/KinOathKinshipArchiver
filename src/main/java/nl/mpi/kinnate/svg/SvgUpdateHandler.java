@@ -167,7 +167,7 @@ public class SvgUpdateHandler {
                         int dragCounter = 0;
                         for (String entityId : graphPanel.selectedGroupId) {
                             // store the remainder after snap for re use on each update
-                            dragRemainders[dragCounter] = new EntitySvg().moveEntity(graphPanel.doc, entityId, updateDragNodeXInner + dragRemainders[dragCounter], updateDragNodeYInner, graphPanel.snapToGrid);
+                            dragRemainders[dragCounter] = new EntitySvg().moveEntity(graphPanel.doc, entityId, updateDragNodeXInner + dragRemainders[dragCounter], updateDragNodeYInner, graphPanel.dataStoreSvg.snapToGrid);
                             dragCounter++;
                         }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
