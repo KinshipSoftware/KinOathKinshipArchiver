@@ -57,6 +57,7 @@ public class EntitySearchPanel extends JPanel {
 //        } //else {
 //        //   leftTree.rootNodeChildren = new ArbilTreeObject[]{graphPanel.imdiNode};
 //        // }
+        leftTree.setRootVisible(false);
         leftTree.requestResort();
         JLabel searchLabel = new JLabel("Search Entity Names");
         searchField = new JTextField();
