@@ -70,6 +70,15 @@ public class RelationSvg {
         float fromBezY;
         float toBezX;
         float toBezY;
+        if ((egoX > alterX && egoY < alterY) || (egoX > alterX && egoY > alterY)) {
+            // prevent the label on the line from rendering upside down
+            float tempX = alterX;
+            float tempY = alterY;
+            alterX = egoX;
+            alterY = egoY;
+            egoX = tempX;
+            egoY = tempY;
+        }
         if (relationLineType == DataTypes.RelationLineType.verticalCurve) {
             fromBezX = egoX;
             fromBezY = alterY;
