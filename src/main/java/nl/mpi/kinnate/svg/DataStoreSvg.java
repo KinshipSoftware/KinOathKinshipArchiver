@@ -29,7 +29,8 @@ public class DataStoreSvg {
 //    @XmlElement(name = "EgoIdList", namespace = "http://mpi.nl/tla/kin")
 //    @XmlElementWrapper(name = "kin:EgoIdList")
     @XmlElement(name = "EgoId", namespace = "http://mpi.nl/tla/kin")
-    protected HashSet<String> egoIdentifierSet = new HashSet<String>();
+    public HashSet<String> egoEntities = new HashSet<String>();
+    public HashSet<String> requiredEntities = new HashSet<String>();
 //        @XmlElementWrapper(name = "kin:KinTypeStrings")
     @XmlElement(name = "KinTypeString", namespace = "http://mpi.nl/tla/kin")
     protected String[] kinTypeStrings = new String[]{};
