@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.entityindexer;
 
 import java.net.URI;
+import java.util.HashSet;
 import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 import nl.mpi.kinnate.kindata.EntityData;
 
@@ -11,5 +12,5 @@ import nl.mpi.kinnate.kindata.EntityData;
  */
 public interface EntityService {
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException;
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, HashSet<String> egoIdentifiers, HashSet<String> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException;
 }
