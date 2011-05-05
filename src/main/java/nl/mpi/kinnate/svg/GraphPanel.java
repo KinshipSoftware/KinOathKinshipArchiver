@@ -469,6 +469,8 @@ public class GraphPanel extends JPanel implements SavePanel {
             //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(new EntitySvg().listSymbolNames(doc));
+//            svgUpdateHandler.updateSvgSelectionHighlights(); // todo: does this rsolve the issue after an update that the selection highlight is lost but the selection is still made?
+            selectedGroupId.clear();
 //        zoomDrawing();
         } catch (DOMException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
