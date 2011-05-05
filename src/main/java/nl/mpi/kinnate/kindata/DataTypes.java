@@ -8,7 +8,7 @@ package nl.mpi.kinnate.kindata;
 public class DataTypes {
     public enum RelationLineType {
 
-        square, horizontalCurve, verticalCurve, none
+        sanguineLine, kinTermLine, verticalCurve, none
     }
 
     public enum RelationType {
