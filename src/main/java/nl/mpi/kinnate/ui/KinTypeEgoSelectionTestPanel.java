@@ -314,12 +314,17 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
 //        }
     }
 
+    public void dataNodeIconCleared(String[] selectedIdentifiers) {
+//        for(String currentIdentifier : selectedIdentifiers)
+//        graphPanel.getPathForElementId(currentIdentifier)...
+        // todo: get the paths and provide as URIs to update the database: assuming that updating individual files is worthwhile
+        new EntityCollection().updateDatabase(null);
+        graphPanel.getIndexParameters().valuesChanged = true;
+        drawGraph();
+    }
+
     public void dataNodeIconCleared(ArbilDataNode arbilDataNode) {
-        if (arbilDataNode != null) {
-            new EntityCollection().updateDatabase(arbilDataNode.getURI());
-        } else {
-            new EntityCollection().createDatabase();
-        }
+        new EntityCollection().updateDatabase(arbilDataNode.getURI());
         graphPanel.getIndexParameters().valuesChanged = true;
         drawGraph();
     }
