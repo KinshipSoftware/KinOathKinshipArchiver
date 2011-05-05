@@ -37,8 +37,10 @@ public class DataStoreSvg {
     protected IndexerParameters indexParameters;
     @XmlElement(name = "KinTermGroups", namespace = "http://mpi.nl/tla/kin")
     protected KinTermGroup[] kinTermGroups;
+    @XmlElement(name = "ShowLabels", namespace = "http://mpi.nl/tla/kin")
+    public boolean showLabels = true;
     @XmlElement(name = "ShowKinTypeLabels", namespace = "http://mpi.nl/tla/kin")
-    public boolean showKinTypeLables = false;
+    public boolean showKinTypeLabels = false;
     @XmlElement(name = "ShowKinTermLabels", namespace = "http://mpi.nl/tla/kin")
     public boolean showKinTermLabels = false;
     @XmlElement(name = "ShowKinTermLines", namespace = "http://mpi.nl/tla/kin")
