@@ -3,6 +3,7 @@ package nl.mpi.kinnate.entityindexer;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
@@ -144,7 +145,7 @@ public class QueryParser implements EntityService {
         return visibleEntityFound;
     }
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, HashSet<String> egoIdentifiers, HashSet<String> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
         foundOrder = 0; // temp for testing // todo: remove testing labels
         if (indexParameters.valuesChanged) {
             indexParameters.valuesChanged = false;
@@ -202,7 +203,7 @@ public class QueryParser implements EntityService {
             lineCounter++;
         }
         // todo: the following could be removed if the ego nodes are replaces with the equavelent kin type string eg "E=Identifier"
-        for (String currentEgoId : uniqueIdentifiers) {
+        for (String currentEgoId : egoIdentifiers) {
             EntityData egoNode;
             if (loadedGraphNodes.containsKey(currentEgoId)) {
                 egoNode = loadedGraphNodes.get(currentEgoId);
@@ -218,6 +219,16 @@ public class QueryParser implements EntityService {
                     getNextRelations(loadedGraphNodes, egoNode, kinTypes, indexParameters);
                 }
             }
+        }
+        for (String currentEgoId : requiredEntityIdentifiers) {
+            EntityData requiredNode;
+            if (loadedGraphNodes.containsKey(currentEgoId)) {
+                requiredNode = loadedGraphNodes.get(currentEgoId);
+            } else {
+                requiredNode = entityCollection.getEntity(currentEgoId, indexParameters);
+                loadedGraphNodes.put(currentEgoId, requiredNode);
+            }
+            requiredNode.isVisible = true;
         }
         // set the alter node object from the unique identifier
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
