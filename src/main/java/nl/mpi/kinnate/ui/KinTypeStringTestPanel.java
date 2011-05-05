@@ -97,7 +97,7 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
 
     public void updateGraph() {
         KinTypeStringConverter graphData = new KinTypeStringConverter();
-        graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTermGroups());
+        graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg);
         graphPanel.drawNodes(graphData);
         KinTypeStringTestPanel.this.doLayout();
     }
