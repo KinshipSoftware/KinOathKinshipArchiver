@@ -9,6 +9,7 @@ import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlightType;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.svg.DataStoreSvg;
 
 /**
  *  Document   : KinTypeStringConverter
@@ -171,6 +172,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                 String[] queryTerm = queryText.split("=");
                                 if (queryTerm.length == 2) {
                                     if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
+                                        // todo: *:* like namespace handling might be required here
                                         currentElement.queryTerm.add(new String[]{queryTerm[0], queryTerm[1]});
                                     }
                                 }
@@ -210,7 +212,7 @@ public class KinTypeStringConverter extends GraphSorter {
         return kinTypeList;
     }
 
-    public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray) {
+    public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg) {
         HashMap<String, EntityData> graphDataNodeList = new HashMap<String, EntityData>();
         EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{"E"}, true);
         graphDataNodeList.put("E", egoDataNode);
@@ -247,8 +249,8 @@ public class KinTypeStringConverter extends GraphSorter {
                             } else {
                                 currentGraphDataNode = new EntityData(fullKinTypeString, fullKinTypeString, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{fullKinTypeString}, false);
                                 DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
-                                parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.square, null, null);
-                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.square, null, null);
+                                parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
                                 graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
                                 currentGraphDataNode.isVisible = true;
                                 // add any child nodes?
@@ -256,7 +258,8 @@ public class KinTypeStringConverter extends GraphSorter {
                                     if (kinTerms.graphShow) {
                                         String kinTermLabel = kinTerms.getTermLabel(fullKinTypeString);
                                         if (kinTermLabel != null) {
-                                            egoDataNode.addRelatedNode(currentGraphDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.horizontalCurve, kinTerms.graphColour, kinTermLabel);
+                                            currentGraphDataNode.addKinTermString(kinTermLabel);
+                                            egoDataNode.addRelatedNode(currentGraphDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.kinTermLine, kinTerms.graphColour, kinTermLabel);
                                         }
                                     }
                                 }
