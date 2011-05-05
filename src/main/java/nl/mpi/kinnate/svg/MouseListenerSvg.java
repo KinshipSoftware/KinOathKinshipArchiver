@@ -26,6 +26,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     static boolean mouseActionOnNode = false;
     static boolean mouseActionIsPopupTrigger = false;
     static boolean mouseActionIsDrag = false;
+    private String entityToToggle = null;
 
     public MouseListenerSvg(GraphPanel graphPanelLocal) {
         graphPanel = graphPanelLocal;
@@ -34,7 +35,10 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     @Override
     public void mouseDragged(MouseEvent me) {
         if (startDragPoint != null) {
-//                System.out.println("mouseDragged: " + me.toString());
+//            System.out.println("mouseDragged: " + me.toString());
+            if (graphPanel.selectedGroupId.size() > 0) {
+                checkSelectionClearRequired(me);
+            }
             if (graphPanel.selectedGroupId.size() > 0) {
                 graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 // limit the drag to the distance draged not the location
@@ -49,16 +53,26 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         startDragPoint = me.getPoint();
     }
 
+    private void checkSelectionClearRequired(MouseEvent me) {
+        if (/* !mouseActionIsDrag &&  */!mouseActionIsPopupTrigger && !mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
+            System.out.println("Clear selection");
+            graphPanel.selectedGroupId.clear();
+            graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
+        }
+    }
+
     @Override
     public void mouseReleased(MouseEvent me) {
 //        System.out.println("mouseReleased: " + me.toString());
         graphPanel.svgCanvas.setCursor(preDragCursor);
         startDragPoint = null;
-        if (!mouseActionIsDrag && !mouseActionIsPopupTrigger && !mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
-            System.out.println("Clear selection");
-            graphPanel.selectedGroupId.clear();
+        if (!mouseActionIsDrag && entityToToggle != null) {
+            // toggle the highlight
+            graphPanel.selectedGroupId.remove(entityToToggle);
+            entityToToggle = null;
             graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
         }
+        checkSelectionClearRequired(me);
         mouseActionOnNode = false;
     }
 
@@ -88,9 +102,11 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             graphPanel.selectedGroupId.clear();
             graphPanel.selectedGroupId.add(entityIdentifier);
         } else {
-            // toggle the highlight
+            // toggle the highlight            
             if (nodeAlreadySelected) {
-                graphPanel.selectedGroupId.remove(entityIdentifier);
+                // postpone until after a drag action can be tested for and only deselect if not draged
+                entityToToggle = entityIdentifier;
+                // graphPanel.selectedGroupId.remove(entityIdentifier);
             } else {
                 graphPanel.selectedGroupId.add(entityIdentifier);
             }
