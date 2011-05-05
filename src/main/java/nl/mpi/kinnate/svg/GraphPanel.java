@@ -61,7 +61,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     protected ArrayList<String> selectedGroupId;
     protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     public DataStoreSvg dataStoreSvg;
-    private URI[] egoPathsTemp = null;
+//    private URI[] egoPathsTemp = null;
     protected SvgUpdateHandler svgUpdateHandler;
     private int currentZoom = 0;
     private int currentWidth = 0;
@@ -205,59 +205,58 @@ public class GraphPanel extends JPanel implements SavePanel {
         dataStoreSvg.kinTermGroups = kinTermsList.toArray(new KinTermGroup[]{});
     }
 
-    public String[] getEgoUniquiIdentifiersList() {
-        return dataStoreSvg.egoIdentifierSet.toArray(new String[]{});
-    }
+//    public String[] getEgoUniquiIdentifiersList() {
+//        return dataStoreSvg.egoIdentifierSet.toArray(new String[]{});
+//    }
 
-    public String[] getEgoIdList() {
-        return dataStoreSvg.egoIdentifierSet.toArray(new String[]{});
-    }
+//    public String[] getEgoIdList() {
+//        return dataStoreSvg.egoIdentifierSet.toArray(new String[]{});
+//    }
 
-    public URI[] getEgoPaths() {
-        if (egoPathsTemp != null) {
-            return egoPathsTemp;
-        }
-        ArrayList<URI> returnPaths = new ArrayList<URI>();
-        for (String egoId : dataStoreSvg.egoIdentifierSet) {
-            try {
-                String entityPath = getPathForElementId(egoId);
-//                if (entityPath != null) {
-                returnPaths.add(new URI(entityPath));
-//                }
-            } catch (URISyntaxException ex) {
-                GuiHelper.linorgBugCatcher.logError(ex);
-                // todo: warn user with a dialog
-            }
-        }
-        return returnPaths.toArray(new URI[]{});
-    }
+//    public URI[] getEgoPaths() {
+//        if (egoPathsTemp != null) {
+//            return egoPathsTemp;
+//        }
+//        ArrayList<URI> returnPaths = new ArrayList<URI>();
+//        for (String egoId : dataStoreSvg.egoIdentifierSet) {
+//            try {
+//                String entityPath = getPathForElementId(egoId);
+////                if (entityPath != null) {
+//                returnPaths.add(new URI(entityPath));
+////                }
+//            } catch (URISyntaxException ex) {
+//                GuiHelper.linorgBugCatcher.logError(ex);
+//                // todo: warn user with a dialog
+//            }
+//        }
+//        return returnPaths.toArray(new URI[]{});
+//    }
+//    public void setRequiredEntities(URI[] egoPathArray, String[] egoIdentifierArray) {
+////        egoPathsTemp = egoPathArray; // egoPathsTemp is only required if the ego nodes are not already on the graph (otherwise the path can be obtained from the graph elements)
+//        dataStoreSvg.requiredEntities = new HashSet<String>(Arrays.asList(egoIdentifierArray));
+//    }
+//
+//    public void addRequiredEntity(URI[] egoPathArray, String[] egoIdentifierArray) {
+////        egoPathsTemp = egoPathArray; // egoPathsTemp is only required if the ego nodes are not already on the graph (otherwise the path can be obtained from the graph elements)
+//        dataStoreSvg.requiredEntities.addAll(Arrays.asList(egoIdentifierArray));
+//    }
 
-    public void setEgoList(URI[] egoPathArray, String[] egoIdentifierArray) {
-        egoPathsTemp = egoPathArray; // egoPathsTemp is only required if the ego nodes are not already on the graph (otherwise the path can be obtained from the graph elements)
-        dataStoreSvg.egoIdentifierSet = new HashSet<String>(Arrays.asList(egoIdentifierArray));
-    }
-
-    public void addEgo(URI[] egoPathArray, String[] egoIdentifierArray) {
-        egoPathsTemp = egoPathArray; // egoPathsTemp is only required if the ego nodes are not already on the graph (otherwise the path can be obtained from the graph elements)
-        dataStoreSvg.egoIdentifierSet.addAll(Arrays.asList(egoIdentifierArray));
-    }
-
-    public void removeEgo(String[] egoIdentifierArray) {
-        dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
-    }
+//    public void removeEgo(String[] egoIdentifierArray) {
+//        dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
+//    }
 
     public String[] getSelectedIds() {
         return selectedGroupId.toArray(new String[]{});
     }
 
-    public boolean selectionContainsEgo() {
-        for (String selectedId : selectedGroupId) {
-            if (dataStoreSvg.egoIdentifierSet.contains(selectedId)) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    public boolean selectionContainsEgo() {
+//        for (String selectedId : selectedGroupId) {
+//            if (dataStoreSvg.egoIdentifierSet.contains(selectedId)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     public String getPathForElementId(String elementId) {
 //        NamedNodeMap namedNodeMap = doc.getElementById(elementId).getAttributes();
