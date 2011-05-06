@@ -23,7 +23,7 @@ public class SvgUpdateHandler {
     private boolean threadRunning = false;
     private int updateDragNodeX = 0;
     private int updateDragNodeY = 0;
-    private float[] dragRemainders = null;
+    private float[][] dragRemainders = null;
 
     protected SvgUpdateHandler(GraphPanel graphPanelLocal, KinTermSavePanel kinTermSavePanelLocal) {
         graphPanel = graphPanelLocal;
@@ -150,9 +150,9 @@ public class SvgUpdateHandler {
 
             public void run() {
                 if (dragRemainders == null) {
-                    dragRemainders = new float[graphPanel.selectedGroupId.size()];
+                    dragRemainders = new float[graphPanel.selectedGroupId.size()][];
                     for (int dragCounter = 0; dragCounter < dragRemainders.length; dragCounter++) {
-                        dragRemainders[dragCounter] = 0;
+                        dragRemainders[dragCounter] = new float[]{0, 0};
                     }
                 }
                 boolean continueUpdating = true;
@@ -173,7 +173,7 @@ public class SvgUpdateHandler {
                         int dragCounter = 0;
                         for (String entityId : graphPanel.selectedGroupId) {
                             // store the remainder after snap for re use on each update
-                            dragRemainders[dragCounter] = new EntitySvg().moveEntity(graphPanel.doc, entityId, updateDragNodeXInner + dragRemainders[dragCounter], updateDragNodeYInner, graphPanel.dataStoreSvg.snapToGrid);
+                            dragRemainders[dragCounter] = new EntitySvg().moveEntity(graphPanel.doc, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid);
                             dragCounter++;
                         }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
