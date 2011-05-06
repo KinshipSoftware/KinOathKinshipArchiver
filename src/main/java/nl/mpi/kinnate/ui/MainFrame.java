@@ -117,6 +117,7 @@ public class MainFrame extends javax.swing.JFrame {
         newDiagramMenuItem = new javax.swing.JMenuItem();
         openDiagram = new javax.swing.JMenuItem();
         openRecentMenu = recentFileMenu;
+        jMenu1 = new SamplesFileMenu(this);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         saveDiagram = new javax.swing.JMenuItem();
         saveDiagramAs = new javax.swing.JMenuItem();
@@ -194,6 +195,9 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         fileMenu.add(openRecentMenu);
+
+        jMenu1.setText("Open Sample Diagram");
+        fileMenu.add(jMenu1);
         fileMenu.add(jSeparator2);
 
         saveDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
@@ -404,6 +408,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem importGedcomSimple;
     private javax.swing.JMenuItem importGedcomTorture;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
