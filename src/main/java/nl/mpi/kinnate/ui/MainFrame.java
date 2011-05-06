@@ -27,13 +27,13 @@ public class MainFrame extends javax.swing.JFrame {
     private ArbilTableModel imdiTableModel;
     private DragTransferHandler dragTransferHandler;
     private EntityCollection entityCollection;
-    protected RecentFileMenu recentFileMenu;
+    private RecentFileMenu recentFileMenu;
 
     /** Creates new form MainFrame */
     public MainFrame() {
+        recentFileMenu = new RecentFileMenu(this);
         initComponents();
         nl.mpi.kinnate.ArbilInjector.injectHandlers();
-        recentFileMenu = new RecentFileMenu();
         entityCollection = new EntityCollection();
         entitySearchPanel = new EntitySearchPanel(entityCollection);
 //        GraphPanel0 graphPanel0Deprecated;
@@ -91,6 +91,14 @@ public class MainFrame extends javax.swing.JFrame {
         return kinTermSavePanel;
     }
 
+    public void openDiagram(File selectedFile) {
+        recentFileMenu.addRecentFile(selectedFile.getAbsolutePath());
+        KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(selectedFile);
+        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
+        jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
+        jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -108,7 +116,7 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
         openDiagram = new javax.swing.JMenuItem();
-        openRecentMenu = new javax.swing.JMenu();
+        openRecentMenu = recentFileMenu;
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         saveDiagram = new javax.swing.JMenuItem();
         saveDiagramAs = new javax.swing.JMenuItem();
@@ -180,7 +188,6 @@ public class MainFrame extends javax.swing.JFrame {
         fileMenu.add(openDiagram);
 
         openRecentMenu.setText("Open Recent Diagram");
-        openRecentMenu.setEnabled(false);
         openRecentMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openRecentMenuActionPerformed(evt);
@@ -252,10 +259,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDiagramActionPerformed
         for (File selectedFile : ArbilWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false)) {
-            KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(selectedFile);
-            egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
-            jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
-            jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
+            openDiagram(selectedFile);
         }
     }//GEN-LAST:event_openDiagramActionPerformed
 
