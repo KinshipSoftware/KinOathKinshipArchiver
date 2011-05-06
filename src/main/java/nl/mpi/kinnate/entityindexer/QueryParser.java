@@ -181,6 +181,7 @@ public class QueryParser implements EntityService {
 //                            queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
                             if (kinTypeElement.kinType.isEgoType()) {
                                 queryNode.isEgo = true; // there might be multiple types for a single entitiy
+                                new KinTypeStringConverter().setEgoKinTypeString(queryNode);
                             }
                         }
                     }
@@ -213,6 +214,7 @@ public class QueryParser implements EntityService {
                 loadedGraphNodes.put(currentEgoId, egoNode);
             }
             egoNode.isEgo = true;
+            new KinTypeStringConverter().setEgoKinTypeString(egoNode);
             egoNode.isVisible = true;
             if (kinTypeStrings != null) {
                 for (String currentKinString : kinTypeStrings) {
