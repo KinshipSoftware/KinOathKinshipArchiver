@@ -123,10 +123,12 @@ public class EntityData {
 
     public String getKinTypeString() {
         String returnString = "";
-        for (String kinType : kinTypeArray) {
-            returnString = returnString + kinType + "|";
+        if (kinTypeArray.length > 0) {
+            for (String kinType : kinTypeArray) {
+                returnString = returnString + kinType + "|";
+            }
+            returnString = returnString.substring(0, returnString.length() - 1);
         }
-        returnString = returnString.substring(0, returnString.length() - 1);
         return returnString;
     }
 
