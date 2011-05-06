@@ -215,7 +215,7 @@ public class SvgUpdateHandler {
         };
     }
 
-    public void addLabel(final String labelString, final int xPos, final int yPos) {
+    public void addLabel(final String labelString, final float xPos, final float yPos) {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
@@ -223,10 +223,8 @@ public class SvgUpdateHandler {
                 public void run() {
                     Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
                     Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
-//                    labelText.setAttribute("x", Float.toString(xPos));
-//                    labelText.setAttribute("y", Float.toString(yPos));
-                    labelText.setAttribute("x", "100");
-                    labelText.setAttribute("y", "100");
+                    labelText.setAttribute("x", Float.toString(xPos));
+                    labelText.setAttribute("y", Float.toString(yPos));
                     labelText.setAttribute("fill", "black");
                     labelText.setAttribute("stroke-width", "0");
                     labelText.setAttribute("font-size", "28");
