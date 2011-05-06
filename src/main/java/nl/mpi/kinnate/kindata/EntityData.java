@@ -30,7 +30,7 @@ public class EntityData {
     @XmlElement(name = "Symbol")
     private String symbolTypeString;
     @XmlElement(name = "DateOfBirth")
-    private Date dateOfBirth;
+    private Date dateOfBirth; // todo: use this in the graph sort and offer to show on the graph
     public boolean isEgo = false;
     @XmlElementWrapper(name = "Labels")
     @XmlElement(name = "String")
