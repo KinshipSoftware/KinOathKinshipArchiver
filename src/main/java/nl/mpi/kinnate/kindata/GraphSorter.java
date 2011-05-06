@@ -94,6 +94,7 @@ public class GraphSorter {
     }
 
     protected void sanguineSort() {
+        // todo: improve this sorting by adding a secondary row sort
         System.out.println("calculateLocations");
         // create an array of rows
         ArrayList<HashSet<EntityData>> generationRows = new ArrayList<HashSet<EntityData>>();
@@ -130,13 +131,85 @@ public class GraphSorter {
                 yPos++;
             }
         }
-        System.out.println("gridWidth: " + gridWidth);
         gridHeight = yPos;
-        sortByLinkDistance();
-        sortByLinkDistance();
+        int maxRowWidth = 0;
+        // correct the grid width
+        for (HashSet<EntityData> currentRow : generationRows) {
+            if (maxRowWidth < currentRow.size()) {
+                maxRowWidth = currentRow.size();
+            }
+        }
+        gridWidth = maxRowWidth;
+        System.out.println("gridWidth: " + gridWidth);
+        sortRowsByAncestor(generationRows);
+//        sortByLinkDistance();
+//        sortByLinkDistance();
+    }
+
+    private void sortRowsByAncestor(ArrayList<HashSet<EntityData>> generationRows) {
+        // todo: handle reverse generations also
+        ArrayList<EntityData> sortedRow = new ArrayList<EntityData>();
+        int startRow = 0;
+        while (generationRows.get(startRow).isEmpty()) {
+            startRow++;
+        }
+        HashSet<EntityData> firstRow = generationRows.get(startRow);
+        for (EntityData currentEntity : firstRow) {
+            if (!sortedRow.contains(currentEntity)) { // if the entity has been added then do not look into any further
+                sortedRow.add(currentEntity);
+                // if this node has children in common with any other on this row then place them next to each other
+                // todo: add sort by DOB
+                for (EntityData contemporariesEntity : findContemporariesWithCommonDescendant(currentEntity, 2)) {
+                    if (!sortedRow.contains(contemporariesEntity)) {
+                        sortedRow.add(contemporariesEntity);
+                    }
+                }
+            }
+        }
+        while (sortedRow.size() > 0) {
+            assignRowOrder(sortedRow);
+            ArrayList<EntityData> nextRow = new ArrayList<EntityData>();
+            for (EntityData currentEntity : sortedRow) {
+                for (EntityRelation childRelation : currentEntity.getDistinctRelateNodes()) {
+                    if (childRelation.getAlterNode().yPos == currentEntity.yPos + 1) {
+                        if (!nextRow.contains(childRelation.getAlterNode())) {
+                            nextRow.add(childRelation.getAlterNode());
+                        }
+                    }
+                }
+            }
+            sortedRow = nextRow;
+        }
+    }
+
+    private void assignRowOrder(ArrayList<EntityData> sortedRow) {
+        int columnCount = 0;
+        for (EntityData currentEntity : sortedRow) {
+            // todo: space the nodes
+            currentEntity.xPos = columnCount;
+            columnCount++;
+            System.out.println("sorted: " + currentEntity.getLabel()[0] + " : " + currentEntity.xPos + "," + currentEntity.yPos);
+        }
+    }
+
+    private HashSet<EntityData> findContemporariesWithCommonDescendant(EntityData currentEntity, int depth) {
+        HashSet<EntityData> foundContemporaries = new HashSet<EntityData>();
+        for (EntityRelation childRelation : currentEntity.getDistinctRelateNodes()) {
+            if (childRelation.getAlterNode().yPos == currentEntity.yPos) {
+                foundContemporaries.add(childRelation.getAlterNode());
+            } else {
+                depth--;
+                if (depth > 0) {
+                    foundContemporaries.addAll(findContemporariesWithCommonDescendant(currentEntity, depth));
+                }
+            }
+        }
+        return foundContemporaries;
     }
 
     private void sortByLinkDistance() {
+        // todo: correct the grid width,
+        // start at the top row and count the childeren of each parent and space accordingly
         EntityData[][] graphGrid = new EntityData[gridHeight][gridWidth];
         for (EntityData graphDataNode : graphDataNodeArray) {
             graphGrid[graphDataNode.yPos][graphDataNode.xPos] = graphDataNode;
