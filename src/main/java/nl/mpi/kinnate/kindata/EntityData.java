@@ -2,6 +2,7 @@ package nl.mpi.kinnate.kindata;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,6 +29,8 @@ public class EntityData {
     private SymbolType symbolType;
     @XmlElement(name = "Symbol")
     private String symbolTypeString;
+    @XmlElement(name = "DateOfBirth")
+    private Date dateOfBirth;
     public boolean isEgo = false;
     @XmlElementWrapper(name = "Labels")
     @XmlElement(name = "String")
