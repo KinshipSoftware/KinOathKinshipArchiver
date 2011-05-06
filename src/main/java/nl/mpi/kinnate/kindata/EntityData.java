@@ -115,8 +115,17 @@ public class EntityData {
         kinTypeArray = tempList.toArray(new String[]{});
     }
 
-    public String[] getKinTypeStrings() {
+    public String[] getKinTypeStringArray() {
         return kinTypeArray;
+    }
+
+    public String getKinTypeString() {
+        String returnString = "";
+        for (String kinType : kinTypeArray) {
+            returnString = returnString + kinType + "|";
+        }
+        returnString = returnString.substring(0, returnString.length() - 1);
+        return returnString;
     }
 
     public void addKinTermString(String kinTermString) {
