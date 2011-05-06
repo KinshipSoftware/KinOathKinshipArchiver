@@ -1,11 +1,11 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -25,7 +25,7 @@ import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
  *  Created on : Feb 18, 2011, 11:51:00 AM
  *  Author     : Peter Withers
  */
-public class GraphPanelContextMenu extends JPopupMenu {
+public class GraphPanelContextMenu extends JPopupMenu implements ActionListener {
 
     KinTypeEgoSelectionTestPanel egoSelectionPanel;
     GraphPanel graphPanel;
@@ -125,7 +125,10 @@ public class GraphPanelContextMenu extends JPopupMenu {
                 JMenuItem addLabel = new JMenuItem("Add " + currentType);
                 addLabel.setActionCommand(currentType);
                 shapeSubMenu.add(addLabel);
-                addLabel.setEnabled(false);
+                if (!"Label".equals(currentType)) {
+                    addLabel.setEnabled(false);
+                }
+                addLabel.addActionListener(this);
                 // todo: addthese into a layer behind the entities, athought lables could be above
                 // todo: when geometry is selected construct an arbildatanode to allow the geometries attributes to be edited
             }
@@ -306,5 +309,11 @@ public class GraphPanelContextMenu extends JPopupMenu {
         showKinTypeLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTypeLabels);
         showKinTermLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLabels);
         super.show(cmpnt, i, i1);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("Label")){
+            graphPanel.svgUpdateHandler.addLabel("Label", this.getX(), this.getY());
+        }
     }
 }
