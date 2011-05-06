@@ -52,9 +52,9 @@ public class MainFrame extends javax.swing.JFrame {
         this.add(jTabbedPane1, BorderLayout.CENTER);
         KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
         egoSelectionTestPanel.createDefaultGraph(KinTypeEgoSelectionTestPanel.defaultGraphString);
-        jTabbedPane1.add("EgoSelection", egoSelectionTestPanel);
-        jTabbedPane1.add("KinTypes", new KinTypeStringTestPanel());
-        jTabbedPane1.add("Kin Term Mapping for KinType Strings", new KinTypeStringTestPanel());
+        jTabbedPane1.add("Database Query", egoSelectionTestPanel);
+        jTabbedPane1.add("Kin Type String", new KinTypeStringTestPanel());
+//        jTabbedPane1.add("Kin Term Mapping for KinType Strings", new KinTypeStringTestPanel());
         jTabbedPane1.add("Archive Entity Linker", new ArchiveEntityLinkerPanel());
 //        jTabbedPane1.add("Graph", graphPanel);
 //        jTabbedPane1.add("SVG2  (deprecated)", new GraphPanel1());
