@@ -27,22 +27,24 @@ import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
  */
 public class GraphPanelContextMenu extends JPopupMenu implements ActionListener {
 
-    KinTypeEgoSelectionTestPanel egoSelectionPanel;
-    GraphPanel graphPanel;
-    GraphPanelSize graphPanelSize;
-    JMenuItem addRelationEntityMenu;
-    JMenuItem setAsEgoMenuItem;
-    JMenuItem addAsEgoMenuItem;
-    JMenuItem removeEgoMenuItem;
-    JMenuItem addAsRequiredMenuItem;
-    JMenuItem removeRequiredMenuItem;
-    JCheckBoxMenuItem snapToGridMenuItem;
-    JCheckBoxMenuItem showKinTermLinesMenuItem;
-    JCheckBoxMenuItem showSanguineLinesMenuItem;
-    JCheckBoxMenuItem showLabelssMenuItem;
-    JCheckBoxMenuItem showKinTypeLabelssMenuItem;
-    JCheckBoxMenuItem showKinTermLabelssMenuItem;
-    String[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
+    private KinTypeEgoSelectionTestPanel egoSelectionPanel;
+    private GraphPanel graphPanel;
+    private GraphPanelSize graphPanelSize;
+    private JMenuItem addRelationEntityMenu;
+    private JMenuItem setAsEgoMenuItem;
+    private JMenuItem addAsEgoMenuItem;
+    private JMenuItem removeEgoMenuItem;
+    private JMenuItem addAsRequiredMenuItem;
+    private JMenuItem removeRequiredMenuItem;
+    private JCheckBoxMenuItem snapToGridMenuItem;
+    private JCheckBoxMenuItem showKinTermLinesMenuItem;
+    private JCheckBoxMenuItem showSanguineLinesMenuItem;
+    private JCheckBoxMenuItem showLabelssMenuItem;
+    private JCheckBoxMenuItem showKinTypeLabelssMenuItem;
+    private JCheckBoxMenuItem showKinTermLabelssMenuItem;
+    private String[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
+    private float xPos;
+    private float yPos;
 
     public GraphPanelContextMenu(KinTypeEgoSelectionTestPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, GraphPanelSize graphPanelSizeLocal) {
         egoSelectionPanel = egoSelectionPanelLocal;
@@ -287,6 +289,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
     @Override
     public void show(Component cmpnt, int i, int i1) {
+        xPos = cmpnt.getMousePosition().x;
+        yPos = cmpnt.getMousePosition().y;
         selectedIdentifiers = graphPanel.getSelectedIds();
         if (addRelationEntityMenu != null) {
             addRelationEntityMenu.setVisible(selectedIdentifiers.length == 2);
@@ -312,8 +316,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("Label")){
-            graphPanel.svgUpdateHandler.addLabel("Label", this.getX(), this.getY());
+        if (e.getActionCommand().equals("Label")) {
+            graphPanel.svgUpdateHandler.addLabel("Label", xPos, yPos);
         }
     }
 }
