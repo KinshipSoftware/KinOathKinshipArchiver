@@ -5,6 +5,8 @@ import nl.mpi.kinnate.KinTermSavePanel;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.Text;
+import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGRect;
 
@@ -211,5 +213,32 @@ public class SvgUpdateHandler {
                 }
             }
         };
+    }
+
+    public void addLabel(final String labelString, final int xPos, final int yPos) {
+        UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+
+                public void run() {
+                    Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
+                    Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
+//                    labelText.setAttribute("x", Float.toString(xPos));
+//                    labelText.setAttribute("y", Float.toString(yPos));
+                    labelText.setAttribute("x", "100");
+                    labelText.setAttribute("y", "100");
+                    labelText.setAttribute("fill", "black");
+                    labelText.setAttribute("stroke-width", "0");
+                    labelText.setAttribute("font-size", "28");
+                    labelText.setAttribute("id", "label" + labelGroup.getChildNodes().getLength());
+                    Text textNode = graphPanel.doc.createTextNode(labelString);
+                    labelText.appendChild(textNode);
+                    // todo: put this into a geometry group and allow for selection and drag
+                    labelGroup.appendChild(labelText);
+//                    graphPanel.doc.getDocumentElement().appendChild(labelText);
+                    ((EventTarget) labelText).addEventListener("mousedown", new MouseListenerSvg(graphPanel), false);
+                }
+            });
+        }
     }
 }
