@@ -141,9 +141,9 @@ public class GraphSorter {
         }
         gridWidth = maxRowWidth;
         System.out.println("gridWidth: " + gridWidth);
-        sortRowsByAncestor(generationRows);
-//        sortByLinkDistance();
-//        sortByLinkDistance();
+//        sortRowsByAncestor(generationRows);
+        sortByLinkDistance();
+        sortByLinkDistance();
     }
 
     private void sortRowsByAncestor(ArrayList<HashSet<EntityData>> generationRows) {
