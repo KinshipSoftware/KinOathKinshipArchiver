@@ -284,8 +284,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         Element groupNode = doc.createElementNS(svgNameSpace, "g");
         groupNode.setAttribute("id", currentNode.getUniqueIdentifier());
         groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
-        // todo: assess if the kin type strings or the kin terms should be stored in the svg entity node
-//        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
+        // the kin type strings are stored here so that on selection in the graph the add kin term panel can be pre populatedwith the kin type strings of the selection
+        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
 //        counterTest++;
         Element symbolNode;
         String symbolType = currentNode.getSymbolType();
@@ -343,7 +343,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             labelList.addAll(Arrays.asList(currentNode.getLabel()));
         }
         if (dataStoreSvg.showKinTypeLabels) {
-            labelList.addAll(Arrays.asList(currentNode.getKinTypeStrings()));
+            labelList.addAll(Arrays.asList(currentNode.getKinTypeStringArray()));
         }
         if (dataStoreSvg.showKinTermLabels) {
             labelList.addAll(Arrays.asList(currentNode.getKinTermStrings()));
