@@ -137,6 +137,7 @@ public class QueryParser implements EntityService {
                 // todo assess if the found node is of the correct kin type
                 // todo: maybe add a chain so the prev and next of each loaded node can be reached here
                 alterEntity.isVisible = true;
+                alterEntity.addKinTypeString(adjacentKinType.kinType.getCodeString());
                 //alterEntity.appendTempLabel(adjacentKinType.kinType.getCodeString() + " G:" + generationalDistance + "F: " + foundOrder++);
 //                alterEntity.appendTempLabel(adjacentKinType.kinType.getCodeString());
                 visibleEntityFound = true;
