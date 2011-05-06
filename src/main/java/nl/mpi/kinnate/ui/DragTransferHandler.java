@@ -109,7 +109,7 @@ public class DragTransferHandler extends TransferHandler implements Transferable
                     }
                 }
             }
-            ((KinTypeEgoSelectionTestPanel) dropLocation).addEgoNodes(slectedUris.toArray(new URI[]{}), slectedIdentifiers.toArray(new String[]{}));
+            ((KinTypeEgoSelectionTestPanel) dropLocation).addRequiredNodes(slectedUris.toArray(new URI[]{}), slectedIdentifiers.toArray(new String[]{}));
             return true;
         }
         return false;
