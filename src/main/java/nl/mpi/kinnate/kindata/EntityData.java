@@ -111,8 +111,10 @@ public class EntityData {
 
     public void addKinTypeString(String kinTypeString) {
         ArrayList<String> tempList = new ArrayList<String>(Arrays.asList(kinTypeArray));
-        tempList.add(kinTypeString);
-        kinTypeArray = tempList.toArray(new String[]{});
+        if (!tempList.contains(kinTypeString)) {
+            tempList.add(kinTypeString);
+            kinTypeArray = tempList.toArray(new String[]{});
+        }
     }
 
     public String[] getKinTypeStringArray() {
