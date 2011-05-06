@@ -2,7 +2,6 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
@@ -17,21 +16,20 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
 
     public ImportSamplesFileMenu(MainFrame mainFrameLocal) {
         mainFrame = mainFrameLocal;
-
-        addSampleToMenu("Hawaiian Kin Terms", "HawaiianKinTerms.svg");
-        addSampleToMenu("Japanese Kin Terms", "JapaneseKinTerms.svg");
-        addSampleToMenu("Cha'palaa Kin Terms", "ChapalaaKinTerms.svg");
+        addSampleToMenu("Gedcom Simple File", "/gedcomsamples/wiki-test-ged.ged");
+        addSampleToMenu("Gedcom Torture File", "/TestGED/TGC55C.ged");
+        addSampleToMenu("Descententes de Jose Antonio de Figueiredo", "/gedcomsamples/descententes_de_jose_antonio_de_figueiredo.ged");
     }
 
     private void addSampleToMenu(String menuText, String sampleFileString) {
-        String currentFilePath = ImportSamplesFileMenu.class.getResource("../../../../svgsamples/" + sampleFileString).getPath();
+//        String currentFilePath = ImportSamplesFileMenu.class.getResource("../../../../svgsamples/" + sampleFileString).getPath();
         JMenuItem currentMenuItem = new JMenuItem(menuText);
-        currentMenuItem.setActionCommand(currentFilePath);
+        currentMenuItem.setActionCommand(sampleFileString);
         currentMenuItem.addActionListener(this);
         this.add(currentMenuItem);
     }
 
     public void actionPerformed(ActionEvent e) {
-        mainFrame.openDiagram(new File(e.getActionCommand()));
+        mainFrame.importEntities(e.getActionCommand());
     }
 }
