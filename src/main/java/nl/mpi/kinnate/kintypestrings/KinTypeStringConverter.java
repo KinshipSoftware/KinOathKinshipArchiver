@@ -34,7 +34,8 @@ public class KinTypeStringConverter extends GraphSorter {
         }
 
         public boolean isEgoType() {
-            return codeString.equals("E");
+            // todo: this could be better handled by adding a boolean: isego to each KinType
+            return codeString.contains("E");
         }
     }
     private KinType[] referenceKinTypes = new KinType[]{
@@ -64,7 +65,11 @@ public class KinTypeStringConverter extends GraphSorter {
         new KinType("G", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
         new KinType("E", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
         new KinType("C", DataTypes.RelationType.descendant, EntityData.SymbolType.square),
-        new KinType("X", DataTypes.RelationType.none, EntityData.SymbolType.none) // X is intended to indicate unknown or no type, for instance this is used after import to add all nodes to the graph
+        // other types
+        // todo: the gendered ego kin types Em and Ef are probably not correct and should be verified
+        new KinType("Ef", DataTypes.RelationType.sibling, EntityData.SymbolType.circle),
+        new KinType("Em", DataTypes.RelationType.sibling, EntityData.SymbolType.triangle)
+    //        new KinType("X", DataTypes.RelationType.none, EntityData.SymbolType.none) // X is intended to indicate unknown or no type, for instance this is used after import to add all nodes to the graph
     };
 
     public class KinTypeElement {
@@ -80,6 +85,13 @@ public class KinTypeStringConverter extends GraphSorter {
         ParserHighlight[] highlightLocs;
     }
 
+    public void setEgoKinTypeString(EntityData entityData) {
+        for (KinType kinType : referenceKinTypes) {
+            if (kinType.isEgoType() && kinType.symbolType.name().equals(entityData.getSymbolType())) {
+                entityData.addKinTypeString(kinType.codeString);
+            }
+        }
+    }
 //    public void highlightComments(String[] kinTypeStrings, ParserHighlight[][] parserHighlight) {
 //        int lineCounter = 0;
 //        for (String currentString : kinTypeStrings) {
@@ -119,10 +131,11 @@ public class KinTypeStringConverter extends GraphSorter {
         // note that this will get the kin type reversed for one of the adjacent entities and this must be accounted for in the kin type comparison
         // todo: note that the ego and alter are not correct labels
         // this array will get the kin type reversed for one of the adjacent entities
-        if (egoEntity.isEgo) {// && alter.getSymbolType().equals(EntityData.SymbolType.triangle.name())) {
+        if (egoEntity.isEgo && requiredKinType.isEgoType()) {// && alter.getSymbolType().equals(EntityData.SymbolType.triangle.name())) {
             return true;
         }
-        if (requiredKinType.relationType.equals(entityRelation.relationType)) {
+        if (requiredKinType.relationType.equals(entityRelation.relationType)
+                && requiredKinType.symbolType.name().equals(alterEntity.getSymbolType())) {
             return true;
         }
         return false;
