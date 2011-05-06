@@ -214,7 +214,7 @@ public class KinTypeStringConverter extends GraphSorter {
 
     public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg) {
         HashMap<String, EntityData> graphDataNodeList = new HashMap<String, EntityData>();
-        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{"E"}, true);
+        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{}, true);
         graphDataNodeList.put("E", egoDataNode);
         egoDataNode.isVisible = true;
         ArrayList<String> inputStringList = new ArrayList<String>();
@@ -247,7 +247,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                 currentGraphDataNode = graphDataNodeList.get(fullKinTypeString);
                                 // add any child nodes?
                             } else {
-                                currentGraphDataNode = new EntityData(fullKinTypeString, fullKinTypeString, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{fullKinTypeString}, false);
+                                currentGraphDataNode = new EntityData(fullKinTypeString, fullKinTypeString, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{}, false);
                                 DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
                                 parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
                                 currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
