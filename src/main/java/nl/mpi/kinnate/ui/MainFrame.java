@@ -99,6 +99,10 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
     }
 
+    public void importEntities(String importPath) {
+        new GedcomImportPanel(entityCollection, jTabbedPane1).startImportJar(importPath);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -110,14 +114,13 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        importGedcomTorture = new javax.swing.JMenuItem();
-        importGedcomSimple = new javax.swing.JMenuItem();
         ImportGedcomUrl = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
         openDiagram = new javax.swing.JMenuItem();
         openRecentMenu = recentFileMenu;
         jMenu1 = new SamplesFileMenu(this);
+        jMenu2 = new ImportSamplesFileMenu(this);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         saveDiagram = new javax.swing.JMenuItem();
         saveDiagramAs = new javax.swing.JMenuItem();
@@ -143,22 +146,6 @@ public class MainFrame extends javax.swing.JFrame {
                 fileMenuActionPerformed(evt);
             }
         });
-
-        importGedcomTorture.setText("Import Gedcom Torture File");
-        importGedcomTorture.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importGedcomTortureActionPerformed(evt);
-            }
-        });
-        fileMenu.add(importGedcomTorture);
-
-        importGedcomSimple.setText("Import Gedcom Simple File");
-        importGedcomSimple.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importGedcomSimpleActionPerformed(evt);
-            }
-        });
-        fileMenu.add(importGedcomSimple);
 
         ImportGedcomUrl.setText("Import Gedcom Samples (from internet)");
         ImportGedcomUrl.addActionListener(new java.awt.event.ActionListener() {
@@ -198,6 +185,9 @@ public class MainFrame extends javax.swing.JFrame {
 
         jMenu1.setText("Open Sample Diagram");
         fileMenu.add(jMenu1);
+
+        jMenu2.setText("Import Sample Data");
+        fileMenu.add(jMenu2);
         fileMenu.add(jSeparator2);
 
         saveDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
@@ -247,16 +237,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void importGedcomTortureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importGedcomTortureActionPerformed
-        // TODO add your handling code here:
-        new GedcomImportPanel(entityCollection, jTabbedPane1).startImportJar("/TestGED/TGC55C.ged");
-    }//GEN-LAST:event_importGedcomTortureActionPerformed
-
-    private void importGedcomSimpleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importGedcomSimpleActionPerformed
-        // TODO add your handling code here:
-        new GedcomImportPanel(entityCollection, jTabbedPane1).startImportJar("/TestGED/wiki-test-ged.ged");
-    }//GEN-LAST:event_importGedcomSimpleActionPerformed
 
     private void fileMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileMenuActionPerformed
     }//GEN-LAST:event_fileMenuActionPerformed
@@ -406,9 +386,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitApplication;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenuItem importGedcomSimple;
-    private javax.swing.JMenuItem importGedcomTorture;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
