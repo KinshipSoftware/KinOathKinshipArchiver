@@ -108,6 +108,8 @@ public class QueryBuilder {
                 + "return"
                 + "<Entity>{\n"
                 + "<Identifier>" + uniqueIdentifier + "</Identifier>,\n"
+                // todo: check that DOB is read and that there is data to sort by
+                + "<DateOfBirth>{$entityNode/(*:Entity|*:Gedcom)/DOB}</DateOfBirth>,\n"
                 + "<Path>{base-uri($entityNode)}</Path>,\n"
                 + getSymbolClause(indexParameters, "$entityNode")
                 + "<Labels>\n"
