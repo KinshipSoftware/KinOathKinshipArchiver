@@ -62,7 +62,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     public DataStoreSvg dataStoreSvg;
 //    private URI[] egoPathsTemp = null;
-    protected SvgUpdateHandler svgUpdateHandler;
+    public SvgUpdateHandler svgUpdateHandler;
     private int currentZoom = 0;
     private int currentWidth = 0;
     private int currentHeight = 0;
@@ -208,11 +208,9 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    public String[] getEgoUniquiIdentifiersList() {
 //        return dataStoreSvg.egoIdentifierSet.toArray(new String[]{});
 //    }
-
 //    public String[] getEgoIdList() {
 //        return dataStoreSvg.egoIdentifierSet.toArray(new String[]{});
 //    }
-
 //    public URI[] getEgoPaths() {
 //        if (egoPathsTemp != null) {
 //            return egoPathsTemp;
@@ -240,11 +238,9 @@ public class GraphPanel extends JPanel implements SavePanel {
 ////        egoPathsTemp = egoPathArray; // egoPathsTemp is only required if the ego nodes are not already on the graph (otherwise the path can be obtained from the graph elements)
 //        dataStoreSvg.requiredEntities.addAll(Arrays.asList(egoIdentifierArray));
 //    }
-
 //    public void removeEgo(String[] egoIdentifierArray) {
 //        dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
 //    }
-
     public String[] getSelectedIds() {
         return selectedGroupId.toArray(new String[]{});
     }
@@ -257,7 +253,6 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        }
 //        return false;
 //    }
-
     public String getPathForElementId(String elementId) {
 //        NamedNodeMap namedNodeMap = doc.getElementById(elementId).getAttributes();
 //        for (int attributeCounter = 0; attributeCounter < namedNodeMap.getLength(); attributeCounter++) {
@@ -479,6 +474,9 @@ public class GraphPanel extends JPanel implements SavePanel {
                 }
             }
             svgRoot.appendChild(entityGroupNode);
+            Element labelsGroup = doc.createElementNS(svgNameSpace, "g");
+            labelsGroup.setAttribute("id", "LabelsGroup");
+            svgRoot.appendChild(labelsGroup);
             //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(new EntitySvg().listSymbolNames(doc));
