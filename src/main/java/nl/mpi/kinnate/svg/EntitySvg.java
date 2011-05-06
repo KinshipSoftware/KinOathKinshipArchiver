@@ -192,28 +192,42 @@ public class EntitySvg {
         }
     }
 
-    public float moveEntity(SVGDocument doc, String entityId, float shiftX, float shiftY, boolean snapToGrid) {
+    public float[] moveEntity(SVGDocument doc, String entityId, float shiftX, float shiftY, boolean snapToGrid) {
         Element entitySymbol = doc.getElementById(entityId);
-        float remainderAfterSnap = 0;
+        float remainderAfterSnapX = 0;
+        float remainderAfterSnapY = 0;
         if (entitySymbol != null) {
+            boolean allowYshift = entitySymbol.getLocalName().equals("text");
             SVGMatrix sVGMatrix = ((SVGLocatable) entitySymbol).getCTM();
 //            sVGMatrix.setE(sVGMatrix.getE() + shiftX);
 //            sVGMatrix.setE(sVGMatrix.getF() + shiftY);
 //            System.out.println("shiftX: " + shiftX);
-            float updatedPosition = sVGMatrix.getE() + shiftX;
+            float updatedPositionX = sVGMatrix.getE() + shiftX;
+            float updatedPositionY = sVGMatrix.getF();
+            if (allowYshift) {
+                updatedPositionY = updatedPositionY + shiftY;
+            }
 //            System.out.println("updatedPosition: " + updatedPosition);
             if (snapToGrid) {
-                float updatedSnapPosition = Math.round(updatedPosition / 50) * 50; // limit movement to the grid
-                remainderAfterSnap = updatedPosition - updatedSnapPosition;
-                updatedPosition = updatedSnapPosition;
+                float updatedSnapPositionX = Math.round(updatedPositionX / 50) * 50; // limit movement to the grid
+                remainderAfterSnapX = updatedPositionX - updatedSnapPositionX;
+                updatedPositionX = updatedSnapPositionX;
+                if (allowYshift) {
+                    float updatedSnapPositionY = Math.round(updatedPositionY / 50) * 50; // limit movement to the grid
+                    remainderAfterSnapY = updatedPositionY - updatedSnapPositionY;
+                    updatedPositionY = updatedSnapPositionY;
+                }
             } else {
-                updatedPosition = (int) updatedPosition;  // prevent uncorrectable but visible variations in the position of entities to each other
+                updatedPositionX = (int) updatedPositionX;  // prevent uncorrectable but visible variations in the position of entities to each other
+                if (allowYshift) {
+                    updatedPositionY = (int) updatedPositionY;
+                }
             }
 //            System.out.println("updatedPosition after snap: " + updatedPosition);
-            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(updatedPosition) + ", " + sVGMatrix.getF() + ")");
+            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(updatedPositionX) + ", " + String.valueOf(updatedPositionY) + ")");
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + (sVGMatrix.getF() + shiftY) + ")");
         }
 //        System.out.println("remainderAfterSnap: " + remainderAfterSnap);
-        return remainderAfterSnap;
+        return new float[]{remainderAfterSnapX, remainderAfterSnapY};
     }
 }
