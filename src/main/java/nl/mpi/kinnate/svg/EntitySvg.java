@@ -206,7 +206,10 @@ public class EntitySvg {
         Element kinSymbols = doc.getElementById("KinSymbols");
         if (kinSymbols != null) {
             for (Node kinSymbolNode = kinSymbols.getFirstChild(); kinSymbolNode != null; kinSymbolNode = kinSymbolNode.getNextSibling()) {
-                symbolArray.add(kinSymbolNode.getAttributes().getNamedItem("id").getNodeValue());
+                Node idNode = kinSymbolNode.getAttributes().getNamedItem("id");
+                if (idNode != null) {
+                    symbolArray.add(idNode.getNodeValue());
+                }
             }
         }
         return symbolArray.toArray(new String[]{});
@@ -303,6 +306,7 @@ public class EntitySvg {
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         Float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
+            // todo: check the related nodes and average their positions then check to see if it is free and insert the node there
             storedPosition = new Float[]{currentNode.getxPos() * hSpacing + hSpacing - symbolSize / 2.0f,
                         currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f};
             entityPositions.put(currentNode.getUniqueIdentifier(), storedPosition);
