@@ -12,11 +12,8 @@ import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.xml.parsers.DocumentBuilderFactory;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
@@ -37,8 +34,6 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.Text;
-import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGRect;
@@ -61,6 +56,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     protected ArrayList<String> selectedGroupId;
     protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     public DataStoreSvg dataStoreSvg;
+    protected EntitySvg entitySvg;
 //    private URI[] egoPathsTemp = null;
     public SvgUpdateHandler svgUpdateHandler;
     private int currentZoom = 0;
@@ -69,6 +65,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public GraphPanel(KinTermSavePanel egoSelectionPanel) {
         dataStoreSvg = new DataStoreSvg();
+        entitySvg = new EntitySvg();
+        dataStoreSvg.setDefaults();
         svgUpdateHandler = new SvgUpdateHandler(this, egoSelectionPanel);
         selectedGroupId = new ArrayList<String>();
         graphPanelSize = new GraphPanelSize();
@@ -152,6 +150,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             svgCanvas.setDocument(doc);
             dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc);
             requiresSave = false;
+            entitySvg.readEntityPositions(doc.getElementsByTagName("EntityGroup").item(0));
         } catch (IOException ioe) {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
@@ -280,94 +279,6 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.setRenderingTransform(at);
     }
 
-    private Element createEntitySymbol(EntityData currentNode, int hSpacing, int vSpacing, int symbolSize) {
-        Element groupNode = doc.createElementNS(svgNameSpace, "g");
-        groupNode.setAttribute("id", currentNode.getUniqueIdentifier());
-        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
-        // the kin type strings are stored here so that on selection in the graph the add kin term panel can be pre populatedwith the kin type strings of the selection
-        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
-//        counterTest++;
-        Element symbolNode;
-        String symbolType = currentNode.getSymbolType();
-        if (symbolType == null || symbolType.length() == 0) {
-            symbolType = "square";
-        }
-        // todo: check that if an entity is already placed in which case do not recreate
-        // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
-        symbolNode = doc.createElementNS(svgNameSpace, "use");
-        symbolNode.setAttribute("id", currentNode.getUniqueIdentifier() + "symbol");
-        symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
-        groupNode.setAttribute("transform", "translate(" + Integer.toString(currentNode.getxPos() * hSpacing + hSpacing - symbolSize / 2) + ", " + Integer.toString(currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2) + ")");
-
-        if (currentNode.isEgo) {
-            symbolNode.setAttribute("fill", "black");
-        } else {
-            symbolNode.setAttribute("fill", "white");
-        }
-
-        symbolNode.setAttribute("stroke", "black");
-        symbolNode.setAttribute("stroke-width", "2");
-        groupNode.appendChild(symbolNode);
-
-////////////////////////////// tspan method appears to fail in batik rendering process unless saved and reloaded ////////////////////////////////////////////////
-//            Element labelText = doc.createElementNS(svgNS, "text");
-////            labelText.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
-////            labelText.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
-//            labelText.setAttribute("fill", "black");
-//            labelText.setAttribute("fill-opacity", "1");
-//            labelText.setAttribute("stroke-width", "0");
-//            labelText.setAttribute("font-size", "14px");
-////            labelText.setAttribute("text-anchor", "end");
-////            labelText.setAttribute("style", "font-size:14px;text-anchor:end;fill:black;fill-opacity:1");
-//            //labelText.setNodeValue(currentChild.toString());
-//
-//            //String textWithUni = "\u0041";
-//            int textSpanCounter = 0;
-//            int lineSpacing = 10;
-//            for (String currentTextLable : currentNode.getLabel()) {
-//                Text textNode = doc.createTextNode(currentTextLable);
-//                Element tspanElement = doc.createElement("tspan");
-//                tspanElement.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
-//                tspanElement.setAttribute("y", Integer.toString((currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + textSpanCounter));
-////                tspanElement.setAttribute("y", Integer.toString(textSpanCounter * lineSpacing));
-//                tspanElement.appendChild(textNode);
-//                labelText.appendChild(tspanElement);
-//                textSpanCounter += lineSpacing;
-//            }
-//            groupNode.appendChild(labelText);
-////////////////////////////// end tspan method appears to fail in batik rendering process ////////////////////////////////////////////////
-
-////////////////////////////// alternate method ////////////////////////////////////////////////
-        ArrayList<String> labelList = new ArrayList<String>();
-        if (dataStoreSvg.showLabels) {
-            labelList.addAll(Arrays.asList(currentNode.getLabel()));
-        }
-        if (dataStoreSvg.showKinTypeLabels) {
-            labelList.addAll(Arrays.asList(currentNode.getKinTypeStringArray()));
-        }
-        if (dataStoreSvg.showKinTermLabels) {
-            labelList.addAll(Arrays.asList(currentNode.getKinTermStrings()));
-        }
-        // todo: this method has the draw back that the text is not selectable as a block
-        int textSpanCounter = 0;
-        int lineSpacing = 15;
-        for (String currentTextLable : labelList) {
-            Element labelText = doc.createElementNS(svgNameSpace, "text");
-            labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
-            labelText.setAttribute("y", Integer.toString(textSpanCounter));
-            labelText.setAttribute("fill", "black");
-            labelText.setAttribute("stroke-width", "0");
-            labelText.setAttribute("font-size", "14");
-            Text textNode = doc.createTextNode(currentTextLable);
-            labelText.appendChild(textNode);
-            textSpanCounter += lineSpacing;
-            groupNode.appendChild(labelText);
-        }
-////////////////////////////// end alternate method ////////////////////////////////////////////////
-        ((EventTarget) groupNode).addEventListener("mousedown", new MouseListenerSvg(this), false);
-        return groupNode;
-    }
-
     public void drawNodes() {
         drawNodes(graphData);
     }
@@ -393,7 +304,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            // todo: look into how to add the extra namespaces to the svg document - doc.getDomConfig()
 //            doc.getDocumentElement().setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:version", "");
 //            doc.getDocumentElement().setAttribute("xmlns:" + DataStoreSvg.kinDataNameSpace, DataStoreSvg.kinDataNameSpaceLocation); // this method of declaring multiple namespaces looks to me to be wrong but it is the only method that does not get stripped out by the transformer on save
-            new EntitySvg().insertSymbols(doc, svgNameSpace);
+            entitySvg.insertSymbols(doc, svgNameSpace);
 //        Document doc = impl.createDocument(svgNS, "svg", null);
 //        SVGDocument doc = svgCanvas.getSVGDocument();
             // Get the root element (the 'svg' elemen¤t).
@@ -410,8 +321,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             // todo: get the user selected canvas size and adjust the hSpacing and vSpacing to fit
 //        int hSpacing = maxTextLength * 10 + 100;
             int hSpacing = graphPanelSize.getHorizontalSpacing(graphData.gridWidth);
-            int symbolSize = 15;
-            int strokeWidth = 2;
+//            int strokeWidth = 2;
 
 //        int preferedWidth = graphData.gridWidth * hSpacing + hSpacing * 2;
 //        int preferedHeight = graphData.gridHeight * vSpacing + vSpacing * 2;
@@ -433,6 +343,16 @@ public class GraphPanel extends JPanel implements SavePanel {
             // add the relation symbols in a group below the relation lines
             Element relationGroupNode = doc.createElementNS(svgNameSpace, "g");
             relationGroupNode.setAttribute("id", "RelationGroup");
+            svgRoot.appendChild(relationGroupNode);
+            // add the entity symbols in a group on top of the relation lines
+            Element entityGroupNode = doc.createElementNS(svgNameSpace, "g");
+            entityGroupNode.setAttribute("id", "EntityGroup");
+            for (EntityData currentNode : graphData.getDataNodes()) {
+                if (currentNode.isVisible) {
+                    entityGroupNode.appendChild(entitySvg.createEntitySymbol(this, currentNode, hSpacing, vSpacing));
+                }
+            }
+            svgRoot.appendChild(entityGroupNode);
             for (EntityData currentNode : graphData.getDataNodes()) {
                 // set up the mouse listners on the group node
 //            ((EventTarget) groupNode).addEventListener("mouseover", new EventListener() {
@@ -459,27 +379,17 @@ public class GraphPanel extends JPanel implements SavePanel {
                     for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
                         if ((dataStoreSvg.showKinTermLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.kinTermLine)
                                 && (dataStoreSvg.showSanguineLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.sanguineLine)) {
-                            new RelationSvg().insertRelation(doc, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing, strokeWidth);
+                            new RelationSvg().insertRelation(this, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing);
                         }
                     }
                 }
             }
-            svgRoot.appendChild(relationGroupNode);
-            // add the entity symbols in a group on top of the relation lines
-            Element entityGroupNode = doc.createElementNS(svgNameSpace, "g");
-            entityGroupNode.setAttribute("id", "EntityGroup");
-            for (EntityData currentNode : graphData.getDataNodes()) {
-                if (currentNode.isVisible) {
-                    entityGroupNode.appendChild(createEntitySymbol(currentNode, hSpacing, vSpacing, symbolSize));
-                }
-            }
-            svgRoot.appendChild(entityGroupNode);
             Element labelsGroup = doc.createElementNS(svgNameSpace, "g");
             labelsGroup.setAttribute("id", "LabelsGroup");
             svgRoot.appendChild(labelsGroup);
-            //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+            //ArbilComponentBuilder.savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
-            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(new EntitySvg().listSymbolNames(doc));
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc));
 //            svgUpdateHandler.updateSvgSelectionHighlights(); // todo: does this rsolve the issue after an update that the selection highlight is lost but the selection is still made?
             selectedGroupId.clear();
 //        zoomDrawing();
