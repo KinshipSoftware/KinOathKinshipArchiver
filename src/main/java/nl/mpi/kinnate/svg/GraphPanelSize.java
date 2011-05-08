@@ -11,7 +11,7 @@ public class GraphPanelSize {
     private int preferedWidth = 800;
     private int preferedHeight = 600;
     private int defaultVerticalSpacing = 100;
-    private int defaultHorizontalSpacing = 100;
+    private int defaultHorizontalSpacing = 200;
     String[][] preferredSizeArray = new String[][]{
         {"352 x 288", "352", "288"},
         {"640 x 480", "640", "480"},
@@ -86,18 +86,18 @@ public class GraphPanelSize {
     }
 
     public int getVerticalSpacing(int gridHeight) {
-        if (autoSize) {
+//        if (autoSize) {
             return defaultVerticalSpacing;
-        } else {
-            return preferedHeight / (gridHeight + 1);
-        }
+//        } else {
+//            return preferedHeight / (gridHeight + 1);
+//        }
     }
 
     public int getHorizontalSpacing(int gridWidth) {
-        if (autoSize) {
+//        if (autoSize) {
             return defaultHorizontalSpacing;
-        } else {
-            return preferedWidth / (gridWidth + 1);
-        }
+//        } else {
+//            return preferedWidth / (gridWidth + 1);
+//        }
     }
 }
