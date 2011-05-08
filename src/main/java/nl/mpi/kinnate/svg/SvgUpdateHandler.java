@@ -173,7 +173,7 @@ public class SvgUpdateHandler {
                         int dragCounter = 0;
                         for (String entityId : graphPanel.selectedGroupId) {
                             // store the remainder after snap for re use on each update
-                            dragRemainders[dragCounter] = new EntitySvg().moveEntity(graphPanel.doc, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid);
+                            dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel.doc, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid);
                             dragCounter++;
                         }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
@@ -205,7 +205,7 @@ public class SvgUpdateHandler {
 //                    }
                         int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(graphPanel.graphData.gridHeight);
                         int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(graphPanel.graphData.gridWidth);
-                        new RelationSvg().updateRelationLines(graphPanel.doc, graphPanel.selectedGroupId, graphPanel.svgNameSpace, hSpacing, vSpacing);
+                        new RelationSvg().updateRelationLines(graphPanel, graphPanel.selectedGroupId, graphPanel.svgNameSpace, hSpacing, vSpacing);
                         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                     }
                     synchronized (SvgUpdateHandler.this) {
