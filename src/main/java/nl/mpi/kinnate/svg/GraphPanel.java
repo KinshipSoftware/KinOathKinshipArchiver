@@ -34,6 +34,7 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGRect;
@@ -62,6 +63,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private int currentZoom = 0;
     private int currentWidth = 0;
     private int currentHeight = 0;
+    private AffineTransform zoomAffineTransform = null;
 
     public GraphPanel(KinTermSavePanel egoSelectionPanel) {
         dataStoreSvg = new DataStoreSvg();
@@ -131,10 +133,10 @@ public class GraphPanel extends JPanel implements SavePanel {
         float drawingCenter = (currentWidth / 2);
 //                float drawingCenter = (bbox.getX() + (bbox.getWidth() / 2));
         float canvasCenter = (canvasBounds.width / 2);
-        AffineTransform at = new AffineTransform();
-        at.translate((canvasCenter - drawingCenter), 1);
-        at.concatenate(scaleTransform);
-        svgCanvas.setRenderingTransform(at);
+        zoomAffineTransform = new AffineTransform();
+        zoomAffineTransform.translate((canvasCenter - drawingCenter), 1);
+        zoomAffineTransform.concatenate(scaleTransform);
+        svgCanvas.setRenderingTransform(zoomAffineTransform);
     }
 
     public void setArbilTableModel(ArbilTableModel arbilTableModelLocal) {
@@ -349,7 +351,11 @@ public class GraphPanel extends JPanel implements SavePanel {
                 entityGroupNode.setAttribute("id", "EntityGroup");
                 entityGroupNodeOld.getParentNode().insertBefore(entityGroupNode, entityGroupNodeOld);
                 entityGroupNodeOld.getParentNode().removeChild(entityGroupNodeOld);
-
+                // remove old kin diagram data
+                NodeList dataNodes = doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
+                for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
+                    dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
+                }
             }
 //            entitySvg.removeOldEntities(entityGroupNode);
 //            entitySvg.removeOldEntities(relationGroupNode);
@@ -378,6 +384,11 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            svgUpdateHandler.updateSvgSelectionHighlights(); // todo: does this rsolve the issue after an update that the selection highlight is lost but the selection is still made?
             selectedGroupId.clear();
 //        zoomDrawing();
+            if (zoomAffineTransform != null) {
+                // re apply the last zoom
+                // todo: asses why this does not work
+                svgCanvas.setRenderingTransform(zoomAffineTransform);
+            }
         } catch (DOMException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
         } catch (IOException exception) {
