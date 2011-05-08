@@ -6,12 +6,12 @@ import java.util.HashMap;
 import nl.mpi.kinnate.kindata.EntityData;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGMatrix;
-import org.w3c.dom.svg.SVGRect;
 
 /**
  *  Document   : EntitySvg
@@ -29,9 +29,38 @@ public class EntitySvg {
     }
 
     public void readEntityPositions(Node entityGroup) {
-        // todo: read the entity positions from the existing dom
-        // todo: only the x pos needs to be sotred because the y pos is determined by the generations
-//        entityPositions
+        // read the entity positions from the existing dom
+        if (entityGroup != null) {
+            for (Node entityNode = entityGroup.getFirstChild(); entityNode != null; entityNode = entityNode.getNextSibling()) {
+                NamedNodeMap nodeMap = entityNode.getAttributes();
+                if (nodeMap != null) {
+                    Node idNode = nodeMap.getNamedItem("id");
+                    Node transformNode = nodeMap.getNamedItem("transform");
+                    if (idNode != null && transformNode != null) {
+                        String entityId = idNode.getNodeValue();
+                        //transform="translate(300.0, 192.5)"
+                        // because the svg dom has not been rendered we cannot get any of the screen data, so we must parse the transform tag
+                        String transformString = transformNode.getNodeValue();
+                        transformString = transformString.replaceAll("\\s", "");
+                        transformString = transformString.replace("translate(", "");
+                        transformString = transformString.replace(")", "");
+                        String[] stringPos = transformString.split(",");
+//                        System.out.println("entityId: " + entityId);
+//                        System.out.println("transformString: " + transformString);
+                        entityPositions.put(entityId, new Float[]{Float.parseFloat(stringPos[0]), Float.parseFloat(stringPos[1])});
+//                      SVGRect bbox = ((SVGLocatable) entityNode).getBBox();
+//                      SVGMatrix sVGMatrix = ((SVGLocatable) entityNode).getCTM();
+//                      System.out.println("getE: " + sVGMatrix.getE());
+//                      System.out.println("getF: " + sVGMatrix.getF());
+////                    System.out.println("bbox X: " + bbox.getX());
+////                    System.out.println("bbox Y: " + bbox.getY());
+////                    System.out.println("bbox W: " + bbox.getWidth());
+////                    System.out.println("bbox H: " + bbox.getHeight());
+//                      new float[]{sVGMatrix.getE() + bbox.getWidth() / 2, sVGMatrix.getF() + bbox.getHeight() / 2};
+                    }
+                }
+            }
+        }
     }
 
     public void insertSymbols(SVGDocument doc, String svgNameSpace) {
