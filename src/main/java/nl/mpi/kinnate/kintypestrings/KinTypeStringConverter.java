@@ -39,6 +39,10 @@ public class KinTypeStringConverter extends GraphSorter {
         }
     }
     private KinType[] referenceKinTypes = new KinType[]{
+        // other types
+        // todo: the gendered ego kin types Em and Ef are probably not correct and should be verified
+        new KinType("Ef", DataTypes.RelationType.none, EntityData.SymbolType.circle),
+        new KinType("Em", DataTypes.RelationType.none, EntityData.SymbolType.triangle),
         // type 1
         new KinType("Fa", DataTypes.RelationType.ancestor, EntityData.SymbolType.triangle),
         new KinType("Mo", DataTypes.RelationType.ancestor, EntityData.SymbolType.circle),
@@ -63,12 +67,8 @@ public class KinTypeStringConverter extends GraphSorter {
         new KinType("W", DataTypes.RelationType.union, EntityData.SymbolType.circle),
         new KinType("P", DataTypes.RelationType.ancestor, EntityData.SymbolType.square),
         new KinType("G", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
-        new KinType("E", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
-        new KinType("C", DataTypes.RelationType.descendant, EntityData.SymbolType.square),
-        // other types
-        // todo: the gendered ego kin types Em and Ef are probably not correct and should be verified
-        new KinType("Ef", DataTypes.RelationType.sibling, EntityData.SymbolType.circle),
-        new KinType("Em", DataTypes.RelationType.sibling, EntityData.SymbolType.triangle)
+        new KinType("E", DataTypes.RelationType.none, EntityData.SymbolType.square),
+        new KinType("C", DataTypes.RelationType.descendant, EntityData.SymbolType.square)
     //        new KinType("X", DataTypes.RelationType.none, EntityData.SymbolType.none) // X is intended to indicate unknown or no type, for instance this is used after import to add all nodes to the graph
     };
 
@@ -107,11 +107,13 @@ public class KinTypeStringConverter extends GraphSorter {
 //            lineCounter++;
 //        }
 //    }
+
     public boolean compareRequiresNextRelation(EntityData adjacentEntity, KinType requiredKinType, EntityRelation entityRelation) {
 //        adjacentEntity.appendTempLabel("compareRequiresNextRelation" + "F: " + QueryParser.foundOrder++); // temp for testing // todo: remove testing labels
         if (adjacentEntity.getSymbolType().equals(EntityData.SymbolType.union.name())) {
             return true;
         }
+        // todo: continue here
         if (requiredKinType.relationType.equals(DataTypes.RelationType.ancestor) && entityRelation.relationType.equals(DataTypes.RelationType.sibling)) {
             return true;
         }
@@ -227,9 +229,9 @@ public class KinTypeStringConverter extends GraphSorter {
 
     public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg) {
         HashMap<String, EntityData> graphDataNodeList = new HashMap<String, EntityData>();
-        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{}, true);
-        graphDataNodeList.put("E", egoDataNode);
-        egoDataNode.isVisible = true;
+//        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{}, true);
+//        graphDataNodeList.put("E", egoDataNode);
+//        egoDataNode.isVisible = true;
         ArrayList<String> inputStringList = new ArrayList<String>();
         inputStringList.addAll(Arrays.asList(inputStringArray));
         for (KinTermGroup kinTerms : kinTermsArray) {
@@ -244,13 +246,18 @@ public class KinTypeStringConverter extends GraphSorter {
             System.out.println("inputString: " + inputString);
             if (inputString != null) {
                 inputString = inputString.trim();
+                if (!inputString.startsWith("E")) {
+                    inputString = "E" + inputString;
+                }
                 String consumableString = inputString;
-                EntityData parentDataNode = egoDataNode;
+                EntityData parentDataNode = null;
+                EntityData egoDataNode = null;
                 while (consumableString.length() > 0) {
                     boolean kinTypeFound = false;
                     for (KinType currentReferenceKinType : referenceKinTypes) {
                         if (consumableString.startsWith(currentReferenceKinType.codeString)) {
                             consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
+                            consumableString = consumableString.replaceAll("^[-\\+\\d]*", "");
                             String fullKinTypeString = inputString.substring(0, inputString.length() - consumableString.length());
                             System.out.println("kinTypeFound: " + currentReferenceKinType.codeString);
                             System.out.println("consumableString: " + consumableString);
@@ -258,12 +265,21 @@ public class KinTypeStringConverter extends GraphSorter {
                             EntityData currentGraphDataNode;
                             if (graphDataNodeList.containsKey(fullKinTypeString)) {
                                 currentGraphDataNode = graphDataNodeList.get(fullKinTypeString);
-                                // add any child nodes?
+                                if (currentGraphDataNode.isEgo) {
+                                    egoDataNode = currentGraphDataNode;
+//                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
+                                }
                             } else {
-                                currentGraphDataNode = new EntityData(fullKinTypeString, fullKinTypeString, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{}, false);
+                                currentGraphDataNode = new EntityData(fullKinTypeString, fullKinTypeString, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{}, currentReferenceKinType.isEgoType());
+                                if (currentGraphDataNode.isEgo) {
+                                    egoDataNode = currentGraphDataNode;
+//                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
+                                }
                                 DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
-                                parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
-                                currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                if (parentDataNode != null) {
+                                    parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                    currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                }
                                 graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
                                 currentGraphDataNode.isVisible = true;
                                 // add any child nodes?
