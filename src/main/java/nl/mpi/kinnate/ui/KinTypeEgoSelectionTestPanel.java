@@ -278,6 +278,10 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         return graphPanel.hasSaveFileName();
     }
 
+    public File getFileName() {
+        return graphPanel.getFileName();
+    }
+
     public boolean requiresSave() {
         return graphPanel.requiresSave();
     }
