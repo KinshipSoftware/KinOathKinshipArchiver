@@ -12,6 +12,7 @@ import nl.mpi.arbil.ui.PreviewSplitPanel;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.transcoder.DiagramTranscoder;
 
 /*
  *  Document   : MainFrame
@@ -94,7 +95,7 @@ public class MainFrame extends javax.swing.JFrame {
     public void openDiagram(File selectedFile, boolean saveToRecentMenu) {
         if (saveToRecentMenu) {
             // prevent files from the samples menu being added to the recent files menu
-            recentFileMenu.addRecentFile(selectedFile.getAbsolutePath()); 
+            recentFileMenu.addRecentFile(selectedFile.getAbsolutePath());
         }
         KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(selectedFile);
         egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
@@ -386,6 +387,8 @@ public class MainFrame extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         // todo: implement pdf export
+        new DiagramTranscoder().saveAsPdf((SavePanel) jTabbedPane1.getSelectedComponent());
+        new DiagramTranscoder().saveAsJpg((SavePanel) jTabbedPane1.getSelectedComponent());
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
