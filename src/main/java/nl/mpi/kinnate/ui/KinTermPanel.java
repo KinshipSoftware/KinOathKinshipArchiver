@@ -65,6 +65,7 @@ public class KinTermPanel extends JPanel {
                 if (parentComponent instanceof JTabbedPane) {
                     ((JTabbedPane) parentComponent).setTitleAt(((JTabbedPane) parentComponent).getSelectedIndex(), kinTerms.titleString);
                 }
+                savePanel.setRequiresSave();
             }
         });
         kinTypeGroupDescription = new JTextField(kinTerms.descriptionString);
@@ -74,6 +75,7 @@ public class KinTermPanel extends JPanel {
             public void keyReleased(KeyEvent ke) {
                 super.keyReleased(ke);
                 kinTerms.descriptionString = ((JTextField) ke.getComponent()).getText();
+                savePanel.setRequiresSave();
             }
         });
         colourSelectBox = new JComboBox(new String[]{"red", "blue", "#FF0000", "#FFAA00", "#00FF95", "#62D9A7", "#8000FF", "#FF00D4"});
