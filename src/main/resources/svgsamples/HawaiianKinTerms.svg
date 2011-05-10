@@ -286,7 +286,7 @@
     </g>
   </g>
   <g id="LabelsGroup">
-    <text x="371.0" font-size="28" y="66.0" transform="translate(250.0, -50.0)" fill="black" id="label0" stroke-width="0">Label</text>
+    <text x="330.0" font-size="28" y="70.0" transform="translate(250.0, -50.0)" fill="black" id="label0" stroke-width="0">Hawaiian Kin Terms</text>
   </g>
   
 <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
