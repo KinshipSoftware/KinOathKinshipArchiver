@@ -34,6 +34,7 @@ import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -64,12 +65,31 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
 //    private String kinTypeStrings[] = new String[]{};
 
     public KinTypeEgoSelectionTestPanel(File existingFile) {
+        graphPanel = new GraphPanel(this);
+        kinTypeStringInput = new JTextPane();
+        if (existingFile != null && existingFile.exists()) {
+            graphPanel.readSvg(existingFile);
+            String kinTermContents = null;
+            for (String currentKinTypeString : graphPanel.getKinTypeStrigs()) {
+                if (currentKinTypeString.trim().length() > 0) {
+                    if (kinTermContents == null) {
+                        kinTermContents = "";
+                    } else {
+                        kinTermContents = kinTermContents + "\n";
+                    }
+                    kinTermContents = kinTermContents + currentKinTypeString.trim();
+                }
+            }
+            kinTypeStringInput.setText(kinTermContents);
+        } else {
+            // todo: filter out the noise and only save or use the actual kin type strings
+//            graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
+//            kinTypeStrings = graphPanel.getKinTypeStrigs();
+        }
         this.setLayout(new BorderLayout());
         registeredEntityIds = new ArrayList<String>();
-        graphPanel = new GraphPanel(this);
         egoSelectionPanel = new EgoSelectionPanel();
         kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
-        kinTypeStringInput = new JTextPane();
         // set the styles for the kin type string text
         Style styleComment = kinTypeStringInput.addStyle("Comment", null);
 //        StyleConstants.setForeground(styleComment, new Color(247,158,9));
@@ -119,25 +139,6 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         entityIndex = new QueryParser();
 
         graphSorter = new GraphSorter();
-        if (existingFile != null && existingFile.exists()) {
-            graphPanel.readSvg(existingFile);
-            String kinTermContents = null;
-            for (String currentKinTypeString : graphPanel.getKinTypeStrigs()) {
-                if (currentKinTypeString.trim().length() > 0) {
-                    if (kinTermContents == null) {
-                        kinTermContents = "";
-                    } else {
-                        kinTermContents = kinTermContents + "\n";
-                    }
-                    kinTermContents = kinTermContents + currentKinTypeString.trim();
-                }
-            }
-            kinTypeStringInput.setText(kinTermContents);
-        } else {
-            // todo: filter out the noise and only save or use the actual kin type strings
-//            graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
-//            kinTypeStrings = graphPanel.getKinTypeStrigs();
-        }
 
         IndexerParametersPanel indexerParametersPanel = new IndexerParametersPanel(this, graphPanel, tableCellDragHandler);
         JPanel advancedPanel = new JPanel(new BorderLayout());
@@ -189,37 +190,45 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         try {
             String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
             ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
-            graphSorter.setEntitys(entityIndex.getRelationsOfEgo(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters()));
-            StyledDocument styledDocument = kinTypeStringInput.getStyledDocument();
-            int lineStart = 0;
-            for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
-                ParserHighlight currentHighlight = parserHighlight[lineCounter];
+            EntityData[] graphNodes = entityIndex.getRelationsOfEgo(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters());
+            if (graphNodes.length == 0) {
+                KinTypeStringConverter graphData = new KinTypeStringConverter();
+                graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg);
+                graphPanel.drawNodes(graphData);
+                KinTypeEgoSelectionTestPanel.this.doLayout();
+            } else {
+                graphSorter.setEntitys(graphNodes);
+                StyledDocument styledDocument = kinTypeStringInput.getStyledDocument();
+                int lineStart = 0;
+                for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
+                    ParserHighlight currentHighlight = parserHighlight[lineCounter];
 //                int lineStart = styledDocument.getParagraphElement(lineCounter).getStartOffset();
 //                int lineEnd = styledDocument.getParagraphElement(lineCounter).getEndOffset();
-                int lineEnd = lineStart + kinTypeStrings[lineCounter].length();
-                styledDocument.setCharacterAttributes(lineStart, lineEnd, kinTypeStringInput.getStyle("Unknown"), true);
-                while (currentHighlight.highlight != null) {
-                    int startPos = lineStart + currentHighlight.startChar;
-                    int charCount = lineEnd - lineStart;
-                    if (currentHighlight.nextHighlight.highlight != null) {
-                        charCount = currentHighlight.nextHighlight.startChar - currentHighlight.startChar;
+                    int lineEnd = lineStart + kinTypeStrings[lineCounter].length();
+                    styledDocument.setCharacterAttributes(lineStart, lineEnd, kinTypeStringInput.getStyle("Unknown"), true);
+                    while (currentHighlight.highlight != null) {
+                        int startPos = lineStart + currentHighlight.startChar;
+                        int charCount = lineEnd - lineStart;
+                        if (currentHighlight.nextHighlight.highlight != null) {
+                            charCount = currentHighlight.nextHighlight.startChar - currentHighlight.startChar;
+                        }
+                        if (currentHighlight.highlight != null) {
+                            String styleName = currentHighlight.highlight.name();
+                            styledDocument.setCharacterAttributes(startPos, charCount, kinTypeStringInput.getStyle(styleName), true);
+                        }
+                        currentHighlight = currentHighlight.nextHighlight;
                     }
-                    if (currentHighlight.highlight != null) {
-                        String styleName = currentHighlight.highlight.name();
-                        styledDocument.setCharacterAttributes(startPos, charCount, kinTypeStringInput.getStyle(styleName), true);
-                    }
-                    currentHighlight = currentHighlight.nextHighlight;
+                    lineStart += kinTypeStrings[lineCounter].length() + 1;
                 }
-                lineStart += kinTypeStrings[lineCounter].length() + 1;
+//        kinTypeStrings = graphPanel.getKinTypeStrigs();
+                // register interest Arbil updates and update the graph when data is edited in the table
+                registerCurrentNodes(graphSorter.getDataNodes());
+                graphPanel.drawNodes(graphSorter);
             }
         } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
             ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
         }
-//        kinTypeStrings = graphPanel.getKinTypeStrigs();
-        // register interest Arbil updates and update the graph when data is edited in the table
-        registerCurrentNodes(graphSorter.getDataNodes());
-        graphPanel.drawNodes(graphSorter);
         egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes());
     }
 
@@ -270,6 +279,10 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
 
     public boolean requiresSave() {
         return graphPanel.requiresSave();
+    }
+
+    public void setRequiresSave() {
+        graphPanel.setRequiresSave();
     }
 
     public void saveToFile() {
