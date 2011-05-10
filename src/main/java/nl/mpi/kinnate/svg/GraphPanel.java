@@ -161,6 +161,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     private void saveSvg(File svgFilePath) {
         svgFile = svgFilePath;
+        drawNodes(); // re draw the nodes so that any data changes such as the title/description in the kin term groups get updated into the file
         ArbilComponentBuilder.savePrettyFormatting(doc, svgFilePath);
         requiresSave = false;
     }
@@ -293,6 +294,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         currentWidth = graphPanelSize.getWidth(graphData.gridWidth, hSpacing);
         currentHeight = graphPanelSize.getHeight(graphData.gridHeight, vSpacing);
         try {
+            Element svgRoot;
             Element relationGroupNode;
             Element entityGroupNode;
             if (doc == null) {
@@ -320,11 +322,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                 doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
                 entitySvg.insertSymbols(doc, svgNameSpace);
                 // Get the root element (the 'svg' element)
-                Element svgRoot = doc.getDocumentElement();
-                // Set the width and height attributes on the root 'svg' element.        
-                svgRoot.setAttribute("width", Integer.toString(currentWidth));
-                svgRoot.setAttribute("height", Integer.toString(currentHeight));
-                this.setPreferredSize(new Dimension(graphPanelSize.getHeight(graphData.gridHeight, vSpacing), graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));
+                svgRoot = doc.getDocumentElement();
                 // add the relation symbols in a group below the relation lines
                 relationGroupNode = doc.createElementNS(svgNameSpace, "g");
                 relationGroupNode.setAttribute("id", "RelationGroup");
@@ -356,8 +354,13 @@ public class GraphPanel extends JPanel implements SavePanel {
                 for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
                     dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
                 }
+                // Get the root element (the 'svg' element)
+                svgRoot = doc.getDocumentElement();
             }
-//            entitySvg.removeOldEntities(entityGroupNode);
+            // Set the width and height attributes on the root 'svg' element.
+            svgRoot.setAttribute("width", Integer.toString(currentWidth));
+            svgRoot.setAttribute("height", Integer.toString(currentHeight));
+            this.setPreferredSize(new Dimension(graphPanelSize.getHeight(graphData.gridHeight, vSpacing), graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));//            entitySvg.removeOldEntities(entityGroupNode);
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
             // store the selected kin type strings and other data in the dom
@@ -402,6 +405,10 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public boolean requiresSave() {
         return requiresSave;
+    }
+
+    public void setRequiresSave() {
+        requiresSave = true;
     }
 
     public void saveToFile() {
