@@ -31,6 +31,6 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        mainFrame.openDiagram(new File(e.getActionCommand()));
+        mainFrame.openDiagram(new File(e.getActionCommand()), false);
     }
 }
