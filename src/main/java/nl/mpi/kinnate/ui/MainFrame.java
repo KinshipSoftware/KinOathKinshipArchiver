@@ -128,6 +128,7 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         saveDiagram = new javax.swing.JMenuItem();
         saveDiagramAs = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         closeTabMenuItem = new javax.swing.JMenuItem();
         exitApplication = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
@@ -213,6 +214,15 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         fileMenu.add(saveDiagramAs);
+
+        jMenuItem1.setText("Export as PDF");
+        jMenuItem1.setEnabled(false);
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        fileMenu.add(jMenuItem1);
 
         closeTabMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
         closeTabMenuItem.setText("Close");
@@ -373,6 +383,11 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ImportGedcomUrlActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        // todo: implement pdf export
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -393,6 +408,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
