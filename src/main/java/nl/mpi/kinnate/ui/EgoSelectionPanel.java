@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -30,6 +31,8 @@ public class EgoSelectionPanel extends JPanel {
     private ArbilTree impliedTree;
 //    DefaultTreeModel impliedModel;
 //    DefaultMutableTreeNode impliedRootNode;
+    JPanel labelPanel3;
+    JLabel transientLabel;
 
     public EgoSelectionPanel() {
         DefaultTreeCellRenderer cellRenderer = new DefaultTreeCellRenderer();
@@ -64,13 +67,15 @@ public class EgoSelectionPanel extends JPanel {
 //        this.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected Ego"));
         JPanel labelPanel1 = new JPanel(new BorderLayout());
         JPanel labelPanel2 = new JPanel(new BorderLayout());
-        JPanel labelPanel3 = new JPanel(new BorderLayout());
+        labelPanel3 = new JPanel(new BorderLayout());
+//        JPanel labelPanel4 = new JPanel(new BorderLayout());
         labelPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Ego"));
         labelPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Required"));
         labelPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Implied"));
-        labelPanel1.add(egoTree);
-        labelPanel2.add(requiredTree);
-        labelPanel3.add(impliedTree);
+//        labelPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Transient"));
+        labelPanel1.add(egoTree, BorderLayout.CENTER);
+        labelPanel2.add(requiredTree, BorderLayout.CENTER);
+        labelPanel3.add(impliedTree, BorderLayout.CENTER);
         egoTree.setBackground(labelPanel1.getBackground());
         requiredTree.setBackground(labelPanel1.getBackground());
         impliedTree.setBackground(labelPanel1.getBackground());
@@ -98,18 +103,33 @@ public class EgoSelectionPanel extends JPanel {
             } catch (URISyntaxException exception) {
                 System.err.println(exception.getMessage());
             }
+        }
 //            setEgoNodes(egoNodeArray, egoTree, egoModel, egoRootNode);
-            egoTree.rootNodeChildren = egoNodeArray.toArray(new ArbilDataNode[]{});
-            egoTree.requestResort();
+        egoTree.rootNodeChildren = egoNodeArray.toArray(new ArbilDataNode[]{});
+        egoTree.requestResort();
 //            setEgoNodes(requiredNodeArray, requiredTree, requiredModel, requiredRootNode);
-            requiredTree.rootNodeChildren = requiredNodeArray.toArray(new ArbilDataNode[]{});
-            requiredTree.requestResort();
+        requiredTree.rootNodeChildren = requiredNodeArray.toArray(new ArbilDataNode[]{});
+        requiredTree.requestResort();
 //            setEgoNodes(remainingNodeArray, impliedTree, impliedModel, impliedRootNode);
-            impliedTree.rootNodeChildren = remainingNodeArray.toArray(new ArbilDataNode[]{});
-            impliedTree.requestResort();
+        impliedTree.rootNodeChildren = remainingNodeArray.toArray(new ArbilDataNode[]{});
+        impliedTree.requestResort();
+        if (transientLabel != null) {
+            labelPanel3.remove(transientLabel);
         }
     }
 
+    public void setTransientNodes(EntityData[] allEntities) {
+        egoTree.rootNodeChildren = new ArbilDataNode[]{};
+        egoTree.requestResort();
+//            setEgoNodes(requiredNodeArray, requiredTree, requiredModel, requiredRootNode);
+        requiredTree.rootNodeChildren = new ArbilDataNode[]{};
+        requiredTree.requestResort();
+//            setEgoNodes(remainingNodeArray, impliedTree, impliedModel, impliedRootNode);
+        impliedTree.rootNodeChildren = new ArbilDataNode[]{};
+        impliedTree.requestResort();
+        transientLabel = new JLabel(allEntities.length + " transient entities have been generated");
+        labelPanel3.add(transientLabel, BorderLayout.PAGE_START);
+    }
 //    private void setEgoNodes(ArrayList<ArbilDataNode> selectedNodes, JTree currentTree, DefaultTreeModel currentModel, DefaultMutableTreeNode currentRootNode) {
 //        currentRootNode.removeAllChildren();
 //        currentModel.nodeStructureChanged(currentRootNode);
