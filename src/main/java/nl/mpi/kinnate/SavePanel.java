@@ -11,6 +11,8 @@ public interface SavePanel {
 
     public boolean requiresSave();
 
+    public void setRequiresSave();
+
     public boolean hasSaveFileName();
 
     public void saveToFile();
