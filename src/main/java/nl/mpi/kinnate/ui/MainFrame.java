@@ -91,8 +91,11 @@ public class MainFrame extends javax.swing.JFrame {
         return kinTermSavePanel;
     }
 
-    public void openDiagram(File selectedFile) {
-        recentFileMenu.addRecentFile(selectedFile.getAbsolutePath()); // todo: prevent files from the samples menu being added to the recent files menu
+    public void openDiagram(File selectedFile, boolean saveToRecentMenu) {
+        if (saveToRecentMenu) {
+            // prevent files from the samples menu being added to the recent files menu
+            recentFileMenu.addRecentFile(selectedFile.getAbsolutePath()); 
+        }
         KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(selectedFile);
         egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
@@ -244,7 +247,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDiagramActionPerformed
         for (File selectedFile : ArbilWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false)) {
-            openDiagram(selectedFile);
+            openDiagram(selectedFile, true);
         }
     }//GEN-LAST:event_openDiagramActionPerformed
 
