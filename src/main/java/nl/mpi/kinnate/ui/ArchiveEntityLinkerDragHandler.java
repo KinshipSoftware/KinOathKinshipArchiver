@@ -125,20 +125,30 @@ public class ArchiveEntityLinkerDragHandler extends TransferHandler implements T
         URI addedNodePath = null;
         if (dropLocation.equals(kinTree)) {
             System.out.println("dropped to the kinTree");
+            ArbilDataNode[] selectedArbilNodes = kinTree.getSelectedNodes();
             for (ArbilDataNode currentArbilNode : selectedNodes) {
+                boolean createdEntity = false;
                 // todo: if the dropped archive node alreay is linked in the kin database then show that kin entity, if the node is dragged from the archive tree or from one kin entity to another then add or move it to the new target
-                String nodeType = ArchiveEntityLinkerDragHandler.class.getResource("/xsd/StandardEntity.xsd").toString();
-                URI targetFileURI = ArbilSessionStorage.getSingleInstance().getNewArbilFileName(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), nodeType);
-                ArbilComponentBuilder componentBuilder = new ArbilComponentBuilder();
+                // todo: if multiple are draged then add them all to the same entity
                 try {
-                    addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
-                    // set the unique idntifier
-                    String localIdentifier = new LocalIdentifier().setLocalIdentifier(new File(addedNodePath));
+                    if (selectedArbilNodes != null && selectedArbilNodes.length == 1) {
+                        addedNodePath = selectedArbilNodes[0].getURI();
+                    } else {
+                        String nodeType = ArchiveEntityLinkerDragHandler.class.getResource("/xsd/StandardEntity.xsd").toString();
+                        URI targetFileURI = ArbilSessionStorage.getSingleInstance().getNewArbilFileName(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), nodeType);
+                        ArbilComponentBuilder componentBuilder = new ArbilComponentBuilder();
+                        addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
+                        // set the unique idntifier
+                        String localIdentifier = new LocalIdentifier().setLocalIdentifier(new File(addedNodePath));
+                        createdEntity = true;
+                    }
                     try {
-                        // set the name node
                         Document metadataDom = ArbilComponentBuilder.getDocument(addedNodePath);
-                        Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity/:Name");
-                        uniqueIdentifierNode.setTextContent(currentArbilNode.toString());
+                        if (createdEntity) {
+                            // set the name node
+                            Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity/:Name");
+                            uniqueIdentifierNode.setTextContent(currentArbilNode.toString());
+                        }
                         // create and set the link node
                         Element linkPathElement = metadataDom.createElement("CorpusLink"); // todo: this might well be updated at a later date, or even use the cmdi link type although that is more complex than required
                         linkPathElement.setTextContent(currentArbilNode.getUrlString());
@@ -157,14 +167,18 @@ public class ArchiveEntityLinkerDragHandler extends TransferHandler implements T
                         new ArbilBugCatcher().logError(exception);
                     }
                     ArbilDataNode kinArbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, addedNodePath);
-                    // cmdi link types have been considered here but they are very complex and not well suited to kinship needs so we are using the corpus link type for now
+                    if (createdEntity) {
+                        // cmdi link types have been considered here but they are very complex and not well suited to kinship needs so we are using the corpus link type for now
 //                    new ArbilComponentBuilder().insertResourceProxy(kinArbilDataNode, currentArbilNode);
-                    ArrayList<ArbilDataNode> kinTreeNodes = new ArrayList<ArbilDataNode>();
-                    if (kinTree.rootNodeChildren != null) {
-                        kinTreeNodes.addAll(Arrays.asList(kinTree.rootNodeChildren));
+                        ArrayList<ArbilDataNode> kinTreeNodes = new ArrayList<ArbilDataNode>();
+                        if (kinTree.rootNodeChildren != null) {
+                            kinTreeNodes.addAll(Arrays.asList(kinTree.rootNodeChildren));
+                        }
+                        kinTreeNodes.add(kinArbilDataNode);
+                        kinTree.rootNodeChildren = kinTreeNodes.toArray(new ArbilDataNode[]{});
+                    } else {
+                        kinArbilDataNode.reloadNode();
                     }
-                    kinTreeNodes.add(kinArbilDataNode);
-                    kinTree.rootNodeChildren = kinTreeNodes.toArray(new ArbilDataNode[]{});
                     kinTree.requestResort();
                 } catch (URISyntaxException ex) {
                     new ArbilBugCatcher().logError(ex);
