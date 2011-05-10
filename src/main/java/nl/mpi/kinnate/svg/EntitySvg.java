@@ -206,9 +206,12 @@ public class EntitySvg {
         Element kinSymbols = doc.getElementById("KinSymbols");
         if (kinSymbols != null) {
             for (Node kinSymbolNode = kinSymbols.getFirstChild(); kinSymbolNode != null; kinSymbolNode = kinSymbolNode.getNextSibling()) {
-                Node idNode = kinSymbolNode.getAttributes().getNamedItem("id");
-                if (idNode != null) {
-                    symbolArray.add(idNode.getNodeValue());
+                NamedNodeMap attributesMap = kinSymbolNode.getAttributes();
+                if (attributesMap != null) {
+                    Node idNode = attributesMap.getNamedItem("id");
+                    if (idNode != null) {
+                        symbolArray.add(idNode.getNodeValue());
+                    }
                 }
             }
         }
@@ -310,6 +313,9 @@ public class EntitySvg {
             storedPosition = new Float[]{currentNode.getxPos() * hSpacing + hSpacing - symbolSize / 2.0f,
                         currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f};
             entityPositions.put(currentNode.getUniqueIdentifier(), storedPosition);
+        } else {
+//            // prevent the y position being changed
+            storedPosition[1] = currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f;
         }
         groupNode.setAttribute("transform", "translate(" + Float.toString(storedPosition[0]) + ", " + Float.toString(storedPosition[1]) + ")");
         if (currentNode.isEgo) {
