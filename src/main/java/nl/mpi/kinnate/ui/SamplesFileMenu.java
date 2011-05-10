@@ -20,6 +20,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
         addSampleToMenu("Hawaiian Kin Terms", "HawaiianKinTerms.svg");
         addSampleToMenu("Japanese Kin Terms", "JapaneseKinTerms.svg");
         addSampleToMenu("Cha'palaa Kin Terms", "ChapalaaKinTerms.svg");
+        addSampleToMenu("Gendered Ego", "GenderedEgo.svg");
     }
 
     private void addSampleToMenu(String menuText, String sampleFileString) {
