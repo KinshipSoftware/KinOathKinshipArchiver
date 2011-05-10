@@ -67,7 +67,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             ArbilSessionStorage.getSingleInstance().saveStringArray("RecentKinFiles", new String[]{});
             setupMenu();
         } else {
-            mainFrame.openDiagram(new File(e.getActionCommand()));
+            mainFrame.openDiagram(new File(e.getActionCommand()), true);
         }
     }
 }
