@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="800" zoomAndPan="magnify" contentStyleType="text/css" height="600" preserveAspectRatio="xMidYMid meet" version="1.0">
+<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="1600" zoomAndPan="magnify" contentStyleType="text/css" height="500" preserveAspectRatio="xMidYMid meet" version="1.0">
   <defs id="KinSymbols">
     <g id="circle">
-      <circle stroke-width="2" height="15" r="7" cx="7" cy="7" stroke="black"/>
+      <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
     </g>
     <g id="square">
-      <rect x="0" width="15" stroke-width="2" height="15" y="0" stroke="black"/>
+      <rect x="0" width="15" y="0" height="15" stroke-width="2" stroke="black"/>
     </g>
     <g id="square45">
       <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
@@ -14,12 +14,12 @@
       <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
     </g>
     <g id="union">
-      <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
-      <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
-      <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
+      <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
+      <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
+      <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
     </g>
     <g id="triangle">
-      <polygon stroke-width="2" points="7,0 0,12 15,12" stroke="black"/>
+      <polygon points="7,0 0,12 15,12" stroke-width="2" stroke="black"/>
     </g>
     <g id="equals">
       <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
@@ -28,19 +28,281 @@
       <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
     </g>
   </defs>
-  <kin:KinDiagramData>
+  <g id="RelationGroup">
+    <g id="relation0">
+      <kin:RelationEntities xmlns:kin="kin" ego="D" lineType="sanguineLine" alter="E" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation0Line" stroke-width="2" points="607.0,299.5 607.0,249.5 707.0,249.5 707.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
+    </g>
+    <g id="relation1">
+      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="sanguineLine" alter="F" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation1Line" stroke-width="2" points="707.0,199.5 707.0,149.5 607.0,149.5 607.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
+    </g>
+    <g id="relation2">
+      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="sanguineLine" alter="M" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation2Line" stroke-width="2" points="707.0,199.5 707.0,149.5 807.0,149.5 807.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
+    </g>
+    <g id="relation3">
+      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="sanguineLine" alter="S" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation3Line" stroke-width="2" points="707.0,199.5 707.0,249.5 807.0,249.5 807.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
+    </g>
+    <g id="relation4">
+      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="sanguineLine" alter="B" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation4Line" stroke-width="2" points="707.0,199.5 707.0,149.5 1007.0,149.5 1007.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
+    </g>
+    <g id="relation5">
+      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="sanguineLine" alter="Z" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation5Line" stroke-width="2" points="707.0,199.5 707.0,149.5 457.0,149.5 457.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
+    </g>
+    <g id="relation6">
+      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="sanguineLine" alter="D" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation6Line" stroke-width="2" points="707.0,199.5 707.0,249.5 607.0,249.5 607.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
+    </g>
+    <g id="relation7">
+      <kin:RelationEntities xmlns:kin="kin" ego="F" lineType="sanguineLine" alter="E" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation7Line" stroke-width="2" points="607.0,99.5 607.0,149.5 707.0,149.5 707.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
+    </g>
+    <g id="relation8">
+      <kin:RelationEntities xmlns:kin="kin" ego="F" lineType="sanguineLine" alter="FB" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation8Line" stroke-width="2" points="607.0,99.5 607.0,49.5 307.0,49.5 307.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
+    </g>
+    <g id="relation9">
+      <kin:RelationEntities xmlns:kin="kin" ego="F" lineType="sanguineLine" alter="FZ" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation9Line" stroke-width="2" points="607.0,99.5 607.0,49.5 457.0,49.5 457.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
+    </g>
+    <g id="relation10">
+      <kin:RelationEntities xmlns:kin="kin" ego="MZ" lineType="sanguineLine" alter="M" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation10Line" stroke-width="2" points="957.0,99.5 957.0,49.5 807.0,49.5 807.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
+    </g>
+    <g id="relation11">
+      <kin:RelationEntities xmlns:kin="kin" ego="BS" lineType="sanguineLine" alter="B" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation11Line" stroke-width="2" points="1107.0,299.5 1107.0,249.5 1007.0,249.5 1007.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
+    </g>
+    <g id="relation12">
+      <kin:RelationEntities xmlns:kin="kin" ego="FB" lineType="sanguineLine" alter="F" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation12Line" stroke-width="2" points="307.0,99.5 307.0,49.5 607.0,49.5 607.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
+    </g>
+    <g id="relation13">
+      <kin:RelationEntities xmlns:kin="kin" ego="B" lineType="sanguineLine" alter="E" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation13Line" stroke-width="2" points="1007.0,199.5 1007.0,149.5 707.0,149.5 707.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
+    </g>
+    <g id="relation14">
+      <kin:RelationEntities xmlns:kin="kin" ego="B" lineType="sanguineLine" alter="BS" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation14Line" stroke-width="2" points="1007.0,199.5 1007.0,249.5 1107.0,249.5 1107.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
+    </g>
+    <g id="relation15">
+      <kin:RelationEntities xmlns:kin="kin" ego="B" lineType="sanguineLine" alter="BD" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation15Line" stroke-width="2" points="1007.0,199.5 1007.0,249.5 907.0,249.5 907.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
+    </g>
+    <g id="relation16">
+      <kin:RelationEntities xmlns:kin="kin" ego="FZ" lineType="sanguineLine" alter="F" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation16Line" stroke-width="2" points="457.0,99.5 457.0,49.5 607.0,49.5 607.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
+    </g>
+    <g id="relation17">
+      <kin:RelationEntities xmlns:kin="kin" ego="M" lineType="sanguineLine" alter="E" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation17Line" stroke-width="2" points="807.0,99.5 807.0,149.5 707.0,149.5 707.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
+    </g>
+    <g id="relation18">
+      <kin:RelationEntities xmlns:kin="kin" ego="M" lineType="sanguineLine" alter="MB" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation18Line" stroke-width="2" points="807.0,99.5 807.0,49.5 1107.0,49.5 1107.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
+    </g>
+    <g id="relation19">
+      <kin:RelationEntities xmlns:kin="kin" ego="M" lineType="sanguineLine" alter="MZ" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation19Line" stroke-width="2" points="807.0,99.5 807.0,49.5 957.0,49.5 957.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation19Line"/>
+    </g>
+    <g id="relation20">
+      <kin:RelationEntities xmlns:kin="kin" ego="ZD" lineType="sanguineLine" alter="Z" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation20Line" stroke-width="2" points="357.0,299.5 357.0,249.5 457.0,249.5 457.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation20Line"/>
+    </g>
+    <g id="relation21">
+      <kin:RelationEntities xmlns:kin="kin" ego="BD" lineType="sanguineLine" alter="B" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation21Line" stroke-width="2" points="907.0,299.5 907.0,249.5 1007.0,249.5 1007.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation21Line"/>
+    </g>
+    <g id="relation22">
+      <kin:RelationEntities xmlns:kin="kin" ego="S" lineType="sanguineLine" alter="E" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation22Line" stroke-width="2" points="807.0,299.5 807.0,249.5 707.0,249.5 707.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation22Line"/>
+    </g>
+    <g id="relation23">
+      <kin:RelationEntities xmlns:kin="kin" ego="ZS" lineType="sanguineLine" alter="Z" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation23Line" stroke-width="2" points="507.0,299.5 507.0,249.5 457.0,249.5 457.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation23Line"/>
+    </g>
+    <g id="relation24">
+      <kin:RelationEntities xmlns:kin="kin" ego="MB" lineType="sanguineLine" alter="M" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation24Line" stroke-width="2" points="1107.0,99.5 1107.0,49.5 807.0,49.5 807.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation24Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation24Line"/>
+    </g>
+    <g id="relation25">
+      <kin:RelationEntities xmlns:kin="kin" ego="Z" lineType="sanguineLine" alter="E" relationType="sibling"/>
+      <defs>
+        <polyline fill="none" id="relation25Line" stroke-width="2" points="457.0,199.5 457.0,149.5 707.0,149.5 707.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation25Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation25Line"/>
+    </g>
+    <g id="relation26">
+      <kin:RelationEntities xmlns:kin="kin" ego="Z" lineType="sanguineLine" alter="ZS" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation26Line" stroke-width="2" points="457.0,199.5 457.0,249.5 507.0,249.5 507.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation26Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation26Line"/>
+    </g>
+    <g id="relation27">
+      <kin:RelationEntities xmlns:kin="kin" ego="Z" lineType="sanguineLine" alter="ZD" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation27Line" stroke-width="2" points="457.0,199.5 457.0,249.5 357.0,249.5 357.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation27Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation27Line"/>
+    </g>
+  </g>
+  <g id="EntityGroup">
+    <g id="D" kin:kintype="D" transform="translate(600.0, 292.5)" kin:path="D">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Dsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Keikamahini</text>
+    </g>
+    <g id="E" kin:kintype="E" transform="translate(700.0, 192.5)" kin:path="E">
+      <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#square" xlink:type="simple" xlink:actuate="onLoad" id="Esymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+    </g>
+    <g id="F" kin:kintype="F" transform="translate(600.0, 92.5)" kin:path="F">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Fsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Makuakane</text>
+    </g>
+    <g id="MZ" kin:kintype="MZ" transform="translate(950.0, 92.5)" kin:path="MZ">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="MZsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Makuahini</text>
+    </g>
+    <g id="BS" kin:kintype="BS" transform="translate(1100.0, 292.5)" kin:path="BS">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="BSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Keikikane</text>
+    </g>
+    <g id="FB" kin:kintype="FB" transform="translate(300.0, 92.5)" kin:path="FB">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="FBsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Makuakane</text>
+    </g>
+    <g id="B" kin:kintype="B" transform="translate(1000.0, 192.5)" kin:path="B">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Bsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+    </g>
+    <g id="FZ" kin:kintype="FZ" transform="translate(450.0, 92.5)" kin:path="FZ">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="FZsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Makuahini</text>
+    </g>
+    <g id="M" kin:kintype="M" transform="translate(800.0, 92.5)" kin:path="M">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Msymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Makuahini</text>
+    </g>
+    <g id="ZD" kin:kintype="ZD" transform="translate(350.0, 292.5)" kin:path="ZD">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="ZDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Keikamahini</text>
+    </g>
+    <g id="BD" kin:kintype="BD" transform="translate(900.0, 292.5)" kin:path="BD">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="BDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Keikamahini</text>
+    </g>
+    <g id="S" kin:kintype="S" transform="translate(800.0, 292.5)" kin:path="S">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Ssymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Keikikane</text>
+    </g>
+    <g id="ZS" kin:kintype="ZS" transform="translate(500.0, 292.5)" kin:path="ZS">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="ZSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Keikikane</text>
+    </g>
+    <g id="MB" kin:kintype="MB" transform="translate(1100.0, 92.5)" kin:path="MB">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="MBsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Makuakane</text>
+    </g>
+    <g id="Z" kin:kintype="Z" transform="translate(450.0, 192.5)" kin:path="Z">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Zsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+    </g>
+  </g>
+  <g id="LabelsGroup">
+    <text x="371.0" font-size="28" y="66.0" transform="translate(250.0, -50.0)" fill="black" id="label0" stroke-width="0">Label</text>
+  </g>
+  
+<kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
     <kin:IndexParameters>
       <kin:LabelFields>
-        <kin:IndexerParam kin:XPath="Kinnate/Gedcom/Entity/NAME/NAME"/>
-        <kin:IndexerParam kin:XPath="Kinnate/Gedcom/Entity[GedcomType='FAM']/GedcomType"/>
-        <kin:IndexerParam kin:XPath="Kinnate/Gedcom/Entity/Text"/>
-        <kin:IndexerParam kin:XPath="Kinnate/Gedcom/Entity/NAME/NPFX"/>
-        <kin:IndexerParam kin:XPath="Kinnate/Gedcom/Entity/NoteText"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*:Name"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:Text"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NoteText"/>
       </kin:LabelFields>
       <kin:SymbolFieldsFields>
-        <kin:IndexerParam kin:XPath="Kinnate/Gedcom/Entity[SEX='M']" kin:Value="triangle"/>
-        <kin:IndexerParam kin:XPath="Kinnate/Gedcom/Entity[SEX='F']" kin:Value="circle"/>
-        <kin:IndexerParam kin:XPath="Kinnate/Gedcom/Entity[GedcomType='FAM']" kin:Value="union"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:SEX='M']" kin:Value="triangle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:SEX='F']" kin:Value="circle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']" kin:Value="union"/>
       </kin:SymbolFieldsFields>
       <kin:AncestorFields>
         <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMC"/>
@@ -50,379 +312,29 @@
         <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.SLGC.FAMC"/>
         <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.HUSB"/>
         <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.WIFE"/>
+        <kin:IndexerParam kin:XPath="ancestor"/>
       </kin:AncestorFields>
       <kin:DecendantFields>
         <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHIL"/>
         <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMS"/>
+        <kin:IndexerParam kin:XPath="descendant"/>
       </kin:DecendantFields>
     </kin:IndexParameters>
-    <kin:KinTermGroups kin:Show="false" kin:GroupColour="blue" kin:GroupName="English terms" kin:Generate="false">
-      <kin:KinTerm kin:Term="Grand Mother" kin:Alter="MM"/>
-      <kin:KinTerm kin:Term="Aunt" kin:Alter="MZ|FZ"/>
-      <kin:KinTerm kin:Term="Uncle" kin:Alter="MB|FB"/>
-      <kin:KinTerm kin:Term="Grand Father" kin:Alter="FF"/>
-    </kin:KinTermGroups>
-    <kin:KinTermGroups kin:Show="true" kin:GroupColour="blue" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="true">
+    <kin:KinTermGroup kin:Show="true" kin:GroupColour="blue" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="true">
       <kin:KinTerm kin:Term="Makuakane" kin:Description="Father, Uncle" kin:Alter="F|FB|MB"/>
       <kin:KinTerm kin:Term="Makuahini" kin:Description="Mother, Aunt" kin:Alter="M|MZ|FZ"/>
-      <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="" kin:Alter="E(male)B|E(male)FBS|E(male)FZS|E(male)MBS|E(male)MZS"/>
-      <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="Brother/Sister, Cousin" kin:Alter="E(female)Z|E(female)FBD|E(female)FZD|E(female)MBD|E(female)MZD"/>
-      <kin:KinTerm kin:Term="Kaikuane" kin:Description="Brother, Cousin" kin:Alter="E(female)B|E(female)FBS|E(female)FZS|E(female)MBS|E(female)MZS"/>
-      <kin:KinTerm kin:Term="Kaikuane" kin:Description="Sister, Cousin" kin:Alter="E(male)Z|E(male)FBD|E(male)FZD|E(male)MBD|E(male)MZD"/>
+      <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="" kin:Alter="EmB|EmFBS|EmFZS|EmMBS|EmMZS"/>
+      <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="Brother/Sister, Cousin" kin:Alter="EfZ|EfFBD|EfFZD|EfMBD|EfMZD"/>
+      <kin:KinTerm kin:Term="Kaikuane" kin:Description="Brother, Cousin" kin:Alter="EfB|EfFBS|EfFZS|EfMBS|EfMZS"/>
+      <kin:KinTerm kin:Term="Kaikuane" kin:Description="Sister, Cousin" kin:Alter="EmZ|EmFBD|EmFZD|EmMBD|EmMZD"/>
       <kin:KinTerm kin:Term="Keikikane" kin:Description="Son, Nephew" kin:Alter="S|BS|ZS"/>
       <kin:KinTerm kin:Term="Keikamahini" kin:Description="Daughter, Niece" kin:Alter="D|BD|ZD"/>
-    </kin:KinTermGroups>
+    </kin:KinTermGroup>
+    <kin:ShowLabels>true</kin:ShowLabels>
+    <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
+    <kin:ShowKinTermLabels>true</kin:ShowKinTermLabels>
+    <kin:ShowKinTermLines>false</kin:ShowKinTermLines>
+    <kin:SnapToGrid>true</kin:SnapToGrid>
+    <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
   </kin:KinDiagramData>
-  <g id="RelationGroup">
-    <g id="relation0">
-      <kin:RelationEntities xmlns:kin="kin" ego="D" lineType="square" alter="E" relationType="ancestor"/>
-      <defs>
-        <polyline fill="none" id="relation0Line" stroke-width="2" points="357.0,450.0 357.0,375.25 307.5,375.25 307.5,300.5" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
-    </g>
-    <g id="relation1">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="square" alter="F" relationType="ancestor"/>
-      <defs>
-        <polyline fill="none" id="relation1Line" stroke-width="2" points="307.5,300.5 307.5,224.75 357.5,224.75 357.5,149.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
-    </g>
-    <g id="relation2">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="horizontalCurve" alter="FB" relationType="none"/>
-      <defs>
-        <path fill="none" id="relation2Line" stroke-width="2" d="M 307.5,300.5 C 432.5,300.5 432.5,149.0 557.5,149.0" stroke="blue"/>
-      </defs>
-      <text fill="blue" font-size="14" stroke-width="0" text-anchor="middle">
-        <textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line" xlink:type="simple" xlink:actuate="onLoad" id="relation2label" xlink:show="other">Makuakane</textPath>
-      </text>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
-    </g>
-    <g id="relation3">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="square" alter="M" relationType="ancestor"/>
-      <defs>
-        <polyline fill="none" id="relation3Line" stroke-width="2" points="307.5,300.5 307.5,225.25 257.0,225.25 257.0,150.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
-    </g>
-    <g id="relation4">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="horizontalCurve" alter="MB" relationType="none"/>
-      <defs>
-        <path fill="none" id="relation4Line" stroke-width="2" d="M 307.5,300.5 C 232.5,300.5 232.5,149.0 157.5,149.0" stroke="blue"/>
-      </defs>
-      <text fill="blue" font-size="14" stroke-width="0" text-anchor="middle">
-        <textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line" xlink:type="simple" xlink:actuate="onLoad" id="relation4label" xlink:show="other">Makuakane</textPath>
-      </text>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
-    </g>
-    <g id="relation5">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="horizontalCurve" alter="MZ" relationType="none"/>
-      <defs>
-        <path fill="none" id="relation5Line" stroke-width="2" d="M 307.5,300.5 C 182.25,300.5 182.25,150.0 57.0,150.0" stroke="blue"/>
-      </defs>
-      <text fill="blue" font-size="14" stroke-width="0" text-anchor="middle">
-        <textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line" xlink:type="simple" xlink:actuate="onLoad" id="relation5label" xlink:show="other">Makuahini</textPath>
-      </text>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
-    </g>
-    <g id="relation6">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="horizontalCurve" alter="FZ" relationType="none"/>
-      <defs>
-        <path fill="none" id="relation6Line" stroke-width="2" d="M 307.5,300.5 C 382.25,300.5 382.25,150.0 457.0,150.0" stroke="blue"/>
-      </defs>
-      <text fill="blue" font-size="14" stroke-width="0" text-anchor="middle">
-        <textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line" xlink:type="simple" xlink:actuate="onLoad" id="relation6label" xlink:show="other">Makuahini</textPath>
-      </text>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
-    </g>
-    <g id="relation7">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="square" alter="S" relationType="descendant"/>
-      <defs>
-        <polyline fill="none" id="relation7Line" stroke-width="2" points="307.5,300.5 307.5,374.75 257.5,374.75 257.5,449.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
-    </g>
-    <g id="relation8">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="square" alter="B" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation8Line" stroke-width="2" points="307.5,300.5 307.5,299.75 107.5,299.75 107.5,299.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
-    </g>
-    <g id="relation9">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="horizontalCurve" alter="BS" relationType="none"/>
-      <defs>
-        <path fill="none" id="relation9Line" stroke-width="2" d="M 307.5,300.5 C 182.5,300.5 182.5,449.0 57.5,449.0" stroke="blue"/>
-      </defs>
-      <text fill="blue" font-size="14" stroke-width="0" text-anchor="middle">
-        <textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line" xlink:type="simple" xlink:actuate="onLoad" id="relation9label" xlink:show="other">Keikikane</textPath>
-      </text>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
-    </g>
-    <g id="relation10">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="square" alter="Z" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation10Line" stroke-width="2" points="307.5,300.5 307.5,300.25 507.0,300.25 507.0,300.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
-    </g>
-    <g id="relation11">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="horizontalCurve" alter="ZS" relationType="none"/>
-      <defs>
-        <path fill="none" id="relation11Line" stroke-width="2" d="M 307.5,300.5 C 382.5,300.5 382.5,449.0 457.5,449.0" stroke="blue"/>
-      </defs>
-      <text fill="blue" font-size="14" stroke-width="0" text-anchor="middle">
-        <textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line" xlink:type="simple" xlink:actuate="onLoad" id="relation11label" xlink:show="other">Keikikane</textPath>
-      </text>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
-    </g>
-    <g id="relation12">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="square" alter="D" relationType="descendant"/>
-      <defs>
-        <polyline fill="none" id="relation12Line" stroke-width="2" points="307.5,300.5 307.5,375.25 357.0,375.25 357.0,450.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
-    </g>
-    <g id="relation13">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="horizontalCurve" alter="BD" relationType="none"/>
-      <defs>
-        <path fill="none" id="relation13Line" stroke-width="2" d="M 307.5,300.5 C 232.25,300.5 232.25,450.0 157.0,450.0" stroke="blue"/>
-      </defs>
-      <text fill="blue" font-size="14" stroke-width="0" text-anchor="middle">
-        <textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line" xlink:type="simple" xlink:actuate="onLoad" id="relation13label" xlink:show="other">Keikamahini</textPath>
-      </text>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
-    </g>
-    <g id="relation14">
-      <kin:RelationEntities xmlns:kin="kin" ego="E" lineType="horizontalCurve" alter="ZD" relationType="none"/>
-      <defs>
-        <path fill="none" id="relation14Line" stroke-width="2" d="M 307.5,300.5 C 432.25,300.5 432.25,450.0 557.0,450.0" stroke="blue"/>
-      </defs>
-      <text fill="blue" font-size="14" stroke-width="0" text-anchor="middle">
-        <textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line" xlink:type="simple" xlink:actuate="onLoad" id="relation14label" xlink:show="other">Keikamahini</textPath>
-      </text>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
-    </g>
-    <g id="relation15">
-      <kin:RelationEntities xmlns:kin="kin" ego="F" lineType="square" alter="E" relationType="descendant"/>
-      <defs>
-        <polyline fill="none" id="relation15Line" stroke-width="2" points="357.5,149.0 357.5,224.75 307.5,224.75 307.5,300.5" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
-    </g>
-    <g id="relation16">
-      <kin:RelationEntities xmlns:kin="kin" ego="F" lineType="square" alter="FB" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation16Line" stroke-width="2" points="357.5,149.0 357.5,74.0 557.5,74.0 557.5,149.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
-    </g>
-    <g id="relation17">
-      <kin:RelationEntities xmlns:kin="kin" ego="F" lineType="square" alter="FZ" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation17Line" stroke-width="2" points="357.5,149.0 357.5,149.5 457.0,149.5 457.0,150.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
-    </g>
-    <g id="relation18">
-      <kin:RelationEntities xmlns:kin="kin" ego="MZ" lineType="square" alter="M" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation18Line" stroke-width="2" points="57.0,150.0 57.0,75.0 257.0,75.0 257.0,150.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
-    </g>
-    <g id="relation19">
-      <kin:RelationEntities xmlns:kin="kin" ego="BS" lineType="square" alter="B" relationType="ancestor"/>
-      <defs>
-        <polyline fill="none" id="relation19Line" stroke-width="2" points="57.5,449.0 57.5,374.0 107.5,374.0 107.5,299.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation19Line"/>
-    </g>
-    <g id="relation20">
-      <kin:RelationEntities xmlns:kin="kin" ego="FB" lineType="square" alter="F" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation20Line" stroke-width="2" points="557.5,149.0 557.5,74.0 357.5,74.0 357.5,149.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation20Line"/>
-    </g>
-    <g id="relation21">
-      <kin:RelationEntities xmlns:kin="kin" ego="B" lineType="square" alter="E" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation21Line" stroke-width="2" points="107.5,299.0 107.5,299.75 307.5,299.75 307.5,300.5" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation21Line"/>
-    </g>
-    <g id="relation22">
-      <kin:RelationEntities xmlns:kin="kin" ego="B" lineType="square" alter="BS" relationType="descendant"/>
-      <defs>
-        <polyline fill="none" id="relation22Line" stroke-width="2" points="107.5,299.0 107.5,374.0 57.5,374.0 57.5,449.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation22Line"/>
-    </g>
-    <g id="relation23">
-      <kin:RelationEntities xmlns:kin="kin" ego="B" lineType="square" alter="BD" relationType="descendant"/>
-      <defs>
-        <polyline fill="none" id="relation23Line" stroke-width="2" points="107.5,299.0 107.5,374.5 157.0,374.5 157.0,450.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation23Line"/>
-    </g>
-    <g id="relation24">
-      <kin:RelationEntities xmlns:kin="kin" ego="FZ" lineType="square" alter="F" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation24Line" stroke-width="2" points="457.0,150.0 457.0,149.5 357.5,149.5 357.5,149.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation24Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation24Line"/>
-    </g>
-    <g id="relation25">
-      <kin:RelationEntities xmlns:kin="kin" ego="M" lineType="square" alter="E" relationType="descendant"/>
-      <defs>
-        <polyline fill="none" id="relation25Line" stroke-width="2" points="257.0,150.0 257.0,225.25 307.5,225.25 307.5,300.5" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation25Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation25Line"/>
-    </g>
-    <g id="relation26">
-      <kin:RelationEntities xmlns:kin="kin" ego="M" lineType="square" alter="MB" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation26Line" stroke-width="2" points="257.0,150.0 257.0,149.5 157.5,149.5 157.5,149.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation26Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation26Line"/>
-    </g>
-    <g id="relation27">
-      <kin:RelationEntities xmlns:kin="kin" ego="M" lineType="square" alter="MZ" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation27Line" stroke-width="2" points="257.0,150.0 257.0,75.0 57.0,75.0 57.0,150.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation27Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation27Line"/>
-    </g>
-    <g id="relation28">
-      <kin:RelationEntities xmlns:kin="kin" ego="ZD" lineType="square" alter="Z" relationType="ancestor"/>
-      <defs>
-        <polyline fill="none" id="relation28Line" stroke-width="2" points="557.0,450.0 557.0,375.0 507.0,375.0 507.0,300.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation28Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation28Line"/>
-    </g>
-    <g id="relation29">
-      <kin:RelationEntities xmlns:kin="kin" ego="BD" lineType="square" alter="B" relationType="ancestor"/>
-      <defs>
-        <polyline fill="none" id="relation29Line" stroke-width="2" points="157.0,450.0 157.0,374.5 107.5,374.5 107.5,299.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation29Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation29Line"/>
-    </g>
-    <g id="relation30">
-      <kin:RelationEntities xmlns:kin="kin" ego="S" lineType="square" alter="E" relationType="ancestor"/>
-      <defs>
-        <polyline fill="none" id="relation30Line" stroke-width="2" points="257.5,449.0 257.5,374.75 307.5,374.75 307.5,300.5" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation30Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation30Line"/>
-    </g>
-    <g id="relation31">
-      <kin:RelationEntities xmlns:kin="kin" ego="ZS" lineType="square" alter="Z" relationType="ancestor"/>
-      <defs>
-        <polyline fill="none" id="relation31Line" stroke-width="2" points="457.5,449.0 457.5,374.5 507.0,374.5 507.0,300.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation31Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation31Line"/>
-    </g>
-    <g id="relation32">
-      <kin:RelationEntities xmlns:kin="kin" ego="MB" lineType="square" alter="M" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation32Line" stroke-width="2" points="157.5,149.0 157.5,149.5 257.0,149.5 257.0,150.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation32Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation32Line"/>
-    </g>
-    <g id="relation33">
-      <kin:RelationEntities xmlns:kin="kin" ego="Z" lineType="square" alter="E" relationType="sibling"/>
-      <defs>
-        <polyline fill="none" id="relation33Line" stroke-width="2" points="507.0,300.0 507.0,300.25 307.5,300.25 307.5,300.5" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation33Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation33Line"/>
-    </g>
-    <g id="relation34">
-      <kin:RelationEntities xmlns:kin="kin" ego="Z" lineType="square" alter="ZS" relationType="descendant"/>
-      <defs>
-        <polyline fill="none" id="relation34Line" stroke-width="2" points="507.0,300.0 507.0,374.5 457.5,374.5 457.5,449.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation34Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation34Line"/>
-    </g>
-    <g id="relation35">
-      <kin:RelationEntities xmlns:kin="kin" ego="Z" lineType="square" alter="ZD" relationType="descendant"/>
-      <defs>
-        <polyline fill="none" id="relation35Line" stroke-width="2" points="507.0,300.0 507.0,375.0 557.0,375.0 557.0,450.0" stroke="grey"/>
-      </defs>
-      <use xlink:actuate="onLoad" xlink:type="simple" id="relation35Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation35Line"/>
-    </g>
-  </g>
-  <g id="EntityGroup">
-    <g id="D" kin:kintype="D" transform="translate(350.0, 443.0)" kin:path="D">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Dsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">D</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Keikamahini</text>
-    </g>
-    <g id="E" kin:kintype="E" transform="translate(300.0, 293.0)" kin:path="E">
-      <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#square" xlink:type="simple" xlink:actuate="onLoad" id="Esymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">E</text>
-    </g>
-    <g id="F" kin:kintype="F" transform="translate(350.0, 143.0)" kin:path="F">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Fsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">F</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Makuakane</text>
-    </g>
-    <g id="MZ" kin:kintype="MZ" transform="translate(50.0, 143.0)" kin:path="MZ">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="MZsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">MZ</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Makuahini</text>
-    </g>
-    <g id="BS" kin:kintype="BS" transform="translate(50.0, 443.0)" kin:path="BS">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="BSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">BS</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Keikikane</text>
-    </g>
-    <g id="FB" kin:kintype="FB" transform="translate(550.0, 143.0)" kin:path="FB">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="FBsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FB</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Makuakane</text>
-    </g>
-    <g id="B" kin:kintype="B" transform="translate(100.0, 293.0)" kin:path="B">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Bsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">B</text>
-    </g>
-    <g id="FZ" kin:kintype="FZ" transform="translate(450.0, 143.0)" kin:path="FZ">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="FZsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FZ</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Makuahini</text>
-    </g>
-    <g id="M" kin:kintype="M" transform="translate(250.0, 143.0)" kin:path="M">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Msymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">M</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Makuahini</text>
-    </g>
-    <g id="ZD" kin:kintype="ZD" transform="translate(550.0, 443.0)" kin:path="ZD">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="ZDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ZD</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Keikamahini</text>
-    </g>
-    <g id="BD" kin:kintype="BD" transform="translate(150.0, 443.0)" kin:path="BD">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="BDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">BD</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Keikamahini</text>
-    </g>
-    <g id="S" kin:kintype="S" transform="translate(250.0, 443.0)" kin:path="S">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Ssymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">S</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Keikikane</text>
-    </g>
-    <g id="ZS" kin:kintype="ZS" transform="translate(450.0, 443.0)" kin:path="ZS">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="ZSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ZS</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Keikikane</text>
-    </g>
-    <g id="MB" kin:kintype="MB" transform="translate(150.0, 143.0)" kin:path="MB">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="MBsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">MB</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Makuakane</text>
-    </g>
-    <g id="Z" kin:kintype="Z" transform="translate(500.0, 293.0)" kin:path="Z">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Zsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Z</text>
-    </g>
-  </g>
 </svg>
