@@ -92,11 +92,12 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void openDiagram(File selectedFile) {
-        recentFileMenu.addRecentFile(selectedFile.getAbsolutePath());
+        recentFileMenu.addRecentFile(selectedFile.getAbsolutePath()); // todo: prevent files from the samples menu being added to the recent files menu
         KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(selectedFile);
         egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
+        egoSelectionTestPanel.drawGraph();
     }
 
     public void importEntities(String importPath) {
