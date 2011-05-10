@@ -7,11 +7,11 @@ package nl.mpi.kinnate.svg;
  */
 public class GraphPanelSize {
 
-    public boolean autoSize = false;
+    public boolean autoSize = true;
     private int preferedWidth = 800;
     private int preferedHeight = 600;
     private int defaultVerticalSpacing = 100;
-    private int defaultHorizontalSpacing = 200;
+    private int defaultHorizontalSpacing = 200; // todo: adjust this so the first draw is the same as the snap locations
     String[][] preferredSizeArray = new String[][]{
         {"352 x 288", "352", "288"},
         {"640 x 480", "640", "480"},
