@@ -15,6 +15,8 @@ public interface SavePanel {
 
     public boolean hasSaveFileName();
 
+    public File getFileName();
+
     public void saveToFile();
 
     public void saveToFile(File saveFile);
