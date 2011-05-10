@@ -22,6 +22,15 @@
                             <xs:element name="UniqueIdentifier" type="cmd:UniqueIdentifier" minOccurs="1" maxOccurs="1"/>
                             <xs:element name="Name" ann:displaypriority="1" minOccurs="1" maxOccurs="1"/>
                             <xs:element name="DOB" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="sex">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="male" ann:label="Male"/>
+                                        <xs:enumeration value="female" ann:label="Female"/>
+                                        <xs:enumeration value="unknown" ann:label="Unknown"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
                             <xs:element name="permissions">
                                 <xs:simpleType>
                                     <xs:restriction base="xs:string">
