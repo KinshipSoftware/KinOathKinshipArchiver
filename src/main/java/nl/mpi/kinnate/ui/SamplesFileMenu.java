@@ -17,10 +17,15 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
 
     public SamplesFileMenu(MainFrame mainFrameLocal) {
         mainFrame = mainFrameLocal;
+        addSampleToMenu("Application Overview", "ApplicationOverview.svg");
+        addSampleToMenu("Imported Data Query Example (ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/)", "QueryExample.svg");
+        addSampleToMenu("Archive Link Example", "ArchiveLinks.svg");
         addSampleToMenu("Hawaiian Kin Terms", "HawaiianKinTerms.svg");
         addSampleToMenu("Japanese Kin Terms", "JapaneseKinTerms.svg");
+//        addSampleToMenu("Multiple Kin Terms", "MultipleKinTerms.svg");
         addSampleToMenu("Cha'palaa Kin Terms", "ChapalaaKinTerms.svg");
         addSampleToMenu("Gendered Ego", "GenderedEgo.svg");
+        addSampleToMenu("Imported Entities (600)", "600ImportedEntities.svg");
     }
 
     private void addSampleToMenu(String menuText, String sampleFileString) {
@@ -34,4 +39,22 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         mainFrame.openDiagram(new File(e.getActionCommand()), false);
     }
+//    private void addLaunchSampleToMenu(String menuText, String sampleFileString) {
+//        String currentFilePath = SamplesFileMenu.class.getResource("../../../../svgsamples/" + sampleFileString).getPath();
+//        JMenuItem currentMenuItem = new JMenuItem(menuText);
+//        currentMenuItem.setActionCommand(currentFilePath);
+//        currentMenuItem.addActionListener(new LaunchExternal());
+//        this.add(currentMenuItem);
+//    }
+//
+//    class LaunchExternal implements ActionListener {
+//
+//        public void actionPerformed(ActionEvent e) {
+//            try {
+//                GuiHelper.getSingleInstance().openFileInExternalApplication(new URI(e.getActionCommand()));
+//            } catch (URISyntaxException exception) {
+//                System.err.println(exception.getMessage());
+//            }
+//        }
+//    }
 }
