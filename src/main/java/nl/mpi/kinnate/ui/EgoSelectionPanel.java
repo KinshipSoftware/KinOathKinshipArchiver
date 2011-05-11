@@ -41,6 +41,8 @@ public class EgoSelectionPanel extends JPanel {
 //        egoModel = new DefaultTreeModel(egoRootNode);
 //        egoTree = new JTree(egoModel);
         egoTree = new ArbilTree();
+        // todo: add trac task to modify the arbil tree such that each tree can have its own preview table
+//        egoTree.getModel().
 //        egoTree.setRootVisible(false);
         egoTree.setCellRenderer(new ArbilTreeRenderer());
 
