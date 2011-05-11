@@ -166,6 +166,8 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         });
         kinTypeStringInput.addKeyListener(new KeyListener() {
 
+            String previousKinTypeStrings = null;
+
             public void keyTyped(KeyEvent e) {
             }
 
@@ -173,9 +175,14 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             }
 
             public void keyReleased(KeyEvent e) {
-                graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
+                synchronized (e) {
+                    if (previousKinTypeStrings == null || !previousKinTypeStrings.equals(kinTypeStringInput.getText())) {
+                        graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
 //                kinTypeStrings = graphPanel.getKinTypeStrigs();
-                drawGraph();
+                        drawGraph();
+                        previousKinTypeStrings = kinTypeStringInput.getText();
+                    }
+                }
             }
         });
     }
