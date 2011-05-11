@@ -83,6 +83,10 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
         return graphPanel.hasSaveFileName();
     }
 
+    public File getFileName() {
+        return graphPanel.getFileName();
+    }
+
     public boolean requiresSave() {
         return graphPanel.requiresSave();
     }
