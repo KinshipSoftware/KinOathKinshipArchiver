@@ -239,7 +239,13 @@ public class QueryParser implements EntityService {
                 nodeRelation.setAlterNode(loadedGraphNodes.get(nodeRelation.alterUniqueIdentifier));
             }
         }
-        return loadedGraphNodes.values().toArray(new EntityData[]{});
+        ArrayList<EntityData> returnNodes = new ArrayList<EntityData>();
+        for (EntityData entityData : loadedGraphNodes.values()) {
+            if (entityData.isVisible) {
+                returnNodes.add(entityData);
+            }
+        }
+        return returnNodes.toArray(new EntityData[]{});
 
 
 
