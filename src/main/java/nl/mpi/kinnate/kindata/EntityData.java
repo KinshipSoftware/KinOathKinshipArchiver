@@ -24,7 +24,9 @@ public class EntityData {
     private String uniqueIdentifier;
     @XmlElement(name = "Path")
     private String entityPath;
+    @XmlElement(name = "KinType")
     private String[] kinTypeArray = new String[]{};
+    @XmlElement(name = "KinTerm")
     private String[] kinTermArray = new String[]{};
     private SymbolType symbolType;
     @XmlElement(name = "Symbol")
