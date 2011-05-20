@@ -49,8 +49,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
     protected SVGDocument doc;
-    protected ArbilTableModel arbilTableModel;
-    protected GraphSorter graphData;
+    protected ArbilTableModel arbilTableModel;    
     private boolean requiresSave = false;
     private File svgFile = null;
     protected GraphPanelSize graphPanelSize;
@@ -284,16 +283,16 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void drawNodes() {
-        drawNodes(graphData);
+        drawNodes(dataStoreSvg.graphData);
     }
 
     public void drawNodes(GraphSorter graphDataLocal) {
         requiresSave = true;
-        graphData = graphDataLocal;
-        int vSpacing = graphPanelSize.getVerticalSpacing(graphData.gridHeight);
-        int hSpacing = graphPanelSize.getHorizontalSpacing(graphData.gridWidth);
-        currentWidth = graphPanelSize.getWidth(graphData.gridWidth, hSpacing);
-        currentHeight = graphPanelSize.getHeight(graphData.gridHeight, vSpacing);
+        dataStoreSvg.graphData = graphDataLocal;
+        int vSpacing = graphPanelSize.getVerticalSpacing(dataStoreSvg.graphData.gridHeight);
+        int hSpacing = graphPanelSize.getHorizontalSpacing(dataStoreSvg.graphData.gridWidth);
+        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
+        currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
         try {
             Element svgRoot;
             Element relationGroupNode;
@@ -361,17 +360,17 @@ public class GraphPanel extends JPanel implements SavePanel {
             // Set the width and height attributes on the root 'svg' element.
             svgRoot.setAttribute("width", Integer.toString(currentWidth));
             svgRoot.setAttribute("height", Integer.toString(currentHeight));
-            this.setPreferredSize(new Dimension(graphPanelSize.getHeight(graphData.gridHeight, vSpacing), graphPanelSize.getWidth(graphData.gridWidth, hSpacing)));//            entitySvg.removeOldEntities(entityGroupNode);
+            this.setPreferredSize(new Dimension(graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing), graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing)));//            entitySvg.removeOldEntities(entityGroupNode);
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
             // store the selected kin type strings and other data in the dom
             dataStoreSvg.storeAllData(doc);
-            for (EntityData currentNode : graphData.getDataNodes()) {
+            for (EntityData currentNode : dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     entityGroupNode.appendChild(entitySvg.createEntitySymbol(this, currentNode, hSpacing, vSpacing));
                 }
             }
-            for (EntityData currentNode : graphData.getDataNodes()) {
+            for (EntityData currentNode : dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
                         if ((dataStoreSvg.showKinTermLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.kinTermLine)
@@ -381,6 +380,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                     }
                 }
             }
+            // todo: allow the user to set an entity as the provider of new dat being entered, this selected user can then be added to each field that is updated as the providence for that data. this would be best done in a cascading fashon so that there is a default informant for the entity and if required for sub nodes and fields
             svgCanvas.setSVGDocument(doc);
             //ArbilComponentBuilder.savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
