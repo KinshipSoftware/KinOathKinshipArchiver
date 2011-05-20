@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.kindata;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *  Document   : EntityRelation
@@ -9,6 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class EntityRelation {
 
+    @XmlTransient
     private EntityData alterNode;
     public int generationalDistance;
     @XmlElement(name = "Identifier")
@@ -30,6 +32,7 @@ public class EntityRelation {
         }
     }
 
+    @XmlTransient
     public EntityData getAlterNode() {
         return alterNode;
     }
