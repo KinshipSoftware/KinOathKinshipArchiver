@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -50,6 +51,12 @@ public class DataStoreSvg {
     public boolean snapToGrid = true;
     @XmlElement(name = "ShowSanguineLines", namespace = "http://mpi.nl/tla/kin")
     public boolean showSanguineLines = true;
+    @XmlElement(name = "ShowArchiveLinks", namespace = "http://mpi.nl/tla/kin")
+    public boolean showArchiveLinks = true;
+    @XmlElement(name = "ShowResourceLinks", namespace = "http://mpi.nl/tla/kin")
+    public boolean showResourceLinks = true;
+    @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
+    protected GraphSorter graphData;
 
     public class GraphRelationData {
 
