@@ -42,6 +42,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private JCheckBoxMenuItem showLabelssMenuItem;
     private JCheckBoxMenuItem showKinTypeLabelssMenuItem;
     private JCheckBoxMenuItem showKinTermLabelssMenuItem;
+    private JCheckBoxMenuItem showArchiveLinksMenuItem;
+    private JCheckBoxMenuItem showResourceLinksMenuItem;
     private String[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
     private float xPos;
     private float yPos;
@@ -258,6 +260,24 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(showKinTermLabelssMenuItem);
+        showArchiveLinksMenuItem = new JCheckBoxMenuItem("Show Archive Links");
+        showArchiveLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                graphPanel.dataStoreSvg.showArchiveLinks = !graphPanel.dataStoreSvg.showArchiveLinks;
+                graphPanel.drawNodes();
+            }
+        });
+        this.add(showArchiveLinksMenuItem);
+        showResourceLinksMenuItem = new JCheckBoxMenuItem("Show Archive Resource Links");
+        showResourceLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                graphPanel.dataStoreSvg.showResourceLinks = !graphPanel.dataStoreSvg.showResourceLinks;
+                graphPanel.drawNodes();
+            }
+        });
+        this.add(showResourceLinksMenuItem);
         JMenuItem searchEntityServiceMenuItem = new JMenuItem("Search Entity Service");
         searchEntityServiceMenuItem.setToolTipText("Search the entity database for entities matching the current kin terms and populate he diagram with the results");
         searchEntityServiceMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -312,6 +332,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         showLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showLabels);
         showKinTypeLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTypeLabels);
         showKinTermLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLabels);
+        showArchiveLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showArchiveLinks);
+        showResourceLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showResourceLinks);
         super.show(cmpnt, i, i1);
     }
 
