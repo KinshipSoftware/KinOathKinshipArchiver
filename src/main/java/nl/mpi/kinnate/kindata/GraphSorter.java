@@ -3,6 +3,7 @@ package nl.mpi.kinnate.kindata;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  *  Document   : GraphData
@@ -11,6 +12,7 @@ import java.util.HashSet;
  */
 public class GraphSorter {
 
+    @XmlElement(name = "EntityArray", namespace = "http://mpi.nl/tla/kin")
     protected EntityData[] graphDataNodeArray = new EntityData[]{};
     public int gridWidth;
     public int gridHeight;
@@ -61,7 +63,7 @@ public class GraphSorter {
         }
         for (EntityRelation relatedNode : currentNode.getVisiblyRelateNodes()) { // todo: here we are soriting only visible nodes, sorting invisible nodes as well might cause issues or might help the layout and this must be tested
             // todo: what happens here if there are multiple relations specified?
-            if (inputNodes.contains(relatedNode.getAlterNode())) {
+            if (/*relatedNode.getAlterNode().isVisible &&*/ inputNodes.contains(relatedNode.getAlterNode())) {
                 HashSet<EntityData> targetColumns;
                 switch (relatedNode.relationType) {
                     case ancestor:
@@ -107,8 +109,10 @@ public class GraphSorter {
         while (inputNodes.size() > 0) { // this loop checks all nodes provided for display, but the sanguineSubnodeSort will remove any related nodes before we return to this loop, so this loop would only run once if all nodes are related
             EntityData currentNode = inputNodes.remove(0);
 //            System.out.println("add as root node: " + currentNode.getLabel());
-            currentColumns.add(currentNode);
-            sanguineSubnodeSort(generationRows, currentColumns, inputNodes, currentNode);
+//            if (currentNode.isVisible) {
+                currentColumns.add(currentNode);
+                sanguineSubnodeSort(generationRows, currentColumns, inputNodes, currentNode);
+//            }
         }
         gridWidth = 0;
         int yPos = 0;
