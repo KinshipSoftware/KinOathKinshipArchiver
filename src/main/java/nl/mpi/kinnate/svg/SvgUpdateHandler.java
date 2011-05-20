@@ -203,8 +203,8 @@ public class SvgUpdateHandler {
 //                            }
 //                        }
 //                    }
-                        int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(graphPanel.graphData.gridHeight);
-                        int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(graphPanel.graphData.gridWidth);
+                        int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(graphPanel.dataStoreSvg.graphData.gridHeight);
+                        int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(graphPanel.dataStoreSvg.graphData.gridWidth);
                         new RelationSvg().updateRelationLines(graphPanel, graphPanel.selectedGroupId, graphPanel.svgNameSpace, hSpacing, vSpacing);
                         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                     }
