@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="1600" zoomAndPan="magnify" contentStyleType="text/css" height="700" preserveAspectRatio="xMidYMid meet" version="1.0">
+  <defs id="KinSymbols">
+    <g id="circle">
+      <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
+    </g>
+    <g id="square">
+      <rect x="0" width="15" y="0" height="15" stroke-width="2" stroke="black"/>
+    </g>
+    <g id="square45">
+      <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
+    </g>
+    <g id="rhombus">
+      <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
+    </g>
+    <g id="union">
+      <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
+      <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
+      <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
+    </g>
+    <g id="triangle">
+      <polygon points="7,0 0,12 15,12" stroke-width="2" stroke="black"/>
+    </g>
+    <g id="equals">
+      <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
+    </g>
+    <g id="cross">
+      <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
+    </g>
+  </defs>
+  <g id="RelationGroup">
+    <g id="relation0">
+      <kin:RelationEntities xmlns:kin="kin" ego="c2756ddbce9075043f0e776b74967406" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation0Line" stroke-width="2" points="1507.0,499.5 1507.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
+    </g>
+    <g id="relation1">
+      <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="c2756ddbce9075043f0e776b74967406" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation1Line" stroke-width="2" points="257.0,399.5 257.0,449.5 1507.0,449.5 1507.0,499.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
+    </g>
+    <g id="relation2">
+      <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="b5a6f7ae6577aee8c3d5752dc016227e" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation2Line" stroke-width="2" points="257.0,399.5 257.0,449.5 557.0,449.5 557.0,499.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
+    </g>
+    <g id="relation3">
+      <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="aeb20e59678e819cf65a4691a4f5351e" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation3Line" stroke-width="2" points="257.0,399.5 257.0,449.5 57.0,449.5 57.0,499.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
+    </g>
+    <g id="relation4">
+      <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="f40d57a461baf9ba2d78d98158905aac" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation4Line" stroke-width="2" points="257.0,399.5 257.0,449.5 307.0,449.5 307.0,499.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
+    </g>
+    <g id="relation5">
+      <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="15c4902a8dffc26d1097071afa378f06" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation5Line" stroke-width="2" points="257.0,399.5 257.0,449.5 1257.0,449.5 1257.0,499.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
+    </g>
+    <g id="relation6">
+      <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="5f7c61e3b329f729fccb353be7919c06" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation6Line" stroke-width="2" points="257.0,399.5 257.0,449.5 857.0,449.5 857.0,499.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
+    </g>
+    <g id="relation7">
+      <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="c161cc8cd18e5580c5523f6cacebed57" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation7Line" stroke-width="2" points="257.0,399.5 257.0,349.5 457.0,349.5 457.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
+    </g>
+    <g id="relation8">
+      <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="252d913ce1050263a3ed64afc663388b" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation8Line" stroke-width="2" points="257.0,399.5 257.0,349.5 57.0,349.5 57.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
+    </g>
+    <g id="relation9">
+      <kin:RelationEntities xmlns:kin="kin" ego="aeb20e59678e819cf65a4691a4f5351e" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation9Line" stroke-width="2" points="57.0,499.5 57.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
+    </g>
+    <g id="relation10">
+      <kin:RelationEntities xmlns:kin="kin" ego="f40d57a461baf9ba2d78d98158905aac" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation10Line" stroke-width="2" points="307.0,499.5 307.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
+    </g>
+    <g id="relation11">
+      <kin:RelationEntities xmlns:kin="kin" ego="c161cc8cd18e5580c5523f6cacebed57" lineType="sanguineLine" alter="fe8eb49f443fd4f3ec1b31cde9619b0e" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation11Line" stroke-width="2" points="457.0,299.5 457.0,249.5 199.5,249.5 199.5,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
+    </g>
+    <g id="relation12">
+      <kin:RelationEntities xmlns:kin="kin" ego="c161cc8cd18e5580c5523f6cacebed57" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation12Line" stroke-width="2" points="457.0,299.5 457.0,349.5 257.0,349.5 257.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
+    </g>
+    <g id="relation13">
+      <kin:RelationEntities xmlns:kin="kin" ego="15c4902a8dffc26d1097071afa378f06" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation13Line" stroke-width="2" points="1257.0,499.5 1257.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
+    </g>
+    <g id="relation14">
+      <kin:RelationEntities xmlns:kin="kin" ego="fe8eb49f443fd4f3ec1b31cde9619b0e" lineType="sanguineLine" alter="d3c0f89b23dc6932d9ce03bfc14ff7bc" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation14Line" stroke-width="2" points="199.5,199.5 199.5,149.5 199.5,149.5 199.5,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
+    </g>
+    <g id="relation15">
+      <kin:RelationEntities xmlns:kin="kin" ego="fe8eb49f443fd4f3ec1b31cde9619b0e" lineType="sanguineLine" alter="658d2299d9b4cd423defbdb80279ac4a" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation15Line" stroke-width="2" points="199.5,199.5 199.5,249.5 1257.0,249.5 1257.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
+    </g>
+    <g id="relation16">
+      <kin:RelationEntities xmlns:kin="kin" ego="fe8eb49f443fd4f3ec1b31cde9619b0e" lineType="sanguineLine" alter="c972ef46ef8e41f9930c7ec1bd2de4dd" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation16Line" stroke-width="2" points="199.5,199.5 199.5,249.5 857.0,249.5 857.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
+    </g>
+    <g id="relation17">
+      <kin:RelationEntities xmlns:kin="kin" ego="fe8eb49f443fd4f3ec1b31cde9619b0e" lineType="sanguineLine" alter="09e0fd9ee305b8ae5adde02765ed1522" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation17Line" stroke-width="2" points="199.5,199.5 199.5,249.5 1607.0,249.5 1607.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
+    </g>
+    <g id="relation18">
+      <kin:RelationEntities xmlns:kin="kin" ego="fe8eb49f443fd4f3ec1b31cde9619b0e" lineType="sanguineLine" alter="c161cc8cd18e5580c5523f6cacebed57" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation18Line" stroke-width="2" points="199.5,199.5 199.5,249.5 457.0,249.5 457.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
+    </g>
+    <g id="relation19">
+      <kin:RelationEntities xmlns:kin="kin" ego="09e0fd9ee305b8ae5adde02765ed1522" lineType="sanguineLine" alter="fe8eb49f443fd4f3ec1b31cde9619b0e" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation19Line" stroke-width="2" points="1607.0,299.5 1607.0,249.5 199.5,249.5 199.5,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation19Line"/>
+    </g>
+    <g id="relation20">
+      <kin:RelationEntities xmlns:kin="kin" ego="658d2299d9b4cd423defbdb80279ac4a" lineType="sanguineLine" alter="fe8eb49f443fd4f3ec1b31cde9619b0e" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation20Line" stroke-width="2" points="1257.0,299.5 1257.0,249.5 199.5,249.5 199.5,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation20Line"/>
+    </g>
+    <g id="relation21">
+      <kin:RelationEntities xmlns:kin="kin" ego="c972ef46ef8e41f9930c7ec1bd2de4dd" lineType="sanguineLine" alter="fe8eb49f443fd4f3ec1b31cde9619b0e" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation21Line" stroke-width="2" points="857.0,299.5 857.0,249.5 199.5,249.5 199.5,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation21Line"/>
+    </g>
+    <g id="relation22">
+      <kin:RelationEntities xmlns:kin="kin" ego="b5a6f7ae6577aee8c3d5752dc016227e" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation22Line" stroke-width="2" points="557.0,499.5 557.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation22Line"/>
+    </g>
+    <g id="relation23">
+      <kin:RelationEntities xmlns:kin="kin" ego="d3c0f89b23dc6932d9ce03bfc14ff7bc" lineType="sanguineLine" alter="fe8eb49f443fd4f3ec1b31cde9619b0e" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation23Line" stroke-width="2" points="199.5,99.5 199.5,149.5 199.5,149.5 199.5,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation23Line"/>
+    </g>
+    <g id="relation24">
+      <kin:RelationEntities xmlns:kin="kin" ego="252d913ce1050263a3ed64afc663388b" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation24Line" stroke-width="2" points="57.0,299.5 57.0,349.5 257.0,349.5 257.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation24Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation24Line"/>
+    </g>
+    <g id="relation25">
+      <kin:RelationEntities xmlns:kin="kin" ego="5f7c61e3b329f729fccb353be7919c06" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation25Line" stroke-width="2" points="857.0,499.5 857.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation25Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation25Line"/>
+    </g>
+  </g>
+  <g id="EntityGroup">
+    <g id="c2756ddbce9075043f0e776b74967406" kin:kintype="S" transform="translate(1500.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I212_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="c2756ddbce9075043f0e776b74967406symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">JOS‚E ALBUQUERQUE DE /FIGUEIREDO/</text>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Eng. Civil</text>
+    </g>
+    <g id="acac44007f0ce17a970af2430d4de251" kin:kintype="" transform="translate(250.0, 392.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F5_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#union" xlink:type="simple" xlink:actuate="onLoad" id="acac44007f0ce17a970af2430d4de251symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FAM</text>
+    </g>
+    <g id="aeb20e59678e819cf65a4691a4f5351e" kin:kintype="S" transform="translate(50.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I215_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="aeb20e59678e819cf65a4691a4f5351esymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">RAIMUNDO /FIGUEIREDO/</text>
+    </g>
+    <g id="f40d57a461baf9ba2d78d98158905aac" kin:kintype="S" transform="translate(300.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I216_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="f40d57a461baf9ba2d78d98158905aacsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ERNESTO /FIGUEIREDO/</text>
+    </g>
+    <g id="c161cc8cd18e5580c5523f6cacebed57" kin:kintype="Em|S" transform="translate(450.0, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I8_.cmdi">
+      <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="c161cc8cd18e5580c5523f6cacebed57symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/</text>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Adv. e ex-Gerente T‚ec. da F‚abr. de Tecidos de Sobral</text>
+    </g>
+    <g id="15c4902a8dffc26d1097071afa378f06" kin:kintype="S" transform="translate(1250.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I218_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="15c4902a8dffc26d1097071afa378f06symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FRANCISCO /FIGUEIREDO/</text>
+    </g>
+    <g id="fe8eb49f443fd4f3ec1b31cde9619b0e" kin:kintype="" transform="translate(192.5, 192.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F17_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#union" xlink:type="simple" xlink:actuate="onLoad" id="fe8eb49f443fd4f3ec1b31cde9619b0esymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FAM</text>
+    </g>
+    <g id="09e0fd9ee305b8ae5adde02765ed1522" kin:kintype="S" transform="translate(1600.0, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I234_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="09e0fd9ee305b8ae5adde02765ed1522symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">JOS‚E DE PAULA PESSOA DE /FIGUEIREDO/</text>
+    </g>
+    <g id="658d2299d9b4cd423defbdb80279ac4a" kin:kintype="S" transform="translate(1250.0, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I227_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="658d2299d9b4cd423defbdb80279ac4asymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">JOS‚E ANT„ONIO DE /FIGUEIREDO FILHO/</text>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Eng. Civil</text>
+    </g>
+    <g id="c972ef46ef8e41f9930c7ec1bd2de4dd" kin:kintype="S" transform="translate(850.0, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I233_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="c972ef46ef8e41f9930c7ec1bd2de4ddsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FRANCISCO DE PAULA PESSOA DE /FIGUEIREDO/</text>
+    </g>
+    <g id="b5a6f7ae6577aee8c3d5752dc016227e" kin:kintype="S" transform="translate(550.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I213_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="b5a6f7ae6577aee8c3d5752dc016227esymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ERNESTO SABOIA DE /FIGUEIREDO/</text>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Func. do Banco do Brasil</text>
+    </g>
+    <g id="d3c0f89b23dc6932d9ce03bfc14ff7bc" kin:kintype="M" transform="translate(192.5, 92.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I11_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="d3c0f89b23dc6932d9ce03bfc14ff7bcsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ANTONIA GERACINA DE PAULA /PESSOA/</text>
+    </g>
+    <g id="252d913ce1050263a3ed64afc663388b" kin:kintype="M" transform="translate(50.0, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I9_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="252d913ce1050263a3ed64afc663388bsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ANTONIA ERNESTINA SABOIA DE /ALBUQUERQUE/</text>
+    </g>
+    <g id="5f7c61e3b329f729fccb353be7919c06" kin:kintype="S" transform="translate(850.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I4_.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="5f7c61e3b329f729fccb353be7919c06symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">CAETANO SABOIA DE ALBUQUERQUE /FIGUEIREDO/</text>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Cel. do Ex‚ercito</text>
+    </g>
+  </g>
+  <g id="LabelsGroup"/>
+  
+<kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+    <kin:KinTypeString>E=[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/]MM</kin:KinTypeString>
+    <kin:KinTypeString>E=[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/]SS</kin:KinTypeString>
+    <kin:IndexParameters>
+      <kin:LabelFields>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*:Name"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:Text"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NoteText"/>
+      </kin:LabelFields>
+      <kin:SymbolFieldsFields>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:SEX='M']" kin:Value="triangle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:SEX='F']" kin:Value="circle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']" kin:Value="union"/>
+      </kin:SymbolFieldsFields>
+      <kin:AncestorFields>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.BIRT.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHR.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.ADOP.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.SLGC.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.HUSB"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.WIFE"/>
+        <kin:IndexerParam kin:XPath="ancestor"/>
+      </kin:AncestorFields>
+      <kin:DecendantFields>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHIL"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMS"/>
+        <kin:IndexerParam kin:XPath="descendant"/>
+      </kin:DecendantFields>
+    </kin:IndexParameters>
+    <kin:KinTermGroup kin:Show="true" kin:GroupColour="blue" kin:GroupName="English terms" kin:Generate="false">
+      <kin:KinTerm kin:Term="Grand Mother" kin:Alter="MM"/>
+      <kin:KinTerm kin:Term="Aunt" kin:Alter="MZ|FZ"/>
+      <kin:KinTerm kin:Term="Uncle" kin:Alter="MB|FB"/>
+      <kin:KinTerm kin:Term="Grand Father" kin:Alter="FF"/>
+    </kin:KinTermGroup>
+    <kin:KinTermGroup kin:Show="true" kin:GroupColour="cyan" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="false">
+      <kin:KinTerm kin:Term="Makuakane" kin:Description="Father, Uncle" kin:Alter="F|FB|MB"/>
+      <kin:KinTerm kin:Term="Makuahini" kin:Description="Mother, Aunt" kin:Alter="M|MZ|FZ"/>
+      <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="" kin:Alter="E(male)B|E(male)FBS|E(male)FZS|E(male)MBS|E(male)MZS"/>
+      <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="Brother/Sister, Cousin" kin:Alter="E(female)Z|E(female)FBD|E(female)FZD|E(female)MBD|E(female)MZD"/>
+      <kin:KinTerm kin:Term="Kaikuane" kin:Description="Brother, Cousin" kin:Alter="E(female)B|E(female)FBS|E(female)FZS|E(female)MBS|E(female)MZS"/>
+      <kin:KinTerm kin:Term="Kaikuane" kin:Description="Sister, Cousin" kin:Alter="E(male)Z|E(male)FBD|E(male)FZD|E(male)MBD|E(male)MZD"/>
+      <kin:KinTerm kin:Term="Keikikane" kin:Description="Son, Nephew" kin:Alter="S|BS|ZS"/>
+      <kin:KinTerm kin:Term="Keikamahini" kin:Description="Daughter, Niece" kin:Alter="D|BD|ZD"/>
+    </kin:KinTermGroup>
+    <kin:ShowLabels>true</kin:ShowLabels>
+    <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
+    <kin:ShowKinTermLabels>false</kin:ShowKinTermLabels>
+    <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
+    <kin:SnapToGrid>true</kin:SnapToGrid>
+    <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
+  </kin:KinDiagramData>
+</svg>
