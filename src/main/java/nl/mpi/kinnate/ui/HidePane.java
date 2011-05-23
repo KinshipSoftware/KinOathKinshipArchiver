@@ -17,6 +17,7 @@ public class HidePane extends JPanel {
 
     private Component contentComponent;
     private boolean hiddenState = true;
+//    private RotatedButton removeButton;
     private JButton removeButton;
     private int shownWidth = 300;
     private String openLabel;
@@ -37,6 +38,13 @@ public class HidePane extends JPanel {
         }
         contentComponent = contentComponentLocal;
         this.setLayout(new BorderLayout());
+//        RotatedButton.Orientation orientation;
+//        if (horizontalDivider) {
+//            orientation = RotatedButton.Orientation.bottom;
+//        } else {
+//            orientation = RotatedButton.Orientation.left;
+//        }
+//        removeButton = new RotatedButton(labelStringLocal, orientation);
         removeButton = new JButton(openLabel);
         removeButton.addMouseMotionListener(new MouseMotionAdapter() {
 
