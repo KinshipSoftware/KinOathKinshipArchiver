@@ -309,6 +309,7 @@ public class EntitySvg {
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         Float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
+            // loop through the filled locations and move to the right or left if not empty required
             // todo: check the related nodes and average their positions then check to see if it is free and insert the node there
             storedPosition = new Float[]{currentNode.getxPos() * hSpacing + hSpacing - symbolSize / 2.0f,
                         currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f};
@@ -381,6 +382,29 @@ public class EntitySvg {
             labelText.appendChild(textNode);
             textSpanCounter += lineSpacing;
             groupNode.appendChild(labelText);
+        }
+        int linkCounter = 0;
+        if (currentNode.archiveLinkArray != null) {
+            for (String linkString : currentNode.archiveLinkArray) {
+                // todo: loop through the archive links and optionaly add href tags for each linked archive data <a xlink:href="http://www.mpi.nl/imdi-archive-link" target="_blank"></a>
+                linkCounter++;
+                Element labelTagA = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "a");
+
+                labelTagA.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", linkString);
+                labelTagA.setAttribute("target", "_blank");
+
+                Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
+                labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
+                labelText.setAttribute("y", Integer.toString(textSpanCounter));
+                labelText.setAttribute("fill", "black");
+                labelText.setAttribute("stroke-width", "0");
+                labelText.setAttribute("font-size", "14");
+                Text textNode = graphPanel.doc.createTextNode("link: " + linkCounter);
+                labelText.appendChild(textNode);
+                textSpanCounter += lineSpacing;
+                labelTagA.appendChild(labelText);
+                groupNode.appendChild(labelTagA);
+            }
         }
 ////////////////////////////// end alternate method ////////////////////////////////////////////////
         ((EventTarget) groupNode).addEventListener("mousedown", new MouseListenerSvg(graphPanel), false);
