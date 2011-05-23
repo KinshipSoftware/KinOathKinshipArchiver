@@ -53,8 +53,8 @@ public class DataStoreSvg {
     public boolean showSanguineLines = true;
     @XmlElement(name = "ShowArchiveLinks", namespace = "http://mpi.nl/tla/kin")
     public boolean showArchiveLinks = true;
-    @XmlElement(name = "ShowResourceLinks", namespace = "http://mpi.nl/tla/kin")
-    public boolean showResourceLinks = true;
+//    @XmlElement(name = "ShowResourceLinks", namespace = "http://mpi.nl/tla/kin")
+//    public boolean showResourceLinks = true;
     @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
     protected GraphSorter graphData;
 
