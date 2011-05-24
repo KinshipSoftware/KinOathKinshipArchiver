@@ -22,7 +22,8 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
         addSampleToMenu("Archive Link Example", "ArchiveLinks.svg");
         addSampleToMenu("Hawaiian Kin Terms", "HawaiianKinTerms.svg");
         addSampleToMenu("Japanese Kin Terms", "JapaneseKinTerms.svg");
-//        addSampleToMenu("Multiple Kin Terms", "MultipleKinTerms.svg");
+        addSampleToMenu("Custom Symbols", "CustomSymbols.svg");
+        addSampleToMenu("Named Transient Entities", "NamedTransientEntities.svg");
         addSampleToMenu("Cha'palaa Kin Terms", "ChapalaaKinTerms.svg");
         addSampleToMenu("Gendered Ego", "GenderedEgo.svg");
         addSampleToMenu("Imported Entities (600)", "600ImportedEntities.svg");
