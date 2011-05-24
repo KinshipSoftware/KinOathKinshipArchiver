@@ -227,6 +227,12 @@ public class KinTypeStringConverter extends GraphSorter {
         return kinTypeList;
     }
 
+    private void parseLabelStrings(EntityData currentNode, String inputString) {
+        if (inputString.startsWith(":")) {
+            currentNode.appendTempLabel(inputString.substring(1));
+        }
+    }
+
     public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg) {
         HashMap<String, EntityData> graphDataNodeList = new HashMap<String, EntityData>();
 //        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{}, true);
@@ -293,6 +299,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                     }
                                 }
                             }
+                            parseLabelStrings(currentGraphDataNode, consumableString);
                             parentDataNode = currentGraphDataNode;
                             kinTypeFound = true;
                             break;
