@@ -41,6 +41,11 @@ public class EntityData {
     @XmlElementWrapper(name = "Relations")
     @XmlElement(name = "Relation")
     private EntityRelation[] relatedNodes;
+    @XmlElement(name = "ArchiveLink")
+    // todo: this needs to provide both the archive handle (for opening the browser) and the url to open localy stored copy of the file
+    public String[] archiveLinkArray = null; //new String[]{"http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7", "http://www.google.com", "http://www.mpi.nl"};
+//    @XmlElement(name = "ResourceLink")
+//    public String[] resourceLinkArray;
     protected int xPos;
     protected int yPos;
     public boolean isVisible = false;
