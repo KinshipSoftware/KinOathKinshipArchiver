@@ -82,9 +82,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             }
             kinTypeStringInput.setText(kinTermContents);
         } else {
-            // todo: filter out the noise and only save or use the actual kin type strings
-//            graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
-//            kinTypeStrings = graphPanel.getKinTypeStrigs();
+            graphPanel.generateDefaultSvg();
         }
         this.setLayout(new BorderLayout());
         registeredEntityIds = new ArrayList<String>();
