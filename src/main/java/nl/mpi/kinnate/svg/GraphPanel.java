@@ -30,6 +30,8 @@ import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.JSVGScrollPane;
+import org.apache.batik.swing.svg.LinkActivationEvent;
+import org.apache.batik.swing.svg.LinkActivationListener;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
@@ -49,7 +51,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
     protected SVGDocument doc;
-    protected ArbilTableModel arbilTableModel;    
+    protected ArbilTableModel arbilTableModel;
     private boolean requiresSave = false;
     private File svgFile = null;
     protected GraphPanelSize graphPanelSize;
@@ -156,6 +158,54 @@ public class GraphPanel extends JPanel implements SavePanel {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
 //        svgCanvas.setURI(svgFilePath.toURI().toString());
+    }
+
+    public void generateDefaultSvg() {
+        try {
+            Element svgRoot;
+            Element relationGroupNode;
+            Element entityGroupNode;
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
+            // set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
+            // in order to add the extra namespaces to the svg document we use a string and parse it
+            // other methods have been tried but this is the most readable and the only one that actually works
+            // I think this is mainly due to the way the svg dom would otherwise be constructed
+            // others include:
+            // doc.getDomConfig()
+            // doc.getDocumentElement().setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:version", "");
+            // doc.getDocumentElement().setAttribute("xmlns:" + DataStoreSvg.kinDataNameSpace, DataStoreSvg.kinDataNameSpaceLocation); // this method of declaring multiple namespaces looks to me to be wrong but it is the only method that does not get stripped out by the transformer on save
+            //        Document doc = impl.createDocument(svgNS, "svg", null);
+            //        SVGDocument doc = svgCanvas.getSVGDocument();
+            String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                    + "<svg xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:kin=\"http://mpi.nl/tla/kin\" "
+                    + "xmlns=\"http://www.w3.org/2000/svg\" contentScriptType=\"text/ecmascript\" "
+                    + " zoomAndPan=\"magnify\" contentStyleType=\"text/css\" "
+                    + "preserveAspectRatio=\"xMidYMid meet\" version=\"1.0\"/>";
+            // DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
+            // doc = (SVGDocument) impl.createDocument(svgNameSpace, "svg", null);
+            String parser = XMLResourceDescriptor.getXMLParserClassName();
+            SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
+            doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
+            entitySvg.insertSymbols(doc, svgNameSpace);
+            // Get the root element (the 'svg' element)
+            svgRoot = doc.getDocumentElement();
+            // add the relation symbols in a group below the relation lines
+            relationGroupNode = doc.createElementNS(svgNameSpace, "g");
+            relationGroupNode.setAttribute("id", "RelationGroup");
+            svgRoot.appendChild(relationGroupNode);
+            // add the entity symbols in a group on top of the relation lines
+            entityGroupNode = doc.createElementNS(svgNameSpace, "g");
+            entityGroupNode.setAttribute("id", "EntityGroup");
+            svgRoot.appendChild(entityGroupNode);
+            // add the labels group on top
+            Element labelsGroup = doc.createElementNS(svgNameSpace, "g");
+            labelsGroup.setAttribute("id", "LabelsGroup");
+            svgRoot.appendChild(labelsGroup);
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc));
+        } catch (IOException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+        }
     }
 
     private void saveSvg(File svgFilePath) {
@@ -297,66 +347,28 @@ public class GraphPanel extends JPanel implements SavePanel {
             Element svgRoot;
             Element relationGroupNode;
             Element entityGroupNode;
-            if (doc == null) {
-                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                documentBuilderFactory.setNamespaceAware(true);
-                // set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
-                // in order to add the extra namespaces to the svg document we use a string and parse it
-                // other methods have been tried but this is the most readable and the only one that actually works
-                // I think this is mainly due to the way the svg dom would otherwise be constructed
-                // others include:
-                // doc.getDomConfig()
-                // doc.getDocumentElement().setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:version", "");
-                // doc.getDocumentElement().setAttribute("xmlns:" + DataStoreSvg.kinDataNameSpace, DataStoreSvg.kinDataNameSpaceLocation); // this method of declaring multiple namespaces looks to me to be wrong but it is the only method that does not get stripped out by the transformer on save
-                //        Document doc = impl.createDocument(svgNS, "svg", null);
-                //        SVGDocument doc = svgCanvas.getSVGDocument();
-                String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                        + "<svg xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:kin=\"http://mpi.nl/tla/kin\" "
-                        + "xmlns=\"http://www.w3.org/2000/svg\" contentScriptType=\"text/ecmascript\" "
-                        + " zoomAndPan=\"magnify\" contentStyleType=\"text/css\" "
-                        + "preserveAspectRatio=\"xMidYMid meet\" version=\"1.0\"/>";
-                // DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
-                // doc = (SVGDocument) impl.createDocument(svgNameSpace, "svg", null);
-                String parser = XMLResourceDescriptor.getXMLParserClassName();
-                SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
-                doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
-                entitySvg.insertSymbols(doc, svgNameSpace);
-                // Get the root element (the 'svg' element)
-                svgRoot = doc.getDocumentElement();
-                // add the relation symbols in a group below the relation lines
-                relationGroupNode = doc.createElementNS(svgNameSpace, "g");
-                relationGroupNode.setAttribute("id", "RelationGroup");
-                svgRoot.appendChild(relationGroupNode);
-                // add the entity symbols in a group on top of the relation lines
-                entityGroupNode = doc.createElementNS(svgNameSpace, "g");
-                entityGroupNode.setAttribute("id", "EntityGroup");
-                svgRoot.appendChild(entityGroupNode);
-                // add the labels group on top
-                Element labelsGroup = doc.createElementNS(svgNameSpace, "g");
-                labelsGroup.setAttribute("id", "LabelsGroup");
-                svgRoot.appendChild(labelsGroup);
-
-            } else {
-                Node relationGroupNodeOld = doc.getElementById("RelationGroup");
-                Node entityGroupNodeOld = doc.getElementById("EntityGroup");
-                // remove the old relation lines
-                relationGroupNode = doc.createElementNS(svgNameSpace, "g");
-                relationGroupNode.setAttribute("id", "RelationGroup");
-                relationGroupNodeOld.getParentNode().insertBefore(relationGroupNode, relationGroupNodeOld);
-                relationGroupNodeOld.getParentNode().removeChild(relationGroupNodeOld);
-                // remove the old entity symbols
-                entityGroupNode = doc.createElementNS(svgNameSpace, "g");
-                entityGroupNode.setAttribute("id", "EntityGroup");
-                entityGroupNodeOld.getParentNode().insertBefore(entityGroupNode, entityGroupNodeOld);
-                entityGroupNodeOld.getParentNode().removeChild(entityGroupNodeOld);
-                // remove old kin diagram data
-                NodeList dataNodes = doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
-                for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
-                    dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
-                }
-                // Get the root element (the 'svg' element)
-                svgRoot = doc.getDocumentElement();
+//            if (doc == null) {
+//            } else {
+            Node relationGroupNodeOld = doc.getElementById("RelationGroup");
+            Node entityGroupNodeOld = doc.getElementById("EntityGroup");
+            // remove the old relation lines
+            relationGroupNode = doc.createElementNS(svgNameSpace, "g");
+            relationGroupNode.setAttribute("id", "RelationGroup");
+            relationGroupNodeOld.getParentNode().insertBefore(relationGroupNode, relationGroupNodeOld);
+            relationGroupNodeOld.getParentNode().removeChild(relationGroupNodeOld);
+            // remove the old entity symbols
+            entityGroupNode = doc.createElementNS(svgNameSpace, "g");
+            entityGroupNode.setAttribute("id", "EntityGroup");
+            entityGroupNodeOld.getParentNode().insertBefore(entityGroupNode, entityGroupNodeOld);
+            entityGroupNodeOld.getParentNode().removeChild(entityGroupNodeOld);
+            // remove old kin diagram data
+            NodeList dataNodes = doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
+            for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
+                dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
             }
+            // Get the root element (the 'svg' element)
+            svgRoot = doc.getDocumentElement();
+//            }
             // Set the width and height attributes on the root 'svg' element.
             svgRoot.setAttribute("width", Integer.toString(currentWidth));
             svgRoot.setAttribute("height", Integer.toString(currentHeight));
@@ -384,7 +396,6 @@ public class GraphPanel extends JPanel implements SavePanel {
             svgCanvas.setSVGDocument(doc);
             //ArbilComponentBuilder.savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
-            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc));
 //            svgUpdateHandler.updateSvgSelectionHighlights(); // todo: does this rsolve the issue after an update that the selection highlight is lost but the selection is still made?
             selectedGroupId.clear();
 //        zoomDrawing();
@@ -393,9 +404,14 @@ public class GraphPanel extends JPanel implements SavePanel {
                 // todo: asses why this does not work
                 svgCanvas.setRenderingTransform(zoomAffineTransform);
             }
+            svgCanvas.addLinkActivationListener(new LinkActivationListener() {
+
+                public void linkActivated(LinkActivationEvent lae) {
+                    // todo: find a better way to block the built in hyper link handler that tries to load the url into the canvas
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+            });
         } catch (DOMException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
-        } catch (IOException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
         }
     }
