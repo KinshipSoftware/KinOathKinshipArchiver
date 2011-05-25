@@ -73,6 +73,15 @@ public class QueryParser implements EntityService {
 //        }
 //        return queryTerms.toArray(new String[][]{});
 //    }
+    @Deprecated // it would seem not to be a good idea to try and use existing entities from an svg file when their relations might not exist, so we will allow the existing entities to be used on the graph but not for database actions
+    public void primeWithEntities(EntityData[] preLoadedEntities) {
+        for (EntityData currentEntity : preLoadedEntities) {
+            if (!loadedGraphNodes.containsKey(currentEntity.getUniqueIdentifier())) {
+                loadedGraphNodes.put(currentEntity.getUniqueIdentifier(), currentEntity);
+            }
+        }
+    }
+
     private void getNextRelations(HashMap<String, EntityData> createdGraphNodes, EntityData egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) {
         if (remainingKinTypes.size() > 0) {
             KinType currentKinType = remainingKinTypes.remove(0);
@@ -104,7 +113,7 @@ public class QueryParser implements EntityService {
                 adjacentEntity = loadedGraphNodes.get(entityRelation.alterUniqueIdentifier);
             } else {
                 adjacentEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexParameters);
-                loadedGraphNodes.put(entityRelation.alterUniqueIdentifier, adjacentEntity);
+                loadedGraphNodes.put(adjacentEntity.getUniqueIdentifier(), adjacentEntity);
             }
             entityRelation.setAlterNode(adjacentEntity);
             adjacentKinType.entityData.add(adjacentEntity);
@@ -174,7 +183,7 @@ public class QueryParser implements EntityService {
                                 queryNode = loadedGraphNodes.get(currentFoundId);
                             } else {
                                 queryNode = entityCollection.getEntity(currentFoundId, indexParameters);
-                                loadedGraphNodes.put(currentFoundId, queryNode);
+                                loadedGraphNodes.put(queryNode.getUniqueIdentifier(), queryNode);
                             }
                             queryNode.isVisible = true;
                             kinTypeElement.entityData.add(queryNode);
@@ -211,7 +220,7 @@ public class QueryParser implements EntityService {
                 egoNode = loadedGraphNodes.get(currentEgoId);
             } else {
                 egoNode = entityCollection.getEntity(currentEgoId, indexParameters);
-                loadedGraphNodes.put(currentEgoId, egoNode);
+                loadedGraphNodes.put(egoNode.getUniqueIdentifier(), egoNode);
             }
             egoNode.isEgo = true;
             new KinTypeStringConverter().setEgoKinTypeString(egoNode);
@@ -229,7 +238,7 @@ public class QueryParser implements EntityService {
                 requiredNode = loadedGraphNodes.get(currentEgoId);
             } else {
                 requiredNode = entityCollection.getEntity(currentEgoId, indexParameters);
-                loadedGraphNodes.put(currentEgoId, requiredNode);
+                loadedGraphNodes.put(requiredNode.getUniqueIdentifier(), requiredNode);
             }
             requiredNode.isVisible = true;
         }
