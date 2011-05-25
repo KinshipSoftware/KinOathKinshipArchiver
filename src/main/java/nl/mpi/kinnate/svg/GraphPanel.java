@@ -37,6 +37,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGRect;
@@ -157,7 +158,22 @@ public class GraphPanel extends JPanel implements SavePanel {
         } catch (IOException ioe) {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
-//        svgCanvas.setURI(svgFilePath.toURI().toString());
+        // set up the mouse listeners that were lost in the save/re-open process
+        for (String groupForMouseListener : new String[]{"EntityGroup", "LabelsGroup"}) {
+            Element parentElement = doc.getElementById(groupForMouseListener);
+            if (parentElement == null) {
+                Element requiredGroup = doc.createElementNS(svgNameSpace, "g");
+                requiredGroup.setAttribute("id", groupForMouseListener);
+                Element svgRoot = doc.getDocumentElement();
+                svgRoot.appendChild(requiredGroup);
+            } else {
+                Node currentNode = parentElement.getFirstChild();
+                while (currentNode != null) {
+                    ((EventTarget) currentNode).addEventListener("mousedown", new MouseListenerSvg(this), false);
+                    currentNode = currentNode.getNextSibling();
+                }
+            }
+        }
     }
 
     public void generateDefaultSvg() {
@@ -198,7 +214,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             entityGroupNode = doc.createElementNS(svgNameSpace, "g");
             entityGroupNode.setAttribute("id", "EntityGroup");
             svgRoot.appendChild(entityGroupNode);
-            // add the labels group on top
+            // add the labels group on top, also added on svg load if missing
             Element labelsGroup = doc.createElementNS(svgNameSpace, "g");
             labelsGroup.setAttribute("id", "LabelsGroup");
             svgRoot.appendChild(labelsGroup);
@@ -313,11 +329,11 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            System.out.println(namedNodeMap.item(attributeCounter).getNodeValue());
 //        }
         Element entityElement = doc.getElementById(elementId);
-//        if (entityElement == null) {
-//            return null;
-//        } else {
-        return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path");
-//        }
+        if (entityElement == null) {
+            return null;
+        } else {
+            return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path");
+        }
     }
 
     public String getKinTypeForElementId(String elementId) {
@@ -337,6 +353,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void drawNodes(GraphSorter graphDataLocal) {
+        // todo: resolve threading issue and update issue so that imdi nodes that update can update the diagram
         requiresSave = true;
         dataStoreSvg.graphData = graphDataLocal;
         int vSpacing = graphPanelSize.getVerticalSpacing(dataStoreSvg.graphData.gridHeight);
