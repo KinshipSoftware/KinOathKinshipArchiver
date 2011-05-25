@@ -27,7 +27,7 @@ public class EntityData {
     @XmlElement(name = "KinType")
     private String[] kinTypeArray = new String[]{};
     @XmlElement(name = "KinTerm")
-    private String[] kinTermArray = new String[]{};
+    private GraphLabel[] kinTermArray = new GraphLabel[]{};
     private SymbolType symbolType;
     @XmlElement(name = "Symbol")
     private String symbolTypeString;
@@ -139,13 +139,13 @@ public class EntityData {
         return returnString;
     }
 
-    public void addKinTermString(String kinTermString) {
-        ArrayList<String> tempList = new ArrayList<String>(Arrays.asList(kinTermArray));
-        tempList.add(kinTermString);
-        kinTermArray = tempList.toArray(new String[]{});
+    public void addKinTermString(String kinTermString, String colourString) {
+        ArrayList<GraphLabel> tempList = new ArrayList<GraphLabel>(Arrays.asList(kinTermArray));
+        tempList.add(new GraphLabel(kinTermString, colourString));
+        kinTermArray = tempList.toArray(new GraphLabel[]{});
     }
 
-    public String[] getKinTermStrings() {
+    public GraphLabel[] getKinTermStrings() {
         return kinTermArray;
     }
 
