@@ -21,12 +21,15 @@ public class IndexerParam {
     public IndexerParam() {
     }
 
-    public IndexerParam(IndexerParameters indexerParametersLocal, String[][] valuesArrayLocal) {
-        indexerParameters = indexerParametersLocal;
+    public IndexerParam(String[][] valuesArrayLocal) {
         parametersList = new ArrayList<ParameterElement>();
         for (String[] currentValue : valuesArrayLocal) {
             parametersList.add(new ParameterElement(currentValue));
         }
+    }
+
+    public void setParent(IndexerParameters indexerParametersLocal) {
+        indexerParameters = indexerParametersLocal;
     }
 
     public void setValues(String[][] valuesArrayLocal) {
