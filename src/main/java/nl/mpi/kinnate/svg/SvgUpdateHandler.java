@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.geom.AffineTransform;
+import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.Element;
@@ -169,7 +170,9 @@ public class SvgUpdateHandler {
                     }
 //                    System.out.println("updateDragNodeX: " + updateDragNodeXInner);
 //                    System.out.println("updateDragNodeY: " + updateDragNodeYInner);
-                    if (graphPanel.doc != null) {
+                    if (graphPanel.doc == null || graphPanel.dataStoreSvg.graphData == null) {
+                        GuiHelper.linorgBugCatcher.logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
+                    } else {
                         int dragCounter = 0;
                         for (String entityId : graphPanel.selectedGroupId) {
                             // store the remainder after snap for re use on each update
@@ -202,7 +205,7 @@ public class SvgUpdateHandler {
 //                                }
 //                            }
 //                        }
-//                    }
+//                    } 
                         int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(graphPanel.dataStoreSvg.graphData.gridHeight);
                         int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(graphPanel.dataStoreSvg.graphData.gridWidth);
                         new RelationSvg().updateRelationLines(graphPanel, graphPanel.selectedGroupId, graphPanel.svgNameSpace, hSpacing, vSpacing);
