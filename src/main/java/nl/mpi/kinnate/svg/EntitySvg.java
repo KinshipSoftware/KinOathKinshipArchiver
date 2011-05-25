@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.GraphLabel;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -365,9 +366,9 @@ public class EntitySvg {
         if (graphPanel.dataStoreSvg.showKinTypeLabels) {
             labelList.addAll(Arrays.asList(currentNode.getKinTypeStringArray()));
         }
-        if (graphPanel.dataStoreSvg.showKinTermLabels) {
-            labelList.addAll(Arrays.asList(currentNode.getKinTermStrings()));
-        }
+//        if (graphPanel.dataStoreSvg.showKinTermLabels) {
+//            labelList.addAll(Arrays.asList(currentNode.getKinTermStrings()));
+//        }
         // todo: this method has the draw back that the text is not selectable as a block
         int textSpanCounter = 0;
         int lineSpacing = 15;
@@ -379,6 +380,18 @@ public class EntitySvg {
             labelText.setAttribute("stroke-width", "0");
             labelText.setAttribute("font-size", "14");
             Text textNode = graphPanel.doc.createTextNode(currentTextLable);
+            labelText.appendChild(textNode);
+            textSpanCounter += lineSpacing;
+            groupNode.appendChild(labelText);
+        }
+        for (GraphLabel currentTextLable : currentNode.getKinTermStrings()) {
+            Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
+            labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
+            labelText.setAttribute("y", Integer.toString(textSpanCounter));
+            labelText.setAttribute("fill", currentTextLable.getColourString());
+            labelText.setAttribute("stroke-width", "0");
+            labelText.setAttribute("font-size", "14");
+            Text textNode = graphPanel.doc.createTextNode(currentTextLable.getLabelString());
             labelText.appendChild(textNode);
             textSpanCounter += lineSpacing;
             groupNode.appendChild(labelText);
