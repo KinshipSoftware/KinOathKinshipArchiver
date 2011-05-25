@@ -58,6 +58,11 @@ public class QueryBuilder {
         return stringBuilder.toString();
     }
 
+    public String getArchiveLinksClause() {
+        return "for $corpusLink in $entityNode/*:CorpusLink\n"
+                + "return <ArchiveLink>{$corpusLink/text()}</ArchiveLink>";
+    }
+
     public String getRelationQuery(String uniqueIdentifier, IndexerParameters indexParameters) {
         String ancestorSequence = this.asSequenceString(indexParameters.ancestorFields);
         String decendantSequence = this.asSequenceString(indexParameters.decendantFields);
@@ -115,7 +120,8 @@ public class QueryBuilder {
                 + "<Labels>\n"
                 // loop the label fields and add a node for any that exist
                 + this.getLabelsClause(indexParameters, "$entityNode")
-                + "</Labels>"
+                + "</Labels>,"
+                + this.getArchiveLinksClause()
                 + "}"
                 + this.getRelationQuery(uniqueIdentifier, indexParameters)
                 + "</Entity>\n";
