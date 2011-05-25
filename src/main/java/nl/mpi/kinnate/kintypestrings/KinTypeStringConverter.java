@@ -276,7 +276,7 @@ public class KinTypeStringConverter extends GraphSorter {
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
                                 }
                             } else {
-                                currentGraphDataNode = new EntityData(fullKinTypeString, fullKinTypeString, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{}, currentReferenceKinType.isEgoType());
+                                currentGraphDataNode = new EntityData(fullKinTypeString, null, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{}, currentReferenceKinType.isEgoType());
                                 if (currentGraphDataNode.isEgo) {
                                     egoDataNode = currentGraphDataNode;
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
@@ -293,7 +293,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                     if (kinTerms.graphShow) {
                                         String kinTermLabel = kinTerms.getTermLabel(fullKinTypeString);
                                         if (kinTermLabel != null) {
-                                            currentGraphDataNode.addKinTermString(kinTermLabel);
+                                            currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
                                             egoDataNode.addRelatedNode(currentGraphDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.kinTermLine, kinTerms.graphColour, kinTermLabel);
                                         }
                                     }
