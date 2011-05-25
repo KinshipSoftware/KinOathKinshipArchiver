@@ -121,7 +121,9 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             try {
                 for (String currentSelectedId : graphPanel.selectedGroupId) {
                     String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
-                    graphPanel.arbilTableModel.addArbilDataNode(new URI(currentSelectedPath));
+                    if (currentSelectedPath != null) {
+                        graphPanel.arbilTableModel.addArbilDataNode(new URI(currentSelectedPath));
+                    }
                 }
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
