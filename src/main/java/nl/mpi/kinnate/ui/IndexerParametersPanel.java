@@ -14,6 +14,11 @@ public class IndexerParametersPanel extends JTabbedPane {
 
     public IndexerParametersPanel(SavePanel savePanel, GraphPanel graphPanel, TableCellDragHandler tableCellDragHandler) {
 
+        graphPanel.getIndexParameters().symbolFieldsFields.setParent(graphPanel.getIndexParameters());
+        graphPanel.getIndexParameters().ancestorFields.setParent(graphPanel.getIndexParameters());
+        graphPanel.getIndexParameters().decendantFields.setParent(graphPanel.getIndexParameters());
+        graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
+
         // todo: add drag drop of field to these lists and initially populate them from the SVG data
         this.add("Symbol Fields", new JScrollPane(new FieldSelectionList(savePanel, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler)));
 //        this.add("Relation Fields", new JScrollPane(new FieldSelectionList(graphPanel.getIndexParameters().relevantLinkData, tableCellDragHandler)));
