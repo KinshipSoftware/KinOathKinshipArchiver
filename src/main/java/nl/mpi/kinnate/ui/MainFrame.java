@@ -101,7 +101,7 @@ public class MainFrame extends javax.swing.JFrame {
         egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
-        egoSelectionTestPanel.drawGraph();
+        //egoSelectionTestPanel.drawGraph();
     }
 
     public void importEntities(String importPath) {
