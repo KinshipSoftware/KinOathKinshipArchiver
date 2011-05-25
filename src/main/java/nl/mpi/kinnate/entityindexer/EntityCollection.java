@@ -149,7 +149,7 @@ public class EntityCollection {
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
         }
-        return new EntityData(uniqueIdentifier, "", "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
+        return new EntityData(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
     }
 
     static public void main(String[] args) {
