@@ -5,12 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -24,12 +24,9 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
-import org.basex.core.cmd.Add;
 import org.basex.core.cmd.Set;
 import org.basex.core.cmd.CreateDB;
 import org.basex.core.cmd.DropDB;
-import org.basex.core.cmd.Open;
-import org.basex.core.cmd.Optimize;
 import org.basex.core.cmd.XQuery;
 import org.basex.query.QueryException;
 import org.basex.query.QueryProcessor;
@@ -58,6 +55,12 @@ public class EntityCollection {
             new DropDB(databaseName).execute(context);
             new Set("CREATEFILTER", "*.cmdi").execute(context);
             new CreateDB(databaseName, ArbilSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
+//            new Open(databaseName).execute(context);
+//            new CreateIndex("text").execute(context); // TEXT|ATTRIBUTE|FULLTEXT|PATH
+//            new CreateIndex("fulltext").execute(context);
+//            new CreateIndex("attribute").execute(context);
+//            new CreateIndex("path").execute(context);
+//            new Close().execute(context);
 //            context.close();
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
@@ -69,11 +72,20 @@ public class EntityCollection {
         createDatabase();
 //        try {
 //            new Open(databaseName).execute(context);
+////            new Delete(updatedFile.toString()).execute(context);
+////            new Add(new File(updatedFile).toString()).execute(context);
 //            new Add(updatedFile.toString()).execute(context);
 //            new Optimize().execute(context);
+//            new Close().execute(context);
 //        } catch (BaseXException baseXException) {
 //            new ArbilBugCatcher().logError(baseXException);
 //        }
+    }
+
+    public SearchResults listGedcomEntityIds() {
+        // todo: use this to populate the InderParametersFormUI
+        String queryString = "distinct-values(collection('nl-mpi-kinnate')/Kinnate/Relation/Type/text())";
+        return performQuery(queryString);
     }
 
     public SearchResults listAllRelationTypes() {
@@ -133,7 +145,32 @@ public class EntityCollection {
         return searchResults;
     }
 
+    public EntityData[] getEntityWithRelations(String uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
+        long startTime = System.currentTimeMillis();
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String query1String = queryBuilder.getEntityWithRelationsQuery(uniqueIdentifier, excludeUniqueIdentifiers, indexParameters);
+        System.out.println("query1String: " + query1String);
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            String queryResult = new XQuery(query1String).execute(context);
+            System.out.println("queryResult: " + queryResult);
+            EntityData[] selectedEntity = (EntityData[]) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData[].class).getValue();
+            long queryMils = System.currentTimeMillis() - startTime;
+            String queryTimeString = "Query time: " + queryMils + "ms for " + selectedEntity.length + " entities";
+            System.out.println(queryTimeString);
+//            selectedEntity.appendTempLabel(queryTimeString);
+            return selectedEntity;
+        } catch (JAXBException exception) {
+            new ArbilBugCatcher().logError(exception);
+        } catch (BaseXException exception) {
+            new ArbilBugCatcher().logError(exception);
+        }
+        return new EntityData[]{}; //(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
+    }
+
     public EntityData getEntity(String uniqueIdentifier, IndexerParameters indexParameters) {
+        long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
         System.out.println("query1String: " + query1String);
@@ -143,6 +180,10 @@ public class EntityCollection {
             String queryResult = new XQuery(query1String).execute(context);
             System.out.println("queryResult: " + queryResult);
             EntityData selectedEntity = (EntityData) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData.class).getValue();
+            long queryMils = System.currentTimeMillis() - startTime;
+            String queryTimeString = "Query time: " + queryMils + "ms";
+            System.out.println(queryTimeString);
+//            selectedEntity.appendTempLabel(queryTimeString);
             return selectedEntity;
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
@@ -156,8 +197,17 @@ public class EntityCollection {
         JFrame jFrame = new JFrame("Test Query Window");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final JTextArea queryText = new JTextArea();
+        final JLabel queryTimeLabel = new JLabel();
+        //queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
+//        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
-        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
+//        queryText.setText(new QueryBuilder().getEntityWithRelationsQuery("e4dfbd92d311088bf692211ced5179e5", new String[]{"e4dfbd92d311088bf692211ced5179e5"}, new IndexerParameters()));
+        queryText.setText("for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate[(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = \"e4dfbd92d311088bf692211ced5179e5\"]\n"
+                + "return<Entity>{\n"
+                + "<Identifier>{$entityNode/(*:Entity|*:Gedcom)/*:UniqueIdentifier//text()}</Identifier>,\n"
+                + "<DateOfBirth>{$entityNode/(*:Entity|*:Gedcom)/DOB}</DateOfBirth>,\n"
+                + "<Path>{base-uri($entityNode)}</Path>\n"
+                + "}</Entity>\n");
         final JTextArea resultsText = new JTextArea();
         resultsText.setVisible(false);
         JButton jButton = new JButton("run query");
@@ -166,7 +216,11 @@ public class EntityCollection {
             public void actionPerformed(ActionEvent e) {
                 resultsText.setText("");
                 try {
+                    long startTime = System.currentTimeMillis();
                     resultsText.append(new XQuery(queryText.getText()).execute(context));
+                    long queryMils = System.currentTimeMillis() - startTime;
+                    String queryTimeString = "Query time: " + queryMils + "ms";
+                    queryTimeLabel.setText(queryTimeString);
                 } catch (BaseXException exception) {
                     resultsText.append(exception.getMessage());
                 }
@@ -183,10 +237,23 @@ public class EntityCollection {
             public void actionPerformed(ActionEvent e) {
                 resultsText.setText("");
                 try {
-                    new EntityCollection().updateDatabase(new URI("file:///Users/petwit/.arbil/ArbilWorkingFiles/a0d39c01f0e75d5364bfe643635aa48d/_I3_.cmdi"));
+                    new EntityCollection().updateDatabase(new URI("file:/Users/petwit/.arbil/ArbilWorkingFiles/ca1641fc8828f9edb295d1e7b3d37405/_PARENTS_.cmdi"));
                 } catch (URISyntaxException exception) {
                     resultsText.append(exception.getMessage());
                 }
+                resultsText.setVisible(true);
+            }
+        });
+        JButton recreateButton = new JButton("recreate database");
+        recreateButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                resultsText.setText("");
+//                try {
+                new EntityCollection().createDatabase();
+//                } catch (URISyntaxException exception) {
+//                    resultsText.append(exception.getMessage());
+//                }
                 resultsText.setVisible(true);
             }
         });
@@ -197,6 +264,8 @@ public class EntityCollection {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(jButton);
         buttonPanel.add(updateButton);
+        buttonPanel.add(recreateButton);
+        buttonPanel.add(queryTimeLabel);
         jPanel.add(buttonPanel, BorderLayout.PAGE_START);
         jFrame.setContentPane(new JScrollPane(jPanel));
         jFrame.pack();
