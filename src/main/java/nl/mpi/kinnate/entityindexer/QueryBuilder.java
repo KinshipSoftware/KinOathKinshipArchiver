@@ -10,6 +10,22 @@ import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
  */
 public class QueryBuilder {
 
+    public String asSequenceString(String[] stringArray) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String currentEntry : stringArray) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append(",");
+            } else {
+                stringBuilder.append("(");
+            }
+            stringBuilder.append("\"");
+            stringBuilder.append(currentEntry);
+            stringBuilder.append("\"");
+        }
+        stringBuilder.append(")");
+        return stringBuilder.toString();
+    }
+
     public String asSequenceString(IndexerParam indexerParam) {
         StringBuilder stringBuilder = new StringBuilder();
         for (ParameterElement currentEntry : indexerParam.getValues()) {
@@ -108,11 +124,21 @@ public class QueryBuilder {
                 + "}</Relations>\n";
     }
 
+    public String getEntityWithRelationsQuery(String uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
+        return "for $entityNode in collection('nl-mpi-kinnate')//*:UniqueIdentifier[. = \"" + uniqueIdentifier + "\"]/ancestor::*:Kinnate\n"
+                + "where 0 = ($entityNode/(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = " + asSequenceString(excludeUniqueIdentifiers) + ")\n"
+                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
+    }
+
     public String getEntityQuery(String uniqueIdentifier, IndexerParameters indexParameters) {
         return "let $entityNode := collection('nl-mpi-kinnate')/*:Kinnate[(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
-                + "return"
+                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
+    }
+
+    private String getEntityQueryReturn(String uniqueIdentifier, IndexerParameters indexParameters) {
+        return "return"
                 + "<Entity>{\n"
-                + "<Identifier>" + uniqueIdentifier + "</Identifier>,\n"
+                + "<Identifier>{$entityNode/(*:Entity|*:Gedcom)/*:UniqueIdentifier//text()}</Identifier>,\n"
                 // todo: check that DOB is read and that there is data to sort by
                 + "<DateOfBirth>{$entityNode/(*:Entity|*:Gedcom)/DOB}</DateOfBirth>,\n"
                 + "<Path>{base-uri($entityNode)}</Path>,\n"
