@@ -82,9 +82,8 @@ public class EntityCollection {
 //        }
     }
 
-    public SearchResults listGedcomEntityIds() {
-        // todo: use this to populate the InderParametersFormUI
-        String queryString = "distinct-values(collection('nl-mpi-kinnate')/Kinnate/Relation/Type/text())";
+    public SearchResults listGedcomFamIds() {
+        String queryString = "distinct-values(collection('nl-mpi-kinnate')/*:Kinnate/*:Gedcom[*:Entity/*:GedcomType='FAM']/*:UniqueIdentifier//text())";
         return performQuery(queryString);
     }
 
