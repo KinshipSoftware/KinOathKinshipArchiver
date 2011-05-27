@@ -3,6 +3,8 @@ package nl.mpi.kinnate.svg;
 import java.awt.geom.AffineTransform;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
+import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityRelation;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -173,10 +175,24 @@ public class SvgUpdateHandler {
                     if (graphPanel.doc == null || graphPanel.dataStoreSvg.graphData == null) {
                         GuiHelper.linorgBugCatcher.logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
                     } else {
+                        boolean allRealtionsSelected = true;
+                        relationLoop:
+                        for (EntityData selectedEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+                            if (selectedEntity.isVisible
+                                    && graphPanel.selectedGroupId.contains(selectedEntity.getUniqueIdentifier())) {
+                                for (EntityRelation entityRelation : selectedEntity.getVisiblyRelateNodes()) {
+                                    EntityData relatedEntity = entityRelation.getAlterNode();
+                                    if (relatedEntity.isVisible && !graphPanel.selectedGroupId.contains(relatedEntity.getUniqueIdentifier())) {
+                                        allRealtionsSelected = false;
+                                        break relationLoop;
+                                    }
+                                }
+                            }
+                        }
                         int dragCounter = 0;
                         for (String entityId : graphPanel.selectedGroupId) {
                             // store the remainder after snap for re use on each update
-                            dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel.doc, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid);
+                            dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel.doc, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, allRealtionsSelected);
                             dragCounter++;
                         }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
