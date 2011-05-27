@@ -145,7 +145,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         arbilTableModel = arbilTableModelLocal;
     }
 
-    public void readSvg(File svgFilePath) {
+    public EntityData[] readSvg(File svgFilePath) {
         svgFile = svgFilePath;
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
@@ -174,6 +174,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                 }
             }
         }
+        return dataStoreSvg.graphData.getDataNodes();
     }
 
     public void generateDefaultSvg() {
