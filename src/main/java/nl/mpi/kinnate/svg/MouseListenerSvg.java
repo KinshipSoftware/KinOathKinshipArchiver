@@ -9,8 +9,8 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
-import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.kinnate.kindata.EntityData;
 import org.w3c.dom.Element;
 
 /**
@@ -27,6 +27,11 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     static boolean mouseActionIsPopupTrigger = false;
     static boolean mouseActionIsDrag = false;
     private String entityToToggle = null;
+
+    public enum ActionCode {
+
+        selectAll, selectRelated, expandSelection, deselectAll
+    }
 
     public MouseListenerSvg(GraphPanel graphPanelLocal) {
         graphPanel = graphPanelLocal;
@@ -57,7 +62,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         if (/* !mouseActionIsDrag &&  */!mouseActionIsPopupTrigger && !mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
             System.out.println("Clear selection");
             graphPanel.selectedGroupId.clear();
-            graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
+            updateSelectionDisplay();
         }
     }
 
@@ -70,7 +75,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             // toggle the highlight
             graphPanel.selectedGroupId.remove(entityToToggle);
             entityToToggle = null;
-            graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
+            updateSelectionDisplay();
         }
         checkSelectionClearRequired(me);
         mouseActionOnNode = false;
@@ -97,7 +102,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         String entityIdentifier = currentDraggedElement.getAttribute("id");
         System.out.println("entityPath: " + entityIdentifier);
         boolean nodeAlreadySelected = graphPanel.selectedGroupId.contains(entityIdentifier);
-        if (!shiftDown) {
+        if (!shiftDown && !nodeAlreadySelected) {
             System.out.println("Clear selection");
             graphPanel.selectedGroupId.clear();
             graphPanel.selectedGroupId.add(entityIdentifier);
@@ -111,10 +116,11 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 graphPanel.selectedGroupId.add(entityIdentifier);
             }
         }
+        updateSelectionDisplay();
+    }
+
+    private void updateSelectionDisplay() {
         graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
-//                if (existingHighlight == null) {
-//                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-//                }
         // update the table selection
         if (graphPanel.arbilTableModel != null) {
             graphPanel.arbilTableModel.removeAllArbilDataNodeRows();
@@ -129,5 +135,31 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 GuiHelper.linorgBugCatcher.logError(urise);
             }
         }
+    }
+
+    public void performMenuAction(ActionCode commandCode) {
+        System.out.println("commandCode: " + commandCode.name());
+        switch (commandCode) {
+            case selectAll:
+                graphPanel.selectedGroupId.clear();
+                for (EntityData currentEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+                    if (currentEntity.isVisible) {
+                        if (!graphPanel.selectedGroupId.contains(currentEntity.getUniqueIdentifier())) {
+                            graphPanel.selectedGroupId.add(currentEntity.getUniqueIdentifier());
+                        }
+                    }
+                }
+                break;
+            case selectRelated:
+                // todo: continue here
+                break;
+            case expandSelection:
+                // todo: continue here
+                break;
+            case deselectAll:
+                graphPanel.selectedGroupId.clear();
+                break;
+        }
+        updateSelectionDisplay();
     }
 }
