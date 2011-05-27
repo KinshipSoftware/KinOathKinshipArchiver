@@ -65,10 +65,11 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
 //    private String kinTypeStrings[] = new String[]{};
 
     public KinTypeEgoSelectionTestPanel(File existingFile) {
+        EntityData[] svgStoredEntities = null;
         graphPanel = new GraphPanel(this);
         kinTypeStringInput = new JTextPane();
         if (existingFile != null && existingFile.exists()) {
-            graphPanel.readSvg(existingFile);
+            svgStoredEntities = graphPanel.readSvg(existingFile);
             String kinTermContents = null;
             for (String currentKinTypeString : graphPanel.getKinTypeStrigs()) {
                 if (currentKinTypeString.trim().length() > 0) {
@@ -134,7 +135,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         // EntityIndex loads the xml files and reads the document for entity data
 //        entityIndex = new EntityIndex(graphPanel.getIndexParameters());
         // EntityCollection queries the xml collection to get the entity data
-        entityIndex = new QueryParser();
+        entityIndex = new QueryParser(svgStoredEntities);
 
         graphSorter = new GraphSorter();
 
