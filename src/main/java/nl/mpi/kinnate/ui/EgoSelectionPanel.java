@@ -93,17 +93,19 @@ public class EgoSelectionPanel extends JPanel {
         ArrayList<ArbilDataNode> requiredNodeArray = new ArrayList<ArbilDataNode>();
         ArrayList<ArbilDataNode> remainingNodeArray = new ArrayList<ArbilDataNode>();
         for (EntityData entityData : allEntities) {
-            try {
-                ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityData.getEntityPath()));
-                if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
-                    egoNodeArray.add(arbilDataNode);
-                } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
-                    requiredNodeArray.add(arbilDataNode);
-                } else {
-                    remainingNodeArray.add(arbilDataNode);
+            if (entityData.isVisible) {
+                try {
+                    ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityData.getEntityPath()));
+                    if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                        egoNodeArray.add(arbilDataNode);
+                    } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                        requiredNodeArray.add(arbilDataNode);
+                    } else {
+                        remainingNodeArray.add(arbilDataNode);
+                    }
+                } catch (URISyntaxException exception) {
+                    System.err.println(exception.getMessage());
                 }
-            } catch (URISyntaxException exception) {
-                System.err.println(exception.getMessage());
             }
         }
 //            setEgoNodes(egoNodeArray, egoTree, egoModel, egoRootNode);
