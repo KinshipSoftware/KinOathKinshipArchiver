@@ -251,12 +251,16 @@ public class EntitySvg {
 //        }
 //    }
 
-    public float[] moveEntity(SVGDocument doc, String entityId, float shiftX, float shiftY, boolean snapToGrid) {
+    public float[] moveEntity(SVGDocument doc, String entityId, float shiftX, float shiftY, boolean snapToGrid, boolean allRealtionsSelected) {
         Element entitySymbol = doc.getElementById(entityId);
         float remainderAfterSnapX = 0;
         float remainderAfterSnapY = 0;
         if (entitySymbol != null) {
             boolean allowYshift = entitySymbol.getLocalName().equals("text");
+            if (allRealtionsSelected) {
+                // if all the visible relations are selected then allow y shift
+                allowYshift = true;
+            }
             SVGMatrix sVGMatrix = ((SVGLocatable) entitySymbol).getCTM();
 //            sVGMatrix.setE(sVGMatrix.getE() + shiftX);
 //            sVGMatrix.setE(sVGMatrix.getF() + shiftY);
