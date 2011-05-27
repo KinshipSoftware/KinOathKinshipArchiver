@@ -34,6 +34,7 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         recentFileMenu = new RecentFileMenu(this);
         initComponents();
+        ((EditMenu) editMenu).enableMenuKeys();
         nl.mpi.kinnate.ArbilInjector.injectHandlers();
         entityCollection = new EntityCollection();
         entitySearchPanel = new EntitySearchPanel(entityCollection);
@@ -101,7 +102,7 @@ public class MainFrame extends javax.swing.JFrame {
         egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
-        //egoSelectionTestPanel.drawGraph();
+        egoSelectionTestPanel.drawGraph();
     }
 
     public void importEntities(String importPath) {
@@ -132,7 +133,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         closeTabMenuItem = new javax.swing.JMenuItem();
         exitApplication = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
+        editMenu = new EditMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(jTabbedPane1, java.awt.BorderLayout.PAGE_START);
@@ -246,6 +247,20 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar1.add(fileMenu);
 
         editMenu.setText("Edit");
+        editMenu.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                editMenuMenuSelected(evt);
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+        });
+        editMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editMenuActionPerformed(evt);
+            }
+        });
         jMenuBar1.add(editMenu);
 
         setJMenuBar(jMenuBar1);
@@ -390,6 +405,16 @@ public class MainFrame extends javax.swing.JFrame {
         new DiagramTranscoder().saveAsPdf((SavePanel) jTabbedPane1.getSelectedComponent());
         new DiagramTranscoder().saveAsJpg((SavePanel) jTabbedPane1.getSelectedComponent());
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void editMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuActionPerformed
+    }//GEN-LAST:event_editMenuActionPerformed
+
+    private void editMenuMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_editMenuMenuSelected
+//        // init the menu and pass it the current save panel
+////        int tabIndex = Integer.valueOf(jTabbedPane1.getSelectedIndex());
+////        SavePanel savePanel = getSavePanel(tabIndex);
+//        ((EditMenu) editMenu).initMenu();
+    }//GEN-LAST:event_editMenuMenuSelected
 
     /**
      * @param args the command line arguments
