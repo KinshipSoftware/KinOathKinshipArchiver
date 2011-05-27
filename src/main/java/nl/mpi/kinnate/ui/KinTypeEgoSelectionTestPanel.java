@@ -197,7 +197,14 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
             ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
             EntityData[] graphNodes = entityIndex.getRelationsOfEgo(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters());
-            if (graphNodes.length == 0) {
+            boolean visibleNodeFound = false;
+            for (EntityData currentNode : graphNodes) {
+                if (currentNode.isVisible) {
+                    visibleNodeFound = true;
+                    break;
+                }
+            }
+            if (!visibleNodeFound /*graphNodes.length == 0*/) {
                 KinTypeStringConverter graphData = new KinTypeStringConverter();
                 graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg);
                 graphPanel.drawNodes(graphData);
