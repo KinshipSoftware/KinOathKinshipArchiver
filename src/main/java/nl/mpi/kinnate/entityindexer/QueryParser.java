@@ -40,9 +40,14 @@ public class QueryParser implements EntityService {
         }
     }
 
-    public QueryParser() {
+    public QueryParser(EntityData[] svgEntities) {
         entityCollection = new EntityCollection();
         loadedGraphNodes = new HashMap<String, EntityData>();
+        if (svgEntities != null) {
+            for (EntityData svgStoredEntity : svgEntities) {
+                loadedGraphNodes.put(svgStoredEntity.getUniqueIdentifier(), svgStoredEntity);
+            }
+        }
     }
 
 //    public String[][] getQueryStrings(String kinTypeString) {
@@ -248,14 +253,16 @@ public class QueryParser implements EntityService {
                 nodeRelation.setAlterNode(loadedGraphNodes.get(nodeRelation.alterUniqueIdentifier));
             }
         }
-        ArrayList<EntityData> returnNodes = new ArrayList<EntityData>();
-        for (EntityData entityData : loadedGraphNodes.values()) {
-            if (entityData.isVisible) {
-                returnNodes.add(entityData);
-            }
-        }
-        return returnNodes.toArray(new EntityData[]{});
-
+        // either strip out the entities that are not shown
+//        ArrayList<EntityData> returnNodes = new ArrayList<EntityData>();
+//        for (EntityData entityData : loadedGraphNodes.values()) {
+//            if (entityData.isVisible) {
+//                returnNodes.add(entityData);
+//            }
+//        }
+//        return returnNodes.toArray(new EntityData[]{});
+        // or return all of the loaded entities so they can be stored in the svg file
+        return loadedGraphNodes.values().toArray(new EntityData[]{});
 
 
 //        ArrayList<GraphDataNode> graphDataNodes = new ArrayList<GraphDataNode>();
