@@ -74,22 +74,26 @@ public class EntityImporter implements GenericImporter {
         return fileName.replaceAll("[^A-z0-9]", "_") + ".cmdi";
     }
 
-    public URI[] importTestFile(JTextArea importTextArea, File testFile) {
+    public URI[] importFile(JTextArea importTextArea, File testFile) {
         try {
             calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
-            return importTestFile(importTextArea, new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
+            return importFile(importTextArea, new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
         } catch (FileNotFoundException exception) {
             // todo: handle this
             return null;
         }
     }
 
-    public URI[] importTestFile(JTextArea importTextArea, String testFileString) {
+    public URI[] importFile(JTextArea importTextArea, String testFileString) {
         calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
-        return importTestFile(importTextArea, new InputStreamReader(getClass().getResourceAsStream(testFileString)));
+        return importFile(importTextArea, new InputStreamReader(getClass().getResourceAsStream(testFileString)));
     }
 
-    public URI[] importTestFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
+    public URI[] importFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
+        throw new UnsupportedOperationException("Not supported");
+    }
+
+    public boolean canImport(String inputFileString) {
         throw new UnsupportedOperationException("Not supported");
     }
 }
