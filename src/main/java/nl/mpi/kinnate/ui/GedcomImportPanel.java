@@ -20,6 +20,7 @@ import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.XsdChecker;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.GedcomImporter;
+import nl.mpi.kinnate.gedcomimport.GenericImporter;
 
 /**
  *  Document   : GedcomImportPanel
@@ -49,15 +50,15 @@ public class GedcomImportPanel extends JPanel {
 //    private DragTransferHandler dragTransferHandler;
     }
 
-    protected JPanel getCreatedNodesPane(final GedcomImporter gedcomImporter) {
+    protected JPanel getCreatedNodesPane(final GenericImporter gedcomImporter) {
         JPanel createdNodesPanel = new JPanel();
         createdNodesPanel.setLayout(new BoxLayout(createdNodesPanel, BoxLayout.PAGE_AXIS));
-        if (gedcomImporter.createdNodeIds.isEmpty()) {
+        if (gedcomImporter.getCreatedNodeIds().isEmpty()) {
             createdNodesPanel.add(new JLabel("No data was imported, nothing to show in the graph."));
         } else {
             final ArrayList<JCheckBox> checkBoxArray = new ArrayList<JCheckBox>();
-            for (String typeString : gedcomImporter.createdNodeIds.keySet()) {
-                JCheckBox currentCheckBox = new JCheckBox(typeString + " ( x " + gedcomImporter.createdNodeIds.get(typeString).size() + ")");
+            for (String typeString : gedcomImporter.getCreatedNodeIds().keySet()) {
+                JCheckBox currentCheckBox = new JCheckBox(typeString + " ( x " + gedcomImporter.getCreatedNodeIds().get(typeString).size() + ")");
                 currentCheckBox.setActionCommand(typeString);
                 checkBoxArray.add(currentCheckBox);
                 createdNodesPanel.add(currentCheckBox);
@@ -69,7 +70,7 @@ public class GedcomImportPanel extends JPanel {
                     ArrayList<String> selectedIds = new ArrayList<String>();
                     for (JCheckBox currentCheckBox : checkBoxArray) {
                         if (currentCheckBox.isSelected()) {
-                            selectedIds.addAll((gedcomImporter.createdNodeIds.get(currentCheckBox.getActionCommand())));
+                            selectedIds.addAll((gedcomImporter.getCreatedNodeIds().get(currentCheckBox.getActionCommand())));
                         }
                     }
                     KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
@@ -130,7 +131,7 @@ public class GedcomImportPanel extends JPanel {
                         @Override
                         public void run() {
                             boolean overwriteExisting = overwriteOnImport.isSelected();
-                            GedcomImporter gedcomImporter = new GedcomImporter(overwriteExisting);
+                            GenericImporter gedcomImporter = new GedcomImporter(overwriteExisting);
                             gedcomImporter.setProgressBar(progressBar);
                             URI[] treeNodesArray;
                             if (importFileString != null) {
