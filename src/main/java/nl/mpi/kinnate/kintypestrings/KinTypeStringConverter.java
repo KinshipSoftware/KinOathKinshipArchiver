@@ -254,7 +254,10 @@ public class KinTypeStringConverter extends GraphSorter {
             boolean egoNodeFound = false;
 //            System.out.println("inputString: " + inputString);
             ParserHighlight parserHighlight = new ParserHighlight();
-            parserHighlightArray[lineCounter] = parserHighlight;
+            if (parserHighlightArray.length > lineCounter) {
+                // if kin type strings have been added from the kin terms then there will be no space in the array
+                parserHighlightArray[lineCounter] = parserHighlight;
+            }
             if (inputString != null && inputString.length() > 0) {
                 if (inputString.startsWith("#")) {
                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, 0);
