@@ -174,6 +174,9 @@ public class GraphPanel extends JPanel implements SavePanel {
                 }
             }
         }
+        if (dataStoreSvg.graphData == null) {
+            return null;
+        }
         return dataStoreSvg.graphData.getDataNodes();
     }
 
