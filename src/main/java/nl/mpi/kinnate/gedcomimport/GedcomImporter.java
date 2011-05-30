@@ -36,12 +36,13 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         super(overwriteExistingLocal);
     }
 
+    @Override
     public boolean canImport(String inputFileString) {
         return (inputFileString.toLowerCase().endsWith(".ged"));
     }
 
     @Override
-    public URI[] importTestFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
+    public URI[] importFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
         createdNodeIds = new HashMap<String, ArrayList<String>>();
 //        Hashtable<String, URI> createdNodesTable = new Hashtable<String, URI>();
