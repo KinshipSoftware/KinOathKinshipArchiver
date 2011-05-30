@@ -5,12 +5,14 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityRelation;
 import org.w3c.dom.Element;
 
 /**
@@ -23,10 +25,10 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     private Cursor preDragCursor;
     private GraphPanel graphPanel;
     private Point startDragPoint = null;
-    static boolean mouseActionOnNode = false;
-    static boolean mouseActionIsPopupTrigger = false;
-    static boolean mouseActionIsDrag = false;
-    private String entityToToggle = null;
+    static private boolean mouseActionOnNode = false;
+    static private boolean mouseActionIsPopupTrigger = false;
+    static private boolean mouseActionIsDrag = false;
+    static private String entityToToggle = null;
 
     public enum ActionCode {
 
@@ -59,7 +61,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     }
 
     private void checkSelectionClearRequired(MouseEvent me) {
-        if (/* !mouseActionIsDrag &&  */!mouseActionIsPopupTrigger && !mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
+        boolean shiftDown = me.isShiftDown();
+        if (!shiftDown && /* !mouseActionIsDrag &&  */ !mouseActionIsPopupTrigger && !mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
             System.out.println("Clear selection");
             graphPanel.selectedGroupId.clear();
             updateSelectionDisplay();
@@ -108,11 +111,11 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             graphPanel.selectedGroupId.add(entityIdentifier);
         } else {
             // toggle the highlight            
-            if (nodeAlreadySelected) {
+            if (shiftDown && nodeAlreadySelected) {
                 // postpone until after a drag action can be tested for and only deselect if not draged
                 entityToToggle = entityIdentifier;
                 // graphPanel.selectedGroupId.remove(entityIdentifier);
-            } else {
+            } else if (!nodeAlreadySelected) {
                 graphPanel.selectedGroupId.add(entityIdentifier);
             }
         }
@@ -137,6 +140,19 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         }
     }
 
+    private void addRelations(int maxCount, EntityData currentEntity, HashSet<String> selectedIds) {
+        if (maxCount >= selectedIds.size()) {
+            return;
+        }
+        for (EntityRelation entityRelation : currentEntity.getVisiblyRelateNodes()) {
+            EntityData alterNode = entityRelation.getAlterNode();
+            if (alterNode.isVisible) {
+                selectedIds.add(alterNode.getUniqueIdentifier());
+                addRelations(maxCount, alterNode, selectedIds);
+            }
+        }
+    }
+
     public void performMenuAction(ActionCode commandCode) {
         System.out.println("commandCode: " + commandCode.name());
         switch (commandCode) {
@@ -151,7 +167,17 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 }
                 break;
             case selectRelated:
-                // todo: continue here
+                HashSet<String> selectedIds = new HashSet<String>(graphPanel.selectedGroupId);
+                for (EntityData currentEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+                    if (currentEntity.isVisible) {
+                        // todo: continue here
+                        if (graphPanel.selectedGroupId.contains(currentEntity.getUniqueIdentifier())) {
+                            addRelations(graphPanel.dataStoreSvg.graphData.getDataNodes().length, currentEntity, selectedIds);
+                        }
+                    }
+                }
+                graphPanel.selectedGroupId.clear();
+                graphPanel.selectedGroupId.addAll(selectedIds);
                 break;
             case expandSelection:
                 // todo: continue here
