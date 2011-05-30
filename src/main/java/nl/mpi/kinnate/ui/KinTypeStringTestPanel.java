@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -105,7 +106,9 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
 
     public void updateGraph() {
         KinTypeStringConverter graphData = new KinTypeStringConverter();
-        graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg);
+        String[] kinTypeStrings = kinTypeStringInput.getText().split("\n");
+        ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
+        graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
         graphPanel.drawNodes(graphData);
         KinTypeStringTestPanel.this.doLayout();
     }
