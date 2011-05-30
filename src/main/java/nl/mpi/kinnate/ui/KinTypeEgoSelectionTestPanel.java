@@ -206,7 +206,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             }
             if (!visibleNodeFound /*graphNodes.length == 0*/) {
                 KinTypeStringConverter graphData = new KinTypeStringConverter();
-                graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
+                graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
                 graphPanel.drawNodes(graphData);
                 egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
 //                KinTypeEgoSelectionTestPanel.this.doLayout();
