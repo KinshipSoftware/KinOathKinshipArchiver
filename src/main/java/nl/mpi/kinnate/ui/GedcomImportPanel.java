@@ -19,6 +19,7 @@ import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.XsdChecker;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.gedcomimport.CsvImporter;
 import nl.mpi.kinnate.gedcomimport.GedcomImporter;
 import nl.mpi.kinnate.gedcomimport.GenericImporter;
 
@@ -131,13 +132,22 @@ public class GedcomImportPanel extends JPanel {
                         @Override
                         public void run() {
                             boolean overwriteExisting = overwriteOnImport.isSelected();
-                            GenericImporter gedcomImporter = new GedcomImporter(overwriteExisting);
-                            gedcomImporter.setProgressBar(progressBar);
+                            GenericImporter genericImporter = new GedcomImporter(overwriteExisting);
+                            if (importFileString != null) {
+                                if (!genericImporter.canImport(importFileString)) {
+                                    genericImporter = new CsvImporter(overwriteExisting);
+                                }
+                            } else {
+                                if (!genericImporter.canImport(importFile.toString())) {
+                                    genericImporter = new CsvImporter(overwriteExisting);
+                                }
+                            }
+                            genericImporter.setProgressBar(progressBar);
                             URI[] treeNodesArray;
                             if (importFileString != null) {
-                                treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFileString);
+                                treeNodesArray = genericImporter.importFile(importTextArea, importFileString);
                             } else {
-                                treeNodesArray = gedcomImporter.importTestFile(importTextArea, importFile);
+                                treeNodesArray = genericImporter.importFile(importTextArea, importFile);
                             }
                             boolean checkFilesAfterImport = validateImportedXml.isSelected();
                             if (treeNodesArray != null && checkFilesAfterImport) {
@@ -193,7 +203,7 @@ public class GedcomImportPanel extends JPanel {
 //                GraphData graphData = new GraphData();
 //                graphData.readData();
 //                graphPanel.drawNodes(graphData);
-                            GedcomImportPanel.this.endPagePanel.add(GedcomImportPanel.this.getCreatedNodesPane(gedcomImporter), BorderLayout.CENTER);
+                            GedcomImportPanel.this.endPagePanel.add(GedcomImportPanel.this.getCreatedNodesPane(genericImporter), BorderLayout.CENTER);
                             GedcomImportPanel.this.revalidate();
                         }
                     }.start();
