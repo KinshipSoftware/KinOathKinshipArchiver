@@ -32,9 +32,9 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
-import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
+import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -206,40 +206,40 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             }
             if (!visibleNodeFound /*graphNodes.length == 0*/) {
                 KinTypeStringConverter graphData = new KinTypeStringConverter();
-                graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg);
+                graphData.readKinTypes(kinTypeStringInput.getText().split("\n"), graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
                 graphPanel.drawNodes(graphData);
                 egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
 //                KinTypeEgoSelectionTestPanel.this.doLayout();
             } else {
                 graphSorter.setEntitys(graphNodes);
-                StyledDocument styledDocument = kinTypeStringInput.getStyledDocument();
-                int lineStart = 0;
-                for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
-                    ParserHighlight currentHighlight = parserHighlight[lineCounter];
-//                int lineStart = styledDocument.getParagraphElement(lineCounter).getStartOffset();
-//                int lineEnd = styledDocument.getParagraphElement(lineCounter).getEndOffset();
-                    int lineEnd = lineStart + kinTypeStrings[lineCounter].length();
-                    styledDocument.setCharacterAttributes(lineStart, lineEnd, kinTypeStringInput.getStyle("Unknown"), true);
-                    while (currentHighlight.highlight != null) {
-                        int startPos = lineStart + currentHighlight.startChar;
-                        int charCount = lineEnd - lineStart;
-                        if (currentHighlight.nextHighlight.highlight != null) {
-                            charCount = currentHighlight.nextHighlight.startChar - currentHighlight.startChar;
-                        }
-                        if (currentHighlight.highlight != null) {
-                            String styleName = currentHighlight.highlight.name();
-                            styledDocument.setCharacterAttributes(startPos, charCount, kinTypeStringInput.getStyle(styleName), true);
-                        }
-                        currentHighlight = currentHighlight.nextHighlight;
-                    }
-                    lineStart += kinTypeStrings[lineCounter].length() + 1;
-                }
-//        kinTypeStrings = graphPanel.getKinTypeStrigs();
                 // register interest Arbil updates and update the graph when data is edited in the table
                 registerCurrentNodes(graphSorter.getDataNodes());
                 graphPanel.drawNodes(graphSorter);
                 egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes());
             }
+            StyledDocument styledDocument = kinTypeStringInput.getStyledDocument();
+            int lineStart = 0;
+            for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
+                ParserHighlight currentHighlight = parserHighlight[lineCounter];
+//                int lineStart = styledDocument.getParagraphElement(lineCounter).getStartOffset();
+//                int lineEnd = styledDocument.getParagraphElement(lineCounter).getEndOffset();
+                int lineEnd = lineStart + kinTypeStrings[lineCounter].length();
+                styledDocument.setCharacterAttributes(lineStart, lineEnd, kinTypeStringInput.getStyle("Unknown"), true);
+                while (currentHighlight.highlight != null) {
+                    int startPos = lineStart + currentHighlight.startChar;
+                    int charCount = lineEnd - lineStart;
+                    if (currentHighlight.nextHighlight.highlight != null) {
+                        charCount = currentHighlight.nextHighlight.startChar - currentHighlight.startChar;
+                    }
+                    if (currentHighlight.highlight != null) {
+                        String styleName = currentHighlight.highlight.name();
+                        styledDocument.setCharacterAttributes(startPos, charCount, kinTypeStringInput.getStyle(styleName), true);
+                    }
+                    currentHighlight = currentHighlight.nextHighlight;
+                }
+                lineStart += kinTypeStrings[lineCounter].length() + 1;
+            }
+//        kinTypeStrings = graphPanel.getKinTypeStrigs();
         } catch (EntityServiceException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
             ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
