@@ -12,6 +12,7 @@ import nl.mpi.arbil.ui.PreviewSplitPanel;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.export.ExportToR;
 import nl.mpi.kinnate.transcoder.DiagramTranscoder;
 
 /*
@@ -53,8 +54,8 @@ public class MainFrame extends javax.swing.JFrame {
         this.add(new HidePane(entitySearchPanel, "Search Entities", BorderLayout.LINE_END), BorderLayout.LINE_START);
         this.add(jTabbedPane1, BorderLayout.CENTER);
         KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
-        egoSelectionTestPanel.createDefaultGraph(KinTypeEgoSelectionTestPanel.defaultGraphString);
-        jTabbedPane1.add("Database Query", egoSelectionTestPanel);
+//        egoSelectionTestPanel.createDefaultGraph(KinTypeEgoSelectionTestPanel.defaultGraphString);
+        jTabbedPane1.add("Unsaved Diagram", egoSelectionTestPanel);
         jTabbedPane1.add("Kin Type String", new KinTypeStringTestPanel());
 //        jTabbedPane1.add("Kin Term Mapping for KinType Strings", new KinTypeStringTestPanel());
         jTabbedPane1.add("Archive Entity Linker", new ArchiveEntityLinkerPanel());
@@ -131,7 +132,9 @@ public class MainFrame extends javax.swing.JFrame {
         saveDiagram = new javax.swing.JMenuItem();
         saveDiagramAs = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
+        exportToR = new javax.swing.JMenuItem();
         closeTabMenuItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         exitApplication = new javax.swing.JMenuItem();
         editMenu = new EditMenu();
 
@@ -226,6 +229,14 @@ public class MainFrame extends javax.swing.JFrame {
         });
         fileMenu.add(jMenuItem1);
 
+        exportToR.setText("Export to R / SPSS");
+        exportToR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportToRActionPerformed(evt);
+            }
+        });
+        fileMenu.add(exportToR);
+
         closeTabMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
         closeTabMenuItem.setText("Close");
         closeTabMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -234,6 +245,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         fileMenu.add(closeTabMenuItem);
+        fileMenu.add(jSeparator3);
 
         exitApplication.setText("Exit");
         exitApplication.setActionCommand("exit");
@@ -349,10 +361,12 @@ public class MainFrame extends javax.swing.JFrame {
         if (savePanel != null) {
             saveDiagram.setEnabled(savePanel.hasSaveFileName() && savePanel.requiresSave());
             saveDiagramAs.setEnabled(true);
+            exportToR.setEnabled(true);
             closeTabMenuItem.setEnabled(true);
         } else {
             saveDiagramAs.setEnabled(false);
             saveDiagram.setEnabled(false);
+            exportToR.setEnabled(false);
             closeTabMenuItem.setEnabled(false);
         }
     }//GEN-LAST:event_fileMenuMenuSelected
@@ -413,8 +427,15 @@ public class MainFrame extends javax.swing.JFrame {
 //        // init the menu and pass it the current save panel
 ////        int tabIndex = Integer.valueOf(jTabbedPane1.getSelectedIndex());
 ////        SavePanel savePanel = getSavePanel(tabIndex);
-//        ((EditMenu) editMenu).initMenu();
+// todo: pass the current tab selection to the menu         ((EditMenu) editMenu).initMenu();
     }//GEN-LAST:event_editMenuMenuSelected
+
+    private void exportToRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportToRActionPerformed
+        int selectedIndex = jTabbedPane1.getSelectedIndex();
+//        String currentTabText = jTabbedPane1.getTitleAt(selectedIndex);
+        SavePanel savePanel = getSavePanel(selectedIndex);
+        new ExportToR().doExport(this, savePanel);
+    }//GEN-LAST:event_exportToRActionPerformed
 
     /**
      * @param args the command line arguments
@@ -432,6 +453,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem closeTabMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitApplication;
+    private javax.swing.JMenuItem exportToR;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -439,6 +461,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JMenuItem newDiagramMenuItem;
     private javax.swing.JMenuItem openDiagram;
