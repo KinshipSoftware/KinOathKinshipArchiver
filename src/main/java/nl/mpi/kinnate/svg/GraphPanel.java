@@ -366,6 +366,14 @@ public class GraphPanel extends JPanel implements SavePanel {
         currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
         try {
             Element svgRoot;
+            // Get the root element (the 'svg' element)
+            svgRoot = doc.getDocumentElement();
+            Element labelsGroup = doc.getElementById("LabelsGroup");
+            if (labelsGroup == null) {
+                labelsGroup = doc.createElementNS(svgNameSpace, "g");
+                labelsGroup.setAttribute("id", "LabelsGroup");
+                svgRoot.appendChild(labelsGroup);
+            }
             Element relationGroupNode;
             Element entityGroupNode;
 //            if (doc == null) {
@@ -375,34 +383,34 @@ public class GraphPanel extends JPanel implements SavePanel {
             // remove the old relation lines
             relationGroupNode = doc.createElementNS(svgNameSpace, "g");
             relationGroupNode.setAttribute("id", "RelationGroup");
-            relationGroupNodeOld.getParentNode().insertBefore(relationGroupNode, relationGroupNodeOld);
-            relationGroupNodeOld.getParentNode().removeChild(relationGroupNodeOld);
-            // remove the old entity symbols
+            svgRoot.insertBefore(relationGroupNode, labelsGroup);
+            if (relationGroupNodeOld != null) {
+                svgRoot.removeChild(relationGroupNodeOld);
+            }
+            // remove the old entity symbols making sure the entities sit above the relations but below the labels
             entityGroupNode = doc.createElementNS(svgNameSpace, "g");
             entityGroupNode.setAttribute("id", "EntityGroup");
-            entityGroupNodeOld.getParentNode().insertBefore(entityGroupNode, entityGroupNodeOld);
-            entityGroupNodeOld.getParentNode().removeChild(entityGroupNodeOld);
+            svgRoot.insertBefore(entityGroupNode, labelsGroup);
+            if (entityGroupNodeOld != null) {
+                svgRoot.removeChild(entityGroupNodeOld);
+            }
             // remove old kin diagram data
             NodeList dataNodes = doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
             for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
                 dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
             }
-            // Get the root element (the 'svg' element)
-            svgRoot = doc.getDocumentElement();
 //            }
             // Set the width and height attributes on the root 'svg' element.
             svgRoot.setAttribute("width", Integer.toString(currentWidth));
             svgRoot.setAttribute("height", Integer.toString(currentHeight));
+//            svgRoot.removeAttribute("width");
+//            svgRoot.removeAttribute("height");
             this.setPreferredSize(new Dimension(graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing), graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing)));//            entitySvg.removeOldEntities(entityGroupNode);
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
             // store the selected kin type strings and other data in the dom
             dataStoreSvg.storeAllData(doc);
-            for (EntityData currentNode : dataStoreSvg.graphData.getDataNodes()) {
-                if (currentNode.isVisible) {
-                    entityGroupNode.appendChild(entitySvg.createEntitySymbol(this, currentNode, hSpacing, vSpacing));
-                }
-            }
+            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
             for (EntityData currentNode : dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
