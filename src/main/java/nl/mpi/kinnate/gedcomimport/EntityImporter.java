@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 
 /**
@@ -28,9 +29,11 @@ public class EntityImporter implements GenericImporter {
     protected String inputFileMd5Sum;
     protected boolean overwriteExisting;
     protected HashMap<String, ArrayList<String>> createdNodeIds;
+//    private MetadataBuilder metadataBuilder;
 
     public EntityImporter(boolean overwriteExistingLocal) {
         overwriteExisting = overwriteExistingLocal;
+//        metadataBuilder = new MetadataBuilder();
     }
 
     public HashMap<String, ArrayList<String>> getCreatedNodeIds() {
@@ -67,6 +70,14 @@ public class EntityImporter implements GenericImporter {
         } catch (IOException iOException) {
             new ArbilBugCatcher().logError(iOException);
         }
+    }
+
+    protected File getDestinationDirectory() {
+        File destinationDirectory = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), inputFileMd5Sum);
+        if (!destinationDirectory.exists()) {
+            destinationDirectory.mkdir();
+        }
+        return destinationDirectory;
     }
 
     public String cleanFileName(String fileName) {
