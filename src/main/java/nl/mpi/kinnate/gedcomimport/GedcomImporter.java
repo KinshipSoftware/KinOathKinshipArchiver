@@ -1,21 +1,15 @@
 package nl.mpi.kinnate.gedcomimport;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -36,70 +30,13 @@ import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
  *  Created on : Aug 24, 2010, 2:40:21 PM
  *  Author     : Peter Withers
  */
-public class GedcomImporter {
-
-    private int inputLineCount;
-    private String inputFileMd5Sum;
-    JProgressBar progressBar = null;
-    private boolean overwriteExisting;
-    public HashMap<String, ArrayList<String>> createdNodeIds;
+public class GedcomImporter extends EntityImporter implements GenericImporter {
 
     public GedcomImporter(boolean overwriteExistingLocal) {
-        overwriteExisting = overwriteExistingLocal;
+        super(overwriteExistingLocal);
     }
 
-    private void appendToTaskOutput(JTextArea importTextArea, String lineOfText) {
-        importTextArea.append(lineOfText + "\n");
-        importTextArea.setCaretPosition(importTextArea.getText().length());
-    }
-
-    public void setProgressBar(JProgressBar progressBarLocal) {
-        progressBar = progressBarLocal;
-    }
-
-    private void calculateFileNameAndFileLength(BufferedReader bufferedReader) {
-        // count the lines in the file (for progress) and calculate the md5 sum (for unique file naming)
-        try {
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-            StringBuilder hexString = new StringBuilder();
-            String strLine;
-            inputLineCount = 0;
-            while ((strLine = bufferedReader.readLine()) != null) {
-                digest.update(strLine.getBytes());
-                inputLineCount++;
-            }
-            byte[] md5sum = digest.digest();
-            for (int byteCounter = 0; byteCounter < md5sum.length; ++byteCounter) {
-                hexString.append(Integer.toHexString(0x0100 + (md5sum[byteCounter] & 0x00FF)).substring(1));
-            }
-            inputFileMd5Sum = hexString.toString();
-        } catch (NoSuchAlgorithmException algorithmException) {
-            new ArbilBugCatcher().logError(algorithmException);
-        } catch (IOException iOException) {
-            new ArbilBugCatcher().logError(iOException);
-        }
-    }
-
-    private String cleanFileName(String fileName) {
-        // prevent bad file names being created from the gedcom internal name part
-        return fileName.replaceAll("[^A-z0-9]", "_") + ".cmdi";
-    }
-
-    public URI[] importTestFile(JTextArea importTextArea, File testFile) {
-        try {
-            calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
-            return importTestFile(importTextArea, new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
-        } catch (FileNotFoundException exception) {
-            // todo: handle this
-            return null;
-        }
-    }
-
-    public URI[] importTestFile(JTextArea importTextArea, String testFileString) {
-        calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
-        return importTestFile(importTextArea, new InputStreamReader(getClass().getResourceAsStream(testFileString)));
-    }
-
+    @Override
     public URI[] importTestFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
         createdNodeIds = new HashMap<String, ArrayList<String>>();
