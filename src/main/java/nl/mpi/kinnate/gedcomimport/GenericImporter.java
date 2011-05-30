@@ -14,11 +14,13 @@ import javax.swing.JTextArea;
  */
 public interface GenericImporter {
 
+    public boolean canImport(String inputFileString);
+
     public HashMap<String, ArrayList<String>> getCreatedNodeIds();
 
     public void setProgressBar(JProgressBar progressBarLocal);
 
-    public URI[] importTestFile(JTextArea importTextArea, File testFile);
+    public URI[] importFile(JTextArea importTextArea, File inputFile);
 
-    public URI[] importTestFile(JTextArea importTextArea, String testFileString);
+    public URI[] importFile(JTextArea importTextArea, String inputFileString);
 }
