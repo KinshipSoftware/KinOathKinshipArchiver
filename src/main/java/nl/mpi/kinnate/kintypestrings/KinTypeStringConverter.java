@@ -5,10 +5,9 @@ import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
-import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlightType;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kintypestrings.ParserHighlight.ParserHighlightType;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 
 /**
@@ -233,7 +232,7 @@ public class KinTypeStringConverter extends GraphSorter {
         }
     }
 
-    public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg) {
+    public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg, ParserHighlight[] parserHighlightArray) {
         HashMap<String, EntityData> graphDataNodeList = new HashMap<String, EntityData>();
 //        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{}, true);
 //        graphDataNodeList.put("E", egoDataNode);
@@ -248,65 +247,98 @@ public class KinTypeStringConverter extends GraphSorter {
                 }
             }
         }
+        int lineCounter = -1;
         for (String inputString : inputStringList) {
-            System.out.println("inputString: " + inputString);
-            if (inputString != null) {
-                inputString = inputString.trim();
-                if (!inputString.startsWith("E")) {
-                    inputString = "E" + inputString;
-                }
-                String consumableString = inputString;
-                EntityData parentDataNode = null;
-                EntityData egoDataNode = null;
-                while (consumableString.length() > 0) {
-                    boolean kinTypeFound = false;
-                    for (KinType currentReferenceKinType : referenceKinTypes) {
-                        if (consumableString.startsWith(currentReferenceKinType.codeString)) {
-                            consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
-                            consumableString = consumableString.replaceAll("^[-\\+\\d]*", "");
-                            String fullKinTypeString = inputString.substring(0, inputString.length() - consumableString.length());
-                            System.out.println("kinTypeFound: " + currentReferenceKinType.codeString);
-                            System.out.println("consumableString: " + consumableString);
-                            System.out.println("fullKinTypeString: " + fullKinTypeString);
-                            EntityData currentGraphDataNode;
-                            if (graphDataNodeList.containsKey(fullKinTypeString)) {
-                                currentGraphDataNode = graphDataNodeList.get(fullKinTypeString);
-                                if (currentGraphDataNode.isEgo) {
-                                    egoDataNode = currentGraphDataNode;
+            int insertedEgoOffset = 0;
+            lineCounter++;
+            boolean egoNodeFound = false;
+//            System.out.println("inputString: " + inputString);
+            ParserHighlight parserHighlight = new ParserHighlight();
+            parserHighlightArray[lineCounter] = parserHighlight;
+            if (inputString != null && inputString.length() > 0) {
+                if (inputString.startsWith("#")) {
+                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, 0);
+                } else {
+//                    while (inputString.matches("^[\\s]")) {
+//                        inputString = inputString.substring(1);
+//                        insertedEgoOffset--;
+//                    }
+//                    inputString = inputString.trim();
+                    if (!inputString.startsWith("E")) {
+                        inputString = "E" + inputString;
+                        insertedEgoOffset++;
+                    }
+                    int initialLength = inputString.length();
+                    String consumableString = inputString;
+                    EntityData parentDataNode = null;
+                    EntityData egoDataNode = null;
+                    while (consumableString.length() > 0) {
+                        int parserHighlightPosition = initialLength - consumableString.length() - insertedEgoOffset;
+                        boolean kinTypeFound = false;
+                        for (KinType currentReferenceKinType : referenceKinTypes) {
+                            if (consumableString.startsWith(currentReferenceKinType.codeString)) {
+                                if (currentReferenceKinType.isEgoType() && egoNodeFound) {
+                                    // prevent multiple egos on one line
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, parserHighlightPosition);
+                                    break;
+                                } else {
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, parserHighlightPosition);
+                                }
+                                if (currentReferenceKinType.isEgoType()) {
+                                    egoNodeFound = true;
+                                }
+                                consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
+                                consumableString = consumableString.replaceAll("^[-\\+\\d]*", "");
+                                String fullKinTypeString = inputString.substring(0, inputString.length() - consumableString.length());
+                                System.out.println("kinTypeFound: " + currentReferenceKinType.codeString);
+                                System.out.println("consumableString: " + consumableString);
+                                System.out.println("fullKinTypeString: " + fullKinTypeString);
+                                EntityData currentGraphDataNode;
+                                if (graphDataNodeList.containsKey(fullKinTypeString)) {
+                                    currentGraphDataNode = graphDataNodeList.get(fullKinTypeString);
+                                    if (currentGraphDataNode.isEgo) {
+                                        egoDataNode = currentGraphDataNode;
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
-                                }
-                            } else {
-                                currentGraphDataNode = new EntityData(fullKinTypeString, null, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{}, currentReferenceKinType.isEgoType());
-                                if (currentGraphDataNode.isEgo) {
-                                    egoDataNode = currentGraphDataNode;
+                                    }
+                                } else {
+                                    currentGraphDataNode = new EntityData(fullKinTypeString, null, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{}, currentReferenceKinType.isEgoType());
+                                    if (currentGraphDataNode.isEgo) {
+                                        egoDataNode = currentGraphDataNode;
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
-                                }
-                                DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
-                                if (parentDataNode != null) {
-                                    parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
-                                    currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
-                                }
-                                graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
-                                currentGraphDataNode.isVisible = true;
-                                // add any child nodes?
-                                for (KinTermGroup kinTerms : kinTermsArray) {
-                                    if (kinTerms.graphShow) {
-                                        String kinTermLabel = kinTerms.getTermLabel(fullKinTypeString);
-                                        if (kinTermLabel != null) {
-                                            currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
-                                            egoDataNode.addRelatedNode(currentGraphDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.kinTermLine, kinTerms.graphColour, kinTermLabel);
+                                    }
+                                    DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
+                                    if (parentDataNode != null) {
+                                        parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                        currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                    }
+                                    graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
+                                    currentGraphDataNode.isVisible = true;
+                                    // add any child nodes?
+                                    for (KinTermGroup kinTerms : kinTermsArray) {
+                                        if (kinTerms.graphShow) {
+                                            String kinTermLabel = kinTerms.getTermLabel(fullKinTypeString);
+                                            if (kinTermLabel != null) {
+                                                currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
+                                                egoDataNode.addRelatedNode(currentGraphDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.kinTermLine, kinTerms.graphColour, kinTermLabel);
+                                            }
                                         }
                                     }
                                 }
+                                parseLabelStrings(currentGraphDataNode, consumableString);
+                                parentDataNode = currentGraphDataNode;
+                                kinTypeFound = true;
+                                break;
                             }
-                            parseLabelStrings(currentGraphDataNode, consumableString);
-                            parentDataNode = currentGraphDataNode;
-                            kinTypeFound = true;
+                        }
+                        if (kinTypeFound == false) {
+                            consumableString = consumableString.replaceAll("^[\\s]*", "");
+                            if (consumableString.startsWith("#")) {
+                                parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length() - insertedEgoOffset);
+                            } else {
+                                parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - consumableString.length() - insertedEgoOffset);
+                            }
                             break;
                         }
-                    }
-                    if (kinTypeFound == false) {
-                        break;
                     }
                 }
             }
