@@ -58,7 +58,6 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //            return;
 //        }
 
-        MetadataBuilder metadataBuilder = new MetadataBuilder();
 //        metadataBuilder.addChildNode(gedcomImdiObject, ".Gedcom.Relation", null, null, null);
 //        gedcomImdiObject.loadImdiDom();
 //        gedcomImdiObject.waitTillLoaded();
@@ -77,12 +76,9 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
             Element previousField = null;
             Node currentDomNode = null;
 
-            File destinationDirectory = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), inputFileMd5Sum);
-            if (!destinationDirectory.exists()) {
-                destinationDirectory.mkdir();
-            }
+            File destinationDirectory = super.getDestinationDirectory();
 
-            String gedcomPreviousPath = "";
+//            String gedcomPreviousPath = "";
             int currntLineCounter = 0;
             boolean skipFileEntity = false;
             while ((strLine = bufferedReader.readLine()) != null) {
