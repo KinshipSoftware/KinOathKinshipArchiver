@@ -2,8 +2,8 @@ package nl.mpi.kinnate.entityindexer;
 
 import java.net.URI;
 import java.util.HashSet;
-import nl.mpi.kinnate.entityindexer.QueryParser.ParserHighlight;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 
 /**
  *  Document   : EntityService
