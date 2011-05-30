@@ -9,6 +9,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
+import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 
 /**
  *  Document   : QueryParser
@@ -19,26 +20,6 @@ public class QueryParser implements EntityService {
 
     HashMap<String, EntityData> loadedGraphNodes;
     EntityCollection entityCollection;
-
-    public enum ParserHighlightType {
-
-        KinType, Comment, Error, Query, Unknown
-    }
-
-    public class ParserHighlight {
-
-        public ParserHighlight nextHighlight = null;
-        public ParserHighlightType highlight;
-        public int startChar = 0;
-
-        public ParserHighlight addHighlight(ParserHighlightType highlightType, int startChar) {
-
-            this.highlight = highlightType;
-            this.startChar = startChar;
-            this.nextHighlight = new ParserHighlight();
-            return this.nextHighlight;
-        }
-    }
 
     public QueryParser(EntityData[] svgEntities) {
         entityCollection = new EntityCollection();
@@ -173,8 +154,9 @@ public class QueryParser implements EntityService {
             graphDataNode.clearVisibility();
             graphDataNode.clearTempLabels();
         }
-        int lineCounter = 0;
+        int lineCounter = -1;
         for (String currentKinString : kinTypeStrings) {
+            lineCounter++;
             parserHighlight[lineCounter] = new ParserHighlight();
             ArrayList<KinTypeStringConverter.KinTypeElement> kinTypeElementArray = kinTypeStringConverter.getKinTypeElements(currentKinString, parserHighlight[lineCounter]);
             for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeElementArray) {
@@ -216,7 +198,6 @@ public class QueryParser implements EntityService {
                     }
                 }
             }
-            lineCounter++;
         }
         // todo: the following could be removed if the ego nodes are replaces with the equavelent kin type string eg "E=Identifier"
         for (String currentEgoId : egoIdentifiers) {
