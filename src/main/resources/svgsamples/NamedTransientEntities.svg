@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="1000" zoomAndPan="magnify" contentStyleType="text/css" height="500" preserveAspectRatio="xMidYMid meet" version="1.0">
+<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="1000" zoomAndPan="magnify" contentStyleType="text/css" height="700" preserveAspectRatio="xMidYMid meet" version="1.0">
     <defs id="KinSymbols">
         <g id="circle">
-            <circle stroke-width="2" height="15" r="7" cx="7" cy="7" stroke="black"/>
+            <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
         </g>
         <g id="square">
-            <rect x="0" width="15" stroke-width="2" height="15" y="0" stroke="black"/>
+            <rect x="0" width="15" y="0" height="15" stroke-width="2" stroke="black"/>
         </g>
         <g id="square45">
             <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
@@ -14,12 +14,12 @@
             <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
         </g>
         <g id="union">
-            <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
-            <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
-            <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
+            <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
+            <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
+            <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
         </g>
         <g id="triangle">
-            <polygon stroke-width="2" points="7,0 0,12 15,12" stroke="black"/>
+            <polygon points="7,0 0,12 15,12" stroke-width="2" stroke="black"/>
         </g>
         <g id="equals">
             <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
@@ -28,297 +28,429 @@
             <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
         </g>
     </defs>
+    
+    
     <g id="RelationGroup">
-        <g id="relation0">
-            <kin:RelationEntities xmlns:kin="kin" ego="EfF" lineType="sanguineLine" alter="Ef" relationType="descendant"/>
-            <defs>
-                <polyline fill="none" id="relation0Line" stroke-width="2" points="107.0,199.5 107.0,249.5 199.5,249.5 199.5,299.5" stroke="grey"/>
-            </defs>
-            <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
-        </g>
-        <g id="relation1">
-            <kin:RelationEntities xmlns:kin="kin" ego="EfF" lineType="sanguineLine" alter="EfFF" relationType="ancestor"/>
-            <defs>
-                <polyline fill="none" id="relation1Line" stroke-width="2" points="107.0,199.5 107.0,149.5 107.0,149.5 107.0,99.5" stroke="grey"/>
-            </defs>
-            <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
-        </g>
-        <g id="relation2">
-            <kin:RelationEntities xmlns:kin="kin" ego="Em" lineType="sanguineLine" alter="EmM" relationType="ancestor"/>
-            <defs>
-                <polyline fill="none" id="relation2Line" stroke-width="2" points="407.0,199.5 407.0,149.5 407.0,149.5 407.0,99.5" stroke="grey"/>
-            </defs>
-            <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
-        </g>
-        <g id="relation3">
-            <kin:RelationEntities xmlns:kin="kin" ego="EfFF" lineType="sanguineLine" alter="EfF" relationType="descendant"/>
-            <defs>
-                <polyline fill="none" id="relation3Line" stroke-width="2" points="107.0,99.5 107.0,149.5 107.0,149.5 107.0,199.5" stroke="grey"/>
-            </defs>
-            <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
-        </g>
-        <g id="relation4">
-            <kin:RelationEntities xmlns:kin="kin" ego="EfM" lineType="sanguineLine" alter="Ef" relationType="descendant"/>
-            <defs>
-                <polyline fill="none" id="relation4Line" stroke-width="2" points="257.0,199.5 257.0,249.5 199.5,249.5 199.5,299.5" stroke="grey"/>
-            </defs>
-            <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
-        </g>
-        <g id="relation5">
-            <kin:RelationEntities xmlns:kin="kin" ego="EmM" lineType="sanguineLine" alter="Em" relationType="descendant"/>
-            <defs>
-                <polyline fill="none" id="relation5Line" stroke-width="2" points="407.0,99.5 407.0,149.5 407.0,149.5 407.0,199.5" stroke="grey"/>
-            </defs>
-            <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
-        </g>
-        <g id="relation6">
-            <kin:RelationEntities xmlns:kin="kin" ego="Ef" lineType="sanguineLine" alter="EfM" relationType="ancestor"/>
-            <defs>
-                <polyline fill="none" id="relation6Line" stroke-width="2" points="199.5,299.5 199.5,249.5 257.0,249.5 257.0,199.5" stroke="grey"/>
-            </defs>
-            <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
-        </g>
-        <g id="relation7">
-            <kin:RelationEntities xmlns:kin="kin" ego="Ef" lineType="sanguineLine" alter="EfF" relationType="ancestor"/>
-            <defs>
-                <polyline fill="none" id="relation7Line" stroke-width="2" points="199.5,299.5 199.5,249.5 107.0,249.5 107.0,199.5" stroke="grey"/>
-            </defs>
-            <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
-        </g>
+    <g id="relation0">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfMMM" lineType="sanguineLine" alter="EfMM" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation0Line" stroke-width="2" points="407.0,199.5 407.0,249.5 507.0,249.5 507.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
     </g>
-    <g id="EntityGroup">
-        <g id="EfF" kin:kintype="EfF" transform="translate(100.0, 192.5)" kin:path="EfF">
-            <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EfFsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        </g>
-        <g id="Em" kin:kintype="Em" transform="translate(400.0, 192.5)" kin:path="Em">
-            <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Emsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">John</text>
-        </g>
-        <g id="EfFF" kin:kintype="EfFF" transform="translate(100.0, 92.5)" kin:path="EfFF">
-            <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EfFFsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Clarence</text>
-        </g>
-        <g id="EfM" kin:kintype="EfM" transform="translate(250.0, 192.5)" kin:path="EfM">
-            <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EfMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Joyce</text>
-        </g>
-        <g id="EmM" kin:kintype="EmM" transform="translate(400.0, 92.5)" kin:path="EmM">
-            <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EmMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jannet</text>
-        </g>
-        <g id="Ef" kin:kintype="Ef" transform="translate(192.5, 292.5)" kin:path="Ef">
-            <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Efsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane</text>
-        </g>
+    <g id="relation1">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfF" lineType="sanguineLine" alter="Ef" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation1Line" stroke-width="2" points="207.0,399.5 207.0,449.5 307.0,449.5 307.0,499.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
     </g>
-    <g id="LabelsGroup"/>
-    <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
-        <kin:KinTypeString>Ef:Jane</kin:KinTypeString>
-        <kin:KinTypeString>Em:John</kin:KinTypeString>
-        <kin:KinTypeString>EmM:Janet</kin:KinTypeString>
-        <kin:KinTypeString>EfM:Joyce</kin:KinTypeString>
-        <kin:KinTypeString>EfFF:Clarence</kin:KinTypeString>
-        <kin:KinTypeString>EfF:Jonathan</kin:KinTypeString>
-        <kin:KinTypeString>EfMMF:Nathan</kin:KinTypeString>
-        <kin:KinTypeString>EfMM:Betty</kin:KinTypeString>
-        <kin:IndexParameters>
-            <kin:LabelFields>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*:Name"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:Text"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NoteText"/>
-            </kin:LabelFields>
-            <kin:SymbolFieldsFields>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:SEX='M']" kin:Value="triangle"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:SEX='F']" kin:Value="circle"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']" kin:Value="union"/>
-            </kin:SymbolFieldsFields>
-            <kin:AncestorFields>
-                <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMC"/>
-                <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.BIRT.FAMC"/>
-                <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHR.FAMC"/>
-                <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.ADOP.FAMC"/>
-                <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.SLGC.FAMC"/>
-                <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.HUSB"/>
-                <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.WIFE"/>
-                <kin:IndexerParam kin:XPath="ancestor"/>
-            </kin:AncestorFields>
-            <kin:DecendantFields>
-                <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHIL"/>
-                <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMS"/>
-                <kin:IndexerParam kin:XPath="descendant"/>
-            </kin:DecendantFields>
-        </kin:IndexParameters>
-        <kin:KinTermGroup kin:Show="true" kin:GroupColour="blue" kin:GroupName="English terms" kin:Generate="false">
-            <kin:KinTerm kin:Term="Grand Mother" kin:Alter="MM"/>
-            <kin:KinTerm kin:Term="Aunt" kin:Alter="MZ|FZ"/>
-            <kin:KinTerm kin:Term="Uncle" kin:Alter="MB|FB"/>
-            <kin:KinTerm kin:Term="Grand Father" kin:Alter="FF"/>
-        </kin:KinTermGroup>
-        <kin:KinTermGroup kin:Show="true" kin:GroupColour="cyan" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="false">
-            <kin:KinTerm kin:Term="Makuakane" kin:Description="Father, Uncle" kin:Alter="F|FB|MB"/>
-            <kin:KinTerm kin:Term="Makuahini" kin:Description="Mother, Aunt" kin:Alter="M|MZ|FZ"/>
-            <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="" kin:Alter="E(male)B|E(male)FBS|E(male)FZS|E(male)MBS|E(male)MZS"/>
-            <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="Brother/Sister, Cousin" kin:Alter="E(female)Z|E(female)FBD|E(female)FZD|E(female)MBD|E(female)MZD"/>
-            <kin:KinTerm kin:Term="Kaikuane" kin:Description="Brother, Cousin" kin:Alter="E(female)B|E(female)FBS|E(female)FZS|E(female)MBS|E(female)MZS"/>
-            <kin:KinTerm kin:Term="Kaikuane" kin:Description="Sister, Cousin" kin:Alter="E(male)Z|E(male)FBD|E(male)FZD|E(male)MBD|E(male)MZD"/>
-            <kin:KinTerm kin:Term="Keikikane" kin:Description="Son, Nephew" kin:Alter="S|BS|ZS"/>
-            <kin:KinTerm kin:Term="Keikamahini" kin:Description="Daughter, Niece" kin:Alter="D|BD|ZD"/>
-        </kin:KinTermGroup>
-        <kin:ShowLabels>true</kin:ShowLabels>
-        <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
-        <kin:ShowKinTermLabels>false</kin:ShowKinTermLabels>
-        <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
-        <kin:SnapToGrid>true</kin:SnapToGrid>
-        <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
-        <kin:ShowArchiveLinks>false</kin:ShowArchiveLinks>
-        <kin:EntityData>
-            <kin:EntityArray>
-                <Identifier>EfF</Identifier>
-                <Path>EfF</Path>
-                <KinType>EfF</KinType>
-                <isEgo>false</isEgo>
-                <Labels/>
-                <Relations>
-                    <Relation>
-                        <generationalDistance>0</generationalDistance>
-                        <Identifier>Ef</Identifier>
-                        <Type>descendant</Type>
-                        <Line>sanguineLine</Line>
-                    </Relation>
-                    <Relation>
-                        <generationalDistance>0</generationalDistance>
-                        <Identifier>EfFF</Identifier>
-                        <Type>ancestor</Type>
-                        <Line>sanguineLine</Line>
-                    </Relation>
-                </Relations>
-                <ArchiveLink>http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7</ArchiveLink>
-                <ArchiveLink>http://www.google.com</ArchiveLink>
-                <ArchiveLink>http://www.mpi.nl</ArchiveLink>
-                <isVisible>true</isVisible>
-                <xPos>2</xPos>
-            </kin:EntityArray>
-            <kin:EntityArray>
-                <Identifier>Em</Identifier>
-                <Path>Em</Path>
-                <KinType>Em</KinType>
-                <isEgo>true</isEgo>
-                <Labels>
-                    <String>John</String>
-                </Labels>
-                <Relations>
-                    <Relation>
-                        <generationalDistance>0</generationalDistance>
-                        <Identifier>EmM</Identifier>
-                        <Type>ancestor</Type>
-                        <Line>sanguineLine</Line>
-                    </Relation>
-                </Relations>
-                <ArchiveLink>http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7</ArchiveLink>
-                <ArchiveLink>http://www.google.com</ArchiveLink>
-                <ArchiveLink>http://www.mpi.nl</ArchiveLink>
-                <isVisible>true</isVisible>
-                <xPos>1</xPos>
-            </kin:EntityArray>
-            <kin:EntityArray>
-                <Identifier>EfFF</Identifier>
-                <Path>EfFF</Path>
-                <KinType>EfFF</KinType>
-                <isEgo>false</isEgo>
-                <Labels>
-                    <String>Clarence</String>
-                </Labels>
-                <Relations>
-                    <Relation>
-                        <generationalDistance>0</generationalDistance>
-                        <Identifier>EfF</Identifier>
-                        <Type>descendant</Type>
-                        <Line>sanguineLine</Line>
-                    </Relation>
-                </Relations>
-                <ArchiveLink>http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7</ArchiveLink>
-                <ArchiveLink>http://www.google.com</ArchiveLink>
-                <ArchiveLink>http://www.mpi.nl</ArchiveLink>
-                <isVisible>true</isVisible>
-                <xPos>0</xPos>
-            </kin:EntityArray>
-            <kin:EntityArray>
-                <Identifier>EfM</Identifier>
-                <Path>EfM</Path>
-                <KinType>EfM</KinType>
-                <isEgo>false</isEgo>
-                <Labels>
-                    <String>Joyce</String>
-                </Labels>
-                <Relations>
-                    <Relation>
-                        <generationalDistance>0</generationalDistance>
-                        <Identifier>Ef</Identifier>
-                        <Type>descendant</Type>
-                        <Line>sanguineLine</Line>
-                    </Relation>
-                </Relations>
-                <ArchiveLink>http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7</ArchiveLink>
-                <ArchiveLink>http://www.google.com</ArchiveLink>
-                <ArchiveLink>http://www.mpi.nl</ArchiveLink>
-                <isVisible>true</isVisible>
-                <xPos>0</xPos>
-            </kin:EntityArray>
-            <kin:EntityArray>
-                <Identifier>EmM</Identifier>
-                <Path>EmM</Path>
-                <KinType>EmM</KinType>
-                <isEgo>false</isEgo>
-                <Labels>
-                    <String>Jannet</String>
-                </Labels>
-                <Relations>
-                    <Relation>
-                        <generationalDistance>0</generationalDistance>
-                        <Identifier>Em</Identifier>
-                        <Type>descendant</Type>
-                        <Line>sanguineLine</Line>
-                    </Relation>
-                </Relations>
-                <ArchiveLink>http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7</ArchiveLink>
-                <ArchiveLink>http://www.google.com</ArchiveLink>
-                <ArchiveLink>http://www.mpi.nl</ArchiveLink>
-                <isVisible>true</isVisible>
-                <xPos>2</xPos>
-            </kin:EntityArray>
-            <kin:EntityArray>
-                <Identifier>Ef</Identifier>
-                <Path>Ef</Path>
-                <KinType>Ef</KinType>
-                <isEgo>true</isEgo>
-                <Labels>
-                    <String>Jane</String>
-                </Labels>
-                <Relations>
-                    <Relation>
-                        <generationalDistance>0</generationalDistance>
-                        <Identifier>EfM</Identifier>
-                        <Type>ancestor</Type>
-                        <Line>sanguineLine</Line>
-                    </Relation>
-                    <Relation>
-                        <generationalDistance>0</generationalDistance>
-                        <Identifier>EfF</Identifier>
-                        <Type>ancestor</Type>
-                        <Line>sanguineLine</Line>
-                    </Relation>
-                </Relations>
-                <ArchiveLink>http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7</ArchiveLink>
-                <ArchiveLink>http://www.google.com</ArchiveLink>
-                <ArchiveLink>http://www.mpi.nl</ArchiveLink>
-                <isVisible>true</isVisible>
-                <xPos>2</xPos>
-            </kin:EntityArray>
-            <gridWidth>3</gridWidth>
-            <gridHeight>3</gridHeight>
-        </kin:EntityData>
-    </kin:KinDiagramData>
+    <g id="relation2">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfF" lineType="sanguineLine" alter="EfFF" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation2Line" stroke-width="2" points="207.0,399.5 207.0,349.5 207.0,349.5 207.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
+    </g>
+    <g id="relation3">
+      <kin:RelationEntities xmlns:kin="kin" ego="Em" lineType="sanguineLine" alter="EmM" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation3Line" stroke-width="2" points="57.0,199.5 57.0,149.5 57.0,149.5 57.0,99.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
+    </g>
+    <g id="relation4">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfMM" lineType="sanguineLine" alter="EfM" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation4Line" stroke-width="2" points="507.0,299.5 507.0,349.5 407.0,349.5 407.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
+    </g>
+    <g id="relation5">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfMM" lineType="sanguineLine" alter="EfMMF" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation5Line" stroke-width="2" points="507.0,299.5 507.0,249.5 607.0,249.5 607.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
+    </g>
+    <g id="relation6">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfMM" lineType="sanguineLine" alter="EfMMM" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation6Line" stroke-width="2" points="507.0,299.5 507.0,249.5 407.0,249.5 407.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
+    </g>
+    <g id="relation7">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfFF" lineType="sanguineLine" alter="EfF" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation7Line" stroke-width="2" points="207.0,299.5 207.0,349.5 207.0,349.5 207.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
+    </g>
+    <g id="relation8">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfMMF" lineType="sanguineLine" alter="EfMM" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation8Line" stroke-width="2" points="607.0,199.5 607.0,249.5 507.0,249.5 507.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
+    </g>
+    <g id="relation9">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfM" lineType="sanguineLine" alter="Ef" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation9Line" stroke-width="2" points="407.0,399.5 407.0,449.5 307.0,449.5 307.0,499.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
+    </g>
+    <g id="relation10">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfM" lineType="sanguineLine" alter="EfMF" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation10Line" stroke-width="2" points="407.0,399.5 407.0,349.5 307.0,349.5 307.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
+    </g>
+    <g id="relation11">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfM" lineType="sanguineLine" alter="EfMM" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation11Line" stroke-width="2" points="407.0,399.5 407.0,349.5 507.0,349.5 507.0,299.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
+    </g>
+    <g id="relation12">
+      <kin:RelationEntities xmlns:kin="kin" ego="EmM" lineType="sanguineLine" alter="Em" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation12Line" stroke-width="2" points="57.0,99.5 57.0,149.5 57.0,149.5 57.0,199.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
+    </g>
+    <g id="relation13">
+      <kin:RelationEntities xmlns:kin="kin" ego="Ef" lineType="sanguineLine" alter="EfM" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation13Line" stroke-width="2" points="307.0,499.5 307.0,449.5 407.0,449.5 407.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
+    </g>
+    <g id="relation14">
+      <kin:RelationEntities xmlns:kin="kin" ego="Ef" lineType="sanguineLine" alter="EfF" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation14Line" stroke-width="2" points="307.0,499.5 307.0,449.5 207.0,449.5 207.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
+    </g>
+    <g id="relation15">
+      <kin:RelationEntities xmlns:kin="kin" ego="EfMF" lineType="sanguineLine" alter="EfM" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation15Line" stroke-width="2" points="307.0,299.5 307.0,349.5 407.0,349.5 407.0,399.5" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
+    </g>
+  </g>
+  <g id="EntityGroup">
+    <g id="EfMMM" kin:kintype="EfMMM" transform="translate(400.0, 192.5)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EfMMMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Dorris</text>
+    </g>
+    <g id="EfF" kin:kintype="EfF" transform="translate(200.0, 392.5)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EfFsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jonathan</text>
+    </g>
+    <g id="Em" kin:kintype="Em" transform="translate(50.0, 192.5)" kin:path="">
+      <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Emsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">John</text>
+    </g>
+    <g id="EfMM" kin:kintype="EfMM" transform="translate(500.0, 292.5)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EfMMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Betty</text>
+    </g>
+    <g id="EfFF" kin:kintype="EfFF" transform="translate(200.0, 292.5)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EfFFsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Clarence</text>
+    </g>
+    <g id="EfMMF" kin:kintype="EfMMF" transform="translate(600.0, 192.5)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EfMMFsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Nathan</text>
+    </g>
+    <g id="EfM" kin:kintype="EfM" transform="translate(400.0, 392.5)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EfMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Joyce</text>
+    </g>
+    <g id="EmM" kin:kintype="EmM" transform="translate(50.0, 92.5)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EmMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Janet</text>
+    </g>
+    <g id="Ef" kin:kintype="Ef" transform="translate(300.0, 492.5)" kin:path="">
+      <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Efsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane</text>
+    </g>
+    <g id="EfMF" kin:kintype="EfMF" transform="translate(300.0, 292.5)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EfMFsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jamie</text>
+    </g>
+  </g>
+  <g id="LabelsGroup"/>
+    
+<kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+    <kin:KinTypeString>Ef:Jane</kin:KinTypeString>
+    <kin:KinTypeString>EfM:Joyce</kin:KinTypeString>
+    <kin:KinTypeString>EfMF:Jamie</kin:KinTypeString>
+    <kin:KinTypeString>EfFF:Clarence</kin:KinTypeString>
+    <kin:KinTypeString>EfF:Jonathan</kin:KinTypeString>
+    <kin:KinTypeString>EfMMF:Nathan</kin:KinTypeString>
+    <kin:KinTypeString>EfMM:Betty</kin:KinTypeString>
+    <kin:KinTypeString>EfMMM:Dorris</kin:KinTypeString>
+    <kin:KinTypeString>Em:John</kin:KinTypeString>
+    <kin:KinTypeString>EmM:Janet</kin:KinTypeString>
+    <kin:IndexParameters>
+      <kin:LabelFields>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*:Name"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:Text"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NoteText"/>
+      </kin:LabelFields>
+      <kin:SymbolFieldsFields>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:SEX='M']" kin:Value="triangle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:SEX='F']" kin:Value="circle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']" kin:Value="union"/>
+      </kin:SymbolFieldsFields>
+      <kin:AncestorFields>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.BIRT.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHR.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.ADOP.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.SLGC.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.HUSB"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.WIFE"/>
+        <kin:IndexerParam kin:XPath="ancestor"/>
+      </kin:AncestorFields>
+      <kin:DecendantFields>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHIL"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMS"/>
+        <kin:IndexerParam kin:XPath="descendant"/>
+      </kin:DecendantFields>
+    </kin:IndexParameters>
+    <kin:KinTermGroup kin:Show="true" kin:GroupColour="blue" kin:GroupName="English terms" kin:Generate="false">
+      <kin:KinTerm kin:Term="Grand Mother" kin:Alter="MM"/>
+      <kin:KinTerm kin:Term="Aunt" kin:Alter="MZ|FZ"/>
+      <kin:KinTerm kin:Term="Uncle" kin:Alter="MB|FB"/>
+      <kin:KinTerm kin:Term="Grand Father" kin:Alter="FF"/>
+    </kin:KinTermGroup>
+    <kin:KinTermGroup kin:Show="true" kin:GroupColour="cyan" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="false">
+      <kin:KinTerm kin:Term="Makuakane" kin:Description="Father, Uncle" kin:Alter="F|FB|MB"/>
+      <kin:KinTerm kin:Term="Makuahini" kin:Description="Mother, Aunt" kin:Alter="M|MZ|FZ"/>
+      <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="" kin:Alter="E(male)B|E(male)FBS|E(male)FZS|E(male)MBS|E(male)MZS"/>
+      <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="Brother/Sister, Cousin" kin:Alter="E(female)Z|E(female)FBD|E(female)FZD|E(female)MBD|E(female)MZD"/>
+      <kin:KinTerm kin:Term="Kaikuane" kin:Description="Brother, Cousin" kin:Alter="E(female)B|E(female)FBS|E(female)FZS|E(female)MBS|E(female)MZS"/>
+      <kin:KinTerm kin:Term="Kaikuane" kin:Description="Sister, Cousin" kin:Alter="E(male)Z|E(male)FBD|E(male)FZD|E(male)MBD|E(male)MZD"/>
+      <kin:KinTerm kin:Term="Keikikane" kin:Description="Son, Nephew" kin:Alter="S|BS|ZS"/>
+      <kin:KinTerm kin:Term="Keikamahini" kin:Description="Daughter, Niece" kin:Alter="D|BD|ZD"/>
+    </kin:KinTermGroup>
+    <kin:ShowLabels>true</kin:ShowLabels>
+    <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
+    <kin:ShowKinTermLabels>false</kin:ShowKinTermLabels>
+    <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
+    <kin:SnapToGrid>true</kin:SnapToGrid>
+    <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
+    <kin:ShowArchiveLinks>false</kin:ShowArchiveLinks>
+    <kin:EntityData>
+      <kin:EntityArray>
+        <Identifier>EfMMM</Identifier>
+        <KinType>EfMMM</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfMM</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+        <xPos>2</xPos>
+      </kin:EntityArray>
+      <kin:EntityArray>
+        <Identifier>EfF</Identifier>
+        <KinType>EfF</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Ef</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfFF</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+        <xPos>0</xPos>
+      </kin:EntityArray>
+      <kin:EntityArray>
+        <Identifier>Em</Identifier>
+        <KinType>Em</KinType>
+        <isEgo>true</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EmM</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+        <xPos>1</xPos>
+      </kin:EntityArray>
+      <kin:EntityArray>
+        <Identifier>EfMM</Identifier>
+        <KinType>EfMM</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfM</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfMMF</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfMMM</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+        <xPos>2</xPos>
+      </kin:EntityArray>
+      <kin:EntityArray>
+        <Identifier>EfFF</Identifier>
+        <KinType>EfFF</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfF</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+        <xPos>0</xPos>
+      </kin:EntityArray>
+      <kin:EntityArray>
+        <Identifier>EfMMF</Identifier>
+        <KinType>EfMMF</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfMM</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+        <xPos>0</xPos>
+      </kin:EntityArray>
+      <kin:EntityArray>
+        <Identifier>EfM</Identifier>
+        <KinType>EfM</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Ef</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfMF</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfMM</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+        <xPos>2</xPos>
+      </kin:EntityArray>
+      <kin:EntityArray>
+        <Identifier>EmM</Identifier>
+        <KinType>EmM</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Em</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+        <xPos>2</xPos>
+      </kin:EntityArray>
+      <kin:EntityArray>
+        <Identifier>Ef</Identifier>
+        <KinType>Ef</KinType>
+        <isEgo>true</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfM</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfF</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+        <xPos>2</xPos>
+      </kin:EntityArray>
+      <kin:EntityArray>
+        <Identifier>EfMF</Identifier>
+        <KinType>EfMF</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EfM</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+        <xPos>1</xPos>
+      </kin:EntityArray>
+      <gridWidth>3</gridWidth>
+      <gridHeight>5</gridHeight>
+    </kin:EntityData>
+  </kin:KinDiagramData>
 </svg>
