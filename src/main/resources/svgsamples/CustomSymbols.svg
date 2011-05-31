@@ -5,7 +5,7 @@
       <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
     </g>
     <g id="square">
-      <rect x="0" width="15" stroke-width="2" height="15" y="0" stroke="black"/>
+      <rect x="0" width="15" y="0" height="15" stroke-width="2" stroke="black"/>
     </g>
     <g id="square45">
       <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
@@ -14,12 +14,12 @@
       <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
     </g>
     <g id="union">
-      <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
-      <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
-      <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
+      <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
+      <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
+      <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
     </g>
     <g id="triangle">
-      <polygon stroke-width="2" points="7,0 0,12 15,12" stroke="black"/>
+      <polygon points="7,0 0,12 15,12" stroke-width="2" stroke="black"/>
     </g>
     <g id="equals">
       <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
@@ -28,12 +28,12 @@
       <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
     </g>
     <g id="DottedStar">
-        <path sodipodi:r2="7.7716919" transform="translate(-192.5,-92.5)" sodipodi:arg1="-0.35877067" sodipodi:sides="5" style="fill:none;stroke:#000000;stroke-width:1.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5,1.5;stroke-dashoffset:0;fill-opacity:1" sodipodi:cx="267.42467" sodipodi:r1="15.543384" sodipodi:cy="130.58556" d="m 281.97841,125.12791 -7.06266,7.52721 2.19681,10.08534 -9.34129,-4.39094 -8.91287,5.20583 1.28942,-10.24097 -7.70527,-6.86796 10.13819,-1.93832 4.15076,-9.45046 4.97633,9.04302 z" sodipodi:arg2="0.26954786" sodipodi:type="star"/>
+        <path sodipodi:r2="7.7716919" transform="translate(-260.5,-122.5)" sodipodi:sides="5" sodipodi:arg1="-0.35877067" style="fill:none;stroke:#000000;stroke-width:1.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5,1.5;stroke-dashoffset:0;fill-opacity:1" sodipodi:cx="267.42467" sodipodi:cy="130.58556" sodipodi:r1="15.543384" d="m 281.97841,125.12791 -7.06266,7.52721 2.19681,10.08534 -9.34129,-4.39094 -8.91287,5.20583 1.28942,-10.24097 -7.70527,-6.86796 10.13819,-1.93832 4.15076,-9.45046 4.97633,9.04302 z" sodipodi:arg2="0.26954786" sodipodi:type="star"/>
     </g>
     <g id="Spiral">
-      <path sodipodi:argument="-18.290956" sodipodi:expansion="1" transform="translate(-192.5,-92.5)" sodipodi:t0="0" sodipodi:revolution="3" style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" sodipodi:radius="17.162445" sodipodi:cx="362.02386" sodipodi:cy="121.48948" d="m 362.02386,121.48948 c 0.72971,0.45606 -0.25475,1.20863 -0.758,1.21281 -1.36378,0.0113 -1.9558,-1.60223 -1.66762,-2.72882 0.5155,-2.01522 2.88434,-2.78402 4.69964,-2.12242 2.66404,0.97092 3.6316,4.18196 2.57723,6.67046 -1.40532,3.31677 -5.48485,4.48711 -8.64128,3.03202 -3.97204,-1.83108 -5.34667,-6.79018 -3.48683,-10.61209 2.25252,-4.62884 8.09689,-6.20856 12.58291,-3.94163 5.28662,2.67149 7.07191,9.40443 4.39644,14.55372 -3.08894,5.94506 -10.71256,7.93623 -16.52454,4.85124 -6.60395,-3.50536 -8.80124,-12.02108 -5.30605,-18.49536 3.92108,-7.26316 13.32989,-9.66673 20.46618,-5.76084 7.92263,4.33627 10.5326,14.63892 6.21565,22.43699" sodipodi:type="spiral"/>
+      <path sodipodi:expansion="1" sodipodi:argument="-18.290956" sodipodi:t0="0" transform="translate(-192.5,-92.5)" sodipodi:revolution="3" style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" sodipodi:radius="17.162445" sodipodi:cx="362.02386" sodipodi:cy="121.48948" d="m 362.02386,121.48948 c 0.72971,0.45606 -0.25475,1.20863 -0.758,1.21281 -1.36378,0.0113 -1.9558,-1.60223 -1.66762,-2.72882 0.5155,-2.01522 2.88434,-2.78402 4.69964,-2.12242 2.66404,0.97092 3.6316,4.18196 2.57723,6.67046 -1.40532,3.31677 -5.48485,4.48711 -8.64128,3.03202 -3.97204,-1.83108 -5.34667,-6.79018 -3.48683,-10.61209 2.25252,-4.62884 8.09689,-6.20856 12.58291,-3.94163 5.28662,2.67149 7.07191,9.40443 4.39644,14.55372 -3.08894,5.94506 -10.71256,7.93623 -16.52454,4.85124 -6.60395,-3.50536 -8.80124,-12.02108 -5.30605,-18.49536 3.92108,-7.26316 13.32989,-9.66673 20.46618,-5.76084 7.92263,4.33627 10.5326,14.63892 6.21565,22.43699" sodipodi:type="spiral"/>
     </g>
-    <g style="fill:none;stroke:#6674ff;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1, 1;stroke-dashoffset:0" id="Cube" sodipodi:type="inkscape:box3d">
+    <g style="fill:none;stroke:#6674ff;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1, 1;stroke-dashoffset:0" sodipodi:type="inkscape:box3d" id="Cube">
         <path d="m 350.89874,34.461481 15.68537,-6.438075 0,16.437848 -15.68537,5.976904 z" id="path10519" style="fill:#e9e9ff;fill-rule:evenodd;stroke:none" sodipodi:type="inkscape:box3dside"/>
         <path d="m 335.07249,31.12071 0,16.215982 15.82625,3.101466 0,-15.976677 z" id="path10509" style="fill:#353564;fill-rule:evenodd;stroke:none" sodipodi:type="inkscape:box3dside"/>
         <path d="m 335.07249,31.12071 15.46333,-6.635254 16.04829,3.53795 -15.68537,6.438075 z" id="path10511" style="fill:#4d4d9f;fill-rule:evenodd;stroke:none" sodipodi:type="inkscape:box3dside"/>
@@ -42,9 +42,11 @@
         <path d="m 335.07249,31.12071 15.46333,-6.635254 0,16.691278 -15.46333,6.159958 z" id="path10513" style="fill:#8686bf;fill-rule:evenodd;stroke:none" sodipodi:type="inkscape:box3dside"/>
     </g>
     <g id="AnotherStar">
-      <path sodipodi:r2="3.6400028" transform="translate(-192.5,-92.5)" sodipodi:arg1="0.92729522" sodipodi:sides="5" style="fill:none;stroke:#0a21ff;stroke-width:1.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:miter" sodipodi:cx="419.32916" sodipodi:r1="18.192156" sodipodi:cy="122.39909" d="m 430.24446,136.95282 -10.7772,-10.91634 -10.6065,11.24102 7.05172,-13.62306 -13.96844,-6.61371 15.1354,2.49683 1.97353,-15.32853 2.30247,15.16619 15.18815,-2.85984 -13.7124,6.87639 z" id="path10521" sodipodi:arg2="1.5328485" sodipodi:type="star"/>
+      <path sodipodi:r2="3.6400028" transform="translate(-192.5,-92.5)" sodipodi:sides="5" sodipodi:arg1="0.92729522" style="fill:none;stroke:#0a21ff;stroke-width:1.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:miter" sodipodi:cx="419.32916" sodipodi:cy="122.39909" sodipodi:r1="18.192156" id="path10521" d="m 430.24446,136.95282 -10.7772,-10.91634 -10.6065,11.24102 7.05172,-13.62306 -13.96844,-6.61371 15.1354,2.49683 1.97353,-15.32853 2.30247,15.16619 15.18815,-2.85984 -13.7124,6.87639 z" sodipodi:arg2="1.5328485" sodipodi:type="star"/>
     </g>
   </defs>
+  
+  
   
   
   <g id="RelationGroup">
@@ -70,30 +72,30 @@
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
     </g>
     <g id="relation3">
-      <kin:RelationEntities xmlns:kin="kin" ego="affcdec9668e07bb415c514947443c7b" lineType="sanguineLine" alter="32b5215c4cb79df9ff818821f26f8437" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="32b5215c4cb79df9ff818821f26f8437" lineType="sanguineLine" alter="affcdec9668e07bb415c514947443c7b" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation3Line" stroke-width="2" points="199.5,399.5 199.5,349.5 199.5,349.5 199.5,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation3Line" stroke-width="2" points="199.5,299.5 199.5,349.5 199.5,349.5 199.5,399.5" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
     </g>
     <g id="relation4">
-      <kin:RelationEntities xmlns:kin="kin" ego="32b5215c4cb79df9ff818821f26f8437" lineType="sanguineLine" alter="affcdec9668e07bb415c514947443c7b" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="32b5215c4cb79df9ff818821f26f8437" lineType="sanguineLine" alter="99cc9b51cc6e98c473d6a7c4722fa181" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation4Line" stroke-width="2" points="199.5,299.5 199.5,349.5 199.5,349.5 199.5,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation4Line" stroke-width="2" points="199.5,299.5 199.5,249.5 399.5,249.5 399.5,199.5" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
     </g>
     <g id="relation5">
-      <kin:RelationEntities xmlns:kin="kin" ego="32b5215c4cb79df9ff818821f26f8437" lineType="sanguineLine" alter="99cc9b51cc6e98c473d6a7c4722fa181" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="32b5215c4cb79df9ff818821f26f8437" lineType="sanguineLine" alter="504dc321aea011f1212a829927b1b8fa" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation5Line" stroke-width="2" points="199.5,299.5 199.5,249.5 399.5,249.5 399.5,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation5Line" stroke-width="2" points="199.5,299.5 199.5,349.5 399.5,349.5 399.5,399.5" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
     </g>
     <g id="relation6">
-      <kin:RelationEntities xmlns:kin="kin" ego="32b5215c4cb79df9ff818821f26f8437" lineType="sanguineLine" alter="504dc321aea011f1212a829927b1b8fa" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="affcdec9668e07bb415c514947443c7b" lineType="sanguineLine" alter="32b5215c4cb79df9ff818821f26f8437" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation6Line" stroke-width="2" points="199.5,299.5 199.5,349.5 399.5,349.5 399.5,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation6Line" stroke-width="2" points="199.5,399.5 199.5,349.5 199.5,349.5 199.5,299.5" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
     </g>
@@ -139,41 +141,42 @@
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Joyce Smith</text>
     </g>
     <g id="a5c52746580656cac7e7be6d88ef79e4" kin:kintype="" transform="translate(392.5, 92.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510215837.cmdi">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="a5c52746580656cac7e7be6d88ef79e4symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#rhombus" xlink:type="simple" xlink:actuate="onLoad" id="a5c52746580656cac7e7be6d88ef79e4symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Richard Smith</text>
     </g>
     <g id="46b24107031dc2dbb69d3c1a781a399c" kin:kintype="" transform="translate(592.5, 92.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510220042.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="46b24107031dc2dbb69d3c1a781a399csymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane Smith</text>
     </g>
+    <g id="32b5215c4cb79df9ff818821f26f8437" kin:kintype="" transform="translate(192.5, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/201105102158300.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#rhombus" xlink:type="simple" xlink:actuate="onLoad" id="32b5215c4cb79df9ff818821f26f8437symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jim Smith</text>
+    </g>
     <g id="affcdec9668e07bb415c514947443c7b" kin:kintype="" transform="translate(192.5, 392.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510215830.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="affcdec9668e07bb415c514947443c7bsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jenny Smith</text>
     </g>
-    <g id="32b5215c4cb79df9ff818821f26f8437" kin:kintype="" transform="translate(192.5, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/201105102158300.cmdi">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="32b5215c4cb79df9ff818821f26f8437symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jim Smith</text>
-    </g>
-    <g id="99cc9b51cc6e98c473d6a7c4722fa181" kin:kintype="Em" transform="translate(392.5, 192.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510220249.cmdi">
-      <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="99cc9b51cc6e98c473d6a7c4722fa181symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+    <g id="99cc9b51cc6e98c473d6a7c4722fa181" kin:kintype="" transform="translate(392.5, 192.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510220249.cmdi">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#rhombus" xlink:type="simple" xlink:actuate="onLoad" id="99cc9b51cc6e98c473d6a7c4722fa181symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">John Smith</text>
     </g>
     <g id="7cc0b96597442447fb89cfe6bad28457" kin:kintype="" transform="translate(392.5, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510220150.cmdi">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="7cc0b96597442447fb89cfe6bad28457symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#rhombus" xlink:type="simple" xlink:actuate="onLoad" id="7cc0b96597442447fb89cfe6bad28457symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Brian Smith</text>
     </g>
   </g>
   <g id="LabelsGroup"/>
   
 
+
 <kin:KinDiagramData xmlns="" xmlns:ns5="http://www.w3.org/2000/svg">
-    <kin:EgoId>99cc9b51cc6e98c473d6a7c4722fa181</kin:EgoId>
+    <kin:EgoId>a5c52746580656cac7e7be6d88ef79e4</kin:EgoId>
     <requiredEntities>504dc321aea011f1212a829927b1b8fa</requiredEntities>
     <requiredEntities>a5c52746580656cac7e7be6d88ef79e4</requiredEntities>
     <requiredEntities>46b24107031dc2dbb69d3c1a781a399c</requiredEntities>
-    <requiredEntities>32b5215c4cb79df9ff818821f26f8437</requiredEntities>
-    <requiredEntities>affcdec9668e07bb415c514947443c7b</requiredEntities>
     <requiredEntities>99cc9b51cc6e98c473d6a7c4722fa181</requiredEntities>
+    <requiredEntities>affcdec9668e07bb415c514947443c7b</requiredEntities>
+    <requiredEntities>32b5215c4cb79df9ff818821f26f8437</requiredEntities>
     <requiredEntities>7cc0b96597442447fb89cfe6bad28457</requiredEntities>
     <kin:IndexParameters>
       <kin:LabelFields>
@@ -184,7 +187,7 @@
         <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NoteText"/>
       </kin:LabelFields>
       <kin:SymbolFieldsFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity[*:sex='male']" kin:Value="triangle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity[*:sex='male']" kin:Value="rhombus"/>
         <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity[*:sex='female']" kin:Value="circle"/>
       </kin:SymbolFieldsFields>
       <kin:AncestorFields>
@@ -249,8 +252,8 @@
       <kin:EntityArray>
         <Identifier>a5c52746580656cac7e7be6d88ef79e4</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510215837.cmdi</Path>
-        <Symbol>triangle</Symbol>
-        <isEgo>false</isEgo>
+        <Symbol>rhombus</Symbol>
+        <isEgo>true</isEgo>
         <Labels>
           <String>Richard Smith</String>
         </Labels>
@@ -291,32 +294,9 @@
         <xPos>0</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
-        <Identifier>affcdec9668e07bb415c514947443c7b</Identifier>
-        <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510215830.cmdi</Path>
-        <Symbol>circle</Symbol>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Jenny Smith</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>32b5215c4cb79df9ff818821f26f8437</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <ArchiveLink>http://corpus.sol.lu.se/lund-archive/ET-Frog/Metadata/fp04im03.imdi#.METATRANSCRIPT.Session.Resources.MediaFile(2)</ArchiveLink>
-        <ArchiveLink>http://corpus.sol.lu.se/lund-archive/Kammu/Damrong_Tayanin/photos/ceremonies/Metadata/Dancing_tiger.imdi#.METATRANSCRIPT.Session.Resources.MediaFile(1)</ArchiveLink>
-        <ArchiveLink>http://corpus.sol.lu.se/lund-archive/Kammu/Damrong_Tayanin/photos/ceremonies/Metadata/Dancing_tiger.imdi</ArchiveLink>
-        <ArchiveLink>http://corpus.sol.lu.se/lund-archive/Kammu/Damrong_Tayanin/photos/villages/Metadata/village_banpreng.imdi#.METATRANSCRIPT.Session.Resources.MediaFile(1)</ArchiveLink>
-        <isVisible>true</isVisible>
-        <xPos>0</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
         <Identifier>32b5215c4cb79df9ff818821f26f8437</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/201105102158300.cmdi</Path>
-        <Symbol>triangle</Symbol>
+        <Symbol>rhombus</Symbol>
         <isEgo>false</isEgo>
         <Labels>
           <String>Jim Smith</String>
@@ -347,11 +327,33 @@
         <xPos>0</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
+        <Identifier>affcdec9668e07bb415c514947443c7b</Identifier>
+        <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510215830.cmdi</Path>
+        <Symbol>circle</Symbol>
+        <isEgo>false</isEgo>
+        <Labels>
+          <String>Jenny Smith</String>
+        </Labels>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>32b5215c4cb79df9ff818821f26f8437</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <ArchiveLink>http://corpus.sol.lu.se/lund-archive/ET-Frog/Metadata/fp04im03.imdi#.METATRANSCRIPT.Session.Resources.MediaFile(2)</ArchiveLink>
+        <ArchiveLink>http://corpus.sol.lu.se/lund-archive/Kammu/Damrong_Tayanin/photos/ceremonies/Metadata/Dancing_tiger.imdi#.METATRANSCRIPT.Session.Resources.MediaFile(1)</ArchiveLink>
+        <ArchiveLink>http://corpus.sol.lu.se/lund-archive/Kammu/Damrong_Tayanin/photos/ceremonies/Metadata/Dancing_tiger.imdi</ArchiveLink>
+        <ArchiveLink>http://corpus.sol.lu.se/lund-archive/Kammu/Damrong_Tayanin/photos/villages/Metadata/village_banpreng.imdi#.METATRANSCRIPT.Session.Resources.MediaFile(1)</ArchiveLink>
+        <isVisible>true</isVisible>
+        <xPos>0</xPos>
+      </kin:EntityArray>
+      <kin:EntityArray>
         <Identifier>99cc9b51cc6e98c473d6a7c4722fa181</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510220249.cmdi</Path>
-        <KinType>Em</KinType>
-        <Symbol>triangle</Symbol>
-        <isEgo>true</isEgo>
+        <Symbol>rhombus</Symbol>
+        <isEgo>false</isEgo>
         <Labels>
           <String>John Smith</String>
         </Labels>
@@ -390,7 +392,7 @@
       <kin:EntityArray>
         <Identifier>7cc0b96597442447fb89cfe6bad28457</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/20110510220150.cmdi</Path>
-        <Symbol>triangle</Symbol>
+        <Symbol>rhombus</Symbol>
         <isEgo>false</isEgo>
         <Labels>
           <String>Brian Smith</String>
