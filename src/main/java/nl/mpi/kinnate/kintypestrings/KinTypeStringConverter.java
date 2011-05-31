@@ -226,10 +226,12 @@ public class KinTypeStringConverter extends GraphSorter {
         return kinTypeList;
     }
 
-    private void parseLabelStrings(EntityData currentNode, String inputString) {
+    private boolean parseLabelStrings(EntityData currentNode, String inputString) {
         if (inputString.startsWith(":")) {
             currentNode.appendTempLabel(inputString.substring(1));
+            return true;
         }
+        return false;
     }
 
     public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg, ParserHighlight[] parserHighlightArray) {
@@ -327,7 +329,10 @@ public class KinTypeStringConverter extends GraphSorter {
                                         }
                                     }
                                 }
-                                parseLabelStrings(currentGraphDataNode, consumableString);
+                                if (parseLabelStrings(currentGraphDataNode, consumableString)) {
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length() - insertedEgoOffset);
+                                    consumableString = "";
+                                }
                                 parentDataNode = currentGraphDataNode;
                                 kinTypeFound = true;
                                 break;
