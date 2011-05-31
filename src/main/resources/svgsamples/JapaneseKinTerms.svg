@@ -5,7 +5,7 @@
             <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
         </g>
         <g id="square">
-            <rect x="0" width="15" y="0" height="15" stroke-width="2" stroke="black"/>
+            <rect x="0" width="15" stroke-width="2" height="15" y="0" stroke="black"/>
         </g>
         <g id="square45">
             <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
@@ -14,12 +14,12 @@
             <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
         </g>
         <g id="union">
-            <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
-            <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
-            <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
+            <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
+            <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
+            <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
         </g>
         <g id="triangle">
-            <polygon points="7,0 0,12 15,12" stroke-width="2" stroke="black"/>
+            <polygon stroke-width="2" points="7,0 0,12 15,12" stroke="black"/>
         </g>
         <g id="equals">
             <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
@@ -28,11 +28,7 @@
             <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
         </g>
     </defs>
-  
-    
-    
-
-<g id="RelationGroup">
+  <g id="RelationGroup">
     <g id="relation0">
       <kin:RelationEntities xmlns:kin="kin" ego="EPPBCC" lineType="sanguineLine" alter="EPPBC" relationType="ancestor"/>
       <defs>
@@ -356,6 +352,7 @@
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EPZDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPZD</text>
       <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="15">従姉</text>
+      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="30">従妹</text>
     </g>
     <g id="EPPZ" kin:kintype="EPPZ" transform="translate(1700.0, 92.5)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EPPZsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
@@ -365,6 +362,7 @@
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EPBDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPBD</text>
       <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="15">従姉</text>
+      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="30">従妹</text>
     </g>
     <g id="EB-" kin:kintype="EB-" transform="translate(700.0, 292.5)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EB-symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
@@ -388,7 +386,8 @@
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EPBsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPB</text>
       <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="15">叔父</text>
-      <text x="22.5" fill="#8000FF" font-size="14" stroke-width="0" y="30">おじさん</text>
+      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="30">伯父</text>
+      <text x="22.5" fill="#8000FF" font-size="14" stroke-width="0" y="45">おじさん</text>
     </g>
     <g id="EM" kin:kintype="EM" transform="translate(800.0, 192.5)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
@@ -400,6 +399,7 @@
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EPZSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPZS</text>
       <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="15">従兄</text>
+      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="30">従弟</text>
     </g>
     <g id="EZ-" kin:kintype="EZ-" transform="translate(600.0, 292.5)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EZ-symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
@@ -410,12 +410,15 @@
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EPZsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPZ</text>
       <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="15">叔母</text>
-      <text x="22.5" fill="#8000FF" font-size="14" stroke-width="0" y="30">おばさん</text>
+      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="30">伯母</text>
+      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="45">おば</text>
+      <text x="22.5" fill="#8000FF" font-size="14" stroke-width="0" y="60">おばさん</text>
     </g>
     <g id="EPBS" kin:kintype="EPBS" transform="translate(1100.0, 292.5)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EPBSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPBS</text>
       <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="15">従兄</text>
+      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="30">従弟</text>
     </g>
     <g id="EPPZC" kin:kintype="EPPZC" transform="translate(1700.0, 192.5)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#square" xlink:type="simple" xlink:actuate="onLoad" id="EPPZCsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
@@ -460,8 +463,15 @@
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPP</text>
     </g>
   </g>
-  <g id="LabelsGroup"/>
-  <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+  <g id="LabelsGroup">
+    <text x="462.0" font-size="28" y="100.0" transform="translate(150.0, -50.0)" fill="black" id="label0" stroke-width="0">Japanese Kin Terms</text>
+    <text x="359.0" font-size="14" y="179.0" transform="translate(255.0, -83.0)" fill="#FF00D4" id="label1" stroke-width="0">(Referential)</text>
+    <text x="365.0" font-size="14" y="244.0" transform="translate(249.0, -125.0)" fill="#8000FF" id="label2" stroke-width="0">(Vocative)</text>
+  </g>
+  
+
+
+<kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
     <kin:IndexParameters>
       <kin:LabelFields>
         <kin:IndexerParam kin:XPath="Kinnate/Gedcom/Entity/NAME/NAME"/>
@@ -542,7 +552,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>0</xPos>
+        <xPos>3</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>E</Identifier>
@@ -685,6 +695,14 @@
             <Identifier>EPB</Identifier>
             <Type>none</Type>
             <Line>kinTermLine</Line>
+            <Label>伯父</Label>
+            <lineColour>#FF00D4</lineColour>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EPB</Identifier>
+            <Type>none</Type>
+            <Line>kinTermLine</Line>
             <Label>おじさん</Label>
             <lineColour>#8000FF</lineColour>
           </Relation>
@@ -694,6 +712,22 @@
             <Type>none</Type>
             <Line>kinTermLine</Line>
             <Label>叔母</Label>
+            <lineColour>#FF00D4</lineColour>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EPZ</Identifier>
+            <Type>none</Type>
+            <Line>kinTermLine</Line>
+            <Label>伯母</Label>
+            <lineColour>#FF00D4</lineColour>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EPZ</Identifier>
+            <Type>none</Type>
+            <Line>kinTermLine</Line>
+            <Label>おば</Label>
             <lineColour>#FF00D4</lineColour>
           </Relation>
           <Relation>
@@ -714,10 +748,26 @@
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
+            <Identifier>EPZS</Identifier>
+            <Type>none</Type>
+            <Line>kinTermLine</Line>
+            <Label>従弟</Label>
+            <lineColour>#FF00D4</lineColour>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
             <Identifier>EPBS</Identifier>
             <Type>none</Type>
             <Line>kinTermLine</Line>
             <Label>従兄</Label>
+            <lineColour>#FF00D4</lineColour>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EPBS</Identifier>
+            <Type>none</Type>
+            <Line>kinTermLine</Line>
+            <Label>従弟</Label>
             <lineColour>#FF00D4</lineColour>
           </Relation>
           <Relation>
@@ -730,10 +780,26 @@
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
+            <Identifier>EPZD</Identifier>
+            <Type>none</Type>
+            <Line>kinTermLine</Line>
+            <Label>従妹</Label>
+            <lineColour>#FF00D4</lineColour>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
             <Identifier>EPBD</Identifier>
             <Type>none</Type>
             <Line>kinTermLine</Line>
             <Label>従姉</Label>
+            <lineColour>#FF00D4</lineColour>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EPBD</Identifier>
+            <Type>none</Type>
+            <Line>kinTermLine</Line>
+            <Label>従妹</Label>
             <lineColour>#FF00D4</lineColour>
           </Relation>
           <Relation>
@@ -786,12 +852,13 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>4</xPos>
+        <xPos>7</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPZD</Identifier>
         <KinType>EPZD</KinType>
         <KinTerm text="従姉" colour="#FF00D4"/>
+        <KinTerm text="従妹" colour="#FF00D4"/>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
@@ -803,7 +870,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>6</xPos>
+        <xPos>0</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPPZ</Identifier>
@@ -825,12 +892,13 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>9</xPos>
+        <xPos>10</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPBD</Identifier>
         <KinType>EPBD</KinType>
         <KinTerm text="従姉" colour="#FF00D4"/>
+        <KinTerm text="従妹" colour="#FF00D4"/>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
@@ -842,7 +910,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>10</xPos>
+        <xPos>8</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EB-</Identifier>
@@ -859,7 +927,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>7</xPos>
+        <xPos>1</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPPZCC</Identifier>
@@ -876,7 +944,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>8</xPos>
+        <xPos>9</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPPB</Identifier>
@@ -944,12 +1012,13 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>10</xPos>
+        <xPos>3</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPB</Identifier>
         <KinType>EPB</KinType>
         <KinTerm text="叔父" colour="#FF00D4"/>
+        <KinTerm text="伯父" colour="#FF00D4"/>
         <KinTerm text="おじさん" colour="#8000FF"/>
         <isEgo>false</isEgo>
         <Labels/>
@@ -998,6 +1067,7 @@
         <Identifier>EPZS</Identifier>
         <KinType>EPZS</KinType>
         <KinTerm text="従兄" colour="#FF00D4"/>
+        <KinTerm text="従弟" colour="#FF00D4"/>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
@@ -1009,7 +1079,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>9</xPos>
+        <xPos>6</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EZ-</Identifier>
@@ -1026,12 +1096,14 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>3</xPos>
+        <xPos>2</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPZ</Identifier>
         <KinType>EPZ</KinType>
         <KinTerm text="叔母" colour="#FF00D4"/>
+        <KinTerm text="伯母" colour="#FF00D4"/>
+        <KinTerm text="おば" colour="#FF00D4"/>
         <KinTerm text="おばさん" colour="#8000FF"/>
         <isEgo>false</isEgo>
         <Labels/>
@@ -1056,12 +1128,13 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>4</xPos>
+        <xPos>9</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPBS</Identifier>
         <KinType>EPBS</KinType>
         <KinTerm text="従兄" colour="#FF00D4"/>
+        <KinTerm text="従弟" colour="#FF00D4"/>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
@@ -1073,7 +1146,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>2</xPos>
+        <xPos>4</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPPZC</Identifier>
@@ -1095,7 +1168,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>9</xPos>
+        <xPos>6</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPM</Identifier>
@@ -1113,7 +1186,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>10</xPos>
+        <xPos>3</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EF</Identifier>
@@ -1131,7 +1204,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>6</xPos>
+        <xPos>10</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EZ+</Identifier>
@@ -1149,7 +1222,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>1</xPos>
+        <xPos>5</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPPBC</Identifier>
@@ -1171,7 +1244,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>3</xPos>
+        <xPos>4</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EB+</Identifier>
@@ -1189,7 +1262,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>5</xPos>
+        <xPos>10</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPF</Identifier>
@@ -1207,7 +1280,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>7</xPos>
+        <xPos>4</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPP</Identifier>
@@ -1235,7 +1308,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>8</xPos>
+        <xPos>6</xPos>
       </kin:EntityArray>
       <gridWidth>11</gridWidth>
       <gridHeight>3</gridHeight>
