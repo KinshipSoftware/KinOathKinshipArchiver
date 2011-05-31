@@ -141,12 +141,12 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     }
 
     private void addRelations(int maxCount, EntityData currentEntity, HashSet<String> selectedIds) {
-        if (maxCount >= selectedIds.size()) {
+        if (maxCount <= selectedIds.size()) {
             return;
         }
         for (EntityRelation entityRelation : currentEntity.getVisiblyRelateNodes()) {
             EntityData alterNode = entityRelation.getAlterNode();
-            if (alterNode.isVisible) {
+            if (alterNode.isVisible && !selectedIds.contains(alterNode.getUniqueIdentifier())) {
                 selectedIds.add(alterNode.getUniqueIdentifier());
                 addRelations(maxCount, alterNode, selectedIds);
             }
