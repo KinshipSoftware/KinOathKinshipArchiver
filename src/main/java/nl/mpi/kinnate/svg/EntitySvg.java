@@ -316,8 +316,22 @@ public class EntitySvg {
         if (storedPosition == null) {
             // loop through the filled locations and move to the right or left if not empty required
             // todo: check the related nodes and average their positions then check to see if it is free and insert the node there
-            storedPosition = new Float[]{currentNode.getxPos() * hSpacing + hSpacing - symbolSize / 2.0f,
-                        currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f};
+            boolean positionFree = false;
+            float preferedX = currentNode.getxPos();
+            while (!positionFree) {
+                storedPosition = new Float[]{preferedX * hSpacing + hSpacing - symbolSize / 2.0f,
+                            currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f};
+                if (entityPositions.isEmpty()) {
+                    break;
+                }
+                for (Float[] currentPosition : entityPositions.values()) {
+                    positionFree = !currentPosition[0].equals(storedPosition[0]) || !currentPosition[1].equals(storedPosition[1]);
+                    if (!positionFree) {
+                        break;
+                    }
+                }
+                preferedX++;
+            }
             entityPositions.put(currentNode.getUniqueIdentifier(), storedPosition);
         } else {
 //            // prevent the y position being changed
