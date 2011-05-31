@@ -108,15 +108,16 @@ public class KinTermGroup {
         return kinTermArray.toArray(new KinTerm[]{});
     }
 
-    public String getTermLabel(String kinTypeString) {
+    public String[] getTermLabel(String kinTypeString) {
         // todo: add the propositus to the selection criteria
+        ArrayList<String> foundKinTerms = new ArrayList<String>();
         for (KinTerm kinTermItem : kinTermArray) {
             for (String kinType : kinTermItem.alterKinTypeStrings.split("\\|")) {
                 if (kinTypeString.trim().equals(kinType.trim())) {
-                    return kinTermItem.kinTerm;
+                    foundKinTerms.add(kinTermItem.kinTerm);
                 }
             }
         }
-        return null;
+        return foundKinTerms.toArray(new String[]{});
     }
 }
