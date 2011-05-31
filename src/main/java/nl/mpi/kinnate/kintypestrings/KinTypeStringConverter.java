@@ -113,7 +113,7 @@ public class KinTypeStringConverter extends GraphSorter {
             return true;
         }
         // todo: continue here
-        if (requiredKinType.relationType.equals(DataTypes.RelationType.ancestor) && entityRelation.relationType.equals(DataTypes.RelationType.sibling)) {
+        if (requiredKinType.relationType.equals(DataTypes.RelationType.sibling) && entityRelation.relationType.equals(DataTypes.RelationType.ancestor)) {
             return true;
         }
         return false;
@@ -321,8 +321,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                     // add any child nodes?
                                     for (KinTermGroup kinTerms : kinTermsArray) {
                                         if (kinTerms.graphShow) {
-                                            String kinTermLabel = kinTerms.getTermLabel(fullKinTypeString);
-                                            if (kinTermLabel != null) {
+                                            for (String kinTermLabel : kinTerms.getTermLabel(fullKinTypeString)) {
                                                 currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
                                                 egoDataNode.addRelatedNode(currentGraphDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.kinTermLine, kinTerms.graphColour, kinTermLabel);
                                             }
