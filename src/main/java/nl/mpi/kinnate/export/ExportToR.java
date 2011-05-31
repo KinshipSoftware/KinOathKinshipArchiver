@@ -40,4 +40,21 @@ public class ExportToR {
             // todo: warn user that no file selected and so cannot save
         }
     }
+    // example usage:
+//    install.packages()
+//    pid	id	momid	dadid	sex	affected
+//    24	1	0	0	1	1
+//    24	2	0	0	2	1
+//    24	3	1	2	1	2
+//    24	4	0	0	2	2
+//    24	5	3	4	1	3
+//
+//    dataFrame <- read.table("https://192.168.1.24/gallery/kinship-r.csv",header=T)
+//    # url not required: dataFrame <- read.table(url("http://192.168.1.24/gallery/kinship-r.csv"),header=T)
+//    dataFrame <- read.table("~/kinship-r.csv",header=T)
+//    library(kinship)
+//    attach(dataFrame)
+//    pedigreeObj <- pedigree(id,momid,dadid,sex, affected)
+//    plot(pedigreeObj)
+
 }
