@@ -174,6 +174,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                 }
             }
         }
+        dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc));
         if (dataStoreSvg.graphData == null) {
             return null;
         }
@@ -401,8 +402,10 @@ public class GraphPanel extends JPanel implements SavePanel {
             }
 //            }
             // Set the width and height attributes on the root 'svg' element.
-            svgRoot.setAttribute("width", Integer.toString(currentWidth));
+            svgRoot.setAttribute("width", Integer.toString(currentWidth)); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
             svgRoot.setAttribute("height", Integer.toString(currentHeight));
+//            svgRoot.setAttribute("width", "100%");
+//            svgRoot.setAttribute("height", "100%");
 //            svgRoot.removeAttribute("width");
 //            svgRoot.removeAttribute("height");
             this.setPreferredSize(new Dimension(graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing), graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing)));//            entitySvg.removeOldEntities(entityGroupNode);
