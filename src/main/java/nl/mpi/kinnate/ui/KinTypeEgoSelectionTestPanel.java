@@ -57,17 +57,24 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             + "# Enter one string per line.\n"
             //+ "# By default all relations of the selected entity will be shown.\n"
             + "# for example:\n"
-            + "E=[Bob]MFM\n"
-            + "E=[Bob]MZ\n"
-            + "E=[Bob]F\n"
-            + "E=[Bob]M\n"
-            + "E=[Bob]S";
+            + "EmWMMM\n"
+            + "E:1:FFE\n"
+            + "EmWMMM:1:\n"
+            + "E:1:FFE\n";
+//            + "E=[Bob]MFM\n"
+//            + "E=[Bob]MZ\n"
+//            + "E=[Bob]F\n"
+//            + "E=[Bob]M\n"
+//            + "E=[Bob]S";
 //    private String kinTypeStrings[] = new String[]{};
+    Color commentColour = Color.GRAY;
 
     public KinTypeEgoSelectionTestPanel(File existingFile) {
         EntityData[] svgStoredEntities = null;
         graphPanel = new GraphPanel(this);
         kinTypeStringInput = new JTextPane();
+        kinTypeStringInput.setText(defaultString);
+        kinTypeStringInput.setForeground(commentColour);
         if (existingFile != null && existingFile.exists()) {
             svgStoredEntities = graphPanel.readSvg(existingFile);
             String kinTermContents = null;
@@ -92,7 +99,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         // set the styles for the kin type string text
         Style styleComment = kinTypeStringInput.addStyle("Comment", null);
 //        StyleConstants.setForeground(styleComment, new Color(247,158,9));
-        StyleConstants.setForeground(styleComment, Color.GRAY);
+        StyleConstants.setForeground(styleComment, commentColour);
         Style styleKinType = kinTypeStringInput.addStyle("KinType", null);
         StyleConstants.setForeground(styleKinType, new Color(43, 32, 161));
         Style styleQuery = kinTypeStringInput.addStyle("Query", null);
@@ -159,7 +166,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             public void focusLost(FocusEvent e) {
                 if (kinTypeStringInput.getText().length() == 0) {
                     kinTypeStringInput.setText(defaultString);
-//                    kinTypeStringInput.setForeground(Color.lightGray);
+                    kinTypeStringInput.setForeground(commentColour);
                 }
             }
         });
