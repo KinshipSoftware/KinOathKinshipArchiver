@@ -112,7 +112,7 @@ public class KinTypeStringConverter extends GraphSorter {
         if (adjacentEntity.getSymbolType().equals(EntityData.SymbolType.union.name())) {
             return true;
         }
-        // todo: continue here
+        // todo: continue here...
         if (requiredKinType.relationType.equals(DataTypes.RelationType.sibling) && entityRelation.relationType.equals(DataTypes.RelationType.ancestor)) {
             return true;
         }
@@ -226,12 +226,14 @@ public class KinTypeStringConverter extends GraphSorter {
         return kinTypeList;
     }
 
-    private boolean parseLabelStrings(EntityData currentNode, String inputString) {
+    private String parseLabelStrings(String inputString) {
         if (inputString.startsWith(":")) {
-            currentNode.appendTempLabel(inputString.substring(1));
-            return true;
+            String[] inputStringParts = inputString.split(":");
+            if (inputStringParts.length > 0) {
+                return inputStringParts[1];
+            }
         }
-        return false;
+        return null;
     }
 
     public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg, ParserHighlight[] parserHighlightArray) {
@@ -269,19 +271,21 @@ public class KinTypeStringConverter extends GraphSorter {
 //                        insertedEgoOffset--;
 //                    }
 //                    inputString = inputString.trim();
-                    if (!inputString.startsWith("E")) {
-                        inputString = "E" + inputString;
-                        insertedEgoOffset++;
-                    }
+//                    if (!inputString.startsWith("E")) {
+//                        inputString = "E" + inputString;
+//                        insertedEgoOffset++;
+//                    }
                     int initialLength = inputString.length();
                     String consumableString = inputString;
                     EntityData parentDataNode = null;
                     EntityData egoDataNode = null;
+                    String fullKinTypeString = "";
                     while (consumableString.length() > 0) {
                         int parserHighlightPosition = initialLength - consumableString.length() - insertedEgoOffset;
                         boolean kinTypeFound = false;
                         for (KinType currentReferenceKinType : referenceKinTypes) {
                             if (consumableString.startsWith(currentReferenceKinType.codeString)) {
+                                String previousConsumableString = consumableString;
                                 if (currentReferenceKinType.isEgoType() && egoNodeFound) {
                                     // prevent multiple egos on one line
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, parserHighlightPosition);
@@ -294,43 +298,54 @@ public class KinTypeStringConverter extends GraphSorter {
                                 }
                                 consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
                                 consumableString = consumableString.replaceAll("^[-\\+\\d]*", "");
-                                String fullKinTypeString = inputString.substring(0, inputString.length() - consumableString.length());
                                 System.out.println("kinTypeFound: " + currentReferenceKinType.codeString);
                                 System.out.println("consumableString: " + consumableString);
-                                System.out.println("fullKinTypeString: " + fullKinTypeString);
+//                                System.out.println("fullKinTypeString: " + fullKinTypeString);
                                 EntityData currentGraphDataNode;
-                                if (graphDataNodeList.containsKey(fullKinTypeString)) {
-                                    currentGraphDataNode = graphDataNodeList.get(fullKinTypeString);
-                                    if (currentGraphDataNode.isEgo) {
-                                        egoDataNode = currentGraphDataNode;
-//                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
-                                    }
+                                String identifierString = parseLabelStrings(consumableString);
+                                String labelStrings[];
+                                if (null != identifierString) {
+                                    // if an identifier has been specified then use it as the unique identifier
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length() - insertedEgoOffset);
+                                    consumableString = consumableString.substring(identifierString.length() + 2);
+                                    labelStrings = new String[]{identifierString};
+                                    fullKinTypeString = ":" + identifierString + ":";
                                 } else {
-                                    currentGraphDataNode = new EntityData(fullKinTypeString, null, fullKinTypeString, currentReferenceKinType.symbolType, new String[]{}, currentReferenceKinType.isEgoType());
+                                    fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
+//                                    fullKinTypeString = inputString.substring(0, inputString.length() - consumableString.length());
+                                    // if no identifier has been specified then use the full kin type string
+                                    identifierString = fullKinTypeString;
+                                    labelStrings = new String[]{};
+                                }
+                                if (graphDataNodeList.containsKey(identifierString)) {
+                                    currentGraphDataNode = graphDataNodeList.get(identifierString);
                                     if (currentGraphDataNode.isEgo) {
                                         egoDataNode = currentGraphDataNode;
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
                                     }
-                                    DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
-                                    if (parentDataNode != null) {
-                                        parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
-                                        currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
-                                    }
-                                    graphDataNodeList.put(fullKinTypeString, currentGraphDataNode);
-                                    currentGraphDataNode.isVisible = true;
-                                    // add any child nodes?
-                                    for (KinTermGroup kinTerms : kinTermsArray) {
-                                        if (kinTerms.graphShow) {
-                                            for (String kinTermLabel : kinTerms.getTermLabel(fullKinTypeString)) {
-                                                currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
-                                                egoDataNode.addRelatedNode(currentGraphDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.kinTermLine, kinTerms.graphColour, kinTermLabel);
-                                            }
-                                        }
+                                    // todo: check the gender or any other testable attrubute and give syntax highlight error if found
+                                } else {
+                                    currentGraphDataNode = new EntityData(identifierString, null, fullKinTypeString, currentReferenceKinType.symbolType, labelStrings, currentReferenceKinType.isEgoType());
+                                    if (currentGraphDataNode.isEgo) {
+                                        egoDataNode = currentGraphDataNode;
+//                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
                                     }
                                 }
-                                if (parseLabelStrings(currentGraphDataNode, consumableString)) {
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length() - insertedEgoOffset);
-                                    consumableString = "";
+                                DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
+                                if (parentDataNode != null) {
+                                    parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                    currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                }
+                                graphDataNodeList.put(identifierString, currentGraphDataNode);
+                                currentGraphDataNode.isVisible = true;
+                                // add any child nodes?
+                                for (KinTermGroup kinTerms : kinTermsArray) {
+                                    if (kinTerms.graphShow && egoDataNode != null) {
+                                        for (String kinTermLabel : kinTerms.getTermLabel(fullKinTypeString)) {
+                                            currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
+                                            egoDataNode.addRelatedNode(currentGraphDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.kinTermLine, kinTerms.graphColour, kinTermLabel);
+                                        }
+                                    }
                                 }
                                 parentDataNode = currentGraphDataNode;
                                 kinTypeFound = true;
