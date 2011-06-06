@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.kindata;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.bind.annotation.XmlElement;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -13,10 +14,48 @@ public class GraphSorter {
 
     @XmlElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
     protected EntityData[] graphDataNodeArray = new EntityData[]{};
-    public int graphWidth;
-    public int graphHeight;
+    public float graphWidth;
+    public float graphHeight;
+    int xPadding = 100; // todo sort out one place for this var
+    int yPadding = 100; // todo sort out one place for this var
 //    , int hSpacing, int vSpacing
 //
+
+    private class SortingEntity {
+
+        String selfEntityId;
+        ArrayList<SortingEntity> mustBeBelow;
+        float[] calculatedPosition = null;
+
+        public SortingEntity(EntityData entityData, HashMap<String, SortingEntity> knownSortingEntities) {
+            selfEntityId = entityData.getUniqueIdentifier();
+            mustBeBelow = new ArrayList<SortingEntity>();
+            for (EntityRelation entityRelation : entityData.getVisiblyRelateNodes()) {
+                if (entityRelation.relationType == DataTypes.RelationType.ancestor) {
+                    if (!knownSortingEntities.containsKey(entityRelation.alterUniqueIdentifier)) {
+                        knownSortingEntities.put(entityRelation.alterUniqueIdentifier, new SortingEntity(entityRelation.getAlterNode(), knownSortingEntities));
+                    }
+                    mustBeBelow.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
+                }
+            }
+        }
+
+        public float[] getPosition(HashMap<String, float[]> entityPositions) {
+            if (calculatedPosition == null) {
+                calculatedPosition = entityPositions.get(selfEntityId);
+                if (calculatedPosition == null) {
+                    calculatedPosition = new float[]{0.0f, 0.0f};
+                }
+                for (SortingEntity sortingEntity : mustBeBelow) {
+                    float[] nextAbovePos = sortingEntity.getPosition(entityPositions);
+                    if (nextAbovePos[1] > calculatedPosition[1] - yPadding) {
+                        calculatedPosition[1] = nextAbovePos[1] + yPadding;
+                    }
+                }
+            }
+            return calculatedPosition;
+        }
+    }
 
     public void setEntitys(EntityData[] graphDataNodeArrayLocal) {
         graphDataNodeArray = graphDataNodeArrayLocal;
@@ -24,52 +63,121 @@ public class GraphSorter {
         //printLocations(); // todo: remove this and maybe add a label of x,y post for each node to better see the sorting
     }
 
-    public void placeAllNodes(GraphPanel graphPanel, EntityData[] allEntitys, HashMap<String, Float[]> entityPositions) {
+//    private void placeRelatives(EntityData currentNode, ArrayList<EntityData> intendedSortOrder, HashMap<String, Float[]> entityPositions) {
+//        for (EntityRelation entityRelation : currentNode.getVisiblyRelateNodes()) {
+//            EntityData relatedEntity = entityRelation.getAlterNode();
+//
+//        }
+//    }
+    public void placeAllNodes(GraphPanel graphPanel, EntityData[] allEntitys, HashMap<String, float[]> entityPositions) {
         // make a has table of all entites
         // find the first ego node
         // place it and all its immediate relatives onto the graph, each time checking that the space is free
         // contine to the next nearest relatives
         // when all done search for any unrelated nodes and do it all again
         // make sure that invisible nodes are ignored
-
-        // store the max and min X Y so that the diagram size can be correctly specified
+        HashMap<String, SortingEntity> knownSortingEntities = new HashMap<String, SortingEntity>();
         for (EntityData currentNode : allEntitys) {
-            if (currentNode.isVisible) {
-                // loop through the filled locations and move to the right or left if not empty required
-//            // todo: check the related nodes and average their positions then check to see if it is free and insert the node there
-                boolean positionFree = false;
-                float preferedX = 0;
-                String currentIdentifier = currentNode.getUniqueIdentifier();
-                Float[] storedPosition = entityPositions.get(currentIdentifier);
-//                if (storedPosition == null) {
-//                    storedPosition = new Float[]{preferedX, 0.0f};
-//                }
-                while (!positionFree) {
-//                storedPosition = new Float[]{preferedX * hSpacing + hSpacing - symbolSize / 2.0f,
-//                            currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f};
-//                if (entityPositions.isEmpty()) {
-//                    break;
-//                }
-                    if (storedPosition != null) {
-                        positionFree = true;
-                        for (String comparedIdentifier : entityPositions.keySet()) {
-                            if (!comparedIdentifier.equals(currentIdentifier)) {
-                                Float[] currentPosition = entityPositions.get(comparedIdentifier);
-                                positionFree = !currentPosition[0].equals(storedPosition[0]) || !currentPosition[1].equals(storedPosition[1]);
-                                if (!positionFree) {
-                                    break;
-                                }
-                            }
-                        }
-                        preferedX++;
-                    }
-                    if (!positionFree) {
-                        storedPosition = new Float[]{preferedX, 0.0f};
-                    }
+            if (!knownSortingEntities.containsKey(currentNode.getUniqueIdentifier())) {
+                knownSortingEntities.put(currentNode.getUniqueIdentifier(), new SortingEntity(currentNode, knownSortingEntities));
+            }
+            entityPositions.put(currentNode.getUniqueIdentifier(), knownSortingEntities.get(currentNode.getUniqueIdentifier()).getPosition(entityPositions));
+        }
+
+        // get min positions
+        float[] minPostion = null;
+        for (float[] currentPosition : entityPositions.values()) {
+            if (minPostion == null) {
+                minPostion = currentPosition;
+            } else {
+                if (minPostion[0] > currentPosition[0]) {
+                    minPostion[0] = currentPosition[0];
                 }
-                entityPositions.put(currentIdentifier, storedPosition);
+                if (minPostion[1] > currentPosition[1]) {
+                    minPostion[1] = currentPosition[1];
+                }
             }
         }
+        // adjust the min position
+        float xOffset = xPadding - minPostion[0];
+        float yOffset = yPadding - minPostion[1];
+        for (float[] currentPosition : entityPositions.values()) {
+            currentPosition[0] = currentPosition[0] + xOffset;
+            currentPosition[1] = currentPosition[1] + yOffset;
+        }
+        // get max positions
+        graphWidth = 0;
+        graphHeight = 0;
+        for (float[] currentPosition : entityPositions.values()) {
+            if (graphWidth < currentPosition[0]) {
+                graphWidth = currentPosition[0];
+            }
+            if (graphHeight < currentPosition[1]) {
+                graphHeight = currentPosition[1];
+            }
+        }
+        // make sure there is some padding on the right and bottom
+        graphWidth += xPadding * 2;
+        graphHeight += yPadding * 2;
+
+//        ArrayList<EntityData> intendedSortOrder = new ArrayList<EntityData>();
+////        ArrayList<EntityData> placedEntities = new ArrayList<EntityData>();
+//        for (EntityData currentNode : allEntitys) {
+//            if (currentNode.isVisible && entityPositions.containsKey(currentNode.getUniqueIdentifier())) {
+//                // add all the placed entities first in the list
+//                intendedSortOrder.add(currentNode);
+//            }
+//        }
+//        boolean nodesNeedPlacement = false;
+//        for (EntityData currentNode : allEntitys) {
+//            if (currentNode.isVisible && !intendedSortOrder.contains(currentNode)) {
+//                intendedSortOrder.add(currentNode);
+//                nodesNeedPlacement = true;
+//            }
+//        }
+//        if (!nodesNeedPlacement) {
+//            return;
+//        }
+//        // store the max and min X Y so that the diagram size can be correctly specified
+//        while (!intendedSortOrder.isEmpty()) {
+//            EntityData currentNode = intendedSortOrder.remove(0);
+////            placedEntities.add(currentNode);
+//            if (currentNode.isVisible) {
+//                // loop through the filled locations and move to the right or left if not empty required
+////            // todo: check the related nodes and average their positions then check to see if it is free and insert the node there
+//                boolean positionFree = false;
+//                float preferedX = 0;
+//                String currentIdentifier = currentNode.getUniqueIdentifier();
+//                Float[] storedPosition = entityPositions.get(currentIdentifier);
+////                if (storedPosition == null) {
+////                    storedPosition = new Float[]{preferedX, 0.0f};
+////                }
+//                while (!positionFree) {
+////                storedPosition = new Float[]{preferedX * hSpacing + hSpacing - symbolSize / 2.0f,
+////                            currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f};
+////                if (entityPositions.isEmpty()) {
+////                    break;
+////                }
+//                    if (storedPosition != null) {
+//                        positionFree = true;
+//                        for (String comparedIdentifier : entityPositions.keySet()) {
+//                            if (!comparedIdentifier.equals(currentIdentifier)) {
+//                                Float[] currentPosition = entityPositions.get(comparedIdentifier);
+//                                positionFree = !currentPosition[0].equals(storedPosition[0]) || !currentPosition[1].equals(storedPosition[1]);
+//                                if (!positionFree) {
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                        preferedX++;
+//                    }
+//                    if (!positionFree) {
+//                        storedPosition = new Float[]{preferedX, 0.0f};
+//                    }
+//                }
+//                entityPositions.put(currentIdentifier, storedPosition);
+//            }
+//        }
     }
 //
 ////    public int[] getEntityLocation(String entityId) {
