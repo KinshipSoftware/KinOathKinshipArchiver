@@ -85,17 +85,17 @@ public class GraphPanelSize {
         }
     }
 
-    public int getVerticalSpacing(int gridHeight) {
+    public int getVerticalSpacing() {// int gridHeight) {
 //        if (autoSize) {
-            return defaultVerticalSpacing;
+        return defaultVerticalSpacing;
 //        } else {
 //            return preferedHeight / (gridHeight + 1);
 //        }
     }
 
-    public int getHorizontalSpacing(int gridWidth) {
+    public int getHorizontalSpacing() {// int gridWidth) {
 //        if (autoSize) {
-            return defaultHorizontalSpacing;
+        return defaultHorizontalSpacing;
 //        } else {
 //            return preferedWidth / (gridWidth + 1);
 //        }
