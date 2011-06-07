@@ -397,14 +397,15 @@ public class GraphPanel extends JPanel implements SavePanel {
             }
             dataStoreSvg.graphData.placeAllNodes(this, entitySvg.entityPositions);
 //            }
+            float[] graphSize = dataStoreSvg.graphData.getGraphSize(entitySvg.entityPositions);
             // Set the width and height attributes on the root 'svg' element.
-            svgRoot.setAttribute("width", Float.toString(dataStoreSvg.graphData.graphWidth)); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
-            svgRoot.setAttribute("height", Float.toString(dataStoreSvg.graphData.graphHeight));
+            svgRoot.setAttribute("width", Float.toString(graphSize[0])); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
+            svgRoot.setAttribute("height", Float.toString(graphSize[1]));
 //            svgRoot.setAttribute("width", "100%");
 //            svgRoot.setAttribute("height", "100%");
 //            svgRoot.removeAttribute("width");
 //            svgRoot.removeAttribute("height");
-            this.setPreferredSize(new Dimension((int) dataStoreSvg.graphData.graphWidth, (int) dataStoreSvg.graphData.graphHeight));//            entitySvg.removeOldEntities(entityGroupNode);
+            this.setPreferredSize(new Dimension((int) graphSize[0], (int) graphSize[1]));//            entitySvg.removeOldEntities(entityGroupNode);
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
             // store the selected kin type strings and other data in the dom
