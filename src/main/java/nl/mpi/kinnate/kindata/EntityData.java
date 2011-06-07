@@ -46,8 +46,6 @@ public class EntityData {
     public String[] archiveLinkArray = null; //new String[]{"http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7", "http://www.google.com", "http://www.mpi.nl"};
 //    @XmlElement(name = "ResourceLink")
 //    public String[] resourceLinkArray;
-    protected int xPos;
-    protected int yPos;
     public boolean isVisible = false;
     private EntityRelation[] visiblyRelateNodes = null;
     private EntityRelation[] distinctRelateNodes = null;
@@ -74,22 +72,6 @@ public class EntityData {
         isEgo = isEgoLocal;
     }
 
-    public int getxPos() {
-        return xPos;
-    }
-
-    public void setxPos(int xPos) {
-        this.xPos = xPos;
-    }
-
-    public int getyPos() {
-        return yPos;
-    }
-
-//    public void setyPos(int yPos) {
-//        // todo: y position cannot be set in the default layout of vertical generations
-//        // this.yPos = yPos;
-//    }
     public String getSymbolType() {
         if (symbolType != null) {
             switch (symbolType) {
@@ -180,6 +162,7 @@ public class EntityData {
         nodeRelation.labelString = labelString;
         nodeRelation.lineColour = lineColourLocal;
         if (relatedNodes != null) {
+            // todo: prevent duplicates
             ArrayList<EntityRelation> relatedNodesList = new ArrayList<EntityRelation>();
             relatedNodesList.addAll(Arrays.asList(relatedNodes));
             relatedNodesList.add(nodeRelation);
