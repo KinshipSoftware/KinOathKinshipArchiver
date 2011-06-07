@@ -129,9 +129,14 @@ public class RelationSvg {
         String lineIdString = "relation" + relationLineIndex + "Line";
         new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, graphLinkNode.relationType, graphLinkNode.relationLineType, currentNode.getUniqueIdentifier(), graphLinkNode.getAlterNode().getUniqueIdentifier());
         // set the line end points
-        Float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(currentNode.getUniqueIdentifier());
-        Float[] alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
-
+//        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(currentNode.getUniqueIdentifier());
+//        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
+        float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(currentNode.getUniqueIdentifier());
+        float[] alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
+//        float fromX = (currentNode.getxPos()); // * hSpacing + hSpacing
+//        float fromY = (currentNode.getyPos()); // * vSpacing + vSpacing
+//        float toX = (graphLinkNode.getAlterNode().getxPos()); // * hSpacing + hSpacing
+//        float toY = (graphLinkNode.getAlterNode().getyPos()); // * vSpacing + vSpacing
         float fromX = (egoSymbolPoint[0]); // * hSpacing + hSpacing
         float fromY = (egoSymbolPoint[1]); // * vSpacing + vSpacing
         float toX = (alterSymbolPoint[0]); // * hSpacing + hSpacing
@@ -241,9 +246,10 @@ public class RelationSvg {
                         String lineElementId = idAttrubite.getNodeValue() + "Line";
                         Element relationLineElement = graphPanel.doc.getElementById(lineElementId);
                         //System.out.println("type: " + relationLineElement.getLocalName());
-
-                        Float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
-                        Float[] alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+                        float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
+                        float[] alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+//                        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.egoNodeId);
+//                        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.alterNodeId);
 
                         float egoX = egoSymbolPoint[0];
                         float egoY = egoSymbolPoint[1];
