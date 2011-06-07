@@ -21,16 +21,17 @@ import org.w3c.dom.svg.SVGMatrix;
  */
 public class EntitySvg {
 
-    protected HashMap<String, Float[]> entityPositions;
+    protected HashMap<String, float[]> entityPositions;
     private int symbolSize = 15;
     static protected int strokeWidth = 2;
 
     public EntitySvg() {
-        entityPositions = new HashMap<String, Float[]>();
+        entityPositions = new HashMap<String, float[]>();
     }
 
     public void readEntityPositions(Node entityGroup) {
         // read the entity positions from the existing dom
+        // this now replaces the position values in the entity data and the entity position is now stored in the svg entity visual not the entity data 
         if (entityGroup != null) {
             for (Node entityNode = entityGroup.getFirstChild(); entityNode != null; entityNode = entityNode.getNextSibling()) {
                 NamedNodeMap nodeMap = entityNode.getAttributes();
@@ -48,7 +49,7 @@ public class EntitySvg {
                         String[] stringPos = transformString.split(",");
 //                        System.out.println("entityId: " + entityId);
 //                        System.out.println("transformString: " + transformString);
-                        entityPositions.put(entityId, new Float[]{Float.parseFloat(stringPos[0]), Float.parseFloat(stringPos[1])});
+                        entityPositions.put(entityId, new float[]{Float.parseFloat(stringPos[0]), Float.parseFloat(stringPos[1])});
 //                      SVGRect bbox = ((SVGLocatable) entityNode).getBBox();
 //                      SVGMatrix sVGMatrix = ((SVGLocatable) entityNode).getCTM();
 //                      System.out.println("getE: " + sVGMatrix.getE());
@@ -219,11 +220,11 @@ public class EntitySvg {
         return symbolArray.toArray(new String[]{});
     }
 
-    public Float[] getEntityLocation(String entityId) {
-        Float[] returnLoc = entityPositions.get(entityId);
-        Float xPos = returnLoc[0] + (symbolSize / 2);
-        Float yPos = returnLoc[1] + (symbolSize / 2);
-        return new Float[]{xPos, yPos};
+    public float[] getEntityLocation(String entityId) {
+        float[] returnLoc = entityPositions.get(entityId);
+        float xPos = returnLoc[0] + (symbolSize / 2);
+        float yPos = returnLoc[1] + (symbolSize / 2);
+        return new float[]{xPos, yPos};
     }
 //    public float[] getEntityLocation(SVGDocument doc, String entityId) {
 //        Element entitySymbol = doc.getElementById(entityId + "symbol");
@@ -287,7 +288,8 @@ public class EntitySvg {
                 }
             }
 //            System.out.println("updatedPosition after snap: " + updatedPosition);
-            entityPositions.put(entityId, new Float[]{updatedPositionX, updatedPositionY});
+//                graphPanel.dataStoreSvg.graphData.setEntityLocation(entityId, updatedPositionX, updatedPositionY);
+            entityPositions.put(entityId, new float[]{updatedPositionX, updatedPositionY});
             ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(updatedPositionX) + ", " + String.valueOf(updatedPositionY) + ")");
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + (sVGMatrix.getF() + shiftY) + ")");
         }
@@ -295,7 +297,7 @@ public class EntitySvg {
         return new float[]{remainderAfterSnapX, remainderAfterSnapY};
     }
 
-    public Element createEntitySymbol(GraphPanel graphPanel, EntityData currentNode, int hSpacing, int vSpacing) {
+    protected Element createEntitySymbol(GraphPanel graphPanel, EntityData currentNode) {
         Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
         groupNode.setAttribute("id", currentNode.getUniqueIdentifier());
         groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
@@ -312,30 +314,31 @@ public class EntitySvg {
         symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
         symbolNode.setAttribute("id", currentNode.getUniqueIdentifier() + "symbol");
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
-        Float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
+        float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
-            // loop through the filled locations and move to the right or left if not empty required
-            // todo: check the related nodes and average their positions then check to see if it is free and insert the node there
-            boolean positionFree = false;
-            float preferedX = currentNode.getxPos();
-            while (!positionFree) {
-                storedPosition = new Float[]{preferedX * hSpacing + hSpacing - symbolSize / 2.0f,
-                            currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f};
-                if (entityPositions.isEmpty()) {
-                    break;
-                }
-                for (Float[] currentPosition : entityPositions.values()) {
-                    positionFree = !currentPosition[0].equals(storedPosition[0]) || !currentPosition[1].equals(storedPosition[1]);
-                    if (!positionFree) {
-                        break;
-                    }
-                }
-                preferedX++;
-            }
-            entityPositions.put(currentNode.getUniqueIdentifier(), storedPosition);
+//            throw new Exception("Entity position should have been set in the graph sorter");
+//            // loop through the filled locations and move to the right or left if not empty required
+//            // todo: check the related nodes and average their positions then check to see if it is free and insert the node there
+//            boolean positionFree = false;
+//            float preferedX = currentNode.getxPos();
+//            while (!positionFree) {
+//                storedPosition = new Float[]{preferedX * hSpacing + hSpacing - symbolSize / 2.0f,
+//                            currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f};
+//                if (entityPositions.isEmpty()) {
+//                    break;
+//                }
+//                for (Float[] currentPosition : entityPositions.values()) {
+//                    positionFree = !currentPosition[0].equals(storedPosition[0]) || !currentPosition[1].equals(storedPosition[1]);
+//                    if (!positionFree) {
+//                        break;
+//                    }
+//                }
+//                preferedX++;
+//            }
+//            entityPositions.put(currentNode.getUniqueIdentifier(), storedPosition);
         } else {
-//            // prevent the y position being changed
-            storedPosition[1] = currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f;
+////            // prevent the y position being changed
+//            storedPosition[1] = currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f;
         }
         groupNode.setAttribute("transform", "translate(" + Float.toString(storedPosition[0]) + ", " + Float.toString(storedPosition[1]) + ")");
         if (currentNode.isEgo) {
