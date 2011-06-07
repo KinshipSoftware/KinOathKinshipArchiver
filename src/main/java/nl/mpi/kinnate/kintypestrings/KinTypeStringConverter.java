@@ -112,7 +112,7 @@ public class KinTypeStringConverter extends GraphSorter {
         if (adjacentEntity.getSymbolType().equals(EntityData.SymbolType.union.name())) {
             return true;
         }
-        // todo: continue here...
+        // todo: continue here....
         if (requiredKinType.relationType.equals(DataTypes.RelationType.sibling) && entityRelation.relationType.equals(DataTypes.RelationType.ancestor)) {
             return true;
         }
@@ -323,7 +323,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                         egoDataNode = currentGraphDataNode;
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
                                     }
-                                    // todo: check the gender or any other testable attrubute and give syntax highlight error if found
+                                    // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
                                 } else {
                                     currentGraphDataNode = new EntityData(identifierString, null, fullKinTypeString, currentReferenceKinType.symbolType, labelStrings, currentReferenceKinType.isEgoType());
                                     if (currentGraphDataNode.isEgo) {
@@ -365,7 +365,7 @@ public class KinTypeStringConverter extends GraphSorter {
                 }
             }
         }
-        graphDataNodeArray = graphDataNodeList.values().toArray(new EntityData[]{});
-        sanguineSort();
+        super.setEntitys(graphDataNodeList.values().toArray(new EntityData[]{}));
+//        sanguineSort();
     }
 }
