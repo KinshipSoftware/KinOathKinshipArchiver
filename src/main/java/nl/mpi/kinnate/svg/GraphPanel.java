@@ -1,11 +1,9 @@
 package nl.mpi.kinnate.svg;
 
-import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -24,6 +22,7 @@ import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
@@ -39,8 +38,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
-import org.w3c.dom.svg.SVGLocatable;
-import org.w3c.dom.svg.SVGRect;
 
 /**
  *  Document   : GraphPanel
@@ -63,8 +60,6 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    private URI[] egoPathsTemp = null;
     public SvgUpdateHandler svgUpdateHandler;
     private int currentZoom = 0;
-    private int currentWidth = 0;
-    private int currentHeight = 0;
     private AffineTransform zoomAffineTransform = null;
 
     public GraphPanel(KinTermSavePanel egoSelectionPanel) {
@@ -120,27 +115,26 @@ public class GraphPanel extends JPanel implements SavePanel {
         }
     }
 
-    private void zoomDrawing() {
-        AffineTransform scaleTransform = new AffineTransform();
-        scaleTransform.scale(1 - currentZoom / 10.0, 1 - currentZoom / 10.0);
-        System.out.println("currentZoom: " + currentZoom);
-//        svgCanvas.setRenderingTransform(scaleTransform);
-        Rectangle canvasBounds = this.getBounds();
-        SVGRect bbox = ((SVGLocatable) doc.getRootElement()).getBBox();
-        if (bbox != null) {
-            System.out.println("previousZoomedWith: " + bbox.getWidth());
-        }
-//        SVGElement rootElement = doc.getRootElement();
-//        if (currentWidth < canvasBounds.width) {
-        float drawingCenter = (currentWidth / 2);
-//                float drawingCenter = (bbox.getX() + (bbox.getWidth() / 2));
-        float canvasCenter = (canvasBounds.width / 2);
-        zoomAffineTransform = new AffineTransform();
-        zoomAffineTransform.translate((canvasCenter - drawingCenter), 1);
-        zoomAffineTransform.concatenate(scaleTransform);
-        svgCanvas.setRenderingTransform(zoomAffineTransform);
-    }
-
+//    private void zoomDrawing() {
+//        AffineTransform scaleTransform = new AffineTransform();
+//        scaleTransform.scale(1 - currentZoom / 10.0, 1 - currentZoom / 10.0);
+//        System.out.println("currentZoom: " + currentZoom);
+////        svgCanvas.setRenderingTransform(scaleTransform);
+//        Rectangle canvasBounds = this.getBounds();
+//        SVGRect bbox = ((SVGLocatable) doc.getRootElement()).getBBox();
+//        if (bbox != null) {
+//            System.out.println("previousZoomedWith: " + bbox.getWidth());
+//        }
+////        SVGElement rootElement = doc.getRootElement();
+////        if (currentWidth < canvasBounds.width) {
+//        float drawingCenter = (currentWidth / 2);
+////                float drawingCenter = (bbox.getX() + (bbox.getWidth() / 2));
+//        float canvasCenter = (canvasBounds.width / 2);
+//        zoomAffineTransform = new AffineTransform();
+//        zoomAffineTransform.translate((canvasCenter - drawingCenter), 1);
+//        zoomAffineTransform.concatenate(scaleTransform);
+//        svgCanvas.setRenderingTransform(zoomAffineTransform);
+//    }
     public void setArbilTableModel(ArbilTableModel arbilTableModelLocal) {
         arbilTableModel = arbilTableModelLocal;
     }
@@ -361,10 +355,11 @@ public class GraphPanel extends JPanel implements SavePanel {
         // todo: resolve threading issue and update issue so that imdi nodes that update can update the diagram
         requiresSave = true;
         dataStoreSvg.graphData = graphDataLocal;
-        int vSpacing = graphPanelSize.getVerticalSpacing(dataStoreSvg.graphData.gridHeight);
-        int hSpacing = graphPanelSize.getHorizontalSpacing(dataStoreSvg.graphData.gridWidth);
-        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
-        currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
+        dataStoreSvg.graphData.setPadding(graphPanelSize);
+        int vSpacing = graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);
+        int hSpacing = graphPanelSize.getHorizontalSpacing(); //dataStoreSvg.graphData.gridWidth);
+//        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
+//        currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
         try {
             Element svgRoot;
             // Get the root element (the 'svg' element)
@@ -400,20 +395,26 @@ public class GraphPanel extends JPanel implements SavePanel {
             for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
                 dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
             }
+            dataStoreSvg.graphData.placeAllNodes(this, entitySvg.entityPositions);
 //            }
             // Set the width and height attributes on the root 'svg' element.
-            svgRoot.setAttribute("width", Integer.toString(currentWidth)); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
-            svgRoot.setAttribute("height", Integer.toString(currentHeight));
+            svgRoot.setAttribute("width", Float.toString(dataStoreSvg.graphData.graphWidth)); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
+            svgRoot.setAttribute("height", Float.toString(dataStoreSvg.graphData.graphHeight));
 //            svgRoot.setAttribute("width", "100%");
 //            svgRoot.setAttribute("height", "100%");
 //            svgRoot.removeAttribute("width");
 //            svgRoot.removeAttribute("height");
-            this.setPreferredSize(new Dimension(graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing), graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing)));//            entitySvg.removeOldEntities(entityGroupNode);
+            this.setPreferredSize(new Dimension((int) dataStoreSvg.graphData.graphWidth, (int) dataStoreSvg.graphData.graphHeight));//            entitySvg.removeOldEntities(entityGroupNode);
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
             // store the selected kin type strings and other data in the dom
             dataStoreSvg.storeAllData(doc);
-            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
+//            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
+            for (EntityData currentNode : dataStoreSvg.graphData.getDataNodes()) {
+                if (currentNode.isVisible) {
+                    entityGroupNode.appendChild(entitySvg.createEntitySymbol(this, currentNode));
+                }
+            }
             for (EntityData currentNode : dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
