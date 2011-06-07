@@ -252,8 +252,8 @@ public class EntitySvg {
 //        }
 //    }
 
-    public float[] moveEntity(SVGDocument doc, String entityId, float shiftX, float shiftY, boolean snapToGrid, boolean allRealtionsSelected) {
-        Element entitySymbol = doc.getElementById(entityId);
+    public float[] moveEntity(GraphPanel graphPanel, String entityId, float shiftX, float shiftY, boolean snapToGrid, boolean allRealtionsSelected) {
+        Element entitySymbol = graphPanel.doc.getElementById(entityId);
         float remainderAfterSnapX = 0;
         float remainderAfterSnapY = 0;
         if (entitySymbol != null) {
