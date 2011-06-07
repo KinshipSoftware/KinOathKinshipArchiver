@@ -13,7 +13,8 @@ import nl.mpi.kinnate.svg.GraphPanel;
 public class GraphSorter {
 
     @XmlElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
-    protected EntityData[] graphDataNodeArray = new EntityData[]{};
+    private EntityData[] graphDataNodeArray = new EntityData[]{};
+    HashMap<String, SortingEntity> knownSortingEntities;
     public float graphWidth;
     public float graphHeight;
     int xPadding = 100; // todo sort out one place for this var
@@ -25,19 +26,50 @@ public class GraphSorter {
 
         String selfEntityId;
         ArrayList<SortingEntity> mustBeBelow;
+        ArrayList<SortingEntity> mustBeNextTo;
+        EntityRelation[] visiblyRelateNodes;
         float[] calculatedPosition = null;
 
-        public SortingEntity(EntityData entityData, HashMap<String, SortingEntity> knownSortingEntities) {
+        public SortingEntity(EntityData entityData) {
             selfEntityId = entityData.getUniqueIdentifier();
+            visiblyRelateNodes = entityData.getVisiblyRelateNodes();
             mustBeBelow = new ArrayList<SortingEntity>();
-            for (EntityRelation entityRelation : entityData.getVisiblyRelateNodes()) {
-                if (entityRelation.relationType == DataTypes.RelationType.ancestor) {
-                    if (!knownSortingEntities.containsKey(entityRelation.alterUniqueIdentifier)) {
-                        knownSortingEntities.put(entityRelation.alterUniqueIdentifier, new SortingEntity(entityRelation.getAlterNode(), knownSortingEntities));
-                    }
-                    mustBeBelow.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
+            mustBeNextTo = new ArrayList<SortingEntity>();
+        }
+
+        public void calculateRelations(HashMap<String, SortingEntity> knownSortingEntities) {
+            for (EntityRelation entityRelation : visiblyRelateNodes) {
+                switch (entityRelation.relationType) {
+                    case ancestor:
+                        mustBeBelow.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
+                        break;
+                    case union:
+                        mustBeNextTo.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
+                        break;
                 }
             }
+        }
+
+        private boolean positionIsFree(String currentIdentifier, float[] targetPosition, HashMap<String, float[]> entityPositions) {
+            int useCount = 0;
+            for (float[] currentPosition : entityPositions.values()) {
+                if (currentPosition[0] == targetPosition[0] && currentPosition[1] == targetPosition[1]) {
+                    useCount++;
+                }
+            }
+            if (useCount == 0) {
+                return true;
+            }
+            if (useCount == 1) {
+                float[] entityPosition = entityPositions.get(currentIdentifier);
+                if (entityPosition != null) {
+                    if (entityPosition[0] == targetPosition[0] && entityPosition[1] == targetPosition[1]) {
+                        // if there is one entity already in this position then check if it is the current entity, in which case it is free
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public float[] getPosition(HashMap<String, float[]> entityPositions) {
@@ -50,8 +82,19 @@ public class GraphSorter {
                     float[] nextAbovePos = sortingEntity.getPosition(entityPositions);
                     if (nextAbovePos[1] > calculatedPosition[1] - yPadding) {
                         calculatedPosition[1] = nextAbovePos[1] + yPadding;
+                        calculatedPosition[0] = nextAbovePos[0];
+                    }
+                    while (!positionIsFree(selfEntityId, calculatedPosition, entityPositions)) {
+                        // todo: this should be checking min distance not free
+                        calculatedPosition[0] = calculatedPosition[0] + xPadding;
                     }
                 }
+//                                for (SortingEntity sortingEntity : mustBeNextTo) {
+//                    float[] nextAbovePos = sortingEntity.getPosition(entityPositions);
+//                    if (nextAbovePos[1] > calculatedPosition[1] - yPadding) {
+//                        calculatedPosition[1] = nextAbovePos[1] + yPadding;
+//                    }
+//                }
             }
             return calculatedPosition;
         }
@@ -59,6 +102,15 @@ public class GraphSorter {
 
     public void setEntitys(EntityData[] graphDataNodeArrayLocal) {
         graphDataNodeArray = graphDataNodeArrayLocal;
+
+        // this section need only be done when the nodes are added to this graphsorter
+        knownSortingEntities = new HashMap<String, SortingEntity>();
+        for (EntityData currentNode : graphDataNodeArrayLocal) {
+            knownSortingEntities.put(currentNode.getUniqueIdentifier(), new SortingEntity(currentNode));
+        }
+        for (SortingEntity currentSorter : knownSortingEntities.values()) {
+            currentSorter.calculateRelations(knownSortingEntities);
+        }
 //        sanguineSort();
         //printLocations(); // todo: remove this and maybe add a label of x,y post for each node to better see the sorting
     }
@@ -69,19 +121,15 @@ public class GraphSorter {
 //
 //        }
 //    }
-    public void placeAllNodes(GraphPanel graphPanel, EntityData[] allEntitys, HashMap<String, float[]> entityPositions) {
+    public void placeAllNodes(GraphPanel graphPanel, HashMap<String, float[]> entityPositions) {
         // make a has table of all entites
         // find the first ego node
         // place it and all its immediate relatives onto the graph, each time checking that the space is free
         // contine to the next nearest relatives
         // when all done search for any unrelated nodes and do it all again
         // make sure that invisible nodes are ignored
-        HashMap<String, SortingEntity> knownSortingEntities = new HashMap<String, SortingEntity>();
-        for (EntityData currentNode : allEntitys) {
-            if (!knownSortingEntities.containsKey(currentNode.getUniqueIdentifier())) {
-                knownSortingEntities.put(currentNode.getUniqueIdentifier(), new SortingEntity(currentNode, knownSortingEntities));
-            }
-            entityPositions.put(currentNode.getUniqueIdentifier(), knownSortingEntities.get(currentNode.getUniqueIdentifier()).getPosition(entityPositions));
+        for (SortingEntity currentSorter : knownSortingEntities.values()) {
+            entityPositions.put(currentSorter.selfEntityId, currentSorter.getPosition(entityPositions));
         }
 
         // get min positions
