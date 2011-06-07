@@ -192,7 +192,7 @@ public class SvgUpdateHandler {
                         int dragCounter = 0;
                         for (String entityId : graphPanel.selectedGroupId) {
                             // store the remainder after snap for re use on each update
-                            dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel.doc, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, allRealtionsSelected);
+                            dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, allRealtionsSelected);
                             dragCounter++;
                         }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
@@ -234,6 +234,7 @@ public class SvgUpdateHandler {
                         }
                     }
                 }
+                graphPanel.updateCanvasSize();
             }
         };
     }
