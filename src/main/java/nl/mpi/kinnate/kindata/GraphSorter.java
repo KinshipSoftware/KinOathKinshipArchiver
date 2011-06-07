@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.bind.annotation.XmlElement;
 import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.svg.GraphPanelSize;
 
 /**
  *  Document   : GraphData
@@ -17,10 +18,15 @@ public class GraphSorter {
     HashMap<String, SortingEntity> knownSortingEntities;
     public float graphWidth;
     public float graphHeight;
-    int xPadding = 100; // todo sort out one place for this var
-    int yPadding = 100; // todo sort out one place for this var
+    public int xPadding = 100; // todo sort out one place for this var
+    public int yPadding = 100; // todo sort out one place for this var
 //    , int hSpacing, int vSpacing
 //
+
+    public void setPadding(GraphPanelSize graphPanelSize) {
+        xPadding = graphPanelSize.getHorizontalSpacing();
+        yPadding = graphPanelSize.getVerticalSpacing();
+    }
 
     private class SortingEntity {
 
