@@ -33,6 +33,7 @@ public class GraphSorter {
         ArrayList<SortingEntity> mustBeBelow;
         ArrayList<SortingEntity> mustBeAbove;
         ArrayList<SortingEntity> mustBeNextTo;
+        ArrayList<SortingEntity> couldBeNextTo;
         EntityRelation[] visiblyRelateNodes;
         float[] calculatedPosition = null;
 
@@ -42,6 +43,7 @@ public class GraphSorter {
             mustBeBelow = new ArrayList<SortingEntity>();
             mustBeAbove = new ArrayList<SortingEntity>();
             mustBeNextTo = new ArrayList<SortingEntity>();
+            couldBeNextTo = new ArrayList<SortingEntity>();
         }
 
         public void calculateRelations(HashMap<String, SortingEntity> knownSortingEntities) {
@@ -54,8 +56,10 @@ public class GraphSorter {
                         mustBeAbove.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
                         break;
                     case union:
-                    case sibling:
                         mustBeNextTo.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
+                    // no break here is deliberate: those that mustBeNextTo to need also to be in couldBeNextTo
+                    case sibling:
+                        couldBeNextTo.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
                         break;
                 }
             }
@@ -100,16 +104,37 @@ public class GraphSorter {
                     }
                 }
                 if (calculatedPosition == null) {
-                    for (SortingEntity sortingEntity : mustBeNextTo) {
+                    for (SortingEntity sortingEntity : couldBeNextTo) {
                         float[] nextToPos = sortingEntity.getPosition(entityPositions);
                         if (calculatedPosition == null) {
                             calculatedPosition = new float[]{nextToPos[0], nextToPos[1]};
+//                        } else if (nextToPos[1] > calculatedPosition[1]) {
+//                            calculatedPosition = new float[]{nextToPos[0], nextToPos[1]};
                         }
                     }
                 }
                 if (calculatedPosition == null) {
                     float[] graphSize = getGraphSize(entityPositions);
                     calculatedPosition = new float[]{0.0f, graphSize[1]};
+                }
+                // make sure any spouses are in the same row
+                // todo: this should probably be moved into a separate action and when a move is made then move in sequence the entities that are below and to the right
+                for (SortingEntity sortingEntity : mustBeNextTo) {
+                    float[] nextToPos = entityPositions.get(sortingEntity.selfEntityId);
+                    if (nextToPos != null) {
+                        if (nextToPos[1] > calculatedPosition[1]) {
+                            calculatedPosition = new float[]{nextToPos[0], nextToPos[1]};
+                        }
+//                    } else {
+//                        // prepopulate the spouse position
+//                        float[] spousePosition = new float[]{calculatedPosition[0], calculatedPosition[1]};
+//                        while (!positionIsFree(sortingEntity.selfEntityId, spousePosition, entityPositions)) {
+//                            // todo: this should be checking min distance not free
+//                            spousePosition[0] = spousePosition[0] + xPadding;
+//                            System.out.println("move spouse right: " + selfEntityId);
+//                        }
+//                        entityPositions.put(sortingEntity.selfEntityId, spousePosition);
+                    }
                 }
                 while (!positionIsFree(selfEntityId, calculatedPosition, entityPositions)) {
                     // todo: this should be checking min distance not free
@@ -125,7 +150,8 @@ public class GraphSorter {
             ArrayList<SortingEntity> allRelations = new ArrayList<SortingEntity>();
             allRelations.addAll(mustBeAbove);
             allRelations.addAll(mustBeBelow);
-            allRelations.addAll(mustBeNextTo);
+//            allRelations.addAll(mustBeNextTo); // those that are in mustBeNextTo are also in couldBeNextTo
+            allRelations.addAll(couldBeNextTo);
             for (SortingEntity sortingEntity : allRelations) {
                 if (sortingEntity.calculatedPosition == null) {
                     sortingEntity.getPosition(entityPositions);
