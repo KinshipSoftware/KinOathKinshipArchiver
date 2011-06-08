@@ -41,7 +41,7 @@ public class GraphSorter {
             visiblyRelateNodes = entityData.getVisiblyRelateNodes();
             mustBeBelow = new ArrayList<SortingEntity>();
             mustBeAbove = new ArrayList<SortingEntity>();
-//            mustBeNextTo = new ArrayList<SortingEntity>();
+            mustBeNextTo = new ArrayList<SortingEntity>();
         }
 
         public void calculateRelations(HashMap<String, SortingEntity> knownSortingEntities) {
@@ -98,20 +98,22 @@ public class GraphSorter {
 //                        calculatedPosition[0] = nextAbovePos[0];
                         System.out.println("move down: " + selfEntityId);
                     }
-                    while (!positionIsFree(selfEntityId, calculatedPosition, entityPositions)) {
-                        // todo: this should be checking min distance not free
-                        calculatedPosition[0] = calculatedPosition[0] + xPadding;
-                        System.out.println("move right: " + selfEntityId);
+                }
+                if (calculatedPosition == null) {
+                    for (SortingEntity sortingEntity : mustBeNextTo) {
+                        float[] nextToPos = sortingEntity.getPosition(entityPositions);
+                        if (calculatedPosition == null) {
+                            calculatedPosition = new float[]{nextToPos[0], nextToPos[1]};
+                        }
                     }
                 }
-//                for (SortingEntity sortingEntity : mustBeNextTo) {
-//                    float[] nextAbovePos = sortingEntity.getPosition(entityPositions);
-//                    if (nextAbovePos[1] > calculatedPosition[1] - yPadding) {
-//                        calculatedPosition[1] = nextAbovePos[1] + yPadding;
-//                    }
-//                }
                 if (calculatedPosition == null) {
                     calculatedPosition = new float[]{0.0f, 0.0f};
+                }
+                while (!positionIsFree(selfEntityId, calculatedPosition, entityPositions)) {
+                    // todo: this should be checking min distance not free
+                    calculatedPosition[0] = calculatedPosition[0] + xPadding;
+                    System.out.println("move right: " + selfEntityId);
                 }
                 entityPositions.put(selfEntityId, calculatedPosition);
             }
@@ -119,7 +121,11 @@ public class GraphSorter {
         }
 
         public void getRelatedPositions(HashMap<String, float[]> entityPositions) {
-            for (SortingEntity sortingEntity : mustBeAbove) {
+            ArrayList<SortingEntity> allRelations = new ArrayList<SortingEntity>();
+            allRelations.addAll(mustBeAbove);
+            allRelations.addAll(mustBeBelow);
+            allRelations.addAll(mustBeNextTo);
+            for (SortingEntity sortingEntity : allRelations) {
                 if (sortingEntity.calculatedPosition == null) {
                     sortingEntity.getPosition(entityPositions);
                     sortingEntity.getRelatedPositions(entityPositions);
