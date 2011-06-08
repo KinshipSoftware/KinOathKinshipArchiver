@@ -57,10 +57,14 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             + "# Enter one string per line.\n"
             //+ "# By default all relations of the selected entity will be shown.\n"
             + "# for example:\n"
-            + "EmWMMM\n"
-            + "E:1:FFE\n"
-            + "EmWMMM:1:\n"
-            + "E:1:FFE\n";
+//            + "EmWMMM\n"
+//            + "E:1:FFE\n"
+//            + "EmWMMM:1:\n"
+//            + "E:1:FFE\n"
+            + "FS:1:BSSWMDHFF:1:\n"
+            + "M:2:SSDHMFM:2:\n"
+            + "F:3:SSDHMF:3:\n"
+            + "";
 //            + "E=[Bob]MFM\n"
 //            + "E=[Bob]MZ\n"
 //            + "E=[Bob]F\n"
