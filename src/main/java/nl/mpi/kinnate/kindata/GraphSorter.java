@@ -108,7 +108,8 @@ public class GraphSorter {
                     }
                 }
                 if (calculatedPosition == null) {
-                    calculatedPosition = new float[]{0.0f, 0.0f};
+                    float[] graphSize = getGraphSize(entityPositions);
+                    calculatedPosition = new float[]{0.0f, graphSize[1]};
                 }
                 while (!positionIsFree(selfEntityId, calculatedPosition, entityPositions)) {
                     // todo: this should be checking min distance not free
@@ -162,30 +163,6 @@ public class GraphSorter {
 //        }
 //    }
     public float[] getGraphSize(HashMap<String, float[]> entityPositions) {
-        // get min positions
-        // this must also take into account any graphics such as labels
-        float[] minPostion = null;
-        for (float[] currentPosition : entityPositions.values()) {
-            if (minPostion == null) {
-                minPostion = currentPosition;
-            } else {
-                if (minPostion[0] > currentPosition[0]) {
-                    minPostion[0] = currentPosition[0];
-                }
-                if (minPostion[1] > currentPosition[1]) {
-                    minPostion[1] = currentPosition[1];
-                }
-            }
-        }
-        // adjust the min position
-        // todo: this requires that the svg is updated to match this change on all nodes (to test drag one node left past zero, which causes all other nodes to be moved, then move another node and the relation lines do not get placed correctly)
-        float xOffset = xPadding - minPostion[0];
-        float yOffset = yPadding - minPostion[1];
-        requiresRedraw = (yOffset != 0 || xOffset != 0);
-        for (float[] currentPosition : entityPositions.values()) {
-            currentPosition[0] = currentPosition[0] + xOffset;
-            currentPosition[1] = currentPosition[1] + yOffset;
-        }
         // get max positions
         float graphWidth = 0;
         float graphHeight = 0;
@@ -214,7 +191,30 @@ public class GraphSorter {
             currentSorter.getPosition(entityPositions);
             currentSorter.getRelatedPositions(entityPositions);
         }
-
+// get min positions
+        // this must also take into account any graphics such as labels
+        float[] minPostion = null;
+        for (float[] currentPosition : entityPositions.values()) {
+            if (minPostion == null) {
+                minPostion = currentPosition;
+            } else {
+                if (minPostion[0] > currentPosition[0]) {
+                    minPostion[0] = currentPosition[0];
+                }
+                if (minPostion[1] > currentPosition[1]) {
+                    minPostion[1] = currentPosition[1];
+                }
+            }
+        }
+        // adjust the min position
+        // todo: this requires that the svg is updated to match this change on all nodes (to test drag one node left past zero, which causes all other nodes to be moved, then move another node and the relation lines do not get placed correctly)
+        float xOffset = xPadding - minPostion[0];
+        float yOffset = yPadding - minPostion[1];
+        requiresRedraw = (yOffset != 0 || xOffset != 0);
+        for (float[] currentPosition : entityPositions.values()) {
+            currentPosition[0] = currentPosition[0] + xOffset;
+            currentPosition[1] = currentPosition[1] + yOffset;
+        }
 //        ArrayList<EntityData> intendedSortOrder = new ArrayList<EntityData>();
 ////        ArrayList<EntityData> placedEntities = new ArrayList<EntityData>();
 //        for (EntityData currentNode : allEntitys) {
