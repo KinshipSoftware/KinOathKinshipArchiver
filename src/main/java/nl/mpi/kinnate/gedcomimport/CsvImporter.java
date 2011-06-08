@@ -36,6 +36,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
     @Override
     public URI[] importFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
+        HashMap<String, EntityDocument> createdDocuments = new HashMap<String, EntityDocument>();
         createdNodeIds = new HashMap<String, ArrayList<String>>();
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         File destinationDirectory = super.getDestinationDirectory();
@@ -50,19 +51,34 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                     allHeadings.add(cleanHeading);
 //                    appendToTaskOutput(importTextArea, "Heading: " + cleanHeading);
                 }
-                while ((inputLine = bufferedReader.readLine()) != null) {
-                    int valueCount = 0;
-                    for (String entityLineString : inputLine.split(",")) {
-                        if (valueCount == 0) {
-                            // create a new entity file
+                try {
+                    while ((inputLine = bufferedReader.readLine()) != null) {
+                        EntityDocument currentEntity = null;
+                        int valueCount = 0;
+                        for (String entityLineString : inputLine.split(",")) {
+                            String cleanValue = cleanCsvString(entityLineString);
+                            if (currentEntity == null) {
+                                // create a new entity file
+                                String idString = super.cleanFileName(cleanValue);
+                                currentEntity = new EntityDocument(destinationDirectory, idString);
+                                appendToTaskOutput(importTextArea, "created: " + currentEntity.getFilePath());
+                                createdNodes.add(currentEntity.createDocument(overwriteExisting));
+                                createdDocuments.put(idString, currentEntity);
+                                String typeString = "Entity";
+                                if (createdNodeIds.get(typeString) == null) {
+                                    ArrayList<String> idArray = new ArrayList<String>();
+                                    idArray.add(currentEntity.getUniquieIdentifier());
+                                    createdNodeIds.put(typeString, idArray);
+                                } else {
+                                    createdNodeIds.get(typeString).add(currentEntity.getUniquieIdentifier());
+                                }
+                            } else if (cleanValue.length() > 0) {
+                                currentEntity.insertValue(allHeadings.get(valueCount), cleanValue);
+                                appendToTaskOutput(importTextArea, allHeadings.get(valueCount) + " : " + cleanValue);
+                            }
+                            valueCount++;
                         }
-                        String cleanValue = cleanCsvString(entityLineString);
-                        if (cleanValue.length() > 0) {
-                            appendToTaskOutput(importTextArea, allHeadings.get(valueCount) + " : " + cleanValue);
-                        }
-                        valueCount++;
-                    }
-                    break;
+                        break;
 
 //                    appendToTaskOutput(importTextArea, inputLine);
 //                    boolean skipFileEntity = false;
@@ -74,7 +90,14 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 //                            }
 //                        }
 //                    }
+                    }
+                } catch (ImportException exception) {
+                    appendToTaskOutput(importTextArea, exception.getMessage());
                 }
+            }
+            for (EntityDocument currentDocument : createdDocuments.values()) {
+                currentDocument.saveDocument();
+                appendToTaskOutput(importTextArea, "saved: " + currentDocument.getFilePath());
             }
         } catch (IOException exception) {
             new ArbilBugCatcher().logError(exception);
