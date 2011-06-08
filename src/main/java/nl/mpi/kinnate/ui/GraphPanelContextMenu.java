@@ -187,6 +187,15 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         });
         this.add(resetZoomMenuItem);
 
+        JMenuItem resetLayoutMenuItem = new JMenuItem("Reset Layout");
+        resetLayoutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                graphPanel.resetLayout();
+            }
+        });
+        this.add(resetLayoutMenuItem);
+
         snapToGridMenuItem = new JCheckBoxMenuItem("Snap To Grid");
         snapToGridMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
