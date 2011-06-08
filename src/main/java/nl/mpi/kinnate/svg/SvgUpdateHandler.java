@@ -227,6 +227,16 @@ public class SvgUpdateHandler {
                         new RelationSvg().updateRelationLines(graphPanel, graphPanel.selectedGroupId, graphPanel.svgNameSpace, hSpacing, vSpacing);
                         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                     }
+                    // graphPanel.updateCanvasSize(); // updating the canvas size here is too slow so it is moved into the drag ended 
+//                    if (graphPanel.dataStoreSvg.graphData.isRedrawRequired()) { // this has been abandoned in favour of preventing dragging past zero
+                        // todo: update the position of all nodes
+                        // todo: any labels and other non entity graphics must also be taken into account here
+//                        for (EntityData selectedEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+//                            if (selectedEntity.isVisible) {
+//                                graphPanel.entitySvg.moveEntity(graphPanel, selectedEntity.getUniqueIdentifier(), updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, true);
+//                            }
+//                        }
+//                    }
                     synchronized (SvgUpdateHandler.this) {
                         continueUpdating = dragUpdateRequired;
                         if (!continueUpdating) {
@@ -234,7 +244,6 @@ public class SvgUpdateHandler {
                         }
                     }
                 }
-                graphPanel.updateCanvasSize();
             }
         };
     }
