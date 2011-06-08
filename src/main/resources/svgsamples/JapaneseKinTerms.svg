@@ -5,7 +5,7 @@
             <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
         </g>
         <g id="square">
-            <rect x="0" width="15" stroke-width="2" height="15" y="0" stroke="black"/>
+            <rect x="0" width="15" y="0" height="15" stroke-width="2" stroke="black"/>
         </g>
         <g id="square45">
             <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
@@ -14,12 +14,12 @@
             <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
         </g>
         <g id="union">
-            <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
-            <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
-            <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
+            <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
+            <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
+            <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
         </g>
         <g id="triangle">
-            <polygon stroke-width="2" points="7,0 0,12 15,12" stroke="black"/>
+            <polygon points="7,0 0,12 15,12" stroke-width="2" stroke="black"/>
         </g>
         <g id="equals">
             <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
@@ -149,16 +149,16 @@
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
     </g>
     <g id="relation17">
-      <kin:RelationEntities xmlns:kin="kin" ego="EP" lineType="sanguineLine" alter="EPB" relationType="sibling"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="EP" lineType="sanguineLine" alter="EPZ" relationType="sibling"/>
       <defs>
-        <polyline fill="none" id="relation17Line" stroke-width="2" points="1007.0,199.5 1007.0,149.5 1157.0,149.5 1157.0,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation17Line" stroke-width="2" points="1007.0,199.5 1007.0,149.5 1357.0,149.5 1357.0,199.5" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
     </g>
     <g id="relation18">
-      <kin:RelationEntities xmlns:kin="kin" ego="EP" lineType="sanguineLine" alter="EPZ" relationType="sibling"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="EP" lineType="sanguineLine" alter="EPB" relationType="sibling"/>
       <defs>
-        <polyline fill="none" id="relation18Line" stroke-width="2" points="1007.0,199.5 1007.0,149.5 1357.0,149.5 1357.0,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation18Line" stroke-width="2" points="1007.0,199.5 1007.0,149.5 1157.0,149.5 1157.0,199.5" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
     </g>
@@ -385,9 +385,8 @@
     <g id="EPB" kin:kintype="EPB" transform="translate(1150.0, 192.5)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EPBsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPB</text>
-      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="15">叔父</text>
-      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="30">伯父</text>
-      <text x="22.5" fill="#8000FF" font-size="14" stroke-width="0" y="45">おじさん</text>
+      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="15">おじ</text>
+      <text x="22.5" fill="#8000FF" font-size="14" stroke-width="0" y="30">おじさん</text>
     </g>
     <g id="EM" kin:kintype="EM" transform="translate(800.0, 192.5)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
@@ -409,10 +408,8 @@
     <g id="EPZ" kin:kintype="EPZ" transform="translate(1350.0, 192.5)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="EPZsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPZ</text>
-      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="15">叔母</text>
-      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="30">伯母</text>
-      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="45">おば</text>
-      <text x="22.5" fill="#8000FF" font-size="14" stroke-width="0" y="60">おばさん</text>
+      <text x="22.5" fill="#FF00D4" font-size="14" stroke-width="0" y="15">おば</text>
+      <text x="22.5" fill="#8000FF" font-size="14" stroke-width="0" y="30">おばさん</text>
     </g>
     <g id="EPBS" kin:kintype="EPBS" transform="translate(1100.0, 292.5)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="EPBSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
@@ -468,9 +465,6 @@
     <text x="359.0" font-size="14" y="179.0" transform="translate(255.0, -83.0)" fill="#FF00D4" id="label1" stroke-width="0">(Referential)</text>
     <text x="365.0" font-size="14" y="244.0" transform="translate(249.0, -125.0)" fill="#8000FF" id="label2" stroke-width="0">(Vocative)</text>
   </g>
-  
-
-
 <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
     <kin:IndexParameters>
       <kin:LabelFields>
@@ -506,10 +500,6 @@
       <kin:KinTerm kin:Term="母" kin:Alter="EM" kin:Propositus="^M" kin:Description="Mother (when speaking to other than family)"/>
       <kin:KinTerm kin:Term="姉" kin:Alter="EZ+" kin:Propositus="^Z" kin:Description="Elder Sister (when speaking to other than family)"/>
       <kin:KinTerm kin:Term="弟" kin:Alter="EB-" kin:Propositus="^B (this needs to be able to indicate not family)" kin:Description="Yonger Brother (when speaking to other than family)"/>
-      <kin:KinTerm kin:Term="叔父" kin:Description="Younger brother of parent (when speaking to other than family)" kin:Alter="EPB"/>
-      <kin:KinTerm kin:Term="叔母" kin:Description="Younger sister of parent (when speaking to other than family)" kin:Alter="EPZ"/>
-      <kin:KinTerm kin:Term="伯父" kin:Description="Older brother of parents (when speaking to other than family)" kin:Alter="EPB"/>
-      <kin:KinTerm kin:Term="伯母" kin:Description="Older sister of parents (when speaking to other than family)" kin:Alter="EPZ"/>
       <kin:KinTerm kin:Term="従兄" kin:Description="Older male cousin (when speaking to other than family)" kin:Alter="EPZS|EPBS"/>
       <kin:KinTerm kin:Term="従姉" kin:Description="Older female cousin (when speaking to other than family)" kin:Alter="EPZD|EPBD"/>
       <kin:KinTerm kin:Term="従弟" kin:Description="Yonger male cousin (when speaking to other than family)" kin:Alter="EPZS|EPBS"/>
@@ -518,6 +508,7 @@
       <kin:KinTerm kin:Term="祖父" kin:Description="Grand Father" kin:Alter="EPF"/>
       <kin:KinTerm kin:Term="祖母" kin:Description="Grand Mother" kin:Alter="EPM"/>
       <kin:KinTerm kin:Term="おば" kin:Description="" kin:Alter="EPZ"/>
+      <kin:KinTerm kin:Term="おじ" kin:Description="" kin:Alter="EPB"/>
     </kin:KinTermGroup>
     <kin:KinTermGroup kin:Show="true" kin:GroupColour="#8000FF" kin:GroupName="Japanese Kin Terms(Vocative)" kin:Generate="true">
       <kin:KinTerm kin:Term="お父さん" kin:Description="" kin:Alter="EF"/>
@@ -552,7 +543,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>3</xPos>
+        <xPos>10</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>E</Identifier>
@@ -684,46 +675,6 @@
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>EPB</Identifier>
-            <Type>none</Type>
-            <Line>kinTermLine</Line>
-            <Label>叔父</Label>
-            <lineColour>#FF00D4</lineColour>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>EPB</Identifier>
-            <Type>none</Type>
-            <Line>kinTermLine</Line>
-            <Label>伯父</Label>
-            <lineColour>#FF00D4</lineColour>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>EPB</Identifier>
-            <Type>none</Type>
-            <Line>kinTermLine</Line>
-            <Label>おじさん</Label>
-            <lineColour>#8000FF</lineColour>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>EPZ</Identifier>
-            <Type>none</Type>
-            <Line>kinTermLine</Line>
-            <Label>叔母</Label>
-            <lineColour>#FF00D4</lineColour>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>EPZ</Identifier>
-            <Type>none</Type>
-            <Line>kinTermLine</Line>
-            <Label>伯母</Label>
-            <lineColour>#FF00D4</lineColour>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
             <Identifier>EPZ</Identifier>
             <Type>none</Type>
             <Line>kinTermLine</Line>
@@ -753,6 +704,22 @@
             <Line>kinTermLine</Line>
             <Label>従弟</Label>
             <lineColour>#FF00D4</lineColour>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EPB</Identifier>
+            <Type>none</Type>
+            <Line>kinTermLine</Line>
+            <Label>おじ</Label>
+            <lineColour>#FF00D4</lineColour>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>EPB</Identifier>
+            <Type>none</Type>
+            <Line>kinTermLine</Line>
+            <Label>おじさん</Label>
+            <lineColour>#8000FF</lineColour>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
@@ -852,7 +819,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>7</xPos>
+        <xPos>2</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPZD</Identifier>
@@ -870,7 +837,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>0</xPos>
+        <xPos>5</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPPZ</Identifier>
@@ -892,7 +859,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>10</xPos>
+        <xPos>6</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPBD</Identifier>
@@ -910,7 +877,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>8</xPos>
+        <xPos>3</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EB-</Identifier>
@@ -927,7 +894,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>1</xPos>
+        <xPos>6</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPPZCC</Identifier>
@@ -944,7 +911,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>9</xPos>
+        <xPos>7</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPPB</Identifier>
@@ -982,13 +949,13 @@
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>EPB</Identifier>
+            <Identifier>EPZ</Identifier>
             <Type>sibling</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>EPZ</Identifier>
+            <Identifier>EPB</Identifier>
             <Type>sibling</Type>
             <Line>sanguineLine</Line>
           </Relation>
@@ -1012,13 +979,12 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>3</xPos>
+        <xPos>6</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPB</Identifier>
         <KinType>EPB</KinType>
-        <KinTerm text="叔父" colour="#FF00D4"/>
-        <KinTerm text="伯父" colour="#FF00D4"/>
+        <KinTerm text="おじ" colour="#FF00D4"/>
         <KinTerm text="おじさん" colour="#8000FF"/>
         <isEgo>false</isEgo>
         <Labels/>
@@ -1079,7 +1045,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>6</xPos>
+        <xPos>1</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EZ-</Identifier>
@@ -1096,13 +1062,11 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>2</xPos>
+        <xPos>4</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPZ</Identifier>
         <KinType>EPZ</KinType>
-        <KinTerm text="叔母" colour="#FF00D4"/>
-        <KinTerm text="伯母" colour="#FF00D4"/>
         <KinTerm text="おば" colour="#FF00D4"/>
         <KinTerm text="おばさん" colour="#8000FF"/>
         <isEgo>false</isEgo>
@@ -1128,7 +1092,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>9</xPos>
+        <xPos>10</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPBS</Identifier>
@@ -1146,7 +1110,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>4</xPos>
+        <xPos>8</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPPZC</Identifier>
@@ -1168,7 +1132,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>6</xPos>
+        <xPos>4</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPM</Identifier>
@@ -1186,7 +1150,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>3</xPos>
+        <xPos>9</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EF</Identifier>
@@ -1204,7 +1168,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>10</xPos>
+        <xPos>3</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EZ+</Identifier>
@@ -1222,7 +1186,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>5</xPos>
+        <xPos>9</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPPBC</Identifier>
@@ -1244,7 +1208,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>4</xPos>
+        <xPos>9</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EB+</Identifier>
@@ -1262,7 +1226,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>10</xPos>
+        <xPos>0</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPF</Identifier>
@@ -1280,7 +1244,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>4</xPos>
+        <xPos>7</xPos>
       </kin:EntityArray>
       <kin:EntityArray>
         <Identifier>EPP</Identifier>
@@ -1308,7 +1272,7 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>6</xPos>
+        <xPos>8</xPos>
       </kin:EntityArray>
       <gridWidth>11</gridWidth>
       <gridHeight>3</gridHeight>
