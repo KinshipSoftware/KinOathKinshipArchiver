@@ -108,8 +108,6 @@ public class GraphSorter {
                         float[] nextToPos = sortingEntity.getPosition(entityPositions);
                         if (calculatedPosition == null) {
                             calculatedPosition = new float[]{nextToPos[0], nextToPos[1]};
-//                        } else if (nextToPos[1] > calculatedPosition[1]) {
-//                            calculatedPosition = new float[]{nextToPos[0], nextToPos[1]};
                         }
                     }
                 }
