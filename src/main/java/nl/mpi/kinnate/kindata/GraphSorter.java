@@ -18,6 +18,7 @@ public class GraphSorter {
     HashMap<String, SortingEntity> knownSortingEntities;
     public int xPadding = 100; // todo sort out one place for this var
     public int yPadding = 100; // todo sort out one place for this var
+    private boolean requiresRedraw = false;
 //    , int hSpacing, int vSpacing
 //
 
@@ -52,9 +53,10 @@ public class GraphSorter {
                     case descendant:
                         mustBeAbove.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
                         break;
-//                    case union:
-//                        mustBeNextTo.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
-//                        break;
+                    case union:
+                    case sibling:
+                        mustBeNextTo.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
+                        break;
                 }
             }
         }
@@ -84,8 +86,8 @@ public class GraphSorter {
 
         public float[] getPosition(HashMap<String, float[]> entityPositions) {
             System.out.println("getPosition: " + selfEntityId);
+            calculatedPosition = entityPositions.get(selfEntityId);
             if (calculatedPosition == null) {
-                calculatedPosition = entityPositions.get(selfEntityId);
                 for (SortingEntity sortingEntity : mustBeBelow) {
                     float[] nextAbovePos = sortingEntity.getPosition(entityPositions);
                     if (calculatedPosition == null) {
@@ -102,17 +104,17 @@ public class GraphSorter {
                         System.out.println("move right: " + selfEntityId);
                     }
                 }
-//                                for (SortingEntity sortingEntity : mustBeNextTo) {
+//                for (SortingEntity sortingEntity : mustBeNextTo) {
 //                    float[] nextAbovePos = sortingEntity.getPosition(entityPositions);
 //                    if (nextAbovePos[1] > calculatedPosition[1] - yPadding) {
 //                        calculatedPosition[1] = nextAbovePos[1] + yPadding;
 //                    }
 //                }
+                if (calculatedPosition == null) {
+                    calculatedPosition = new float[]{0.0f, 0.0f};
+                }
+                entityPositions.put(selfEntityId, calculatedPosition);
             }
-            if (calculatedPosition == null) {
-                calculatedPosition = new float[]{0.0f, 0.0f};
-            }
-            entityPositions.put(selfEntityId, calculatedPosition);
             return calculatedPosition;
         }
 
@@ -141,6 +143,12 @@ public class GraphSorter {
         //printLocations(); // todo: remove this and maybe add a label of x,y post for each node to better see the sorting
     }
 
+    public boolean isRedrawRequired() {
+        boolean returnBool = requiresRedraw;
+        requiresRedraw = false;
+        return returnBool;
+    }
+
 //    private void placeRelatives(EntityData currentNode, ArrayList<EntityData> intendedSortOrder, HashMap<String, Float[]> entityPositions) {
 //        for (EntityRelation entityRelation : currentNode.getVisiblyRelateNodes()) {
 //            EntityData relatedEntity = entityRelation.getAlterNode();
@@ -148,6 +156,30 @@ public class GraphSorter {
 //        }
 //    }
     public float[] getGraphSize(HashMap<String, float[]> entityPositions) {
+        // get min positions
+        // this must also take into account any graphics such as labels
+        float[] minPostion = null;
+        for (float[] currentPosition : entityPositions.values()) {
+            if (minPostion == null) {
+                minPostion = currentPosition;
+            } else {
+                if (minPostion[0] > currentPosition[0]) {
+                    minPostion[0] = currentPosition[0];
+                }
+                if (minPostion[1] > currentPosition[1]) {
+                    minPostion[1] = currentPosition[1];
+                }
+            }
+        }
+        // adjust the min position
+        // todo: this requires that the svg is updated to match this change on all nodes (to test drag one node left past zero, which causes all other nodes to be moved, then move another node and the relation lines do not get placed correctly)
+        float xOffset = xPadding - minPostion[0];
+        float yOffset = yPadding - minPostion[1];
+        requiresRedraw = (yOffset != 0 || xOffset != 0);
+        for (float[] currentPosition : entityPositions.values()) {
+            currentPosition[0] = currentPosition[0] + xOffset;
+            currentPosition[1] = currentPosition[1] + yOffset;
+        }
         // get max positions
         float graphWidth = 0;
         float graphHeight = 0;
@@ -175,28 +207,6 @@ public class GraphSorter {
         for (SortingEntity currentSorter : knownSortingEntities.values()) {
             currentSorter.getPosition(entityPositions);
             currentSorter.getRelatedPositions(entityPositions);
-        }
-
-        // get min positions
-        float[] minPostion = null;
-        for (float[] currentPosition : entityPositions.values()) {
-            if (minPostion == null) {
-                minPostion = currentPosition;
-            } else {
-                if (minPostion[0] > currentPosition[0]) {
-                    minPostion[0] = currentPosition[0];
-                }
-                if (minPostion[1] > currentPosition[1]) {
-                    minPostion[1] = currentPosition[1];
-                }
-            }
-        }
-        // adjust the min position
-        float xOffset = xPadding - minPostion[0];
-        float yOffset = yPadding - minPostion[1];
-        for (float[] currentPosition : entityPositions.values()) {
-            currentPosition[0] = currentPosition[0] + xOffset;
-            currentPosition[1] = currentPosition[1] + yOffset;
         }
 
 //        ArrayList<EntityData> intendedSortOrder = new ArrayList<EntityData>();
