@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
@@ -72,6 +70,7 @@ public class EntityDocument {
                 localIdentifierElement.setTextContent(uniquieIdentifier);
                 Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity/:UniqueIdentifier");
                 uniqueIdentifierNode.appendChild(localIdentifierElement);
+                currentDomNode = uniqueIdentifierNode.getParentNode();
             } catch (DOMException exception) {
                 new ArbilBugCatcher().logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
@@ -93,9 +92,34 @@ public class EntityDocument {
     }
 
     public void insertValue(String nodeName, String valueString) {
+//        System.out.println("insertValue: " + nodeName + " : " + valueString);
+        nodeName = nodeName.replaceAll("\\s", "_");
+        Element valueElement = metadataDom.createElement(nodeName);
+        valueElement.setTextContent(valueString);
+        currentDomNode.appendChild(valueElement);
     }
 
-    public void insertRelation(String relationUniquieIdentifier) {
+    public void insertRelation(String typeString, String relationUniquieIdentifier, String fileNameString) {
+        Element relationElement = metadataDom.createElement("Relation");
+        metadataDom.getDocumentElement().appendChild(relationElement);
+
+        Element linkElement = metadataDom.createElement("Link");
+        linkElement.setTextContent("./" + fileNameString);
+        relationElement.appendChild(linkElement);
+
+        Element uniqueIdentifierElement = metadataDom.createElement("UniqueIdentifier");
+        Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
+        localIdentifierElement.setTextContent(relationUniquieIdentifier);
+        uniqueIdentifierElement.appendChild(localIdentifierElement);
+        relationElement.appendChild(uniqueIdentifierElement);
+
+        Element typeElement = metadataDom.createElement("Type");
+        typeElement.setTextContent(typeString);
+        relationElement.appendChild(typeElement);
+
+        Element targetNameElement = metadataDom.createElement("TargetName");
+//        targetNameElement.setTextContent(lineParts[2]);
+        relationElement.appendChild(targetNameElement);
     }
 
     public String getFilePath() {
