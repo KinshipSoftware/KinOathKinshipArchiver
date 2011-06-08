@@ -50,7 +50,7 @@ public class EditMenu extends JMenu implements ActionListener {
         boolean graphPanelFocused = initialGraphPanel != null;
         selectAllMenu.setEnabled(graphPanelFocused);
         selectRelatedMenu.setEnabled(graphPanelFocused);
-        expandSelectionMenu.setEnabled(graphPanelFocused);
+        expandSelectionMenu.setEnabled(false); // graphPanelFocused); // removed until the code is completed
         deselectAllMenu.setEnabled(graphPanelFocused);
     }
 
