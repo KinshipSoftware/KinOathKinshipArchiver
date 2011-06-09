@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 
 /**
  *  Document   : CsvImporter
@@ -31,6 +32,27 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         valueString = valueString.replaceAll("\"$", "");
         valueString = valueString.replaceAll("\"\"", "");
         return valueString;
+    }
+
+    private EntityDocument getEntityDocument(JTextArea importTextArea, File destinationDirectory, HashMap<String, EntityDocument> createdDocuments, ArrayList<URI> createdNodes, String idString) throws ImportException {
+        idString = super.cleanFileName(idString);
+        EntityDocument currentEntity = createdDocuments.get(idString);
+        if (currentEntity == null) {
+            // create a new entity file
+            currentEntity = new EntityDocument(destinationDirectory, idString);
+            appendToTaskOutput(importTextArea, "created: " + currentEntity.getFilePath());
+            createdNodes.add(currentEntity.createDocument(overwriteExisting));
+            createdDocuments.put(idString, currentEntity);
+            String typeString = "Entity";
+            if (createdNodeIds.get(typeString) == null) {
+                ArrayList<String> idArray = new ArrayList<String>();
+                idArray.add(currentEntity.getUniquieIdentifier());
+                createdNodeIds.put(typeString, idArray);
+            } else {
+                createdNodeIds.get(typeString).add(currentEntity.getUniquieIdentifier());
+            }
+        }
+        return currentEntity;
     }
 
     @Override
@@ -57,28 +79,40 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                         int valueCount = 0;
                         for (String entityLineString : inputLine.split(",")) {
                             String cleanValue = cleanCsvString(entityLineString);
+                            String headingString = allHeadings.get(valueCount);
                             if (currentEntity == null) {
-                                // create a new entity file
-                                String idString = super.cleanFileName(cleanValue);
-                                currentEntity = new EntityDocument(destinationDirectory, idString);
-                                appendToTaskOutput(importTextArea, "created: " + currentEntity.getFilePath());
-                                createdNodes.add(currentEntity.createDocument(overwriteExisting));
-                                createdDocuments.put(idString, currentEntity);
-                                String typeString = "Entity";
-                                if (createdNodeIds.get(typeString) == null) {
-                                    ArrayList<String> idArray = new ArrayList<String>();
-                                    idArray.add(currentEntity.getUniquieIdentifier());
-                                    createdNodeIds.put(typeString, idArray);
-                                } else {
-                                    createdNodeIds.get(typeString).add(currentEntity.getUniquieIdentifier());
-                                }
+                                currentEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+
                             } else if (cleanValue.length() > 0) {
-                                currentEntity.insertValue(allHeadings.get(valueCount), cleanValue);
-                                appendToTaskOutput(importTextArea, allHeadings.get(valueCount) + " : " + cleanValue);
+                                if (headingString.startsWith("Spouses")) {
+                                    if (headingString.matches("Spouses[\\d]*-ID")) {
+                                        EntityDocument relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+                                        currentEntity.insertRelation(RelationType.union, relatedEntity.getUniquieIdentifier(), relatedEntity.getFileName());
+                                    } else {
+                                        appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
+                                    }
+                                } else if (headingString.startsWith("Parents")) {
+                                    if (headingString.matches("Parents[\\d]*-ID")) {
+                                        EntityDocument relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+                                        currentEntity.insertRelation(RelationType.ancestor, relatedEntity.getUniquieIdentifier(), relatedEntity.getFileName());
+                                    } else {
+                                        appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
+                                    }
+                                } else if (headingString.startsWith("Children")) {
+                                    if (headingString.matches("Children[\\d]*-ID")) {
+                                        EntityDocument relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+                                        currentEntity.insertRelation(RelationType.descendant, relatedEntity.getUniquieIdentifier(), relatedEntity.getFileName());
+                                    } else {
+                                        appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
+                                    }
+                                } else {
+                                    currentEntity.insertValue(headingString, cleanValue);
+                                    appendToTaskOutput(importTextArea, "Setting value: " + allHeadings.get(valueCount) + " : " + cleanValue);
+                                }
                             }
                             valueCount++;
                         }
-                        break;
+//                        break;
 
 //                    appendToTaskOutput(importTextArea, inputLine);
 //                    boolean skipFileEntity = false;
