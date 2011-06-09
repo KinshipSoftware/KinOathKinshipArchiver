@@ -27,6 +27,7 @@ public class SvgUpdateHandler {
     private int updateDragNodeX = 0;
     private int updateDragNodeY = 0;
     private float[][] dragRemainders = null;
+    private boolean resizeRequired = false;
 
     protected SvgUpdateHandler(GraphPanel graphPanelLocal, KinTermSavePanel kinTermSavePanelLocal) {
         graphPanel = graphPanelLocal;
@@ -136,6 +137,7 @@ public class SvgUpdateHandler {
     }
 
     protected void updateDragNode(int updateDragNodeXLocal, int updateDragNodeYLocal) {
+        resizeRequired = true;
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         synchronized (SvgUpdateHandler.this) {
             dragUpdateRequired = true;
@@ -229,8 +231,8 @@ public class SvgUpdateHandler {
                     }
                     // graphPanel.updateCanvasSize(); // updating the canvas size here is too slow so it is moved into the drag ended 
 //                    if (graphPanel.dataStoreSvg.graphData.isRedrawRequired()) { // this has been abandoned in favour of preventing dragging past zero
-                        // todo: update the position of all nodes
-                        // todo: any labels and other non entity graphics must also be taken into account here
+                    // todo: update the position of all nodes
+                    // todo: any labels and other non entity graphics must also be taken into account here
 //                        for (EntityData selectedEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
 //                            if (selectedEntity.isVisible) {
 //                                graphPanel.entitySvg.moveEntity(graphPanel, selectedEntity.getUniqueIdentifier(), updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, true);
@@ -246,6 +248,25 @@ public class SvgUpdateHandler {
                 }
             }
         };
+    }
+
+    public void updateCanvasSize() {
+        UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+
+                public void run() {
+                    if (resizeRequired) {
+                        resizeRequired = false;
+                        Element svgRoot = graphPanel.doc.getDocumentElement();
+                        float[] graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+                        // Set the width and height attributes on the root 'svg' element.
+                        svgRoot.setAttribute("width", Float.toString(graphSize[0])); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
+                        svgRoot.setAttribute("height", Float.toString(graphSize[1]));
+                    }
+                }
+            });
+        }
     }
 
     public void addLabel(final String labelString, final float xPos, final float yPos) {
