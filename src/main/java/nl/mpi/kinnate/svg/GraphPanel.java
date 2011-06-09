@@ -358,21 +358,6 @@ public class GraphPanel extends JPanel implements SavePanel {
         drawNodes(dataStoreSvg.graphData);
     }
 
-    public void updateCanvasSize() {
-        Element svgRoot = doc.getDocumentElement();
-        float[] graphSize = dataStoreSvg.graphData.getGraphSize(entitySvg.entityPositions);
-        dataStoreSvg.graphData.isRedrawRequired(); // clear the redraw flag
-        // Set the width and height attributes on the root 'svg' element.
-        svgRoot.setAttribute("width", Float.toString(graphSize[0])); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
-        svgRoot.setAttribute("height", Float.toString(graphSize[1]));
-//            svgRoot.setAttribute("width", "100%");
-//            svgRoot.setAttribute("height", "100%");
-//            svgRoot.removeAttribute("width");
-//            svgRoot.removeAttribute("height");
-//            this.setPreferredSize(new Dimension((int) graphSize[0], (int) graphSize[1]));//            entitySvg.removeOldEntities(entityGroupNode);
-
-    }
-
     public void drawNodes(GraphSorter graphDataLocal) {
         // todo: resolve threading issue and update issue so that imdi nodes that update can update the diagram
         requiresSave = true;
@@ -419,7 +404,17 @@ public class GraphPanel extends JPanel implements SavePanel {
             }
             dataStoreSvg.graphData.placeAllNodes(this, entitySvg.entityPositions);
 //            }
-            updateCanvasSize();
+
+            float[] graphSize = dataStoreSvg.graphData.getGraphSize(entitySvg.entityPositions);
+            // Set the width and height attributes on the root 'svg' element.
+            svgRoot.setAttribute("width", Float.toString(graphSize[0])); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
+            svgRoot.setAttribute("height", Float.toString(graphSize[1]));
+//            svgRoot.setAttribute("width", "100%");
+//            svgRoot.setAttribute("height", "100%");
+//            svgRoot.removeAttribute("width");
+//            svgRoot.removeAttribute("height");
+//            this.setPreferredSize(new Dimension((int) graphSize[0], (int) graphSize[1]));//            entitySvg.removeOldEntities(entityGroupNode);
+
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
             // store the selected kin type strings and other data in the dom
