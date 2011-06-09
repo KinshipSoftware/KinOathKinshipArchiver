@@ -99,7 +99,22 @@ public class EntityDocument {
     public void insertValue(String nodeName, String valueString) {
 //        System.out.println("insertValue: " + nodeName + " : " + valueString);
         nodeName = nodeName.replaceAll("\\s", "_");
-        Element valueElement = metadataDom.createElement(nodeName);
+        Node currentNode = currentDomNode.getFirstChild();
+        while (currentNode != null) {
+            if (nodeName.equals(currentNode.getLocalName())) {
+                if (currentNode.getTextContent() == null || currentNode.getTextContent().length() == 0) {
+                    // put the value into this node
+                    currentNode.setTextContent(valueString);
+                    return;
+                }
+                if (currentNode.getTextContent().equals(valueString)) {
+                    // if the value already exists then do not add again
+                    return;
+                }
+            }
+            currentNode = currentNode.getNextSibling();
+        }
+        Node valueElement = metadataDom.createElement(nodeName);
         valueElement.setTextContent(valueString);
         currentDomNode.appendChild(valueElement);
     }
