@@ -172,16 +172,21 @@ public class EntityCollection {
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
-        System.out.println("query1String: " + query1String);
+//        System.out.println("query1String: " + query1String);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            long startQueryTime = System.currentTimeMillis();
             String queryResult = new XQuery(query1String).execute(context);
-            System.out.println("queryResult: " + queryResult);
+            long queryMils = System.currentTimeMillis() - startQueryTime;
+            System.out.println("Query time: " + queryMils + "ms");
+            long startJaxbTime = System.currentTimeMillis();
+//            System.out.println("queryResult: " + queryResult);
             EntityData selectedEntity = (EntityData) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData.class).getValue();
-            long queryMils = System.currentTimeMillis() - startTime;
-            String queryTimeString = "Query time: " + queryMils + "ms";
-            System.out.println(queryTimeString);
+            long queryJaxBMils = System.currentTimeMillis() - startJaxbTime;
+            System.out.println("JaxB time: " + queryJaxBMils + "ms");
+            long queryTotalMils = System.currentTimeMillis() - startTime;
+            System.out.println("Total Query time: " + queryTotalMils + "ms");
 //            selectedEntity.appendTempLabel(queryTimeString);
             return selectedEntity;
         } catch (JAXBException exception) {
