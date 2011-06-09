@@ -18,7 +18,7 @@ public class GraphSorter {
     HashMap<String, SortingEntity> knownSortingEntities;
     public int xPadding = 100; // todo sort out one place for this var
     public int yPadding = 100; // todo sort out one place for this var
-    private boolean requiresRedraw = false;
+//    private boolean requiresRedraw = false;
 //    , int hSpacing, int vSpacing
 //
 
@@ -174,11 +174,11 @@ public class GraphSorter {
         //printLocations(); // todo: remove this and maybe add a label of x,y post for each node to better see the sorting
     }
 
-    public boolean isRedrawRequired() {
-        boolean returnBool = requiresRedraw;
-        requiresRedraw = false;
-        return returnBool;
-    }
+//    public boolean isResizeRequired() {
+//        boolean returnBool = requiresRedraw;
+//        requiresRedraw = false;
+//        return returnBool;
+//    }
 
 //    private void placeRelatives(EntityData currentNode, ArrayList<EntityData> intendedSortOrder, HashMap<String, Float[]> entityPositions) {
 //        for (EntityRelation entityRelation : currentNode.getVisiblyRelateNodes()) {
@@ -234,7 +234,7 @@ public class GraphSorter {
         // todo: this requires that the svg is updated to match this change on all nodes (to test drag one node left past zero, which causes all other nodes to be moved, then move another node and the relation lines do not get placed correctly)
         float xOffset = xPadding - minPostion[0];
         float yOffset = yPadding - minPostion[1];
-        requiresRedraw = (yOffset != 0 || xOffset != 0);
+//        requiresRedraw = (yOffset != 0 || xOffset != 0);
         for (float[] currentPosition : entityPositions.values()) {
             currentPosition[0] = currentPosition[0] + xOffset;
             currentPosition[1] = currentPosition[1] + yOffset;
