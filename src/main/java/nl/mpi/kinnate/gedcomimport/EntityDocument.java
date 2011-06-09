@@ -8,6 +8,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -33,6 +34,10 @@ public class EntityDocument {
         idString = nameString;
         entityFile = new File(destinationDirectory, nameString);
         uniquieIdentifier = new LocalIdentifier().getUniqueIdentifier(entityFile);
+    }
+
+    public String getFileName() {
+        return entityFile.getName();
     }
 
     public String getUniquieIdentifier() {
@@ -99,7 +104,7 @@ public class EntityDocument {
         currentDomNode.appendChild(valueElement);
     }
 
-    public void insertRelation(String typeString, String relationUniquieIdentifier, String fileNameString) {
+    public void insertRelation(RelationType relationType, String relationUniquieIdentifier, String fileNameString) {
         Element relationElement = metadataDom.createElement("Relation");
         metadataDom.getDocumentElement().appendChild(relationElement);
 
@@ -114,7 +119,7 @@ public class EntityDocument {
         relationElement.appendChild(uniqueIdentifierElement);
 
         Element typeElement = metadataDom.createElement("Type");
-        typeElement.setTextContent(typeString);
+        typeElement.setTextContent(relationType.name());
         relationElement.appendChild(typeElement);
 
         Element targetNameElement = metadataDom.createElement("TargetName");
