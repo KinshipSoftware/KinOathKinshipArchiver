@@ -18,9 +18,9 @@ public class IndexerParameters {
     @XmlTransient
     public IndexerParam relevantLinkData = new IndexerParam(new String[][]{{"Type"}});
     @XmlElement(name = "LabelFields", namespace = "http://mpi.nl/tla/kin")
-    public IndexerParam labelFields = new IndexerParam(new String[][]{{"*:Kinnate/*:Entity/*:Name"}, {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"}, {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"}, {"*:Kinnate/*:Gedcom/*:Entity/*:Text"}, {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"}, {"*:Kinnate/*:Gedcom/*:Entity/*:NoteText"}});
+    public IndexerParam labelFields = new IndexerParam(new String[][]{{"*:Kinnate/*:Entity/*[starts-with(local-name(), 'Name')]"}, {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"}, {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"}, {"*:Kinnate/*:Gedcom/*:Entity/*:Text"}, {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"}, {"*:Kinnate/*:Gedcom/*:Entity/*:NoteText"}});
     @XmlElement(name = "SymbolFieldsFields", namespace = "http://mpi.nl/tla/kin")
-    public IndexerParam symbolFieldsFields = new IndexerParam(new String[][]{{"*:Kinnate/*:Gedcom/*:Entity[*:sex='male']", "triangle"}, {"*:Kinnate/*:Gedcom/*:Entity[*:sex='female']", "circle"}, {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']", "union"}});
+    public IndexerParam symbolFieldsFields = new IndexerParam(new String[][]{{"*:Kinnate/*:Gedcom/*:Entity[*:sex='male']", "triangle"}, {"*:Kinnate/*:Entity[*:Gender='male']", "triangle"}, {"*:Kinnate/*:Gedcom/*:Entity[*:sex='female']", "circle"}, {"*:Kinnate/*:Entity[*:Gender='female']", "circle"}, {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']", "union"}});
     @XmlElement(name = "AncestorFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam ancestorFields = new IndexerParam(new String[][]{{"Kinnate.Gedcom.Entity.FAMC"}, {"Kinnate.Gedcom.Entity.BIRT.FAMC"}, {"Kinnate.Gedcom.Entity.CHR.FAMC"}, {"Kinnate.Gedcom.Entity.ADOP.FAMC"}, {"Kinnate.Gedcom.Entity.SLGC.FAMC"}, {"Kinnate.Gedcom.Entity.HUSB"}, {"Kinnate.Gedcom.Entity.WIFE"}, {"ancestor"}});
 //    public IndexerParam siblingFields = new IndexerParam(new String[]{{"Kinnate.Gedcom.Entity.CHIL"}, {"Kinnate.Gedcom.Entity.FAMS"}});
