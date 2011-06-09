@@ -73,8 +73,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     public void mouseReleased(MouseEvent me) {
 //        System.out.println("mouseReleased: " + me.toString());
         graphPanel.svgCanvas.setCursor(preDragCursor);
-        if (startDragPoint != null) {
-            graphPanel.updateCanvasSize();
+        if (mouseActionIsDrag) {
+            graphPanel.svgUpdateHandler.updateCanvasSize();
         }
         startDragPoint = null;
         if (!mouseActionIsDrag && entityToToggle != null) {
@@ -183,7 +183,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 graphPanel.selectedGroupId.addAll(selectedIds);
                 break;
             case expandSelection:
-                // todo: continue here
+                // todo: continue here...
                 break;
             case deselectAll:
                 graphPanel.selectedGroupId.clear();
