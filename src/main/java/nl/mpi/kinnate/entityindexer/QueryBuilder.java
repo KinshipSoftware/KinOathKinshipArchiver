@@ -46,14 +46,10 @@ public class QueryBuilder {
         StringBuilder stringBuilder = new StringBuilder();
         for (ParameterElement currentEntry : indexParameters.labelFields.getValues()) {
             String trimmedXpath = currentEntry.getXpathString().substring("*:Kinnate".length());
-            stringBuilder.append("{if (exists(");
+            stringBuilder.append("{for $labelNode in ");
             stringBuilder.append(entityNodeVar);
             stringBuilder.append(trimmedXpath);
-            stringBuilder.append(")) then ");
-            stringBuilder.append("<String>{");
-            stringBuilder.append(entityNodeVar);
-            stringBuilder.append(trimmedXpath);
-            stringBuilder.append("/text()}</String>else()}\n");
+            stringBuilder.append("\nreturn <String>{$labelNode/text()}</String>}\n");
         }
         return stringBuilder.toString();
     }
