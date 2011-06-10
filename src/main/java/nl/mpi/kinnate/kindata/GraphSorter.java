@@ -88,7 +88,7 @@ public class GraphSorter {
             return false;
         }
 
-        public float[] getPosition(HashMap<String, float[]> entityPositions) {
+        protected float[] getPosition(HashMap<String, float[]> entityPositions) {
             System.out.println("getPosition: " + selfEntityId);
             calculatedPosition = entityPositions.get(selfEntityId);
             if (calculatedPosition == null) {
@@ -144,7 +144,7 @@ public class GraphSorter {
             return calculatedPosition;
         }
 
-        public void getRelatedPositions(HashMap<String, float[]> entityPositions) {
+        protected void getRelatedPositions(HashMap<String, float[]> entityPositions) {
             ArrayList<SortingEntity> allRelations = new ArrayList<SortingEntity>();
             allRelations.addAll(mustBeAbove);
             allRelations.addAll(mustBeBelow);
@@ -165,7 +165,10 @@ public class GraphSorter {
         // this section need only be done when the nodes are added to this graphsorter
         knownSortingEntities = new HashMap<String, SortingEntity>();
         for (EntityData currentNode : graphDataNodeArrayLocal) {
-            knownSortingEntities.put(currentNode.getUniqueIdentifier(), new SortingEntity(currentNode));
+            if (currentNode.isVisible) {
+                // only create sorting entities for visible entities
+                knownSortingEntities.put(currentNode.getUniqueIdentifier(), new SortingEntity(currentNode));
+            }
         }
         for (SortingEntity currentSorter : knownSortingEntities.values()) {
             currentSorter.calculateRelations(knownSortingEntities);
@@ -179,7 +182,6 @@ public class GraphSorter {
 //        requiresRedraw = false;
 //        return returnBool;
 //    }
-
 //    private void placeRelatives(EntityData currentNode, ArrayList<EntityData> intendedSortOrder, HashMap<String, Float[]> entityPositions) {
 //        for (EntityRelation entityRelation : currentNode.getVisiblyRelateNodes()) {
 //            EntityData relatedEntity = entityRelation.getAlterNode();
@@ -211,6 +213,11 @@ public class GraphSorter {
         // contine to the next nearest relatives
         // when all done search for any unrelated nodes and do it all again
         // make sure that invisible nodes are ignored
+        for (EntityData currentNode : graphDataNodeArray) {
+            if (!currentNode.isVisible) {
+                entityPositions.remove(currentNode.getUniqueIdentifier());
+            }
+        }
         for (SortingEntity currentSorter : knownSortingEntities.values()) {
             currentSorter.getPosition(entityPositions);
             currentSorter.getRelatedPositions(entityPositions);
@@ -229,6 +236,10 @@ public class GraphSorter {
                     minPostion[1] = currentPosition[1];
                 }
             }
+        }
+        if (minPostion == null) {
+            // when there are no entities this could be null and must be corrected here
+            minPostion = new float[]{0, 0};
         }
         // adjust the min position
         // todo: this requires that the svg is updated to match this change on all nodes (to test drag one node left past zero, which causes all other nodes to be moved, then move another node and the relation lines do not get placed correctly)
