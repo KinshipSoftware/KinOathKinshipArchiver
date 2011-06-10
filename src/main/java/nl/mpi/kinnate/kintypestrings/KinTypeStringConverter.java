@@ -307,7 +307,11 @@ public class KinTypeStringConverter extends GraphSorter {
                                 if (null != identifierString) {
                                     // if an identifier has been specified then use it as the unique identifier
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length() - insertedEgoOffset);
-                                    consumableString = consumableString.substring(identifierString.length() + 2);
+                                    if (consumableString.length() < identifierString.length() + 2) {
+                                        consumableString = "";
+                                    } else {
+                                        consumableString = consumableString.substring(identifierString.length() + 2);
+                                    }
                                     labelStrings = new String[]{identifierString};
                                     fullKinTypeString = ":" + identifierString + ":";
                                 } else {
