@@ -3,11 +3,14 @@ package nl.mpi.kinnate.svg;
 import java.awt.geom.AffineTransform;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import org.apache.batik.bridge.UpdateManager;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGLocatable;
@@ -291,6 +294,111 @@ public class SvgUpdateHandler {
                     ((EventTarget) labelText).addEventListener("mousedown", new MouseListenerSvg(graphPanel), false);
                 }
             });
+        }
+    }
+
+    public void updateEntities() {
+        UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+
+                public void run() {
+                    drawEntities();
+                }
+            });
+        } else {
+            // on the first draw there will be on update manager
+            drawEntities();
+        }
+    }
+
+    private void drawEntities() {
+        graphPanel.dataStoreSvg.graphData.setPadding(graphPanel.graphPanelSize);
+        int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);
+        int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); //dataStoreSvg.graphData.gridWidth);
+//        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
+//        currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
+        try {
+            Element svgRoot;
+            // Get the root element (the 'svg' element)
+            svgRoot = graphPanel.doc.getDocumentElement();
+            Element labelsGroup = graphPanel.doc.getElementById("LabelsGroup");
+            if (labelsGroup == null) {
+                labelsGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+                labelsGroup.setAttribute("id", "LabelsGroup");
+                svgRoot.appendChild(labelsGroup);
+            }
+            Element relationGroupNode;
+            Element entityGroupNode;
+//            if (doc == null) {
+//            } else {
+            Node relationGroupNodeOld = graphPanel.doc.getElementById("RelationGroup");
+            Node entityGroupNodeOld = graphPanel.doc.getElementById("EntityGroup");
+            // remove the old relation lines
+            relationGroupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+            relationGroupNode.setAttribute("id", "RelationGroup");
+            svgRoot.insertBefore(relationGroupNode, labelsGroup);
+            if (relationGroupNodeOld != null) {
+                svgRoot.removeChild(relationGroupNodeOld);
+            }
+            // remove the old entity symbols making sure the entities sit above the relations but below the labels
+            entityGroupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+            entityGroupNode.setAttribute("id", "EntityGroup");
+            svgRoot.insertBefore(entityGroupNode, labelsGroup);
+            if (entityGroupNodeOld != null) {
+                svgRoot.removeChild(entityGroupNodeOld);
+            }
+            // remove old kin diagram data
+            NodeList dataNodes = graphPanel.doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
+            for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
+                dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
+            }
+            graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel, graphPanel.entitySvg.entityPositions);
+//            }
+
+            float[] graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+            // Set the width and height attributes on the root 'svg' element.
+            svgRoot.setAttribute("width", Float.toString(graphSize[0])); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
+            svgRoot.setAttribute("height", Float.toString(graphSize[1]));
+//            svgRoot.setAttribute("width", "100%");
+//            svgRoot.setAttribute("height", "100%");
+//            svgRoot.removeAttribute("width");
+//            svgRoot.removeAttribute("height");
+//            this.setPreferredSize(new Dimension((int) graphSize[0], (int) graphSize[1]));//            entitySvg.removeOldEntities(entityGroupNode);
+
+//            entitySvg.removeOldEntities(relationGroupNode);
+            // todo: find the real text size from batik
+            // store the selected kin type strings and other data in the dom
+            graphPanel.dataStoreSvg.storeAllData(graphPanel.doc);
+//            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
+            for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+                if (currentNode.isVisible) {
+                    entityGroupNode.appendChild(graphPanel.entitySvg.createEntitySymbol(graphPanel, currentNode));
+                }
+            }
+            for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+                if (currentNode.isVisible) {
+                    for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
+                        if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.kinTermLine)
+                                && (graphPanel.dataStoreSvg.showSanguineLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.sanguineLine)) {
+                            new RelationSvg().insertRelation(graphPanel, graphPanel.svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing);
+                        }
+                    }
+                }
+            }
+            // todo: allow the user to set an entity as the provider of new dat being entered, this selected user can then be added to each field that is updated as the providence for that data. this would be best done in a cascading fashon so that there is a default informant for the entity and if required for sub nodes and fields
+//
+            //ArbilComponentBuilder.savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+//        svgCanvas.revalidate();
+//            svgUpdateHandler.updateSvgSelectionHighlights(); // todo: does this rsolve the issue after an update that the selection highlight is lost but the selection is still made?
+//        zoomDrawing();
+//            if (zoomAffineTransform != null) {
+//                // re apply the last zoom
+//                // todo: asses why this does not work
+//                svgCanvas.setRenderingTransform(zoomAffineTransform);
+//            };
+        } catch (DOMException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
         }
     }
 }
