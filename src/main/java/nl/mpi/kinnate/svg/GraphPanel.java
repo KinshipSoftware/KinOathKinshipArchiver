@@ -113,6 +113,13 @@ public class GraphPanel extends JPanel implements SavePanel {
         } else {
             svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(null, this, graphPanelSize));
         }
+        svgCanvas.addLinkActivationListener(new LinkActivationListener() {
+
+            public void linkActivated(LinkActivationEvent lae) {
+                // todo: find a better way to block the built in hyper link handler that tries to load the url into the canvas
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
     }
 
 //    private void zoomDrawing() {
@@ -172,6 +179,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (dataStoreSvg.graphData == null) {
             return null;
         }
+        svgCanvas.setSVGDocument(doc);
         return dataStoreSvg.graphData.getDataNodes();
     }
 
@@ -218,6 +226,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             labelsGroup.setAttribute("id", "LabelsGroup");
             svgRoot.appendChild(labelsGroup);
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc));
+            svgCanvas.setSVGDocument(doc);
         } catch (IOException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
         }
@@ -355,107 +364,18 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void drawNodes() {
-        drawNodes(dataStoreSvg.graphData);
+        requiresSave = true;
+        selectedGroupId.clear();
+        svgUpdateHandler.updateEntities();
     }
 
-    public void drawNodes(GraphSorter graphDataLocal) {
-        // todo: resolve threading issue and update issue so that imdi nodes that update can update the diagram
-        requiresSave = true;
+    public void drawNodes(GraphSorter graphDataLocal) {        
         dataStoreSvg.graphData = graphDataLocal;
-        dataStoreSvg.graphData.setPadding(graphPanelSize);
-        int vSpacing = graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);
-        int hSpacing = graphPanelSize.getHorizontalSpacing(); //dataStoreSvg.graphData.gridWidth);
-//        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
-//        currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
-        try {
-            Element svgRoot;
-            // Get the root element (the 'svg' element)
-            svgRoot = doc.getDocumentElement();
-            Element labelsGroup = doc.getElementById("LabelsGroup");
-            if (labelsGroup == null) {
-                labelsGroup = doc.createElementNS(svgNameSpace, "g");
-                labelsGroup.setAttribute("id", "LabelsGroup");
-                svgRoot.appendChild(labelsGroup);
-            }
-            Element relationGroupNode;
-            Element entityGroupNode;
-//            if (doc == null) {
-//            } else {
-            Node relationGroupNodeOld = doc.getElementById("RelationGroup");
-            Node entityGroupNodeOld = doc.getElementById("EntityGroup");
-            // remove the old relation lines
-            relationGroupNode = doc.createElementNS(svgNameSpace, "g");
-            relationGroupNode.setAttribute("id", "RelationGroup");
-            svgRoot.insertBefore(relationGroupNode, labelsGroup);
-            if (relationGroupNodeOld != null) {
-                svgRoot.removeChild(relationGroupNodeOld);
-            }
-            // remove the old entity symbols making sure the entities sit above the relations but below the labels
-            entityGroupNode = doc.createElementNS(svgNameSpace, "g");
-            entityGroupNode.setAttribute("id", "EntityGroup");
-            svgRoot.insertBefore(entityGroupNode, labelsGroup);
-            if (entityGroupNodeOld != null) {
-                svgRoot.removeChild(entityGroupNodeOld);
-            }
-            // remove old kin diagram data
-            NodeList dataNodes = doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
-            for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
-                dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
-            }
-            dataStoreSvg.graphData.placeAllNodes(this, entitySvg.entityPositions);
-//            }
-
-            float[] graphSize = dataStoreSvg.graphData.getGraphSize(entitySvg.entityPositions);
-            // Set the width and height attributes on the root 'svg' element.
-            svgRoot.setAttribute("width", Float.toString(graphSize[0])); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
-            svgRoot.setAttribute("height", Float.toString(graphSize[1]));
-//            svgRoot.setAttribute("width", "100%");
-//            svgRoot.setAttribute("height", "100%");
-//            svgRoot.removeAttribute("width");
-//            svgRoot.removeAttribute("height");
-//            this.setPreferredSize(new Dimension((int) graphSize[0], (int) graphSize[1]));//            entitySvg.removeOldEntities(entityGroupNode);
-
-//            entitySvg.removeOldEntities(relationGroupNode);
-            // todo: find the real text size from batik
-            // store the selected kin type strings and other data in the dom
-            dataStoreSvg.storeAllData(doc);
-//            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
-            for (EntityData currentNode : dataStoreSvg.graphData.getDataNodes()) {
-                if (currentNode.isVisible) {
-                    entityGroupNode.appendChild(entitySvg.createEntitySymbol(this, currentNode));
-                }
-            }
-            for (EntityData currentNode : dataStoreSvg.graphData.getDataNodes()) {
-                if (currentNode.isVisible) {
-                    for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
-                        if ((dataStoreSvg.showKinTermLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.kinTermLine)
-                                && (dataStoreSvg.showSanguineLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.sanguineLine)) {
-                            new RelationSvg().insertRelation(this, svgNameSpace, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing);
-                        }
-                    }
-                }
-            }
-            // todo: allow the user to set an entity as the provider of new dat being entered, this selected user can then be added to each field that is updated as the providence for that data. this would be best done in a cascading fashon so that there is a default informant for the entity and if required for sub nodes and fields
-            svgCanvas.setSVGDocument(doc);
-            //ArbilComponentBuilder.savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
-//        svgCanvas.revalidate();
-//            svgUpdateHandler.updateSvgSelectionHighlights(); // todo: does this rsolve the issue after an update that the selection highlight is lost but the selection is still made?
-            selectedGroupId.clear();
-//        zoomDrawing();
-            if (zoomAffineTransform != null) {
-                // re apply the last zoom
-                // todo: asses why this does not work
-                svgCanvas.setRenderingTransform(zoomAffineTransform);
-            }
-            svgCanvas.addLinkActivationListener(new LinkActivationListener() {
-
-                public void linkActivated(LinkActivationEvent lae) {
-                    // todo: find a better way to block the built in hyper link handler that tries to load the url into the canvas
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-            });
-        } catch (DOMException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+        drawNodes();
+        if (graphDataLocal.getDataNodes().length == 0) {
+            // if all entities have been removed then reset the zoom so that new nodes are going to been centered
+            // todo: it would be better to move the window to cover the drawing area but not change the zoom
+            resetZoom();
         }
     }
 
