@@ -286,8 +286,12 @@ public class KinTypeStringConverter extends GraphSorter {
                         for (KinType currentReferenceKinType : referenceKinTypes) {
                             if (consumableString.startsWith(currentReferenceKinType.codeString)) {
                                 String previousConsumableString = consumableString;
+//                                if (currentReferenceKinType.isEgoType()) {
+//                                    fullKinTypeString = "";
+//                                }
                                 if (currentReferenceKinType.isEgoType() && egoNodeFound) {
                                     // prevent multiple egos on one line
+                                    // going from one kin type to a second ego cannot specify the relation to the second ego and hence such syntax is not workable
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, parserHighlightPosition);
                                     break;
                                 } else {
@@ -313,14 +317,15 @@ public class KinTypeStringConverter extends GraphSorter {
                                         consumableString = consumableString.substring(identifierString.length() + 2);
                                     }
                                     labelStrings = new String[]{identifierString};
-                                    fullKinTypeString = ":" + identifierString + ":";
+//                                    fullKinTypeString = ""; //fullKinTypeString + ":" + identifierString + ":";
                                 } else {
-                                    fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
+//                                    fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
 //                                    fullKinTypeString = inputString.substring(0, inputString.length() - consumableString.length());
                                     // if no identifier has been specified then use the full kin type string
                                     identifierString = fullKinTypeString;
                                     labelStrings = new String[]{};
                                 }
+                                fullKinTypeString = fullKinTypeString + currentReferenceKinType.codeString;
                                 if (graphDataNodeList.containsKey(identifierString)) {
                                     currentGraphDataNode = graphDataNodeList.get(identifierString);
                                     if (currentGraphDataNode.isEgo) {
