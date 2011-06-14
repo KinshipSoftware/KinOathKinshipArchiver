@@ -346,7 +346,11 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public String getKinTypeForElementId(String elementId) {
         Element entityElement = doc.getElementById(elementId);
-        return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kintype");
+        if (entityElement != null) {
+            return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kintype");
+        } else {
+            return "";
+        }
     }
 
     public void resetZoom() {
@@ -367,9 +371,10 @@ public class GraphPanel extends JPanel implements SavePanel {
         requiresSave = true;
         selectedGroupId.clear();
         svgUpdateHandler.updateEntities();
+        svgCanvas.invalidate();
     }
 
-    public void drawNodes(GraphSorter graphDataLocal) {        
+    public void drawNodes(GraphSorter graphDataLocal) {
         dataStoreSvg.graphData = graphDataLocal;
         drawNodes();
         if (graphDataLocal.getDataNodes().length == 0) {
