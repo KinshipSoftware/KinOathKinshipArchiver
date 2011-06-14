@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="1600" zoomAndPan="magnify" contentStyleType="text/css" height="800" preserveAspectRatio="xMidYMid meet" version="1.0">
+<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="1500.0" zoomAndPan="magnify" contentStyleType="text/css" height="1000.0" preserveAspectRatio="xMidYMid meet" version="1.0">
   <defs id="KinSymbols">
     <g id="circle">
       <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
     </g>
     <g id="square">
-      <rect x="0" width="15" y="0" height="15" stroke-width="2" stroke="black"/>
+      <rect x="0" width="15" stroke-width="2" height="15" y="0" stroke="black"/>
     </g>
     <g id="square45">
       <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
@@ -14,12 +14,12 @@
       <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
     </g>
     <g id="union">
-      <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
-      <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
-      <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
+      <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
+      <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
+      <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
     </g>
     <g id="triangle">
-      <polygon points="7,0 0,12 15,12" stroke-width="2" stroke="black"/>
+      <polygon stroke-width="2" points="7,0 0,12 15,12" stroke="black"/>
     </g>
     <g id="equals">
       <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
@@ -30,429 +30,432 @@
   </defs>
   
   
+  
+  
   <g id="RelationGroup">
     <g id="relation0">
-      <kin:RelationEntities xmlns:kin="kin" ego="F" lineType="sanguineLine" alter="1" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MSSDHMF" lineType="sanguineLine" alter="MSSDHM" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation0Line" stroke-width="2" points="357.0,299.5 357.0,349.5 307.0,349.5 307.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation0Line" stroke-width="2" points="7.0,307.0 7.0,357.0 7.0,357.0 7.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
     </g>
     <g id="relation1">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSSWMD" lineType="sanguineLine" alter=":1:BSSWM" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MSSDHMF" lineType="sanguineLine" alter="2" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation1Line" stroke-width="2" points="607.0,599.5 607.0,549.5 557.0,549.5 557.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation1Line" stroke-width="2" points="7.0,307.0 7.0,257.0 7.0,257.0 7.0,207.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
     </g>
     <g id="relation2">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSSWMD" lineType="sanguineLine" alter=":1:BSSWMDH" relationType="union"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="F" lineType="sanguineLine" alter="1" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation2Line" stroke-width="2" points="607.0,599.5 607.0,649.5 307.0,649.5 307.0,599.5" stroke="grey"/>
+        <polyline fill="none" id="relation2Line" stroke-width="2" points="457.0,207.0 457.0,257.0 457.0,257.0 457.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
     </g>
     <g id="relation3">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BS" lineType="sanguineLine" alter=":1:B" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSSWMD" lineType="sanguineLine" alter="FSBSSWM" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation3Line" stroke-width="2" points="407.0,499.5 407.0,449.5 407.0,449.5 407.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation3Line" stroke-width="2" points="457.0,807.0 457.0,757.0 457.0,757.0 457.0,707.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
     </g>
     <g id="relation4">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BS" lineType="sanguineLine" alter=":1:BSS" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSSWMD" lineType="sanguineLine" alter="FSBSSWMDH" relationType="union"/>
       <defs>
-        <polyline fill="none" id="relation4Line" stroke-width="2" points="407.0,499.5 407.0,549.5 407.0,549.5 407.0,599.5" stroke="grey"/>
+        <polyline fill="none" id="relation4Line" stroke-width="2" points="457.0,807.0 457.0,657.0 457.0,657.0 457.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
     </g>
     <g id="relation5">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:B" lineType="sanguineLine" alter="1" relationType="sibling"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSS" lineType="sanguineLine" alter="FS" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation5Line" stroke-width="2" points="407.0,399.5 407.0,349.5 307.0,349.5 307.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation5Line" stroke-width="2" points="907.0,407.0 907.0,357.0 907.0,357.0 907.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
     </g>
     <g id="relation6">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:B" lineType="sanguineLine" alter=":1:BS" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSS" lineType="sanguineLine" alter="FSSD" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation6Line" stroke-width="2" points="407.0,399.5 407.0,449.5 407.0,449.5 407.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation6Line" stroke-width="2" points="907.0,407.0 907.0,457.0 907.0,457.0 907.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
     </g>
     <g id="relation7">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:SS" lineType="sanguineLine" alter=":2:S" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSSW" lineType="sanguineLine" alter="FSBSS" relationType="union"/>
       <defs>
-        <polyline fill="none" id="relation7Line" stroke-width="2" points="957.0,299.5 957.0,249.5 957.0,249.5 957.0,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation7Line" stroke-width="2" points="657.0,807.0 657.0,657.0 657.0,657.0 657.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
     </g>
     <g id="relation8">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:SS" lineType="sanguineLine" alter=":2:SSD" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSSW" lineType="sanguineLine" alter="FSBSSWM" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation8Line" stroke-width="2" points="957.0,299.5 957.0,349.5 957.0,349.5 957.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation8Line" stroke-width="2" points="657.0,807.0 657.0,757.0 457.0,757.0 457.0,707.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
     </g>
     <g id="relation9">
-      <kin:RelationEntities xmlns:kin="kin" ego=":3:SS" lineType="sanguineLine" alter=":3:S" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSSDHM" lineType="sanguineLine" alter="FSSDH" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation9Line" stroke-width="2" points="857.0,299.5 857.0,249.5 857.0,249.5 857.0,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation9Line" stroke-width="2" points="1107.0,307.0 1107.0,407.0 1107.0,407.0 1107.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
     </g>
     <g id="relation10">
-      <kin:RelationEntities xmlns:kin="kin" ego=":3:SS" lineType="sanguineLine" alter=":3:SSD" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSSDHM" lineType="sanguineLine" alter="3" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation10Line" stroke-width="2" points="857.0,299.5 857.0,299.5 957.0,299.5 957.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation10Line" stroke-width="2" points="1107.0,307.0 1107.0,257.0 907.0,257.0 907.0,207.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
     </g>
     <g id="relation11">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSS" lineType="sanguineLine" alter=":1:BS" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MSSDH" lineType="sanguineLine" alter="MSSD" relationType="union"/>
       <defs>
-        <polyline fill="none" id="relation11Line" stroke-width="2" points="407.0,599.5 407.0,549.5 407.0,549.5 407.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation11Line" stroke-width="2" points="7.0,507.0 7.0,557.0 207.0,557.0 207.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
     </g>
     <g id="relation12">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSS" lineType="sanguineLine" alter=":1:BSSW" relationType="union"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MSSDH" lineType="sanguineLine" alter="MSSDHM" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation12Line" stroke-width="2" points="407.0,599.5 407.0,649.5 507.0,649.5 507.0,599.5" stroke="grey"/>
+        <polyline fill="none" id="relation12Line" stroke-width="2" points="7.0,507.0 7.0,457.0 7.0,457.0 7.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
     </g>
     <g id="relation13">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSSWMDH" lineType="sanguineLine" alter=":1:BSSWMD" relationType="union"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MSSDHM" lineType="sanguineLine" alter="MSSDH" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation13Line" stroke-width="2" points="307.0,599.5 307.0,649.5 607.0,649.5 607.0,599.5" stroke="grey"/>
+        <polyline fill="none" id="relation13Line" stroke-width="2" points="7.0,407.0 7.0,457.0 7.0,457.0 7.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
     </g>
     <g id="relation14">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSSWMDH" lineType="sanguineLine" alter=":1:BSSWMDHF" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MSSDHM" lineType="sanguineLine" alter="MSSDHMF" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation14Line" stroke-width="2" points="307.0,599.5 307.0,549.5 307.0,549.5 307.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation14Line" stroke-width="2" points="7.0,407.0 7.0,357.0 7.0,357.0 7.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
     </g>
     <g id="relation15">
-      <kin:RelationEntities xmlns:kin="kin" ego=":3:SSDH" lineType="sanguineLine" alter=":3:SSD" relationType="union"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSSDH" lineType="sanguineLine" alter="FSSD" relationType="union"/>
       <defs>
-        <polyline fill="none" id="relation15Line" stroke-width="2" points="1107.0,299.5 1107.0,349.5 957.0,349.5 957.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation15Line" stroke-width="2" points="1107.0,507.0 1107.0,557.0 907.0,557.0 907.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
     </g>
     <g id="relation16">
-      <kin:RelationEntities xmlns:kin="kin" ego=":3:SSDH" lineType="sanguineLine" alter=":3:SSDHM" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSSDH" lineType="sanguineLine" alter="FSSDHM" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation16Line" stroke-width="2" points="1107.0,299.5 1107.0,249.5 1107.0,249.5 1107.0,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation16Line" stroke-width="2" points="1107.0,507.0 1107.0,407.0 1107.0,407.0 1107.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
     </g>
     <g id="relation17">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:SSDHMF" lineType="sanguineLine" alter=":2:SSDHM" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSSWM" lineType="sanguineLine" alter="FSBSSW" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation17Line" stroke-width="2" points="757.0,199.5 757.0,249.5 757.0,249.5 757.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation17Line" stroke-width="2" points="457.0,707.0 457.0,757.0 657.0,757.0 657.0,807.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
     </g>
     <g id="relation18">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:SSDHMF" lineType="sanguineLine" alter="2" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSSWM" lineType="sanguineLine" alter="FSBSSWMD" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation18Line" stroke-width="2" points="757.0,199.5 757.0,149.5 857.0,149.5 857.0,99.5" stroke="grey"/>
+        <polyline fill="none" id="relation18Line" stroke-width="2" points="457.0,707.0 457.0,757.0 457.0,757.0 457.0,807.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
     </g>
     <g id="relation19">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSSW" lineType="sanguineLine" alter=":1:BSS" relationType="union"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MS" lineType="sanguineLine" alter="2" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation19Line" stroke-width="2" points="507.0,599.5 507.0,649.5 407.0,649.5 407.0,599.5" stroke="grey"/>
+        <polyline fill="none" id="relation19Line" stroke-width="2" points="207.0,307.0 207.0,257.0 7.0,257.0 7.0,207.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation19Line"/>
     </g>
     <g id="relation20">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSSW" lineType="sanguineLine" alter=":1:BSSWM" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MS" lineType="sanguineLine" alter="MSS" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation20Line" stroke-width="2" points="507.0,599.5 507.0,549.5 557.0,549.5 557.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation20Line" stroke-width="2" points="207.0,307.0 207.0,357.0 207.0,357.0 207.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation20Line"/>
     </g>
     <g id="relation21">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:SSDHM" lineType="sanguineLine" alter=":2:SSDH" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FS" lineType="sanguineLine" alter="3" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation21Line" stroke-width="2" points="757.0,299.5 757.0,349.5 757.0,349.5 757.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation21Line" stroke-width="2" points="907.0,307.0 907.0,257.0 907.0,257.0 907.0,207.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation21Line"/>
     </g>
     <g id="relation22">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:SSDHM" lineType="sanguineLine" alter=":2:SSDHMF" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FS" lineType="sanguineLine" alter="FSS" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation22Line" stroke-width="2" points="757.0,299.5 757.0,249.5 757.0,249.5 757.0,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation22Line" stroke-width="2" points="907.0,307.0 907.0,357.0 907.0,357.0 907.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation22Line"/>
     </g>
     <g id="relation23">
-      <kin:RelationEntities xmlns:kin="kin" ego="3" lineType="sanguineLine" alter=":3:S" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="3" lineType="sanguineLine" alter="FS" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation23Line" stroke-width="2" points="1007.0,99.5 1007.0,149.5 857.0,149.5 857.0,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation23Line" stroke-width="2" points="907.0,207.0 907.0,257.0 907.0,257.0 907.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation23Line"/>
     </g>
     <g id="relation24">
-      <kin:RelationEntities xmlns:kin="kin" ego="3" lineType="sanguineLine" alter=":3:SSDHM" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="3" lineType="sanguineLine" alter="FSSDHM" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation24Line" stroke-width="2" points="1007.0,99.5 1007.0,149.5 1107.0,149.5 1107.0,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation24Line" stroke-width="2" points="907.0,207.0 907.0,257.0 1107.0,257.0 1107.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation24Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation24Line"/>
     </g>
     <g id="relation25">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSSWMDHF" lineType="sanguineLine" alter=":1:BSSWMDH" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSSWMDH" lineType="sanguineLine" alter="FSBSSWMD" relationType="union"/>
       <defs>
-        <polyline fill="none" id="relation25Line" stroke-width="2" points="307.0,499.5 307.0,549.5 307.0,549.5 307.0,599.5" stroke="grey"/>
+        <polyline fill="none" id="relation25Line" stroke-width="2" points="457.0,507.0 457.0,657.0 457.0,657.0 457.0,807.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation25Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation25Line"/>
     </g>
     <g id="relation26">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSSWMDHF" lineType="sanguineLine" alter="1" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSSWMDH" lineType="sanguineLine" alter="FSBSSWMDHF" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation26Line" stroke-width="2" points="307.0,499.5 307.0,449.5 307.0,449.5 307.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation26Line" stroke-width="2" points="457.0,507.0 457.0,457.0 457.0,457.0 457.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation26Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation26Line"/>
     </g>
     <g id="relation27">
-      <kin:RelationEntities xmlns:kin="kin" ego="2" lineType="sanguineLine" alter=":2:S" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="2" lineType="sanguineLine" alter="MS" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation27Line" stroke-width="2" points="857.0,99.5 857.0,149.5 957.0,149.5 957.0,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation27Line" stroke-width="2" points="7.0,207.0 7.0,257.0 207.0,257.0 207.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation27Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation27Line"/>
     </g>
     <g id="relation28">
-      <kin:RelationEntities xmlns:kin="kin" ego="2" lineType="sanguineLine" alter=":2:SSDHMF" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="2" lineType="sanguineLine" alter="MSSDHMF" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation28Line" stroke-width="2" points="857.0,99.5 857.0,149.5 757.0,149.5 757.0,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation28Line" stroke-width="2" points="7.0,207.0 7.0,257.0 7.0,257.0 7.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation28Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation28Line"/>
     </g>
     <g id="relation29">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:SSD" lineType="sanguineLine" alter=":2:SS" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSSD" lineType="sanguineLine" alter="FSS" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation29Line" stroke-width="2" points="957.0,399.5 957.0,349.5 957.0,349.5 957.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation29Line" stroke-width="2" points="907.0,507.0 907.0,457.0 907.0,457.0 907.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation29Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation29Line"/>
     </g>
     <g id="relation30">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:SSD" lineType="sanguineLine" alter=":2:SSDH" relationType="union"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSSD" lineType="sanguineLine" alter="FSSDH" relationType="union"/>
       <defs>
-        <polyline fill="none" id="relation30Line" stroke-width="2" points="957.0,399.5 957.0,449.5 757.0,449.5 757.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation30Line" stroke-width="2" points="907.0,507.0 907.0,557.0 1107.0,557.0 1107.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation30Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation30Line"/>
     </g>
     <g id="relation31">
-      <kin:RelationEntities xmlns:kin="kin" ego="1" lineType="sanguineLine" alter="F" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MSSD" lineType="sanguineLine" alter="MSS" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation31Line" stroke-width="2" points="307.0,399.5 307.0,349.5 357.0,349.5 357.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation31Line" stroke-width="2" points="207.0,507.0 207.0,457.0 207.0,457.0 207.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation31Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation31Line"/>
     </g>
     <g id="relation32">
-      <kin:RelationEntities xmlns:kin="kin" ego="1" lineType="sanguineLine" alter=":1:B" relationType="sibling"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MSSD" lineType="sanguineLine" alter="MSSDH" relationType="union"/>
       <defs>
-        <polyline fill="none" id="relation32Line" stroke-width="2" points="307.0,399.5 307.0,349.5 407.0,349.5 407.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation32Line" stroke-width="2" points="207.0,507.0 207.0,557.0 7.0,557.0 7.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation32Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation32Line"/>
     </g>
     <g id="relation33">
-      <kin:RelationEntities xmlns:kin="kin" ego="1" lineType="sanguineLine" alter=":1:BSSWMDHF" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="1" lineType="sanguineLine" alter="F" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation33Line" stroke-width="2" points="307.0,399.5 307.0,449.5 307.0,449.5 307.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation33Line" stroke-width="2" points="457.0,307.0 457.0,257.0 457.0,257.0 457.0,207.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation33Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation33Line"/>
     </g>
     <g id="relation34">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSSWM" lineType="sanguineLine" alter=":1:BSSW" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="1" lineType="sanguineLine" alter="FSB" relationType="sibling"/>
       <defs>
-        <polyline fill="none" id="relation34Line" stroke-width="2" points="557.0,499.5 557.0,549.5 507.0,549.5 507.0,599.5" stroke="grey"/>
+        <polyline fill="none" id="relation34Line" stroke-width="2" points="457.0,307.0 457.0,257.0 657.0,257.0 657.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation34Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation34Line"/>
     </g>
     <g id="relation35">
-      <kin:RelationEntities xmlns:kin="kin" ego=":1:BSSWM" lineType="sanguineLine" alter=":1:BSSWMD" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="1" lineType="sanguineLine" alter="FSBSSWMDHF" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation35Line" stroke-width="2" points="557.0,499.5 557.0,549.5 607.0,549.5 607.0,599.5" stroke="grey"/>
+        <polyline fill="none" id="relation35Line" stroke-width="2" points="457.0,307.0 457.0,357.0 457.0,357.0 457.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation35Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation35Line"/>
     </g>
     <g id="relation36">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:S" lineType="sanguineLine" alter="2" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSSWMDHF" lineType="sanguineLine" alter="FSBSSWMDH" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation36Line" stroke-width="2" points="957.0,199.5 957.0,149.5 857.0,149.5 857.0,99.5" stroke="grey"/>
+        <polyline fill="none" id="relation36Line" stroke-width="2" points="457.0,407.0 457.0,457.0 457.0,457.0 457.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation36Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation36Line"/>
     </g>
     <g id="relation37">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:S" lineType="sanguineLine" alter=":2:SS" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSSWMDHF" lineType="sanguineLine" alter="1" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation37Line" stroke-width="2" points="957.0,199.5 957.0,249.5 957.0,249.5 957.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation37Line" stroke-width="2" points="457.0,407.0 457.0,357.0 457.0,357.0 457.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation37Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation37Line"/>
     </g>
     <g id="relation38">
-      <kin:RelationEntities xmlns:kin="kin" ego=":3:S" lineType="sanguineLine" alter="3" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSS" lineType="sanguineLine" alter="FSBS" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation38Line" stroke-width="2" points="857.0,199.5 857.0,149.5 1007.0,149.5 1007.0,99.5" stroke="grey"/>
+        <polyline fill="none" id="relation38Line" stroke-width="2" points="657.0,507.0 657.0,457.0 657.0,457.0 657.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation38Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation38Line"/>
     </g>
     <g id="relation39">
-      <kin:RelationEntities xmlns:kin="kin" ego=":3:S" lineType="sanguineLine" alter=":3:SS" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBSS" lineType="sanguineLine" alter="FSBSSW" relationType="union"/>
       <defs>
-        <polyline fill="none" id="relation39Line" stroke-width="2" points="857.0,199.5 857.0,249.5 857.0,249.5 857.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation39Line" stroke-width="2" points="657.0,507.0 657.0,657.0 657.0,657.0 657.0,807.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation39Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation39Line"/>
     </g>
     <g id="relation40">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:SSDH" lineType="sanguineLine" alter=":2:SSD" relationType="union"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSB" lineType="sanguineLine" alter="1" relationType="sibling"/>
       <defs>
-        <polyline fill="none" id="relation40Line" stroke-width="2" points="757.0,399.5 757.0,449.5 957.0,449.5 957.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation40Line" stroke-width="2" points="657.0,307.0 657.0,257.0 457.0,257.0 457.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation40Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation40Line"/>
     </g>
     <g id="relation41">
-      <kin:RelationEntities xmlns:kin="kin" ego=":2:SSDH" lineType="sanguineLine" alter=":2:SSDHM" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSB" lineType="sanguineLine" alter="FSBS" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation41Line" stroke-width="2" points="757.0,399.5 757.0,349.5 757.0,349.5 757.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation41Line" stroke-width="2" points="657.0,307.0 657.0,357.0 657.0,357.0 657.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation41Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation41Line"/>
     </g>
     <g id="relation42">
-      <kin:RelationEntities xmlns:kin="kin" ego=":3:SSDHM" lineType="sanguineLine" alter=":3:SSDH" relationType="descendant"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBS" lineType="sanguineLine" alter="FSB" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation42Line" stroke-width="2" points="1107.0,199.5 1107.0,249.5 1107.0,249.5 1107.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation42Line" stroke-width="2" points="657.0,407.0 657.0,357.0 657.0,357.0 657.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation42Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation42Line"/>
     </g>
     <g id="relation43">
-      <kin:RelationEntities xmlns:kin="kin" ego=":3:SSDHM" lineType="sanguineLine" alter="3" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="FSBS" lineType="sanguineLine" alter="FSBSS" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation43Line" stroke-width="2" points="1107.0,199.5 1107.0,149.5 1007.0,149.5 1007.0,99.5" stroke="grey"/>
+        <polyline fill="none" id="relation43Line" stroke-width="2" points="657.0,407.0 657.0,457.0 657.0,457.0 657.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation43Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation43Line"/>
     </g>
     <g id="relation44">
-      <kin:RelationEntities xmlns:kin="kin" ego=":3:SSD" lineType="sanguineLine" alter=":3:SS" relationType="ancestor"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MSS" lineType="sanguineLine" alter="MS" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation44Line" stroke-width="2" points="957.0,299.5 957.0,299.5 857.0,299.5 857.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation44Line" stroke-width="2" points="207.0,407.0 207.0,357.0 207.0,357.0 207.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation44Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation44Line"/>
     </g>
     <g id="relation45">
-      <kin:RelationEntities xmlns:kin="kin" ego=":3:SSD" lineType="sanguineLine" alter=":3:SSDH" relationType="union"/>
+      <kin:RelationEntities xmlns:kin="kin" ego="MSS" lineType="sanguineLine" alter="MSSD" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation45Line" stroke-width="2" points="957.0,299.5 957.0,349.5 1107.0,349.5 1107.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation45Line" stroke-width="2" points="207.0,407.0 207.0,457.0 207.0,457.0 207.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation45Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation45Line"/>
     </g>
   </g>
   <g id="EntityGroup">
-    <g id="F" kin:kintype="F" transform="translate(350.0, 292.5)" kin:path="">
+    <g id="MSSDHMF" kin:kintype="MSSDHMF" transform="translate(0.0, 300.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="MSSDHMFsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">MSSDHMF</text>
+    </g>
+    <g id="F" kin:kintype="F" transform="translate(450.0, 200.0)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Fsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">F</text>
     </g>
-    <g id=":1:BSSWMD" kin:kintype=":1:BSSWMD" transform="translate(600.0, 592.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id=":1:BSSWMDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:1:BSSWMD</text>
+    <g id="FSBSSWMD" kin:kintype="FSBSSWMD" transform="translate(450.0, 800.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="FSBSSWMDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSBSSWMD</text>
     </g>
-    <g id=":1:BS" kin:kintype=":1:BS" transform="translate(400.0, 492.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":1:BSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:1:BS</text>
+    <g id="FSS" kin:kintype="FSS" transform="translate(900.0, 400.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="FSSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSS</text>
     </g>
-    <g id=":1:B" kin:kintype=":1:B" transform="translate(400.0, 392.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":1:Bsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:1:B</text>
+    <g id="FSBSSW" kin:kintype="FSBSSW" transform="translate(650.0, 800.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="FSBSSWsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSBSSW</text>
     </g>
-    <g id=":2:SS" kin:kintype=":2:SS" transform="translate(950.0, 292.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":2:SSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:2:SS</text>
+    <g id="FSSDHM" kin:kintype="FSSDHM" transform="translate(1100.0, 300.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="FSSDHMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSSDHM</text>
     </g>
-    <g id=":3:SS" kin:kintype=":3:SS" transform="translate(850.0, 292.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":3:SSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:3:SS</text>
+    <g id="MSSDH" kin:kintype="MSSDH" transform="translate(0.0, 500.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="MSSDHsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">MSSDH</text>
     </g>
-    <g id=":1:BSS" kin:kintype=":1:BSS" transform="translate(400.0, 592.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":1:BSSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:1:BSS</text>
+    <g id="MSSDHM" kin:kintype="MSSDHM" transform="translate(0.0, 400.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="MSSDHMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">MSSDHM</text>
     </g>
-    <g id=":1:BSSWMDH" kin:kintype=":1:BSSWMDH" transform="translate(300.0, 592.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":1:BSSWMDHsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:1:BSSWMDH</text>
+    <g id="FSSDH" kin:kintype="FSSDH" transform="translate(1100.0, 500.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="FSSDHsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSSDH</text>
     </g>
-    <g id=":3:SSDH" kin:kintype=":3:SSDH" transform="translate(1100.0, 292.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":3:SSDHsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:3:SSDH</text>
+    <g id="FSBSSWM" kin:kintype="FSBSSWM" transform="translate(450.0, 700.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="FSBSSWMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSBSSWM</text>
     </g>
-    <g id=":2:SSDHMF" kin:kintype=":2:SSDHMF" transform="translate(750.0, 192.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":2:SSDHMFsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:2:SSDHMF</text>
+    <g id="MS" kin:kintype="MS" transform="translate(200.0, 300.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="MSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">MS</text>
     </g>
-    <g id=":1:BSSW" kin:kintype=":1:BSSW" transform="translate(500.0, 592.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id=":1:BSSWsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:1:BSSW</text>
+    <g id="FS" kin:kintype="FS" transform="translate(900.0, 300.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="FSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FS</text>
     </g>
-    <g id=":2:SSDHM" kin:kintype=":2:SSDHM" transform="translate(750.0, 292.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id=":2:SSDHMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:2:SSDHM</text>
-    </g>
-    <g id="3" kin:kintype=":3:" transform="translate(1000.0, 92.5)" kin:path="">
+    <g id="3" kin:kintype="F" transform="translate(900.0, 200.0)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="3symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">3</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">:3:</text>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">F</text>
     </g>
-    <g id=":1:BSSWMDHF" kin:kintype=":1:BSSWMDHF" transform="translate(300.0, 492.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":1:BSSWMDHFsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:1:BSSWMDHF</text>
+    <g id="FSBSSWMDH" kin:kintype="FSBSSWMDH" transform="translate(450.0, 500.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="FSBSSWMDHsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSBSSWMDH</text>
     </g>
-    <g id="2" kin:kintype=":2:" transform="translate(850.0, 92.5)" kin:path="">
+    <g id="2" kin:kintype="M" transform="translate(0.0, 200.0)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="2symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">2</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">:2:</text>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">M</text>
     </g>
-    <g id=":2:SSD" kin:kintype=":2:SSD" transform="translate(950.0, 392.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id=":2:SSDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:2:SSD</text>
+    <g id="FSSD" kin:kintype="FSSD" transform="translate(900.0, 500.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="FSSDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSSD</text>
     </g>
-    <g id="1" kin:kintype=":1:" transform="translate(300.0, 392.5)" kin:path="">
+    <g id="MSSD" kin:kintype="MSSD" transform="translate(200.0, 500.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="MSSDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">MSSD</text>
+    </g>
+    <g id="1" kin:kintype="FS" transform="translate(450.0, 300.0)" kin:path="">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="1symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">1</text>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">:1:</text>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">FS</text>
     </g>
-    <g id=":1:BSSWM" kin:kintype=":1:BSSWM" transform="translate(550.0, 492.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id=":1:BSSWMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:1:BSSWM</text>
+    <g id="FSBSSWMDHF" kin:kintype="FSBSSWMDHF" transform="translate(450.0, 400.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="FSBSSWMDHFsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSBSSWMDHF</text>
     </g>
-    <g id=":2:S" kin:kintype=":2:S" transform="translate(950.0, 192.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":2:Ssymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:2:S</text>
+    <g id="FSBSS" kin:kintype="FSBSS" transform="translate(650.0, 500.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="FSBSSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSBSS</text>
     </g>
-    <g id=":3:S" kin:kintype=":3:S" transform="translate(850.0, 192.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":3:Ssymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:3:S</text>
+    <g id="FSB" kin:kintype="FSB" transform="translate(650.0, 300.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="FSBsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSB</text>
     </g>
-    <g id=":2:SSDH" kin:kintype=":2:SSDH" transform="translate(750.0, 392.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id=":2:SSDHsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:2:SSDH</text>
+    <g id="FSBS" kin:kintype="FSBS" transform="translate(650.0, 400.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="FSBSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSBS</text>
     </g>
-    <g id=":3:SSDHM" kin:kintype=":3:SSDHM" transform="translate(1100.0, 192.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id=":3:SSDHMsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:3:SSDHM</text>
-    </g>
-    <g id=":3:SSD" kin:kintype=":3:SSD" transform="translate(950.0, 292.5)" kin:path="">
-      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id=":3:SSDsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">:3:SSD</text>
+    <g id="MSS" kin:kintype="MSS" transform="translate(200.0, 400.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="MSSsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">MSS</text>
     </g>
   </g>
   <g id="LabelsGroup"/>
   
+
 <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
     <kin:KinTypeString>FS:1:BSSWMDHFF:1:</kin:KinTypeString>
     <kin:KinTypeString>M:2:SSDHMFM:2:</kin:KinTypeString>
@@ -511,7 +514,28 @@
     <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
     <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
     <kin:EntityData>
-      <kin:EntityArray>
+      <kin:Entity>
+        <Identifier>MSSDHMF</Identifier>
+        <KinType>MSSDHMF</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>MSSDHM</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>2</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>F</Identifier>
         <KinType>F</KinType>
         <isEgo>false</isEgo>
@@ -525,253 +549,220 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>4</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:1:BSSWMD</Identifier>
-        <KinType>:1:BSSWMD</KinType>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSBSSWMD</Identifier>
+        <KinType>FSBSSWMD</KinType>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSSWM</Identifier>
+            <Identifier>FSBSSWM</Identifier>
             <Type>ancestor</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSSWMDH</Identifier>
+            <Identifier>FSBSSWMDH</Identifier>
             <Type>union</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>3</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:1:BS</Identifier>
-        <KinType>:1:BS</KinType>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSS</Identifier>
+        <KinType>FSS</KinType>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:B</Identifier>
+            <Identifier>FS</Identifier>
             <Type>ancestor</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSS</Identifier>
+            <Identifier>FSSD</Identifier>
             <Type>descendant</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>5</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:1:B</Identifier>
-        <KinType>:1:B</KinType>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSBSSW</Identifier>
+        <KinType>FSBSSW</KinType>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>1</Identifier>
-            <Type>sibling</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BS</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-        <xPos>1</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:2:SS</Identifier>
-        <KinType>:2:SS</KinType>
-        <isEgo>false</isEgo>
-        <Labels/>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:2:S</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:2:SSD</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-        <xPos>3</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:3:SS</Identifier>
-        <KinType>:3:SS</KinType>
-        <isEgo>false</isEgo>
-        <Labels/>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:3:S</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:3:SSD</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-        <xPos>5</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:1:BSS</Identifier>
-        <KinType>:1:BSS</KinType>
-        <isEgo>false</isEgo>
-        <Labels/>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BS</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSSW</Identifier>
-            <Type>union</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-        <xPos>4</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:1:BSSWMDH</Identifier>
-        <KinType>:1:BSSWMDH</KinType>
-        <isEgo>false</isEgo>
-        <Labels/>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSSWMD</Identifier>
+            <Identifier>FSBSS</Identifier>
             <Type>union</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSSWMDHF</Identifier>
+            <Identifier>FSBSSWM</Identifier>
             <Type>ancestor</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>5</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:3:SSDH</Identifier>
-        <KinType>:3:SSDH</KinType>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSSDHM</Identifier>
+        <KinType>FSSDHM</KinType>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:3:SSD</Identifier>
+            <Identifier>FSSDH</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>3</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>MSSDH</Identifier>
+        <KinType>MSSDH</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>MSSD</Identifier>
             <Type>union</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:3:SSDHM</Identifier>
+            <Identifier>MSSDHM</Identifier>
             <Type>ancestor</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>2</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:2:SSDHMF</Identifier>
-        <KinType>:2:SSDHMF</KinType>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>MSSDHM</Identifier>
+        <KinType>MSSDHM</KinType>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:2:SSDHM</Identifier>
+            <Identifier>MSSDH</Identifier>
             <Type>descendant</Type>
             <Line>sanguineLine</Line>
           </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>MSSDHMF</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSSDH</Identifier>
+        <KinType>FSSDH</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>FSSD</Identifier>
+            <Type>union</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>FSSDHM</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSBSSWM</Identifier>
+        <KinType>FSBSSWM</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>FSBSSW</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>FSBSSWMD</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>MS</Identifier>
+        <KinType>MS</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
             <Identifier>2</Identifier>
             <Type>ancestor</Type>
             <Line>sanguineLine</Line>
           </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-        <xPos>1</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:1:BSSW</Identifier>
-        <KinType>:1:BSSW</KinType>
-        <isEgo>false</isEgo>
-        <Labels/>
-        <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSS</Identifier>
-            <Type>union</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSSWM</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-        <xPos>1</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:2:SSDHM</Identifier>
-        <KinType>:2:SSDHM</KinType>
-        <isEgo>false</isEgo>
-        <Labels/>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:2:SSDH</Identifier>
+            <Identifier>MSS</Identifier>
             <Type>descendant</Type>
             <Line>sanguineLine</Line>
           </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FS</Identifier>
+        <KinType>FS</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:2:SSDHMF</Identifier>
+            <Identifier>3</Identifier>
             <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>FSS</Identifier>
+            <Type>descendant</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>0</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>3</Identifier>
-        <KinType>:3:</KinType>
+        <KinType>F</KinType>
         <isEgo>false</isEgo>
         <Labels>
           <String>3</String>
@@ -779,45 +770,43 @@
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:3:S</Identifier>
+            <Identifier>FS</Identifier>
             <Type>descendant</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:3:SSDHM</Identifier>
+            <Identifier>FSSDHM</Identifier>
             <Type>descendant</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>4</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:1:BSSWMDHF</Identifier>
-        <KinType>:1:BSSWMDHF</KinType>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSBSSWMDH</Identifier>
+        <KinType>FSBSSWMDH</KinType>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSSWMDH</Identifier>
-            <Type>descendant</Type>
+            <Identifier>FSBSSWMD</Identifier>
+            <Type>union</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>1</Identifier>
+            <Identifier>FSBSSWMDHF</Identifier>
             <Type>ancestor</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>3</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>2</Identifier>
-        <KinType>:2:</KinType>
+        <KinType>M</KinType>
         <isEgo>false</isEgo>
         <Labels>
           <String>2</String>
@@ -825,45 +814,64 @@
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:2:S</Identifier>
+            <Identifier>MS</Identifier>
             <Type>descendant</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:2:SSDHMF</Identifier>
+            <Identifier>MSSDHMF</Identifier>
             <Type>descendant</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>2</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:2:SSD</Identifier>
-        <KinType>:2:SSD</KinType>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSSD</Identifier>
+        <KinType>FSSD</KinType>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:2:SS</Identifier>
+            <Identifier>FSS</Identifier>
             <Type>ancestor</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:2:SSDH</Identifier>
+            <Identifier>FSSDH</Identifier>
             <Type>union</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>4</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>MSSD</Identifier>
+        <KinType>MSSD</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>MSS</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>MSSDH</Identifier>
+            <Type>union</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>1</Identifier>
-        <KinType>:1:</KinType>
+        <KinType>FS</KinType>
         <isEgo>false</isEgo>
         <Labels>
           <String>1</String>
@@ -877,154 +885,126 @@
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:B</Identifier>
+            <Identifier>FSB</Identifier>
             <Type>sibling</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSSWMDHF</Identifier>
+            <Identifier>FSBSSWMDHF</Identifier>
             <Type>descendant</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>2</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:1:BSSWM</Identifier>
-        <KinType>:1:BSSWM</KinType>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSBSSWMDHF</Identifier>
+        <KinType>FSBSSWMDHF</KinType>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSSW</Identifier>
+            <Identifier>FSBSSWMDH</Identifier>
             <Type>descendant</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:1:BSSWMD</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-        <xPos>2</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:2:S</Identifier>
-        <KinType>:2:S</KinType>
-        <isEgo>false</isEgo>
-        <Labels/>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>2</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:2:SS</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-        <xPos>4</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:3:S</Identifier>
-        <KinType>:3:S</KinType>
-        <isEgo>false</isEgo>
-        <Labels/>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>3</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:3:SS</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-        <xPos>3</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:2:SSDH</Identifier>
-        <KinType>:2:SSDH</KinType>
-        <isEgo>false</isEgo>
-        <Labels/>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:2:SSD</Identifier>
-            <Type>union</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:2:SSDHM</Identifier>
+            <Identifier>1</Identifier>
             <Type>ancestor</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>3</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:3:SSDHM</Identifier>
-        <KinType>:3:SSDHM</KinType>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSBSS</Identifier>
+        <KinType>FSBSS</KinType>
         <isEgo>false</isEgo>
         <Labels/>
         <Relations>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:3:SSDH</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>3</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-        <xPos>5</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>:3:SSD</Identifier>
-        <KinType>:3:SSD</KinType>
-        <isEgo>false</isEgo>
-        <Labels/>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>:3:SS</Identifier>
+            <Identifier>FSBS</Identifier>
             <Type>ancestor</Type>
             <Line>sanguineLine</Line>
           </Relation>
           <Relation>
             <generationalDistance>0</generationalDistance>
-            <Identifier>:3:SSDH</Identifier>
+            <Identifier>FSBSSW</Identifier>
             <Type>union</Type>
             <Line>sanguineLine</Line>
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>1</xPos>
-      </kin:EntityArray>
-      <gridWidth>6</gridWidth>
-      <gridHeight>6</gridHeight>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSB</Identifier>
+        <KinType>FSB</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>1</Identifier>
+            <Type>sibling</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>FSBS</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>FSBS</Identifier>
+        <KinType>FSBS</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>FSB</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>FSBSS</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>MSS</Identifier>
+        <KinType>MSS</KinType>
+        <isEgo>false</isEgo>
+        <Labels/>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>MS</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>MSSD</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <xPadding>200</xPadding>
+      <yPadding>100</yPadding>
     </kin:EntityData>
   </kin:KinDiagramData>
 </svg>
