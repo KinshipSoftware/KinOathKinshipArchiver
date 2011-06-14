@@ -312,7 +312,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void drawEntities() {
+    public void drawEntities() { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
         graphPanel.dataStoreSvg.graphData.setPadding(graphPanel.graphPanelSize);
         int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);
         int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); //dataStoreSvg.graphData.gridWidth);
