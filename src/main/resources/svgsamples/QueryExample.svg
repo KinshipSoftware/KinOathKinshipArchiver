@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="15400" zoomAndPan="magnify" contentStyleType="text/css" height="700" preserveAspectRatio="xMidYMid meet" version="1.0">
+<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="2150.0" zoomAndPan="magnify" contentStyleType="text/css" height="700.0" preserveAspectRatio="xMidYMid meet" version="1.0">
   <defs id="KinSymbols">
     <g id="circle">
       <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
     </g>
     <g id="square">
-      <rect x="0" width="15" y="0" height="15" stroke-width="2" stroke="black"/>
+      <rect x="0" width="15" stroke-width="2" height="15" y="0" stroke="black"/>
     </g>
     <g id="square45">
       <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
@@ -14,12 +14,12 @@
       <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
     </g>
     <g id="union">
-      <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
-      <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
-      <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
+      <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
+      <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
+      <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
     </g>
     <g id="triangle">
-      <polygon points="7,0 0,12 15,12" stroke-width="2" stroke="black"/>
+      <polygon stroke-width="2" points="7,0 0,12 15,12" stroke="black"/>
     </g>
     <g id="equals">
       <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
@@ -28,254 +28,257 @@
       <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
     </g>
   </defs>
+  
+  
   <g id="RelationGroup">
     <g id="relation0">
       <kin:RelationEntities xmlns:kin="kin" ego="c2756ddbce9075043f0e776b74967406" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation0Line" stroke-width="2" points="1507.0,499.5 1507.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation0Line" stroke-width="2" points="1657.0,507.0 1657.0,457.0 407.0,457.0 407.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
     </g>
     <g id="relation1">
       <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="c2756ddbce9075043f0e776b74967406" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation1Line" stroke-width="2" points="257.0,399.5 257.0,449.5 1507.0,449.5 1507.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation1Line" stroke-width="2" points="407.0,407.0 407.0,457.0 1657.0,457.0 1657.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
     </g>
     <g id="relation2">
       <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="b5a6f7ae6577aee8c3d5752dc016227e" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation2Line" stroke-width="2" points="257.0,399.5 257.0,449.5 557.0,449.5 557.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation2Line" stroke-width="2" points="407.0,407.0 407.0,457.0 707.0,457.0 707.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
     </g>
     <g id="relation3">
       <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="aeb20e59678e819cf65a4691a4f5351e" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation3Line" stroke-width="2" points="257.0,399.5 257.0,449.5 57.0,449.5 57.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation3Line" stroke-width="2" points="407.0,407.0 407.0,457.0 207.0,457.0 207.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
     </g>
     <g id="relation4">
       <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="f40d57a461baf9ba2d78d98158905aac" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation4Line" stroke-width="2" points="257.0,399.5 257.0,449.5 307.0,449.5 307.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation4Line" stroke-width="2" points="407.0,407.0 407.0,457.0 457.0,457.0 457.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
     </g>
     <g id="relation5">
       <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="15c4902a8dffc26d1097071afa378f06" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation5Line" stroke-width="2" points="257.0,399.5 257.0,449.5 1257.0,449.5 1257.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation5Line" stroke-width="2" points="407.0,407.0 407.0,457.0 1407.0,457.0 1407.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
     </g>
     <g id="relation6">
       <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="5f7c61e3b329f729fccb353be7919c06" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation6Line" stroke-width="2" points="257.0,399.5 257.0,449.5 857.0,449.5 857.0,499.5" stroke="grey"/>
+        <polyline fill="none" id="relation6Line" stroke-width="2" points="407.0,407.0 407.0,457.0 1007.0,457.0 1007.0,507.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
     </g>
     <g id="relation7">
       <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="c161cc8cd18e5580c5523f6cacebed57" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation7Line" stroke-width="2" points="257.0,399.5 257.0,349.5 457.0,349.5 457.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation7Line" stroke-width="2" points="407.0,407.0 407.0,357.0 607.0,357.0 607.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
     </g>
     <g id="relation8">
       <kin:RelationEntities xmlns:kin="kin" ego="acac44007f0ce17a970af2430d4de251" lineType="sanguineLine" alter="252d913ce1050263a3ed64afc663388b" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation8Line" stroke-width="2" points="257.0,399.5 257.0,349.5 57.0,349.5 57.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation8Line" stroke-width="2" points="407.0,407.0 407.0,357.0 207.0,357.0 207.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
     </g>
     <g id="relation9">
       <kin:RelationEntities xmlns:kin="kin" ego="aeb20e59678e819cf65a4691a4f5351e" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation9Line" stroke-width="2" points="57.0,499.5 57.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation9Line" stroke-width="2" points="207.0,507.0 207.0,457.0 407.0,457.0 407.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
     </g>
     <g id="relation10">
       <kin:RelationEntities xmlns:kin="kin" ego="f40d57a461baf9ba2d78d98158905aac" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation10Line" stroke-width="2" points="307.0,499.5 307.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation10Line" stroke-width="2" points="457.0,507.0 457.0,457.0 407.0,457.0 407.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
     </g>
     <g id="relation11">
       <kin:RelationEntities xmlns:kin="kin" ego="c161cc8cd18e5580c5523f6cacebed57" lineType="sanguineLine" alter="fe8eb49f443fd4f3ec1b31cde9619b0e" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation11Line" stroke-width="2" points="457.0,299.5 457.0,249.5 199.5,249.5 199.5,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation11Line" stroke-width="2" points="607.0,307.0 607.0,257.0 349.5,257.0 349.5,207.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
     </g>
     <g id="relation12">
       <kin:RelationEntities xmlns:kin="kin" ego="c161cc8cd18e5580c5523f6cacebed57" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation12Line" stroke-width="2" points="457.0,299.5 457.0,349.5 257.0,349.5 257.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation12Line" stroke-width="2" points="607.0,307.0 607.0,357.0 407.0,357.0 407.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
     </g>
     <g id="relation13">
       <kin:RelationEntities xmlns:kin="kin" ego="15c4902a8dffc26d1097071afa378f06" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation13Line" stroke-width="2" points="1257.0,499.5 1257.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation13Line" stroke-width="2" points="1407.0,507.0 1407.0,457.0 407.0,457.0 407.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
     </g>
     <g id="relation14">
       <kin:RelationEntities xmlns:kin="kin" ego="fe8eb49f443fd4f3ec1b31cde9619b0e" lineType="sanguineLine" alter="d3c0f89b23dc6932d9ce03bfc14ff7bc" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation14Line" stroke-width="2" points="199.5,199.5 199.5,149.5 199.5,149.5 199.5,99.5" stroke="grey"/>
+        <polyline fill="none" id="relation14Line" stroke-width="2" points="349.5,207.0 349.5,157.0 349.5,157.0 349.5,107.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
     </g>
     <g id="relation15">
       <kin:RelationEntities xmlns:kin="kin" ego="fe8eb49f443fd4f3ec1b31cde9619b0e" lineType="sanguineLine" alter="658d2299d9b4cd423defbdb80279ac4a" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation15Line" stroke-width="2" points="199.5,199.5 199.5,249.5 1257.0,249.5 1257.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation15Line" stroke-width="2" points="349.5,207.0 349.5,257.0 1407.0,257.0 1407.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
     </g>
     <g id="relation16">
       <kin:RelationEntities xmlns:kin="kin" ego="fe8eb49f443fd4f3ec1b31cde9619b0e" lineType="sanguineLine" alter="c972ef46ef8e41f9930c7ec1bd2de4dd" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation16Line" stroke-width="2" points="199.5,199.5 199.5,249.5 857.0,249.5 857.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation16Line" stroke-width="2" points="349.5,207.0 349.5,257.0 1007.0,257.0 1007.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
     </g>
     <g id="relation17">
       <kin:RelationEntities xmlns:kin="kin" ego="fe8eb49f443fd4f3ec1b31cde9619b0e" lineType="sanguineLine" alter="09e0fd9ee305b8ae5adde02765ed1522" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation17Line" stroke-width="2" points="199.5,199.5 199.5,249.5 1607.0,249.5 1607.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation17Line" stroke-width="2" points="349.5,207.0 349.5,257.0 1757.0,257.0 1757.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
     </g>
     <g id="relation18">
       <kin:RelationEntities xmlns:kin="kin" ego="fe8eb49f443fd4f3ec1b31cde9619b0e" lineType="sanguineLine" alter="c161cc8cd18e5580c5523f6cacebed57" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation18Line" stroke-width="2" points="199.5,199.5 199.5,249.5 457.0,249.5 457.0,299.5" stroke="grey"/>
+        <polyline fill="none" id="relation18Line" stroke-width="2" points="349.5,207.0 349.5,257.0 607.0,257.0 607.0,307.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
     </g>
     <g id="relation19">
       <kin:RelationEntities xmlns:kin="kin" ego="09e0fd9ee305b8ae5adde02765ed1522" lineType="sanguineLine" alter="fe8eb49f443fd4f3ec1b31cde9619b0e" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation19Line" stroke-width="2" points="1607.0,299.5 1607.0,249.5 199.5,249.5 199.5,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation19Line" stroke-width="2" points="1757.0,307.0 1757.0,257.0 349.5,257.0 349.5,207.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation19Line"/>
     </g>
     <g id="relation20">
       <kin:RelationEntities xmlns:kin="kin" ego="658d2299d9b4cd423defbdb80279ac4a" lineType="sanguineLine" alter="fe8eb49f443fd4f3ec1b31cde9619b0e" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation20Line" stroke-width="2" points="1257.0,299.5 1257.0,249.5 199.5,249.5 199.5,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation20Line" stroke-width="2" points="1407.0,307.0 1407.0,257.0 349.5,257.0 349.5,207.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation20Line"/>
     </g>
     <g id="relation21">
       <kin:RelationEntities xmlns:kin="kin" ego="c972ef46ef8e41f9930c7ec1bd2de4dd" lineType="sanguineLine" alter="fe8eb49f443fd4f3ec1b31cde9619b0e" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation21Line" stroke-width="2" points="857.0,299.5 857.0,249.5 199.5,249.5 199.5,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation21Line" stroke-width="2" points="1007.0,307.0 1007.0,257.0 349.5,257.0 349.5,207.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation21Line"/>
     </g>
     <g id="relation22">
       <kin:RelationEntities xmlns:kin="kin" ego="b5a6f7ae6577aee8c3d5752dc016227e" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation22Line" stroke-width="2" points="557.0,499.5 557.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation22Line" stroke-width="2" points="707.0,507.0 707.0,457.0 407.0,457.0 407.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation22Line"/>
     </g>
     <g id="relation23">
       <kin:RelationEntities xmlns:kin="kin" ego="d3c0f89b23dc6932d9ce03bfc14ff7bc" lineType="sanguineLine" alter="fe8eb49f443fd4f3ec1b31cde9619b0e" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation23Line" stroke-width="2" points="199.5,99.5 199.5,149.5 199.5,149.5 199.5,199.5" stroke="grey"/>
+        <polyline fill="none" id="relation23Line" stroke-width="2" points="349.5,107.0 349.5,157.0 349.5,157.0 349.5,207.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation23Line"/>
     </g>
     <g id="relation24">
       <kin:RelationEntities xmlns:kin="kin" ego="252d913ce1050263a3ed64afc663388b" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="descendant"/>
       <defs>
-        <polyline fill="none" id="relation24Line" stroke-width="2" points="57.0,299.5 57.0,349.5 257.0,349.5 257.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation24Line" stroke-width="2" points="207.0,307.0 207.0,357.0 407.0,357.0 407.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation24Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation24Line"/>
     </g>
     <g id="relation25">
       <kin:RelationEntities xmlns:kin="kin" ego="5f7c61e3b329f729fccb353be7919c06" lineType="sanguineLine" alter="acac44007f0ce17a970af2430d4de251" relationType="ancestor"/>
       <defs>
-        <polyline fill="none" id="relation25Line" stroke-width="2" points="857.0,499.5 857.0,449.5 257.0,449.5 257.0,399.5" stroke="grey"/>
+        <polyline fill="none" id="relation25Line" stroke-width="2" points="1007.0,507.0 1007.0,457.0 407.0,457.0 407.0,407.0" stroke="grey"/>
       </defs>
       <use xlink:actuate="onLoad" xlink:type="simple" id="relation25Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation25Line"/>
     </g>
   </g>
   <g id="EntityGroup">
-    <g id="c2756ddbce9075043f0e776b74967406" kin:kintype="S" transform="translate(1500.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I212_.cmdi">
+    <g id="c2756ddbce9075043f0e776b74967406" kin:kintype="S" transform="translate(1650.0, 500.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I212_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="c2756ddbce9075043f0e776b74967406symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">JOS‚E ALBUQUERQUE DE /FIGUEIREDO/</text>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Eng. Civil</text>
     </g>
-    <g id="acac44007f0ce17a970af2430d4de251" kin:kintype="" transform="translate(250.0, 392.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F5_.cmdi">
+    <g id="acac44007f0ce17a970af2430d4de251" kin:kintype="" transform="translate(400.0, 400.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F5_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#union" xlink:type="simple" xlink:actuate="onLoad" id="acac44007f0ce17a970af2430d4de251symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FAM</text>
     </g>
-    <g id="aeb20e59678e819cf65a4691a4f5351e" kin:kintype="S" transform="translate(50.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I215_.cmdi">
+    <g id="aeb20e59678e819cf65a4691a4f5351e" kin:kintype="S" transform="translate(200.0, 500.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I215_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="aeb20e59678e819cf65a4691a4f5351esymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">RAIMUNDO /FIGUEIREDO/</text>
     </g>
-    <g id="f40d57a461baf9ba2d78d98158905aac" kin:kintype="S" transform="translate(300.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I216_.cmdi">
+    <g id="f40d57a461baf9ba2d78d98158905aac" kin:kintype="S" transform="translate(450.0, 500.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I216_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="f40d57a461baf9ba2d78d98158905aacsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ERNESTO /FIGUEIREDO/</text>
     </g>
-    <g id="c161cc8cd18e5580c5523f6cacebed57" kin:kintype="Em|S" transform="translate(450.0, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I8_.cmdi">
+    <g id="c161cc8cd18e5580c5523f6cacebed57" kin:kintype="Em|S" transform="translate(600.0, 300.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I8_.cmdi">
       <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="c161cc8cd18e5580c5523f6cacebed57symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/</text>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Adv. e ex-Gerente T‚ec. da F‚abr. de Tecidos de Sobral</text>
     </g>
-    <g id="15c4902a8dffc26d1097071afa378f06" kin:kintype="S" transform="translate(1250.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I218_.cmdi">
+    <g id="15c4902a8dffc26d1097071afa378f06" kin:kintype="S" transform="translate(1400.0, 500.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I218_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="15c4902a8dffc26d1097071afa378f06symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FRANCISCO /FIGUEIREDO/</text>
     </g>
-    <g id="fe8eb49f443fd4f3ec1b31cde9619b0e" kin:kintype="" transform="translate(192.5, 192.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F17_.cmdi">
+    <g id="fe8eb49f443fd4f3ec1b31cde9619b0e" kin:kintype="" transform="translate(342.5, 200.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F17_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#union" xlink:type="simple" xlink:actuate="onLoad" id="fe8eb49f443fd4f3ec1b31cde9619b0esymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FAM</text>
     </g>
-    <g id="09e0fd9ee305b8ae5adde02765ed1522" kin:kintype="S" transform="translate(1600.0, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I234_.cmdi">
+    <g id="09e0fd9ee305b8ae5adde02765ed1522" kin:kintype="S" transform="translate(1750.0, 300.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I234_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="09e0fd9ee305b8ae5adde02765ed1522symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">JOS‚E DE PAULA PESSOA DE /FIGUEIREDO/</text>
     </g>
-    <g id="658d2299d9b4cd423defbdb80279ac4a" kin:kintype="S" transform="translate(1250.0, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I227_.cmdi">
+    <g id="658d2299d9b4cd423defbdb80279ac4a" kin:kintype="S" transform="translate(1400.0, 300.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I227_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="658d2299d9b4cd423defbdb80279ac4asymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">JOS‚E ANT„ONIO DE /FIGUEIREDO FILHO/</text>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Eng. Civil</text>
     </g>
-    <g id="c972ef46ef8e41f9930c7ec1bd2de4dd" kin:kintype="S" transform="translate(850.0, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I233_.cmdi">
+    <g id="c972ef46ef8e41f9930c7ec1bd2de4dd" kin:kintype="S" transform="translate(1000.0, 300.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I233_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="c972ef46ef8e41f9930c7ec1bd2de4ddsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FRANCISCO DE PAULA PESSOA DE /FIGUEIREDO/</text>
     </g>
-    <g id="b5a6f7ae6577aee8c3d5752dc016227e" kin:kintype="S" transform="translate(550.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I213_.cmdi">
+    <g id="b5a6f7ae6577aee8c3d5752dc016227e" kin:kintype="S" transform="translate(700.0, 500.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I213_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="b5a6f7ae6577aee8c3d5752dc016227esymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ERNESTO SABOIA DE /FIGUEIREDO/</text>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Func. do Banco do Brasil</text>
     </g>
-    <g id="d3c0f89b23dc6932d9ce03bfc14ff7bc" kin:kintype="M" transform="translate(192.5, 92.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I11_.cmdi">
+    <g id="d3c0f89b23dc6932d9ce03bfc14ff7bc" kin:kintype="M" transform="translate(342.5, 100.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I11_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="d3c0f89b23dc6932d9ce03bfc14ff7bcsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ANTONIA GERACINA DE PAULA /PESSOA/</text>
     </g>
-    <g id="252d913ce1050263a3ed64afc663388b" kin:kintype="M" transform="translate(50.0, 292.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I9_.cmdi">
+    <g id="252d913ce1050263a3ed64afc663388b" kin:kintype="M" transform="translate(200.0, 300.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I9_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="252d913ce1050263a3ed64afc663388bsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">ANTONIA ERNESTINA SABOIA DE /ALBUQUERQUE/</text>
     </g>
-    <g id="5f7c61e3b329f729fccb353be7919c06" kin:kintype="S" transform="translate(850.0, 492.5)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I4_.cmdi">
+    <g id="5f7c61e3b329f729fccb353be7919c06" kin:kintype="S" transform="translate(1000.0, 500.0)" kin:path="file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I4_.cmdi">
       <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="5f7c61e3b329f729fccb353be7919c06symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">CAETANO SABOIA DE ALBUQUERQUE /FIGUEIREDO/</text>
       <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Cel. do Ex‚ercito</text>
     </g>
   </g>
   <g id="LabelsGroup"/>
+
 
 <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
     <kin:KinTypeString>E=[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/]MM</kin:KinTypeString>
@@ -334,7 +337,7 @@
     <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
     <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
     <kin:EntityData>
-      <kin:EntityArray>
+      <kin:Entity>
         <Identifier>11a214b75b95e47fc806b39989127c35</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I239_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -382,9 +385,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>34</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>7596dffc906036a449b65567b1b8ccaa</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I225_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -419,9 +421,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>67</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>19a6cc681204132a6c903bcbc04a2642</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I4749_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -456,9 +457,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>71</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>aea269d22c740352d139e5b24024afba</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1998_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -493,9 +493,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>13</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>b81d80f10db61bf8043a616b7795966d</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I219_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -519,9 +518,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>56</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>0735f33b5151a270b73417818cd7f822</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I10_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -545,9 +543,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>25</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>5d763c50785545ab441cd872c58a9ec8</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I241_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -595,9 +592,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>37</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>24c62e5fd44d9e09d820d2013180d766</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I592_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -620,9 +616,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>45</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>04bc0d9c133a105b47b76424da2eaf02</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F207_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -729,9 +724,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>6</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>9e3a2d3ea5d10094bf548e4acd21b184</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I238_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -767,9 +761,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>38</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>c2756ddbce9075043f0e776b74967406</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I212_.cmdi</Path>
         <KinType>S</KinType>
@@ -806,9 +799,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>17</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>acac44007f0ce17a970af2430d4de251</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F5_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -951,9 +943,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>21</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>cefd4589e0f72bac386ab24073c93acb</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F553_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -1036,9 +1027,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>29</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>65620b0475442aa3cd2b76919184c6d9</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1996_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -1074,9 +1064,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>9</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>bbb006ef24d6dcf616079b94e60a4194</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I245_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -1111,9 +1100,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>26</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>df8af0ac3c445b59783ca1c19a71b874</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I229_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1136,9 +1124,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>53</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>5fb30f6f45470fa4a3dae28289fabccf</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I228_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1173,9 +1160,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>10</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>23f466b57055d3d8e1db99439b60da5b</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I180_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1222,9 +1208,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>0</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>54c5fbbcdbc61ecab1526781c9619261</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I591_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1247,9 +1232,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>33</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>343d15d2a3fc50dc2c212207763e1700</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F4_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -1284,9 +1268,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>60</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>aeb20e59678e819cf65a4691a4f5351e</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I215_.cmdi</Path>
         <KinType>S</KinType>
@@ -1310,9 +1293,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>21</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>2dd246f6307b0df97d120348ec42d189</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I4748_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -1335,9 +1317,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>5</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>f40d57a461baf9ba2d78d98158905aac</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I216_.cmdi</Path>
         <KinType>S</KinType>
@@ -1361,9 +1342,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>22</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>5797d5ac4e39c9f7363ceda01743061f</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I13071_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1386,9 +1366,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>73</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>21df184bb6d3634879f56ce51d4d1f92</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I11475_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1411,9 +1390,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>61</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>c084147fcccca7b83a393c129ac0e5d0</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F205_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -1520,9 +1498,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>15</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>3b71efd1c5518cd2d69aeb608b754f2f</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I4751_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1545,9 +1522,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>2</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>883ea756f1aad754eb5055a0df3144d8</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I181_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1594,9 +1570,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>46</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>a8a95d5e3add3b2bcca8b10442b1149c</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I235_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1619,9 +1594,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>4</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>51a9d5114b997b1ab4e60e916e47a4b5</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1995_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -1656,9 +1630,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>31</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>32ec64743c5b8878a22db21fe45a3c07</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I217_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1681,9 +1654,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>7</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>e90b0edd3c154cacefd6343b0a27907c</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I2_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -1719,9 +1691,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>70</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>4ffe533bd5eea875c00b2868b3310762</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F216_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -1840,9 +1811,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>68</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>7d4a03a34205256ae276d91feaf8c079</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I247_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -1878,9 +1848,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>8</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>87fe159f07ef601d0d6148e9c7ee82d2</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1576_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -1916,9 +1885,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>18</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>dd082b1ee16abe4ac3b75fc38deea692</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I737_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -1942,9 +1910,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>66</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>ae230eeda9f80a9db46d574c18644f02</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I243_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -1979,9 +1946,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>27</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>c161cc8cd18e5580c5523f6cacebed57</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I8_.cmdi</Path>
         <KinType>Em</KinType>
@@ -2019,9 +1985,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>16</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>da1fffa81fdf38efb0b1ca11b0106fd1</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I231_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -2044,9 +2009,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>11</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>fe6d4fea383fb2d094f71dc0b10f9400</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I3011_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -2069,9 +2033,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>51</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>da65be5d4e8b1ff78fc9acff73b0f626</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I249_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -2107,9 +2070,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>28</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>17a0f55ac2d1dd26fb97a7646d8a754b</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1999_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -2144,9 +2106,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>50</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>15c4902a8dffc26d1097071afa378f06</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I218_.cmdi</Path>
         <KinType>S</KinType>
@@ -2170,9 +2131,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>23</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>f26bae37cfe791796e308f27ddb43cbc</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I2001_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -2195,9 +2155,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>24</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>6bd2496b63751c9073dfe30351b599da</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I4747_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -2233,9 +2192,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>42</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>35b042fb485277f3954969baa96689cd</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I248_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -2271,9 +2229,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>48</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>65f58020354cc6d1e352a1592dab8450</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F214_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -2404,9 +2361,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>74</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>3dc231019e7bd63c54b89756cc7c7f6a</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I246_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -2430,9 +2386,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>64</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>1b9e09d7f201bfa5a1946ca2da6ea8ef</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I221_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -2480,46 +2435,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>63</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>1edf44352dba4e15e6761985b4f14f9e</Identifier>
-        <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1575_.cmdi</Path>
-        <Symbol>circle</Symbol>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>FRANCISCA CAROLINA DE PAULA /FIGUEIREDO/</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>fe8eb49f443fd4f3ec1b31cde9619b0e</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>cefd4589e0f72bac386ab24073c93acb</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>cefd4589e0f72bac386ab24073c93acb</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>fe8eb49f443fd4f3ec1b31cde9619b0e</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>false</isVisible>
-        <xPos>12</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>fe8eb49f443fd4f3ec1b31cde9619b0e</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F17_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -2686,9 +2603,44 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>32</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>1edf44352dba4e15e6761985b4f14f9e</Identifier>
+        <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1575_.cmdi</Path>
+        <Symbol>circle</Symbol>
+        <isEgo>false</isEgo>
+        <Labels>
+          <String>FRANCISCA CAROLINA DE PAULA /FIGUEIREDO/</String>
+        </Labels>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>fe8eb49f443fd4f3ec1b31cde9619b0e</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>cefd4589e0f72bac386ab24073c93acb</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>cefd4589e0f72bac386ab24073c93acb</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>fe8eb49f443fd4f3ec1b31cde9619b0e</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>false</isVisible>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>3b507e3c7f031b76ef6f1ae321df50e2</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I214_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -2723,9 +2675,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>41</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>7ce7293d34797a272ee570927c1b343c</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I250_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -2761,9 +2712,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>1</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>d47769fd6e403011e8b9e143ab702af6</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I222_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -2799,9 +2749,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>52</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>daf51d8077835e566851804ae081c853</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I244_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -2824,9 +2773,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>47</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>ff9c32234ca35485dfc1389cb5b809c1</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I4750_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -2861,9 +2809,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>21</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>c5405597b2b9b2b06c73c977cb51a527</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I5_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -2886,9 +2833,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>59</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>09e0fd9ee305b8ae5adde02765ed1522</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I234_.cmdi</Path>
         <KinType>S</KinType>
@@ -2912,9 +2858,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>36</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>658d2299d9b4cd423defbdb80279ac4a</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I227_.cmdi</Path>
         <KinType>S</KinType>
@@ -2939,9 +2884,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>30</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>bd97f71259adb86e0d39380477cb1a57</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I2000_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -2964,9 +2908,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>14</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>6ddfd0d259f4cbcdb764512020985d38</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F208_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -3049,9 +2992,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>57</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>ddfb4a93a9e3061702dcaf5399c69bd9</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1579_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -3074,9 +3016,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>23</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>c972ef46ef8e41f9930c7ec1bd2de4dd</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I233_.cmdi</Path>
         <KinType>S</KinType>
@@ -3100,9 +3041,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>55</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>b1f78dba124ded91daadb3c1f3ded3da</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I2002_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -3125,9 +3065,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>49</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>b5a6f7ae6577aee8c3d5752dc016227e</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I213_.cmdi</Path>
         <KinType>S</KinType>
@@ -3164,9 +3103,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>24</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>eae81325d9f7b74086d696f91be942c5</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1994_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -3189,9 +3127,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>43</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>fd42a98948ad1d97ec541b61d1ca160b</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I236_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -3226,9 +3163,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>32</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>8f2ac2f63228ab2744518be0790da083</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I220_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -3264,9 +3200,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>22</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>2bd0f9f61829fb826e0bc4801bdfbf7d</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I232_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -3289,9 +3224,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>54</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>03e48064be4cfd18ebc90ae8c130711a</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I211_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -3326,9 +3260,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>62</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>d3c0f89b23dc6932d9ce03bfc14ff7bc</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I11_.cmdi</Path>
         <KinType>M</KinType>
@@ -3352,9 +3285,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>32</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>d6377703b84955d2e4c38938ded3dbcc</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F2_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -3425,9 +3357,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>17</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>252d913ce1050263a3ed64afc663388b</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I9_.cmdi</Path>
         <KinType>M</KinType>
@@ -3451,9 +3382,8 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>65</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>23739ddc3f4cda458f5320f88c21aa58</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I242_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -3476,9 +3406,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>58</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>2193fcbca0768a1ac50e8ff4293e7a0d</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1574_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -3514,9 +3443,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>44</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>94b0ccb60daca792c7939a584c6cf511</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I11474_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -3539,9 +3467,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>40</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>166da527bbc0fa9340cea2f2d7037793</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_F206_.cmdi</Path>
         <Symbol>union</Symbol>
@@ -3612,9 +3539,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>39</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>18724468b227826f99d73c98fa5232f1</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I590_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -3637,9 +3563,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>20</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>b29ae3ab1f1a8b00a4d8ef78200a2044</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1997_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -3675,9 +3600,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>35</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>410c7038e10dc312852e0ae82db621c9</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I237_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -3713,9 +3637,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>19</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>8d9f9a5c5249eb851bc9bdc64b712353</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I1577_.cmdi</Path>
         <Symbol>circle</Symbol>
@@ -3738,9 +3661,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>72</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>03ae8f742184f502db496f5cdcd12c90</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I240_.cmdi</Path>
         <Symbol>triangle</Symbol>
@@ -3788,34 +3710,8 @@
           </Relation>
         </Relations>
         <isVisible>false</isVisible>
-        <xPos>69</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
-        <Identifier>5bfd9d143ad632233bd82262319a219e</Identifier>
-        <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I230_.cmdi</Path>
-        <Symbol>circle</Symbol>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>ROSA AM‚ELIA DE PAULA PESSOA DE /FIGUEIREDO/</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>fe8eb49f443fd4f3ec1b31cde9619b0e</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>fe8eb49f443fd4f3ec1b31cde9619b0e</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>false</isVisible>
-        <xPos>3</xPos>
-      </kin:EntityArray>
-      <kin:EntityArray>
+      </kin:Entity>
+      <kin:Entity>
         <Identifier>5f7c61e3b329f729fccb353be7919c06</Identifier>
         <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I4_.cmdi</Path>
         <KinType>S</KinType>
@@ -3864,10 +3760,33 @@
           </Relation>
         </Relations>
         <isVisible>true</isVisible>
-        <xPos>25</xPos>
-      </kin:EntityArray>
-      <gridWidth>75</gridWidth>
-      <gridHeight>5</gridHeight>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>5bfd9d143ad632233bd82262319a219e</Identifier>
+        <Path>file:/Users/petwit/.arbil/ArbilWorkingFiles/a7257a1056fc49566ff2a3bc358941a8/_I230_.cmdi</Path>
+        <Symbol>circle</Symbol>
+        <isEgo>false</isEgo>
+        <Labels>
+          <String>ROSA AM‚ELIA DE PAULA PESSOA DE /FIGUEIREDO/</String>
+        </Labels>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>fe8eb49f443fd4f3ec1b31cde9619b0e</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>fe8eb49f443fd4f3ec1b31cde9619b0e</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>false</isVisible>
+      </kin:Entity>
+      <xPadding>200</xPadding>
+      <yPadding>100</yPadding>
     </kin:EntityData>
   </kin:KinDiagramData>
 </svg>
