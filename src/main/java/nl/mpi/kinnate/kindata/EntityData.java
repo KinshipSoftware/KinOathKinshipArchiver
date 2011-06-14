@@ -122,6 +122,12 @@ public class EntityData {
     }
 
     public void addKinTermString(String kinTermString, String colourString) {
+        for (GraphLabel currentLabel : kinTermArray) {
+            if (currentLabel.getLabelString().equals(kinTermString) && currentLabel.getColourString().equals(colourString)) {
+                // prevent duplicates
+                return;
+            }
+        }
         ArrayList<GraphLabel> tempList = new ArrayList<GraphLabel>(Arrays.asList(kinTermArray));
         tempList.add(new GraphLabel(kinTermString, colourString));
         kinTermArray = tempList.toArray(new GraphLabel[]{});
