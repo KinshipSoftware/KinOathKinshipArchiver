@@ -308,6 +308,8 @@ public class KinTypeStringConverter extends GraphSorter {
                                 EntityData currentGraphDataNode;
                                 String identifierString = parseLabelStrings(consumableString);
                                 String labelStrings[];
+//                                fullKinTypeString = fullKinTypeString + currentReferenceKinType.codeString;
+                                fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
                                 if (null != identifierString) {
                                     // if an identifier has been specified then use it as the unique identifier
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length() - insertedEgoOffset);
@@ -325,7 +327,6 @@ public class KinTypeStringConverter extends GraphSorter {
                                     identifierString = fullKinTypeString;
                                     labelStrings = new String[]{};
                                 }
-                                fullKinTypeString = fullKinTypeString + currentReferenceKinType.codeString;
                                 if (graphDataNodeList.containsKey(identifierString)) {
                                     currentGraphDataNode = graphDataNodeList.get(identifierString);
                                     if (currentGraphDataNode.isEgo) {
