@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="1500.0" zoomAndPan="magnify" contentStyleType="text/css" height="1000.0" preserveAspectRatio="xMidYMid meet" version="1.0">
+<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="1250.0" zoomAndPan="magnify" contentStyleType="text/css" height="800.0" preserveAspectRatio="xMidYMid meet" version="1.0">
   <defs id="KinSymbols">
     <g id="circle">
-      <circle stroke-width="2" height="15" r="7" cx="7" cy="7" stroke="black"/>
+      <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
     </g>
     <g id="square">
       <rect x="0" width="15" stroke-width="2" height="15" y="0" stroke="black"/>
@@ -28,10 +28,234 @@
       <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
     </g>
   </defs>
-  <g id="RelationGroup"/>
-  <g id="EntityGroup"/>
+  
+  
+  
+  
+  <g id="RelationGroup">
+    <g id="relation0">
+      <kin:RelationEntities xmlns:kin="kin" ego="Maria Anna of Spain" lineType="sanguineLine" alter="Mariana of Austria" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation0Line" stroke-width="2" points="457.0,307.0 457.0,357.0 257.0,357.0 257.0,407.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
+    </g>
+    <g id="relation1">
+      <kin:RelationEntities xmlns:kin="kin" ego="Maria Anna of Spain" lineType="sanguineLine" alter="Margaret of Austria" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation1Line" stroke-width="2" points="457.0,307.0 457.0,257.0 657.0,257.0 657.0,207.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
+    </g>
+    <g id="relation2">
+      <kin:RelationEntities xmlns:kin="kin" ego="Charles II of Spain" lineType="sanguineLine" alter="Marie Louise d'Orléans" relationType="union"/>
+      <defs>
+        <polyline fill="none" id="relation2Line" stroke-width="2" points="457.0,607.0 457.0,657.0 207.0,657.0 207.0,607.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
+    </g>
+    <g id="relation3">
+      <kin:RelationEntities xmlns:kin="kin" ego="Charles II of Spain" lineType="sanguineLine" alter="Philip IV of Spain" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation3Line" stroke-width="2" points="457.0,607.0 457.0,557.0 657.0,557.0 657.0,507.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
+    </g>
+    <g id="relation4">
+      <kin:RelationEntities xmlns:kin="kin" ego="Charles II of Spain" lineType="sanguineLine" alter="Mariana of Austria" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation4Line" stroke-width="2" points="457.0,607.0 457.0,507.0 257.0,507.0 257.0,407.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
+    </g>
+    <g id="relation5">
+      <kin:RelationEntities xmlns:kin="kin" ego="Philip II of Spain" lineType="sanguineLine" alter="Philip III of Spain" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation5Line" stroke-width="2" points="857.0,307.0 857.0,357.0 857.0,357.0 857.0,407.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
+    </g>
+    <g id="relation6">
+      <kin:RelationEntities xmlns:kin="kin" ego="Philip II of Spain" lineType="sanguineLine" alter="Charles V, Holy Roman Emperor" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation6Line" stroke-width="2" points="857.0,307.0 857.0,257.0 857.0,257.0 857.0,207.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
+    </g>
+    <g id="relation7">
+      <kin:RelationEntities xmlns:kin="kin" ego="Philip III of Spain" lineType="sanguineLine" alter="Philip IV of Spain" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation7Line" stroke-width="2" points="857.0,407.0 857.0,457.0 657.0,457.0 657.0,507.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
+    </g>
+    <g id="relation8">
+      <kin:RelationEntities xmlns:kin="kin" ego="Philip III of Spain" lineType="sanguineLine" alter="Philip II of Spain" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation8Line" stroke-width="2" points="857.0,407.0 857.0,357.0 857.0,357.0 857.0,307.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
+    </g>
+    <g id="relation9">
+      <kin:RelationEntities xmlns:kin="kin" ego="Charles V, Holy Roman Emperor" lineType="sanguineLine" alter="Philip II of Spain" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation9Line" stroke-width="2" points="857.0,207.0 857.0,257.0 857.0,257.0 857.0,307.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
+    </g>
+    <g id="relation10">
+      <kin:RelationEntities xmlns:kin="kin" ego="Charles V, Holy Roman Emperor" lineType="sanguineLine" alter="Philip I of Castile" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation10Line" stroke-width="2" points="857.0,207.0 857.0,157.0 857.0,157.0 857.0,107.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
+    </g>
+    <g id="relation11">
+      <kin:RelationEntities xmlns:kin="kin" ego="Philip IV of Spain" lineType="sanguineLine" alter="Charles II of Spain" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation11Line" stroke-width="2" points="657.0,507.0 657.0,557.0 457.0,557.0 457.0,607.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
+    </g>
+    <g id="relation12">
+      <kin:RelationEntities xmlns:kin="kin" ego="Philip IV of Spain" lineType="sanguineLine" alter="Philip III of Spain" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation12Line" stroke-width="2" points="657.0,507.0 657.0,457.0 857.0,457.0 857.0,407.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
+    </g>
+    <g id="relation13">
+      <kin:RelationEntities xmlns:kin="kin" ego="Philip IV of Spain" lineType="sanguineLine" alter="Margaret of Austria" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation13Line" stroke-width="2" points="657.0,507.0 657.0,357.0 657.0,357.0 657.0,207.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
+    </g>
+    <g id="relation14">
+      <kin:RelationEntities xmlns:kin="kin" ego="Marie Louise d'Orléans" lineType="sanguineLine" alter="Charles II of Spain" relationType="union"/>
+      <defs>
+        <polyline fill="none" id="relation14Line" stroke-width="2" points="207.0,607.0 207.0,657.0 457.0,657.0 457.0,607.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
+    </g>
+    <g id="relation15">
+      <kin:RelationEntities xmlns:kin="kin" ego="Margaret of Austria" lineType="sanguineLine" alter="Maria Anna of Spain" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation15Line" stroke-width="2" points="657.0,207.0 657.0,257.0 457.0,257.0 457.0,307.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
+    </g>
+    <g id="relation16">
+      <kin:RelationEntities xmlns:kin="kin" ego="Margaret of Austria" lineType="sanguineLine" alter="Maria Anna of Bavaria" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation16Line" stroke-width="2" points="657.0,207.0 657.0,157.0 657.0,157.0 657.0,107.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
+    </g>
+    <g id="relation17">
+      <kin:RelationEntities xmlns:kin="kin" ego="Margaret of Austria" lineType="sanguineLine" alter="Philip IV of Spain" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation17Line" stroke-width="2" points="657.0,207.0 657.0,357.0 657.0,357.0 657.0,507.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
+    </g>
+    <g id="relation18">
+      <kin:RelationEntities xmlns:kin="kin" ego="Ferdinand III, Holy Roman Emperor" lineType="sanguineLine" alter="Mariana of Austria" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation18Line" stroke-width="2" points="257.0,107.0 257.0,257.0 257.0,257.0 257.0,407.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
+    </g>
+    <g id="relation19">
+      <kin:RelationEntities xmlns:kin="kin" ego="Maria Anna of Bavaria" lineType="sanguineLine" alter="Margaret of Austria" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation19Line" stroke-width="2" points="657.0,107.0 657.0,157.0 657.0,157.0 657.0,207.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation19Line"/>
+    </g>
+    <g id="relation20">
+      <kin:RelationEntities xmlns:kin="kin" ego="Philip I of Castile" lineType="sanguineLine" alter="Charles V, Holy Roman Emperor" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation20Line" stroke-width="2" points="857.0,107.0 857.0,157.0 857.0,157.0 857.0,207.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation20Line"/>
+    </g>
+    <g id="relation21">
+      <kin:RelationEntities xmlns:kin="kin" ego="Mariana of Austria" lineType="sanguineLine" alter="Charles II of Spain" relationType="descendant"/>
+      <defs>
+        <polyline fill="none" id="relation21Line" stroke-width="2" points="257.0,407.0 257.0,507.0 457.0,507.0 457.0,607.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation21Line"/>
+    </g>
+    <g id="relation22">
+      <kin:RelationEntities xmlns:kin="kin" ego="Mariana of Austria" lineType="sanguineLine" alter="Maria Anna of Spain" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation22Line" stroke-width="2" points="257.0,407.0 257.0,357.0 457.0,357.0 457.0,307.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation22Line"/>
+    </g>
+    <g id="relation23">
+      <kin:RelationEntities xmlns:kin="kin" ego="Mariana of Austria" lineType="sanguineLine" alter="Ferdinand III, Holy Roman Emperor" relationType="ancestor"/>
+      <defs>
+        <polyline fill="none" id="relation23Line" stroke-width="2" points="257.0,407.0 257.0,257.0 257.0,257.0 257.0,107.0" stroke="grey"/>
+      </defs>
+      <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation23Line"/>
+    </g>
+  </g>
+  <g id="EntityGroup">
+    <g id="Maria Anna of Spain" kin:kintype="EmMM" transform="translate(450.0, 300.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Maria Anna of Spainsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna of Spain</text>
+    </g>
+    <g id="Charles II of Spain" kin:kintype="Em" transform="translate(450.0, 600.0)" kin:path="">
+      <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Charles II of Spainsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles II of Spain</text>
+    </g>
+    <g id="Philip II of Spain" kin:kintype="EmFFF" transform="translate(850.0, 300.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Philip II of Spainsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip II of Spain</text>
+    </g>
+    <g id="Philip III of Spain" kin:kintype="EmFF" transform="translate(850.0, 400.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Philip III of Spainsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip III of Spain</text>
+    </g>
+    <g id="Charles V, Holy Roman Emperor" kin:kintype="EmFFFF" transform="translate(850.0, 200.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Charles V, Holy Roman Emperorsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles V, Holy Roman Emperor</text>
+    </g>
+    <g id="Philip IV of Spain" kin:kintype="EmF" transform="translate(650.0, 500.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Philip IV of Spainsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip IV of Spain</text>
+    </g>
+    <g id="Marie Louise d'Orléans" kin:kintype="EmW" transform="translate(200.0, 600.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Marie Louise d'Orléanssymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Marie Louise d'Orléans</text>
+    </g>
+    <g id="Margaret of Austria" kin:kintype="EmMMM" transform="translate(650.0, 200.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Margaret of Austriasymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Margaret of Austria</text>
+    </g>
+    <g id="Ferdinand III, Holy Roman Emperor" kin:kintype="MF" transform="translate(250.0, 100.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Ferdinand III, Holy Roman Emperorsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ferdinand III, Holy Roman Emperor</text>
+    </g>
+    <g id="Maria Anna of Bavaria" kin:kintype="EmMMMM" transform="translate(650.0, 100.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Maria Anna of Bavariasymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna of Bavaria</text>
+    </g>
+    <g id="Philip I of Castile" kin:kintype="EmFFFFF" transform="translate(850.0, 100.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="Philip I of Castilesymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip I of Castile</text>
+    </g>
+    <g id="Mariana of Austria" kin:kintype="EmM" transform="translate(250.0, 400.0)" kin:path="">
+      <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="Mariana of Austriasymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Mariana of Austria</text>
+    </g>
+  </g>
   <g id="LabelsGroup"/>
-  <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+  
+
+<kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
     <kin:KinTypeString>Em:Charles II of Spain:W:Marie Louise d'Orléans</kin:KinTypeString>
     <kin:KinTypeString>Em:Charles II of Spain:F:Philip IV of Spain:F:Philip III of Spain:F:Philip II of Spain:F:Charles V, Holy Roman Emperor:F:Philip I of Castile</kin:KinTypeString>
     <kin:KinTypeString>Em:Charles II of Spain:M:Mariana of Austria:M:Maria Anna of Spain:M:Margaret of Austria:M:Maria Anna of Bavaria</kin:KinTypeString>
@@ -229,9 +453,152 @@
           <Relation>
             <generationalDistance>0</generationalDistance>
             <Identifier>Charles II of Spain</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Philip III of Spain</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Margaret of Austria</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
           </Relation>
         </Relations>
+        <isVisible>true</isVisible>
       </kin:Entity>
+      <kin:Entity>
+        <Identifier>Marie Louise d'Orléans</Identifier>
+        <KinType>EmW</KinType>
+        <isEgo>false</isEgo>
+        <Labels>
+          <String>Marie Louise d'Orléans</String>
+        </Labels>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Charles II of Spain</Identifier>
+            <Type>union</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>Margaret of Austria</Identifier>
+        <KinType>EmMMM</KinType>
+        <isEgo>false</isEgo>
+        <Labels>
+          <String>Margaret of Austria</String>
+        </Labels>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Maria Anna of Spain</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Maria Anna of Bavaria</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Philip IV of Spain</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>Ferdinand III, Holy Roman Emperor</Identifier>
+        <KinType>MF</KinType>
+        <isEgo>false</isEgo>
+        <Labels>
+          <String>Ferdinand III, Holy Roman Emperor</String>
+        </Labels>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Mariana of Austria</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>Maria Anna of Bavaria</Identifier>
+        <KinType>EmMMMM</KinType>
+        <isEgo>false</isEgo>
+        <Labels>
+          <String>Maria Anna of Bavaria</String>
+        </Labels>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Margaret of Austria</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>Philip I of Castile</Identifier>
+        <KinType>EmFFFFF</KinType>
+        <isEgo>false</isEgo>
+        <Labels>
+          <String>Philip I of Castile</String>
+        </Labels>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Charles V, Holy Roman Emperor</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <kin:Entity>
+        <Identifier>Mariana of Austria</Identifier>
+        <KinType>EmM</KinType>
+        <isEgo>false</isEgo>
+        <Labels>
+          <String>Mariana of Austria</String>
+        </Labels>
+        <Relations>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Charles II of Spain</Identifier>
+            <Type>descendant</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Maria Anna of Spain</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+          <Relation>
+            <generationalDistance>0</generationalDistance>
+            <Identifier>Ferdinand III, Holy Roman Emperor</Identifier>
+            <Type>ancestor</Type>
+            <Line>sanguineLine</Line>
+          </Relation>
+        </Relations>
+        <isVisible>true</isVisible>
+      </kin:Entity>
+      <xPadding>200</xPadding>
+      <yPadding>100</yPadding>
     </kin:EntityData>
   </kin:KinDiagramData>
 </svg>
