@@ -105,8 +105,8 @@ public class GraphSorter {
                 }
                 if (calculatedPosition == null) {
                     for (SortingEntity sortingEntity : couldBeNextTo) {
-                        float[] nextToPos = sortingEntity.getPosition(entityPositions, defaultPosition);
-                        if (calculatedPosition == null) {
+                        float[] nextToPos = entityPositions.get(sortingEntity.selfEntityId);
+                        if (calculatedPosition == null && nextToPos != null) {
                             calculatedPosition = new float[]{nextToPos[0], nextToPos[1]};
                         }
                     }
