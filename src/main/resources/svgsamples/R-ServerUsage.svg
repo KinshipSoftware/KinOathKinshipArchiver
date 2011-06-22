@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="600" zoomAndPan="magnify" contentStyleType="text/css" height="300" preserveAspectRatio="xMidYMid meet" version="1.0">
+  <defs id="KinSymbols">
+    <g id="circle">
+      <circle stroke-width="2" height="15" r="7" cx="7" cy="7" stroke="black"/>
+    </g>
+    <g id="square">
+      <rect x="0" width="15" stroke-width="2" height="15" y="0" stroke="black"/>
+    </g>
+    <g id="square45">
+      <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
+    </g>
+    <g id="rhombus">
+      <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
+    </g>
+    <g id="union">
+      <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
+      <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
+      <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
+    </g>
+    <g id="triangle">
+      <polygon stroke-width="2" points="7,0 0,12 15,12" stroke="black"/>
+    </g>
+    <g id="equals">
+      <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
+    </g>
+    <g id="cross">
+      <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
+    </g>
+  </defs>
+  <g id="LabelsGroup">
+    <text x="158.0" fill="black" id="label0" font-size="28" stroke-width="0" y="84.0">R-import from the entity server</text>
+    <text x="185.0" font-size="28" y="166.0" transform="translate(-50.0, 0.0)" fill="black" id="label1" stroke-width="0">Label</text>
+  </g>
+  <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+    <kin:KinTypeString>E:R-import from the entity server </kin:KinTypeString>
+    <kin:IndexParameters>
+      <kin:LabelFields>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*:Name"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:Text"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NoteText"/>
+      </kin:LabelFields>
+      <kin:SymbolFieldsFields>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:SEX='M']" kin:Value="triangle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:SEX='F']" kin:Value="circle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']" kin:Value="union"/>
+      </kin:SymbolFieldsFields>
+      <kin:AncestorFields>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.BIRT.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHR.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.ADOP.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.SLGC.FAMC"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.HUSB"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.WIFE"/>
+        <kin:IndexerParam kin:XPath="ancestor"/>
+      </kin:AncestorFields>
+      <kin:DecendantFields>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHIL"/>
+        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMS"/>
+        <kin:IndexerParam kin:XPath="descendant"/>
+      </kin:DecendantFields>
+    </kin:IndexParameters>    
+    <kin:ShowLabels>true</kin:ShowLabels>
+    <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
+    <kin:ShowKinTermLabels>false</kin:ShowKinTermLabels>
+    <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
+    <kin:SnapToGrid>true</kin:SnapToGrid>
+    <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
+    <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
+    <kin:EntityData>
+      <kin:EntityArray>
+        <Identifier>E</Identifier>
+        <KinType>E</KinType>
+        <isEgo>true</isEgo>
+        <Labels/>
+        <isVisible>true</isVisible>
+        <xPos>0</xPos>
+      </kin:EntityArray>
+      <gridWidth>1</gridWidth>
+      <gridHeight>1</gridHeight>
+    </kin:EntityData>
+  </kin:KinDiagramData>
+</svg>
