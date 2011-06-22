@@ -52,7 +52,7 @@ public class KinTypeStringConverter extends GraphSorter {
         new KinType("Hu", DataTypes.RelationType.union, EntityData.SymbolType.triangle),
         new KinType("Wi", DataTypes.RelationType.union, EntityData.SymbolType.circle),
         new KinType("Pa", DataTypes.RelationType.ancestor, EntityData.SymbolType.square),
-        new KinType("Sb", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
+        new KinType("Sb", DataTypes.RelationType.sibling, EntityData.SymbolType.square), //todo: are Sp and Sb correct?
         new KinType("Sp", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
         new KinType("Ch", DataTypes.RelationType.descendant, EntityData.SymbolType.square),
         // type 2
@@ -352,6 +352,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                 for (KinTermGroup kinTerms : kinTermsArray) {
                                     if (kinTerms.graphShow && egoDataNode != null) {
                                         for (String kinTermLabel : kinTerms.getTermLabel(fullKinTypeString)) {
+                                            // todo: this could be running too many times, maybe check for efficiency
                                             currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
                                             egoDataNode.addRelatedNode(currentGraphDataNode, 0, DataTypes.RelationType.none, DataTypes.RelationLineType.kinTermLine, kinTerms.graphColour, kinTermLabel);
                                         }
