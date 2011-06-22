@@ -57,4 +57,7 @@ public class ExportToR {
 //    pedigreeObj <- pedigree(id,momid,dadid,sex, affected)
 //    plot(pedigreeObj)
 
+
+//    http://statnet.org/
+//     http://www.jstatsoft.org/v24/i06/
 }
