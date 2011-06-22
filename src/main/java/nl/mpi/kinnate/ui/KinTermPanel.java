@@ -123,6 +123,8 @@ public class KinTermPanel extends JPanel {
         outerPanel.add(showOnGraphCheckBox);
         outerPanel.add(colourSelectBox);
         outerPanel.add(autoGenerateCheckBox);
+        
+        populateAddForm();
 //        this.add(new JLabel("KinTerms"));
         for (final KinTerm currentKinTerm : kinTerms.getKinTerms()) {
             JPanel termPanel = new JPanel();
@@ -229,7 +231,6 @@ public class KinTermPanel extends JPanel {
 //            }
 //        });
 //        outerPanel.add(saveButton, BorderLayout.LINE_END);
-        populateAddForm();
     }
 
     public void setDefaultKinType(String kinTypeString) {
