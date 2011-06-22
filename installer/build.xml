@@ -1,0 +1,496 @@
+<?xml version="1.0"?>
+<!--
+ * arbil.xml
+ * Created on 10 September 2008, 10:03
+ * @author Peter.Withers@mpi.nl
+-->
+<project name="Arbil" default="compile">
+    <target name="setproperties">
+        <property name="arbil.current.major" value="2"/>
+        <property name="arbil.current.minor" value="2"/>
+        <property name="arbil.filenameidentifier" value="-pretesting"/>
+        <property name="arbil.application-title" value="Arbil (pretesting)"/>
+        <property name="arbil.icon-file-name" value="arbil${arbil.filenameidentifier}128x128"/>
+        <property name="SRCDIR" value="src/"/>
+        <property name="OUTPUTDIR" value="${user.home}/Desktop/arbil-build-${arbil.current.major}.${arbil.current.minor}.x/"/>
+        <property name="BUILDDIR" value="${OUTPUTDIR}classes"/>
+        <property name="LIBDIR" value="${OUTPUTDIR}lib/"/>
+        <property name="TypeCheckVersion" value="typecheck-1.5.16185.jar"/>
+        <property name="pathToMpiTrunk" value="${SRCDIR}../../../trunk/"/> <!-- pathToMpiTrunk is being used until a better method becomes available (such as when the required files are in a maven like repository) -->
+        <!-- todo: add all the dependencies here like the type checker -->
+    </target>
+<!-- start package creation -->
+    <path id="ant-deb.classpath">
+        <fileset dir="ant-deb-jar/" includes="*.jar"/>
+    </path>
+    <!-- http://code.google.com/p/ant-deb-task/ -->
+    <taskdef name="deb" classname="com.googlecode.ant_deb_task.Deb" classpathref="ant-deb.classpath"/>
+    <taskdef name="desktopEntry" classname="com.googlecode.ant_deb_task.DesktopEntry" classpathref="ant-deb.classpath"/>
+    <target name="makeDebPackage" depends="signarbil" description="build the deb file">
+        <property name="package.name" value="arbil${arbil.filenameidentifier}"/>
+        <property name="package.jarname" value="${ArbilJarName}"/>
+        <!--check that the icon exists and fail if not-->
+        <available file="${SRCDIR}/nl/mpi/arbil/resources/icons/${arbil.icon-file-name}.png" property="packageIconAvail"/>
+        <fail unless="packageIconAvail" message="${arbil.icon-file-name}.png doesn't exist!"/>
+        <property name="distributionDirectory" value="${OUTPUTDIR}/distribution"/>
+        <mkdir dir="${distributionDirectory}"/>
+        <desktopEntry
+            toFile="${distributionDirectory}/${package.name}.desktop"
+            name="${arbil.application-title}"
+            comment="Arbil is an application for arranging research material and associated metadata into a format appropriate for archiving."
+            exec="java -jar /usr/share/${package.name}/${package.jarname}"
+             add memory increase
+            path="/usr/share/${package.name}/"
+            icon="/usr/share/${package.name}/${arbil.icon-file-name}.png"
+            categories="Science;Education;Java"
+        />
+        <deb
+            todir="${distributionDirectory}"
+            package="${package.name}"
+            section="science"
+            depends="sun-java5-jre | sun-java6-jre, ffmpeg, imagemagick"            
+        > <!-- homepage="http://www.lat-mpi.eu/tools/arbil" deb doesn't support the "homepage" attribute -->
+            <version upstream="${arbil.current.major}.${arbil.current.minor}" debian="${arbil.current.revision}"/>
+            <maintainer name="Peter Withers" email="Peter.Withers@mpi.nl"/>
+            <description synopsis="Arbil is an application for arranging research material and associated metadata into a format appropriate for archiving.">
+Arbil is an application for arranging research material and associated metadata into a format appropriate for archiving.  Arbil is designed so that it can be used off line in remote locations. The data can be entered at any stage in part or as a whole. When an internet connection is available the work can then be transferred to the main archive via Lamus.
+
+http://www.lat-mpi.eu/tools/imdi/Arbil/
+            </description>
+            <tarfileset file="${OUTPUTDIR}/${package.jarname}" prefix="usr/share/${package.name}"/>
+            <tarfileset file="${SRCDIR}/nl/mpi/arbil/resources/icons/${arbil.icon-file-name}.png" prefix="usr/share/${package.name}"/>
+            <tarfileset dir="${LIBDIR}" prefix="usr/share/${package.name}/lib">
+                <include name="*.jar"/>
+            </tarfileset>
+            <tarfileset file="${distributionDirectory}/${package.name}.desktop" prefix="usr/share/applications/"/>
+        </deb>
+    </target>
+<!-- end package creation -->
+    <target name="all" depends="setproperties, clobber, compile, jar, run, updateJnlpAndAppletHtml, getCurrentJnlp" description="clean, build, jar and run">
+        <echo message="Ant Java Version: ${ant.java.version}"/>
+    </target>
+    <target name="clean" description="remove intermediate files" depends="setproperties">
+        <delete dir="${BUILDDIR}"/>
+        <mkdir dir="${BUILDDIR}"/>
+    </target>
+    <target name="clobber" description="remove all artifact files" depends="setproperties">
+        <delete dir="${OUTPUTDIR}"/>
+        <mkdir dir="${OUTPUTDIR}"/>
+    </target>
+    <!-- target compile (this is included by build.all) -->
+    <target name="compile" depends="clean, copyJarFilesToLib, getsvnversion" description="compile the arbil source code to class files">
+        <echo message="Compiling Arbil"/>
+        <javac target="1.5" debug="on" srcdir="${SRCDIR}" destdir="${BUILDDIR}" includes="nl/mpi/arbil/**.java">
+            <classpath>
+                <fileset dir="${LIBDIR}" includes="*.jar"/>
+            </classpath>
+        </javac>
+    </target>
+    <target name="updateJnlpAndAppletHtml" depends="getsvnversion">
+        <macrodef name="updateSingleFile">
+            <attribute name="fileName"/>
+            <sequential>
+                <copy overwrite="true" file="${SRCDIR}@{fileName}.template" tofile="${BUILDDIR}/@{fileName}">
+                    <filterchain>
+                        <replacetokens>
+                            <token key="ArbilVersionNumber" value="${arbil.current.major}-${arbil.current.minor}-${arbil.current.revision}"/>
+                            <token key="BuildDirectory" value="arbil-build-${arbil.current.major}.${arbil.current.minor}.x"/>
+                            <token key="InstalledIcon" value="${arbil.icon-file-name}"/>
+                            <token key="TypeCheckVersion" value="${TypeCheckVersion}"/>
+                            <token key="FilenameIdentifier" value="${arbil.filenameidentifier}"/>
+                            <token key="ApplicationTitle" value="${arbil.application-title}"/>
+                        </replacetokens>
+                    </filterchain>
+                </copy>
+            </sequential>
+        </macrodef>
+        <updateSingleFile fileName="arbil.jnlp"/>
+        <updateSingleFile fileName="arbil-applet.html"/>
+        <updateSingleFile fileName="arbil-applet-lux17.php"/>
+        <updateSingleFile fileName="arbil-win-installer.iss"/>
+        <updateSingleFile fileName="Info.plist"/>
+        <updateSingleFile fileName="start-arbil"/>
+    </target>
+    <target name="buildWindowsInstaller" depends="updateJnlpAndAppletHtml">
+        <!--check that the icon exists and fail if not-->
+        <available file="${SRCDIR}nl/mpi/arbil/resources/icons/${arbil.icon-file-name}.ico" property="installedIconAvail"/>
+        <fail unless="installedIconAvail" message="${arbil.icon-file-name}.ico doesn't exist!"/>
+        <mkdir dir="${OUTPUTDIR}/distribution-win32/temp/"/>
+        <copy todir="${OUTPUTDIR}/distribution-win32/temp/">
+            <fileset dir="${SRCDIR}nl/mpi/arbil/resources/icons/" includes="*.ico"/>
+        </copy>
+        <!--get unzip then delete the imagemagick jar-->
+        <get src="http://www.mpi.nl/tg/j2se/jnlp/arbil/lib/ImageMagick-6.5.9-Win32.jar" dest="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar"/>
+        <unzip src="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar" dest="${OUTPUTDIR}/distribution-win32/temp/ImageMagick"/>
+        <delete file="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar"/>
+        <delete dir="${OUTPUTDIR}/distribution-win32/temp/ImageMagick/META-INF"/>
+        <exec dir="${BUILDDIR}" executable="wine" ><!--os="Windows NT"-->
+            <arg line='"C:\Program Files\Inno Setup 5\iscc.exe" arbil-win-installer.iss'/>
+        </exec>
+        <delete dir="${OUTPUTDIR}/distribution-win32/arbil${arbil.filenameidentifier}-installer.zip"/>
+        <zip destfile="${OUTPUTDIR}/distribution-win32/arbil${arbil.filenameidentifier}-installer.zip" >
+            <file file="${OUTPUTDIR}/distribution-win32/arbil-installer-${arbil.current.major}-${arbil.current.minor}-${arbil.current.revision}.exe"/>
+        </zip>
+        <available file="${OUTPUTDIR}/distribution-win32/arbil${arbil.filenameidentifier}-installer.zip" property="installerZipMissing"/>
+        <fail unless="installerZipMissing" message="arbil${arbil.filenameidentifier}-installer.zip doesn't exist! Is Inno Setup installed inside wine?"/>
+    </target>
+    <target name="buildMacInstaller" depends="updateJnlpAndAppletHtml">
+        <!--check that the icon exists and fail if not-->
+        <available file="${SRCDIR}nl/mpi/arbil/resources/icons/arbil${arbil.filenameidentifier}.icns" property="installedIconAvail"/>
+        <fail unless="installedIconAvail" message="arbil${arbil.filenameidentifier}.icns doesn't exist!"/>
+        <copy file="${BUILDDIR}/Info.plist" todir="${OUTPUTDIR}/distribution-mac/arbil${arbil.filenameidentifier}.app/Contents/"/>
+        <copy file="${BUILDDIR}/start-arbil" todir="${OUTPUTDIR}/distribution-mac/arbil${arbil.filenameidentifier}.app/Contents/MacOS/"/>
+        <copy file="${SRCDIR}nl/mpi/arbil/resources/icons/arbil${arbil.filenameidentifier}.icns" todir="${OUTPUTDIR}/distribution-mac/arbil${arbil.filenameidentifier}.app/Contents/Resources/"/>
+        <copy file="${OUTPUTDIR}/${ArbilJarName}" todir="${OUTPUTDIR}/distribution-mac/arbil${arbil.filenameidentifier}.app/Contents/MacOS/"/>
+        <copy todir="${OUTPUTDIR}/distribution-mac/arbil${arbil.filenameidentifier}.app/Contents/MacOS/lib/">
+            <fileset dir="${OUTPUTDIR}/lib/" includes="*.jar"/>
+        </copy>
+        <chmod file="${OUTPUTDIR}/distribution-mac/arbil${arbil.filenameidentifier}.app/Contents/MacOS/start-arbil" perm="a+xr"/>
+        <tar destfile="${OUTPUTDIR}/distribution-mac/arbil${arbil.filenameidentifier}-mac.tar">
+            <tarfileset dir="${OUTPUTDIR}/distribution-mac/" filemode="755" username="ant" group="ant">
+                <include name="arbil${arbil.filenameidentifier}.app/Contents/MacOS/start-arbil"/>
+            </tarfileset>
+            <tarfileset dir="${OUTPUTDIR}/distribution-mac/" filemode="664" username="ant" group="ant">
+                <include name="arbil${arbil.filenameidentifier}.app/**"/>
+                <exclude name="arbil${arbil.filenameidentifier}.app/Contents/MacOS/start-arbil"/>
+            </tarfileset>
+        </tar>
+    </target>
+    <target name="getCurrentJnlp" depends="setproperties" description="download the current jnlp and applet html from the web server (this is only only used so that the copy in svn is kept up to date)">
+        <get src="http://www.mpi.nl/tg/j2se/jnlp/arbil/arbil${arbil.filenameidentifier}.jnlp" dest="${SRCDIR}nl/mpi/arbil/arbil${arbil.filenameidentifier}.jnlp"/>
+        <get src="http://www.mpi.nl/tg/j2se/jnlp/arbil/arbil-applet${arbil.filenameidentifier}.html" dest="${SRCDIR}nl/mpi/arbil/arbil-applet${arbil.filenameidentifier}.html"/>
+    </target>
+    <target name="getFallbackFiles-x" depends="setproperties"/>
+    <target name="getFallbackFiles" depends="setproperties" description="download the latest schema and controlled vocabularies from the web server">
+        <!-- these files are only used if the server is not available on the first run and will be replaced by the application as soon as a network connection is available -->
+        <mkdir dir="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/"/>
+        <!-- get the latest schema -->
+        <get src="http://www.mpi.nl/IMDI/Schema/IMDI_3.0.xsd" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/IMDI_3.0.xsd"/>
+        <!-- get the latest controlled vocabularies -->
+        <get src="http://www.mpi.nl/IMDI/Schema/Actor-FamilySocialRole.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Actor-FamilySocialRole.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-PlanningType.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-PlanningType.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/MediaFile-Type.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/MediaFile-Type.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Actor-Role.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Actor-Role.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-SocialContext.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-SocialContext.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/MPI-Languages.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/MPI-Languages.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Actor-Sex.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Actor-Sex.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-SubGenre-Discourse.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-SubGenre-Discourse.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Source-Format.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Source-Format.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Boolean.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Boolean.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-SubGenre-Stimuli.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-SubGenre-Stimuli.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Validation-Methodology.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Validation-Methodology.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-Channel.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-Channel.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-SubGenre.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-SubGenre.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Validation-Type.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Validation-Type.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-EventStructure.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-EventStructure.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-Subject.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-Subject.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/WrittenResource-Derivation.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/WrittenResource-Derivation.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-Genre-Discursive.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-Genre-Discursive.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-Task.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-Task.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/WrittenResource-Format.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/WrittenResource-Format.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-Genre-Interactional.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-Genre-Interactional.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Continents.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Continents.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/WrittenResource-SubType-Annotation.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/WrittenResource-SubType-Annotation.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/AnnotationUnit-Type.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/AnnotationUnit-Type.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/AnnotationUnit-Format.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/AnnotationUnit-Format.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-Genre.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-Genre.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Countries.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Countries.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/WrittenResource-SubType.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/WrittenResource-SubType.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-Interactivity.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-Interactivity.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/ISO639-2Languages.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/ISO639-2Languages.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/WrittenResource-Type.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/WrittenResource-Type.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-Involvement.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-Involvement.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/LanguagesID.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/LanguagesID.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/Content-Modalities.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/Content-Modalities.xml"/>
+        <get src="http://www.mpi.nl/IMDI/Schema/MediaFile-Format.xml" dest="${BUILDDIR}/nl/mpi/arbil/resources/IMDI/FallBack/MediaFile-Format.xml"/>
+    </target>
+    <target name="copyFilesForXSL" depends="setproperties">
+        <!-- TODO: this should be removed and these files used from within the relevent jar file which in turn comes from the maven repository -->
+        <available file="${pathToMpiTrunk}src/html/imdi-viewer/imdi-viewer.xsl" property="packageAdditAvail"/>
+        <fail unless="packageAdditAvail" message="missing files from trunk: the xsl, javascript and images must be available for imdi files to be converted to html"/>
+        <copy todir="${BUILDDIR}/nl/mpi/arbil/resources/xsl/">
+            <!--<fileset dir="${SRCDIR}mpi/metadata/transformations/xslt">
+                <include name="IMDI_3_0_TO_WEB.xsl"/>
+            </fileset>-->
+            <fileset dir="${pathToMpiTrunk}src/html/imdi-viewer/">
+                <include name="imdi-viewer-open.gif"/>
+                <include name="imdi-viewer-closed.gif"/>
+                <include name="imdi-viewer.js"/>
+                <include name="imdi-viewer.css"/>
+                <include name="imdi-viewer.xsl"/>
+            </fileset>
+            <!--<fileset dir="${pathToMpiTrunk}webapps/addit/web">
+                <include name="additTooltip.js"/>
+                <include name="additPopup.js"/>
+                <include name="additTooltip.css"/>
+            </fileset>-->
+        </copy>
+    </target>
+    <target name="copyJarFilesToLib" depends="setproperties">
+        <mkdir dir="${LIBDIR}"/>
+        <!-- get the jar files from the server -->
+        <macrodef name="getLibFile">
+            <attribute name="fileName"/>
+            <sequential>
+                <get src="http://www.mpi.nl/tg/j2se/jnlp/arbil/lib/@{fileName}" dest="${LIBDIR}/@{fileName}"/>
+            </sequential>
+        </macrodef>
+        <getLibFile fileName="corpusstructure-1.6.1.jar"/>
+        <getLibFile fileName="imdiapi-1.0.6.jar"/>
+        <getLibFile fileName="log4j-1.2.14.jar"/>
+        <getLibFile fileName="saxon8.jar"/>
+        <getLibFile fileName="saxon8-dom.jar"/>
+        <getLibFile fileName="${TypeCheckVersion}"/>
+        <getLibFile fileName="xalan-2.6.0.jar"/>
+        <getLibFile fileName="xercesImpl-2.9.0.jar"/>
+        <getLibFile fileName="bcprov-jdk15-143.jar"/>
+        <getLibFile fileName="slcshttps_jdk15_v0.2.jar"/>
+        <getLibFile fileName="xbean.jar"/>
+        <getLibFile fileName="commons-digester-2.0.jar"/>
+        <getLibFile fileName="commons-logging-1.1.jar"/>
+        <getLibFile fileName="commons-beanutils-1.8.0.jar"/>
+        <getLibFile fileName="xmlpublic.jar"/>
+        <!-- get the jar files from the svn repository -->
+        <!--<copy todir="${LIBDIR}">
+                 TODO: this needs to be changed to use the maven repository 
+            <fileset dir="${SRCDIR}../../../trunk/webapps/lib/">
+                <include name="corpusstructure-1.6.1.jar"/>
+                <include name="imdiapi-1.0.6.jar"/>
+                <include name="log4j-1.2.14.jar"/>
+                <include name="saxon8.jar"/>
+                <include name="saxon8-dom.jar"/>
+                <include name="${TypeCheckVersion}"/>
+                <include name="xalan-2.6.0.jar"/>
+                <include name="xercesImpl-2.9.0.jar"/>
+                <include name="ImageMagickWin32.jar"/>
+            </fileset>
+            <fileset dir="${SRCDIR}../ShibbolethConnectionDependencies/">
+                <include name="bcprov-jdk15-143.jar"/>
+            </fileset>
+        </copy>-->
+    </target>
+    <target name="jar" depends="setproperties, compile, getFallbackFiles, copyFilesForXSL, copyJarFilesToLib, updateJnlpAndAppletHtml" description="create a Jar file">
+        <!--check that the icon exists and fail if not-->
+        <available file="${SRCDIR}/nl/mpi/arbil/resources/icons/${arbil.icon-file-name}.png" property="jarIconAvail"/>
+        <fail unless="jarIconAvail" message="${arbil.icon-file-name}.png doesn't exist!"/>
+        <mkdir dir="${BUILDDIR}/JNLP-INF/"/>
+        <copy overwrite="true" file="${BUILDDIR}/arbil.jnlp" tofile="${BUILDDIR}/JNLP-INF/application.jnlp"/>
+        <jar destfile="${OUTPUTDIR}/${ArbilJarName}">
+            <fileset dir="${BUILDDIR}" includes="nl/mpi/arbil/**/*.class"/>
+            <fileset dir="${SRCDIR}" includes="log4j.properties"/>
+            <fileset dir="${SRCDIR}" includes="nl/mpi/arbil/resources/icons/*.png"/>
+            <fileset dir="${SRCDIR}" includes="nl/mpi/arbil/resources/html/images/*.png"/>
+            <fileset dir="${SRCDIR}" includes="nl/mpi/arbil/resources/html/*.html"/>
+            <fileset dir="${SRCDIR}" includes="nl/mpi/arbil/resources/html/help/**/*.*"/>
+            <fileset dir="${SRCDIR}" includes="nl/mpi/arbil/resources/templates/*.xml"/>
+            <fileset dir="${BUILDDIR}" includes="nl/mpi/arbil/resources/IMDI/FallBack/*.xsd"/>
+            <fileset dir="${BUILDDIR}" includes="nl/mpi/arbil/resources/IMDI/FallBack/*.xml"/>
+            <fileset dir="${BUILDDIR}" includes="nl/mpi/arbil/resources/xsl/*.*"/>
+            <fileset dir="${BUILDDIR}" includes="JNLP-INF/application.jnlp"/>
+            <manifest>
+                <attribute name="Main-Class" value="nl.mpi.arbil.ArbilMain"/>
+                <!--TODO: (currently removed due to inclusion in the installer for windows) consider preventing the imagemagick jar being on the class path for windows due to the effect it might have on other os -->
+                <attribute name="Class-Path" value="lib/corpusstructure-1.6.1.jar lib/imdiapi-1.0.6.jar lib/log4j-1.2.14.jar lib/saxon8.jar lib/saxon8-dom.jar lib/${TypeCheckVersion} lib/xalan-2.6.0.jar lib/xercesImpl-2.9.0.jar lib/bcprov-jdk15-143.jar lib/slcshttps_jdk15_v0.2.jar lib/xbean.jar lib/commons-digester-2.0.jar lib/commons-logging-1.1.jar lib/commons-beanutils-1.8.0.jar lib/xmlpublic.jar" />
+                <!--<attribute name="Class-Path" value="lib/corpusstructure.jar lib/imdiapi.jar lib/log4j-1.2.14.jar lib/saxon8.jar lib/saxon8-dom.jar lib/${TypeCheckVersion} lib/xalan-2.6.0.jar lib/xercesImpl-2.9.0.jar" />-->
+                <!-- <attribute name="Class-Path" value="lib/corpusstructure.jar lib/imdiapi.jar lib/log4j-1.2.14.jar lib/${TypeCheckVersion} lib/xalan-2.6.0.jar lib/xercesImpl-2.9.0.jar"/> -->
+            </manifest>
+        </jar>
+    </target>
+    <target name="run" description="run the application" depends="setproperties">
+        <java classname="nl.mpi.arbil.ArbilMain" fork="true">
+            <classpath>
+                <!--<fileset dir="${WEBAPPS_LIB}" includes="*.jar"/>-->
+                <!--<filelist dir="${WEBAPPS_LIB}">
+                    <file name="imdiapi.jar" />
+                    <file name="log4j-1.2.14.jar" />
+                    <file name="${TypeCheckVersion}" />
+                    <file name="xalan-2.7.0.jar" />-->
+                    <!--
+                    <file name="saxon8-dom4j.jar" />
+                    <file name="saxon8-dom.jar" />
+                    <file name="saxon8.jar" />
+                    <file name="saxon8-xqj.jar" />
+                    <file name="saxon-dom-8.7.jar" />
+                    <file name="log4j-1.2.9.jar" />
+                    <file name="xalan-2.7.0.jar" />                    
+                    <file name="xercesImpl-2.9.0.jar" />
+                    -->
+                    <!--
+                    <file name="saxon8-ant.jar" />
+                    <file name="saxon8-sql.jar" />
+                    <file name="saxon8-jdom.jar" />
+                    <file name="saxon8-xom.jar" />
+                    <file name="saxon8-xpath.jar" />
+                    <file name="xercesImpl.jar" />
+                    -->
+               <!-- </filelist>-->
+                <pathelement location="${OUTPUTDIR}/${ArbilJarName}"/>
+            </classpath>
+        </java>
+    </target>
+    <target name="getsvnversion-x" depends="setproperties">
+        <property name="ArbilJarName" value="arbil-x-x-x.jar"/>
+    </target>
+    <target name="getsvnversion" depends="setproperties">
+       <!-- <exec executable="svn" output="version.info">
+            <arg value="info"/>
+        </exec>
+        <exec executable="grep" output="version.date">-->
+            <!--<arg value="^Revision"/>-->
+           <!-- <arg value="^Last Changed Date:"/>
+            <arg value="version.info"/>
+        </exec>-->
+        <!--<exec executable="date" output="version.date" />-->
+        <exec outputproperty="arbil.current.revision" executable="svnversion">
+            <arg line="-n -c" />
+            <arg line="${SRCDIR}nl/mpi/arbil/" />
+            <redirector>
+                <outputfilterchain>
+                    <tokenfilter>
+                        <replaceregex pattern="^[0-9]*:" replace="" flags="g"/>
+                        <replaceregex pattern="[^0-9]*" replace="" flags="g"/>
+                    </tokenfilter>
+                </outputfilterchain>
+            </redirector>
+        </exec>
+        <exec outputproperty="arbil.info.all" executable="svn">
+            <arg line="info" />
+            <arg line="${SRCDIR}nl/mpi/arbil/" />
+            <redirector>
+                <outputfilterchain>
+                    <tokenfilter>
+                        <replaceregex pattern="^" replace="\\\\n" flags="g"/>
+                    </tokenfilter>
+                    <striplinebreaks/>
+                </outputfilterchain>
+            </redirector>
+        </exec>
+        <exec outputproperty="arbil.last.commit.date" executable="svn">
+            <arg line="info" />
+            <arg line="${SRCDIR}nl/mpi/arbil/" />
+            <redirector>
+                <outputfilterchain>
+                    <linecontainsregexp>
+                        <regexp pattern="^Last Changed Date:" />
+                    </linecontainsregexp>
+                    <tokenfilter>
+                        <replaceregex pattern=".*\/([^\/]+)$" replace="\1" flags="g"/>
+                    </tokenfilter>
+                </outputfilterchain>
+            </redirector>
+        </exec>
+        <exec outputproperty="arbil.build.date" executable="date" />
+        <echo file="${SRCDIR}nl/mpi/arbil/LinorgVersion.java" append="false">package nl.mpi.arbil;
+public class LinorgVersion {
+    public String applicationTitle = "${arbil.application-title}";
+    public String applicationIconName = "${arbil.icon-file-name}.png";
+    public String currentMajor = "${arbil.current.major}";
+    public String currentMinor = "${arbil.current.minor}";
+    public String currentRevision = "${arbil.current.revision}";
+    public String lastCommitDate = "${arbil.last.commit.date}";
+    public String compileDate = "${arbil.build.date}";
+    public String fullInfo = "${arbil.info.all}";
+    public String currentVersionFile = "http://www.mpi.nl/tg/j2se/jnlp/arbil/arbil${arbil.filenameidentifier}-current.txt";
+}
+        </echo>
+        <property name="ArbilJarName" value="arbil-${arbil.current.major}-${arbil.current.minor}-${arbil.current.revision}.jar"/>
+    </target>
+    <target name="signarbil" depends="jar">
+        <input message="Please enter the latsoftware password:" addproperty="latsoftware.pw">
+            <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+        </input>
+<!--        <signjar keystore="${SRCDIR}/../../../trunk/cert/mpi.keystore" alias="latsoftware's max-planck-gesellschaft id" storepass="${latsoftware.pw}">
+            <path>
+                <fileset dir="${LIBDIR}" includes="**/*.jar" />
+            </path>
+        </signjar>-->
+        <signjar jar="${OUTPUTDIR}/${ArbilJarName}"
+        keystore="${pathToMpiTrunk}cert/mpi.keystore"
+        alias="latsoftware's max-planck-gesellschaft id" storepass="${latsoftware.pw}" />
+    </target>
+   <!-- <target name="image" depends="setproperties">
+        <signjar jar="${OUTPUTDIR}/lib/typecheck-1.5.16185.jar"
+        keystore="${SRCDIR}/../../../trunk/cert/mpi.keystore"
+        alias="latsoftware's max-planck-gesellschaft id" storepass="koekoek" />
+    </target> -->
+    <target name="scp_to_lux09" depends="signarbil, makeDebPackage, updateJnlpAndAppletHtml, buildWindowsInstaller, buildMacInstaller">
+        <echo file="${OUTPUTDIR}/arbil${arbil.filenameidentifier}-current.txt">${arbil.current.revision}</echo>
+        <input message="Please enter lux09 username:" addproperty="lux09.user" />
+        <input message="Please enter lux09 password:" addproperty="lux09.pw">
+            <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+        </input>
+        <scp file="${OUTPUTDIR}/${ArbilJarName}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/"/>
+        <scp file="${distributionDirectory}/arbil${arbil.filenameidentifier}_${arbil.current.major}.${arbil.current.minor}-${arbil.current.revision}_all.deb" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/"/>
+        <scp file="${distributionDirectory}/arbil${arbil.filenameidentifier}_${arbil.current.major}.${arbil.current.minor}-${arbil.current.revision}_all.deb" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/arbil${arbil.filenameidentifier}.deb"/>
+        <scp file="${SRCDIR}/nl/mpi/arbil/resources/icons/${arbil.icon-file-name}.png" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/"/>
+        <!-- http://lux17.mpi.nl/arbil/arbil-applet.html -->
+        <!--<scp file="${OUTPUTDIR}/${ArbilJarName}" remoteTofile="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/arbil.jar"/>-->
+<!--
+        <scp file="${OUTPUTDIR}/lib/imdiapi-1.0.6.jar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/log4j-1.2.14.jar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/saxon8.jar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/saxon8-dom.jar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/${TypeCheckVersion}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/xalan-2.6.0.jar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/xercesImpl-2.9.0.jar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/corpusstructure-1.6.1.jar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/lib/"/>
+-->
+       <!--<scp file="${OUTPUTDIR}/lib/corpusstructure-1.6.1.jar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/lib/"/>
+       <scp file="${OUTPUTDIR}/lib/imdiapi-1.0.6.jar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/lib/"/>-->
+
+       <!-- push the windows installer to the server -->
+        <scp file="${OUTPUTDIR}/distribution-win32/arbil-installer-${arbil.current.major}-${arbil.current.minor}-${arbil.current.revision}.exe" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/"/>
+        <scp file="${OUTPUTDIR}/distribution-win32/arbil${arbil.filenameidentifier}-installer.zip" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/"/>
+        <scp file="${OUTPUTDIR}/distribution-mac/arbil${arbil.filenameidentifier}-mac.tar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/"/>
+        <!-- push the updated the applet html and the arbil jnlp files to the server -->
+        <scp file="${BUILDDIR}/arbil.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/arbil${arbil.filenameidentifier}.jnlp"/>
+        <scp file= "${BUILDDIR}/arbil-applet.html" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/arbil-applet${arbil.filenameidentifier}.html"/>
+        <scp file="${OUTPUTDIR}/arbil${arbil.filenameidentifier}-current.txt" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/arbil/"/>
+    </target>
+    <target name="scp_to_lux17" depends="signarbil, updateJnlpAndAppletHtml">
+        <input message="Please enter lux09 username:" addproperty="lux09.user" />
+        <input message="Please enter lux09 password:" addproperty="lux09.pw">
+            <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+        </input>
+        <!-- http://lux17.mpi.nl/arbil/index.html -->
+        <!-- push the applet jar-->
+        <scp file="${OUTPUTDIR}/${ArbilJarName}" remoteTofile="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/arbil.jar"/>
+        <!-- push the jnlp jar-->
+        <scp file="${OUTPUTDIR}/${ArbilJarName}" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/"/>
+        <!-- push the jnlp -->
+        <!-- the url in the webstart must be updated for the applet and also must be before signing-->
+        <scp file="${BUILDDIR}/arbil.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/arbil${arbil.filenameidentifier}.jnlp"/>
+        <!-- push all the lib jar files -->
+        <scp file="${OUTPUTDIR}/lib/corpusstructure-1.6.1.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/imdiapi-1.0.6.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/log4j-1.2.14.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/saxon8.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/saxon8-dom.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/${TypeCheckVersion}" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/xalan-2.6.0.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/xercesImpl-2.9.0.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/bcprov-jdk15-143.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/slcshttps_jdk15_v0.2.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/xbean.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/commons-digester-2.0.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/commons-logging-1.1.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/commons-beanutils-1.8.0.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <scp file="${OUTPUTDIR}/lib/xmlpublic.jar" todir="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/lib/"/>
+        <!-- push the applet html -->
+        <scp file= "${BUILDDIR}/arbil-applet-lux17.php" remoteTofile="${lux09.user}:${lux09.pw}@lux17.mpi.nl:/lat/apache/htdocs/arbil/index.php"/>
+    </target>
+    <target name="maven-deploy" depends="compile"><!-- this could also depend on signarbil -->
+        <!-- while this could be done in a maven and task, this method appears more portable at this stage -->
+        <exec executable="mvn">
+            <arg line="install:install-file" />
+            <arg line="-Dfile=${OUTPUTDIR}/${ArbilJarName}" />
+            <arg line="-DgroupId=nl.mpi" />
+            <arg line="-DartifactId=arbil" />
+            <arg line="-Dversion=${arbil.current.major}.${arbil.current.minor}.${arbil.current.revision}" />
+            <arg line="-Dpackaging=jar" />
+            <arg line="-DpomFile=${SRCDIR}nl/mpi/arbil/install.pom" />
+            <!-- -DgeneratePom=true -->
+        </exec>
+    </target>
+</project>
+ 
