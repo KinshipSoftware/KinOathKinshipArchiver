@@ -1,6 +1,8 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.geom.AffineTransform;
+import java.io.File;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -319,11 +321,20 @@ public class SvgUpdateHandler {
 //        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
 //        currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
         try {
+            Element svgRoot = graphPanel.doc.getDocumentElement();
             Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
+            if (diagramGroupNode == null) { // make sure the diagram group exists
+                diagramGroupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+                diagramGroupNode.setAttribute("id", "DiagramGroup");
+                svgRoot.appendChild(diagramGroupNode);
+            }
             Element labelsGroup = graphPanel.doc.getElementById("LabelsGroup");
             if (labelsGroup == null) {
                 labelsGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
                 labelsGroup.setAttribute("id", "LabelsGroup");
+                diagramGroupNode.appendChild(labelsGroup);
+            } else if (!labelsGroup.getParentNode().equals(diagramGroupNode)) {
+                labelsGroup.getParentNode().removeChild(labelsGroup);
                 diagramGroupNode.appendChild(labelsGroup);
             }
             Element relationGroupNode;
@@ -357,7 +368,6 @@ public class SvgUpdateHandler {
 
             float[] graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
             // Set the width and height attributes on the root 'svg' element.
-            Element svgRoot = graphPanel.doc.getDocumentElement();
             svgRoot.setAttribute("width", Float.toString(graphSize[0])); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
             svgRoot.setAttribute("height", Float.toString(graphSize[1])); // todo: consider the currentOffset when setting the graph size
 //            svgRoot.setAttribute("width", "100%");
