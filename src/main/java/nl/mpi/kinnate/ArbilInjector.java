@@ -106,7 +106,7 @@ public class ArbilInjector {
         ImdiUtils.setBugCatcher(bugCatcher);
         MetadataBuilder.setBugCatcher(bugCatcher);
         MetadataReader.setBugCatcher(bugCatcher);
-//        MimeHashQueue.setBugCatcher(bugCatcher);
+        MimeHashQueue.setBugCatcher(bugCatcher);
 //        ShibbolethNegotiator.setBugCatcher(bugCatcher);
         TreeHelper.setBugCatcher(bugCatcher);
         XsdChecker.setBugCatcher(bugCatcher);
