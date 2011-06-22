@@ -33,7 +33,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
     }
 
     private void addSampleToMenu(String menuText, String sampleFileString) {
-        String currentFilePath = SamplesFileMenu.class.getResource("../../../../svgsamples/" + sampleFileString).getPath();
+        String currentFilePath = SamplesFileMenu.class.getResource("/svgsamples/" + sampleFileString).getPath();
         JMenuItem currentMenuItem = new JMenuItem(menuText);
         currentMenuItem.setActionCommand(currentFilePath);
         currentMenuItem.addActionListener(this);
