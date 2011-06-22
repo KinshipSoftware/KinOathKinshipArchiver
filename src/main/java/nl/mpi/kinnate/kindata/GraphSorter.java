@@ -213,7 +213,7 @@ public class GraphSorter {
         return new float[]{graphWidth, graphHeight};
     }
 
-    public void /*float[]*/ placeAllNodes(GraphPanel graphPanel, HashMap<String, float[]> entityPositions) {
+    public float[] placeAllNodes(GraphPanel graphPanel, HashMap<String, float[]> entityPositions) {
         // make a has table of all entites
         // find the first ego node
         // place it and all its immediate relatives onto the graph, each time checking that the space is free
@@ -254,11 +254,15 @@ public class GraphSorter {
         // todo: this requires that the svg is updated to match this change on all nodes (to test drag one node left past zero, which causes all other nodes to be moved, then move another node and the relation lines do not get placed correctly)
         float xOffset = xPadding - minPostion[0];
         float yOffset = yPadding - minPostion[1];
+        return new float[]{xOffset, yOffset};
 //        requiresRedraw = (yOffset != 0 || xOffset != 0);
-        for (float[] currentPosition : entityPositions.values()) {
-            currentPosition[0] = currentPosition[0] + xOffset;
-            currentPosition[1] = currentPosition[1] + yOffset;
-        }
+        // todo: use a transalte rather than moving the nodes because the label position is important
+//        if (yOffset < 0 || xOffset < 0) { // todo: use a transalte rather than moving the nodes because the label position is important
+//            for (float[] currentPosition : entityPositions.values()) {
+//                currentPosition[0] = currentPosition[0] + xOffset;
+//                currentPosition[1] = currentPosition[1] + yOffset;
+//            }
+//        }
 //        ArrayList<EntityData> intendedSortOrder = new ArrayList<EntityData>();
 ////        ArrayList<EntityData> placedEntities = new ArrayList<EntityData>();
 //        for (EntityData currentNode : allEntitys) {
