@@ -319,14 +319,12 @@ public class SvgUpdateHandler {
 //        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
 //        currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
         try {
-            Element svgRoot;
-            // Get the root element (the 'svg' element)
-            svgRoot = graphPanel.doc.getDocumentElement();
+            Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
             Element labelsGroup = graphPanel.doc.getElementById("LabelsGroup");
             if (labelsGroup == null) {
                 labelsGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
                 labelsGroup.setAttribute("id", "LabelsGroup");
-                svgRoot.appendChild(labelsGroup);
+                diagramGroupNode.appendChild(labelsGroup);
             }
             Element relationGroupNode;
             Element entityGroupNode;
@@ -337,29 +335,31 @@ public class SvgUpdateHandler {
             // remove the old relation lines
             relationGroupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
             relationGroupNode.setAttribute("id", "RelationGroup");
-            svgRoot.insertBefore(relationGroupNode, labelsGroup);
+            diagramGroupNode.insertBefore(relationGroupNode, labelsGroup);
             if (relationGroupNodeOld != null) {
-                svgRoot.removeChild(relationGroupNodeOld);
+                relationGroupNodeOld.getParentNode().removeChild(relationGroupNodeOld);
             }
             // remove the old entity symbols making sure the entities sit above the relations but below the labels
             entityGroupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
             entityGroupNode.setAttribute("id", "EntityGroup");
-            svgRoot.insertBefore(entityGroupNode, labelsGroup);
+            diagramGroupNode.insertBefore(entityGroupNode, labelsGroup);
             if (entityGroupNodeOld != null) {
-                svgRoot.removeChild(entityGroupNodeOld);
+                entityGroupNodeOld.getParentNode().removeChild(entityGroupNodeOld);
             }
             // remove old kin diagram data
             NodeList dataNodes = graphPanel.doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
             for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
                 dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
             }
-            graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel, graphPanel.entitySvg.entityPositions);
-//            }
+            float[] currentOffset = graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel, graphPanel.entitySvg.entityPositions);
+            // set the diagram offset so that no element is less than zero
+            diagramGroupNode.setAttribute("transform", "translate(" + Float.toString(currentOffset[0]) + ", " + Float.toString(currentOffset[1]) + ")");
 
             float[] graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
             // Set the width and height attributes on the root 'svg' element.
+            Element svgRoot = graphPanel.doc.getDocumentElement();
             svgRoot.setAttribute("width", Float.toString(graphSize[0])); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
-            svgRoot.setAttribute("height", Float.toString(graphSize[1]));
+            svgRoot.setAttribute("height", Float.toString(graphSize[1])); // todo: consider the currentOffset when setting the graph size
 //            svgRoot.setAttribute("width", "100%");
 //            svgRoot.setAttribute("height", "100%");
 //            svgRoot.removeAttribute("width");
@@ -388,7 +388,7 @@ public class SvgUpdateHandler {
             }
             // todo: allow the user to set an entity as the provider of new dat being entered, this selected user can then be added to each field that is updated as the providence for that data. this would be best done in a cascading fashon so that there is a default informant for the entity and if required for sub nodes and fields
 //
-            //ArbilComponentBuilder.savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+//            ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
 //            svgUpdateHandler.updateSvgSelectionHighlights(); // todo: does this rsolve the issue after an update that the selection highlight is lost but the selection is still made?
 //        zoomDrawing();
@@ -400,5 +400,7 @@ public class SvgUpdateHandler {
         } catch (DOMException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
         }
+        // todo: this repaint might not resolve all cases of redraw issues
+        graphPanel.svgCanvas.repaint(); // make sure no remnants are left over after the last redraw
     }
 }
