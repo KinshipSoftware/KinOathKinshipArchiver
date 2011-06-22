@@ -1,4 +1,4 @@
-package nl.mpi.arbil.wicket;
+package nl.mpi.kinnate.rest;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
