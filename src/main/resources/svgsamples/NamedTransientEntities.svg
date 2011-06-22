@@ -199,6 +199,16 @@
     <kin:KinTypeString>EfMMM:Dorris</kin:KinTypeString>
     <kin:KinTypeString>Em:John</kin:KinTypeString>
     <kin:KinTypeString>EmM:Janet</kin:KinTypeString>
+    <kin:KinTypeString>#Ef:Jane</kin:KinTypeString>
+    <kin:KinTypeString>#Ef:Jane:M:Joyce</kin:KinTypeString>
+    <kin:KinTypeString>#Ef:Jane:M:Joyce:F:Jamie</kin:KinTypeString>
+    <kin:KinTypeString>#Ef:Jane:F:Jonathan:F:Clarence</kin:KinTypeString>
+    <kin:KinTypeString>#Ef:Jane:F:Jonathan</kin:KinTypeString>
+    <kin:KinTypeString>#Ef:Jane:M:Joyce:M:Betty:F:Nathan</kin:KinTypeString>
+    <kin:KinTypeString>#Ef:Jane:M:Joyce:M:Betty</kin:KinTypeString>
+    <kin:KinTypeString>#Ef:Jane:M:Joyce:M:Betty:M:Dorris</kin:KinTypeString>
+    <kin:KinTypeString>#Em:John</kin:KinTypeString>
+    <kin:KinTypeString>#Em:John:M:Janet</kin:KinTypeString>
     <kin:IndexParameters>
       <kin:LabelFields>
         <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*:Name"/>
