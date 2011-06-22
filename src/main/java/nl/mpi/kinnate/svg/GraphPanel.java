@@ -354,8 +354,9 @@ public class GraphPanel extends JPanel implements SavePanel {
             return "";
         }
     }
-
+ 
     public void resetZoom() {
+        // todo: this should be moved to the svg update handler and put into a runnable
         AffineTransform at = new AffineTransform();
         at.scale(1, 1);
         at.setToTranslation(1, 1);
