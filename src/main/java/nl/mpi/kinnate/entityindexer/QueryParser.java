@@ -26,6 +26,7 @@ public class QueryParser implements EntityService {
         loadedGraphNodes = new HashMap<String, EntityData>();
         if (svgEntities != null) {
             for (EntityData svgStoredEntity : svgEntities) {
+                // todo: consider if having the entities stored in two locations (admitedly this one is a hash map, the other and array) but maybe this could be confusing?
                 loadedGraphNodes.put(svgStoredEntity.getUniqueIdentifier(), svgStoredEntity);
             }
         }
@@ -66,6 +67,7 @@ public class QueryParser implements EntityService {
                 loadedGraphNodes.put(currentEntity.getUniqueIdentifier(), currentEntity);
             }
         }
+        // todo: set the relations of this node
     }
 
     private void getNextRelations(HashMap<String, EntityData> createdGraphNodes, EntityData egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) {
