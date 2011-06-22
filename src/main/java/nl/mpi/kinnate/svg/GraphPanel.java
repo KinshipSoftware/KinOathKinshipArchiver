@@ -3,7 +3,6 @@ package nl.mpi.kinnate.svg;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -20,8 +19,6 @@ import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.kindata.DataTypes;
-import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
@@ -32,10 +29,8 @@ import org.apache.batik.swing.JSVGScrollPane;
 import org.apache.batik.swing.svg.LinkActivationEvent;
 import org.apache.batik.swing.svg.LinkActivationListener;
 import org.apache.batik.util.XMLResourceDescriptor;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
 
@@ -185,7 +180,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void generateDefaultSvg() {
         try {
-            Element svgRoot;
+            Element diagramGroup;
             Element relationGroupNode;
             Element entityGroupNode;
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -211,20 +206,22 @@ public class GraphPanel extends JPanel implements SavePanel {
             SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
             doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
             entitySvg.insertSymbols(doc, svgNameSpace);
-            // Get the root element (the 'svg' element)
-            svgRoot = doc.getDocumentElement();
+            // add the diagram group to the root element (the 'svg' element)
+            diagramGroup = doc.createElementNS(svgNameSpace, "g");
+            diagramGroup.setAttribute("id", "DiagramGroup");
+            doc.getDocumentElement().appendChild(diagramGroup);
             // add the relation symbols in a group below the relation lines
             relationGroupNode = doc.createElementNS(svgNameSpace, "g");
             relationGroupNode.setAttribute("id", "RelationGroup");
-            svgRoot.appendChild(relationGroupNode);
+            diagramGroup.appendChild(relationGroupNode);
             // add the entity symbols in a group on top of the relation lines
             entityGroupNode = doc.createElementNS(svgNameSpace, "g");
             entityGroupNode.setAttribute("id", "EntityGroup");
-            svgRoot.appendChild(entityGroupNode);
+            diagramGroup.appendChild(entityGroupNode);
             // add the labels group on top, also added on svg load if missing
             Element labelsGroup = doc.createElementNS(svgNameSpace, "g");
             labelsGroup.setAttribute("id", "LabelsGroup");
-            svgRoot.appendChild(labelsGroup);
+            diagramGroup.appendChild(labelsGroup);
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc));
             svgCanvas.setSVGDocument(doc);
         } catch (IOException exception) {
@@ -376,7 +373,6 @@ public class GraphPanel extends JPanel implements SavePanel {
         requiresSave = true;
         selectedGroupId.clear();
         svgUpdateHandler.updateEntities();
-        svgCanvas.invalidate();
     }
 
     public void drawNodes(GraphSorter graphDataLocal) {
@@ -385,7 +381,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (graphDataLocal.getDataNodes().length == 0) {
             // if all entities have been removed then reset the zoom so that new nodes are going to been centered
             // todo: it would be better to move the window to cover the drawing area but not change the zoom
-            resetZoom();
+//            resetZoom();
         }
     }
 
