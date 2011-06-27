@@ -305,7 +305,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                 System.out.println("kinTypeFound: " + currentReferenceKinType.codeString);
                                 System.out.println("consumableString: " + consumableString);
 //                                System.out.println("fullKinTypeString: " + fullKinTypeString);
-                                EntityData currentGraphDataNode;
+                                EntityData currentGraphDataNode = null;
                                 String identifierString = parseLabelStrings(consumableString);
                                 String labelStrings[];
 //                                fullKinTypeString = fullKinTypeString + currentReferenceKinType.codeString;
@@ -318,7 +318,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                     } else {
                                         consumableString = consumableString.substring(identifierString.length() + 2);
                                     }
-                                    labelStrings = new String[]{identifierString};
+                                    labelStrings = identifierString.split(";");
 //                                    fullKinTypeString = ""; //fullKinTypeString + ":" + identifierString + ":";
                                 } else {
 //                                    fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
@@ -334,16 +334,26 @@ public class KinTypeStringConverter extends GraphSorter {
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
                                     }
                                     // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
-                                //} else if () { // todo: look for any existing relaitons that match the required kin type
                                 } else {
-                                    currentGraphDataNode = new EntityData(identifierString, null, fullKinTypeString, currentReferenceKinType.symbolType, labelStrings, currentReferenceKinType.isEgoType());
+                                    if (parentDataNode != null) {
+                                        // look for any existing relaitons that match the required kin type
+                                        for (EntityRelation entityRelation : parentDataNode.getAllRelations()) {
+                                            if (entityRelation.matchesKinType(currentReferenceKinType)) {
+                                                currentGraphDataNode = entityRelation.getAlterNode();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (currentGraphDataNode == null) {
+                                        currentGraphDataNode = new EntityData(identifierString, null, fullKinTypeString, currentReferenceKinType.symbolType, labelStrings, currentReferenceKinType.isEgoType());
+                                    }
                                     if (currentGraphDataNode.isEgo) {
                                         egoDataNode = currentGraphDataNode;
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
                                     }
                                 }
                                 if (parentDataNode != null) {
-                                    parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);                                    
+                                    parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
                                 }
                                 graphDataNodeList.put(identifierString, currentGraphDataNode);
                                 currentGraphDataNode.isVisible = true;
