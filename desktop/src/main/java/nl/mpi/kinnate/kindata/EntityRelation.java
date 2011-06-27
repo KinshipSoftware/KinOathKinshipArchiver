@@ -2,6 +2,7 @@ package nl.mpi.kinnate.kindata;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
+import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
 
 /**
  *  Document   : EntityRelation
@@ -49,7 +50,7 @@ public class EntityRelation implements Comparable<EntityRelation> {
         return -1;
     }
 
-    public boolean matchesKinType() {
+    public boolean matchesKinType(KinType referenceKinType) {
         // todo: compare this relation against a required kin type
         return false;
     }
