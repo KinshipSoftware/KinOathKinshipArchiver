@@ -56,8 +56,10 @@ public class ExportToR {
 //    attach(dataFrame)
 //    pedigreeObj <- pedigree(id,momid,dadid,sex, affected)
 //    plot(pedigreeObj)
-
-
+/////////////////////////////////////////////////////////////////
+//  Suggestion from Dan on R package to look into in detail
 //    http://statnet.org/
 //     http://www.jstatsoft.org/v24/i06/
+//    http://www.jstatsoft.org/v24/i09
+/////////////////////////////////////////////////////////////////
 }
