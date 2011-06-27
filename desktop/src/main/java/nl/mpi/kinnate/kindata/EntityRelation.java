@@ -2,7 +2,6 @@ package nl.mpi.kinnate.kindata;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
-import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
 
 /**
  *  Document   : EntityRelation
