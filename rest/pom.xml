@@ -1,12 +1,14 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>nl.mpi</groupId>
-    <artifactId>kinoath-web</artifactId>
+    <groupId>nl.mpi.kinnate</groupId>
+    <artifactId>kinoath-rest</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>KinOathWeb</name>
+    <name>kinoath-rest</name>
     <build>
+        <finalName>kinoath-rest</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -22,9 +24,13 @@
                 <artifactId>maven-glassfish-plugin</artifactId>
             </plugin>
         </plugins>
-        <finalName>KinOathWeb</finalName>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>Kinnate</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
@@ -62,6 +68,7 @@
     </dependencies>
     <properties>
         <jersey-version>1.7</jersey-version>
+        <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
     </properties>
     <repositories>
         <repository>
