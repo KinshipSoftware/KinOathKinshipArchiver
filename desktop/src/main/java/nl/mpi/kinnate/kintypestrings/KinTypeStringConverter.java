@@ -80,8 +80,13 @@ public class KinTypeStringConverter extends GraphSorter {
         new KinType("P", DataTypes.RelationType.ancestor, EntityData.SymbolType.square),
         new KinType("G", DataTypes.RelationType.sibling, EntityData.SymbolType.square),
         new KinType("E", DataTypes.RelationType.none, EntityData.SymbolType.square),
-        new KinType("C", DataTypes.RelationType.descendant, EntityData.SymbolType.square)
-    //        new KinType("X", DataTypes.RelationType.none, EntityData.SymbolType.none) // X is intended to indicate unknown or no type, for instance this is used after import to add all nodes to the graph
+        new KinType("C", DataTypes.RelationType.descendant, EntityData.SymbolType.square),
+        //        new KinType("X", DataTypes.RelationType.none, EntityData.SymbolType.none) // X is intended to indicate unknown or no type, for instance this is used after import to add all nodes to the graph
+
+        // non ego types to be used to start a kin type string but cannot be used except at the beginning
+        new KinType("m", DataTypes.RelationType.none, EntityData.SymbolType.triangle),
+        new KinType("f", DataTypes.RelationType.none, EntityData.SymbolType.circle),
+        new KinType("x", DataTypes.RelationType.none, EntityData.SymbolType.square)
     };
 
     public class KinTypeElement {
@@ -304,10 +309,15 @@ public class KinTypeStringConverter extends GraphSorter {
 //                                if (currentReferenceKinType.isEgoType()) {
 //                                    fullKinTypeString = "";
 //                                }
-                                if (currentReferenceKinType.isEgoType() && egoNodeFound) {
+                                if (currentReferenceKinType.relationType.equals(DataTypes.RelationType.none) && parentDataNode != null) {
                                     // prevent multiple egos on one line
                                     // going from one kin type to a second ego cannot specify the relation to the second ego and hence such syntax is not workable
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, parserHighlightPosition);
+                                    int commentPosition = consumableString.indexOf("#");
+                                    if (commentPosition > 0) {
+                                        // allow comments after this point
+                                        consumableString = consumableString.substring(commentPosition);
+                                    }
                                     break;
                                 } else {
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, parserHighlightPosition);
@@ -367,7 +377,8 @@ public class KinTypeStringConverter extends GraphSorter {
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
                                     }
                                 }
-                                if (parentDataNode != null) {
+                                if (parentDataNode != null && !currentReferenceKinType.relationType.equals(DataTypes.RelationType.none)) {
+                                    // allow relations only for kin types that do not start the kin type string
                                     parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
                                 }
                                 graphDataNodeList.put(identifierString, currentGraphDataNode);
