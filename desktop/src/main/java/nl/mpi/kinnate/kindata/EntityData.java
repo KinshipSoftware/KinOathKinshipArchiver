@@ -182,6 +182,7 @@ public class EntityData {
         } else {
             relatedNodes = new EntityRelation[]{nodeRelation};
         }
+        distinctRelateNodes = null; // if we get here then clear the distinct related node array so that it gets recalculated
         // add this relation to any existing relations
         if (!relationType.equals(DataTypes.RelationType.none)) {
             DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(relationType);
@@ -215,6 +216,10 @@ public class EntityData {
             visiblyRelateNodes = visiblyRelatedNodes.toArray(new EntityRelation[]{});
         }
         return visiblyRelateNodes;
+    }
+
+    public EntityRelation[] getAllRelations() {
+        return relatedNodes;
     }
 
     public EntityRelation[] getDistinctRelateNodes() {
