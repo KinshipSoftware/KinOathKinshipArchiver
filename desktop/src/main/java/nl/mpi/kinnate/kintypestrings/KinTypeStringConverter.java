@@ -36,6 +36,19 @@ public class KinTypeStringConverter extends GraphSorter {
             // todo: this could be better handled by adding a boolean: isego to each KinType
             return codeString.contains("E");
         }
+
+        public boolean matchesRelation(EntityRelation entityRelation) {
+            if (entityRelation.getAlterNode().isEgo != this.isEgoType()) {
+                return false;
+            }
+            if (!relationType.equals(entityRelation.relationType)) {
+                return false;
+            }
+            if (!symbolType.name().equals(entityRelation.getAlterNode().getSymbolType())) {
+                return false;
+            }
+            return true;
+        }
     }
     private KinType[] referenceKinTypes = new KinType[]{
         // other types
@@ -107,6 +120,7 @@ public class KinTypeStringConverter extends GraphSorter {
 //        }
 //    }
 
+    @Deprecated
     public boolean compareRequiresNextRelation(EntityData adjacentEntity, KinType requiredKinType, EntityRelation entityRelation) {
 //        adjacentEntity.appendTempLabel("compareRequiresNextRelation" + "F: " + QueryParser.foundOrder++); // temp for testing // todo: remove testing labels
         if (adjacentEntity.getSymbolType().equals(EntityData.SymbolType.union.name())) {
@@ -119,6 +133,7 @@ public class KinTypeStringConverter extends GraphSorter {
         return false;
     }
 
+    @Deprecated
     public boolean compareRelationsToKinType(EntityData egoEntity, EntityData alterEntity, KinType requiredKinType, EntityRelation entityRelation, int generationalDistance) {
 //        egoEntity.appendTempLabel("compareRelationsToKinType-egoEntity" + "F: " + QueryParser.foundOrder++);
 //        alterEntity.appendTempLabel("compareRelationsToKinType-alterEntity" + "F: " + QueryParser.foundOrder++);
@@ -338,7 +353,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                     if (parentDataNode != null) {
                                         // look for any existing relaitons that match the required kin type
                                         for (EntityRelation entityRelation : parentDataNode.getAllRelations()) {
-                                            if (entityRelation.matchesKinType(currentReferenceKinType)) {
+                                            if (currentReferenceKinType.matchesRelation(entityRelation)) {
                                                 currentGraphDataNode = entityRelation.getAlterNode();
                                                 break;
                                             }
