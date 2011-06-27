@@ -10,10 +10,9 @@ package nl.mpi.kinnate.rest;
 import java.util.List;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.QueryParam;
+import nl.mpi.kinnate.export.PedigreePackageExport;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
@@ -27,37 +26,49 @@ public class GetKin {
 //    @EJB
 //    private EntityStorageBean entityStorage;
 //    @Path("/kintypes/{kintypeStrings: [a-zA-Z0-9]}")
-    @GET
-    @Produces("text/html")
-    @Path("/csv")
-    public String getXml(@QueryParam("kts") List<String> kintypeStrings) {
+    private EntityData[] getEntityNodes(List<String> kintypeStrings) {
         KinTypeStringConverter graphData = new KinTypeStringConverter();
-//        String kinTypeStrings = "EmB|EmZ|EmM|EmF|EmS|EmD";
         graphData.readKinTypes(kintypeStrings.toArray(new String[]{}), /*graphPanel.getkinTermGroups()*/ new KinTermGroup[]{}, new DataStoreSvg(), new ParserHighlight[kintypeStrings.size()]);
-//                graphPanel.drawNodes(graphData);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (EntityData entityData : graphData.getDataNodes()) {
-            stringBuilder.append(entityData.getUniqueIdentifier());
-            stringBuilder.append(",");
-            stringBuilder.append(entityData.getSymbolType());
-            stringBuilder.append(",");
-            for (String labelString : entityData.getLabel()) {
-                stringBuilder.append(labelString);
-                stringBuilder.append(",");
-            }
-            for (String labelString : entityData.getKinTypeStringArray()) {
-                stringBuilder.append(labelString);
-                stringBuilder.append(",");
-            }
-            stringBuilder.append("<br>");
-        }
-        return "<html><body>" + kintypeStrings + "<p>" + stringBuilder + "</p></body></html>";
-//        return "<html><body><p>" + kintypeStrings + "</p></body></html>"; //entityStorage.getName()
+        return graphData.getDataNodes();
     }
 
-    @PUT
-    @Consumes("text/plain")
-    public void putXml(String content) {
-//        entityStorage.setName(content);
+    @GET
+    @Produces("text/html")
+    @Path("/view")
+    public String getHtml(@QueryParam("kts") List<String> kintypeStrings) {
+        StringBuilder stringBuilder = new StringBuilder();
+        EntityData[] entiryData = getEntityNodes(kintypeStrings);
+        stringBuilder.append("<table>");
+        for (EntityData entityData : entiryData) {
+            stringBuilder.append("<tr><td>");
+            stringBuilder.append(entityData.getUniqueIdentifier());
+            stringBuilder.append("</td><td>");
+            stringBuilder.append(entityData.getSymbolType());
+            stringBuilder.append("</td><td>");
+            for (String labelString : entityData.getLabel()) {
+                stringBuilder.append(labelString);
+                stringBuilder.append("<br>");
+            }
+            stringBuilder.append("</td><td>");
+            for (String labelString : entityData.getKinTypeStringArray()) {
+                stringBuilder.append(labelString);
+                stringBuilder.append("<br>");
+            }
+            stringBuilder.append("</td></tr>");
+        }
+        stringBuilder.append("</table>");
+        stringBuilder.append("<pre>");
+        PedigreePackageExport packageExport = new PedigreePackageExport();
+        stringBuilder.append(packageExport.createCsvContents(entiryData));
+        stringBuilder.append("</pre>");
+        return "<html><body>" + kintypeStrings + "<p>" + stringBuilder + "</p></body></html>";
+    }
+
+    @GET
+    @Produces("text/csv")
+    @Path("/csv")
+    public String getXml(@QueryParam("kts") List<String> kintypeStrings) {
+        PedigreePackageExport packageExport = new PedigreePackageExport();
+        return packageExport.createCsvContents(getEntityNodes(kintypeStrings));
     }
 }
