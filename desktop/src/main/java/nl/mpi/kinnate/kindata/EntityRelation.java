@@ -49,9 +49,4 @@ public class EntityRelation implements Comparable<EntityRelation> {
         }
         return -1;
     }
-
-    public boolean matchesKinType(KinType referenceKinType) {
-        // todo: compare this relation against a required kin type
-        return false;
-    }
 }
