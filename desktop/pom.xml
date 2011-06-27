@@ -93,7 +93,7 @@
                     <mainClass>nl.mpi.kinnate.ui.MainFrame</mainClass>
                     <jvmVersion>1.5+</jvmVersion>
 <!--                        <iconFile>${basedir}/src/main/app-resources/myapplication.icns</iconFile>-->
-                    <iconFile>${basedir}/installer/KinOath.app/Contents/Resources/kinoath.icns</iconFile>
+                    <iconFile>${basedir}/src/main/resources/kinoath.icns</iconFile>
                 </configuration>
                 <executions>
                     <execution>
