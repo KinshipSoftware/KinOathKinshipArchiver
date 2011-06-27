@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *  Created on : Mar 25, 2011, 6:18:44 PM
  *  Author     : Peter Withers
  */
-public class EntityRelation {
+public class EntityRelation implements Comparable<EntityRelation> {
 
     @XmlTransient
     private EntityData alterNode;
@@ -35,5 +35,22 @@ public class EntityRelation {
     @XmlTransient
     public EntityData getAlterNode() {
         return alterNode;
+    }
+
+    public int compareTo(EntityRelation o) {
+        if (o.alterUniqueIdentifier.equals(alterUniqueIdentifier)
+                && o.generationalDistance == generationalDistance
+                && o.relationLineType.equals(relationLineType)
+                && o.relationType.equals(relationType)
+                && ((labelString == null && labelString == null) || o.labelString.equals(labelString))
+                && ((lineColour == null && lineColour == null) || o.lineColour.equals(lineColour))) {
+            return 0;
+        }
+        return -1;
+    }
+
+    public boolean matchesKinType() {
+        // todo: compare this relation against a required kin type
+        return false;
     }
 }
