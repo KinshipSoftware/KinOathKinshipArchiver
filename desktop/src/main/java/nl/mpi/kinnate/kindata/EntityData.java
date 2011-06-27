@@ -219,7 +219,11 @@ public class EntityData {
     }
 
     public EntityRelation[] getAllRelations() {
-        return relatedNodes;
+        if (relatedNodes == null) {
+            return new EntityRelation[]{};
+        } else {
+            return relatedNodes;
+        }
     }
 
     public EntityRelation[] getDistinctRelateNodes() {
