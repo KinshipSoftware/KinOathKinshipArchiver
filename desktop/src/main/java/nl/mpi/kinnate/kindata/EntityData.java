@@ -168,13 +168,30 @@ public class EntityData {
         nodeRelation.labelString = labelString;
         nodeRelation.lineColour = lineColourLocal;
         if (relatedNodes != null) {
-            // todo: prevent duplicates
+            // check for existing relations matching the one to be added and prevent duplicates
+            for (EntityRelation entityRelation : relatedNodes) {
+                if (entityRelation.compareTo(nodeRelation) == 0) {
+                    return;
+                }
+            }
+            // add the relation
             ArrayList<EntityRelation> relatedNodesList = new ArrayList<EntityRelation>();
             relatedNodesList.addAll(Arrays.asList(relatedNodes));
             relatedNodesList.add(nodeRelation);
             relatedNodes = relatedNodesList.toArray(new EntityRelation[]{});
         } else {
             relatedNodes = new EntityRelation[]{nodeRelation};
+        }
+        // add this relation to any existing relations
+        if (!relationType.equals(DataTypes.RelationType.none)) {
+            DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(relationType);
+            alterNodeLocal.addRelatedNode(this, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
+            if (relationType.equals(DataTypes.RelationType.ancestor)) {
+                // todo: if a parent has been added then loop all siblings and add the parent there too
+                // todo: if a sibling has been added then loop all parents and add to the sibling
+            }
+            if (relationType.equals(DataTypes.RelationType.sibling)) {
+            }
         }
     }
 
