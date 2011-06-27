@@ -334,6 +334,7 @@ public class KinTypeStringConverter extends GraphSorter {
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
                                     }
                                     // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
+                                //} else if () { // todo: look for any existing relaitons that match the required kin type
                                 } else {
                                     currentGraphDataNode = new EntityData(identifierString, null, fullKinTypeString, currentReferenceKinType.symbolType, labelStrings, currentReferenceKinType.isEgoType());
                                     if (currentGraphDataNode.isEgo) {
@@ -341,10 +342,8 @@ public class KinTypeStringConverter extends GraphSorter {
 //                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
                                     }
                                 }
-                                DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(currentReferenceKinType.relationType);
                                 if (parentDataNode != null) {
-                                    parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
-                                    currentGraphDataNode.addRelatedNode(parentDataNode, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                    parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);                                    
                                 }
                                 graphDataNodeList.put(identifierString, currentGraphDataNode);
                                 currentGraphDataNode.isVisible = true;
@@ -377,6 +376,5 @@ public class KinTypeStringConverter extends GraphSorter {
             }
         }
         super.setEntitys(graphDataNodeList.values().toArray(new EntityData[]{}));
-//        sanguineSort();
     }
 }
