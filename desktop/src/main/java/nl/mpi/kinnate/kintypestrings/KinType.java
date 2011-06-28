@@ -29,7 +29,7 @@ public class KinType {
         return codeString.contains("E");
     }
 
-    protected boolean matchesRelation(EntityRelation entityRelation) {
+    protected boolean matchesRelation(EntityRelation entityRelation, String kinTypeModifier) {
         if (entityRelation.getAlterNode().isEgo != this.isEgoType()) {
             return false;
         }
