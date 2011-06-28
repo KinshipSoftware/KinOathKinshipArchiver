@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.svg;
 
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -250,17 +251,23 @@ public class EntitySvg {
 //        }
 //    }
 
-    public float[] moveEntity(GraphPanel graphPanel, String entityId, float shiftX, float shiftY, boolean snapToGrid, boolean allRealtionsSelected) {
+    public float[] moveEntity(GraphPanel graphPanel, String entityId, float shiftXfloat, float shiftYfloat, boolean snapToGrid, boolean allRealtionsSelected) {
         Element entitySymbol = graphPanel.doc.getElementById(entityId);
         float remainderAfterSnapX = 0;
         float remainderAfterSnapY = 0;
+        double scaleFactor = 1;
+        double shiftXscaled;
+        double shiftYscaled;
         if (entitySymbol != null) {
             boolean allowYshift = entitySymbol.getLocalName().equals("text");
             if (allRealtionsSelected) {
                 // if all the visible relations are selected then allow y shift
                 allowYshift = true;
             }
-//            SVGMatrix sVGMatrix = ((SVGLocatable) entitySymbol).getCTM();
+            AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
+            scaleFactor = affineTransform.getScaleX(); // the drawing should be proportional so only using X is adequate here
+            shiftXscaled = shiftXfloat / scaleFactor;
+            shiftYscaled = shiftYfloat / scaleFactor;
 ////            sVGMatrix.setE(sVGMatrix.getE() + shiftX);
 ////            sVGMatrix.setE(sVGMatrix.getF() + shiftY);
 ////            System.out.println("shiftX: " + shiftX);
@@ -268,20 +275,18 @@ public class EntitySvg {
 //            float updatedPositionY = sVGMatrix.getF();
 
             float[] entityPosition = entityPositions.get(entityId);
-            float updatedPositionX = entityPosition[0] + shiftX;
+            float updatedPositionX = (float) (entityPosition[0] + shiftXscaled);
             float updatedPositionY = entityPosition[1];
 
             if (allowYshift) {
-                updatedPositionY = updatedPositionY + shiftY;
+                updatedPositionY = (float) (updatedPositionY + shiftYscaled);
             }
 //            System.out.println("updatedPosition: " + updatedPositionX + " : " + updatedPositionY + " : " + shiftX + " : " + shiftY);
             if (snapToGrid) {
-                float updatedSnapPositionX = Math.round(updatedPositionX / 50) * 50; // limit movement to the grid
-                remainderAfterSnapX = updatedPositionX - updatedSnapPositionX;
-                updatedPositionX = updatedSnapPositionX;
+                double updatedSnapPositionX = Math.round(updatedPositionX / 50) * 50; // limit movement to the grid
+                updatedPositionX = (float) updatedSnapPositionX;
                 if (allowYshift) {
-                    float updatedSnapPositionY = Math.round(updatedPositionY / 50) * 50; // limit movement to the grid
-                    remainderAfterSnapY = updatedPositionY - updatedSnapPositionY;
+                    float updatedSnapPositionY = Math.round(updatedPositionY / 50) * 50; // limit movement to the grid                    
                     updatedPositionY = updatedSnapPositionY;
                 }
             } else {
@@ -303,6 +308,10 @@ public class EntitySvg {
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(at.getTranslateX()) + ", " + String.valueOf(at.getTranslateY()) + ")");
             entityPositions.put(entityId, new float[]{updatedPositionX, updatedPositionY});
             ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(updatedPositionX) + ", " + String.valueOf(updatedPositionY) + ")");
+            float distanceXmoved = ((float) ((updatedPositionX - entityPosition[0]) * scaleFactor));
+            float distanceYmoved = ((float) ((updatedPositionY - entityPosition[1]) * scaleFactor));
+            remainderAfterSnapX = shiftXfloat - distanceXmoved;
+            remainderAfterSnapY = shiftYfloat - distanceYmoved;
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + (sVGMatrix.getF() + shiftY) + ")");
         }
 //        System.out.println("remainderAfterSnap: " + remainderAfterSnap);
@@ -328,6 +337,7 @@ public class EntitySvg {
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
+            // todo: it looks like the stored positon can be null
 //            throw new Exception("Entity position should have been set in the graph sorter");
 //            // loop through the filled locations and move to the right or left if not empty required
 //            // todo: check the related nodes and average their positions then check to see if it is free and insert the node there
