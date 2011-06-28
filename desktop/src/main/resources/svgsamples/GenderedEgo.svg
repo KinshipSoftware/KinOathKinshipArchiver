@@ -226,6 +226,8 @@
     <kin:KinTypeString>EmF</kin:KinTypeString>
     <kin:KinTypeString>EB+2</kin:KinTypeString>
     <kin:KinTypeString>Ef</kin:KinTypeString>
+    <kin:KinTypeString>m:1:WMD:2: # this example should produce four entities because the named entity 2 does not match W</kin:KinTypeString>
+    <kin:KinTypeString>m:3:WMD # however this example should produce three entities because the MD does match W</kin:KinTypeString>
     <kin:IndexParameters>
       <kin:LabelFields>
         <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*:Name"/>
@@ -256,21 +258,7 @@
         <kin:IndexerParam kin:XPath="descendant"/>
       </kin:DecendantFields>
     </kin:IndexParameters>
-    <kin:KinTermGroup kin:Show="false" kin:GroupColour="blue" kin:GroupName="English terms" kin:Generate="false">
-      <kin:KinTerm kin:Term="Grand Mother" kin:Alter="MM"/>
-      <kin:KinTerm kin:Term="Aunt" kin:Alter="MZ|FZ"/>
-      <kin:KinTerm kin:Term="Uncle" kin:Alter="MB|FB"/>
-      <kin:KinTerm kin:Term="Grand Father" kin:Alter="FF"/>
-    </kin:KinTermGroup>
-    <kin:KinTermGroup kin:Show="false" kin:GroupColour="cyan" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="false">
-      <kin:KinTerm kin:Term="Makuakane" kin:Description="Father, Uncle" kin:Alter="F|FB|MB"/>
-      <kin:KinTerm kin:Term="Makuahini" kin:Description="Mother, Aunt" kin:Alter="M|MZ|FZ"/>
-      <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="" kin:Alter="E(male)B|E(male)FBS|E(male)FZS|E(male)MBS|E(male)MZS"/>
-      <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="Brother/Sister, Cousin" kin:Alter="E(female)Z|E(female)FBD|E(female)FZD|E(female)MBD|E(female)MZD"/>
-      <kin:KinTerm kin:Term="Kaikuane" kin:Description="Brother, Cousin" kin:Alter="E(female)B|E(female)FBS|E(female)FZS|E(female)MBS|E(female)MZS"/>
-      <kin:KinTerm kin:Term="Kaikuane" kin:Description="Sister, Cousin" kin:Alter="E(male)Z|E(male)FBD|E(male)FZD|E(male)MBD|E(male)MZD"/>
-      <kin:KinTerm kin:Term="Keikikane" kin:Description="Son, Nephew" kin:Alter="S|BS|ZS"/>
-      <kin:KinTerm kin:Term="Keikamahini" kin:Description="Daughter, Niece" kin:Alter="D|BD|ZD"/>
+    <kin:KinTermGroup kin:Show="false" kin:GroupColour="blue" kin:GroupName="" kin:Generate="false">
     </kin:KinTermGroup>
     <kin:ShowLabels>true</kin:ShowLabels>
     <kin:ShowKinTypeLabels>true</kin:ShowKinTypeLabels>
