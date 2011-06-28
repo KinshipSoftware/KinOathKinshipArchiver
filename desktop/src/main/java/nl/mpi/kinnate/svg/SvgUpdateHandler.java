@@ -369,10 +369,10 @@ public class SvgUpdateHandler {
             graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel, graphPanel.entitySvg.entityPositions);
             Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
             // set the diagram offset so that no element is less than zero
-            diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(graphSize.x) + ", " + Integer.toString(graphSize.y) + ")");
+            diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(-graphSize.x) + ", " + Integer.toString(-graphSize.y) + ")");
             // Set the width and height attributes on the root 'svg' element.
-            svgRoot.setAttribute("width", Integer.toString(graphSize.width + graphSize.x));
-            svgRoot.setAttribute("height", Integer.toString(graphSize.height + graphSize.y));
+            svgRoot.setAttribute("width", Integer.toString(graphSize.width - graphSize.x));
+            svgRoot.setAttribute("height", Integer.toString(graphSize.height - graphSize.y));
 //            svgRoot.setAttribute("width", "100%");
 //            svgRoot.setAttribute("height", "100%");
 //            svgRoot.removeAttribute("width");
@@ -401,6 +401,17 @@ public class SvgUpdateHandler {
             }
             // todo: allow the user to set an entity as the provider of new dat being entered, this selected user can then be added to each field that is updated as the providence for that data. this would be best done in a cascading fashon so that there is a default informant for the entity and if required for sub nodes and fields
 //
+            // draw hidious green and yellow rectangle for debugging
+            Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
+            symbolNode.setAttribute("x", Float.toString(graphSize.x));
+            symbolNode.setAttribute("y", Float.toString(graphSize.y));
+            symbolNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x));
+            symbolNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y));
+            symbolNode.setAttribute("fill", "none");
+            symbolNode.setAttribute("stroke-width", "1");
+            symbolNode.setAttribute("stroke", "grey");
+            relationGroupNode.appendChild(symbolNode);
+            // end draw hidious green rectangle for debugging
 //            ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
 //            svgUpdateHandler.updateSvgSelectionHighlights(); // todo: does this rsolve the issue after an update that the selection highlight is lost but the selection is still made?
