@@ -312,12 +312,8 @@ public class KinTypeStringConverter extends GraphSorter {
                                 if (currentReferenceKinType.relationType.equals(DataTypes.RelationType.none) && parentDataNode != null) {
                                     // prevent multiple egos on one line
                                     // going from one kin type to a second ego cannot specify the relation to the second ego and hence such syntax is not workable
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, parserHighlightPosition);
-                                    int commentPosition = consumableString.indexOf("#");
-                                    if (commentPosition > 0) {
-                                        // allow comments after this point
-                                        consumableString = consumableString.substring(commentPosition);
-                                    }
+//                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, parserHighlightPosition);
+                                    // because kinTypeFound is not set then the error highlight will be added
                                     break;
                                 } else {
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, parserHighlightPosition);
@@ -404,6 +400,12 @@ public class KinTypeStringConverter extends GraphSorter {
                                 parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length() - insertedEgoOffset);
                             } else {
                                 parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - consumableString.length() - insertedEgoOffset);
+                                int commentPosition = consumableString.indexOf("#");
+                                if (commentPosition > 0) {
+                                    // allow comments after this point
+                                    consumableString = consumableString.substring(commentPosition);
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length() - insertedEgoOffset);
+                                }
                             }
                             break;
                         }
