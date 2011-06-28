@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.kindata;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.bind.annotation.XmlElement;
@@ -16,6 +17,7 @@ public class GraphSorter {
     @XmlElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
     private EntityData[] graphDataNodeArray = new EntityData[]{};
     HashMap<String, SortingEntity> knownSortingEntities;
+    // todo: should these padding vars be stored in the svg, currently they are stored
     public int xPadding = 100; // todo sort out one place for this var
     public int yPadding = 100; // todo sort out one place for this var
 //    private boolean requiresRedraw = false;
@@ -93,6 +95,7 @@ public class GraphSorter {
             calculatedPosition = entityPositions.get(selfEntityId);
             if (calculatedPosition == null) {
                 for (SortingEntity sortingEntity : mustBeBelow) {
+                    // note that this get position also sets the position and the result will not be null
                     float[] nextAbovePos = sortingEntity.getPosition(entityPositions, defaultPosition);
                     if (calculatedPosition == null) {
                         calculatedPosition = new float[]{nextAbovePos[0], nextAbovePos[1]};
@@ -105,9 +108,26 @@ public class GraphSorter {
                 }
                 if (calculatedPosition == null) {
                     for (SortingEntity sortingEntity : couldBeNextTo) {
+                        // note that this does not set the position and the result can be null
                         float[] nextToPos = entityPositions.get(sortingEntity.selfEntityId);
                         if (calculatedPosition == null && nextToPos != null) {
                             calculatedPosition = new float[]{nextToPos[0], nextToPos[1]};
+                        }
+                    }
+                }
+                if (calculatedPosition == null) {
+                    for (SortingEntity sortingEntity : mustBeAbove) {
+                        // note that this does not set the position and the result can be null
+                        float[] nextBelowPos = entityPositions.get(sortingEntity.selfEntityId);
+                        if (nextBelowPos != null) {
+                            if (calculatedPosition == null) {
+                                calculatedPosition = new float[]{nextBelowPos[0], nextBelowPos[1]};
+                            }
+                            if (nextBelowPos[1] < calculatedPosition[1] + yPadding) {
+                                calculatedPosition[1] = nextBelowPos[1] - yPadding;
+//                        calculatedPosition[0] = nextAbovePos[0];
+                                System.out.println("move up: " + selfEntityId);
+                            }
                         }
                     }
                 }
@@ -157,7 +177,8 @@ public class GraphSorter {
             allRelations.addAll(couldBeNextTo);
             for (SortingEntity sortingEntity : allRelations) {
                 if (sortingEntity.calculatedPosition == null) {
-                    float[] defaultPosition = getGraphSize(entityPositions);
+                    Rectangle rectangle = getGraphSize(entityPositions);
+                    float[] defaultPosition = new float[]{rectangle.width, rectangle.height};
                     sortingEntity.getPosition(entityPositions, defaultPosition);
                     sortingEntity.getRelatedPositions(entityPositions);
                 }
@@ -194,26 +215,35 @@ public class GraphSorter {
 //
 //        }
 //    }
-    public float[] getGraphSize(HashMap<String, float[]> entityPositions) {
-//        System.out.println("getGraphSize");
-        // get max positions
-        float graphWidth = 0;
-        float graphHeight = 0;
+    public Rectangle getGraphSize(HashMap<String, float[]> entityPositions) {
+        // get min positions
+        // this should also take into account any graphics such as labels, although the border provided should be adequate, in other situations the page size could be set, in which case maybe an align option would be helpful
+        int[] minPostion = null;
+        int[] maxPostion = null;
         for (float[] currentPosition : entityPositions.values()) {
-            if (graphWidth < currentPosition[0]) {
-                graphWidth = currentPosition[0];
-            }
-            if (graphHeight < currentPosition[1]) {
-                graphHeight = currentPosition[1];
+            if (minPostion == null) {
+                minPostion = new int[]{Math.round(currentPosition[0]), Math.round(currentPosition[1])};
+                maxPostion = new int[]{Math.round(currentPosition[0]), Math.round(currentPosition[1])};
+            } else {
+                minPostion[0] = Math.min(minPostion[0], Math.round(currentPosition[0]));
+                minPostion[1] = Math.min(minPostion[1], Math.round(currentPosition[1]));
+                maxPostion[0] = Math.max(minPostion[0], Math.round(currentPosition[0]));
+                maxPostion[1] = Math.max(minPostion[1], Math.round(currentPosition[1]));
             }
         }
-        // make sure there is some padding on the right and bottom
-        graphWidth += xPadding * 2;
-        graphHeight += yPadding * 2;
-        return new float[]{graphWidth, graphHeight};
+        if (minPostion == null) {
+            // when there are no entities this could be null and must be corrected here
+            minPostion = new int[]{0, 0};
+            maxPostion = new int[]{0, 0};
+        }
+        int xOffset = xPadding - minPostion[0];
+        int yOffset = yPadding - minPostion[1];
+        int graphWidth = xPadding + maxPostion[0];
+        int graphHeight = xPadding + maxPostion[1];
+        return new Rectangle(xOffset, yOffset, graphWidth, graphHeight);
     }
 
-    public float[] placeAllNodes(GraphPanel graphPanel, HashMap<String, float[]> entityPositions) {
+    public void placeAllNodes(GraphPanel graphPanel, HashMap<String, float[]> entityPositions) {
         // make a has table of all entites
         // find the first ego node
         // place it and all its immediate relatives onto the graph, each time checking that the space is free
@@ -226,35 +256,12 @@ public class GraphSorter {
             }
         }
         for (SortingEntity currentSorter : knownSortingEntities.values()) {
-            float[] defaultPosition = getGraphSize(entityPositions);
+            Rectangle rectangle = getGraphSize(entityPositions);
+            float[] defaultPosition = new float[]{rectangle.width, rectangle.height};
             currentSorter.getPosition(entityPositions, defaultPosition);
             currentSorter.getRelatedPositions(entityPositions);
         }
-// get min positions
-        // this must also take into account any graphics such as labels
-        float[] minPostion = null;
-        for (float[] currentPosition : entityPositions.values()) {
-            if (minPostion == null) {
-                minPostion = new float[]{currentPosition[0], currentPosition[1]};
-            } else {
-                if (minPostion[0] > currentPosition[0]) {
-                    minPostion[0] = currentPosition[0];
-                }
-                if (minPostion[1] > currentPosition[1]) {
-                    minPostion[1] = currentPosition[1];
-                }
-            }
-        }
-        if (minPostion == null) {
-            // when there are no entities this could be null and must be corrected here
-            minPostion = new float[]{0, 0};
-        }
-//        return minPostion;
-        // adjust the min position
-        // todo: this requires that the svg is updated to match this change on all nodes (to test drag one node left past zero, which causes all other nodes to be moved, then move another node and the relation lines do not get placed correctly)
-        float xOffset = xPadding - minPostion[0];
-        float yOffset = yPadding - minPostion[1];
-        return new float[]{xOffset, yOffset};
+
 //        requiresRedraw = (yOffset != 0 || xOffset != 0);
         // todo: use a transalte rather than moving the nodes because the label position is important
 //        if (yOffset < 0 || xOffset < 0) { // todo: use a transalte rather than moving the nodes because the label position is important
