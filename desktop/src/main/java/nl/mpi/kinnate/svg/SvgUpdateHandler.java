@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.svg;
 
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
@@ -264,10 +265,13 @@ public class SvgUpdateHandler {
                     if (resizeRequired) {
                         resizeRequired = false;
                         Element svgRoot = graphPanel.doc.getDocumentElement();
-                        float[] graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+                        Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
+                        Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+                        // set the diagram offset so that no element is less than zero
+                        diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(graphSize.x) + ", " + Integer.toString(graphSize.y) + ")");
                         // Set the width and height attributes on the root 'svg' element.
-                        svgRoot.setAttribute("width", Float.toString(graphSize[0])); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
-                        svgRoot.setAttribute("height", Float.toString(graphSize[1]));
+                        svgRoot.setAttribute("width", Integer.toString(graphSize.width + graphSize.x));
+                        svgRoot.setAttribute("height", Integer.toString(graphSize.height + graphSize.y));
                     }
                 }
             });
@@ -362,14 +366,13 @@ public class SvgUpdateHandler {
             for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
                 dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
             }
-            float[] currentOffset = graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel, graphPanel.entitySvg.entityPositions);
+            graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel, graphPanel.entitySvg.entityPositions);
+            Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
             // set the diagram offset so that no element is less than zero
-            diagramGroupNode.setAttribute("transform", "translate(" + Float.toString(currentOffset[0]) + ", " + Float.toString(currentOffset[1]) + ")");
-
-            float[] graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+            diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(graphSize.x) + ", " + Integer.toString(graphSize.y) + ")");
             // Set the width and height attributes on the root 'svg' element.
-            svgRoot.setAttribute("width", Float.toString(graphSize[0])); // todo: calculate the correct size / width getting it from the GraphPlacementHandler
-            svgRoot.setAttribute("height", Float.toString(graphSize[1])); // todo: consider the currentOffset when setting the graph size
+            svgRoot.setAttribute("width", Integer.toString(graphSize.width + graphSize.x));
+            svgRoot.setAttribute("height", Integer.toString(graphSize.height + graphSize.y));
 //            svgRoot.setAttribute("width", "100%");
 //            svgRoot.setAttribute("height", "100%");
 //            svgRoot.removeAttribute("width");
