@@ -5,6 +5,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight.ParserHighlightType;
@@ -260,6 +261,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                         for (EntityRelation entityRelation : parentDataNode.getAllRelations()) {
                                             if (currentReferenceKinType.matchesRelation(entityRelation)) {
                                                 currentGraphDataNode = entityRelation.getAlterNode();
+                                                currentGraphDataNode.addKinTypeString(fullKinTypeString);
                                                 break;
                                             }
                                         }
@@ -312,6 +314,8 @@ public class KinTypeStringConverter extends GraphSorter {
                 }
             }
         }
-        super.setEntitys(graphDataNodeList.values().toArray(new EntityData[]{}));
+        HashSet<EntityData> entitySet = new HashSet<EntityData>();
+        entitySet.addAll(graphDataNodeList.values()); // make sure that no duplicates are returned, these duplicates may exist from strings like EmMS|EmB which map to the same individual but there are two kin type strings for it and hence two entries
+        super.setEntitys(entitySet.toArray(new EntityData[]{}));
     }
 }
