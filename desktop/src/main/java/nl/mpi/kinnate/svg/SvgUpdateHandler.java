@@ -256,6 +256,36 @@ public class SvgUpdateHandler {
         };
     }
 
+    private void resizeCanvas(Element svgRoot, Element diagramGroupNode) {
+        Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+        // set the diagram offset so that no element is less than zero
+        diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(-graphSize.x) + ", " + Integer.toString(-graphSize.y) + ")");
+        // Set the width and height attributes on the root 'svg' element.
+        svgRoot.setAttribute("width", Integer.toString(graphSize.width - graphSize.x));
+        svgRoot.setAttribute("height", Integer.toString(graphSize.height - graphSize.y));
+
+        // draw hidious green and yellow rectangle for debugging
+        Element pageBorderNode = graphPanel.doc.getElementById("PageBorder");
+        if (pageBorderNode == null) {
+            pageBorderNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
+            pageBorderNode.setAttribute("id", "PageBorder");
+            pageBorderNode.setAttribute("x", Float.toString(graphSize.x));
+            pageBorderNode.setAttribute("y", Float.toString(graphSize.y));
+            pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x));
+            pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y));
+            pageBorderNode.setAttribute("fill", "none");
+            pageBorderNode.setAttribute("stroke-width", "2");
+            pageBorderNode.setAttribute("stroke", "grey");
+            diagramGroupNode.appendChild(pageBorderNode);
+        } else {
+            pageBorderNode.setAttribute("x", Float.toString(graphSize.x));
+            pageBorderNode.setAttribute("y", Float.toString(graphSize.y));
+            pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x));
+            pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y));
+        }
+        // end draw hidious green rectangle for debugging
+    }
+
     public void updateCanvasSize() {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         if (updateManager != null) {
@@ -266,12 +296,7 @@ public class SvgUpdateHandler {
                         resizeRequired = false;
                         Element svgRoot = graphPanel.doc.getDocumentElement();
                         Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
-                        Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
-                        // set the diagram offset so that no element is less than zero
-                        diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(graphSize.x) + ", " + Integer.toString(graphSize.y) + ")");
-                        // Set the width and height attributes on the root 'svg' element.
-                        svgRoot.setAttribute("width", Integer.toString(graphSize.width + graphSize.x));
-                        svgRoot.setAttribute("height", Integer.toString(graphSize.height + graphSize.y));
+                        resizeCanvas(svgRoot, diagramGroupNode);
                     }
                 }
             });
@@ -284,18 +309,28 @@ public class SvgUpdateHandler {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
 
                 public void run() {
+                    Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+                    // todo: handle case where the diagram has not been drawn yet and the graph data and graph size is not available
+//                    if (graphSize == null) {
+//                        graphSize = new Rectangle(0, 0, 0, 0);
+//                    }
                     Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
                     Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
-                    labelText.setAttribute("x", Float.toString(xPos));
-                    labelText.setAttribute("y", Float.toString(yPos));
+                    String labelIdString = "label" + labelGroup.getChildNodes().getLength();
+                    float[] labelPosition = new float[]{graphSize.x + graphSize.width / 2, graphSize.y + graphSize.height / 2};
+//                    labelText.setAttribute("x", "0"); // todo: update this to use the mouse click location // xPos
+//                    labelText.setAttribute("y", "0"); // yPos
                     labelText.setAttribute("fill", "black");
                     labelText.setAttribute("stroke-width", "0");
                     labelText.setAttribute("font-size", "28");
-                    labelText.setAttribute("id", "label" + labelGroup.getChildNodes().getLength());
+                    labelText.setAttribute("id", labelIdString);
+                    labelText.setAttribute("transform", "translate(" + Float.toString(labelPosition[0]) + ", " + Float.toString(labelPosition[1]) + ")");
+//
                     Text textNode = graphPanel.doc.createTextNode(labelString);
                     labelText.appendChild(textNode);
                     // todo: put this into a geometry group and allow for selection and drag
                     labelGroup.appendChild(labelText);
+                    graphPanel.entitySvg.entityPositions.put(labelIdString, labelPosition);
 //                    graphPanel.doc.getDocumentElement().appendChild(labelText);
                     ((EventTarget) labelText).addEventListener("mousedown", new MouseListenerSvg(graphPanel), false);
                 }
@@ -367,17 +402,7 @@ public class SvgUpdateHandler {
                 dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
             }
             graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel, graphPanel.entitySvg.entityPositions);
-            Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
-            // set the diagram offset so that no element is less than zero
-            diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(-graphSize.x) + ", " + Integer.toString(-graphSize.y) + ")");
-            // Set the width and height attributes on the root 'svg' element.
-            svgRoot.setAttribute("width", Integer.toString(graphSize.width - graphSize.x));
-            svgRoot.setAttribute("height", Integer.toString(graphSize.height - graphSize.y));
-//            svgRoot.setAttribute("width", "100%");
-//            svgRoot.setAttribute("height", "100%");
-//            svgRoot.removeAttribute("width");
-//            svgRoot.removeAttribute("height");
-//            this.setPreferredSize(new Dimension((int) graphSize[0], (int) graphSize[1]));//            entitySvg.removeOldEntities(entityGroupNode);
+            resizeCanvas(svgRoot, diagramGroupNode);
 
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
@@ -400,18 +425,6 @@ public class SvgUpdateHandler {
                 }
             }
             // todo: allow the user to set an entity as the provider of new dat being entered, this selected user can then be added to each field that is updated as the providence for that data. this would be best done in a cascading fashon so that there is a default informant for the entity and if required for sub nodes and fields
-//
-            // draw hidious green and yellow rectangle for debugging
-            Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
-            symbolNode.setAttribute("x", Float.toString(graphSize.x));
-            symbolNode.setAttribute("y", Float.toString(graphSize.y));
-            symbolNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x));
-            symbolNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y));
-            symbolNode.setAttribute("fill", "none");
-            symbolNode.setAttribute("stroke-width", "1");
-            symbolNode.setAttribute("stroke", "grey");
-            relationGroupNode.appendChild(symbolNode);
-            // end draw hidious green rectangle for debugging
 //            ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
 //            svgUpdateHandler.updateSvgSelectionHighlights(); // todo: does this rsolve the issue after an update that the selection highlight is lost but the selection is still made?
