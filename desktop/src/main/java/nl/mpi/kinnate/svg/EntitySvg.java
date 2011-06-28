@@ -11,8 +11,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.svg.SVGLocatable;
-import org.w3c.dom.svg.SVGMatrix;
 
 /**
  *  Document   : EntitySvg
@@ -262,16 +260,21 @@ public class EntitySvg {
                 // if all the visible relations are selected then allow y shift
                 allowYshift = true;
             }
-            SVGMatrix sVGMatrix = ((SVGLocatable) entitySymbol).getCTM();
-//            sVGMatrix.setE(sVGMatrix.getE() + shiftX);
-//            sVGMatrix.setE(sVGMatrix.getF() + shiftY);
-//            System.out.println("shiftX: " + shiftX);
-            float updatedPositionX = sVGMatrix.getE() + shiftX;
-            float updatedPositionY = sVGMatrix.getF();
+//            SVGMatrix sVGMatrix = ((SVGLocatable) entitySymbol).getCTM();
+////            sVGMatrix.setE(sVGMatrix.getE() + shiftX);
+////            sVGMatrix.setE(sVGMatrix.getF() + shiftY);
+////            System.out.println("shiftX: " + shiftX);
+//            float updatedPositionX = sVGMatrix.getE() + shiftX;
+//            float updatedPositionY = sVGMatrix.getF();
+
+            float[] entityPosition = entityPositions.get(entityId);
+            float updatedPositionX = entityPosition[0] + shiftX;
+            float updatedPositionY = entityPosition[1];
+
             if (allowYshift) {
                 updatedPositionY = updatedPositionY + shiftY;
             }
-//            System.out.println("updatedPosition: " + updatedPosition);
+//            System.out.println("updatedPosition: " + updatedPositionX + " : " + updatedPositionY + " : " + shiftX + " : " + shiftY);
             if (snapToGrid) {
                 float updatedSnapPositionX = Math.round(updatedPositionX / 50) * 50; // limit movement to the grid
                 remainderAfterSnapX = updatedPositionX - updatedSnapPositionX;
@@ -287,8 +290,17 @@ public class EntitySvg {
                     updatedPositionY = (int) updatedPositionY;
                 }
             }
+
+//            AffineTransform at = new AffineTransform();
+//            at.translate(updatedPositionX, updatedPositionY);
+////                at.scale(scale, scale);
+//            at.concatenate(graphPanel.svgCanvas.getRenderingTransform());
+//                svgCanvas.setRenderingTransform(at);
+
 //            System.out.println("updatedPosition after snap: " + updatedPosition);
 //                graphPanel.dataStoreSvg.graphData.setEntityLocation(entityId, updatedPositionX, updatedPositionY);
+//            entityPositions.put(entityId, new float[]{(float) at.getTranslateX(), (float) at.getTranslateY()});
+//            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(at.getTranslateX()) + ", " + String.valueOf(at.getTranslateY()) + ")");
             entityPositions.put(entityId, new float[]{updatedPositionX, updatedPositionY});
             ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(updatedPositionX) + ", " + String.valueOf(updatedPositionY) + ")");
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + (sVGMatrix.getF() + shiftY) + ")");
