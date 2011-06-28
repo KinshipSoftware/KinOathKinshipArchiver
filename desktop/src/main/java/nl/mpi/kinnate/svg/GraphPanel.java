@@ -151,6 +151,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc);
             requiresSave = false;
             entitySvg.readEntityPositions(doc.getElementById("EntityGroup"));
+            entitySvg.readEntityPositions(doc.getElementById("LabelsGroup"));
         } catch (IOException ioe) {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
