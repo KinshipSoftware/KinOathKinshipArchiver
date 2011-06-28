@@ -158,6 +158,18 @@ public class EntityData {
         }
     }
 
+    private void insertSiblingRelations(EntityData parentEntity) {
+        // update the sibling relations of the parents other children
+        for (EntityRelation entityRelation : parentEntity.getAllRelations()) {
+            if (entityRelation.relationType.equals(DataTypes.RelationType.descendant)) {
+                if (!entityRelation.getAlterNode().equals(this)) {
+                    entityRelation.getAlterNode().addRelatedNode(this, 0, DataTypes.RelationType.sibling, DataTypes.RelationLineType.sanguineLine, null, null);
+                    this.addRelatedNode(entityRelation.getAlterNode(), 0, DataTypes.RelationType.sibling, DataTypes.RelationLineType.sanguineLine, null, null);
+                }
+            }
+        }
+    }
+
     public void addRelatedNode(EntityData alterNodeLocal, int generationalDistance, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String lineColourLocal, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         EntityRelation nodeRelation = new EntityRelation();
@@ -187,12 +199,13 @@ public class EntityData {
         if (!relationType.equals(DataTypes.RelationType.none)) {
             DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(relationType);
             alterNodeLocal.addRelatedNode(this, 0, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
+            // if a parent relation is beig added then update the sibling relations of the other children of that parent
             if (relationType.equals(DataTypes.RelationType.ancestor)) {
-                // todo: if a parent has been added then loop all siblings and add the parent there too
-                // todo: if a sibling has been added then loop all parents and add to the sibling
+                this.insertSiblingRelations(alterNodeLocal);
+            } else if (relationType.equals(DataTypes.RelationType.descendant)) {
+                alterNodeLocal.insertSiblingRelations(this);
             }
-            if (relationType.equals(DataTypes.RelationType.sibling)) {
-            }
+            // if a sibling has been added then there is no way to know if any of the parents are common to the other sibings, so we do nothing in this case
         }
     }
 
