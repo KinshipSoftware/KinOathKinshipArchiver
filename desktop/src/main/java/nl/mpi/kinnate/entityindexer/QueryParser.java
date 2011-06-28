@@ -7,8 +7,8 @@ import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
-import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.KinType;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 
 /**
