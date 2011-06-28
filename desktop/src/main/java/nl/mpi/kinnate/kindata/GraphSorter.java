@@ -227,8 +227,8 @@ public class GraphSorter {
             } else {
                 minPostion[0] = Math.min(minPostion[0], Math.round(currentPosition[0]));
                 minPostion[1] = Math.min(minPostion[1], Math.round(currentPosition[1]));
-                maxPostion[0] = Math.max(minPostion[0], Math.round(currentPosition[0]));
-                maxPostion[1] = Math.max(minPostion[1], Math.round(currentPosition[1]));
+                maxPostion[0] = Math.max(maxPostion[0], Math.round(currentPosition[0]));
+                maxPostion[1] = Math.max(maxPostion[1], Math.round(currentPosition[1]));
             }
         }
         if (minPostion == null) {
@@ -236,10 +236,10 @@ public class GraphSorter {
             minPostion = new int[]{0, 0};
             maxPostion = new int[]{0, 0};
         }
-        int xOffset = xPadding - minPostion[0];
-        int yOffset = yPadding - minPostion[1];
-        int graphWidth = xPadding + maxPostion[0];
-        int graphHeight = xPadding + maxPostion[1];
+        int xOffset = minPostion[0] - xPadding;
+        int yOffset = minPostion[1] - yPadding;
+        int graphWidth = maxPostion[0] + xPadding;
+        int graphHeight = maxPostion[1] + yPadding;
         return new Rectangle(xOffset, yOffset, graphWidth, graphHeight);
     }
 
