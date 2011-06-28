@@ -235,14 +235,17 @@ public class KinTypeStringConverter extends GraphSorter {
                                 } else {
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, parserHighlightPosition);
                                 }
+                                String currentKinTypeString = consumableString;
                                 consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
                                 consumableString = consumableString.replaceAll("^[-\\+\\d]*", "");
+                                currentKinTypeString = currentKinTypeString.substring(0, currentKinTypeString.length() - consumableString.length());
+                                String kinTypeModifier = currentKinTypeString.substring(currentReferenceKinType.codeString.length());
                                 System.out.println("kinTypeFound: " + currentReferenceKinType.codeString);
                                 System.out.println("consumableString: " + consumableString);
 //                                System.out.println("fullKinTypeString: " + fullKinTypeString);
                                 EntityData currentGraphDataNode = null;
                                 fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
-                                LabelStringsParser labelStringsParser = new LabelStringsParser(consumableString, fullKinTypeString);
+                                LabelStringsParser labelStringsParser = new LabelStringsParser(consumableString, parentDataNode, currentKinTypeString);
                                 if (labelStringsParser.identifierFound) {
                                     // add a highlight for the label section
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length());
@@ -256,10 +259,10 @@ public class KinTypeStringConverter extends GraphSorter {
                                     }
                                     // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
                                 } else {
-                                    if (parentDataNode != null) {
+                                    if (parentDataNode != null && !labelStringsParser.identifierFound /* if a label has been specified then always create or reuse that named entity */) {
                                         // look for any existing relaitons that match the required kin type
                                         for (EntityRelation entityRelation : parentDataNode.getAllRelations()) {
-                                            if (currentReferenceKinType.matchesRelation(entityRelation)) {
+                                            if (currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier)) {
                                                 currentGraphDataNode = entityRelation.getAlterNode();
                                                 currentGraphDataNode.addKinTypeString(fullKinTypeString);
                                                 break;
