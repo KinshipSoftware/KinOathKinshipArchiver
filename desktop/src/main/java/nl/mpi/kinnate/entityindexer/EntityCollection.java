@@ -98,6 +98,11 @@ public class EntityCollection {
         return performQuery(queryString);
     }
 
+    public SearchResults searchForLocalEntites() {
+        String queryString = "for $doc in collection('nl-mpi-kinnate') where exists(//*:UniqueIdentifier/*:LocalIdentifier) return base-uri($doc)";
+        return performQuery(queryString);
+    }
+
     private SearchResults performQuery(String queryString) {
         SearchResults searchResults = new SearchResults();
         ArrayList<String> resultPaths = new ArrayList<String>();
