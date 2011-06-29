@@ -367,7 +367,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     public void resetLayout() {
         entitySvg = new EntitySvg();
         dataStoreSvg.graphData.setEntitys(dataStoreSvg.graphData.getDataNodes());
-        dataStoreSvg.graphData.placeAllNodes(this, entitySvg.entityPositions);
+        dataStoreSvg.graphData.placeAllNodes(entitySvg.entityPositions);
         drawNodes();
     }
 
