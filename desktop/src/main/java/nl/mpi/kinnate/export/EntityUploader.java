@@ -29,7 +29,7 @@ public class EntityUploader {
         return searchResults.resultCount;
     }
 
-    public void uploadLocalEntites(JProgressBar uploadProgress) {
+    public void uploadLocalEntites(JProgressBar uploadProgress, String workspaceName, char[] workspacePassword) {
         uploadProgress.setIndeterminate(false);
         uploadProgress.setMinimum(0);
         uploadProgress.setMaximum(searchResults.resultCount);
@@ -39,5 +39,9 @@ public class EntityUploader {
         }
         uploadProgress.setValue(0);
         searchResults = null;
+        for (int charCount = 0; charCount < workspacePassword.length; charCount++) {
+            // clear the password data so that it is not left hanging around in the virtual machine
+            workspacePassword[charCount] = 0;
+        }
     }
 }
