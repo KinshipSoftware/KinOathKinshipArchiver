@@ -401,7 +401,7 @@ public class SvgUpdateHandler {
             for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
                 dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
             }
-            graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel, graphPanel.entitySvg.entityPositions);
+            graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel.entitySvg.entityPositions);
             resizeCanvas(svgRoot, diagramGroupNode);
 
 //            entitySvg.removeOldEntities(relationGroupNode);
