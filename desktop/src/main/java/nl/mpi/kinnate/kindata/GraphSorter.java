@@ -96,14 +96,18 @@ public class GraphSorter {
             if (calculatedPosition == null) {
                 for (SortingEntity sortingEntity : mustBeBelow) {
                     // note that this get position also sets the position and the result will not be null
-                    float[] nextAbovePos = sortingEntity.getPosition(entityPositions, defaultPosition);
-                    if (calculatedPosition == null) {
-                        calculatedPosition = new float[]{nextAbovePos[0], nextAbovePos[1]};
-                    }
-                    if (nextAbovePos[1] > calculatedPosition[1] - yPadding) {
-                        calculatedPosition[1] = nextAbovePos[1] + yPadding;
+//                    float[] nextAbovePos = sortingEntity.getPosition(entityPositions, defaultPosition);
+                    // note that this does not set the position and the result can be null
+                    float[] nextAbovePos = entityPositions.get(sortingEntity.selfEntityId);
+                    if (nextAbovePos != null) {
+                        if (calculatedPosition == null) {
+                            calculatedPosition = new float[]{nextAbovePos[0], nextAbovePos[1]};
+                        }
+                        if (nextAbovePos[1] > calculatedPosition[1] - yPadding) {
+                            calculatedPosition[1] = nextAbovePos[1] + yPadding;
 //                        calculatedPosition[0] = nextAbovePos[0];
-                        System.out.println("move down: " + selfEntityId);
+                            System.out.println("move down: " + selfEntityId);
+                        }
                     }
                 }
                 if (calculatedPosition == null) {
@@ -132,7 +136,7 @@ public class GraphSorter {
                     }
                 }
                 if (calculatedPosition == null) {
-                    calculatedPosition = new float[]{0, defaultPosition[1]};
+                    calculatedPosition = new float[]{defaultPosition[0], 0};
                 }
                 // make sure any spouses are in the same row
                 // todo: this should probably be moved into a separate action and when a move is made then move in sequence the entities that are below and to the right
@@ -243,7 +247,7 @@ public class GraphSorter {
         return new Rectangle(xOffset, yOffset, graphWidth, graphHeight);
     }
 
-    public void placeAllNodes(GraphPanel graphPanel, HashMap<String, float[]> entityPositions) {
+    public void placeAllNodes(HashMap<String, float[]> entityPositions) {
         // make a has table of all entites
         // find the first ego node
         // place it and all its immediate relatives onto the graph, each time checking that the space is free
@@ -251,6 +255,7 @@ public class GraphSorter {
         // when all done search for any unrelated nodes and do it all again
         // make sure that invisible nodes are ignored
         for (EntityData currentNode : graphDataNodeArray) {
+            // remove any invisible node from the position list, the entities in a loaded svg should still get here even if they are not visible anymore
             if (!currentNode.isVisible) {
                 entityPositions.remove(currentNode.getUniqueIdentifier());
             }
