@@ -1,8 +1,13 @@
 package nl.mpi.kinnate.export;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -96,19 +101,38 @@ public class EntityUploader {
     private void uploadFile(URL serverRestUrl, JTextArea outputArea, File uploadFile) {
         try {
             outputArea.append(uploadFile.toString() + "\n");
-            HttpURLConnection httpCon = (HttpURLConnection) serverRestUrl.openConnection();
-            httpCon.setDoOutput(true);
-            httpCon.setRequestMethod("PUT");
-//                    connection.setRequestProperty("Content-Type","text/xml");
-            OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
-            out.write("Resource content");
-            out.close();
-            outputArea.append(httpCon.getResponseMessage() + "\n");
-            outputArea.append(httpCon.getResponseCode() + "\n");
+            HttpURLConnection httpURLConnection = (HttpURLConnection) serverRestUrl.openConnection();
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setRequestMethod("PUT");
+            httpURLConnection.setRequestProperty("Content-Type", "text/xml");
+            // upload the file
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(httpURLConnection.getOutputStream());
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(uploadFile));
+            int bytesRead;
+            while ((bytesRead = bufferedInputStream.read()) > 0) {
+                bufferedOutputStream.write(bytesRead);
+            }
+            bufferedInputStream.close();
+            // show the response code
+            outputArea.append(httpURLConnection.getResponseCode() + "\n");
+            outputArea.append(httpURLConnection.getResponseMessage() + "\n");
+            // show the response page
+            InputStream inputStream;
+            inputStream = httpURLConnection.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            for (String responseLine = bufferedReader.readLine(); responseLine != null; responseLine = bufferedReader.readLine()) {
+                outputArea.append(responseLine);
+            }
+            outputArea.append("\n");
+            stripHistoryFiles(uploadFile);
         } catch (IOException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
             outputArea.append(exception.getMessage());
         }
 
+    }
+
+    private void stripHistoryFiles(File targetFile) {
+        // todo: strip the history files, eg .x .0 .1 .2 etc. but keep the main file
     }
 }
