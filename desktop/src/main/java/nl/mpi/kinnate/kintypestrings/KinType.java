@@ -30,6 +30,7 @@ public class KinType {
     }
 
     protected boolean matchesRelation(EntityRelation entityRelation, String kinTypeModifier) {
+        // todo make use of the kin type modifier
         if (entityRelation.getAlterNode().isEgo != this.isEgoType()) {
             return false;
         }
@@ -37,6 +38,17 @@ public class KinType {
             return false;
         }
         if (!symbolType.name().equals(entityRelation.getAlterNode().getSymbolType())) {
+            return false;
+        }
+        return true;
+    }
+
+    protected boolean matchesEgoEntity(EntityData entityData, String kinTypeModifier) {
+        // todo make use of the kin type modifier or remove it if it proves irelevant
+        if (!entityData.isEgo || !this.isEgoType()) {
+            return false;
+        }
+        if (!symbolType.name().equals(entityData.getSymbolType())) {
             return false;
         }
         return true;
