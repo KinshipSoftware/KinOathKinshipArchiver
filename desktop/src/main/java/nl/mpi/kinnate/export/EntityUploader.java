@@ -93,7 +93,7 @@ public class EntityUploader {
 
             public void run() {
                 try {
-                    URL serverRestUrl = new URL("http://localhost:8080/kinoath-rest/kinoath/kinhive/workspace/" + workspaceName); // todo: put this into a config file
+                    URL serverRestUrl = new URL("http://localhost:8080/kinoath-rest/kinoath/kinspace/" + workspaceName); // todo: put this into a config file
                     uploadProgress.setIndeterminate(false);
                     uploadProgress.setMinimum(0);
                     int maxCount = 0;
