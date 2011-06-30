@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.bind.annotation.XmlElement;
-import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.kintypestrings.LabelStringsParser;
 import nl.mpi.kinnate.svg.GraphPanelSize;
 
 /**
@@ -253,11 +253,21 @@ public class GraphSorter {
         // place it and all its immediate relatives onto the graph, each time checking that the space is free
         // contine to the next nearest relatives
         // when all done search for any unrelated nodes and do it all again
-        // make sure that invisible nodes are ignored
+
+        // remove any transent nodes that are not in this list anymore
+        // and make sure that invisible nodes are ignored
+        ArrayList<String> removeNodeIds = new ArrayList<String>(entityPositions.keySet());
         for (EntityData currentNode : graphDataNodeArray) {
+            removeNodeIds.remove(currentNode.getUniqueIdentifier());
             // remove any invisible node from the position list, the entities in a loaded svg should still get here even if they are not visible anymore
             if (!currentNode.isVisible) {
                 entityPositions.remove(currentNode.getUniqueIdentifier());
+            }
+        }
+        for (String currentRemoveId : removeNodeIds) {
+            if (currentRemoveId.startsWith(LabelStringsParser.transientNodePrefix)) {
+                // remove the transent nodes making sure not to remove the positions of graphics such as labels
+                entityPositions.remove(currentRemoveId);
             }
         }
         for (SortingEntity currentSorter : knownSortingEntities.values()) {
