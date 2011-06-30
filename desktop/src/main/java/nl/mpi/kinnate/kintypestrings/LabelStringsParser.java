@@ -10,6 +10,7 @@ import nl.mpi.kinnate.kindata.EntityData;
  */
 public class LabelStringsParser {
 
+    public static String transientNodePrefix = "transient:";
     boolean identifierFound = false;
     String idString;
     String labelsStrings[] = new String[]{};
@@ -22,7 +23,7 @@ public class LabelStringsParser {
             String[] inputStringParts = inputString.split(":", 3);
             if (inputStringParts.length > 0) {
                 labelsStrings = inputStringParts[1].split(";");
-                idString = "label:" + inputStringParts[1];
+                idString = transientNodePrefix + "label:" + inputStringParts[1];
                 identifierFound = true;
             }
             if (inputStringParts.length > 2) {
@@ -35,7 +36,7 @@ public class LabelStringsParser {
             if (parentData != null) {
                 idString = parentData.getUniqueIdentifier() + currentKinTypeString;
             } else {
-                idString = "kintype:" + currentKinTypeString;
+                idString = transientNodePrefix + "kintype:" + currentKinTypeString;
             }
         }
     }
