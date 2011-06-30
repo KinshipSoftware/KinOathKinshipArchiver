@@ -1,5 +1,7 @@
 package nl.mpi.kinnate.export;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -26,77 +28,120 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
  */
 public class EntityUploader {
 
-    EntityCollection.SearchResults searchResults = null;
-    File[] modifiedFiles = null;
+    private EntityCollection.SearchResults searchResults = null;
+    private File[] modifiedFiles = null;
+//    private boolean uploadComplete = false;
+    URI workSpaceUri = null;
 
     public boolean canUpload() {
         return (searchResults != null && searchResults.resultCount > 0) || (modifiedFiles != null && modifiedFiles.length > 0);
+    }
+
+    public boolean isUploadComplete() {
+        return workSpaceUri != null; //uploadComplete;
+    }
+
+    public URI getWorkSpaceUri() {
+        return workSpaceUri;
+    }
+
+    public String getFoundMessage() {
+        String messageString = "";
+        if (searchResults != null) {
+            messageString += "Found " + searchResults.resultCount + " new files to upload\n";
+        }
+        if (modifiedFiles != null) {
+            messageString += "Found " + modifiedFiles.length + " new files to upload\n";
+        }
+        if (searchResults != null && modifiedFiles != null) {
+            messageString += "No results found\n";
+        }
+        return messageString;
     }
 
     public String getSearchMessage() {
         return searchResults.statusMessage;
     }
 
-    public int findLocalEntities(JProgressBar uploadProgress) {
-        EntityCollection entityCollection = new EntityCollection();
-        uploadProgress.setIndeterminate(true);
-        searchResults = entityCollection.searchForLocalEntites();
-        uploadProgress.setString(searchResults.statusMessage);
-        uploadProgress.setIndeterminate(false);
-        return searchResults.resultCount;
+    public void findLocalEntities(final ActionListener actionListener) {
+        new Thread() {
+
+            public void run() {
+                // search the database
+                EntityCollection entityCollection = new EntityCollection();
+                searchResults = entityCollection.searchForLocalEntites();
+                actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
+            }
+        }.start();
     }
 
-    public int findModifiedEntities(JProgressBar uploadProgress) {
-        // search file system
-        ModifiedFileSearch modifiedFileSearch = new ModifiedFileSearch();
-        modifiedFileSearch.setSearchType(ModifiedFileSearch.SearchType.cmdi); // todo: change this to kmdi when implemented
-        modifiedFiles = modifiedFileSearch.getModifiedFiles(ArbilSessionStorage.getSingleInstance().getCacheDirectory()).toArray(new File[]{});
-        return modifiedFiles.length;
+    public void findModifiedEntities(final ActionListener actionListener) {
+        new Thread() {
+
+            public void run() {
+                // search file system
+                ModifiedFileSearch modifiedFileSearch = new ModifiedFileSearch();
+                modifiedFileSearch.setSearchType(ModifiedFileSearch.SearchType.cmdi); // todo: change this to kmdi when implemented
+                modifiedFiles = modifiedFileSearch.getModifiedFiles(ArbilSessionStorage.getSingleInstance().getCacheDirectory()).toArray(new File[]{});
+                actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
+            }
+        }.start();
     }
 
-    public void uploadLocalEntites(JProgressBar uploadProgress, JTextArea outputArea, String workspaceName, char[] workspacePassword) {
-        try {
-            URL serverRestUrl = new URL("http://localhost:8080/kinoath-rest/kinoath/getkin/kinput"); // todo: put this into a config file
-            uploadProgress.setIndeterminate(false);
-            uploadProgress.setMinimum(0);
-            int maxCount = 0;
-            if (searchResults != null) {
-                maxCount += searchResults.resultCount;
-            }
-            if (modifiedFiles != null) {
-                maxCount += modifiedFiles.length;
-            }
-            uploadProgress.setMaximum(maxCount);
-            uploadProgress.setValue(0);
-            if (searchResults != null) {
-                for (String resultLine : searchResults.resultsPathArray) {
-                    try {
-                        uploadFile(serverRestUrl, outputArea, new File(new URI(resultLine)));
-                    } catch (URISyntaxException exception) {
-                        GuiHelper.linorgBugCatcher.logError(exception);
-                        outputArea.append(exception.getMessage());
+    public void uploadLocalEntites(final ActionListener actionListener, final JProgressBar uploadProgress, final JTextArea outputArea, final String workspaceName, final char[] workspacePassword) {
+        new Thread() {
+
+            public void run() {
+                try {
+                    URL serverRestUrl = new URL("http://localhost:8080/kinoath-rest/kinoath/kinhive/workspace/" + workspaceName); // todo: put this into a config file
+                    uploadProgress.setIndeterminate(false);
+                    uploadProgress.setMinimum(0);
+                    int maxCount = 0;
+                    if (searchResults != null) {
+                        maxCount += searchResults.resultCount;
                     }
-                    uploadProgress.setValue(uploadProgress.getValue() + 1);
+                    if (modifiedFiles != null) {
+                        maxCount += modifiedFiles.length;
+                    }
+                    uploadProgress.setMaximum(maxCount);
+                    uploadProgress.setValue(0);
+                    if (searchResults != null) {
+                        for (String resultLine : searchResults.resultsPathArray) {
+                            try {
+                                uploadFile(serverRestUrl, outputArea, new File(new URI(resultLine)));
+                                convertLocalIdentifierToUnique(null, null); // todo: get the unique identifier from the server response
+                            } catch (URISyntaxException exception) {
+                                GuiHelper.linorgBugCatcher.logError(exception);
+                                outputArea.append(exception.getMessage() + "\n");
+                            }
+                            uploadProgress.setValue(uploadProgress.getValue() + 1);
+                        }
+                    }
+                    if (modifiedFiles != null) {
+                        for (File uploadFile : modifiedFiles) {
+                            uploadFile(serverRestUrl, outputArea, uploadFile);
+                            uploadProgress.setValue(uploadProgress.getValue() + 1);
+                        }
+                    }
+                    workSpaceUri = serverRestUrl.toURI();
+                } catch (MalformedURLException exception) {
+                    GuiHelper.linorgBugCatcher.logError(exception);
+                    outputArea.append(exception.getMessage() + "\n");
+                } catch (URISyntaxException exception) {
+                    GuiHelper.linorgBugCatcher.logError(exception);
+                    outputArea.append(exception.getMessage() + "\n");
                 }
-            }
-            if (modifiedFiles != null) {
-                for (File uploadFile : modifiedFiles) {
-                    uploadFile(serverRestUrl, outputArea, uploadFile);
-                    uploadProgress.setValue(uploadProgress.getValue() + 1);
+                uploadProgress.setValue(0);
+                searchResults = null;
+                modifiedFiles = null;
+                for (int charCount = 0; charCount < workspacePassword.length; charCount++) {
+                    // clear the password data so that it is not left hanging around in the virtual machine
+                    workspacePassword[charCount] = 0;
                 }
+//                uploadComplete = true;
+                actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
             }
-            outputArea.append("Done\n");
-        } catch (MalformedURLException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
-            outputArea.append(exception.getMessage());
-        }
-        uploadProgress.setValue(0);
-        searchResults = null;
-        modifiedFiles = null;
-        for (int charCount = 0; charCount < workspacePassword.length; charCount++) {
-            // clear the password data so that it is not left hanging around in the virtual machine
-            workspacePassword[charCount] = 0;
-        }
+        }.start();
     }
 
     private void uploadFile(URL serverRestUrl, JTextArea outputArea, File uploadFile) {
@@ -122,15 +167,20 @@ public class EntityUploader {
             inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             for (String responseLine = bufferedReader.readLine(); responseLine != null; responseLine = bufferedReader.readLine()) {
-                outputArea.append(responseLine);
+                outputArea.append(responseLine + "\n");
             }
             outputArea.append("\n");
             stripHistoryFiles(uploadFile);
         } catch (IOException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
-            outputArea.append(exception.getMessage());
+            outputArea.append(exception.getMessage() + "\n");
         }
 
+    }
+
+    private void convertLocalIdentifierToUnique(String localIdentifier, String uniqueIdentifier){
+        // todo: change in the target file
+        // todo: update all relatives of the target file
     }
 
     private void stripHistoryFiles(File targetFile) {
