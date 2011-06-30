@@ -56,7 +56,7 @@ public class EntityUploader {
 
     public void uploadLocalEntites(JProgressBar uploadProgress, JTextArea outputArea, String workspaceName, char[] workspacePassword) {
         try {
-            URL serverRestUrl = new URL("http://localhost:8080/kinoath-rest/"); // todo: put this into a config file
+            URL serverRestUrl = new URL("http://localhost:8080/kinoath-rest/kinoath/getkin/kinput"); // todo: put this into a config file
             uploadProgress.setIndeterminate(false);
             uploadProgress.setMinimum(0);
             int maxCount = 0;
@@ -92,6 +92,7 @@ public class EntityUploader {
         }
         uploadProgress.setValue(0);
         searchResults = null;
+        modifiedFiles = null;
         for (int charCount = 0; charCount < workspacePassword.length; charCount++) {
             // clear the password data so that it is not left hanging around in the virtual machine
             workspacePassword[charCount] = 0;
