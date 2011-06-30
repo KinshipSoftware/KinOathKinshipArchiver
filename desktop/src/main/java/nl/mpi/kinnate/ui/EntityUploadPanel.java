@@ -24,7 +24,8 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
 
 //    private JList uploadList;
     private JTextArea uploadText;
-    private JButton searchButton;
+    private JButton searchNewButton;
+    private JButton searchModifiedButton;
     private JButton uploadButton;
     private JTextField workspaceName;
     private JPasswordField passwordText;
@@ -37,14 +38,16 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         entityUploader = new EntityUploader();
 //        uploadList = new JList();
         uploadText = new JTextArea();
-        searchButton = new JButton("Search Entities");
+        searchNewButton = new JButton("Search New Entities");
+        searchModifiedButton = new JButton("Search Modified Entities");
         uploadButton = new JButton("Upload Selected");
         workspaceName = new JTextField();
         passwordText = new JPasswordField();
         uploadProgress = new JProgressBar();
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new FlowLayout());
-        controlPanel.add(searchButton);
+        controlPanel.add(searchNewButton);
+        controlPanel.add(searchModifiedButton);
         controlPanel.add(uploadButton);
 
         workspacePanel = new JPanel();
@@ -73,24 +76,31 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
 //        passwordText.setEnabled(false);
         workspacePanel.setVisible(false);
         passwordPanel.setVisible(false);
-        searchButton.addActionListener(this);
+        searchNewButton.addActionListener(this);
+        searchModifiedButton.addActionListener(this);
         uploadButton.addActionListener(this);
-        searchButton.setActionCommand("search");
+        searchNewButton.setActionCommand("searchnew");
+        searchModifiedButton.setActionCommand("searchmodified");
         uploadButton.setActionCommand("upload");
     }
 
     public void actionPerformed(ActionEvent e) {
-        searchButton.setEnabled(false);
+        searchNewButton.setEnabled(false);
+        searchModifiedButton.setEnabled(false);
         uploadButton.setEnabled(false);
-        if (e.getActionCommand().equals("search")) {
+        if (e.getActionCommand().equals("searchnew")) {
             uploadText.append("Searching for local entities that do not exist on the server\n");
             int foundCount = entityUploader.findLocalEntities(uploadProgress);
 //            uploadText.append(entityUploader.getSearchMessage());
             uploadText.append("Found " + foundCount + " entities to upload\n");
+        } else if (e.getActionCommand().equals("searchmodified")) {
+            uploadText.append("Searching for modified entities that require upload to the server\n");
+            int foundCount = entityUploader.findModifiedEntities(uploadProgress);
+            uploadText.append("Found " + foundCount + " entities to upload\n");
         } else if (e.getActionCommand().equals("upload")) {
             uploadText.append("Uploading entities to the server\n");
-            entityUploader.uploadLocalEntites(uploadProgress, workspaceName.getText(), passwordText.getPassword());
-            uploadText.append("Done\n");
+            entityUploader.uploadLocalEntites(uploadProgress, uploadText, workspaceName.getText(), passwordText.getPassword());
+//            uploadText.append("Done\n");
         }
 
 //        workspaceName.setEnabled(entityUploader.canUpload());
@@ -98,6 +108,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         workspacePanel.setVisible(entityUploader.canUpload());
         passwordPanel.setVisible(entityUploader.canUpload());
         uploadButton.setEnabled(entityUploader.canUpload());
-        searchButton.setEnabled(!entityUploader.canUpload());
+        searchNewButton.setEnabled(!entityUploader.canUpload());
+        searchModifiedButton.setEnabled(!entityUploader.canUpload());
     }
 }
