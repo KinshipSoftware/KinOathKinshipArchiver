@@ -13,6 +13,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.export.EntityUploader;
 
 /**
@@ -27,6 +28,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
     private JButton searchNewButton;
     private JButton searchModifiedButton;
     private JButton uploadButton;
+    private JButton viewUploadButton;
     private JTextField workspaceName;
     private JPasswordField passwordText;
     private JProgressBar uploadProgress;
@@ -41,6 +43,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         searchNewButton = new JButton("Search New Entities");
         searchModifiedButton = new JButton("Search Modified Entities");
         uploadButton = new JButton("Upload Selected");
+        viewUploadButton = new JButton("View Uploaded");
         workspaceName = new JTextField();
         passwordText = new JPasswordField();
         uploadProgress = new JProgressBar();
@@ -49,6 +52,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         controlPanel.add(searchNewButton);
         controlPanel.add(searchModifiedButton);
         controlPanel.add(uploadButton);
+        controlPanel.add(viewUploadButton);
 
         workspacePanel = new JPanel();
         workspacePanel.setLayout(new BorderLayout());
@@ -72,6 +76,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         this.add(new JScrollPane(uploadText), BorderLayout.CENTER);
         this.add(uploadProgress, BorderLayout.PAGE_END);
         uploadButton.setEnabled(false);
+        viewUploadButton.setEnabled(false);
 //        workspaceName.setEnabled(false);
 //        passwordText.setEnabled(false);
         workspacePanel.setVisible(false);
@@ -79,28 +84,36 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         searchNewButton.addActionListener(this);
         searchModifiedButton.addActionListener(this);
         uploadButton.addActionListener(this);
+        viewUploadButton.addActionListener(this);
         searchNewButton.setActionCommand("searchnew");
         searchModifiedButton.setActionCommand("searchmodified");
         uploadButton.setActionCommand("upload");
+        viewUploadButton.setActionCommand("view");
     }
 
     public void actionPerformed(ActionEvent e) {
         searchNewButton.setEnabled(false);
         searchModifiedButton.setEnabled(false);
         uploadButton.setEnabled(false);
+        viewUploadButton.setEnabled(false);
         if (e.getActionCommand().equals("searchnew")) {
             uploadText.setText("Searching for local entities that do not exist on the server\n");
-            int foundCount = entityUploader.findLocalEntities(uploadProgress);
-//            uploadText.append(entityUploader.getSearchMessage());
-            uploadText.append("Found " + foundCount + " entities to upload\n");
+            uploadProgress.setIndeterminate(true);
+            entityUploader.findLocalEntities(this);
         } else if (e.getActionCommand().equals("searchmodified")) {
             uploadText.setText("Searching for modified entities that require upload to the server\n");
-            int foundCount = entityUploader.findModifiedEntities(uploadProgress);
-            uploadText.append("Found " + foundCount + " entities to upload\n");
+            uploadProgress.setIndeterminate(true);
+            entityUploader.findModifiedEntities(this);
         } else if (e.getActionCommand().equals("upload")) {
             uploadText.append("Uploading entities to the server\n");
-            entityUploader.uploadLocalEntites(uploadProgress, uploadText, workspaceName.getText(), passwordText.getPassword());
+            entityUploader.uploadLocalEntites(this, uploadProgress, uploadText, workspaceName.getText(), passwordText.getPassword());
 //            uploadText.append("Done\n");
+        } else if (e.getActionCommand().equals("seachcomplete")) {
+            uploadText.append(entityUploader.getFoundMessage());
+            uploadProgress.setIndeterminate(false);
+            uploadText.append("Done\n");
+        } else if (e.getActionCommand().equals("view")) {
+            GuiHelper.getSingleInstance().openFileInExternalApplication(entityUploader.getWorkSpaceUri());
         }
 
 //        workspaceName.setEnabled(entityUploader.canUpload());
@@ -108,6 +121,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         workspacePanel.setVisible(entityUploader.canUpload());
         passwordPanel.setVisible(entityUploader.canUpload());
         uploadButton.setEnabled(entityUploader.canUpload());
+        viewUploadButton.setEnabled(entityUploader.isUploadComplete());
         searchNewButton.setEnabled(!entityUploader.canUpload());
         searchModifiedButton.setEnabled(!entityUploader.canUpload());
     }
