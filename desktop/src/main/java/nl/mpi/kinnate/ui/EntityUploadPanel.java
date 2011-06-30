@@ -89,12 +89,12 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         searchModifiedButton.setEnabled(false);
         uploadButton.setEnabled(false);
         if (e.getActionCommand().equals("searchnew")) {
-            uploadText.append("Searching for local entities that do not exist on the server\n");
+            uploadText.setText("Searching for local entities that do not exist on the server\n");
             int foundCount = entityUploader.findLocalEntities(uploadProgress);
 //            uploadText.append(entityUploader.getSearchMessage());
             uploadText.append("Found " + foundCount + " entities to upload\n");
         } else if (e.getActionCommand().equals("searchmodified")) {
-            uploadText.append("Searching for modified entities that require upload to the server\n");
+            uploadText.setText("Searching for modified entities that require upload to the server\n");
             int foundCount = entityUploader.findModifiedEntities(uploadProgress);
             uploadText.append("Found " + foundCount + " entities to upload\n");
         } else if (e.getActionCommand().equals("upload")) {
