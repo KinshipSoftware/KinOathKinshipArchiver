@@ -8,8 +8,12 @@
         <init-param>
             <param-name>com.sun.jersey.config.property.classnames</param-name>
             <param-value>nl.mpi.kinnate.rest.GetKin</param-value>
-<!--            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <!--            <param-name>com.sun.jersey.config.property.packages</param-name>
             <param-value>nl.mpi.kinnate.rest</param-value>-->
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.classnames</param-name>
+            <param-value>nl.mpi.kinnate.rest.KinSpace</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
