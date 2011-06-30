@@ -59,6 +59,7 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane1.add("Kin Type String", new KinTypeStringTestPanel());
 //        jTabbedPane1.add("Kin Term Mapping for KinType Strings", new KinTypeStringTestPanel());
         jTabbedPane1.add("Archive Entity Linker", new ArchiveEntityLinkerPanel());
+        jTabbedPane1.add("Entity Upload", new EntityUploadPanel());
 //        jTabbedPane1.add("Graph", graphPanel);
 //        jTabbedPane1.add("SVG2  (deprecated)", new GraphPanel1());
 //        jTabbedPane1.add("Jung", jungGraph);
