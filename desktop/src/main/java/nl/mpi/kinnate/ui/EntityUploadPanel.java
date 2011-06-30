@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -45,6 +47,17 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         uploadButton = new JButton("Upload Selected");
         viewUploadButton = new JButton("View Uploaded");
         workspaceName = new JTextField();
+        workspaceName.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyTyped(KeyEvent keyEvent) {
+                char keyChar = keyEvent.getKeyChar();
+                if (!Character.isLetterOrDigit(keyChar)) {
+                    // prevent non url chars being entered
+                    keyEvent.consume();
+                }
+            }
+        });
         passwordText = new JPasswordField();
         uploadProgress = new JProgressBar();
         JPanel controlPanel = new JPanel();
