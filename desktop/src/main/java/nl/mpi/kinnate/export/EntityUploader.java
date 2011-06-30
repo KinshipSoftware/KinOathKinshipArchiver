@@ -158,6 +158,7 @@ public class EntityUploader {
             while ((bytesRead = bufferedInputStream.read()) > 0) {
                 bufferedOutputStream.write(bytesRead);
             }
+            bufferedOutputStream.close();
             bufferedInputStream.close();
             // show the response code
             outputArea.append(httpURLConnection.getResponseCode() + "\n");
