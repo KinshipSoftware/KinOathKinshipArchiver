@@ -190,6 +190,7 @@ public class KinTypeStringConverter extends GraphSorter {
                 }
             }
         }
+        ArrayList<EntityData> egoDataNodeList = new ArrayList<EntityData>();
         int lineCounter = -1;
         for (String inputString : inputStringList) {
             lineCounter++;
@@ -215,7 +216,7 @@ public class KinTypeStringConverter extends GraphSorter {
                     int initialLength = inputString.length();
                     String consumableString = inputString;
                     EntityData parentDataNode = null;
-                    EntityData egoDataNode = null;
+                    EntityData egoDataNode = null; // todo: replace this with the egoDataNodeList, currently waiting on the kin type strings update below
                     String fullKinTypeString = "";
                     while (consumableString.length() > 0) {
                         int parserHighlightPosition = initialLength - consumableString.length();
@@ -253,10 +254,6 @@ public class KinTypeStringConverter extends GraphSorter {
                                 }
                                 if (graphDataNodeList.containsKey(labelStringsParser.idString)) {
                                     currentGraphDataNode = graphDataNodeList.get(labelStringsParser.idString);
-                                    if (currentGraphDataNode.isEgo) {
-                                        egoDataNode = currentGraphDataNode;
-//                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
-                                    }
                                     // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
                                 } else {
                                     if (parentDataNode != null && !labelStringsParser.identifierFound /* if a label has been specified then always create or reuse that named entity */) {
@@ -268,14 +265,25 @@ public class KinTypeStringConverter extends GraphSorter {
                                                 break;
                                             }
                                         }
+                                    } else if (parentDataNode == null && !labelStringsParser.identifierFound) {
+                                        // look through all the known egos to find a match (must be an ego to match), use case could be: Em:Richard:|Em which should re use the existing ego
+                                        for (EntityData egoEntity : egoDataNodeList) {
+                                            if (currentReferenceKinType.matchesEgoEntity(egoEntity, kinTypeModifier)) {
+                                                currentGraphDataNode = egoEntity;
+                                                currentGraphDataNode.addKinTypeString(fullKinTypeString);
+                                                break;
+                                            }
+                                        }
                                     }
                                     if (currentGraphDataNode == null) {
                                         currentGraphDataNode = new EntityData(labelStringsParser.idString, null, fullKinTypeString, currentReferenceKinType.symbolType, labelStringsParser.labelsStrings, currentReferenceKinType.isEgoType());
+                                        if (currentGraphDataNode.isEgo) {
+                                            egoDataNodeList.add(currentGraphDataNode);
+                                        }
                                     }
-                                    if (currentGraphDataNode.isEgo) {
-                                        egoDataNode = currentGraphDataNode;
-//                                    fullKinTypeString = fullKinTypeString.replaceAll("^E[mf]", "");
-                                    }
+                                }
+                                if (currentGraphDataNode.isEgo) {
+                                    egoDataNode = currentGraphDataNode;
                                 }
                                 if (parentDataNode != null && !currentReferenceKinType.relationType.equals(DataTypes.RelationType.none)) {
                                     // allow relations only for kin types that do not start the kin type string
@@ -286,6 +294,8 @@ public class KinTypeStringConverter extends GraphSorter {
                                 // add any child nodes?
                                 for (KinTermGroup kinTerms : kinTermsArray) {
                                     if (kinTerms.graphShow && egoDataNode != null) {
+                                        // todo: replace this with a loop over egoDataNodeList and then calculate the actual kin type strings for each one rather than the user entered ones used here
+                                        // todo: this should probably be done after all nodes have been created so that subsequent relations are taken into account when calculating the kin terms
                                         for (String kinTermLabel : kinTerms.getTermLabel(fullKinTypeString)) {
                                             // todo: this could be running too many times, maybe check for efficiency
                                             currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
