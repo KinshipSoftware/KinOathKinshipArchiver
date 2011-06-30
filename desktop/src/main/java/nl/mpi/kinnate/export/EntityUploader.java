@@ -1,6 +1,15 @@
 package nl.mpi.kinnate.export;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import javax.swing.JProgressBar;
+import javax.swing.JTextArea;
+import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
@@ -11,9 +20,10 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 public class EntityUploader {
 
     EntityCollection.SearchResults searchResults = null;
+    URI[] modifiedFiles = null;
 
     public boolean canUpload() {
-        return (searchResults != null && searchResults.resultCount > 0);
+        return (searchResults != null && searchResults.resultCount > 0) || (modifiedFiles != null && modifiedFiles.length > 0);
     }
 
     public String getSearchMessage() {
@@ -29,13 +39,47 @@ public class EntityUploader {
         return searchResults.resultCount;
     }
 
-    public void uploadLocalEntites(JProgressBar uploadProgress, String workspaceName, char[] workspacePassword) {
-        uploadProgress.setIndeterminate(false);
-        uploadProgress.setMinimum(0);
-        uploadProgress.setMaximum(searchResults.resultCount);
-        uploadProgress.setValue(0);
-        for (String resultLine : searchResults.resultsPathArray) {
-            uploadProgress.setValue(uploadProgress.getValue() + 1);
+    public int findModifiedEntities(JProgressBar uploadProgress) {
+        modifiedFiles = new URI[]{};
+        // todo: search file system
+        return modifiedFiles.length;
+    }
+
+    public void uploadLocalEntites(JProgressBar uploadProgress, JTextArea outputArea, String workspaceName, char[] workspacePassword) {
+        try {
+            URL serverRestUrl = new URL("http://localhost:8080/kinoath-rest/"); // todo: put this into a config file
+            uploadProgress.setIndeterminate(false);
+            uploadProgress.setMinimum(0);
+            int maxCount = 0;
+            if (searchResults != null) {
+                maxCount += searchResults.resultCount;
+            }
+            if (modifiedFiles != null) {
+                maxCount += modifiedFiles.length;
+            }
+            uploadProgress.setMaximum(maxCount);
+            uploadProgress.setValue(0);
+            if (searchResults != null) {
+                for (String resultLine : searchResults.resultsPathArray) {
+                    try {
+                        uploadFile(serverRestUrl, outputArea, new URI(resultLine));
+                    } catch (URISyntaxException exception) {
+                        GuiHelper.linorgBugCatcher.logError(exception);
+                        outputArea.append(exception.getMessage());
+                    }
+                    uploadProgress.setValue(uploadProgress.getValue() + 1);
+                }
+            }
+            if (modifiedFiles != null) {
+                for (URI resultUri : modifiedFiles) {
+                    uploadFile(serverRestUrl, outputArea, resultUri);
+                    uploadProgress.setValue(uploadProgress.getValue() + 1);
+                }
+            }
+            outputArea.append("Done\n");
+        } catch (MalformedURLException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+            outputArea.append(exception.getMessage());
         }
         uploadProgress.setValue(0);
         searchResults = null;
@@ -43,5 +87,24 @@ public class EntityUploader {
             // clear the password data so that it is not left hanging around in the virtual machine
             workspacePassword[charCount] = 0;
         }
+    }
+
+    private void uploadFile(URL serverRestUrl, JTextArea outputArea, URI uploadEntity) {
+        try {
+            outputArea.append(uploadEntity + "\n");
+            HttpURLConnection httpCon = (HttpURLConnection) serverRestUrl.openConnection();
+            httpCon.setDoOutput(true);
+            httpCon.setRequestMethod("PUT");
+//                    connection.setRequestProperty("Content-Type","text/xml");
+            OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
+            out.write("Resource content");
+            out.close();
+            outputArea.append(httpCon.getResponseMessage() + "\n");
+            outputArea.append(httpCon.getResponseCode() + "\n");
+        } catch (IOException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+            outputArea.append(exception.getMessage());
+        }
+
     }
 }
