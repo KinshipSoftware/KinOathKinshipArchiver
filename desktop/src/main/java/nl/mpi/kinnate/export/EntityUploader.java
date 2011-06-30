@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.export;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -10,6 +11,7 @@ import java.net.URL;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
@@ -20,7 +22,7 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 public class EntityUploader {
 
     EntityCollection.SearchResults searchResults = null;
-    URI[] modifiedFiles = null;
+    File[] modifiedFiles = null;
 
     public boolean canUpload() {
         return (searchResults != null && searchResults.resultCount > 0) || (modifiedFiles != null && modifiedFiles.length > 0);
@@ -40,8 +42,10 @@ public class EntityUploader {
     }
 
     public int findModifiedEntities(JProgressBar uploadProgress) {
-        modifiedFiles = new URI[]{};
-        // todo: search file system
+        // search file system
+        ModifiedFileSearch modifiedFileSearch = new ModifiedFileSearch();
+        modifiedFileSearch.setSearchType(ModifiedFileSearch.SearchType.cmdi); // todo: change this to kmdi when implemented
+        modifiedFiles = modifiedFileSearch.getModifiedFiles(ArbilSessionStorage.getSingleInstance().getCacheDirectory()).toArray(new File[]{});
         return modifiedFiles.length;
     }
 
@@ -62,7 +66,7 @@ public class EntityUploader {
             if (searchResults != null) {
                 for (String resultLine : searchResults.resultsPathArray) {
                     try {
-                        uploadFile(serverRestUrl, outputArea, new URI(resultLine));
+                        uploadFile(serverRestUrl, outputArea, new File(new URI(resultLine)));
                     } catch (URISyntaxException exception) {
                         GuiHelper.linorgBugCatcher.logError(exception);
                         outputArea.append(exception.getMessage());
@@ -71,8 +75,8 @@ public class EntityUploader {
                 }
             }
             if (modifiedFiles != null) {
-                for (URI resultUri : modifiedFiles) {
-                    uploadFile(serverRestUrl, outputArea, resultUri);
+                for (File uploadFile : modifiedFiles) {
+                    uploadFile(serverRestUrl, outputArea, uploadFile);
                     uploadProgress.setValue(uploadProgress.getValue() + 1);
                 }
             }
@@ -89,9 +93,9 @@ public class EntityUploader {
         }
     }
 
-    private void uploadFile(URL serverRestUrl, JTextArea outputArea, URI uploadEntity) {
+    private void uploadFile(URL serverRestUrl, JTextArea outputArea, File uploadFile) {
         try {
-            outputArea.append(uploadEntity + "\n");
+            outputArea.append(uploadFile.toString() + "\n");
             HttpURLConnection httpCon = (HttpURLConnection) serverRestUrl.openConnection();
             httpCon.setDoOutput(true);
             httpCon.setRequestMethod("PUT");
