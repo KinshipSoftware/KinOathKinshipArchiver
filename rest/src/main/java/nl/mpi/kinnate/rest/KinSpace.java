@@ -50,11 +50,18 @@ public class KinSpace {
     public String createWorkspace(@PathParam("workspaceName") String workspaceName) {
         try {
             new HiveManager().createWorkspace(workspaceName);
-            return "created workspace<br><a href=/kinoath-rest/kinoath/kinspace/>" + workspaceName + "</a>" + listWorkSpacesHref;
+            return "created workspace<br><a href=/kinoath-rest/kinoath/kinspace/" + workspaceName + ">" + workspaceName + "</a>" + listWorkSpacesHref;
         } catch (HiveException exception) {
             return exception.getMessage() + listWorkSpacesHref;
         }
 
+    }
+
+    @GET
+    @Produces("text/html")
+    @Path("{workspaceName: [a-zA-Z0-9]*}/{pidString: [a-zA-Z0-9]*}")
+    public String showWorkSpace(@PathParam("workspaceName") String workspaceName, @PathParam("pidString") String pidString) {
+        return workspaceName + " : " + pidString;
     }
 
     @GET
@@ -71,10 +78,27 @@ public class KinSpace {
         } else if (workspaceFiles.length < 1) {
             resultStringBuilder.append("no files found<br>");
         } else {
+            resultStringBuilder.append("<table>");
             for (String currentWorkspaceFile : workspaceFiles) {
-                resultStringBuilder.append(currentWorkspaceFile);
+                String pidString = currentWorkspaceFile.replaceFirst("\\.kmdi$", "");
+                resultStringBuilder.append("<tr><td>");
+                resultStringBuilder.append(pidString);
                 resultStringBuilder.append("<br>");
+                resultStringBuilder.append("</td><td>");
+                resultStringBuilder.append("<a href=/kinoath-rest/kinoath/kinspace/");
+                resultStringBuilder.append(workspaceName);
+                resultStringBuilder.append("/");
+                resultStringBuilder.append(pidString);
+                resultStringBuilder.append(">view</a>");
+                resultStringBuilder.append("</td><td>");
+                resultStringBuilder.append("<a href=/kinoath-rest/kinoath/kinspace/");
+                resultStringBuilder.append(workspaceName);
+                resultStringBuilder.append("/");
+                resultStringBuilder.append(pidString);
+                resultStringBuilder.append("/commit>commit</a>");
+                resultStringBuilder.append("</td></tr>");
             }
+            resultStringBuilder.append("</table>");
         }
         resultStringBuilder.append("</p>");
         resultStringBuilder.append(listWorkSpacesHref);
@@ -87,7 +111,7 @@ public class KinSpace {
     public String putXml(@PathParam("workspaceName") String workspaceName, InputStream entityXmlStream) {
         try {
             String kinHivePid = new HiveManager().addToWorkspace(workspaceName, entityXmlStream);
-            return "Workspace: " + workspaceName + " Received: " + kinHivePid;
+            return "Pid for uploaded file: " + kinHivePid;
         } catch (HiveException exception) {
             throw new WebApplicationException(404);
         }
