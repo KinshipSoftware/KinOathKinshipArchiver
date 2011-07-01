@@ -10,6 +10,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import nl.mpi.kinnate.kinhive.HiveException;
+import nl.mpi.kinnate.kinhive.HiveManager;
 
 /**
  *  Document   : KinSpace
@@ -21,9 +23,54 @@ public class KinSpace {
 
     @GET
     @Produces("text/html")
+    @Path("")
+    public String listWorkSpaces() {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        resultStringBuilder.append("<b>Available Workspaces</b><br><p>");
+        for (String currentWorkspace : new HiveManager().listWorkspaces()) {
+            resultStringBuilder.append("<a href=/kinoath-rest/kinoath/kinspace/");
+            resultStringBuilder.append(currentWorkspace);
+            resultStringBuilder.append(">");
+            resultStringBuilder.append(currentWorkspace);
+            resultStringBuilder.append("</a>");
+            resultStringBuilder.append("<br>");
+        }
+        resultStringBuilder.append("</p><br><a href=/kinoath-rest/kinoath/kinspace/sampleworkspace/create>create a sample workspace (change url to change the workspace name)</a>");
+        return resultStringBuilder.toString();
+    }
+
+    @GET
+    @Produces("text/html")
+    @Path("{workspaceName: [a-zA-Z0-9]*}/create")
+    public String createWorkspace(@PathParam("workspaceName") String workspaceName) {
+        try {
+            new HiveManager().createWorkspace(workspaceName);
+            return "created workspace<br><a href=/kinoath-rest/kinoath/kinspace/>" + workspaceName + "</a>";
+        } catch (HiveException exception) {
+            return exception.getMessage();
+        }
+
+    }
+
+    @GET
+    @Produces("text/html")
     @Path("{workspaceName: [a-zA-Z0-9]*}")
-    public String getHtml(@PathParam("workspaceName") String workspaceName) {
-        return "rabbits for all " + workspaceName;
+    public String showWorkSpace(@PathParam("workspaceName") String workspaceName) {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        resultStringBuilder.append("<b>Workspace: ");
+        resultStringBuilder.append(workspaceName);
+        resultStringBuilder.append("</b><br><p>");
+        boolean filesFound = false;
+        for (String currentWorkspaceFile : new HiveManager().listWorkspaceFiles(workspaceName)) {
+            resultStringBuilder.append(currentWorkspaceFile);
+            resultStringBuilder.append("<br>");
+            filesFound = true;
+        }
+        if (!filesFound) {
+            resultStringBuilder.append("no files found<br>");
+        }
+        resultStringBuilder.append("</p><br><a href=/kinoath-rest/kinoath/kinspace/>list workspaces</a>");
+        return resultStringBuilder.toString();
     }
 
     @Path("{workspaceName: [a-zA-Z0-9]*}")
