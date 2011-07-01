@@ -31,18 +31,18 @@ public class EntityUploader {
     private EntityCollection.SearchResults searchResults = null;
     private File[] modifiedFiles = null;
 //    private boolean uploadComplete = false;
-    URI workSpaceUri = null;
+    URI workspaceUri = null;
 
     public boolean canUpload() {
         return (searchResults != null && searchResults.resultCount > 0) || (modifiedFiles != null && modifiedFiles.length > 0);
     }
 
     public boolean isUploadComplete() {
-        return workSpaceUri != null; //uploadComplete;
+        return workspaceUri != null; //uploadComplete;
     }
 
-    public URI getWorkSpaceUri() {
-        return workSpaceUri;
+    public URI getWorkspaceUri() {
+        return workspaceUri;
     }
 
     public String getFoundMessage() {
@@ -88,7 +88,7 @@ public class EntityUploader {
         }.start();
     }
 
-    public void uploadLocalEntites(final ActionListener actionListener, final JProgressBar uploadProgress, final JTextArea outputArea, final String workspaceName, final char[] workspacePassword) {
+    public void uploadLocalEntites(final ActionListener actionListener, final JProgressBar uploadProgress, final JTextArea outputArea, final String workspaceName, final char[] workspacePassword/*, final boolean createWorkspace*/) {
         new Thread() {
 
             public void run() {
@@ -123,7 +123,7 @@ public class EntityUploader {
                             uploadProgress.setValue(uploadProgress.getValue() + 1);
                         }
                     }
-                    workSpaceUri = serverRestUrl.toURI();
+                    workspaceUri = serverRestUrl.toURI();
                 } catch (MalformedURLException exception) {
                     GuiHelper.linorgBugCatcher.logError(exception);
                     outputArea.append(exception.getMessage() + "\n");
