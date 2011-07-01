@@ -1,7 +1,12 @@
 package nl.mpi.kinnate.kinhive;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  *  Document   : HiveManager
@@ -57,8 +62,23 @@ public class HiveManager {
         }
     }
 
-    public String addToWorkspace(String workspaceName, String fileContents) {
-        return DummyPersistentIds.getPID();
+    public String addToWorkspace(String workspaceName, InputStream entityXmlStream) {
+        String kinHivePid = DummyPersistentIds.getPID();
+
+        File targetFile = new File(getWorkspaceDir(workspaceName), kinHivePid + ".kmdi");
+        try {
+            FileWriter targetFileWriter = new FileWriter(targetFile);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(entityXmlStream, "UTF-8"));
+            for (String responseLine = bufferedReader.readLine(); responseLine != null; responseLine = bufferedReader.readLine()) {
+                targetFileWriter.append(responseLine);
+                targetFileWriter.append("\n");
+            }
+            targetFileWriter.append("\n");
+            targetFileWriter.close();
+        } catch (IOException exception) {
+            return exception.getMessage();
+        }
+        return kinHivePid;
     }
 
     public void migrateToHive(String workspaceName, String persistentID) {
