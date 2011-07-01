@@ -1,6 +1,10 @@
 <html>
     <body>
         <h2>KinOath Web Application Example Page</h2>
+        <b>Workspaces and Uploaded Files</b><br>
+        <p>
+            <a href="kinoath/kinspace">list work spaces</a>
+        </p>
         <b>HTML output for viewing</b><br>
         <% String htmlUrlString = "kinoath/getkin/view?kts=EmB&kts=EmZM&kts=EmM&kts=EmF&kts=EmS&kts=EmDM"; %>
         <p>
