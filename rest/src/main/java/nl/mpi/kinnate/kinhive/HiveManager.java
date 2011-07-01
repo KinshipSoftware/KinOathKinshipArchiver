@@ -62,10 +62,14 @@ public class HiveManager {
         }
     }
 
-    public String addToWorkspace(String workspaceName, InputStream entityXmlStream) {
+    public String addToWorkspace(String workspaceName, InputStream entityXmlStream) throws HiveException {
+        File currentWorkspaceDir = getWorkspaceDir(workspaceName);
+        if (!currentWorkspaceDir.exists()) {
+            throw new HiveException("The workspace does not exist: " + workspaceName);
+        }
+        // todo: look if this is a an existing entity that needs a lock or if it needs a new pid so that it can be added
         String kinHivePid = DummyPersistentIds.getPID();
-
-        File targetFile = new File(getWorkspaceDir(workspaceName), kinHivePid + ".kmdi");
+        File targetFile = new File(currentWorkspaceDir, kinHivePid + ".kmdi");
         try {
             FileWriter targetFileWriter = new FileWriter(targetFile);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(entityXmlStream, "UTF-8"));
