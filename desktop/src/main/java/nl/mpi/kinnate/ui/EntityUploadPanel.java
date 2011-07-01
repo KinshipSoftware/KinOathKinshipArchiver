@@ -131,6 +131,9 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
             uploadText.append(entityUploader.getFoundMessage());
             uploadProgress.setIndeterminate(false);
             uploadText.append("Done\n");
+        } else if (e.getActionCommand().equals("uploadaborted")) {
+            uploadProgress.setIndeterminate(false);
+            uploadText.append("Error on upload, does the specified workspace exist?\n");
         } else if (e.getActionCommand().equals("view")) {
             GuiHelper.getSingleInstance().openFileInExternalApplication(entityUploader.getWorkspaceUri());
         }
