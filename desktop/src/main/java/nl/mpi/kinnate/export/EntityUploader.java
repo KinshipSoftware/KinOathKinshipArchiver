@@ -150,7 +150,7 @@ public class EntityUploader {
 
     private void uploadFile(URL serverRestUrl, JTextArea outputArea, File uploadFile) throws ExportException {
         try {
-            outputArea.append(uploadFile.toString() + "\n");
+//            outputArea.append(uploadFile.toString() + "\n");
             HttpURLConnection httpURLConnection = (HttpURLConnection) serverRestUrl.openConnection();
             httpURLConnection.setDoOutput(true);
             httpURLConnection.setRequestMethod("PUT");
@@ -186,9 +186,12 @@ public class EntityUploader {
     private void convertLocalIdentifierToUnique(String localIdentifier, String uniqueIdentifier) {
         // todo: change in the target file
         // todo: update all relatives of the target file
+        // todo: in the case of an imdi file that is new to the server we need to insert the pid returned by the server
     }
 
     private void stripHistoryFiles(File targetFile) {
         // todo: strip the history files, eg .x .0 .1 .2 etc. but keep the main file
+        ModifiedFileSearch modifiedFileSearch = new ModifiedFileSearch();
+        modifiedFileSearch.stripHistoryFiles(targetFile);
     }
 }
