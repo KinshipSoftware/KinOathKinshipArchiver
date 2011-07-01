@@ -9,6 +9,6 @@ public class DummyPersistentIds {
 
     static public String getPID() {
         // todo: do not do this in production, the time on the server could be wrong and there might be two servers or cpus and there might be two requests in the space of one ms...
-        return "dummyPID:" + System.currentTimeMillis();
+        return "dummyPID" + System.currentTimeMillis();
     }
 }
