@@ -32,6 +32,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
     private JButton uploadButton;
     private JButton viewUploadButton;
     private JTextField workspaceName;
+//    private JCheckBox createWorkspace;
     private JPasswordField passwordText;
     private JProgressBar uploadProgress;
     private EntityUploader entityUploader;
@@ -58,6 +59,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
                 }
             }
         });
+//        createWorkspace=new JCheckBox();
         passwordText = new JPasswordField();
         uploadProgress = new JProgressBar();
         JPanel controlPanel = new JPanel();
@@ -71,6 +73,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         workspacePanel.setLayout(new BorderLayout());
         workspacePanel.add(new JLabel("Target Workspace Name"), BorderLayout.LINE_START);
         workspacePanel.add(workspaceName, BorderLayout.CENTER);
+//        workspacePanel.add(createWorkspace, BorderLayout.LINE_END);
 
         passwordPanel = new JPanel();
         passwordPanel.setLayout(new BorderLayout());
@@ -118,15 +121,18 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
             uploadProgress.setIndeterminate(true);
             entityUploader.findModifiedEntities(this);
         } else if (e.getActionCommand().equals("upload")) {
-            uploadText.append("Uploading entities to the server\n");
-            entityUploader.uploadLocalEntites(this, uploadProgress, uploadText, workspaceName.getText(), passwordText.getPassword());
-//            uploadText.append("Done\n");
+            if (!workspaceName.getText().isEmpty()) {
+                uploadText.append("Uploading entities to the server\n");
+                entityUploader.uploadLocalEntites(this, uploadProgress, uploadText, workspaceName.getText(), passwordText.getPassword() /*, createWorkspace.isSelected()*/);
+            } else {
+                uploadText.append("Please enter a workspace name\n");
+            }
         } else if (e.getActionCommand().equals("seachcomplete")) {
             uploadText.append(entityUploader.getFoundMessage());
             uploadProgress.setIndeterminate(false);
             uploadText.append("Done\n");
         } else if (e.getActionCommand().equals("view")) {
-            GuiHelper.getSingleInstance().openFileInExternalApplication(entityUploader.getWorkSpaceUri());
+            GuiHelper.getSingleInstance().openFileInExternalApplication(entityUploader.getWorkspaceUri());
         }
 
 //        workspaceName.setEnabled(entityUploader.canUpload());
