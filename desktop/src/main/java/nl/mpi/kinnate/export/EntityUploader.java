@@ -109,7 +109,6 @@ public class EntityUploader {
                         for (String resultLine : searchResults.resultsPathArray) {
                             try {
                                 uploadFile(serverRestUrl, outputArea, new File(new URI(resultLine)));
-                                convertLocalIdentifierToUnique(null, null); // todo: get the unique identifier from the server response
                             } catch (URISyntaxException exception) {
                                 GuiHelper.linorgBugCatcher.logError(exception);
                                 outputArea.append(exception.getMessage() + "\n");
@@ -124,27 +123,32 @@ public class EntityUploader {
                         }
                     }
                     workspaceUri = serverRestUrl.toURI();
+                    searchResults = null;
+                    modifiedFiles = null;
+                    actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
                 } catch (MalformedURLException exception) {
                     GuiHelper.linorgBugCatcher.logError(exception);
                     outputArea.append(exception.getMessage() + "\n");
+                    actionListener.actionPerformed(new ActionEvent(this, 0, "uploadaborted"));
                 } catch (URISyntaxException exception) {
                     GuiHelper.linorgBugCatcher.logError(exception);
                     outputArea.append(exception.getMessage() + "\n");
+                    actionListener.actionPerformed(new ActionEvent(this, 0, "uploadaborted"));
+                } catch (ExportException exception) {
+//                    GuiHelper.linorgBugCatcher.logError(exception);
+                    outputArea.append(exception.getMessage() + "\n");
+                    actionListener.actionPerformed(new ActionEvent(this, 0, "uploadaborted"));
                 }
                 uploadProgress.setValue(0);
-                searchResults = null;
-                modifiedFiles = null;
                 for (int charCount = 0; charCount < workspacePassword.length; charCount++) {
                     // clear the password data so that it is not left hanging around in the virtual machine
                     workspacePassword[charCount] = 0;
                 }
-//                uploadComplete = true;
-                actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
             }
         }.start();
     }
 
-    private void uploadFile(URL serverRestUrl, JTextArea outputArea, File uploadFile) {
+    private void uploadFile(URL serverRestUrl, JTextArea outputArea, File uploadFile) throws ExportException {
         try {
             outputArea.append(uploadFile.toString() + "\n");
             HttpURLConnection httpURLConnection = (HttpURLConnection) serverRestUrl.openConnection();
@@ -160,9 +164,6 @@ public class EntityUploader {
             }
             bufferedOutputStream.close();
             bufferedInputStream.close();
-            // show the response code
-            outputArea.append(httpURLConnection.getResponseCode() + "\n");
-            outputArea.append(httpURLConnection.getResponseMessage() + "\n");
             // show the response page
             InputStream inputStream;
             inputStream = httpURLConnection.getInputStream();
@@ -171,15 +172,18 @@ public class EntityUploader {
                 outputArea.append(responseLine + "\n");
             }
             outputArea.append("\n");
+            if (httpURLConnection.getResponseCode() != 200) {
+                throw new ExportException(httpURLConnection.getResponseCode() + "\n" + httpURLConnection.getResponseMessage());
+            }
             stripHistoryFiles(uploadFile);
+            convertLocalIdentifierToUnique(null, null); // todo: get the unique identifier from the server response
         } catch (IOException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
-            outputArea.append(exception.getMessage() + "\n");
+            throw new ExportException(exception.getMessage());
         }
 
     }
 
-    private void convertLocalIdentifierToUnique(String localIdentifier, String uniqueIdentifier){
+    private void convertLocalIdentifierToUnique(String localIdentifier, String uniqueIdentifier) {
         // todo: change in the target file
         // todo: update all relatives of the target file
     }
