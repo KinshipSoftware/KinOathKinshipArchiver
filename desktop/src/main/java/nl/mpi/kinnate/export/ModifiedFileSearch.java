@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.export;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 /**
@@ -46,5 +47,25 @@ public class ModifiedFileSearch {
             }
         }
         return modifiedFileList;
+    }
+
+    public void stripHistoryFiles(final File targetFile) {
+        String[] historyFileArray = targetFile.getParentFile().list(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                // list only history files
+                return name.matches(targetFile.getName() + "\\.[0-9]+$");
+            }
+        });
+        if (historyFileArray != null) {
+            for (String currentHistory : historyFileArray) {
+                System.out.println(currentHistory);
+                if (currentHistory.matches("[^\\^/]+mdi\\.[0-9]+$")) {
+                    // todo: are there any other checks we can do to make certain that don't get a rogue delete occur
+                    new File(targetFile.getParentFile(), currentHistory).delete();
+                }
+            }
+        }
     }
 }
