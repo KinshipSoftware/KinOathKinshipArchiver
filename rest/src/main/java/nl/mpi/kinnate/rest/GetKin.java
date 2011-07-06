@@ -7,6 +7,8 @@ package nl.mpi.kinnate.rest;
  */
 //import javax.ejb.EJB;
 //import javax.ejb.Stateless;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
@@ -28,7 +30,12 @@ public class GetKin {
 //    @Path("/kintypes/{kintypeStrings: [a-zA-Z0-9]}")
     private EntityData[] getEntityNodes(List<String> kintypeStrings) {
         KinTypeStringConverter graphData = new KinTypeStringConverter();
-        graphData.readKinTypes(kintypeStrings.toArray(new String[]{}), /*graphPanel.getkinTermGroups()*/ new KinTermGroup[]{}, new DataStoreSvg(), new ParserHighlight[kintypeStrings.size()]);
+        HashSet<String> kinTypeAllStrings = new HashSet<String>();
+        // loop each and split any pipe chars | into lines
+        for (String currentKinType : kintypeStrings) {
+            kinTypeAllStrings.addAll(Arrays.asList(currentKinType.split("\\|")));
+        }
+        graphData.readKinTypes(kinTypeAllStrings.toArray(new String[]{}), /*graphPanel.getkinTermGroups()*/ new KinTermGroup[]{}, new DataStoreSvg(), new ParserHighlight[kintypeStrings.size()]);
         return graphData.getDataNodes();
     }
 
@@ -71,4 +78,8 @@ public class GetKin {
         PedigreePackageExport packageExport = new PedigreePackageExport();
         return packageExport.createCsvContents(getEntityNodes(kintypeStrings));
     }
+//    @Path("/kinput")
+//    @Path("/kinstruct")
+//    @Path("/kinhive")
+//    @Path("/kinspace")
 }
