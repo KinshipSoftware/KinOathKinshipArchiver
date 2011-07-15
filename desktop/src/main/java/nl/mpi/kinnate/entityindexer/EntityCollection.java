@@ -18,15 +18,19 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
-import org.basex.core.cmd.Set;
+import org.basex.core.cmd.Add;
+import org.basex.core.cmd.Close;
 import org.basex.core.cmd.CreateDB;
+import org.basex.core.cmd.Delete;
 import org.basex.core.cmd.DropDB;
+import org.basex.core.cmd.List;
+import org.basex.core.cmd.Open;
+import org.basex.core.cmd.Optimize;
 import org.basex.core.cmd.XQuery;
 import org.basex.query.QueryException;
 import org.basex.query.QueryProcessor;
@@ -50,36 +54,89 @@ public class EntityCollection {
         public int resultCount = 0;
     }
 
-    public void createDatabase() {
+    public EntityCollection() {
+        // make sure the database exists
+        try {
+            new Open(databaseName).execute(context);
+            context.close();
+        } catch (BaseXException baseXException) {
+            try {
+                new CreateDB(databaseName).execute(context);
+            } catch (BaseXException baseXException2) {
+                new ArbilBugCatcher().logError(baseXException2);
+            }
+        }
+    }
+
+    // see comments below
+//    public void createDatabase() {
+//        try {
+////            System.out.println("List: " + new List().execute(context));
+//            new DropDB(databaseName).execute(context);
+//            new Set("CREATEFILTER", "*.cmdi").execute(context);
+//            new CreateDB(databaseName, ArbilSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
+////            System.out.println("List: " + new List().execute(context));
+////            System.out.println("Find: " + new Find(databaseName).title());
+////            System.out.println("Info: " + new Info().execute(context));
+////            new Open(databaseName).execute(context);
+////            new CreateIndex("text").execute(context); // TEXT|ATTRIBUTE|FULLTEXT|PATH
+////            new CreateIndex("fulltext").execute(context);
+////            new CreateIndex("attribute").execute(context);
+////            new CreateIndex("path").execute(context);
+////            new Close().execute(context);
+////            context.close();
+//        } catch (BaseXException baseXException) {
+//            new ArbilBugCatcher().logError(baseXException);
+//        }
+//    }
+    public void dropDatabase() {
         try {
             new DropDB(databaseName).execute(context);
-            new Set("CREATEFILTER", "*.cmdi").execute(context);
-            new CreateDB(databaseName, ArbilSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
-//            new Open(databaseName).execute(context);
-//            new CreateIndex("text").execute(context); // TEXT|ATTRIBUTE|FULLTEXT|PATH
-//            new CreateIndex("fulltext").execute(context);
-//            new CreateIndex("attribute").execute(context);
-//            new CreateIndex("path").execute(context);
-//            new Close().execute(context);
-//            context.close();
+            System.out.println("List: " + new List().execute(context));
+        } catch (BaseXException baseXException) {
+            new ArbilBugCatcher().logError(baseXException);
+        }
+    }
+
+    private void addFileToDB(URI updatedDataUrl) {
+        try {
+            String urlString = updatedDataUrl.toASCIIString();
+            // delete appears to be fine with a uri string, providing that the document was added as below and not added as a collection, sigh
+            new Delete(urlString).execute(context);
+            // add requires a url other wise it appends the working path when using base-uri in a query
+            // add requires the parent directory otherwise it adds the file name to the root and appends the working path when using base-uri in a query
+            // add appears not to have been tested by anybody, I am not sure if I like basex now, but the following works
+            new Add(urlString, null, urlString.replaceFirst("[^/]*$", "")).execute(context);
+        } catch (BaseXException baseXException) {
+            new ArbilBugCatcher().logError(baseXException);
+        }
+    }
+
+    public void updateDatabase(URI[] updatedFileArray) {
+        try {
+            new Open(databaseName).execute(context);
+            for (URI updatedFile : updatedFileArray) {
+                addFileToDB(updatedFile);
+            }
+            new Optimize().execute(context);
+            new Close().execute(context);
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
         }
     }
 
     public void updateDatabase(URI updatedFile) {
-        // todo: it would appear that a re adding a file does not remove the old entries so for now we will dump and recreate the entire database
-        createDatabase();
-//        try {
-//            new Open(databaseName).execute(context);
-////            new Delete(updatedFile.toString()).execute(context);
-////            new Add(new File(updatedFile).toString()).execute(context);
-//            new Add(updatedFile.toString()).execute(context);
-//            new Optimize().execute(context);
-//            new Close().execute(context);
-//        } catch (BaseXException baseXException) {
-//            new ArbilBugCatcher().logError(baseXException);
-//        }
+        // it would appear that a re adding a file does not remove the old entries so for now we will dump and recreate the entire database
+        // update, this has been updated and adding directories as a collection breaks the update and delete methods in basex so we now do each document individualy
+//        createDatabase();
+        try {
+            new Open(databaseName).execute(context);
+            addFileToDB(updatedFile);
+            new Optimize().execute(context);
+            new Close().execute(context);
+        } catch (BaseXException baseXException) {
+            new ArbilBugCatcher().logError(baseXException);
+        }
     }
 
     public SearchResults listGedcomFamIds() {
@@ -177,7 +234,7 @@ public class EntityCollection {
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
-//        System.out.println("query1String: " + query1String);
+        System.out.println("query1String: " + query1String);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -186,7 +243,7 @@ public class EntityCollection {
             long queryMils = System.currentTimeMillis() - startQueryTime;
             System.out.println("Query time: " + queryMils + "ms");
             long startJaxbTime = System.currentTimeMillis();
-//            System.out.println("queryResult: " + queryResult);
+            System.out.println("queryResult: " + queryResult);
             EntityData selectedEntity = (EntityData) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData.class).getValue();
             long queryJaxBMils = System.currentTimeMillis() - startJaxbTime;
             System.out.println("JaxB time: " + queryJaxBMils + "ms");
@@ -253,13 +310,14 @@ public class EntityCollection {
                 resultsText.setVisible(true);
             }
         });
-        JButton recreateButton = new JButton("recreate database");
+        JButton recreateButton = new JButton("drop database");
         recreateButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 resultsText.setText("");
+                new EntityCollection().dropDatabase();
 //                try {
-                new EntityCollection().createDatabase();
+//                new EntityCollection().createDatabase();
 //                } catch (URISyntaxException exception) {
 //                    resultsText.append(exception.getMessage());
 //                }
