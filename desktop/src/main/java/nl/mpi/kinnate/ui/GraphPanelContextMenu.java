@@ -11,6 +11,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
@@ -36,6 +39,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private JMenuItem removeEgoMenuItem;
     private JMenuItem addAsRequiredMenuItem;
     private JMenuItem removeRequiredMenuItem;
+    private JMenuItem saveFileMenuItem;
     private JCheckBoxMenuItem snapToGridMenuItem;
     private JCheckBoxMenuItem showKinTermLinesMenuItem;
     private JCheckBoxMenuItem showSanguineLinesMenuItem;
@@ -97,7 +101,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         new RelationLinker().linkEntities(graphPanel, selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()));
-                        egoSelectionPanel.dataNodeIconCleared(selectedIdentifiers);
+                        egoSelectionPanel.entityRelationsChanged(selectedIdentifiers);
 //                    graphPanel.
 //                    selectedIdentifiers
 //                            graphPanel.getPathForElementId()
@@ -296,6 +300,22 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(searchEntityServiceMenuItem);
+
+        saveFileMenuItem = new JMenuItem();
+        saveFileMenuItem.setText("Save All Metadata Changes");
+        saveFileMenuItem.setEnabled(false);
+        saveFileMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    ArbilWindowManager.getSingleInstance().stopEditingInCurrentWindow();
+                    ArbilDataNodeLoader.getSingleInstance().saveNodesNeedingSave(true);
+                } catch (Exception ex) {
+                    GuiHelper.linorgBugCatcher.logError(ex);
+                }
+            }
+        });
+        this.add(saveFileMenuItem);
     }
 
     private URI[] getSelectedUriArray() {
@@ -343,6 +363,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         showKinTermLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLabels);
         showArchiveLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showArchiveLinks);
 //        showResourceLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showResourceLinks);
+        saveFileMenuItem.setEnabled(ArbilDataNodeLoader.getSingleInstance().nodesNeedSave());
         super.show(cmpnt, i, i1);
     }
 
