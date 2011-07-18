@@ -58,15 +58,27 @@ public class EntityCollection {
         // make sure the database exists
         try {
             new Open(databaseName).execute(context);
-            context.close();
+            //context.close();
+            new Close().execute(context);
         } catch (BaseXException baseXException) {
             try {
                 new CreateDB(databaseName).execute(context);
+//                new Open(databaseName).execute(context);
             } catch (BaseXException baseXException2) {
                 new ArbilBugCatcher().logError(baseXException2);
             }
         }
+        // todo: should we explicitly close the DB? putting it in the distructor would not be reliable
+        // todo: however now that we close via the Close() method it seems fine and the DB is not explicitly opened 
     }
+
+//    public void closeDataBase() {
+//        try {
+//            new Close().execute(context);
+//        } catch (BaseXException baseXException2) {
+//            new ArbilBugCatcher().logError(baseXException2);
+//        }
+//    }
 
     // see comments below
 //    public void createDatabase() {
