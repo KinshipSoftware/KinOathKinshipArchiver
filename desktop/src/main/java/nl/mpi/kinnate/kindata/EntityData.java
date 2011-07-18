@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *  Document   : GraphDataNode
@@ -46,6 +47,8 @@ public class EntityData {
     public String[] archiveLinkArray = null; //new String[]{"http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7", "http://www.google.com", "http://www.mpi.nl"};
 //    @XmlElement(name = "ResourceLink")
 //    public String[] resourceLinkArray;
+    @XmlTransient
+    public boolean metadataRequiresSave = false;
     public boolean isVisible = false;
     private EntityRelation[] visiblyRelateNodes = null;
     private EntityRelation[] distinctRelateNodes = null;
