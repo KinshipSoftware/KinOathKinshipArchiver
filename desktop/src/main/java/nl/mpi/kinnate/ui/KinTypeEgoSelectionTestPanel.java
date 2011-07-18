@@ -8,8 +8,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.net.URI;
-import java.util.ArrayList;
+import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,6 +21,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeContainer;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
@@ -51,7 +53,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     private HidePane kinTypeHidePane;
     private KinTermTabPane kinTermPanel;
     private EntityService entityIndex;
-    private ArrayList<String> registeredEntityIds;
+    private HashMap<String, ArbilDataNode> registeredEntityIds;
     private String defaultString = "# The kin type strings entered here will determine how the entities show on the graph below\n";
     public static String defaultGraphString = "# The kin type strings entered here will determine how the entities show on the graph below\n"
             + "# Enter one string per line.\n"
@@ -66,7 +68,6 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             + "Em:Charles II of Spain:M:Mariana of Austria:M:Maria Anna of Spain:M:Margaret of Austria:M:Maria Anna of Bavaria\n"
             + "M:Mariana of Austria:F:Ferdinand III, Holy Roman Emperor:\n"
             + "F:Philip IV of Spain:M:Margaret of Austria\n"
-            
             + "F:Ferdinand III, Holy Roman Emperor:\n"
             + "M:Maria Anna of Spain:\n"
             + "F:Philip III of Spain\n"
@@ -108,7 +109,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             graphPanel.generateDefaultSvg();
         }
         this.setLayout(new BorderLayout());
-        registeredEntityIds = new ArrayList<String>();
+        registeredEntityIds = new HashMap<String, ArbilDataNode>();
         egoSelectionPanel = new EgoSelectionPanel();
         kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
         // set the styles for the kin type string text
@@ -363,33 +364,36 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     }
 
     private void registerCurrentNodes(EntityData[] currentEntities) {
-        // todo: update the graph when data is edited in the table
-        // todo: resolve issue where arbil nodes update frequency is too high and breaks basex
-//        for (EntityData entityData : currentEntities) {
-//            if (!registeredEntityIds.contains(entityData.getUniqueIdentifier())) {
-//                try {
-//                    registeredEntityIds.add(entityData.getUniqueIdentifier());
-//                    ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityData.getEntityPath()));
-//                    arbilDataNode.registerContainer(this);
-////                // todo: keep track of registered nodes and remove the unrequired ones here
-//                } catch (URISyntaxException exception) {
-//                    GuiHelper.linorgBugCatcher.logError(exception);
-//                }
-//            }
-//        }
+        // todo: i think this is resolved but double check the issue where arbil nodes update frequency is too high and breaks basex
+        for (EntityData entityData : currentEntities) {
+            ArbilDataNode arbilDataNode = null;
+            if (!registeredEntityIds.containsKey(entityData.getUniqueIdentifier())) {
+                try {
+                    arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityData.getEntityPath()));
+                    registeredEntityIds.put(entityData.getUniqueIdentifier(), arbilDataNode);
+                    arbilDataNode.registerContainer(this);
+                    // todo: keep track of registered nodes and remove the unrequired ones here
+                } catch (URISyntaxException exception) {
+                    GuiHelper.linorgBugCatcher.logError(exception);
+                }
+            } else {
+                arbilDataNode = registeredEntityIds.get(entityData.getUniqueIdentifier());
+            }
+            if (arbilDataNode != null) {
+                entityData.metadataRequiresSave = arbilDataNode.getNeedsSaveToDisk(false);
+            }
+        }
     }
 
-    public void dataNodeIconCleared(String[] selectedIdentifiers) {
-//        for(String currentIdentifier : selectedIdentifiers)
-//        graphPanel.getPathForElementId(currentIdentifier)...
-        // todo: get the paths and provide as URIs to update the database: assuming that updating individual files is worthwhile
-        new EntityCollection().updateDatabase(null);
+    public void entityRelationsChanged(String[] selectedIdentifiers) {
+        // this method does not need to update the database because the link changing process has already done that
         graphPanel.getIndexParameters().valuesChanged = true;
         drawGraph();
     }
 
     public void dataNodeIconCleared(ArbilDataNode arbilDataNode) {
-        new EntityCollection().updateDatabase(arbilDataNode.getURI());
+        EntityCollection entityCollection = new EntityCollection();
+        entityCollection.updateDatabase(arbilDataNode.getURI());
         graphPanel.getIndexParameters().valuesChanged = true;
         drawGraph();
     }
