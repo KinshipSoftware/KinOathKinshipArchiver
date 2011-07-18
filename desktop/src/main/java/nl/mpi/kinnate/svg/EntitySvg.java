@@ -415,6 +415,18 @@ public class EntitySvg {
         // todo: this method has the draw back that the text is not selectable as a block
         int textSpanCounter = 0;
         int lineSpacing = 15;
+        if (currentNode.metadataRequiresSave) {
+            Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
+            labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
+            labelText.setAttribute("y", Integer.toString(textSpanCounter));
+            labelText.setAttribute("fill", "red");
+            labelText.setAttribute("stroke-width", "0");
+            labelText.setAttribute("font-size", "14");
+            Text textNode = graphPanel.doc.createTextNode("modified");
+            labelText.appendChild(textNode);
+            textSpanCounter += lineSpacing;
+            groupNode.appendChild(labelText);
+        }
         for (String currentTextLable : labelList) {
             Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
             labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
