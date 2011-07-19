@@ -66,6 +66,14 @@ public class SvgUpdateHandler {
 
                         // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
                         // as a comprimise these highlighs can be removed when a node is dragged
+                        // add a white background
+                        Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                        highlightBackgroundLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
+                        highlightBackgroundLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
+                        highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
+                        highlightBackgroundLine.setAttribute("stroke", "white");
+                        relationHighlightGroup.appendChild(highlightBackgroundLine);
+                        // add a blue dotted line
                         Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
                         highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
                         highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
