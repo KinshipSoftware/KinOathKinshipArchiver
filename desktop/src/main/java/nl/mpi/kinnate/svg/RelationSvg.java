@@ -48,16 +48,34 @@ public class RelationSvg {
         }
     }
 
-    private void setPolylinePointsAttribute(Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    private void setPolylinePointsAttribute(Element targetNode, String svgNameSpace, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float midY = (egoY + alterY) / 2;
-        if (alterY == egoY) {
-            // make sure that union lines go below the entities and sibling lines go above
-            if (relationType == DataTypes.RelationType.sibling) {
-                midY = alterY - vSpacing / 2;
-            } else if (relationType == DataTypes.RelationType.union) {
+        switch (relationType) {
+            case affiliation:
+                break;
+            case ancestor:
                 midY = alterY + vSpacing / 2;
-            }
+                break;
+            case descendant:
+                midY = egoY + vSpacing / 2;
+                break;
+            case none:
+                break;
+            case sibling:
+                midY = (egoY < alterY) ? egoY - vSpacing / 2 : alterY - vSpacing / 2;
+                break;
+            case union:
+                midY = (egoY > alterY) ? egoY + vSpacing / 2 : alterY + vSpacing / 2;
+                break;
         }
+//        if (alterY == egoY) {
+//            // make sure that union lines go below the entities and sibling lines go above
+//            if (relationType == DataTypes.RelationType.sibling) {
+//                midY = alterY - vSpacing / 2;
+//            } else if (relationType == DataTypes.RelationType.union) {
+//                midY = alterY + vSpacing / 2;
+//            }
+//        }
         targetNode.setAttribute("points",
                 egoX + "," + egoY + " "
                 + egoX + "," + midY + " "
@@ -65,7 +83,7 @@ public class RelationSvg {
                 + alterX + "," + alterY);
     }
 
-    private void setPathPointsAttribute(Element targetNode, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    private void setPathPointsAttribute(Element targetNode, String svgNameSpace, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float fromBezX;
         float fromBezY;
         float toBezX;
@@ -165,7 +183,7 @@ public class RelationSvg {
                 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
                 Element linkLine = graphPanel.doc.createElementNS(svgNameSpace, "path");
 
-                setPathPointsAttribute(linkLine, graphLinkNode.relationType, graphLinkNode.relationLineType, hSpacing, vSpacing, fromX, fromY, toX, toY);
+                setPathPointsAttribute(linkLine, svgNameSpace, graphLinkNode.relationType, graphLinkNode.relationLineType, hSpacing, vSpacing, fromX, fromY, toX, toY);
                 //                    linkLine.setAttribute("x1", );
                 //                    linkLine.setAttribute("y1", );
                 //
@@ -191,7 +209,7 @@ public class RelationSvg {
                 //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
                 Element squareLinkLine = graphPanel.doc.createElementNS(svgNameSpace, "polyline");
 
-                setPolylinePointsAttribute(squareLinkLine, graphLinkNode.relationType, vSpacing, fromX, fromY, toX, toY);
+                setPolylinePointsAttribute(squareLinkLine, svgNameSpace, graphLinkNode.relationType, vSpacing, fromX, fromY, toX, toY);
 
                 squareLinkLine.setAttribute("fill", "none");
                 squareLinkLine.setAttribute("stroke", "grey");
@@ -266,11 +284,11 @@ public class RelationSvg {
 
                         if ("polyline".equals(relationLineElement.getLocalName())) {
                             //System.out.println("polyline to update: " + lineElementId);
-                            setPolylinePointsAttribute(relationLineElement, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
+                            setPolylinePointsAttribute(relationLineElement, svgNameSpace, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
                         }
                         if ("path".equals(relationLineElement.getLocalName())) {
                             //System.out.println("path to update: " + relationLineElement.getLocalName());
-                            setPathPointsAttribute(relationLineElement, graphRelationData.relationType, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
+                            setPathPointsAttribute(relationLineElement, svgNameSpace, graphRelationData.relationType, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
                         }
                         addUseNode(graphPanel.doc, svgNameSpace, (Element) currentChild, lineElementId);
                         updateLabelNode(graphPanel.doc, svgNameSpace, lineElementId, idAttrubite.getNodeValue());
