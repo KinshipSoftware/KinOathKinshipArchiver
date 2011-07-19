@@ -2,8 +2,6 @@ package nl.mpi.kinnate.svg;
 
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
-import java.io.File;
-import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -12,6 +10,7 @@ import nl.mpi.kinnate.kindata.EntityRelation;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
@@ -72,7 +71,7 @@ public class SvgUpdateHandler {
                                         Node existingHighlight = null;
                                         // find any existing highlight
                                         for (Node subGoupNode = currentChild.getFirstChild(); subGoupNode != null; subGoupNode = subGoupNode.getNextSibling()) {
-                                            if ("rect".equals(subGoupNode.getLocalName())) {
+                                            if ("g".equals(subGoupNode.getLocalName())) {
                                                 Node subGroupIdAttrubite = subGoupNode.getAttributes().getNamedItem("id");
                                                 if (subGroupIdAttrubite != null) {
                                                     if ("highlight".equals(subGroupIdAttrubite.getTextContent())) {
@@ -95,9 +94,10 @@ public class SvgUpdateHandler {
 //                                        System.out.println("bbox Y: " + bbox.getY());
 //                                        System.out.println("bbox W: " + bbox.getWidth());
 //                                        System.out.println("bbox H: " + bbox.getHeight());
+                                                Element highlightGroupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+                                                highlightGroupNode.setAttribute("id", "highlight");
                                                 Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
                                                 int paddingDistance = 20;
-                                                symbolNode.setAttribute("id", "highlight");
                                                 symbolNode.setAttribute("x", Float.toString(bbox.getX() - paddingDistance));
                                                 symbolNode.setAttribute("y", Float.toString(bbox.getY() - paddingDistance));
                                                 symbolNode.setAttribute("width", Float.toString(bbox.getWidth() + paddingDistance * 2));
@@ -112,19 +112,84 @@ public class SvgUpdateHandler {
                                                     symbolNode.setAttribute("stroke-dashoffset", "0");
                                                 }
                                                 symbolNode.setAttribute("stroke", "blue");
-//            symbolNode.setAttribute("id", "Highlight");
-//            symbolNode.setAttribute("id", "Highlight");
-//            symbolNode.setAttribute("id", "Highlight");
-//            symbolNode.setAttribute("style", ":none;fill-opacity:1;fill-rule:nonzero;stroke:#6674ff;stroke-opacity:1;stroke-width:1;stroke-miterlimit:4;"
-//                    + "stroke-dasharray:1, 1;stroke-dashoffset:0");
-                                                currentChild.appendChild(symbolNode);
+//                                                if (graphPanel.dataStoreSvg.highlightRelationLines) {
+//                                                    // add highlights for relation lines
+//                                                    Element relationsGroup = graphPanel.doc.getElementById("RelationGroup");
+//                                                    for (Node currentRelation = relationsGroup.getFirstChild(); currentRelation != null; currentRelation = currentRelation.getNextSibling()) {
+//                                                        Node dataElement = currentRelation.getFirstChild();
+//                                                        NamedNodeMap dataAttributes = dataElement.getAttributes();
+//                                                        if (dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "lineType").getNodeValue().equals("sanguineLine")) {
+//
+////
+//                                                            if (entityId.equals(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue()) || entityId.equals(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue())) {
+//                                                                Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
+//
+//
+//                                                                Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
+//                                                                useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
+//                                                                useNode.setAttributeNS(null, "stroke", "blue");
+//                                                                highlightGroupNode.appendChild(useNode);
+//                                                            }
+//                                                        }
+//                                                    }
+//                                                }
+                                                highlightGroupNode.appendChild(symbolNode);
+                                                currentChild.appendChild(highlightGroupNode);
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                            Element relationOldHighlightGroup = graphPanel.doc.getElementById("RelationHighlightGroup");
+                            if (relationOldHighlightGroup != null) {
+                                // remove the relation highlight group
+                                relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
+                            }
+                            if (graphPanel.dataStoreSvg.highlightRelationLines) {
+                                // add highlights for relation lines
+                                Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+                                relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
+                                entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
+                                Element relationsGroup = graphPanel.doc.getElementById("RelationGroup");
+                                for (Node currentRelation = relationsGroup.getFirstChild(); currentRelation != null; currentRelation = currentRelation.getNextSibling()) {
+                                    Node dataElement = currentRelation.getFirstChild();
+                                    NamedNodeMap dataAttributes = dataElement.getAttributes();
+                                    if (dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "lineType").getNodeValue().equals("sanguineLine")) {
+                                        Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
+                                        if (graphPanel.selectedGroupId.contains(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue()) || graphPanel.selectedGroupId.contains(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue())) {
+                                            // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
+//                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
+//                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
+//                                            useNode.setAttributeNS(null, "stroke", "blue");
+//                                            relationHighlightGroup.appendChild(useNode);
+
+                                            // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
+                                            // as a comprimise these highlighs can be removed when a node is dragged
+                                            Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                                            highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
+                                            highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
+                                            highlightLine.setAttribute("points", polyLineElement.getAttribute("points"));
+                                            highlightLine.setAttribute("stroke", "blue");
+                                            highlightLine.setAttribute("stroke-dasharray", "3");
+                                            highlightLine.setAttribute("stroke-dashoffset", "0");
+                                            relationHighlightGroup.appendChild(highlightLine);
+
+                                            // try changing the target lines attributes (does not get updated maybe due to the 'use' node rendering)
+//                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("blue");
+//                                            polyLineElement.setAttributeNS(null, "stroke", "blue");
+//                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth * 2));
+                                        } else {
+//                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("green");
+//                                            polyLineElement.setAttributeNS(null, "stroke", "grey");
+//                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                    // Em:1:FMDH:1:
+//                    ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
                 }
             });
         }
@@ -166,6 +231,12 @@ public class SvgUpdateHandler {
                         dragRemainders[dragCounter] = new float[]{0, 0};
                     }
                 }
+                Element relationOldHighlightGroup = graphPanel.doc.getElementById("RelationHighlightGroup");
+                if (relationOldHighlightGroup != null) {
+                    // remove the relation highlight group because lines will be out of date when the entities are moved
+                    relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
+                }
+
                 boolean continueUpdating = true;
                 while (continueUpdating) {
                     continueUpdating = false;
@@ -264,26 +335,28 @@ public class SvgUpdateHandler {
         svgRoot.setAttribute("width", Integer.toString(graphSize.width - graphSize.x));
         svgRoot.setAttribute("height", Integer.toString(graphSize.height - graphSize.y));
 
-        // draw hidious green and yellow rectangle for debugging
-        Element pageBorderNode = graphPanel.doc.getElementById("PageBorder");
-        if (pageBorderNode == null) {
-            pageBorderNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
-            pageBorderNode.setAttribute("id", "PageBorder");
-            pageBorderNode.setAttribute("x", Float.toString(graphSize.x));
-            pageBorderNode.setAttribute("y", Float.toString(graphSize.y));
-            pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x));
-            pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y));
-            pageBorderNode.setAttribute("fill", "none");
-            pageBorderNode.setAttribute("stroke-width", "2");
-            pageBorderNode.setAttribute("stroke", "grey");
-            diagramGroupNode.appendChild(pageBorderNode);
-        } else {
-            pageBorderNode.setAttribute("x", Float.toString(graphSize.x));
-            pageBorderNode.setAttribute("y", Float.toString(graphSize.y));
-            pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x));
-            pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y));
+        if (graphPanel.dataStoreSvg.showDiagramBorder) {
+            // draw hidious green and yellow rectangle for debugging
+            Element pageBorderNode = graphPanel.doc.getElementById("PageBorder");
+            if (pageBorderNode == null) {
+                pageBorderNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
+                pageBorderNode.setAttribute("id", "PageBorder");
+                pageBorderNode.setAttribute("x", Float.toString(graphSize.x));
+                pageBorderNode.setAttribute("y", Float.toString(graphSize.y));
+                pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x));
+                pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y));
+                pageBorderNode.setAttribute("fill", "none");
+                pageBorderNode.setAttribute("stroke-width", "2");
+                pageBorderNode.setAttribute("stroke", "grey");
+                diagramGroupNode.appendChild(pageBorderNode);
+            } else {
+                pageBorderNode.setAttribute("x", Float.toString(graphSize.x));
+                pageBorderNode.setAttribute("y", Float.toString(graphSize.y));
+                pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x));
+                pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y));
+            }
+            // end draw hidious green rectangle for debugging
         }
-        // end draw hidious green rectangle for debugging
     }
 
     public void updateCanvasSize() {
