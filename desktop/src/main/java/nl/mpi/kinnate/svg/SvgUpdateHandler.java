@@ -39,6 +39,56 @@ public class SvgUpdateHandler {
         kinTermSavePanel = kinTermSavePanelLocal;
     }
 
+    private void updateSanguineHighlights(Element entityGroup) {
+        // this must be only called from within a svg runnable
+        Element relationOldHighlightGroup = graphPanel.doc.getElementById("RelationHighlightGroup");
+        if (relationOldHighlightGroup != null) {
+            // remove the relation highlight group
+            relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
+        }
+        if (graphPanel.dataStoreSvg.highlightRelationLines) {
+            // add highlights for relation lines
+            Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+            relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
+            entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
+            Element relationsGroup = graphPanel.doc.getElementById("RelationGroup");
+            for (Node currentRelation = relationsGroup.getFirstChild(); currentRelation != null; currentRelation = currentRelation.getNextSibling()) {
+                Node dataElement = currentRelation.getFirstChild();
+                NamedNodeMap dataAttributes = dataElement.getAttributes();
+                if (dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "lineType").getNodeValue().equals("sanguineLine")) {
+                    Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
+                    if (graphPanel.selectedGroupId.contains(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue()) || graphPanel.selectedGroupId.contains(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue())) {
+                        // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
+//                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
+//                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
+//                                            useNode.setAttributeNS(null, "stroke", "blue");
+//                                            relationHighlightGroup.appendChild(useNode);
+
+                        // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
+                        // as a comprimise these highlighs can be removed when a node is dragged
+                        Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                        highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
+                        highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
+                        highlightLine.setAttribute("points", polyLineElement.getAttribute("points"));
+                        highlightLine.setAttribute("stroke", "blue");
+                        highlightLine.setAttribute("stroke-dasharray", "3");
+                        highlightLine.setAttribute("stroke-dashoffset", "0");
+                        relationHighlightGroup.appendChild(highlightLine);
+
+                        // try changing the target lines attributes (does not get updated maybe due to the 'use' node rendering)
+//                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("blue");
+//                                            polyLineElement.setAttributeNS(null, "stroke", "blue");
+//                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth * 2));
+                    } else {
+//                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("green");
+//                                            polyLineElement.setAttributeNS(null, "stroke", "grey");
+//                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+                    }
+                }
+            }
+        }
+    }
+
     protected void updateSvgSelectionHighlights() {
         if (kinTermSavePanel != null) {
             String kinTypeStrings = "";
@@ -140,52 +190,7 @@ public class SvgUpdateHandler {
                                     }
                                 }
                             }
-                            Element relationOldHighlightGroup = graphPanel.doc.getElementById("RelationHighlightGroup");
-                            if (relationOldHighlightGroup != null) {
-                                // remove the relation highlight group
-                                relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
-                            }
-                            if (graphPanel.dataStoreSvg.highlightRelationLines) {
-                                // add highlights for relation lines
-                                Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
-                                relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
-                                entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
-                                Element relationsGroup = graphPanel.doc.getElementById("RelationGroup");
-                                for (Node currentRelation = relationsGroup.getFirstChild(); currentRelation != null; currentRelation = currentRelation.getNextSibling()) {
-                                    Node dataElement = currentRelation.getFirstChild();
-                                    NamedNodeMap dataAttributes = dataElement.getAttributes();
-                                    if (dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "lineType").getNodeValue().equals("sanguineLine")) {
-                                        Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
-                                        if (graphPanel.selectedGroupId.contains(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue()) || graphPanel.selectedGroupId.contains(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue())) {
-                                            // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
-//                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
-//                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
-//                                            useNode.setAttributeNS(null, "stroke", "blue");
-//                                            relationHighlightGroup.appendChild(useNode);
-
-                                            // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
-                                            // as a comprimise these highlighs can be removed when a node is dragged
-                                            Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-                                            highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
-                                            highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
-                                            highlightLine.setAttribute("points", polyLineElement.getAttribute("points"));
-                                            highlightLine.setAttribute("stroke", "blue");
-                                            highlightLine.setAttribute("stroke-dasharray", "3");
-                                            highlightLine.setAttribute("stroke-dashoffset", "0");
-                                            relationHighlightGroup.appendChild(highlightLine);
-
-                                            // try changing the target lines attributes (does not get updated maybe due to the 'use' node rendering)
-//                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("blue");
-//                                            polyLineElement.setAttributeNS(null, "stroke", "blue");
-//                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth * 2));
-                                        } else {
-//                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("green");
-//                                            polyLineElement.setAttributeNS(null, "stroke", "grey");
-//                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
-                                        }
-                                    }
-                                }
-                            }
+                            updateSanguineHighlights(entityGroup);
                         }
                     }
                     // Em:1:FMDH:1:
@@ -231,12 +236,12 @@ public class SvgUpdateHandler {
                         dragRemainders[dragCounter] = new float[]{0, 0};
                     }
                 }
-                Element relationOldHighlightGroup = graphPanel.doc.getElementById("RelationHighlightGroup");
-                if (relationOldHighlightGroup != null) {
-                    // remove the relation highlight group because lines will be out of date when the entities are moved
-                    relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
-                }
-
+//                Element relationOldHighlightGroup = graphPanel.doc.getElementById("RelationHighlightGroup");
+//                if (relationOldHighlightGroup != null) {
+//                    // remove the relation highlight group because lines will be out of date when the entities are moved
+//                    relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
+//                }
+                Element entityGroup = graphPanel.doc.getElementById("EntityGroup");
                 boolean continueUpdating = true;
                 while (continueUpdating) {
                     continueUpdating = false;
@@ -304,6 +309,7 @@ public class SvgUpdateHandler {
                         int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); // graphPanel.dataStoreSvg.graphData.gridHeight);
                         int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
                         new RelationSvg().updateRelationLines(graphPanel, graphPanel.selectedGroupId, graphPanel.svgNameSpace, hSpacing, vSpacing);
+                        updateSanguineHighlights(entityGroup);
                         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                     }
                     // graphPanel.updateCanvasSize(); // updating the canvas size here is too slow so it is moved into the drag ended 
