@@ -193,10 +193,10 @@ public class GedcomImportPanel extends JPanel {
                             progressBar.setIndeterminate(true);
                             // todo: it might be more efficient to only update the new files
                             importTextArea.append("Starting update of entity database" + "\n");
-                            entityCollection.createDatabase();
+                            entityCollection.updateDatabase(treeNodesArray);
                             importTextArea.append("Updated entity database" + "\n");
                             importTextArea.setCaretPosition(importTextArea.getText().length());
-                            System.out.println("created new database");
+                            System.out.println("added the imported files to the database");
                             progressBar.setIndeterminate(false);
                             progressBar.setVisible(false);
 //                leftTree.requestResort();
