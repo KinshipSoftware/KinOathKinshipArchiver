@@ -62,7 +62,11 @@ public class RelationSvg {
             case none:
                 break;
             case sibling:
+//                if (commonParentMaxY != null) {
+//                    midY = commonParentMaxY + vSpacing / 2;
+//                } else {
                 midY = (egoY < alterY) ? egoY - vSpacing / 2 : alterY - vSpacing / 2;
+//                }
                 break;
             case union:
                 midY = (egoY > alterY) ? egoY + vSpacing / 2 : alterY + vSpacing / 2;
@@ -139,7 +143,51 @@ public class RelationSvg {
         targetNode.setAttribute("d", "M " + egoX + "," + egoY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + alterX + "," + alterY);
     }
 
+    private boolean hasCommonParent(EntityData currentNode, EntityRelation graphLinkNode) {
+        if (graphLinkNode.relationType == DataTypes.RelationType.sibling) {
+            for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getDistinctRelateNodes()) {
+                if (altersRelation.relationType == DataTypes.RelationType.ancestor) {
+                    for (EntityRelation egosRelation : currentNode.getDistinctRelateNodes()) {
+                        if (egosRelation.relationType == DataTypes.RelationType.ancestor) {
+                            if (altersRelation.alterUniqueIdentifier.equals(egosRelation.alterUniqueIdentifier)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+//    private Float getCommonParentMaxY(EntitySvg entitySvg, EntityData currentNode, EntityRelation graphLinkNode) {
+//        if (graphLinkNode.relationType == DataTypes.RelationType.sibling) {
+//            Float maxY = null;
+//            ArrayList<Float> commonParentY = new ArrayList<Float>();
+//            for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getDistinctRelateNodes()) {
+//                if (altersRelation.relationType == DataTypes.RelationType.ancestor) {
+//                    for (EntityRelation egosRelation : currentNode.getDistinctRelateNodes()) {
+//                        if (egosRelation.relationType == DataTypes.RelationType.ancestor) {
+//                            if (altersRelation.alterUniqueIdentifier.equals(egosRelation.alterUniqueIdentifier)) {
+//                                float parentY = entitySvg.getEntityLocation(egosRelation.alterUniqueIdentifier)[1];
+//                                maxY = parentY > maxY ? parentY : maxY;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            return maxY;
+//        } else {
+//            return null;
+//        }
+//
+//    }
     protected void insertRelation(GraphPanel graphPanel, String svgNameSpace, Element relationGroupNode, EntityData currentNode, EntityRelation graphLinkNode, int hSpacing, int vSpacing) {
+        if (graphLinkNode.relationLineType == DataTypes.RelationLineType.sanguineLine) {
+            if (hasCommonParent(currentNode, graphLinkNode)) {
+                return; // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
+            }
+        }
         int relationLineIndex = relationGroupNode.getChildNodes().getLength();
         Element groupNode = graphPanel.doc.createElementNS(svgNameSpace, "g");
         groupNode.setAttribute("id", "relation" + relationLineIndex);
