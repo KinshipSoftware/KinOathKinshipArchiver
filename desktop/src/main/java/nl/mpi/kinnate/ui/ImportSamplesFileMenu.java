@@ -20,6 +20,7 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
         addSampleToMenu("Gedcom Torture File", "/TestGED/TGC55C.ged");
         addSampleToMenu("Descententes de Jose Antonio de Figueiredo", "/gedcomsamples/descententes_de_jose_antonio_de_figueiredo.ged");
         addSampleToMenu("Wadeye-Joe-Blythe-20110525", "/AllianceSamples/Wadeye-Joe-Blythe-20110525.csv");
+        addSampleToMenu("European Royalty (royal92.ged)", "/gedcomsamples/royal92.ged");
     }
     
     private void addSampleToMenu(String menuText, String sampleFileString) {
