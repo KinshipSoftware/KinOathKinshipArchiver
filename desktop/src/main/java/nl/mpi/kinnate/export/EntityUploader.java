@@ -66,6 +66,7 @@ public class EntityUploader {
     public void findLocalEntities(final ActionListener actionListener) {
         new Thread() {
 
+            @Override
             public void run() {
                 // search the database
                 EntityCollection entityCollection = new EntityCollection();
@@ -78,6 +79,7 @@ public class EntityUploader {
     public void findModifiedEntities(final ActionListener actionListener) {
         new Thread() {
 
+            @Override
             public void run() {
                 // search file system
                 ModifiedFileSearch modifiedFileSearch = new ModifiedFileSearch();
@@ -91,6 +93,7 @@ public class EntityUploader {
     public void uploadLocalEntites(final ActionListener actionListener, final JProgressBar uploadProgress, final JTextArea outputArea, final String workspaceName, final char[] workspacePassword/*, final boolean createWorkspace*/) {
         new Thread() {
 
+            @Override
             public void run() {
                 try {
                     URL serverRestUrl = new URL("http://localhost:8080/kinoath-rest/kinoath/kinspace/" + workspaceName); // todo: put this into a config file
@@ -180,7 +183,6 @@ public class EntityUploader {
         } catch (IOException exception) {
             throw new ExportException(exception.getMessage());
         }
-
     }
 
     private void convertLocalIdentifierToUnique(String localIdentifier, String uniqueIdentifier) {
