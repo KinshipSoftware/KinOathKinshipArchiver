@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphLabel;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -20,12 +21,12 @@ import org.w3c.dom.events.EventTarget;
  */
 public class EntitySvg {
 
-    protected HashMap<String, float[]> entityPositions;
+    protected HashMap<UniqueIdentifier, float[]> entityPositions;
     private int symbolSize = 15;
     static protected int strokeWidth = 2;
 
     public EntitySvg() {
-        entityPositions = new HashMap<String, float[]>();
+        entityPositions = new HashMap<UniqueIdentifier, float[]>();
     }
 
     public void readEntityPositions(Node entityGroup) {
@@ -38,7 +39,7 @@ public class EntitySvg {
                     Node idNode = nodeMap.getNamedItem("id");
                     Node transformNode = nodeMap.getNamedItem("transform");
                     if (idNode != null && transformNode != null) {
-                        String entityId = idNode.getNodeValue();
+                        UniqueIdentifier entityId = new UniqueIdentifier(idNode.getNodeValue());
                         //transform="translate(300.0, 192.5)"
                         // because the svg dom has not been rendered we cannot get any of the screen data, so we must parse the transform tag
                         String transformString = transformNode.getNodeValue();
@@ -219,7 +220,7 @@ public class EntitySvg {
         return symbolArray.toArray(new String[]{});
     }
 
-    public float[] getEntityLocation(String entityId) {
+    public float[] getEntityLocation(UniqueIdentifier entityId) {
         float[] returnLoc = entityPositions.get(entityId);
         float xPos = returnLoc[0] + (symbolSize / 2);
         float yPos = returnLoc[1] + (symbolSize / 2);
@@ -251,8 +252,8 @@ public class EntitySvg {
 //        }
 //    }
 
-    public float[] moveEntity(GraphPanel graphPanel, String entityId, float shiftXfloat, float shiftYfloat, boolean snapToGrid, boolean allRealtionsSelected) {
-        Element entitySymbol = graphPanel.doc.getElementById(entityId);
+    public float[] moveEntity(GraphPanel graphPanel, UniqueIdentifier entityId, float shiftXfloat, float shiftYfloat, boolean snapToGrid, boolean allRealtionsSelected) {
+        Element entitySymbol = graphPanel.doc.getElementById(entityId.getAttributeIdentifier());
         float remainderAfterSnapX = 0;
         float remainderAfterSnapY = 0;
         double scaleFactor = 1;
@@ -320,7 +321,7 @@ public class EntitySvg {
 
     protected Element createEntitySymbol(GraphPanel graphPanel, EntityData currentNode) {
         Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
-        groupNode.setAttribute("id", currentNode.getUniqueIdentifier());
+        groupNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier());
         groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
         // the kin type strings are stored here so that on selection in the graph the add kin term panel can be pre populatedwith the kin type strings of the selection
         groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
@@ -333,7 +334,7 @@ public class EntitySvg {
         // todo: check that if an entity is already placed in which case do not recreate
         // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
         symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
-        symbolNode.setAttribute("id", currentNode.getUniqueIdentifier() + "symbol");
+        symbolNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier() + ":symbol");
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
