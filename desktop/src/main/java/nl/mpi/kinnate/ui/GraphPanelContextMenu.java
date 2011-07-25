@@ -4,12 +4,18 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
@@ -19,9 +25,13 @@ import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.RelationLinker;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.GraphPanelSize;
-import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  *  Document   : GraphPanelContextMenu
@@ -41,6 +51,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private JMenuItem removeRequiredMenuItem;
     private JMenuItem saveFileMenuItem;
     private JCheckBoxMenuItem snapToGridMenuItem;
+    private JCheckBoxMenuItem showBorderMenuItem;
+    private JCheckBoxMenuItem highlightRelationsMenuItem;
     private JCheckBoxMenuItem showKinTermLinesMenuItem;
     private JCheckBoxMenuItem showSanguineLinesMenuItem;
     private JCheckBoxMenuItem showLabelssMenuItem;
@@ -48,7 +60,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private JCheckBoxMenuItem showKinTermLabelssMenuItem;
     private JCheckBoxMenuItem showArchiveLinksMenuItem;
 //    private JCheckBoxMenuItem showResourceLinksMenuItem;
-    private String[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
+    private UniqueIdentifier[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
     private float xPos;
     private float yPos;
 
@@ -68,8 +80,35 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                     URI targetFileURI = ArbilSessionStorage.getSingleInstance().getNewArbilFileName(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), nodeType);
                     ArbilComponentBuilder componentBuilder = new ArbilComponentBuilder();
                     try {
+                        // todo: move this from here and update the way new nodes are constracted so that an entity object is created then saved to disk
                         addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
-                        String localIdentifier = new LocalIdentifier().setLocalIdentifier(new File(addedNodePath));
+
+                        UniqueIdentifier localIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid);
+                        Document metadataDom = null;
+                        try {
+                            // todo: look into handling errors better and look into if this should be an entity data node that is serialised rather than using componentBuilder.createComponentFile
+                            metadataDom = ArbilComponentBuilder.getDocument(addedNodePath);
+                            // add a unique identifier to the entity node
+                            Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Gedcom/:UniqueIdentifier");
+                            try {
+                                JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifier.class);
+                                Marshaller marshaller = jaxbContext.createMarshaller();
+                                marshaller.marshal(localIdentifier, uniqueIdentifierNode);
+                            } catch (JAXBException exception) {
+                                new ArbilBugCatcher().logError(exception);
+                            }
+                            ArbilComponentBuilder.savePrettyFormatting(metadataDom, new File(addedNodePath));
+                        } catch (DOMException exception) {
+                            new ArbilBugCatcher().logError(exception);
+                        } catch (TransformerException exception) {
+                            new ArbilBugCatcher().logError(exception);
+                        } catch (ParserConfigurationException exception) {
+                            new ArbilBugCatcher().logError(exception);
+                        } catch (IOException exception) {
+                            new ArbilBugCatcher().logError(exception);
+                        } catch (SAXException exception) {
+                            new ArbilBugCatcher().logError(exception);
+                        }
                         new EntityCollection().updateDatabase(addedNodePath);
 //                        ArrayList<String> entityArray = new ArrayList<String>(Arrays.asList(LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree")));
 //                        entityArray.add(addedNodePath.toASCIIString());
@@ -84,7 +123,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 //                        egoUriList.add(addedNodePath);
                         // todo: look into the need or not of adding ego nodes, on one hand they should not be added as ego nodes but as working nodes, also it is likely that the jlist that is updated by this could better be updaed by the selection listner
 //                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}), egoIdentifierList.toArray(new String[]{}));
-                        egoSelectionPanel.addRequiredNodes(new URI[]{addedNodePath}, new String[]{localIdentifier});
+                        egoSelectionPanel.addRequiredNodes(new URI[]{addedNodePath}, new UniqueIdentifier[]{localIdentifier});
                     } catch (URISyntaxException ex) {
                         new ArbilBugCatcher().logError(ex);
                         // todo: warn user with a dialog
@@ -136,7 +175,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 if (!"Label".equals(currentType)) {
                     addLabel.setEnabled(false);
                 }
-                addLabel.addActionListener(this);
+                addLabel.addActionListener(GraphPanelContextMenu.this);
                 // todo: addthese into a layer behind the entities, athought lables could be above
                 // todo: when geometry is selected construct an arbildatanode to allow the geometries attributes to be edited
             }
@@ -208,6 +247,26 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(snapToGridMenuItem);
+
+        highlightRelationsMenuItem = new JCheckBoxMenuItem("Highlight Selected Relations");
+        highlightRelationsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                graphPanel.dataStoreSvg.highlightRelationLines = !graphPanel.dataStoreSvg.highlightRelationLines;
+                graphPanel.drawNodes();
+            }
+        });
+        this.add(highlightRelationsMenuItem);
+
+        showBorderMenuItem = new JCheckBoxMenuItem("Show Diagram Border");
+        showBorderMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                graphPanel.dataStoreSvg.showDiagramBorder = !graphPanel.dataStoreSvg.showDiagramBorder;
+                graphPanel.drawNodes();
+            }
+        });
+        this.add(showBorderMenuItem);
 
         JMenu diagramSizeMenuItem = new JMenu("Diagram Size");
         for (String currentString : graphPanelSize.getPreferredSizes()) {
@@ -356,6 +415,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             removeRequiredMenuItem.setVisible(false);
         }
         snapToGridMenuItem.setSelected(graphPanel.dataStoreSvg.snapToGrid);
+        highlightRelationsMenuItem.setSelected(graphPanel.dataStoreSvg.highlightRelationLines);
+        showBorderMenuItem.setSelected(graphPanel.dataStoreSvg.showDiagramBorder);
         showSanguineLinesMenuItem.setSelected(graphPanel.dataStoreSvg.showSanguineLines);
         showKinTermLinesMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLines);
         showLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showLabels);
