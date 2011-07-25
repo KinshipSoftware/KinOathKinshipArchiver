@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : GenericImporter
@@ -16,7 +17,7 @@ public interface GenericImporter {
 
     public boolean canImport(String inputFileString);
 
-    public HashMap<String, ArrayList<String>> getCreatedNodeIds();
+    public HashMap<String, ArrayList<UniqueIdentifier>> getCreatedNodeIds();
 
     public void setProgressBar(JProgressBar progressBarLocal);
 
