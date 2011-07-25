@@ -2,11 +2,14 @@ package nl.mpi.kinnate.svg;
 
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.io.File;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
@@ -57,7 +60,7 @@ public class SvgUpdateHandler {
                 NamedNodeMap dataAttributes = dataElement.getAttributes();
                 if (dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "lineType").getNodeValue().equals("sanguineLine")) {
                     Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
-                    if (graphPanel.selectedGroupId.contains(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue()) || graphPanel.selectedGroupId.contains(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue())) {
+                    if (graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue())) || graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue()))) {
                         // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
 //                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
@@ -100,7 +103,7 @@ public class SvgUpdateHandler {
     protected void updateSvgSelectionHighlights() {
         if (kinTermSavePanel != null) {
             String kinTypeStrings = "";
-            for (String entityID : graphPanel.selectedGroupId) {
+            for (UniqueIdentifier entityID : graphPanel.selectedGroupId) {
                 if (kinTypeStrings.length() != 0) {
                     kinTypeStrings = kinTypeStrings + "|";
                 }
@@ -124,7 +127,7 @@ public class SvgUpdateHandler {
                                 if ("g".equals(currentChild.getLocalName())) {
                                     Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
                                     if (idAttrubite != null) {
-                                        String entityId = idAttrubite.getTextContent();
+                                        UniqueIdentifier entityId = new UniqueIdentifier(idAttrubite.getTextContent());
                                         System.out.println("group id: " + entityId);
                                         Node existingHighlight = null;
                                         // find any existing highlight
@@ -282,7 +285,7 @@ public class SvgUpdateHandler {
                             }
                         }
                         int dragCounter = 0;
-                        for (String entityId : graphPanel.selectedGroupId) {
+                        for (UniqueIdentifier entityId : graphPanel.selectedGroupId) {
                             // store the remainder after snap for re use on each update
                             dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, allRealtionsSelected);
                             dragCounter++;
@@ -403,21 +406,22 @@ public class SvgUpdateHandler {
 //                    }
                     Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
                     Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
-                    String labelIdString = "label" + labelGroup.getChildNodes().getLength();
+                    UniqueIdentifier labelId = new UniqueIdentifier(UniqueIdentifier.IdentifierType.gid);
+//                    String labelIdString = "label" + labelGroup.getChildNodes().getLength();
                     float[] labelPosition = new float[]{graphSize.x + graphSize.width / 2, graphSize.y + graphSize.height / 2};
 //                    labelText.setAttribute("x", "0"); // todo: update this to use the mouse click location // xPos
 //                    labelText.setAttribute("y", "0"); // yPos
                     labelText.setAttribute("fill", "black");
                     labelText.setAttribute("stroke-width", "0");
                     labelText.setAttribute("font-size", "28");
-                    labelText.setAttribute("id", labelIdString);
+                    labelText.setAttribute("id", labelId.getAttributeIdentifier());
                     labelText.setAttribute("transform", "translate(" + Float.toString(labelPosition[0]) + ", " + Float.toString(labelPosition[1]) + ")");
 //
                     Text textNode = graphPanel.doc.createTextNode(labelString);
                     labelText.appendChild(textNode);
                     // todo: put this into a geometry group and allow for selection and drag
                     labelGroup.appendChild(labelText);
-                    graphPanel.entitySvg.entityPositions.put(labelIdString, labelPosition);
+                    graphPanel.entitySvg.entityPositions.put(labelId, labelPosition);
 //                    graphPanel.doc.getDocumentElement().appendChild(labelText);
                     ((EventTarget) labelText).addEventListener("mousedown", new MouseListenerSvg(graphPanel), false);
                 }
