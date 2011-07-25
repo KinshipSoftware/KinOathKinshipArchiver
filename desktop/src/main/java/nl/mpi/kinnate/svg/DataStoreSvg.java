@@ -11,6 +11,7 @@ import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,8 +31,8 @@ public class DataStoreSvg {
 //    @XmlElement(name = "EgoIdList", namespace = "http://mpi.nl/tla/kin")
 //    @XmlElementWrapper(name = "kin:EgoIdList")
     @XmlElement(name = "EgoId", namespace = "http://mpi.nl/tla/kin")
-    public HashSet<String> egoEntities = new HashSet<String>();
-    public HashSet<String> requiredEntities = new HashSet<String>();
+    public HashSet<UniqueIdentifier> egoEntities = new HashSet<UniqueIdentifier>();
+    public HashSet<UniqueIdentifier> requiredEntities = new HashSet<UniqueIdentifier>();
 //        @XmlElementWrapper(name = "kin:KinTypeStrings")
     @XmlElement(name = "KinTypeString", namespace = "http://mpi.nl/tla/kin")
     protected String[] kinTypeStrings = new String[]{};
@@ -55,13 +56,17 @@ public class DataStoreSvg {
     public boolean showArchiveLinks = true;
 //    @XmlElement(name = "ShowResourceLinks", namespace = "http://mpi.nl/tla/kin")
 //    public boolean showResourceLinks = true;
+    @XmlElement(name = "HighlightRelationLines", namespace = "http://mpi.nl/tla/kin")
+    public boolean highlightRelationLines = true;
+    @XmlElement(name = "ShowDiagramBorder", namespace = "http://mpi.nl/tla/kin")
+    public boolean showDiagramBorder = true;
     @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
     protected GraphSorter graphData;
 
     public class GraphRelationData {
 
-        public String egoNodeId;
-        public String alterNodeId;
+        public UniqueIdentifier egoNodeId;
+        public UniqueIdentifier alterNodeId;
         public DataTypes.RelationType relationType;
         public DataTypes.RelationLineType relationLineType;
     }
@@ -70,7 +75,8 @@ public class DataStoreSvg {
     }
 
     public void setDefaults() {
-        kinTermGroups = new KinTermGroup[]{new KinTermGroup(0), new KinTermGroup(1)};
+        // todo: it might be better not to add any kin group until the user explicitly adds one from the menu
+        kinTermGroups = new KinTermGroup[]{new KinTermGroup(-1)}; //new KinTermGroup(0), new KinTermGroup(1)};
         indexParameters = new IndexerParameters();
     }
 
@@ -78,8 +84,8 @@ public class DataStoreSvg {
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
             if ("RelationEntities".equals(currentChild.getLocalName())) {
                 GraphRelationData graphRelationData = new GraphRelationData();
-                graphRelationData.egoNodeId = currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "ego").getNodeValue();
-                graphRelationData.alterNodeId = currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "alter").getNodeValue();
+                graphRelationData.egoNodeId = new UniqueIdentifier(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "ego").getNodeValue());
+                graphRelationData.alterNodeId = new UniqueIdentifier(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "alter").getNodeValue());
                 graphRelationData.relationType = DataTypes.RelationType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "relationType").getNodeValue());
                 graphRelationData.relationLineType = DataTypes.RelationLineType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "lineType").getNodeValue());
                 return graphRelationData;
@@ -88,12 +94,12 @@ public class DataStoreSvg {
         return null;
     }
 
-    public void storeRelationParameters(SVGDocument doc, Element relationGroup, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String egoEntity, String alterEntity) {
+    public void storeRelationParameters(SVGDocument doc, Element relationGroup, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, UniqueIdentifier egoEntity, UniqueIdentifier alterEntity) {
         Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
         dataRecordNode.setAttributeNS(kinDataNameSpace, "lineType", relationLineType.name());
         dataRecordNode.setAttributeNS(kinDataNameSpace, "relationType", relationType.name());
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "ego", egoEntity);
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "alter", alterEntity);
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "ego", egoEntity.getAttributeIdentifier());
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "alter", alterEntity.getAttributeIdentifier());
         relationGroup.appendChild(dataRecordNode);
     }
 
