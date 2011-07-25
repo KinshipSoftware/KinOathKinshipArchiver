@@ -22,6 +22,7 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.CsvImporter;
 import nl.mpi.kinnate.gedcomimport.GedcomImporter;
 import nl.mpi.kinnate.gedcomimport.GenericImporter;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : GedcomImportPanel
@@ -68,7 +69,7 @@ public class GedcomImportPanel extends JPanel {
             showButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    ArrayList<String> selectedIds = new ArrayList<String>();
+                    ArrayList<UniqueIdentifier> selectedIds = new ArrayList<UniqueIdentifier>();
                     for (JCheckBox currentCheckBox : checkBoxArray) {
                         if (currentCheckBox.isSelected()) {
                             selectedIds.addAll((gedcomImporter.getCreatedNodeIds().get(currentCheckBox.getActionCommand())));
@@ -76,7 +77,7 @@ public class GedcomImportPanel extends JPanel {
                     }
                     KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
 //                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
-                    egoSelectionTestPanel.addRequiredNodes(null, selectedIds.toArray(new String[]{}));
+                    egoSelectionTestPanel.addRequiredNodes(null, selectedIds.toArray(new UniqueIdentifier[]{}));
                     jTabbedPane1.add("Imported Entities", egoSelectionTestPanel);
                     jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
                 }
