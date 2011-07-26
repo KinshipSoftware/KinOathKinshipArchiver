@@ -14,6 +14,7 @@ import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.ui.ArbilTreeRenderer;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : EgoSelectionPanel
@@ -88,7 +89,7 @@ public class EgoSelectionPanel extends JPanel {
         this.add(outerScrolPane, BorderLayout.CENTER);
     }
 
-    public void setTreeNodes(HashSet<String> egoIdentifiers, HashSet<String> requiredEntityIdentifiers, EntityData[] allEntities) {
+    public void setTreeNodes(HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, EntityData[] allEntities) {
         ArrayList<ArbilDataNode> egoNodeArray = new ArrayList<ArbilDataNode>();
         ArrayList<ArbilDataNode> requiredNodeArray = new ArrayList<ArbilDataNode>();
         ArrayList<ArbilDataNode> remainingNodeArray = new ArrayList<ArbilDataNode>();
