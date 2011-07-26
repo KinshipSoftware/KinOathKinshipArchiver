@@ -2,6 +2,7 @@ package nl.mpi.kinnate.kintypestrings;
 
 import java.util.Date;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : LabelStringsParser
@@ -10,21 +11,29 @@ import nl.mpi.kinnate.kindata.EntityData;
  */
 public class LabelStringsParser {
 
-    public static String transientNodePrefix = "transient:";
     boolean identifierFound = false;
-    String idString;
+    UniqueIdentifier transientIdentifier;
     String labelsStrings[] = new String[]{};
     Date dateOfBirth = null; // todo: read in the dates and if found set the in the entities
     Date dateOfDeath = null;
     String remainingInputString;
 
     protected LabelStringsParser(String inputString, EntityData parentData, String currentKinTypeString) {
+        String remainderString = inputString.replaceFirst("^#[0-9]*", "");
+        if (inputString.length() != remainderString.length()) {
+            String idString = inputString.substring(1, remainderString.length());
+            transientIdentifier = new UniqueIdentifier("id:" + idString, UniqueIdentifier.IdentifierType.tid);
+            identifierFound = true;
+            inputString = remainderString;
+        }
         if (inputString.startsWith(":")) {
             String[] inputStringParts = inputString.split(":", 3);
             if (inputStringParts.length > 0) {
                 labelsStrings = inputStringParts[1].split(";");
-                idString = transientNodePrefix + "label:" + inputStringParts[1];
-                identifierFound = true;
+                if (transientIdentifier == null) {
+                    transientIdentifier = new UniqueIdentifier("label:" + inputStringParts[1], UniqueIdentifier.IdentifierType.tid);
+                    identifierFound = true;
+                }
             }
             if (inputStringParts.length > 2) {
                 remainingInputString = inputStringParts[2];
@@ -32,12 +41,8 @@ public class LabelStringsParser {
                 remainingInputString = "";
             }
         }
-        if (!identifierFound) {
-            if (parentData != null) {
-                idString = parentData.getUniqueIdentifier() + currentKinTypeString;
-            } else {
-                idString = transientNodePrefix + "kintype:" + currentKinTypeString;
-            }
+        if (transientIdentifier == null) {
+            transientIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid);
         }
     }
 }
