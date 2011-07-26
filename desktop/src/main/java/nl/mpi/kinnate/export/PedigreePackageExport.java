@@ -17,7 +17,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class PedigreePackageExport {
 
-    private static UniqueIdentifier orphanId = new UniqueIdentifier("orphan", UniqueIdentifier.IdentifierType.tid);
+    private static UniqueIdentifier orphanId = new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid);
 
     private String getSimpleId(ArrayList<UniqueIdentifier> allIdArray, UniqueIdentifier entityIdentifier) {
 //        String entityIdentifier = entityData.getUniqueIdentifier();
