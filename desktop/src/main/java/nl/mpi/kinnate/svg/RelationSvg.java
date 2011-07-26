@@ -4,6 +4,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -297,7 +298,7 @@ public class RelationSvg {
         relationGroupNode.appendChild(groupNode);
     }
 
-    public void updateRelationLines(GraphPanel graphPanel, ArrayList<String> draggedNodeIds, String svgNameSpace, int hSpacing, int vSpacing) {
+    public void updateRelationLines(GraphPanel graphPanel, ArrayList<UniqueIdentifier> draggedNodeIds, String svgNameSpace, int hSpacing, int vSpacing) {
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = graphPanel.doc.getElementById("RelationGroup");
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
