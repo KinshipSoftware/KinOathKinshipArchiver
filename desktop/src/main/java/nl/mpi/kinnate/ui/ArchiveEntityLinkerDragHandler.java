@@ -21,7 +21,6 @@ import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
-import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -139,7 +138,7 @@ public class ArchiveEntityLinkerDragHandler extends TransferHandler implements T
                         ArbilComponentBuilder componentBuilder = new ArbilComponentBuilder();
                         addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
                         // set the unique idntifier
-                        String localIdentifier = new LocalIdentifier().setLocalIdentifier(new File(addedNodePath));
+//                        String localIdentifier = new LocalIdentifier().setLocalIdentifier(new File(addedNodePath));
                         createdEntity = true;
                     }
                     try {
