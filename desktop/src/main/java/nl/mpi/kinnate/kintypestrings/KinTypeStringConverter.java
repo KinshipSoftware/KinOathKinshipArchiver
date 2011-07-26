@@ -10,6 +10,7 @@ import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight.ParserHighlightType;
 import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : KinTypeStringConverter
@@ -119,6 +120,13 @@ public class KinTypeStringConverter extends GraphSorter {
                             int queryEnd = consumableString.indexOf("]");
                             if (queryEnd == -1) {
                                 // if the terms are incomplete then ignore the rest of the line
+                                System.out.println("no closing bracket ']' found");
+                                foundKinType = false;
+                                break;
+                            }
+                            if (queryEnd - queryStart < 3) {
+                                // the query string must be more than 2 chars
+                                System.out.println("Query must be over 2 chars long");
                                 foundKinType = false;
                                 break;
                             }
@@ -128,9 +136,7 @@ public class KinTypeStringConverter extends GraphSorter {
                             String queryText = consumableString.substring(queryStart, queryEnd);
                             consumableString = consumableString.substring(queryEnd + 1);
                             if (!queryText.contains("=")) {
-                                if (queryText.length() > 2) {
-                                    currentElement.queryTerm.add(new String[]{"*", queryText});
-                                }
+                                currentElement.queryTerm.add(new String[]{"*", queryText});
                             } else {
                                 String[] queryTerm = queryText.split("=");
                                 if (queryTerm.length == 2) {
@@ -176,7 +182,7 @@ public class KinTypeStringConverter extends GraphSorter {
     }
 
     public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg, ParserHighlight[] parserHighlightArray) {
-        HashMap<String, EntityData> graphDataNodeList = new HashMap<String, EntityData>();
+        HashMap<UniqueIdentifier, EntityData> graphDataNodeList = new HashMap<UniqueIdentifier, EntityData>();
 //        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{}, true);
 //        graphDataNodeList.put("E", egoDataNode);
 //        egoDataNode.isVisible = true;
@@ -252,8 +258,8 @@ public class KinTypeStringConverter extends GraphSorter {
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length());
                                     consumableString = labelStringsParser.remainingInputString;
                                 }
-                                if (graphDataNodeList.containsKey(labelStringsParser.idString)) {
-                                    currentGraphDataNode = graphDataNodeList.get(labelStringsParser.idString);
+                                if (graphDataNodeList.containsKey(labelStringsParser.transientIdentifier)) {
+                                    currentGraphDataNode = graphDataNodeList.get(labelStringsParser.transientIdentifier);
                                     // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
                                 } else {
                                     if (parentDataNode != null && !labelStringsParser.identifierFound /* if a label has been specified then always create or reuse that named entity */) {
@@ -276,7 +282,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                         }
                                     }
                                     if (currentGraphDataNode == null) {
-                                        currentGraphDataNode = new EntityData(labelStringsParser.idString, null, fullKinTypeString, currentReferenceKinType.symbolType, labelStringsParser.labelsStrings, currentReferenceKinType.isEgoType());
+                                        currentGraphDataNode = new EntityData(labelStringsParser.transientIdentifier, null, fullKinTypeString, currentReferenceKinType.symbolType, labelStringsParser.labelsStrings, currentReferenceKinType.isEgoType());
                                         if (currentGraphDataNode.isEgo) {
                                             egoDataNodeList.add(currentGraphDataNode);
                                         }
@@ -289,7 +295,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                     // allow relations only for kin types that do not start the kin type string
                                     parentDataNode.addRelatedNode(currentGraphDataNode, 0, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
                                 }
-                                graphDataNodeList.put(labelStringsParser.idString, currentGraphDataNode);
+                                graphDataNodeList.put(labelStringsParser.transientIdentifier, currentGraphDataNode);
                                 currentGraphDataNode.isVisible = true;
                                 // add any child nodes?
                                 for (KinTermGroup kinTerms : kinTermsArray) {
