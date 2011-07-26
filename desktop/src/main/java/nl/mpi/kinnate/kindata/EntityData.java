@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.kindata;
 
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -22,7 +23,7 @@ public class EntityData {
         square, triangle, circle, union, resource, ego, none
     }
     @XmlElement(name = "Identifier")
-    private String uniqueIdentifier;
+    private UniqueIdentifier uniqueIdentifier;
     @XmlElement(name = "Path")
     private String entityPath;
     @XmlElement(name = "KinType")
@@ -34,7 +35,9 @@ public class EntityData {
     private String symbolTypeString;
     @XmlElement(name = "DateOfBirth")
     private Date dateOfBirth; // todo: use this in the graph sort and offer to show on the graph
-    public boolean isEgo = false;
+    @XmlElement(name = "DateOfDeath")
+    private Date dateOfDeath; // todo: use this in the graph to draw a line through or similar
+    public Boolean isEgo = null;
     @XmlElementWrapper(name = "Labels")
     @XmlElement(name = "String")
     private String[] labelStringArray;
@@ -56,8 +59,8 @@ public class EntityData {
     private EntityData() {
     }
 
-    public EntityData(String uniqueIdentifierLocal, String entityPathLocal, String kinTypeStringLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
-        uniqueIdentifier = uniqueIdentifierLocal;
+    public EntityData(String entityPathLocal, String kinTypeStringLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
+        uniqueIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid);
         entityPath = entityPathLocal;
         kinTypeArray = new String[]{kinTypeStringLocal};
         symbolType = null;
@@ -66,14 +69,43 @@ public class EntityData {
         isEgo = isEgoLocal;
     }
 
-    public EntityData(String uniqueIdentifierLocal, String entityPathLocal, String kinTypeStringLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
-        uniqueIdentifier = uniqueIdentifierLocal;
+    public EntityData(String entityPathLocal, String kinTypeStringLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
+        uniqueIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid);
         entityPath = entityPathLocal;
         kinTypeArray = new String[]{kinTypeStringLocal};
         symbolType = symbolIndex;
         labelStringArray = labelStringLocal;
         isEgo = isEgoLocal;
     }
+
+    public EntityData(UniqueIdentifier uniqueIdentifierLocal, String[] errorMessage) {
+        // this is used only to return error messages from a query that fails to get an entity and to prevent that query being hit again
+        uniqueIdentifier = uniqueIdentifierLocal;
+        entityPath = null;
+        symbolType = SymbolType.none;
+        symbolTypeString = null;
+        labelStringArray = errorMessage;
+        isEgo = null;
+    }
+
+    // begin code used for importing gedcom and other file types
+    public EntityData(UniqueIdentifier uniqueIdentifierLocal) {
+        uniqueIdentifier = uniqueIdentifierLocal;
+        entityPath = null;
+        symbolType = null;
+        symbolTypeString = null;
+        labelStringArray = null;
+        isEgo = null;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setDateOfDeath(Date dateOfDeath) {
+        this.dateOfDeath = dateOfDeath;
+    }
+    // end code used for importing gedcom and other file types
 
     public String getSymbolType() {
         if (symbolType != null) {
@@ -244,7 +276,7 @@ public class EntityData {
 
     public EntityRelation[] getDistinctRelateNodes() {
         if (distinctRelateNodes == null) {
-            ArrayList<String> processedIds = new ArrayList<String>();
+            ArrayList<UniqueIdentifier> processedIds = new ArrayList<UniqueIdentifier>();
             ArrayList<EntityRelation> uniqueNodes = new ArrayList<EntityRelation>();
             if (relatedNodes != null) {
                 for (EntityRelation nodeRelation : relatedNodes) {
@@ -259,7 +291,7 @@ public class EntityData {
         return distinctRelateNodes;
     }
 
-    public String getUniqueIdentifier() {
+    public UniqueIdentifier getUniqueIdentifier() {
         return uniqueIdentifier;
     }
 }
