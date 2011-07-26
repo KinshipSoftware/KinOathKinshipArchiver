@@ -1,10 +1,10 @@
 package nl.mpi.kinnate.kindata;
 
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.bind.annotation.XmlElement;
-import nl.mpi.kinnate.kintypestrings.LabelStringsParser;
 import nl.mpi.kinnate.svg.GraphPanelSize;
 
 /**
@@ -16,7 +16,7 @@ public class GraphSorter {
 
     @XmlElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
     private EntityData[] graphDataNodeArray = new EntityData[]{};
-    HashMap<String, SortingEntity> knownSortingEntities;
+    HashMap<UniqueIdentifier, SortingEntity> knownSortingEntities;
     // todo: should these padding vars be stored in the svg, currently they are stored
     public int xPadding = 100; // todo sort out one place for this var
     public int yPadding = 100; // todo sort out one place for this var
@@ -31,7 +31,7 @@ public class GraphSorter {
 
     private class SortingEntity {
 
-        String selfEntityId;
+        UniqueIdentifier selfEntityId;
         ArrayList<SortingEntity> mustBeBelow;
         ArrayList<SortingEntity> mustBeAbove;
         ArrayList<SortingEntity> mustBeNextTo;
@@ -48,7 +48,7 @@ public class GraphSorter {
             couldBeNextTo = new ArrayList<SortingEntity>();
         }
 
-        public void calculateRelations(HashMap<String, SortingEntity> knownSortingEntities) {
+        public void calculateRelations(HashMap<UniqueIdentifier, SortingEntity> knownSortingEntities) {
             for (EntityRelation entityRelation : visiblyRelateNodes) {
                 switch (entityRelation.relationType) {
                     case ancestor:
@@ -67,7 +67,7 @@ public class GraphSorter {
             }
         }
 
-        private boolean positionIsFree(String currentIdentifier, float[] targetPosition, HashMap<String, float[]> entityPositions) {
+        private boolean positionIsFree(UniqueIdentifier currentIdentifier, float[] targetPosition, HashMap<UniqueIdentifier, float[]> entityPositions) {
             int useCount = 0;
             for (float[] currentPosition : entityPositions.values()) {
                 if (currentPosition[0] == targetPosition[0] && currentPosition[1] == targetPosition[1]) {
@@ -90,8 +90,8 @@ public class GraphSorter {
             return false;
         }
 
-        protected float[] getPosition(HashMap<String, float[]> entityPositions, float[] defaultPosition) {
-            System.out.println("getPosition: " + selfEntityId);
+        protected float[] getPosition(HashMap<UniqueIdentifier, float[]> entityPositions, float[] defaultPosition) {
+            System.out.println("getPosition: " + selfEntityId.getAttributeIdentifier());
             calculatedPosition = entityPositions.get(selfEntityId);
             if (calculatedPosition == null) {
                 for (SortingEntity sortingEntity : mustBeBelow) {
@@ -106,7 +106,7 @@ public class GraphSorter {
                         if (nextAbovePos[1] > calculatedPosition[1] - yPadding) {
                             calculatedPosition[1] = nextAbovePos[1] + yPadding;
 //                        calculatedPosition[0] = nextAbovePos[0];
-                            System.out.println("move down: " + selfEntityId);
+                            System.out.println("move down: " + selfEntityId.getAttributeIdentifier());
                         }
                     }
                 }
@@ -130,7 +130,7 @@ public class GraphSorter {
                             if (nextBelowPos[1] < calculatedPosition[1] + yPadding) {
                                 calculatedPosition[1] = nextBelowPos[1] - yPadding;
 //                        calculatedPosition[0] = nextAbovePos[0];
-                                System.out.println("move up: " + selfEntityId);
+                                System.out.println("move up: " + selfEntityId.getAttributeIdentifier());
                             }
                         }
                     }
@@ -160,12 +160,12 @@ public class GraphSorter {
                 while (!positionIsFree(selfEntityId, calculatedPosition, entityPositions)) {
                     // todo: this should be checking min distance not free
                     calculatedPosition[0] = calculatedPosition[0] + xPadding;
-                    System.out.println("move right: " + selfEntityId);
+                    System.out.println("move right: " + selfEntityId.getAttributeIdentifier());
                 }
 //                System.out.println("Insert: " + selfEntityId + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
                 entityPositions.put(selfEntityId, calculatedPosition);
             }
-            System.out.println("Position: " + selfEntityId + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
+            System.out.println("Position: " + selfEntityId.getAttributeIdentifier() + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
 //            float[] debugArray = entityPositions.get("Charles II of Spain");
 //            if (debugArray != null) {
 //                System.out.println("Charles II of Spain: " + debugArray[0] + " : " + debugArray[1]);
@@ -173,7 +173,7 @@ public class GraphSorter {
             return calculatedPosition;
         }
 
-        protected void getRelatedPositions(HashMap<String, float[]> entityPositions) {
+        protected void getRelatedPositions(HashMap<UniqueIdentifier, float[]> entityPositions) {
             ArrayList<SortingEntity> allRelations = new ArrayList<SortingEntity>();
             allRelations.addAll(mustBeAbove);
             allRelations.addAll(mustBeBelow);
@@ -194,7 +194,7 @@ public class GraphSorter {
         graphDataNodeArray = graphDataNodeArrayLocal;
 
         // this section need only be done when the nodes are added to this graphsorter
-        knownSortingEntities = new HashMap<String, SortingEntity>();
+        knownSortingEntities = new HashMap<UniqueIdentifier, SortingEntity>();
         for (EntityData currentNode : graphDataNodeArrayLocal) {
             if (currentNode.isVisible) {
                 // only create sorting entities for visible entities
@@ -219,7 +219,7 @@ public class GraphSorter {
 //
 //        }
 //    }
-    public Rectangle getGraphSize(HashMap<String, float[]> entityPositions) {
+    public Rectangle getGraphSize(HashMap<UniqueIdentifier, float[]> entityPositions) {
         // get min positions
         // this should also take into account any graphics such as labels, although the border provided should be adequate, in other situations the page size could be set, in which case maybe an align option would be helpful
         int[] minPostion = null;
@@ -247,7 +247,7 @@ public class GraphSorter {
         return new Rectangle(xOffset, yOffset, graphWidth, graphHeight);
     }
 
-    public void placeAllNodes(HashMap<String, float[]> entityPositions) {
+    public void placeAllNodes(HashMap<UniqueIdentifier, float[]> entityPositions) {
         // make a has table of all entites
         // find the first ego node
         // place it and all its immediate relatives onto the graph, each time checking that the space is free
@@ -256,7 +256,7 @@ public class GraphSorter {
 
         // remove any transent nodes that are not in this list anymore
         // and make sure that invisible nodes are ignored
-        ArrayList<String> removeNodeIds = new ArrayList<String>(entityPositions.keySet());
+        ArrayList<UniqueIdentifier> removeNodeIds = new ArrayList<UniqueIdentifier>(entityPositions.keySet());
         for (EntityData currentNode : graphDataNodeArray) {
             removeNodeIds.remove(currentNode.getUniqueIdentifier());
             // remove any invisible node from the position list, the entities in a loaded svg should still get here even if they are not visible anymore
@@ -264,8 +264,8 @@ public class GraphSorter {
                 entityPositions.remove(currentNode.getUniqueIdentifier());
             }
         }
-        for (String currentRemoveId : removeNodeIds) {
-            if (currentRemoveId.startsWith(LabelStringsParser.transientNodePrefix)) {
+        for (UniqueIdentifier currentRemoveId : removeNodeIds) {
+            if (!(currentRemoveId.isGraphicsIdentifier())) {
                 // remove the transent nodes making sure not to remove the positions of graphics such as labels
                 entityPositions.remove(currentRemoveId);
             }
