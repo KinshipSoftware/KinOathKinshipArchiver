@@ -3,6 +3,7 @@ package nl.mpi.kinnate.entityindexer;
 import java.net.URI;
 import java.util.HashSet;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 
 /**
@@ -14,5 +15,5 @@ public interface EntityService {
 
 //    public void primeWithEntities(EntityData[] preLoadedEntities); // it would seem not to be a good idea to try and use existing entities from an svg file when their relations might not exist, so we will allow the existing entities to be used on the graph but not for database actions
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, HashSet<String> egoIdentifiers, HashSet<String> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException;
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException;
 }
