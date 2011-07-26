@@ -128,7 +128,7 @@ public class SvgUpdateHandler {
                                     Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
                                     if (idAttrubite != null) {
                                         UniqueIdentifier entityId = new UniqueIdentifier(idAttrubite.getTextContent());
-                                        System.out.println("group id: " + entityId);
+                                        System.out.println("group id: " + entityId.getAttributeIdentifier());
                                         Node existingHighlight = null;
                                         // find any existing highlight
                                         for (Node subGoupNode = currentChild.getFirstChild(); subGoupNode != null; subGoupNode = subGoupNode.getNextSibling()) {
@@ -358,21 +358,26 @@ public class SvgUpdateHandler {
             if (pageBorderNode == null) {
                 pageBorderNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
                 pageBorderNode.setAttribute("id", "PageBorder");
-                pageBorderNode.setAttribute("x", Float.toString(graphSize.x));
-                pageBorderNode.setAttribute("y", Float.toString(graphSize.y));
-                pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x));
-                pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y));
+                pageBorderNode.setAttribute("x", Float.toString(graphSize.x + 2));
+                pageBorderNode.setAttribute("y", Float.toString(graphSize.y + 2));
+                pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x - 4));
+                pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y - 4));
                 pageBorderNode.setAttribute("fill", "none");
                 pageBorderNode.setAttribute("stroke-width", "2");
                 pageBorderNode.setAttribute("stroke", "grey");
                 diagramGroupNode.appendChild(pageBorderNode);
             } else {
-                pageBorderNode.setAttribute("x", Float.toString(graphSize.x));
-                pageBorderNode.setAttribute("y", Float.toString(graphSize.y));
-                pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x));
-                pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y));
+                pageBorderNode.setAttribute("x", Float.toString(graphSize.x + 2));
+                pageBorderNode.setAttribute("y", Float.toString(graphSize.y + 2));
+                pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x - 4));
+                pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y - 4));
             }
             // end draw hidious green rectangle for debugging
+        } else {
+            Element pageBorderNode = graphPanel.doc.getElementById("PageBorder");
+            if (pageBorderNode != null) {
+                pageBorderNode.getParentNode().removeChild(pageBorderNode);
+            }
         }
     }
 
