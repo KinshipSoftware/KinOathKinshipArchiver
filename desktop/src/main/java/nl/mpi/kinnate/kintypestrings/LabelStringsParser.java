@@ -20,6 +20,7 @@ public class LabelStringsParser {
         if (inputString.startsWith(":")) {
             String[] inputStringParts = inputString.split(":", 3);
             if (inputStringParts.length > 0) {
+                // todo: document and give examples of how these user defined identifiers work and that if the #0-9 type is not provided then the entire label string is used as the identifier
                 labelsStrings = inputStringParts[1].split(";");
                 if (labelsStrings[0].matches("^#[0-9]*")) {
                     userDefinedIdentifier = "id:" + labelsStrings[0];
