@@ -10,6 +10,7 @@ import java.util.HashMap;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : CsvImporter
@@ -45,11 +46,11 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
             createdDocuments.put(idString, currentEntity);
             String typeString = "Entity";
             if (createdNodeIds.get(typeString) == null) {
-                ArrayList<String> idArray = new ArrayList<String>();
-                idArray.add(currentEntity.getUniquieIdentifier());
+                ArrayList<UniqueIdentifier> idArray = new ArrayList<UniqueIdentifier>();
+                idArray.add(currentEntity.getUniqueIdentifier());
                 createdNodeIds.put(typeString, idArray);
             } else {
-                createdNodeIds.get(typeString).add(currentEntity.getUniquieIdentifier());
+                createdNodeIds.get(typeString).add(currentEntity.getUniqueIdentifier());
             }
         }
         return currentEntity;
@@ -59,7 +60,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
     public URI[] importFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
         HashMap<String, EntityDocument> createdDocuments = new HashMap<String, EntityDocument>();
-        createdNodeIds = new HashMap<String, ArrayList<String>>();
+        createdNodeIds = new HashMap<String, ArrayList<UniqueIdentifier>>();
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         File destinationDirectory = super.getDestinationDirectory();
         String inputLine;
@@ -88,21 +89,21 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                                 if (headingString.startsWith("Spouses")) {
                                     if (headingString.matches("Spouses[\\d]*-ID")) {
                                         EntityDocument relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
-                                        currentEntity.insertRelation(RelationType.union, relatedEntity.getUniquieIdentifier(), relatedEntity.getFileName());
+                                        currentEntity.insertRelation(relatedEntity.entityData, RelationType.union, relatedEntity.getFileName());
                                     } else {
                                         appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
                                     }
                                 } else if (headingString.startsWith("Parents")) {
                                     if (headingString.matches("Parents[\\d]*-ID")) {
                                         EntityDocument relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
-                                        currentEntity.insertRelation(RelationType.ancestor, relatedEntity.getUniquieIdentifier(), relatedEntity.getFileName());
+                                        currentEntity.insertRelation(relatedEntity.entityData, RelationType.ancestor, relatedEntity.getFileName());
                                     } else {
                                         appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
                                     }
                                 } else if (headingString.startsWith("Children")) {
                                     if (headingString.matches("Children[\\d]*-ID")) {
                                         EntityDocument relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
-                                        currentEntity.insertRelation(RelationType.descendant, relatedEntity.getUniquieIdentifier(), relatedEntity.getFileName());
+                                        currentEntity.insertRelation(relatedEntity.entityData, RelationType.descendant, relatedEntity.getFileName());
                                     } else {
                                         appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
                                     }
