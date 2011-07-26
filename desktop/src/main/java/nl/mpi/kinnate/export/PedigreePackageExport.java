@@ -8,6 +8,7 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : PedigreePackageExport
@@ -16,7 +17,9 @@ import nl.mpi.kinnate.svg.DataStoreSvg;
  */
 public class PedigreePackageExport {
 
-    private String getSimpleId(ArrayList<String> allIdArray, String entityIdentifier) {
+    private static UniqueIdentifier orphanId = new UniqueIdentifier("orphan", UniqueIdentifier.IdentifierType.tid);
+
+    private String getSimpleId(ArrayList<UniqueIdentifier> allIdArray, UniqueIdentifier entityIdentifier) {
 //        String entityIdentifier = entityData.getUniqueIdentifier();
         if (!allIdArray.contains(entityIdentifier)) {
             allIdArray.add(entityIdentifier);
@@ -24,7 +27,7 @@ public class PedigreePackageExport {
         return Integer.toString(allIdArray.indexOf(entityIdentifier));
     }
 
-    private String getFirstMatchingParent(EntityData entityData, EntityData.SymbolType symbolType) {
+    private UniqueIdentifier getFirstMatchingParent(EntityData entityData, EntityData.SymbolType symbolType) {
         for (EntityRelation entityRelation : entityData.getDistinctRelateNodes()) {
             if (entityRelation.relationType.equals(DataTypes.RelationType.ancestor)) {
                 if (entityRelation.getAlterNode().getSymbolType().equals(symbolType.name())) {
@@ -32,7 +35,7 @@ public class PedigreePackageExport {
                 }
             }
         }
-        return "orphan";
+        return orphanId;
     }
 
     private int getIntegerGender(EntityData entityData) {
@@ -48,8 +51,8 @@ public class PedigreePackageExport {
     }
 
     public String createCsvContents(EntityData[] entityDataArray) {
-        ArrayList<String> allIdArray = new ArrayList<String>();
-        allIdArray.add("orphan"); // in the pedigree package a non existet entity has the id of 0 so we must keep that free
+        ArrayList<UniqueIdentifier> allIdArray = new ArrayList<UniqueIdentifier>();
+        allIdArray.add(orphanId); // in the pedigree package a non existet entity has the id of 0 so we must keep that free
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("id\tmomid\tdadid\tsex\taffected\n"); // todo: add remaining elements: \tstatus\trelations\n");
         for (EntityData entityData : entityDataArray) {
