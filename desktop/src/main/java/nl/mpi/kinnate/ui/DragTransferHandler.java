@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.ui.ArbilTree;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  * Document   : DragTransferHandler
@@ -99,17 +100,17 @@ public class DragTransferHandler extends TransferHandler implements Transferable
         if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
             System.out.println("dropped to KinTypeEgoSelectionTestPanel");
             ArrayList<URI> slectedUris = new ArrayList<URI>();
-            ArrayList<String> slectedIdentifiers = new ArrayList<String>();
+            ArrayList<UniqueIdentifier> slectedIdentifiers = new ArrayList<UniqueIdentifier>();
             for (ArbilDataNode currentArbilNode : selectedNodes) {
                 slectedUris.add(currentArbilNode.getURI());
                 for (String currentIdentifierType : new String[]{"Kinnate.Gedcom.UniqueIdentifier.LocalIdentifier", "Kinnate.Entity.UniqueIdentifier.LocalIdentifier", "Kinnate.Gedcom.UniqueIdentifier.PersistantIdentifier", "Kinnate.Entity.UniqueIdentifier.PersistantIdentifier"}) {
                     if (currentArbilNode.getFields().containsKey(currentIdentifierType)) {
-                        slectedIdentifiers.add(currentArbilNode.getFields().get(currentIdentifierType)[0].getFieldValue());
+                        slectedIdentifiers.add(new UniqueIdentifier(currentArbilNode.getFields().get(currentIdentifierType)[0]));
                         break;
                     }
                 }
             }
-            ((KinTypeEgoSelectionTestPanel) dropLocation).addRequiredNodes(slectedUris.toArray(new URI[]{}), slectedIdentifiers.toArray(new String[]{}));
+            ((KinTypeEgoSelectionTestPanel) dropLocation).addRequiredNodes(slectedUris.toArray(new URI[]{}), slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
             return true;
         }
         return false;
