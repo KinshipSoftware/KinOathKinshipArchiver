@@ -13,6 +13,7 @@ import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
 
 /**
@@ -28,7 +29,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     static private boolean mouseActionOnNode = false;
     static private boolean mouseActionIsPopupTrigger = false;
     static private boolean mouseActionIsDrag = false;
-    static private String entityToToggle = null;
+    static private UniqueIdentifier entityToToggle = null;
 
     public enum ActionCode {
 
@@ -105,8 +106,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         preDragCursor = graphPanel.svgCanvas.getCursor();
         // get the entityPath
         // todo: change selected elements to use the ID not the path, but this change will affect th way the imdi path is obtained to show the table
-        String entityIdentifier = currentDraggedElement.getAttribute("id");
-        System.out.println("entityPath: " + entityIdentifier);
+        UniqueIdentifier entityIdentifier = new UniqueIdentifier(currentDraggedElement.getAttribute("id"));
+        System.out.println("entityPath: " + entityIdentifier.getAttributeIdentifier());
         boolean nodeAlreadySelected = graphPanel.selectedGroupId.contains(entityIdentifier);
         if (!shiftDown && !nodeAlreadySelected) {
             System.out.println("Clear selection");
@@ -131,7 +132,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         if (graphPanel.arbilTableModel != null) {
             graphPanel.arbilTableModel.removeAllArbilDataNodeRows();
             try {
-                for (String currentSelectedId : graphPanel.selectedGroupId) {
+                for (UniqueIdentifier currentSelectedId : graphPanel.selectedGroupId) {
                     String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
                     if (currentSelectedPath != null) {
                         graphPanel.arbilTableModel.addArbilDataNode(new URI(currentSelectedPath));
@@ -143,7 +144,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         }
     }
 
-    private void addRelations(int maxCount, EntityData currentEntity, HashSet<String> selectedIds) {
+    private void addRelations(int maxCount, EntityData currentEntity, HashSet<UniqueIdentifier> selectedIds) {
         if (maxCount <= selectedIds.size()) {
             return;
         }
@@ -170,7 +171,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 }
                 break;
             case selectRelated:
-                HashSet<String> selectedIds = new HashSet<String>(graphPanel.selectedGroupId);
+                HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>(graphPanel.selectedGroupId);
                 for (EntityData currentEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                     if (currentEntity.isVisible) {
                         // todo: continue here
