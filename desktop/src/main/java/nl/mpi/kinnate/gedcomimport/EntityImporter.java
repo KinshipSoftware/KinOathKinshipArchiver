@@ -16,6 +16,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : EntityImporter
@@ -28,7 +29,7 @@ public class EntityImporter implements GenericImporter {
     protected int inputLineCount;
     protected String inputFileMd5Sum;
     protected boolean overwriteExisting;
-    protected HashMap<String, ArrayList<String>> createdNodeIds;
+    protected HashMap<String, ArrayList<UniqueIdentifier>> createdNodeIds;
 //    private MetadataBuilder metadataBuilder;
 
     public EntityImporter(boolean overwriteExistingLocal) {
@@ -36,7 +37,7 @@ public class EntityImporter implements GenericImporter {
 //        metadataBuilder = new MetadataBuilder();
     }
 
-    public HashMap<String, ArrayList<String>> getCreatedNodeIds() {
+    public HashMap<String, ArrayList<UniqueIdentifier>> getCreatedNodeIds() {
         return createdNodeIds;
     }
 
