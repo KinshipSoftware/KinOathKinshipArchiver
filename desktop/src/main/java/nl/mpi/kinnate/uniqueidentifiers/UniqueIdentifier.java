@@ -1,5 +1,7 @@
 package nl.mpi.kinnate.uniqueidentifiers;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -16,7 +18,7 @@ public class UniqueIdentifier {
 
     public enum IdentifierType {
 
-        pid /*Persistent Identifier*/, lid /*Local Identifier*/, tid /*Transient Identifier*/, gid /*Graphics Identifier*/
+        pid /*Persistent Identifier*/, lid /*Local Identifier*/, tid /*Transient Identifier produced by md5 summing a string */, gid /*Graphics Identifier*/
 
     }
     @XmlValue
@@ -53,18 +55,30 @@ public class UniqueIdentifier {
         identifierString = attributeIdentifierParts[1];
     }
 
-//    public UniqueIdentifier(String userDefinedIdentifier, IdentifierType identifierTypeLocal) {
-//        switch (identifierTypeLocal) {
-//            case tid:
-//                identifierString = userDefinedIdentifier;
-//                identifierType = identifierTypeLocal;
-//                break;
-//            case pid:
-//            case lid:
-//            case gid:
-//                throw new UnsupportedOperationException("Unsupported user defined identifier, these must be transient identifiers");
-//        }
-//    }
+    public UniqueIdentifier(String userDefinedIdentifier, IdentifierType identifierTypeLocal) {
+        // this is required so that transient entities have the same identifier on each redraw and on loading a saved document, otherwise the entity positions on the graph get lost
+        // hash the string text so that it is valid in xml attributes but still reconstructable from the same user input
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            byte[] digestbytes = messageDigest.digest(userDefinedIdentifier.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (int i = 0; i < digestbytes.length; ++i) {
+                hexString.append(Integer.toHexString(0x0100 + (digestbytes[i] & 0x00FF)).substring(1));
+            }
+            switch (identifierTypeLocal) {
+                case tid:
+                    identifierString = hexString.toString();
+                    identifierType = identifierTypeLocal;
+                    break;
+                case pid:
+                case lid:
+                case gid:
+                    throw new UnsupportedOperationException("Unsupported user defined identifier, these must be transient identifiers");
+            }
+        } catch (NoSuchAlgorithmException exception) {
+            throw new UnsupportedOperationException("Cannot hash the transient identifier");
+        }
+    }
 
     public String getQueryIdentifier() {
         // todo: limit the query to local or persistent
