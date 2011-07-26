@@ -2,7 +2,6 @@ package nl.mpi.kinnate.kintypestrings;
 
 import java.util.Date;
 import nl.mpi.kinnate.kindata.EntityData;
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : LabelStringsParser
@@ -11,28 +10,22 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class LabelStringsParser {
 
-    boolean identifierFound = false;
-    UniqueIdentifier transientIdentifier;
+    String userDefinedIdentifier = null;
     String labelsStrings[] = new String[]{};
     Date dateOfBirth = null; // todo: read in the dates and if found set the in the entities
     Date dateOfDeath = null;
     String remainingInputString;
 
     protected LabelStringsParser(String inputString, EntityData parentData, String currentKinTypeString) {
-        String remainderString = inputString.replaceFirst("^#[0-9]*", "");
-        if (inputString.length() != remainderString.length()) {
-            String idString = inputString.substring(1, remainderString.length());
-            transientIdentifier = new UniqueIdentifier("id:" + idString, UniqueIdentifier.IdentifierType.tid);
-            identifierFound = true;
-            inputString = remainderString;
-        }
         if (inputString.startsWith(":")) {
             String[] inputStringParts = inputString.split(":", 3);
             if (inputStringParts.length > 0) {
                 labelsStrings = inputStringParts[1].split(";");
-                if (transientIdentifier == null) {
-                    transientIdentifier = new UniqueIdentifier("label:" + inputStringParts[1], UniqueIdentifier.IdentifierType.tid);
-                    identifierFound = true;
+                if (labelsStrings[0].matches("^#[0-9]*")) {
+                    userDefinedIdentifier = "id:" + labelsStrings[0];
+                }
+                if (userDefinedIdentifier == null) {
+                    userDefinedIdentifier = "label:" + inputStringParts[1];
                 }
             }
             if (inputStringParts.length > 2) {
@@ -40,9 +33,6 @@ public class LabelStringsParser {
             } else {
                 remainingInputString = "";
             }
-        }
-        if (transientIdentifier == null) {
-            transientIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid);
         }
     }
 }
