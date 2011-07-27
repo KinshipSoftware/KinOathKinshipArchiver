@@ -13,14 +13,15 @@ public class EntityRelation implements Comparable<EntityRelation> {
 
     @XmlTransient
     private EntityData alterNode;
+    @XmlElement(name = "GenerationalDistance", namespace = "http://mpi.nl/tla/kin")
     public int generationalDistance;
-    @XmlElement(name = "Identifier")
+    @XmlElement(name = "Identifier", namespace = "http://mpi.nl/tla/kin")
     public UniqueIdentifier alterUniqueIdentifier = null;
-    @XmlElement(name = "Type")
+    @XmlElement(name = "Type", namespace = "http://mpi.nl/tla/kin")
     public DataTypes.RelationType relationType;
-    @XmlElement(name = "Line")
+    @XmlElement(name = "Line", namespace = "http://mpi.nl/tla/kin")
     public DataTypes.RelationLineType relationLineType;
-    @XmlElement(name = "Label")
+    @XmlElement(name = "Label", namespace = "http://mpi.nl/tla/kin")
     public String labelString;
     public String lineColour = null;
 
