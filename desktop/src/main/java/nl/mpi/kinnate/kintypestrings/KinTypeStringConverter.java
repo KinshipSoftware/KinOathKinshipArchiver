@@ -182,7 +182,7 @@ public class KinTypeStringConverter extends GraphSorter {
     }
 
     public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg, ParserHighlight[] parserHighlightArray) {
-        HashMap<String, EntityData> namedEntitiesMap = new HashMap<String, EntityData>();
+        HashMap<UniqueIdentifier, EntityData> namedEntitiesMap = new HashMap<UniqueIdentifier, EntityData>();
         HashSet<EntityData> allEntitiesSet = new HashSet<EntityData>();
 //        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{}, true);
 //        graphDataNodeList.put("E", egoDataNode);
@@ -254,16 +254,16 @@ public class KinTypeStringConverter extends GraphSorter {
                                 EntityData currentGraphDataNode = null;
                                 fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
                                 LabelStringsParser labelStringsParser = new LabelStringsParser(consumableString, parentDataNode, currentKinTypeString);
-                                if (labelStringsParser.userDefinedIdentifier != null) {
+                                if (labelStringsParser.userDefinedIdentifierFound) {
                                     // add a highlight for the label section
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length());
                                     consumableString = labelStringsParser.remainingInputString;
                                     // get any previously created entity with the same user defined identifier if it exists
-                                    currentGraphDataNode = namedEntitiesMap.get(labelStringsParser.userDefinedIdentifier);
+                                    currentGraphDataNode = namedEntitiesMap.get(labelStringsParser.uniqueIdentifier);
                                     // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
                                 }
                                 if (currentGraphDataNode == null) {
-                                    if (parentDataNode != null && labelStringsParser.userDefinedIdentifier == null /* if a user defined identifier has been specified then skip this and always create or reuse that named entity */) {
+                                    if (parentDataNode != null && !labelStringsParser.userDefinedIdentifierFound /* if a user defined identifier has been specified then skip this and always create or reuse that named entity */) {
                                         // look for any existing relaitons that match the required kin type
                                         for (EntityRelation entityRelation : parentDataNode.getAllRelations()) {
                                             if (currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier)) {
@@ -272,7 +272,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                                 break;
                                             }
                                         }
-                                    } else if (parentDataNode == null && labelStringsParser.userDefinedIdentifier == null) { /* also skip this if a user defined identifier has been given */
+                                    } else if (parentDataNode == null && !labelStringsParser.userDefinedIdentifierFound) { /* also skip this if a user defined identifier has been given */
                                         // look through all the known egos to find a match (must be an ego to match), use case could be: Em:Richard:|Em which should re use the existing ego
                                         for (EntityData egoEntity : egoDataNodeList) {
                                             if (currentReferenceKinType.matchesEgoEntity(egoEntity, kinTypeModifier)) {
@@ -283,12 +283,12 @@ public class KinTypeStringConverter extends GraphSorter {
                                         }
                                     }
                                     if (currentGraphDataNode == null) {
-                                        currentGraphDataNode = new EntityData(null, fullKinTypeString, currentReferenceKinType.symbolType, labelStringsParser.labelsStrings, currentReferenceKinType.isEgoType());
+                                        currentGraphDataNode = new EntityData(labelStringsParser, fullKinTypeString, currentReferenceKinType.symbolType, currentReferenceKinType.isEgoType());
                                         if (currentGraphDataNode.isEgo) {
                                             egoDataNodeList.add(currentGraphDataNode);
                                         }
-                                        if (labelStringsParser.userDefinedIdentifier != null) {
-                                            namedEntitiesMap.put(labelStringsParser.userDefinedIdentifier, currentGraphDataNode);
+                                        if (labelStringsParser.userDefinedIdentifierFound) {
+                                            namedEntitiesMap.put(labelStringsParser.uniqueIdentifier, currentGraphDataNode);
                                         }
                                         allEntitiesSet.add(currentGraphDataNode);
                                     }
