@@ -4,12 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.kindata.DataTypes.RelationLineType;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
-import nl.mpi.kinnate.uniqueidentifiers.LocalIdentifier;
+import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,21 +32,24 @@ public class EntityDocument {
     File entityFile = null;
     Document metadataDom = null;
     Element previousField = null;
+    Node kinnateNode = null;
+    Element metadataNode = null;
     Node currentDomNode = null;
-    String uniquieIdentifier;
+    public EntityData entityData;
 
     public EntityDocument(File destinationDirectory, String nameString) {
         idString = nameString;
         entityFile = new File(destinationDirectory, nameString);
-        uniquieIdentifier = new LocalIdentifier().getUniqueIdentifier(entityFile);
+//        uniquieIdentifier = new LocalIdentifier().getUniqueIdentifier(entityFile);
+        entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
     }
 
     public String getFileName() {
         return entityFile.getName();
     }
 
-    public String getUniquieIdentifier() {
-        return uniquieIdentifier;
+    public UniqueIdentifier getUniqueIdentifier() {
+        return entityData.getUniqueIdentifier();
     }
 
     public URI createDocument(boolean overwriteExisting) throws ImportException {
@@ -55,7 +63,13 @@ public class EntityDocument {
                 entityUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), this.getClass().getResource(gedcomXsdLocation).toURI(), false);
 
                 metadataDom = ArbilComponentBuilder.getDocument(entityUri);
-                currentDomNode = metadataDom.getDocumentElement();
+                metadataNode = metadataDom.createElement("Metadata");
+                currentDomNode = metadataNode;
+                Node entityNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity");
+                kinnateNode = entityNode.getParentNode();
+                kinnateNode.removeChild(entityNode); // remove the default entity node that will be replaced by jaxb
+
+
 //                            // find the deepest element node to start adding child nodes to
 //                            for (Node childNode = currentDomNode.getFirstChild(); childNode != null; childNode = childNode.getNextSibling()) {
 //                                System.out.println("childNode: " + childNode);
@@ -71,11 +85,11 @@ public class EntityDocument {
 //                            }
 
                 // add a unique identifier to the entity node
-                Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
-                localIdentifierElement.setTextContent(uniquieIdentifier);
-                Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity/:UniqueIdentifier");
-                uniqueIdentifierNode.appendChild(localIdentifierElement);
-                currentDomNode = uniqueIdentifierNode.getParentNode();
+//                Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
+//                localIdentifierElement.setTextContent(uniquieIdentifier);
+//                Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity/:UniqueIdentifier");
+//                uniqueIdentifierNode.appendChild(localIdentifierElement);
+//                currentDomNode = uniqueIdentifierNode.getParentNode();
             } catch (DOMException exception) {
                 new ArbilBugCatcher().logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
@@ -100,6 +114,9 @@ public class EntityDocument {
 //        System.out.println("insertValue: " + nodeName + " : " + valueString);
         nodeName = nodeName.replaceAll("\\s", "_");
         Node currentNode = currentDomNode.getFirstChild();
+        if (currentNode == null) {
+            currentNode = metadataNode;
+        }
         while (currentNode != null) {
             if (nodeName.equals(currentNode.getLocalName())) {
                 if (currentNode.getTextContent() == null || currentNode.getTextContent().length() == 0) {
@@ -119,34 +136,50 @@ public class EntityDocument {
         currentDomNode.appendChild(valueElement);
     }
 
-    public void insertRelation(RelationType relationType, String relationUniquieIdentifier, String fileNameString) {
-        Element relationElement = metadataDom.createElement("Relation");
-        metadataDom.getDocumentElement().appendChild(relationElement);
+    public void insertRelation(EntityData alterNodeLocal, RelationType relationType/*, UniqueIdentifier relationUniquieIdentifier*/, String fileNameString) {
+        entityData.addRelatedNode(alterNodeLocal, 1, relationType, RelationLineType.sanguineLine, null, null);
 
-        Element linkElement = metadataDom.createElement("Link");
-        linkElement.setTextContent("./" + fileNameString);
-        relationElement.appendChild(linkElement);
+//        Element relationElement = metadataDom.createElement("Relation");
+//        metadataDom.getDocumentElement().appendChild(relationElement);
 
-        Element uniqueIdentifierElement = metadataDom.createElement("UniqueIdentifier");
-        Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
-        localIdentifierElement.setTextContent(relationUniquieIdentifier);
-        uniqueIdentifierElement.appendChild(localIdentifierElement);
-        relationElement.appendChild(uniqueIdentifierElement);
+//        Element linkElement = metadataDom.createElement("Link");
+//        linkElement.setTextContent("./" + fileNameString);
+//        relationElement.appendChild(linkElement);
 
-        Element typeElement = metadataDom.createElement("Type");
-        typeElement.setTextContent(relationType.name());
-        relationElement.appendChild(typeElement);
+//        Element uniqueIdentifierElement = metadataDom.createElement("UniqueIdentifier");
+//        Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
+//        localIdentifierElement.setTextContent(relationUniquieIdentifier);
+//        uniqueIdentifierElement.appendChild(localIdentifierElement);
+//        relationElement.appendChild(uniqueIdentifierElement);
 
-        Element targetNameElement = metadataDom.createElement("TargetName");
+//        Element typeElement = metadataDom.createElement("Type");
+//        typeElement.setTextContent(relationType.name());
+//        relationElement.appendChild(typeElement);
+
+//        Element targetNameElement = metadataDom.createElement("TargetName");
 //        targetNameElement.setTextContent(lineParts[2]);
-        relationElement.appendChild(targetNameElement);
+//        relationElement.appendChild(targetNameElement);
     }
 
     public String getFilePath() {
         return entityFile.getAbsolutePath();
     }
 
-    public void saveDocument() {
+    public void saveDocument() throws ImportException {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.marshal(entityData, kinnateNode);
+        } catch (JAXBException exception) {
+            new ArbilBugCatcher().logError(exception);
+        }
+//        try {
+//            Node entityNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity");
+            kinnateNode.appendChild(metadataNode);
+//        } catch (TransformerException exception) {
+//            new ArbilBugCatcher().logError(exception);
+//            throw new ImportException("Error: " + exception.getMessage());
+//        }
         ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
     }
 //    private EntityDocument(File destinationDirectory, String typeString, String idString, HashMap<String, ArrayList<String>> createdNodeIds, boolean overwriteExisting) {
