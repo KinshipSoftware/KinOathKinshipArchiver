@@ -23,32 +23,32 @@ public class EntityData {
 
         square, triangle, circle, union, resource, ego, none
     }
-    @XmlElement(name = "Identifier")
+    @XmlElement(name = "Identifier", namespace="http://mpi.nl/tla/kin")
     private UniqueIdentifier uniqueIdentifier;
-    @XmlElement(name = "Path")
+    @XmlElement(name = "Path", namespace="http://mpi.nl/tla/kin")
     private String entityPath;
-    @XmlElement(name = "KinType")
+    @XmlElement(name = "KinType", namespace="http://mpi.nl/tla/kin")
     private String[] kinTypeArray = new String[]{};
-    @XmlElement(name = "KinTerm")
+    @XmlElement(name = "KinTerm", namespace="http://mpi.nl/tla/kin")
     private GraphLabel[] kinTermArray = new GraphLabel[]{};
     private SymbolType symbolType;
-    @XmlElement(name = "Symbol")
+    @XmlElement(name = "Symbol", namespace="http://mpi.nl/tla/kin")
     private String symbolTypeString;
-    @XmlElement(name = "DateOfBirth")
+    @XmlElement(name = "DateOfBirth", namespace="http://mpi.nl/tla/kin")
     private Date dateOfBirth; // todo: use this in the graph sort and offer to show on the graph
-    @XmlElement(name = "DateOfDeath")
+    @XmlElement(name = "DateOfDeath", namespace="http://mpi.nl/tla/kin")
     private Date dateOfDeath; // todo: use this in the graph to draw a line through or similar
     @XmlTransient
     public boolean isEgo = false;
-    @XmlElementWrapper(name = "Labels")
-    @XmlElement(name = "String")
+//    @XmlElementWrapper(name = "Labels", namespace="http://mpi.nl/tla/kin")
+    @XmlElement(name = "Label", namespace = "http://mpi.nl/tla/kin")
     private String[] labelStringArray;
     @XmlTransient
     ArrayList<String> tempLabelsList = null;
-    @XmlElementWrapper(name = "Relations")
-    @XmlElement(name = "Relation")
+    @XmlElementWrapper(name = "Relations", namespace="http://mpi.nl/tla/kin")
+    @XmlElement(name = "Relation", namespace = "http://mpi.nl/tla/kin")
     private EntityRelation[] relatedNodes;
-    @XmlElement(name = "ArchiveLink")
+    @XmlElement(name = "ArchiveLink", namespace="http://mpi.nl/tla/kin")
     // todo: this needs to provide both the archive handle (for opening the browser) and the url to open localy stored copy of the file
     public String[] archiveLinkArray = null; //new String[]{"http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7", "http://www.google.com", "http://www.mpi.nl"};
 //    @XmlElement(name = "ResourceLink")
