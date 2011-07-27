@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import nl.mpi.kinnate.kintypestrings.LabelStringsParser;
 
 /**
  *  Document   : GraphDataNode
@@ -59,22 +60,32 @@ public class EntityData {
     private EntityData() {
     }
 
-    public EntityData(String entityPathLocal, String kinTypeStringLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
-        uniqueIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid);
-        entityPath = entityPathLocal;
-        kinTypeArray = new String[]{kinTypeStringLocal};
-        symbolType = null;
-        symbolTypeString = symbolTypeLocal;
-        labelStringArray = labelStringLocal;
-        isEgo = isEgoLocal;
-    }
+//    public EntityData(String entityPathLocal, String kinTypeStringLocal, String symbolTypeLocal, String[] labelStringLocal, boolean isEgoLocal) {
+//        uniqueIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid);
+//        entityPath = entityPathLocal;
+//        kinTypeArray = new String[]{kinTypeStringLocal};
+//        symbolType = null;
+//        symbolTypeString = symbolTypeLocal;
+//        labelStringArray = labelStringLocal;
+//        isEgo = isEgoLocal;
+//    }
 
-    public EntityData(String entityPathLocal, String kinTypeStringLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
-        uniqueIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid);
-        entityPath = entityPathLocal;
+//    public EntityData(String entityPathLocal, String kinTypeStringLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
+//        uniqueIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid);
+//        entityPath = entityPathLocal;
+//        kinTypeArray = new String[]{kinTypeStringLocal};
+//        symbolType = symbolIndex;
+//        labelStringArray = labelStringLocal;
+//        isEgo = isEgoLocal;
+//    }
+
+    public EntityData(LabelStringsParser labelStringsParser, String kinTypeStringLocal, SymbolType symbolIndex, boolean isEgoLocal) {
+        // this is used to enable transient entities to have the same identifier on each redraw and on loading a saved document, otherwise the entity positions on the graph get lost
+        uniqueIdentifier = labelStringsParser.uniqueIdentifier;
+        entityPath = null;
         kinTypeArray = new String[]{kinTypeStringLocal};
         symbolType = symbolIndex;
-        labelStringArray = labelStringLocal;
+        labelStringArray = labelStringsParser.labelsStrings;
         isEgo = isEgoLocal;
     }
 
