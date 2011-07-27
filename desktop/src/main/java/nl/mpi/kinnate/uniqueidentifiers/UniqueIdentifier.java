@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 import nl.mpi.arbil.data.ArbilField;
 
@@ -13,7 +12,6 @@ import nl.mpi.arbil.data.ArbilField;
  *  Created on : Jul 21, 2011, 3:23:17 PM
  *  Author     : Peter Withers
  */
-@XmlRootElement(name = "UniqueIdentifier")
 public class UniqueIdentifier {
 
     public enum IdentifierType {
@@ -23,7 +21,7 @@ public class UniqueIdentifier {
     }
     @XmlValue
     private String identifierString = null;
-    @XmlAttribute(name = "type")
+    @XmlAttribute(name = "type", namespace = "http://mpi.nl/tla/kin")
     private IdentifierType identifierType = null;
 
     private UniqueIdentifier() {
