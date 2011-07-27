@@ -15,7 +15,7 @@ import nl.mpi.kinnate.kintypestrings.LabelStringsParser;
  *  Created on : Sep 11, 2010, 4:30:41 PM
  *  Author     : Peter Withers
  */
-@XmlRootElement(name = "Entity")
+@XmlRootElement(name = "Entity", namespace="http://mpi.nl/tla/kin")
 public class EntityData {
 
     public enum SymbolType {
@@ -38,10 +38,12 @@ public class EntityData {
     private Date dateOfBirth; // todo: use this in the graph sort and offer to show on the graph
     @XmlElement(name = "DateOfDeath")
     private Date dateOfDeath; // todo: use this in the graph to draw a line through or similar
-    public Boolean isEgo = null;
+    @XmlTransient
+    public boolean isEgo = false;
     @XmlElementWrapper(name = "Labels")
     @XmlElement(name = "String")
     private String[] labelStringArray;
+    @XmlTransient
     ArrayList<String> tempLabelsList = null;
     @XmlElementWrapper(name = "Relations")
     @XmlElement(name = "Relation")
@@ -53,8 +55,11 @@ public class EntityData {
 //    public String[] resourceLinkArray;
     @XmlTransient
     public boolean metadataRequiresSave = false;
+    @XmlTransient
     public boolean isVisible = false;
+    @XmlTransient
     private EntityRelation[] visiblyRelateNodes = null;
+    @XmlTransient
     private EntityRelation[] distinctRelateNodes = null;
 
     private EntityData() {
@@ -69,7 +74,6 @@ public class EntityData {
 //        labelStringArray = labelStringLocal;
 //        isEgo = isEgoLocal;
 //    }
-
 //    public EntityData(String entityPathLocal, String kinTypeStringLocal, SymbolType symbolIndex, String[] labelStringLocal, boolean isEgoLocal) {
 //        uniqueIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid);
 //        entityPath = entityPathLocal;
@@ -78,7 +82,6 @@ public class EntityData {
 //        labelStringArray = labelStringLocal;
 //        isEgo = isEgoLocal;
 //    }
-
     public EntityData(LabelStringsParser labelStringsParser, String kinTypeStringLocal, SymbolType symbolIndex, boolean isEgoLocal) {
         // this is used to enable transient entities to have the same identifier on each redraw and on loading a saved document, otherwise the entity positions on the graph get lost
         uniqueIdentifier = labelStringsParser.uniqueIdentifier;
@@ -87,6 +90,8 @@ public class EntityData {
         symbolType = symbolIndex;
         labelStringArray = labelStringsParser.labelsStrings;
         isEgo = isEgoLocal;
+        dateOfBirth = labelStringsParser.dateOfBirth;
+        dateOfDeath = labelStringsParser.dateOfDeath;
     }
 
     public EntityData(UniqueIdentifier uniqueIdentifierLocal, String[] errorMessage) {
@@ -96,7 +101,7 @@ public class EntityData {
         symbolType = SymbolType.none;
         symbolTypeString = null;
         labelStringArray = errorMessage;
-        isEgo = null;
+        isEgo = false;
     }
 
     // begin code used for importing gedcom and other file types
@@ -106,7 +111,7 @@ public class EntityData {
         symbolType = null;
         symbolTypeString = null;
         labelStringArray = null;
-        isEgo = null;
+        isEgo = false;
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
