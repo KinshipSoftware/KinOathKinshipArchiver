@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.kindata;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -17,9 +18,9 @@ public class EntityRelation implements Comparable<EntityRelation> {
     public int generationalDistance;
     @XmlElement(name = "Identifier", namespace = "http://mpi.nl/tla/kin")
     public UniqueIdentifier alterUniqueIdentifier = null;
-    @XmlElement(name = "Type", namespace = "http://mpi.nl/tla/kin")
+    @XmlAttribute(name = "Type", namespace = "http://mpi.nl/tla/kin")
     public DataTypes.RelationType relationType;
-    @XmlElement(name = "Line", namespace = "http://mpi.nl/tla/kin")
+    @XmlAttribute(name = "Line", namespace = "http://mpi.nl/tla/kin")
     public DataTypes.RelationLineType relationLineType;
     @XmlElement(name = "Label", namespace = "http://mpi.nl/tla/kin")
     public String labelString;
