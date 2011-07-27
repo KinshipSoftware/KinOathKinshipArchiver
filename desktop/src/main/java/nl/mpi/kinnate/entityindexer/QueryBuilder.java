@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.entityindexer;
 
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 
 /**
@@ -75,6 +76,12 @@ public class QueryBuilder {
                 + "return <ArchiveLink>{$corpusLink/text()}</ArchiveLink>";
     }
 
+    public String getRelationQuery() {
+        return "<Relations>{"
+                + "$entityNode/*:Relations\n"
+                + "}</Relations>";
+    }
+
     public String getRelationQuery(String uniqueIdentifier, IndexerParameters indexParameters) {
         String ancestorSequence = this.asSequenceString(indexParameters.ancestorFields);
         String decendantSequence = this.asSequenceString(indexParameters.decendantFields);
@@ -120,18 +127,18 @@ public class QueryBuilder {
                 + "}</Relations>\n";
     }
 
-    public String getEntityWithRelationsQuery(String uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
-        return "for $entityNode in collection('nl-mpi-kinnate')//*:UniqueIdentifier[. = \"" + uniqueIdentifier + "\"]/ancestor::*:Kinnate\n"
+    public String getEntityWithRelationsQuery(UniqueIdentifier uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
+        return "for $entityNode in collection('nl-mpi-kinnate')//*:UniqueIdentifier[. = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]/ancestor::*:Kinnate\n"
                 + "where 0 = ($entityNode/(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = " + asSequenceString(excludeUniqueIdentifiers) + ")\n"
                 + getEntityQueryReturn(uniqueIdentifier, indexParameters);
     }
 
-    public String getEntityQuery(String uniqueIdentifier, IndexerParameters indexParameters) {
-        return "let $entityNode := collection('nl-mpi-kinnate')/*:Kinnate[(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = \"" + uniqueIdentifier + "\"]\n"
+    public String getEntityQuery(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
+        return "let $entityNode := collection('nl-mpi-kinnate')/*:Kinnate[(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n"
                 + getEntityQueryReturn(uniqueIdentifier, indexParameters);
     }
 
-    private String getEntityQueryReturn(String uniqueIdentifier, IndexerParameters indexParameters) {
+    private String getEntityQueryReturn(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
         return "return"
                 + "<Entity>{\n"
                 + "<Identifier>{$entityNode/(*:Entity|*:Gedcom)/*:UniqueIdentifier//text()}</Identifier>,\n"
@@ -145,7 +152,8 @@ public class QueryBuilder {
                 + "</Labels>,"
                 + this.getArchiveLinksClause()
                 + "}"
-                + this.getRelationQuery(uniqueIdentifier, indexParameters)
+                + this.getRelationQuery(uniqueIdentifier.getQueryIdentifier(), indexParameters)
+                //                + this.getRelationQuery()
                 + "</Entity>\n";
     }
 
@@ -168,9 +176,11 @@ public class QueryBuilder {
             stringBuilder.append("\"]");
         }
 //        stringBuilder.append(")");
-        return "for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate[(*:Entity|*:Gedcom)]\n"
+        return "<IdentifierArray xmlns=\"http://mpi.nl/tla/kin\">{"
+                + "for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate\n"
                 + "where " + stringBuilder.toString() + "\n"
                 + "return\n"
-                + "concat($entityNode/(*:Entity|*:Gedcom)/*:UniqueIdentifier/*/text(), '|')\n";
+                + "$entityNode/*:Entity/*:Identifier\n"
+                + "}</IdentifierArray>";
     }
 }
