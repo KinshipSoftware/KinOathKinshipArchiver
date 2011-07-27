@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlAttribute;
  */
 public class GraphLabel {
 
-    @XmlAttribute(name = "text")
+    @XmlAttribute(name = "text", namespace = "http://mpi.nl/tla/kin")
     protected String labelString;
-    @XmlAttribute(name = "colour")
+    @XmlAttribute(name = "colour", namespace = "http://mpi.nl/tla/kin")
     protected String colourString = null;
 
     public GraphLabel() {
