@@ -148,7 +148,13 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 
             appendToTaskOutput(importTextArea, "Saving all documents");
             for (EntityDocument currentDocument : createdDocuments.values()) {
-                currentDocument.saveDocument();
+                // todo: add progress for this
+                try {
+                    currentDocument.saveDocument();
+                } catch (ImportException exception) {
+                    new ArbilBugCatcher().logError(exception);
+                    appendToTaskOutput(importTextArea, "Error saving file: " + exception.getMessage());
+                }
 //                appendToTaskOutput(importTextArea, "saved: " + currentDocument.getFilePath());
             }
         } catch (IOException exception) {
