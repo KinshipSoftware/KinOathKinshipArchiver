@@ -43,31 +43,31 @@ public class QueryBuilder {
         return stringBuilder.toString();
     }
 
-    public String getLabelsClause(IndexerParameters indexParameters, String entityNodeVar) {
+    public String getLabelsClause(IndexerParameters indexParameters, String docRootVar) {
         StringBuilder stringBuilder = new StringBuilder();
         for (ParameterElement currentEntry : indexParameters.labelFields.getValues()) {
-            String trimmedXpath = currentEntry.getXpathString().substring("*:Kinnate".length());
-            stringBuilder.append("{for $labelNode in ");
-            stringBuilder.append(entityNodeVar);
-            stringBuilder.append(trimmedXpath);
-            stringBuilder.append("\nreturn <String>{$labelNode/text()}</String>}\n");
+//            String trimmedXpath = currentEntry.getXpathString(); //.substring("*:Kinnate/*:Entity".length()); // todo: remove this and update the indexParameters entries
+            stringBuilder.append("for $labelNode in ");
+            stringBuilder.append(docRootVar);
+            stringBuilder.append(currentEntry.getXpathString());
+            stringBuilder.append("\nreturn\ninsert node <kin:Label xmlns:kin=\"http://mpi.nl/tla/kin\">{$labelNode/text()}</kin:Label>  into $copyNode,\n");
         }
         return stringBuilder.toString();
     }
 
-    public String getSymbolClause(IndexerParameters indexParameters, String entityNodeVar) {
+    public String getSymbolClause(IndexerParameters indexParameters, String docRootVar) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<Symbol>{\n");
+        stringBuilder.append("\ninsert node <kin:Symbol xmlns:kin=\"http://mpi.nl/tla/kin\">{\n");
         for (ParameterElement currentEntry : indexParameters.symbolFieldsFields.getValues()) {
             String trimmedXpath = currentEntry.getXpathString().substring("*:Kinnate".length());
             stringBuilder.append("if (exists(");
-            stringBuilder.append(entityNodeVar);
+            stringBuilder.append(docRootVar);
             stringBuilder.append(trimmedXpath);
             stringBuilder.append(")) then \"");
             stringBuilder.append(currentEntry.getSelectedValue());
             stringBuilder.append("\"\n else ");
         }
-        stringBuilder.append("()\n}</Symbol>,\n");
+        stringBuilder.append("()\n}</kin:Symbol> into $copyNode,\n");
         return stringBuilder.toString();
     }
 
@@ -137,8 +137,10 @@ public class QueryBuilder {
         return "let $entityNode := collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n"
                 + "return copy $copyNode := $entityNode\n"
                 + "modify (\n"
-                + "insert nodes <kin:Path xmlns:kin=\"http://mpi.nl/tla/kin\">{base-uri($entityNode)}</kin:Path> into $copyNode,\n" // for some reason "after" fails re attributes: after $copyNode/*:Identifier"
-                + "insert nodes <kin:Label xmlns:kin=\"http://mpi.nl/tla/kin\">{base-uri($entityNode)}</kin:Label> into $copyNode\n" // for some reason "after" fails re attributes: after $copyNode/*:Identifier"
+                // loop the label fields and add a node for any that exist
+                + this.getLabelsClause(indexParameters, "root($entityNode)/")
+                + this.getSymbolClause(indexParameters, "root($entityNode)/")
+                + "insert nodes <kin:Path xmlns:kin=\"http://mpi.nl/tla/kin\">{base-uri($entityNode)}</kin:Path> into $copyNode\n" // for some reason "after" fails re attributes: after $copyNode/*:Identifier" maybe copy is failing to keep the namespace
                 + ")\n"
                 + "return $copyNode\n";
 //                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
