@@ -134,8 +134,14 @@ public class QueryBuilder {
     }
 
     public String getEntityQuery(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
-        return "let $entityNode := collection('nl-mpi-kinnate')/*:Kinnate[(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n"
-                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
+        return "let $entityNode := collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n"
+                + "return copy $copyNode := $entityNode\n"
+                + "modify (\n"
+                + "insert nodes <kin:Path xmlns:kin=\"http://mpi.nl/tla/kin\">{base-uri($entityNode)}</kin:Path> into $copyNode,\n" // for some reason "after" fails re attributes: after $copyNode/*:Identifier"
+                + "insert nodes <kin:Label xmlns:kin=\"http://mpi.nl/tla/kin\">{base-uri($entityNode)}</kin:Label> into $copyNode\n" // for some reason "after" fails re attributes: after $copyNode/*:Identifier"
+                + ")\n"
+                + "return $copyNode\n";
+//                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
     }
 
     private String getEntityQueryReturn(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
