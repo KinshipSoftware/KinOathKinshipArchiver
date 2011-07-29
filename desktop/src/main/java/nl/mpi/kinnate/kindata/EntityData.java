@@ -15,7 +15,7 @@ import nl.mpi.kinnate.kintypestrings.LabelStringsParser;
  *  Created on : Sep 11, 2010, 4:30:41 PM
  *  Author     : Peter Withers
  */
-@XmlRootElement(name = "Entity", namespace="http://mpi.nl/tla/kin")
+@XmlRootElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
 public class EntityData {
 
     public enum SymbolType {
@@ -23,20 +23,20 @@ public class EntityData {
 
         square, triangle, circle, union, resource, ego, none
     }
-    @XmlElement(name = "Identifier", namespace="http://mpi.nl/tla/kin")
+    @XmlElement(name = "Identifier", namespace = "http://mpi.nl/tla/kin")
     private UniqueIdentifier uniqueIdentifier;
-    @XmlElement(name = "Path", namespace="http://mpi.nl/tla/kin")
+    @XmlElement(name = "Path", namespace = "http://mpi.nl/tla/kin")
     private String entityPath;
-    @XmlElement(name = "KinType", namespace="http://mpi.nl/tla/kin")
+    @XmlElement(name = "KinType", namespace = "http://mpi.nl/tla/kin")
     private String[] kinTypeArray = new String[]{};
-    @XmlElement(name = "KinTerm", namespace="http://mpi.nl/tla/kin")
+    @XmlElement(name = "KinTerm", namespace = "http://mpi.nl/tla/kin")
     private GraphLabel[] kinTermArray = new GraphLabel[]{};
     private SymbolType symbolType;
-    @XmlElement(name = "Symbol", namespace="http://mpi.nl/tla/kin")
+    @XmlElement(name = "Symbol", namespace = "http://mpi.nl/tla/kin")
     private String symbolTypeString;
-    @XmlElement(name = "DateOfBirth", namespace="http://mpi.nl/tla/kin")
+    @XmlElement(name = "DateOfBirth", namespace = "http://mpi.nl/tla/kin")
     private Date dateOfBirth; // todo: use this in the graph sort and offer to show on the graph
-    @XmlElement(name = "DateOfDeath", namespace="http://mpi.nl/tla/kin")
+    @XmlElement(name = "DateOfDeath", namespace = "http://mpi.nl/tla/kin")
     private Date dateOfDeath; // todo: use this in the graph to draw a line through or similar
     @XmlTransient
     public boolean isEgo = false;
@@ -45,10 +45,10 @@ public class EntityData {
     private String[] labelStringArray;
     @XmlTransient
     ArrayList<String> tempLabelsList = null;
-    @XmlElementWrapper(name = "Relations", namespace="http://mpi.nl/tla/kin")
+    @XmlElementWrapper(name = "Relations", namespace = "http://mpi.nl/tla/kin")
     @XmlElement(name = "Relation", namespace = "http://mpi.nl/tla/kin")
     private EntityRelation[] relatedNodes;
-    @XmlElement(name = "ArchiveLink", namespace="http://mpi.nl/tla/kin")
+    @XmlElement(name = "ArchiveLink", namespace = "http://mpi.nl/tla/kin")
     // todo: this needs to provide both the archive handle (for opening the browser) and the url to open localy stored copy of the file
     public String[] archiveLinkArray = null; //new String[]{"http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7", "http://www.google.com", "http://www.mpi.nl"};
 //    @XmlElement(name = "ResourceLink")
@@ -121,6 +121,10 @@ public class EntityData {
     public void setDateOfDeath(Date dateOfDeath) {
         this.dateOfDeath = dateOfDeath;
     }
+
+//    public void setSymbolType(SymbolType symbolTypeLocal) {
+//        this.symbolTypeString = symbolTypeLocal.name();
+//    }
     // end code used for importing gedcom and other file types
 
     public String getSymbolType() {
