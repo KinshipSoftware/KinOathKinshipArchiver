@@ -13,6 +13,7 @@ import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
@@ -143,10 +144,10 @@ public class EntityIndex implements EntityService {
         for (ParameterElement currentSymbolField : indexParameters.symbolFieldsFields.getValues()) {
             String linkSymbolString = entityData.getEntityField(currentSymbolField.getXpathString());
             if (linkSymbolString != null) {
-                return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), null, currentSymbolField.getSelectedValue(), labelTextList.toArray(new String[]{}), isEgo);
+                return null; // todo: this is now outdated and needs to be replaced //new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), null, currentSymbolField.getSelectedValue(), labelTextList.toArray(new String[]{}), isEgo);
             }
         }
-        return new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), null, EntityData.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
+        return null; // todo: this is now outdated and needs to be replaced //new EntityData(entityData.getUniqueIdentifier(), entityUri.toASCIIString(), null, EntityData.SymbolType.none, labelTextList.toArray(new String[]{}), isEgo);
     }
 
     private void setRelationData(EntityData egoNode, EntityData alterNode, IndexerEntityData egoData, String alterPath, IndexerParameters indexParameters) {
@@ -220,7 +221,7 @@ public class EntityIndex implements EntityService {
         }
     }
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, HashSet<String> egoIdentifiers, HashSet<String> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
