@@ -2,13 +2,14 @@ package nl.mpi.kinnate.gedcomimport;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.DataTypes.RelationLineType;
@@ -19,6 +20,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -60,50 +62,27 @@ public class EntityDocument {
             throw new ImportException("Skipping existing entity file");
         } else { // start skip overwrite
             try {
-                entityUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), this.getClass().getResource(gedcomXsdLocation).toURI(), false);
-
-                metadataDom = ArbilComponentBuilder.getDocument(entityUri);
-                metadataNode = metadataDom.createElement("Metadata");
+                entityUri = entityFile.toURI();
+                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                documentBuilderFactory.setNamespaceAware(true);
+                String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                        + "<kin:Kinnate xmlns:kin=\"http://mpi.nl/tla/kin\" version=\"1.0\"/>";
+                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+                metadataDom = documentBuilder.parse(new InputSource(new StringReader(templateXml)));
+                metadataNode = metadataDom.createElementNS("http://mpi.nl/tla/kin", "Metadata");
                 currentDomNode = metadataNode;
-                Node entityNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity");
-                kinnateNode = entityNode.getParentNode();
-                kinnateNode.removeChild(entityNode); // remove the default entity node that will be replaced by jaxb
-
-
-//                            // find the deepest element node to start adding child nodes to
-//                            for (Node childNode = currentDomNode.getFirstChild(); childNode != null; childNode = childNode.getNextSibling()) {
-//                                System.out.println("childNode: " + childNode);
-//                                System.out.println("childNodeType: " + childNode.getNodeType());
-//                                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-//                                    System.out.println("entering node");
-//                                    currentDomNode = childNode;
-//                                    childNode = childNode.getFirstChild();
-//                                    if (childNode == null) {
-//                                        break;
-//                                    }
-//                                }
-//                            }
-
-                // add a unique identifier to the entity node
-//                Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
-//                localIdentifierElement.setTextContent(uniquieIdentifier);
-//                Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity/:UniqueIdentifier");
-//                uniqueIdentifierNode.appendChild(localIdentifierElement);
-//                currentDomNode = uniqueIdentifierNode.getParentNode();
+                kinnateNode = metadataDom.getDocumentElement();
             } catch (DOMException exception) {
                 new ArbilBugCatcher().logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
-            } catch (TransformerException exception) {
+            } catch (ParserConfigurationException exception) {
                 new ArbilBugCatcher().logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
-            } catch (URISyntaxException ex) {
-                new ArbilBugCatcher().logError(ex);
-                throw new ImportException("Error: " + ex.getMessage());
-            } catch (ParserConfigurationException exception) {
-                throw new ImportException("Error: " + exception.getMessage());
             } catch (IOException exception) {
+                new ArbilBugCatcher().logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
             } catch (SAXException exception) {
+                new ArbilBugCatcher().logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
             }
             return entityUri;
@@ -172,10 +151,12 @@ public class EntityDocument {
             marshaller.marshal(entityData, kinnateNode);
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
         }
 //        try {
 //            Node entityNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity");
-            kinnateNode.appendChild(metadataNode);
+        kinnateNode.appendChild(metadataNode);
+            // todo: maybe insert the user selected CMDI profile into the XML declaration of the kinnate node and let arbil handle the adding of sub nodes or consider using ArbilComponentBuilder to insert a cmdi sub component into the metadata node or keep the cmdi data in a separate file
 //        } catch (TransformerException exception) {
 //            new ArbilBugCatcher().logError(exception);
 //            throw new ImportException("Error: " + exception.getMessage());
