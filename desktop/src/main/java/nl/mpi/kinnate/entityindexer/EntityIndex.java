@@ -155,22 +155,22 @@ public class EntityIndex implements EntityService {
         DataTypes.RelationType alterType = null;
         String[][] alterRelationFields = egoData.getRelationData(alterPath);
         if (alterRelationFields != null) {
-            for (ParameterElement ancestorField : indexParameters.ancestorFields.getValues()) {
-                for (String[] egoRelationField : alterRelationFields) {
-                    if (ancestorField.getXpathString().equals(egoRelationField)) {
-                        egoType = DataTypes.RelationType.ancestor;
-                        alterType = DataTypes.RelationType.descendant;
-                    }
-                }
-            }
-            for (ParameterElement ancestorField : indexParameters.decendantFields.getValues()) {
-                for (String[] egoRelationField : alterRelationFields) {
-                    if (ancestorField.getXpathString().equals(egoRelationField[1])) {
-                        egoType = DataTypes.RelationType.descendant;
-                        alterType = DataTypes.RelationType.ancestor;
-                    }
-                }
-            }
+//            for (ParameterElement ancestorField : indexParameters.ancestorFields.getValues()) {
+//                for (String[] egoRelationField : alterRelationFields) {
+//                    if (ancestorField.getXpathString().equals(egoRelationField)) {
+//                        egoType = DataTypes.RelationType.ancestor;
+//                        alterType = DataTypes.RelationType.descendant;
+//                    }
+//                }
+//            }
+//            for (ParameterElement ancestorField : indexParameters.decendantFields.getValues()) {
+//                for (String[] egoRelationField : alterRelationFields) {
+//                    if (ancestorField.getXpathString().equals(egoRelationField[1])) {
+//                        egoType = DataTypes.RelationType.descendant;
+//                        alterType = DataTypes.RelationType.ancestor;
+//                    }
+//                }
+//            }
             if (egoType != null && alterType != null) {
                 egoNode.addRelatedNode(alterNode, 0, egoType, DataTypes.RelationLineType.sanguineLine, null, null);
                 alterNode.addRelatedNode(egoNode, 0, alterType, DataTypes.RelationLineType.sanguineLine, null, null);
