@@ -20,7 +20,9 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifierArray;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Add;
@@ -79,7 +81,6 @@ public class EntityCollection {
 //            new ArbilBugCatcher().logError(baseXException2);
 //        }
 //    }
-
     // see comments below
 //    public void createDatabase() {
 //        try {
@@ -201,24 +202,44 @@ public class EntityCollection {
         return searchResults;
     }
 
-    public String[] getEntityIdByTerm(KinTypeStringConverter.KinTypeElement queryTerms) {
-        // todo: add a query cache or determine that the xml database does the job of caching adequately
+    public UniqueIdentifier[] getEntityIdByTerm(KinTypeStringConverter.KinTypeElement queryTerms) {
+        // todo: add a query cache or determine that the xml database does the job of caching adequately (p.s. basex appears to cache the queries adequately)
+        UniqueIdentifier[] returnArray = new UniqueIdentifier[]{};
         QueryBuilder queryBuilder = new QueryBuilder();
         String queryString = queryBuilder.getTermQuery(queryTerms);
-        System.out.println("query1String: " + queryString);
-        String[] searchResults = new String[]{};
+        System.out.println("queryString: " + queryString);
+        long startTime = System.currentTimeMillis();
         try {
-            searchResults = new XQuery(queryString).execute(context).split("\\|");
+            JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifierArray.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            String queryResult = new XQuery(queryString).execute(context);
+            System.out.println("queryResult: " + queryResult);
+            UniqueIdentifierArray identifierArray;
+            if (queryResult.length() > 0) {
+                // filter out the name spaces from the xml
+//                XMLReader reader = XMLReaderFactory.createXMLReader();
+//                KinXmlFilter kinXmlFilter = new KinXmlFilter();
+//                kinXmlFilter.setParent(reader);
+//                SAXSource saxSource = new SAXSource(kinXmlFilter, new InputSource(new BufferedReader(new StringReader(queryResult))));
+//                selectedUniqueIdentifiers = (UniqueIdentifier[]) unmarshaller.unmarshal(saxSource, UniqueIdentifier[].class).getValue();
+                // or leave the name space as is
+                identifierArray = unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), UniqueIdentifierArray.class).getValue();
+                if (identifierArray != null && identifierArray.testIdentifiers != null) {
+                    returnArray = identifierArray.testIdentifiers;
+                }
+                long queryMils = System.currentTimeMillis() - startTime;
+                String queryTimeString = "Query time: " + queryMils + "ms for " + returnArray.length + " UniqueIdentifiers";
+                System.out.println(queryTimeString);
+            }
+        } catch (JAXBException exception) {
+            new ArbilBugCatcher().logError(exception);
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
         }
-        for (String resultLine : searchResults) {
-            System.out.println("resultLine: " + resultLine);
-        }
-        return searchResults;
+        return returnArray;
     }
 
-    public EntityData[] getEntityWithRelations(String uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
+    public EntityData[] getEntityWithRelations(UniqueIdentifier uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityWithRelationsQuery(uniqueIdentifier, excludeUniqueIdentifiers, indexParameters);
@@ -242,7 +263,7 @@ public class EntityCollection {
         return new EntityData[]{}; //(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
     }
 
-    public EntityData getEntity(String uniqueIdentifier, IndexerParameters indexParameters) {
+    public EntityData getEntity(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
@@ -268,7 +289,7 @@ public class EntityCollection {
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
         }
-        return new EntityData(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
+        return new EntityData(uniqueIdentifier, new String[]{"Error loading data", "view log for details"});
     }
 
     static public void main(String[] args) {
