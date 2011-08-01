@@ -262,6 +262,21 @@ public class KinTypeStringConverter extends GraphSorter {
                                     currentGraphDataNode = namedEntitiesMap.get(labelStringsParser.uniqueIdentifier);
                                     // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
                                 }
+                                if (labelStringsParser.uidStartLocation > -1) {
+                                    // add a highlight for the user id section
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Parameter, initialLength - labelStringsParser.uidStartLocation);
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.uidEndLocation);
+                                }
+                                if (labelStringsParser.dateLocation > -1) {
+                                    // add a highlight for the date section
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Parameter, initialLength - labelStringsParser.dateLocation);
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation);
+                                }
+                                if (labelStringsParser.dateError) {
+                                    // add a highlight for the date error section
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - labelStringsParser.dateLocation);
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation);
+                                }
                                 if (currentGraphDataNode == null) {
                                     if (parentDataNode != null && !labelStringsParser.userDefinedIdentifierFound /* if a user defined identifier has been specified then skip this and always create or reuse that named entity */) {
                                         // look for any existing relaitons that match the required kin type
