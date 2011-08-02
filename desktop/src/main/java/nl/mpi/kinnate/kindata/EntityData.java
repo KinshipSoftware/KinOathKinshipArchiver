@@ -21,7 +21,7 @@ public class EntityData {
     public enum SymbolType {
         // symbol terms are used here to try to keep things agnostic
 
-        square, triangle, circle, union, resource, ego, none
+        square, triangle, circle, union, resource, none, error
     }
     @XmlElement(name = "Identifier", namespace = "http://mpi.nl/tla/kin")
     private UniqueIdentifier uniqueIdentifier;
@@ -98,7 +98,7 @@ public class EntityData {
         // this is used only to return error messages from a query that fails to get an entity and to prevent that query being hit again
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = null;
-        symbolType = SymbolType.none;
+        symbolType = SymbolType.error;
         symbolTypeString = null;
         labelStringArray = errorMessage;
         isEgo = false;
@@ -129,22 +129,7 @@ public class EntityData {
 
     public String getSymbolType() {
         if (symbolType != null) {
-            switch (symbolType) {
-                case circle:
-                    return "circle";
-                case ego:
-                    return "square";
-                case none:
-                    return "none";
-                case resource:
-                    return "resource";
-                case square:
-                    return "square";
-                case triangle:
-                    return "triangle";
-                case union:
-                    return "union";
-            }
+            return symbolType.name();
         }
         return symbolTypeString;
     }
