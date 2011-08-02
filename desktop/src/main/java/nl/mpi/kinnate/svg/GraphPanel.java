@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import javax.swing.JPanel;
 import javax.xml.parsers.DocumentBuilderFactory;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
@@ -323,6 +324,17 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    }
     public UniqueIdentifier[] getSelectedIds() {
         return selectedGroupId.toArray(new UniqueIdentifier[]{});
+    }
+
+    public HashMap<UniqueIdentifier, EntityData> getEntitiesById(UniqueIdentifier[] uniqueIdentifiers) {
+        ArrayList<UniqueIdentifier> identifierList = new ArrayList<UniqueIdentifier>(Arrays.asList(uniqueIdentifiers));
+        HashMap<UniqueIdentifier, EntityData> returnMap = new HashMap<UniqueIdentifier, EntityData>();
+        for (EntityData entityData : dataStoreSvg.graphData.getDataNodes()) {
+            if (identifierList.contains(entityData.getUniqueIdentifier())) {
+                returnMap.put(entityData.getUniqueIdentifier(), entityData);
+            }
+        }
+        return returnMap;
     }
 
 //    public boolean selectionContainsEgo() {
