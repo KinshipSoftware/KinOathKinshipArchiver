@@ -361,7 +361,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         }
         if (addRelationEntityMenu != null) {
-            addRelationEntityMenu.setVisible(nonTransientNodeCount == 2);
+            addRelationEntityMenu.setVisible(nonTransientNodeCount > 1);
             setAsEgoMenuItem.setVisible(nonTransientNodeCount > 0);
             addAsEgoMenuItem.setVisible(nonTransientNodeCount > 0);
             removeEgoMenuItem.setVisible(nonTransientNodeCount > 0); // todo: set these items based on the state of the selected entities, //graphPanel.selectionContainsEgo());
