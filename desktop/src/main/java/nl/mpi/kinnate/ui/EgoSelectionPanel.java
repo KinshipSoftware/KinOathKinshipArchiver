@@ -96,13 +96,16 @@ public class EgoSelectionPanel extends JPanel {
         for (EntityData entityData : allEntities) {
             if (entityData.isVisible) {
                 try {
-                    ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityData.getEntityPath()));
-                    if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
-                        egoNodeArray.add(arbilDataNode);
-                    } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
-                        requiredNodeArray.add(arbilDataNode);
-                    } else {
-                        remainingNodeArray.add(arbilDataNode);
+                    String entityPath = entityData.getEntityPath();
+                    if (entityPath != null) {
+                        ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityPath));
+                        if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                            egoNodeArray.add(arbilDataNode);
+                        } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                            requiredNodeArray.add(arbilDataNode);
+                        } else {
+                            remainingNodeArray.add(arbilDataNode);
+                        }
                     }
                 } catch (URISyntaxException exception) {
                     System.err.println(exception.getMessage());
