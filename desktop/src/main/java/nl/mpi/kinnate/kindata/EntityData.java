@@ -114,16 +114,6 @@ public class EntityData {
         isEgo = false;
     }
 
-    @XmlTransient
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    @XmlTransient
-    public Date getDateOfDeath() {
-        return dateOfDeath;
-    }
-
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
@@ -136,11 +126,22 @@ public class EntityData {
 //        this.symbolTypeString = symbolTypeLocal.name();
 //    }
     // end code used for importing gedcom and other file types
+    
     public String getSymbolType() {
         if (symbolType != null) {
             return symbolType.name();
         }
         return symbolTypeString;
+    }
+
+    @XmlTransient
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    @XmlTransient
+    public Date getDateOfDeath() {
+        return dateOfDeath;
     }
 
     public String getEntityPath() {
