@@ -40,10 +40,16 @@ public class EntityDocument {
     public EntityData entityData;
 
     public EntityDocument(File destinationDirectory, String nameString) {
-        idString = nameString;
-        entityFile = new File(destinationDirectory, nameString);
-//        uniquieIdentifier = new LocalIdentifier().getUniqueIdentifier(entityFile);
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
+        if (nameString != null) {
+            idString = nameString;
+            entityFile = new File(destinationDirectory, nameString);
+        } else {
+            idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".cmdi";
+            File subDirectory = new File(destinationDirectory, idString.substring(0, 2));
+            subDirectory.mkdir();
+            entityFile = new File(subDirectory, idString);
+        }
     }
 
     public String getFileName() {
@@ -115,6 +121,12 @@ public class EntityDocument {
         currentDomNode.appendChild(valueElement);
     }
 
+    public void insertDefaultMetadata() {
+        // todo: this could be done via Arbil code and the schema when that is ready
+        insertValue("Gender", "unspecified");
+        insertValue("Name", "unspecified");
+    }
+
     public void insertRelation(EntityData alterNodeLocal, RelationType relationType/*, UniqueIdentifier relationUniquieIdentifier*/, String fileNameString) {
         entityData.addRelatedNode(alterNodeLocal, 1, relationType, RelationLineType.sanguineLine, null, null);
 
@@ -138,6 +150,10 @@ public class EntityDocument {
 //        Element targetNameElement = metadataDom.createElement("TargetName");
 //        targetNameElement.setTextContent(lineParts[2]);
 //        relationElement.appendChild(targetNameElement);
+    }
+
+    public File getFile() {
+        return entityFile;
     }
 
     public String getFilePath() {
