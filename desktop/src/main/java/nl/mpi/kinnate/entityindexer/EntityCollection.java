@@ -18,6 +18,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -33,6 +34,7 @@ import org.basex.core.cmd.DropDB;
 import org.basex.core.cmd.List;
 import org.basex.core.cmd.Open;
 import org.basex.core.cmd.Optimize;
+import org.basex.core.cmd.Set;
 import org.basex.core.cmd.XQuery;
 import org.basex.query.QueryException;
 import org.basex.query.QueryProcessor;
@@ -82,26 +84,30 @@ public class EntityCollection {
 //        }
 //    }
     // see comments below
-//    public void createDatabase() {
-//        try {
-////            System.out.println("List: " + new List().execute(context));
-//            new DropDB(databaseName).execute(context);
-//            new Set("CREATEFILTER", "*.cmdi").execute(context);
-//            new CreateDB(databaseName, ArbilSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
-////            System.out.println("List: " + new List().execute(context));
-////            System.out.println("Find: " + new Find(databaseName).title());
-////            System.out.println("Info: " + new Info().execute(context));
-////            new Open(databaseName).execute(context);
-////            new CreateIndex("text").execute(context); // TEXT|ATTRIBUTE|FULLTEXT|PATH
-////            new CreateIndex("fulltext").execute(context);
-////            new CreateIndex("attribute").execute(context);
-////            new CreateIndex("path").execute(context);
-////            new Close().execute(context);
-////            context.close();
-//        } catch (BaseXException baseXException) {
-//            new ArbilBugCatcher().logError(baseXException);
-//        }
-//    }
+    @Deprecated
+    protected void createDatabase() {
+        // this continues to cause the inserted data to be non updateable without creating duplicates
+        // todo: if this is required then we will need to walk the working directory and add each file via addFileToDB
+        try {
+//            System.out.println("List: " + new List().execute(context));
+            new DropDB(databaseName).execute(context);
+            new Set("CREATEFILTER", "*.cmdi").execute(context);
+            new CreateDB(databaseName, ArbilSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
+//            System.out.println("List: " + new List().execute(context));
+//            System.out.println("Find: " + new Find(databaseName).title());
+//            System.out.println("Info: " + new Info().execute(context));
+//            new Open(databaseName).execute(context);
+//            new CreateIndex("text").execute(context); // TEXT|ATTRIBUTE|FULLTEXT|PATH
+//            new CreateIndex("fulltext").execute(context);
+//            new CreateIndex("attribute").execute(context);
+//            new CreateIndex("path").execute(context);
+//            new Close().execute(context);
+//            context.close();
+        } catch (BaseXException baseXException) {
+            new ArbilBugCatcher().logError(baseXException);
+        }
+    }
+
     public void dropDatabase() {
         try {
             new DropDB(databaseName).execute(context);
@@ -112,8 +118,8 @@ public class EntityCollection {
     }
 
     private void addFileToDB(URI updatedDataUrl) {
+        String urlString = updatedDataUrl.toASCIIString();
         try {
-            String urlString = updatedDataUrl.toASCIIString();
             // delete appears to be fine with a uri string, providing that the document was added as below and not added as a collection, sigh
             new Delete(urlString).execute(context);
             // add requires a url other wise it appends the working path when using base-uri in a query
@@ -153,11 +159,13 @@ public class EntityCollection {
     }
 
     public SearchResults listGedcomFamIds() {
+        // todo: probably needs to be updated
         String queryString = "distinct-values(collection('nl-mpi-kinnate')/*:Kinnate/*:Gedcom[*:Entity/*:GedcomType='FAM']/*:UniqueIdentifier//text())";
         return performQuery(queryString);
     }
 
     public SearchResults listAllRelationTypes() {
+        // todo: probably needs to be updated
         // todo: use this to populate the InderParametersFormUI
         String queryString = "distinct-values(collection('nl-mpi-kinnate')/Kinnate/Relation/Type/text())";
         return performQuery(queryString);
@@ -169,6 +177,7 @@ public class EntityCollection {
     }
 
     public SearchResults searchForLocalEntites() {
+        // todo: probably needs to be updated
         String queryString = "for $doc in collection('nl-mpi-kinnate') where exists(//*:UniqueIdentifier/*:LocalIdentifier) return base-uri($doc)";
         return performQuery(queryString);
     }
@@ -240,6 +249,7 @@ public class EntityCollection {
     }
 
     public EntityData[] getEntityWithRelations(UniqueIdentifier uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
+        // todo: probably needs to be updated
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityWithRelationsQuery(uniqueIdentifier, excludeUniqueIdentifiers, indexParameters);
@@ -343,14 +353,29 @@ public class EntityCollection {
                 resultsText.setVisible(true);
             }
         });
-        JButton recreateButton = new JButton("drop database");
-        recreateButton.addActionListener(new ActionListener() {
+        JButton dropButton = new JButton("drop database");
+        dropButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 resultsText.setText("");
                 new EntityCollection().dropDatabase();
 //                try {
 //                new EntityCollection().createDatabase();
+//                } catch (URISyntaxException exception) {
+//                    resultsText.append(exception.getMessage());
+//                }
+                resultsText.setVisible(true);
+            }
+        });
+        JButton recreateButton = new JButton("drop and recreate database");
+        recreateButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                resultsText.setText("recreating database");
+//                new EntityCollection().dropDatabase();
+//                try {
+                new EntityCollection().createDatabase();
+                resultsText.setText("done\n");
 //                } catch (URISyntaxException exception) {
 //                    resultsText.append(exception.getMessage());
 //                }
@@ -364,6 +389,7 @@ public class EntityCollection {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(jButton);
         buttonPanel.add(updateButton);
+        buttonPanel.add(dropButton);
         buttonPanel.add(recreateButton);
         buttonPanel.add(queryTimeLabel);
         jPanel.add(buttonPanel, BorderLayout.PAGE_START);
