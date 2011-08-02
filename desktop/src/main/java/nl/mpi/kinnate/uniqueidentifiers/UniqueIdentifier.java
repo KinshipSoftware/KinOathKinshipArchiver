@@ -91,6 +91,10 @@ public class UniqueIdentifier {
         return identifierType.name() + ":" + identifierString;
     }
 
+    public boolean isTransientIdentifier() {
+        return identifierType == IdentifierType.tid;
+    }
+
     public boolean isGraphicsIdentifier() {
         return identifierType == IdentifierType.gid;
     }
