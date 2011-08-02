@@ -66,10 +66,10 @@ public class EntityDocument {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 documentBuilderFactory.setNamespaceAware(true);
                 String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                        + "<kin:Kinnate xmlns:kin=\"http://mpi.nl/tla/kin\" version=\"1.0\"/>";
+                        + "<Kinnate xmlns:kin=\"http://mpi.nl/tla/kin\" xmlns=\"http://www.clarin.eu/cmd/\" version=\"1.0\"/>"; //<cmd:Metadata/></Kinnate>
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                 metadataDom = documentBuilder.parse(new InputSource(new StringReader(templateXml)));
-                metadataNode = metadataDom.createElementNS("http://mpi.nl/tla/kin", "Metadata");
+                metadataNode = metadataDom.createElementNS("http://www.clarin.eu/cmd/", "Metadata");
                 currentDomNode = metadataNode;
                 kinnateNode = metadataDom.getDocumentElement();
             } catch (DOMException exception) {
@@ -110,7 +110,7 @@ public class EntityDocument {
             }
             currentNode = currentNode.getNextSibling();
         }
-        Node valueElement = metadataDom.createElement(nodeName);
+        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ nodeName);
         valueElement.setTextContent(valueString);
         currentDomNode.appendChild(valueElement);
     }
@@ -156,7 +156,7 @@ public class EntityDocument {
 //        try {
 //            Node entityNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity");
         kinnateNode.appendChild(metadataNode);
-            // todo: maybe insert the user selected CMDI profile into the XML declaration of the kinnate node and let arbil handle the adding of sub nodes or consider using ArbilComponentBuilder to insert a cmdi sub component into the metadata node or keep the cmdi data in a separate file
+        // todo: maybe insert the user selected CMDI profile into the XML declaration of the kinnate node and let arbil handle the adding of sub nodes or consider using ArbilComponentBuilder to insert a cmdi sub component into the metadata node or keep the cmdi data in a separate file
 //        } catch (TransformerException exception) {
 //            new ArbilBugCatcher().logError(exception);
 //            throw new ImportException("Error: " + exception.getMessage());
