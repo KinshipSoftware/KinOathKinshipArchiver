@@ -3,20 +3,12 @@ package nl.mpi.kinnate.ui;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
@@ -24,14 +16,12 @@ import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.RelationLinker;
+import nl.mpi.kinnate.gedcomimport.EntityDocument;
+import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.GraphPanelSize;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 /**
  *  Document   : GraphPanelContextMenu
@@ -70,62 +60,25 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         graphPanelSize = graphPanelSizeLocal;
         if (egoSelectionPanelLocal != null) {
             JMenuItem addEntityMenuItem = new JMenuItem("Add Entity");
-            addEntityMenuItem.setActionCommand(GraphPanelContextMenu.class.getResource("/xsd/StandardEntity.xsd").toString());
+//            addEntityMenuItem.setActionCommand(GraphPanelContextMenu.class.getResource("/xsd/StandardEntity.xsd").toString());
             addEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    // todo: this could be simplified by adapting the Arbil code
-                    String nodeType = evt.getActionCommand();
-                    URI addedNodePath;
-                    URI targetFileURI = ArbilSessionStorage.getSingleInstance().getNewArbilFileName(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), nodeType);
-                    ArbilComponentBuilder componentBuilder = new ArbilComponentBuilder();
+                    // todo: node type is not used here anymore but could still be useful as a user option
+//                    String nodeType = evt.getActionCommand();
+                    EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null);
                     try {
-                        // todo: move this from here and update the way new nodes are constracted so that an entity object is created then saved to disk
-                        addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
-
-                        UniqueIdentifier localIdentifier = new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid);
-                        Document metadataDom = null;
-                        try {
-                            // todo: look into handling errors better and look into if this should be an entity data node that is serialised rather than using componentBuilder.createComponentFile
-                            metadataDom = ArbilComponentBuilder.getDocument(addedNodePath);
-                            // add a unique identifier to the entity node
-                            Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Gedcom/:UniqueIdentifier");
-                            try {
-                                JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifier.class);
-                                Marshaller marshaller = jaxbContext.createMarshaller();
-                                marshaller.marshal(localIdentifier, uniqueIdentifierNode);
-                            } catch (JAXBException exception) {
-                                new ArbilBugCatcher().logError(exception);
-                            }
-                            ArbilComponentBuilder.savePrettyFormatting(metadataDom, new File(addedNodePath));
-                        } catch (DOMException exception) {
-                            new ArbilBugCatcher().logError(exception);
-                        } catch (TransformerException exception) {
-                            new ArbilBugCatcher().logError(exception);
-                        } catch (ParserConfigurationException exception) {
-                            new ArbilBugCatcher().logError(exception);
-                        } catch (IOException exception) {
-                            new ArbilBugCatcher().logError(exception);
-                        } catch (SAXException exception) {
-                            new ArbilBugCatcher().logError(exception);
-                        }
-                        new EntityCollection().updateDatabase(addedNodePath);
-//                        ArrayList<String> entityArray = new ArrayList<String>(Arrays.asList(LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree")));
-//                        entityArray.add(addedNodePath.toASCIIString());
-//                        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", entityArray.toArray(new String[]{}));
-                        // todo: update the main entity tree
-//                        ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoList()));
-//                        egoUriList.add(addedNodePath);
-//                        ArrayList<String> egoIdentifierList = new ArrayList<String>(Arrays.asList(graphPanel.getEgoUniquiIdentifiersList()));
-//                        egoUriList.add(addedNodePath);
-//                        egoIdentifierList.add(localIdentifier);
-//                        ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoPaths()));
-//                        egoUriList.add(addedNodePath);
-                        // todo: look into the need or not of adding ego nodes, on one hand they should not be added as ego nodes but as working nodes, also it is likely that the jlist that is updated by this could better be updaed by the selection listner
-//                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}), egoIdentifierList.toArray(new String[]{}));
-                        egoSelectionPanel.addRequiredNodes(new URI[]{addedNodePath}, new UniqueIdentifier[]{localIdentifier});
-                    } catch (URISyntaxException ex) {
-                        new ArbilBugCatcher().logError(ex);
+                        entityDocument.createDocument(true);
+                        entityDocument.insertDefaultMetadata();
+                        entityDocument.saveDocument();
+                        URI addedEntityUri = entityDocument.getFile().toURI();
+                        new EntityCollection().updateDatabase(addedEntityUri);
+                        egoSelectionPanel.addRequiredNodes(new URI[]{addedEntityUri}, new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
+                    } catch (ImportException exception) {
+                        // todo: warn user with a dialog
+                        new ArbilBugCatcher().logError(exception);
+//                    } catch (URISyntaxException ex) {
+//                        new ArbilBugCatcher().logError(ex);
                         // todo: warn user with a dialog
                     }
                 }
