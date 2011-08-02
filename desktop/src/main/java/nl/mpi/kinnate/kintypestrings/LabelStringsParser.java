@@ -54,7 +54,7 @@ public class LabelStringsParser {
                             while (dateStringArray[1].length() < "yyyy/MM/dd".length()) {
                                 dateStringArray[1] = dateStringArray[1] + "/01";
                             }
-                            dateOfBirth = formatter.parse(dateStringArray[1]);
+                            dateOfDeath = formatter.parse(dateStringArray[1]);
                         }
                         inputStringParts[1] = remainingString;
                     } catch (ParseException exception) {
