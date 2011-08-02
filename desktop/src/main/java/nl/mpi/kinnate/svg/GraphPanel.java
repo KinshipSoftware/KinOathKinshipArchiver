@@ -20,6 +20,7 @@ import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
@@ -48,7 +49,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private boolean requiresSave = false;
     private File svgFile = null;
     protected GraphPanelSize graphPanelSize;
-    protected ArrayList<String> selectedGroupId;
+    protected ArrayList<UniqueIdentifier> selectedGroupId;
     protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     public DataStoreSvg dataStoreSvg;
     protected EntitySvg entitySvg;
@@ -62,7 +63,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         entitySvg = new EntitySvg();
         dataStoreSvg.setDefaults();
         svgUpdateHandler = new SvgUpdateHandler(this, egoSelectionPanel);
-        selectedGroupId = new ArrayList<String>();
+        selectedGroupId = new ArrayList<UniqueIdentifier>();
         graphPanelSize = new GraphPanelSize();
         this.setLayout(new BorderLayout());
         svgCanvas = new JSVGCanvas();
@@ -320,8 +321,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    public void removeEgo(String[] egoIdentifierArray) {
 //        dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
 //    }
-    public String[] getSelectedIds() {
-        return selectedGroupId.toArray(new String[]{});
+    public UniqueIdentifier[] getSelectedIds() {
+        return selectedGroupId.toArray(new UniqueIdentifier[]{});
     }
 
 //    public boolean selectionContainsEgo() {
@@ -332,14 +333,14 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        }
 //        return false;
 //    }
-    public String getPathForElementId(String elementId) {
+    public String getPathForElementId(UniqueIdentifier elementId) {
 //        NamedNodeMap namedNodeMap = doc.getElementById(elementId).getAttributes();
 //        for (int attributeCounter = 0; attributeCounter < namedNodeMap.getLength(); attributeCounter++) {
 //            System.out.println(namedNodeMap.item(attributeCounter).getNodeName());
 //            System.out.println(namedNodeMap.item(attributeCounter).getNamespaceURI());
 //            System.out.println(namedNodeMap.item(attributeCounter).getNodeValue());
 //        }
-        Element entityElement = doc.getElementById(elementId);
+        Element entityElement = doc.getElementById(elementId.getAttributeIdentifier());
         if (entityElement == null) {
             return null;
         } else {
@@ -347,15 +348,15 @@ public class GraphPanel extends JPanel implements SavePanel {
         }
     }
 
-    public String getKinTypeForElementId(String elementId) {
-        Element entityElement = doc.getElementById(elementId);
+    public String getKinTypeForElementId(UniqueIdentifier elementId) {
+        Element entityElement = doc.getElementById(elementId.getAttributeIdentifier());
         if (entityElement != null) {
             return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kintype");
         } else {
             return "";
         }
     }
- 
+
     public void resetZoom() {
         // todo: this should be moved to the svg update handler and put into a runnable
         AffineTransform at = new AffineTransform();
@@ -369,6 +370,10 @@ public class GraphPanel extends JPanel implements SavePanel {
         dataStoreSvg.graphData.setEntitys(dataStoreSvg.graphData.getDataNodes());
         dataStoreSvg.graphData.placeAllNodes(entitySvg.entityPositions);
         drawNodes();
+    }
+
+    public void clearEntityLocations(UniqueIdentifier[] selectedIdentifiers) {
+        entitySvg.clearEntityLocations(selectedIdentifiers);
     }
 
     public void drawNodes() {
