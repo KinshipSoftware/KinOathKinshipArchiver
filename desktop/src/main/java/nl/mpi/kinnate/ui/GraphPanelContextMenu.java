@@ -400,13 +400,20 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         xPos = cmpnt.getMousePosition().x;
         yPos = cmpnt.getMousePosition().y;
         selectedIdentifiers = graphPanel.getSelectedIds();
+        int nonTransientNodeCount = 0;
+        for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
+            // check to see if these selectedIdentifiers are transent nodes and if they are then do not allow the following menu items
+            if (!uniqueIdentifier.isTransientIdentifier() && !uniqueIdentifier.isGraphicsIdentifier()) {
+                nonTransientNodeCount++;
+            }
+        }
         if (addRelationEntityMenu != null) {
-            addRelationEntityMenu.setVisible(selectedIdentifiers.length == 2);
-            setAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
-            addAsEgoMenuItem.setVisible(selectedIdentifiers.length > 0);
-            removeEgoMenuItem.setVisible(selectedIdentifiers.length > 0); // todo: set these items based on the state of the selected entities, //graphPanel.selectionContainsEgo());
-            addAsRequiredMenuItem.setVisible(selectedIdentifiers.length > 0);
-            removeRequiredMenuItem.setVisible(selectedIdentifiers.length > 0);
+            addRelationEntityMenu.setVisible(nonTransientNodeCount == 2);
+            setAsEgoMenuItem.setVisible(nonTransientNodeCount > 0);
+            addAsEgoMenuItem.setVisible(nonTransientNodeCount > 0);
+            removeEgoMenuItem.setVisible(nonTransientNodeCount > 0); // todo: set these items based on the state of the selected entities, //graphPanel.selectionContainsEgo());
+            addAsRequiredMenuItem.setVisible(nonTransientNodeCount > 0);
+            removeRequiredMenuItem.setVisible(nonTransientNodeCount > 0);
         } else {
             setAsEgoMenuItem.setVisible(false);
             addAsEgoMenuItem.setVisible(false);
