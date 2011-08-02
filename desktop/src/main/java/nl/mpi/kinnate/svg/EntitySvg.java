@@ -200,6 +200,21 @@ public class EntitySvg {
         crossGroup.appendChild(crossNode);
         defsNode.appendChild(crossGroup);
         svgRoot.appendChild(defsNode);
+
+        // add the error symbol
+        Element noneGroup = doc.createElementNS(svgNameSpace, "g");
+        noneGroup.setAttribute("id", "error");
+        Element noneNode = doc.createElementNS(svgNameSpace, "polyline");
+        int posXnone = symbolSize / 2;
+        int posYnone = symbolSize / 2;
+        int offsetNoneAmount = symbolSize / 2;
+        noneNode.setAttribute("points", (posXnone - offsetNoneAmount) + "," + (posYnone - offsetNoneAmount) + " " + (posXnone + offsetNoneAmount) + "," + (posYnone + offsetNoneAmount) + " " + (posXnone) + "," + (posYnone) + " " + (posXnone - offsetNoneAmount) + "," + (posYnone + offsetNoneAmount) + " " + (posXnone + offsetNoneAmount) + "," + (posYnone - offsetNoneAmount));
+        noneNode.setAttribute("fill", "none");
+        noneNode.setAttribute("stroke", "red");
+        noneNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
+        noneGroup.appendChild(noneNode);
+        defsNode.appendChild(noneGroup);
+        svgRoot.appendChild(defsNode);
     }
 
     public String[] listSymbolNames(SVGDocument doc) {
@@ -218,6 +233,12 @@ public class EntitySvg {
             }
         }
         return symbolArray.toArray(new String[]{});
+    }
+
+    public void clearEntityLocations(UniqueIdentifier[] selectedIdentifiers) {
+        for (UniqueIdentifier currentIdentifier : selectedIdentifiers) {
+            entityPositions.remove(currentIdentifier);
+        }
     }
 
     public float[] getEntityLocation(UniqueIdentifier entityId) {
@@ -329,7 +350,7 @@ public class EntitySvg {
         Element symbolNode;
         String symbolType = currentNode.getSymbolType();
         if (symbolType == null || symbolType.length() == 0) {
-            symbolType = "square";
+            symbolType = "error";
         }
         // todo: check that if an entity is already placed in which case do not recreate
         // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
@@ -363,6 +384,7 @@ public class EntitySvg {
 ////            // prevent the y position being changed
 //            storedPosition[1] = currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f;
         }
+        // todo: resolve the null pointer on first run with transient nodes (last test on this did not get a null pointer so maybe it is resolved)
         groupNode.setAttribute("transform", "translate(" + Float.toString(storedPosition[0]) + ", " + Float.toString(storedPosition[1]) + ")");
         if (currentNode.isEgo) {
             symbolNode.setAttribute("fill", "black");
@@ -413,6 +435,7 @@ public class EntitySvg {
 //        if (graphPanel.dataStoreSvg.showKinTermLabels) {
 //            labelList.addAll(Arrays.asList(currentNode.getKinTermStrings()));
 //        }
+        // todo: add the user specified id as a label
         // todo: this method has the draw back that the text is not selectable as a block
         int textSpanCounter = 0;
         int lineSpacing = 15;
@@ -452,6 +475,7 @@ public class EntitySvg {
             textSpanCounter += lineSpacing;
             groupNode.appendChild(labelText);
         }
+        // todo: add the date of birth/death label
         int linkCounter = 0;
         if (graphPanel.dataStoreSvg.showArchiveLinks && currentNode.archiveLinkArray != null) {
             // loop through the archive links and optionaly add href tags for each linked archive data <a xlink:href="http://www.mpi.nl/imdi-archive-link" target="_blank"></a>
