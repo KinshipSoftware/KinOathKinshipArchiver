@@ -7,6 +7,7 @@ import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
@@ -18,12 +19,12 @@ import nl.mpi.kinnate.kintypestrings.ParserHighlight;
  */
 public class QueryParser implements EntityService {
 
-    HashMap<String, EntityData> loadedGraphNodes;
+    HashMap<UniqueIdentifier, EntityData> loadedGraphNodes;
     EntityCollection entityCollection;
 
     public QueryParser(EntityData[] svgEntities) {
         entityCollection = new EntityCollection();
-        loadedGraphNodes = new HashMap<String, EntityData>();
+        loadedGraphNodes = new HashMap<UniqueIdentifier, EntityData>();
         if (svgEntities != null) {
             for (EntityData svgStoredEntity : svgEntities) {
                 // todo: consider if having the entities stored in two locations (admitedly this one is a hash map, the other and array) but maybe this could be confusing?
@@ -70,23 +71,23 @@ public class QueryParser implements EntityService {
         // todo: set the relations of this node
     }
 
-    private void getNextRelations(HashMap<String, EntityData> createdGraphNodes, EntityData egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) {
+    private void getNextRelations(EntityData egoNode, ArrayList<KinType> remainingKinTypes, IndexerParameters indexParameters) {
         if (remainingKinTypes.size() > 0) {
             KinType currentKinType = remainingKinTypes.remove(0);
             for (EntityRelation entityRelation : egoNode.getDistinctRelateNodes()) {
                 EntityData alterNode;
-                if (createdGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
-                    alterNode = createdGraphNodes.get(entityRelation.alterUniqueIdentifier);
+                if (loadedGraphNodes.containsKey(entityRelation.alterUniqueIdentifier)) {
+                    alterNode = loadedGraphNodes.get(entityRelation.alterUniqueIdentifier);
                 } else {
                     alterNode = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexParameters);
-                    createdGraphNodes.put(entityRelation.alterUniqueIdentifier, alterNode);
+                    loadedGraphNodes.put(entityRelation.alterUniqueIdentifier, alterNode);
                 }
                 alterNode.isVisible = true;
 
 //            if (egoNode.relationMatchesType(entityRelation, currentKinType)) {
                 // only traverse if the type matches
 
-                getNextRelations(createdGraphNodes, alterNode, remainingKinTypes, indexParameters);
+                getNextRelations(alterNode, remainingKinTypes, indexParameters);
             }
 //            }
         }
@@ -143,11 +144,11 @@ public class QueryParser implements EntityService {
         return visibleEntityFound;
     }
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, HashSet<String> egoIdentifiers, HashSet<String> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] getRelationsOfEgo(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
         foundOrder = 0; // temp for testing // todo: remove testing labels
         if (indexParameters.valuesChanged) {
             indexParameters.valuesChanged = false;
-            loadedGraphNodes = new HashMap<String, EntityData>();
+            loadedGraphNodes = new HashMap<UniqueIdentifier, EntityData>();
         }
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
 //        kinTypeStringConverter.highlightComments(kinTypeStrings, parserHighlight);
@@ -164,10 +165,10 @@ public class QueryParser implements EntityService {
             for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeElementArray) {
                 // get all the entities with queries attached
                 if (kinTypeElement.queryTerm != null) {
-                    for (String currentFoundId : entityCollection.getEntityIdByTerm(kinTypeElement)) {
+                    for (UniqueIdentifier currentFoundId : entityCollection.getEntityIdByTerm(kinTypeElement)) {
                         EntityData queryNode;
-                        currentFoundId = currentFoundId.trim();
-                        if (currentFoundId.length() > 0 /* make sure that non results do not get mistaken for an identifier */) {
+//                        currentFoundId = currentFoundId.trim();
+//                        if (currentFoundId.length() > 0 /* make sure that non results do not get mistaken for an identifier */) {
                             if (loadedGraphNodes.containsKey(currentFoundId)) {
                                 queryNode = loadedGraphNodes.get(currentFoundId);
                             } else {
@@ -181,7 +182,7 @@ public class QueryParser implements EntityService {
                                 queryNode.isEgo = true; // there might be multiple types for a single entitiy
                                 new KinTypeStringConverter().setEgoKinTypeString(queryNode);
                             }
-                        }
+//                        }
                     }
                 } // todo: else get relations of x
                 // todo: filter on the kin types
@@ -202,7 +203,7 @@ public class QueryParser implements EntityService {
             }
         }
         // todo: the following could be removed if the ego nodes are replaces with the equavelent kin type string eg "E=Identifier"
-        for (String currentEgoId : egoIdentifiers) {
+        for (UniqueIdentifier currentEgoId : egoIdentifiers) {
             EntityData egoNode;
             if (loadedGraphNodes.containsKey(currentEgoId)) {
                 egoNode = loadedGraphNodes.get(currentEgoId);
@@ -216,11 +217,11 @@ public class QueryParser implements EntityService {
             if (kinTypeStrings != null) {
                 for (String currentKinString : kinTypeStrings) {
                     ArrayList<KinType> kinTypes = kinTypeStringConverter.getKinTypes(currentKinString);
-                    getNextRelations(loadedGraphNodes, egoNode, kinTypes, indexParameters);
+                    getNextRelations(egoNode, kinTypes, indexParameters);
                 }
             }
         }
-        for (String currentEgoId : requiredEntityIdentifiers) {
+        for (UniqueIdentifier currentEgoId : requiredEntityIdentifiers) {
             EntityData requiredNode;
             if (loadedGraphNodes.containsKey(currentEgoId)) {
                 requiredNode = loadedGraphNodes.get(currentEgoId);
