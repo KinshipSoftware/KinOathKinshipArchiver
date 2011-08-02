@@ -1,8 +1,10 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.geom.AffineTransform;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphLabel;
@@ -340,6 +342,21 @@ public class EntitySvg {
         return new float[]{remainderAfterSnapX, remainderAfterSnapY};
     }
 
+    private int addTextLabel(GraphPanel graphPanel, Element groupNode, String currentTextLable, String textColour, int textSpanCounter) {
+        int lineSpacing = 15;
+        Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
+        labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
+        labelText.setAttribute("y", Integer.toString(textSpanCounter));
+        labelText.setAttribute("fill", textColour);
+        labelText.setAttribute("stroke-width", "0");
+        labelText.setAttribute("font-size", "14");
+        Text textNode = graphPanel.doc.createTextNode(currentTextLable);
+        labelText.appendChild(textNode);
+        textSpanCounter += lineSpacing;
+        groupNode.appendChild(labelText);
+        return textSpanCounter;
+    }
+
     protected Element createEntitySymbol(GraphPanel graphPanel, EntityData currentNode) {
         Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
         groupNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier());
@@ -438,44 +455,30 @@ public class EntitySvg {
         // todo: add the user specified id as a label
         // todo: this method has the draw back that the text is not selectable as a block
         int textSpanCounter = 0;
-        int lineSpacing = 15;
         if (currentNode.metadataRequiresSave) {
-            Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
-            labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
-            labelText.setAttribute("y", Integer.toString(textSpanCounter));
-            labelText.setAttribute("fill", "red");
-            labelText.setAttribute("stroke-width", "0");
-            labelText.setAttribute("font-size", "14");
-            Text textNode = graphPanel.doc.createTextNode("modified");
-            labelText.appendChild(textNode);
-            textSpanCounter += lineSpacing;
-            groupNode.appendChild(labelText);
+            textSpanCounter = addTextLabel(graphPanel, groupNode, "modified", "red", textSpanCounter);
         }
         for (String currentTextLable : labelList) {
-            Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
-            labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
-            labelText.setAttribute("y", Integer.toString(textSpanCounter));
-            labelText.setAttribute("fill", "black");
-            labelText.setAttribute("stroke-width", "0");
-            labelText.setAttribute("font-size", "14");
-            Text textNode = graphPanel.doc.createTextNode(currentTextLable);
-            labelText.appendChild(textNode);
-            textSpanCounter += lineSpacing;
-            groupNode.appendChild(labelText);
+            textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable, "black", textSpanCounter);
         }
         for (GraphLabel currentTextLable : currentNode.getKinTermStrings()) {
-            Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
-            labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
-            labelText.setAttribute("y", Integer.toString(textSpanCounter));
-            labelText.setAttribute("fill", currentTextLable.getColourString());
-            labelText.setAttribute("stroke-width", "0");
-            labelText.setAttribute("font-size", "14");
-            Text textNode = graphPanel.doc.createTextNode(currentTextLable.getLabelString());
-            labelText.appendChild(textNode);
-            textSpanCounter += lineSpacing;
-            groupNode.appendChild(labelText);
+            textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable.getLabelString(), currentTextLable.getColourString(), textSpanCounter);
         }
-        // todo: add the date of birth/death label
+        // add the date of birth/death string
+        String dateString = "";
+        Date dob = currentNode.getDateOfBirth();
+        Date dod = currentNode.getDateOfDeath();
+        if (dob != null) {
+            // todo: the date format should probably be user defined rather than assuming that the system prefs are correct
+            dateString += DateFormat.getDateInstance().format(dob);
+        }
+        if (dod != null) {
+            dateString += " - " + DateFormat.getDateInstance().format(dod);
+        }
+        if (dateString.length() > 0) {
+            textSpanCounter = addTextLabel(graphPanel, groupNode, dateString, "black", textSpanCounter);
+        }
+        // end date of birth/death label
         int linkCounter = 0;
         if (graphPanel.dataStoreSvg.showArchiveLinks && currentNode.archiveLinkArray != null) {
             // loop through the archive links and optionaly add href tags for each linked archive data <a xlink:href="http://www.mpi.nl/imdi-archive-link" target="_blank"></a>
@@ -502,7 +505,7 @@ public class EntitySvg {
                 labelText.appendChild(labelTagA);
             }
             groupNode.appendChild(labelText);
-            textSpanCounter += lineSpacing;
+//            textSpanCounter += lineSpacing;
         }
 ////////////////////////////// end alternate method ////////////////////////////////////////////////
         ((EventTarget) groupNode).addEventListener("mousedown", new MouseListenerSvg(graphPanel), false);
