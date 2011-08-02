@@ -35,6 +35,7 @@ import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 
@@ -53,7 +54,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     private HidePane kinTypeHidePane;
     private KinTermTabPane kinTermPanel;
     private EntityService entityIndex;
-    private HashMap<String, ArbilDataNode> registeredEntityIds;
+    private HashMap<UniqueIdentifier, ArbilDataNode> registeredArbilDataNode;
     private String defaultString = "# The kin type strings entered here will determine how the entities show on the graph below\n";
     public static String defaultGraphString = "# The kin type strings entered here will determine how the entities show on the graph below\n"
             + "# Enter one string per line.\n"
@@ -109,7 +110,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             graphPanel.generateDefaultSvg();
         }
         this.setLayout(new BorderLayout());
-        registeredEntityIds = new HashMap<String, ArbilDataNode>();
+        registeredArbilDataNode = new HashMap<UniqueIdentifier, ArbilDataNode>();
         egoSelectionPanel = new EgoSelectionPanel();
         kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
         // set the styles for the kin type string text
@@ -120,6 +121,8 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         StyleConstants.setForeground(styleKinType, new Color(43, 32, 161));
         Style styleQuery = kinTypeStringInput.addStyle("Query", null);
         StyleConstants.setForeground(styleQuery, new Color(183, 7, 140));
+        Style styleParamater = kinTypeStringInput.addStyle("Parameter", null);
+        StyleConstants.setForeground(styleParamater, new Color(103, 7, 200));
         Style styleError = kinTypeStringInput.addStyle("Error", null);
 //        StyleConstants.setForeground(styleError, new Color(172,3,57));
         StyleConstants.setForeground(styleError, Color.RED);
@@ -285,27 +288,27 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         drawGraph();
     }
 
-    public void setEgoNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
-        graphPanel.dataStoreSvg.egoEntities = new HashSet<String>(Arrays.asList(egoIdentifierArray));
+    public void setEgoNodes(URI[] egoPathArray, UniqueIdentifier[] egoIdentifierArray) {
+        graphPanel.dataStoreSvg.egoEntities = new HashSet<UniqueIdentifier>(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
-    public void addEgoNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
+    public void addEgoNodes(URI[] egoPathArray, UniqueIdentifier[] egoIdentifierArray) {
         graphPanel.dataStoreSvg.egoEntities.addAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
-    public void removeEgoNodes(String[] egoIdentifierArray) {
+    public void removeEgoNodes(UniqueIdentifier[] egoIdentifierArray) {
         graphPanel.dataStoreSvg.egoEntities.removeAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
-    public void addRequiredNodes(URI[] egoPathArray, String[] egoIdentifierArray) {
+    public void addRequiredNodes(URI[] egoPathArray, UniqueIdentifier[] egoIdentifierArray) {
         graphPanel.dataStoreSvg.requiredEntities.addAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
-    public void removeRequiredNodes(String[] egoIdentifierArray) {
+    public void removeRequiredNodes(UniqueIdentifier[] egoIdentifierArray) {
         graphPanel.dataStoreSvg.requiredEntities.removeAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
@@ -367,17 +370,22 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         // todo: i think this is resolved but double check the issue where arbil nodes update frequency is too high and breaks basex
         for (EntityData entityData : currentEntities) {
             ArbilDataNode arbilDataNode = null;
-            if (!registeredEntityIds.containsKey(entityData.getUniqueIdentifier())) {
+            if (!registeredArbilDataNode.containsKey(entityData.getUniqueIdentifier())) {
                 try {
-                    arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityData.getEntityPath()));
-                    registeredEntityIds.put(entityData.getUniqueIdentifier(), arbilDataNode);
-                    arbilDataNode.registerContainer(this);
-                    // todo: keep track of registered nodes and remove the unrequired ones here
+                    String metadataPath = entityData.getEntityPath();
+                    if (metadataPath != null) {
+                        arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(metadataPath));
+                        registeredArbilDataNode.put(entityData.getUniqueIdentifier(), arbilDataNode);
+                        arbilDataNode.registerContainer(this);
+                        // todo: keep track of registered nodes and remove the unrequired ones here
+                    } else {
+                        GuiHelper.linorgBugCatcher.logError(new Exception("Error getting path for: " + entityData.getUniqueIdentifier().getAttributeIdentifier() + " : " + entityData.getLabel()[0]));
+                    }
                 } catch (URISyntaxException exception) {
                     GuiHelper.linorgBugCatcher.logError(exception);
                 }
             } else {
-                arbilDataNode = registeredEntityIds.get(entityData.getUniqueIdentifier());
+                arbilDataNode = registeredArbilDataNode.get(entityData.getUniqueIdentifier());
             }
             if (arbilDataNode != null) {
                 entityData.metadataRequiresSave = arbilDataNode.getNeedsSaveToDisk(false);
@@ -385,17 +393,45 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         }
     }
 
-    public void entityRelationsChanged(String[] selectedIdentifiers) {
+    public void entityRelationsChanged(UniqueIdentifier[] selectedIdentifiers) {
         // this method does not need to update the database because the link changing process has already done that
+        // remove the stored graph locations of the selected ids
+        graphPanel.clearEntityLocations(selectedIdentifiers);
         graphPanel.getIndexParameters().valuesChanged = true;
         drawGraph();
     }
 
     public void dataNodeIconCleared(ArbilDataNode arbilDataNode) {
-        EntityCollection entityCollection = new EntityCollection();
-        entityCollection.updateDatabase(arbilDataNode.getURI());
-        graphPanel.getIndexParameters().valuesChanged = true;
-        drawGraph();
+        boolean dataBaseRequiresUpdate = false;
+        boolean redrawRequired = false;
+        // find the entity data for this arbil data node
+        for (EntityData entityData : graphSorter.getDataNodes()) {
+            try {
+                String entityPath = entityData.getEntityPath();
+                if (entityPath != null && arbilDataNode.getURI().equals(new URI(entityPath))) {
+                    // check if the metadata has been changed
+                    if (entityData.metadataRequiresSave && !arbilDataNode.getNeedsSaveToDisk(false)) {
+                        dataBaseRequiresUpdate = true;
+                        redrawRequired = true;
+                    }
+                    // clear or set the needs save flag
+                    entityData.metadataRequiresSave = arbilDataNode.getNeedsSaveToDisk(false);
+                    if (entityData.metadataRequiresSave) {
+                        redrawRequired = true;
+                    }
+                }
+            } catch (URISyntaxException exception) {
+                GuiHelper.linorgBugCatcher.logError(exception);
+            }
+        }
+        if (dataBaseRequiresUpdate) {
+            EntityCollection entityCollection = new EntityCollection();
+            entityCollection.updateDatabase(arbilDataNode.getURI());
+            graphPanel.getIndexParameters().valuesChanged = true;
+        }
+        if (redrawRequired) {
+            drawGraph();
+        }
     }
 
     public void dataNodeRemoved(ArbilDataNode adn) {
