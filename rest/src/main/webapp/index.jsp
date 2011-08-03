@@ -21,7 +21,7 @@
             pedigreeObj <- pedigree(id, dadid, momid, sex, affected) <!-- , status, relations --><br>
             plot(pedigreeObj)<br>
         </p>
-        Note that the pedigree package requires that there must always be two parents or none, this means that EM without EM will not be usable in that package.<br>
+        Note that the pedigree package requires that there must always be two parents or none, this means that EM without EF will not be usable in that package.<br>
         Also the pedigree package supports status and relations but these are not output from this service yet.<br>
     </body>
 </html>
