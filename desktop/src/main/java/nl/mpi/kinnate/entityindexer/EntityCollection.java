@@ -158,18 +158,18 @@ public class EntityCollection {
         }
     }
 
-    public SearchResults listGedcomFamIds() {
-        // todo: probably needs to be updated
-        String queryString = "distinct-values(collection('nl-mpi-kinnate')/*:Kinnate/*:Gedcom[*:Entity/*:GedcomType='FAM']/*:UniqueIdentifier//text())";
-        return performQuery(queryString);
-    }
+//    public SearchResults listGedcomFamIds() {
+//        // todo: probably needs to be updated.
+//        String queryString = "distinct-values(collection('nl-mpi-kinnate')/*:Kinnate/*:Gedcom[*:Entity/*:GedcomType='FAM']/*:UniqueIdentifier//text())";
+//        return performQuery(queryString);
+//    }
 
-    public SearchResults listAllRelationTypes() {
-        // todo: probably needs to be updated
-        // todo: use this to populate the InderParametersFormUI
-        String queryString = "distinct-values(collection('nl-mpi-kinnate')/Kinnate/Relation/Type/text())";
-        return performQuery(queryString);
-    }
+//    public SearchResults listAllRelationTypes() {
+//        // todo: probably needs to be updated.
+//        // todo: use this to populate the InderParametersFormUI
+//        String queryString = "distinct-values(collection('nl-mpi-kinnate')/Kinnate/Relation/Type/text())";
+//        return performQuery(queryString);
+//    }
 
     public SearchResults searchByName(String namePartString) {
         String queryString = "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + namePartString + "\") return base-uri($doc)";
@@ -177,11 +177,10 @@ public class EntityCollection {
     }
 
     public SearchResults searchForLocalEntites() {
-        // todo: probably needs to be updated
-        String queryString = "for $doc in collection('nl-mpi-kinnate') where exists(//*:UniqueIdentifier/*:LocalIdentifier) return base-uri($doc)";
+        String queryString = "for $doc in collection('nl-mpi-kinnate') where exists(/*:Kinnate/*:Entity/*:Identifier/@*:type=\"lid\") return base-uri($doc)";
         return performQuery(queryString);
     }
-
+    
     private SearchResults performQuery(String queryString) {
         SearchResults searchResults = new SearchResults();
         ArrayList<String> resultPaths = new ArrayList<String>();
@@ -249,7 +248,7 @@ public class EntityCollection {
     }
 
     public EntityData[] getEntityWithRelations(UniqueIdentifier uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
-        // todo: probably needs to be updated
+        // todo: probably needs to be updated.
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityWithRelationsQuery(uniqueIdentifier, excludeUniqueIdentifiers, indexParameters);
