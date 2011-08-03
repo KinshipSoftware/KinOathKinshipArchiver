@@ -53,7 +53,7 @@ public class EntityUploader {
         if (modifiedFiles != null) {
             messageString += "Found " + modifiedFiles.length + " modified files to upload\n";
         }
-        if (searchResults != null && modifiedFiles != null) {
+        if (searchResults == null && modifiedFiles == null) {
             messageString += "No results found\n";
         }
         return messageString;
