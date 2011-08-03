@@ -131,6 +131,8 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
             uploadText.append(entityUploader.getFoundMessage());
             uploadProgress.setIndeterminate(false);
             uploadText.append("Done\n");
+            searchNewButton.setEnabled(true);
+            searchModifiedButton.setEnabled(true);
         } else if (e.getActionCommand().equals("uploadaborted")) {
             uploadProgress.setIndeterminate(false);
             uploadText.append("Error on upload, does the specified workspace exist?\n");
@@ -144,7 +146,5 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         passwordPanel.setVisible(entityUploader.canUpload());
         uploadButton.setEnabled(entityUploader.canUpload());
         viewUploadButton.setEnabled(entityUploader.isUploadComplete());
-        searchNewButton.setEnabled(!entityUploader.canUpload());
-        searchModifiedButton.setEnabled(!entityUploader.canUpload());
     }
 }
