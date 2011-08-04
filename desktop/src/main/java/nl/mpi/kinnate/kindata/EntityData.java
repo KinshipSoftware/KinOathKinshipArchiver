@@ -42,7 +42,7 @@ public class EntityData {
     public boolean isEgo = false;
 //    @XmlElementWrapper(name = "Labels", namespace="http://mpi.nl/tla/kin")
     @XmlElement(name = "Label", namespace = "http://mpi.nl/tla/kin")
-    private String[] labelStringArray;
+    private String[] labelStringArray = new String[]{};
     @XmlTransient
     ArrayList<String> tempLabelsList = null;
     @XmlElementWrapper(name = "Relations", namespace = "http://mpi.nl/tla/kin")
@@ -126,7 +126,6 @@ public class EntityData {
 //        this.symbolTypeString = symbolTypeLocal.name();
 //    }
     // end code used for importing gedcom and other file types
-
     public String getSymbolType() {
         if (symbolType != null) {
             return symbolType.name();
