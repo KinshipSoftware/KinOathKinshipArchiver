@@ -42,13 +42,18 @@ public class SvgUpdateHandler {
         kinTermSavePanel = kinTermSavePanelLocal;
     }
 
-    private void updateSanguineHighlights(Element entityGroup) {
+    private void removeHighLights() {
         // this must be only called from within a svg runnable
         Element relationOldHighlightGroup = graphPanel.doc.getElementById("RelationHighlightGroup");
         if (relationOldHighlightGroup != null) {
             // remove the relation highlight group
             relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
         }
+    }
+
+    private void updateSanguineHighlights(Element entityGroup) {
+        // this must be only called from within a svg runnable
+        removeHighLights();
         if (graphPanel.dataStoreSvg.highlightRelationLines) {
             // add highlights for relation lines
             Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
@@ -456,6 +461,7 @@ public class SvgUpdateHandler {
 //        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
 //        currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
         try {
+            removeHighLights();
             Element svgRoot = graphPanel.doc.getDocumentElement();
             Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
             if (diagramGroupNode == null) { // make sure the diagram group exists
