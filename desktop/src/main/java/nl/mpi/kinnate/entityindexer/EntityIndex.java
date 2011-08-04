@@ -221,7 +221,7 @@ public class EntityIndex implements EntityService {
         }
     }
 
-    public EntityData[] getRelationsOfEgo(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] processKinTypeStrings(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
