@@ -151,7 +151,9 @@ public class RelationSvg {
                     for (EntityRelation egosRelation : currentNode.getDistinctRelateNodes()) {
                         if (egosRelation.relationType == DataTypes.RelationType.ancestor) {
                             if (altersRelation.alterUniqueIdentifier.equals(egosRelation.alterUniqueIdentifier)) {
-                                return true;
+                                if (altersRelation.getAlterNode().isVisible) {
+                                    return true;
+                                }
                             }
                         }
                     }
