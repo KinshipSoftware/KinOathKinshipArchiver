@@ -29,13 +29,23 @@ public class KinType {
         return codeString.contains("E");
     }
 
-    protected boolean matchesRelation(EntityRelation entityRelation, String kinTypeModifier) {
-        // todo make use of the kin type modifier
+    public boolean matchesRelation(EntityRelation entityRelation, String kinTypeModifier) {
+        // todo: make use of the kin type modifier
         if (entityRelation.getAlterNode().isEgo != this.isEgoType()) {
             return false;
         }
         if (!relationType.equals(entityRelation.relationType)) {
             return false;
+        }
+        if (symbolType == EntityData.SymbolType.square) {
+            return true; // it is better to return all the relations regardless of symbol in this case
+            // if the symbol is square then either circle or triangle are matches (square is matched later)
+//            if (EntityData.SymbolType.circle.name().equals(entityRelation.getAlterNode().getSymbolType())) {
+//                return true;
+//            }
+//            if (EntityData.SymbolType.triangle.name().equals(entityRelation.getAlterNode().getSymbolType())) {
+//                return true;
+//            }
         }
         if (!symbolType.name().equals(entityRelation.getAlterNode().getSymbolType())) {
             return false;
@@ -43,10 +53,20 @@ public class KinType {
         return true;
     }
 
-    protected boolean matchesEgoEntity(EntityData entityData, String kinTypeModifier) {
+    public boolean matchesEgoEntity(EntityData entityData, String kinTypeModifier) {
         // todo make use of the kin type modifier or remove it if it proves irelevant
         if (!entityData.isEgo || !this.isEgoType()) {
             return false;
+        }
+        if (symbolType == EntityData.SymbolType.square) {
+            return true; // it is better to return all the relations regardless of symbol in this case
+            // if the symbol is square then either circle or triangle are matches (square is matched later)
+//            if (EntityData.SymbolType.circle.name().equals(entityData.getSymbolType())) {
+//                return true;
+//            }
+//            if (EntityData.SymbolType.triangle.name().equals(entityData.getSymbolType())) {
+//                return true;
+//            }
         }
         if (!symbolType.name().equals(entityData.getSymbolType())) {
             return false;
