@@ -126,7 +126,7 @@ public class EntityData {
 //        this.symbolTypeString = symbolTypeLocal.name();
 //    }
     // end code used for importing gedcom and other file types
-    
+
     public String getSymbolType() {
         if (symbolType != null) {
             return symbolType.name();
@@ -304,6 +304,16 @@ public class EntityData {
             distinctRelateNodes = uniqueNodes.toArray(new EntityRelation[]{});
         }
         return distinctRelateNodes;
+    }
+
+    public EntityRelation[] getRelatedNodesToBeLoaded() {
+        ArrayList<EntityRelation> entityRelationsToLoad = new ArrayList<EntityRelation>();
+        for (EntityRelation relatedNode : getDistinctRelateNodes()) {
+            if (relatedNode.getAlterNode() == null) {
+                entityRelationsToLoad.add(relatedNode);
+            }
+        }
+        return entityRelationsToLoad.toArray(new EntityRelation[]{});
     }
 
     public UniqueIdentifier getUniqueIdentifier() {
