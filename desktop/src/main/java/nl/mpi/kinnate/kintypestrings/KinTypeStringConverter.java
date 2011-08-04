@@ -55,42 +55,42 @@ public class KinTypeStringConverter extends GraphSorter {
 //        }
 //    }
 
-    @Deprecated
-    public boolean compareRequiresNextRelation(EntityData adjacentEntity, KinType requiredKinType, EntityRelation entityRelation) {
-//        adjacentEntity.appendTempLabel("compareRequiresNextRelation" + "F: " + QueryParser.foundOrder++); // temp for testing // todo: remove testing labels
-        if (adjacentEntity.getSymbolType().equals(EntityData.SymbolType.union.name())) {
-            return true;
-        }
-        // todo: continue here....
-        if (requiredKinType.relationType.equals(DataTypes.RelationType.sibling) && entityRelation.relationType.equals(DataTypes.RelationType.ancestor)) {
-            return true;
-        }
-        return false;
-    }
+//    @Deprecated
+//    public boolean compareRequiresNextRelation(EntityData adjacentEntity, KinType requiredKinType, EntityRelation entityRelation) {
+////        adjacentEntity.appendTempLabel("compareRequiresNextRelation" + "F: " + QueryParser.foundOrder++); // temp for testing // todo: remove testing labels
+//        if (adjacentEntity.getSymbolType().equals(EntityData.SymbolType.union.name())) {
+//            return true;
+//        }
+//        // todo: continue here....
+//        if (requiredKinType.relationType.equals(DataTypes.RelationType.sibling) && entityRelation.relationType.equals(DataTypes.RelationType.ancestor)) {
+//            return true;
+//        }
+//        return false;
+//    }
 
-    @Deprecated
-    public boolean compareRelationsToKinType(EntityData egoEntity, EntityData alterEntity, KinType requiredKinType, EntityRelation entityRelation, int generationalDistance) {
-//        egoEntity.appendTempLabel("compareRelationsToKinType-egoEntity" + "F: " + QueryParser.foundOrder++);
-//        alterEntity.appendTempLabel("compareRelationsToKinType-alterEntity" + "F: " + QueryParser.foundOrder++);
-        // temp for testing // todo: remove testing labels
-//        System.out.println("egoEntity.isEgo: " + egoEntity.isEgo);
-//        System.out.println("alterEntity.isEgo: " + alterEntity.isEgo);
-//        System.out.println("egoEntity.symbol: " + egoEntity.getSymbolType());
-//        System.out.println("alterEntity.symbol: " + alterEntity.getSymbolType());
-//        System.out.println("entityRelation.relationType: " + entityRelation.relationType);
-//        System.out.println("entityRelation.symgenerationalDistancebol: " + entityRelation.generationalDistance);
-        // note that this will get the kin type reversed for one of the adjacent entities and this must be accounted for in the kin type comparison
-        // todo: note that the ego and alter are not correct labels
-        // this array will get the kin type reversed for one of the adjacent entities
-        if (egoEntity.isEgo && requiredKinType.isEgoType()) {// && alter.getSymbolType().equals(EntityData.SymbolType.triangle.name())) {
-            return true;
-        }
-        if (requiredKinType.relationType.equals(entityRelation.relationType)
-                && requiredKinType.symbolType.name().equals(alterEntity.getSymbolType())) {
-            return true;
-        }
-        return false;
-    }
+//    @Deprecated
+//    public boolean compareRelationsToKinType(EntityData egoEntity, EntityData alterEntity, KinType requiredKinType, EntityRelation entityRelation, int generationalDistance) {
+////        egoEntity.appendTempLabel("compareRelationsToKinType-egoEntity" + "F: " + QueryParser.foundOrder++);
+////        alterEntity.appendTempLabel("compareRelationsToKinType-alterEntity" + "F: " + QueryParser.foundOrder++);
+//        // temp for testing // todo: remove testing labels
+////        System.out.println("egoEntity.isEgo: " + egoEntity.isEgo);
+////        System.out.println("alterEntity.isEgo: " + alterEntity.isEgo);
+////        System.out.println("egoEntity.symbol: " + egoEntity.getSymbolType());
+////        System.out.println("alterEntity.symbol: " + alterEntity.getSymbolType());
+////        System.out.println("entityRelation.relationType: " + entityRelation.relationType);
+////        System.out.println("entityRelation.symgenerationalDistancebol: " + entityRelation.generationalDistance);
+//        // note that this will get the kin type reversed for one of the adjacent entities and this must be accounted for in the kin type comparison
+//        // todo: note that the ego and alter are not correct labels
+//        // this array will get the kin type reversed for one of the adjacent entities
+//        if (egoEntity.isEgo && requiredKinType.isEgoType()) {// && alter.getSymbolType().equals(EntityData.SymbolType.triangle.name())) {
+//            return true;
+//        }
+//        if (requiredKinType.relationType.equals(entityRelation.relationType)
+//                && requiredKinType.symbolType.name().equals(alterEntity.getSymbolType())) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     public ArrayList<KinTypeElement> getKinTypeElements(String consumableString, ParserHighlight parserHighlight) {
         int initialLength = consumableString.length();
