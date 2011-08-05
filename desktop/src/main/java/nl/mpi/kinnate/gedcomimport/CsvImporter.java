@@ -35,27 +35,6 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         return valueString;
     }
 
-    private EntityDocument getEntityDocument(JTextArea importTextArea, File destinationDirectory, HashMap<String, EntityDocument> createdDocuments, ArrayList<URI> createdNodes, String idString) throws ImportException {
-        idString = super.cleanFileName(idString);
-        EntityDocument currentEntity = createdDocuments.get(idString);
-        if (currentEntity == null) {
-            // create a new entity file
-            currentEntity = new EntityDocument(destinationDirectory, idString);
-            appendToTaskOutput(importTextArea, "created: " + currentEntity.getFilePath());
-            createdNodes.add(currentEntity.createDocument(overwriteExisting));
-            createdDocuments.put(idString, currentEntity);
-            String typeString = "Entity";
-            if (createdNodeIds.get(typeString) == null) {
-                ArrayList<UniqueIdentifier> idArray = new ArrayList<UniqueIdentifier>();
-                idArray.add(currentEntity.getUniqueIdentifier());
-                createdNodeIds.put(typeString, idArray);
-            } else {
-                createdNodeIds.get(typeString).add(currentEntity.getUniqueIdentifier());
-            }
-        }
-        return currentEntity;
-    }
-
     @Override
     public URI[] importFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
@@ -86,7 +65,6 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                             String headingString = allHeadings.get(valueCount);
                             if (currentEntity == null) {
                                 currentEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
-
                             } else if (cleanValue.length() > 0) {
                                 if (headingString.matches("Spouses[\\d]*-ID")) {
                                     relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
@@ -128,17 +106,6 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 //                            appendToTaskOutput(importTextArea, "Aborting import due to max testing limit");
 //                            break;
 //                        }
-
-//                    appendToTaskOutput(importTextArea, inputLine);
-//                    boolean skipFileEntity = false;
-//                    if (skipFileEntity) {
-//                        skipFileEntity = false;
-//                        while ((inputLine = bufferedReader.readLine()) != null) {
-//                            if (inputLine.startsWith("0")) {
-//                                break;
-//                            }
-//                        }
-//                    }
                     }
                 } catch (ImportException exception) {
                     appendToTaskOutput(importTextArea, exception.getMessage());
@@ -160,19 +127,6 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
             new ArbilBugCatcher().logError(exception);
             appendToTaskOutput(importTextArea, "Error: " + exception.getMessage());
         }
-        //        catch (ParserConfigurationException parserConfigurationException) {
-        //            new ArbilBugCatcher().logError(parserConfigurationException);
-        //            appendToTaskOutput(importTextArea, "Error: " + parserConfigurationException.getMessage());
-        //        } catch (DOMException dOMException) {
-        //            new ArbilBugCatcher().logError(dOMException);
-        //            appendToTaskOutput(importTextArea, "Error: " + dOMException.getMessage());
-        //        } catch (SAXException sAXException) {
-        //            new ArbilBugCatcher().logError(sAXException);
-        //            appendToTaskOutput(importTextArea, "Error: " + sAXException.getMessage());
-        //        }catch (SAXException sAXException) {
-        //            new ArbilBugCatcher().logError(sAXException);
-        //            appendToTaskOutput(importTextArea, "Error: " + sAXException.getMessage());
-        //        }
         return createdNodes.toArray(new URI[]{});
     }
 }
