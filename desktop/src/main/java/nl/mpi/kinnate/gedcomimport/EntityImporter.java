@@ -81,6 +81,27 @@ public class EntityImporter implements GenericImporter {
         return destinationDirectory;
     }
 
+    protected EntityDocument getEntityDocument(JTextArea importTextArea, File destinationDirectory, HashMap<String, EntityDocument> createdDocuments, ArrayList<URI> createdNodes, String idString) throws ImportException {
+        idString = cleanFileName(idString);
+        EntityDocument currentEntity = createdDocuments.get(idString);
+        if (currentEntity == null) {
+            // create a new entity file
+            currentEntity = new EntityDocument(destinationDirectory, idString);
+            appendToTaskOutput(importTextArea, "created: " + currentEntity.getFilePath());
+            createdNodes.add(currentEntity.createDocument(overwriteExisting));
+            createdDocuments.put(idString, currentEntity);
+            String typeString = "Entity";
+            if (createdNodeIds.get(typeString) == null) {
+                ArrayList<UniqueIdentifier> idArray = new ArrayList<UniqueIdentifier>();
+                idArray.add(currentEntity.getUniqueIdentifier());
+                createdNodeIds.put(typeString, idArray);
+            } else {
+                createdNodeIds.get(typeString).add(currentEntity.getUniqueIdentifier());
+            }
+        }
+        return currentEntity;
+    }
+
     public String cleanFileName(String fileName) {
         // prevent bad file names being created from the gedcom internal name part
         return fileName.replaceAll("[^A-z0-9]", "_") + ".cmdi";
