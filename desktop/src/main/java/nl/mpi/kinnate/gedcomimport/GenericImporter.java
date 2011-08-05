@@ -4,8 +4,6 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -19,9 +17,7 @@ public interface GenericImporter {
 
     public HashMap<String, ArrayList<UniqueIdentifier>> getCreatedNodeIds();
 
-    public void setProgressBar(JProgressBar progressBarLocal);
+    public URI[] importFile(File inputFile);
 
-    public URI[] importFile(JTextArea importTextArea, File inputFile);
-
-    public URI[] importFile(JTextArea importTextArea, String inputFileString);
+    public URI[] importFile(String inputFileString);
 }
