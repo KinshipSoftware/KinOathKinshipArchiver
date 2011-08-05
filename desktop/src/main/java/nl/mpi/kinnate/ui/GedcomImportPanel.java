@@ -133,22 +133,21 @@ public class GedcomImportPanel extends JPanel {
                         @Override
                         public void run() {
                             boolean overwriteExisting = overwriteOnImport.isSelected();
-                            GenericImporter genericImporter = new GedcomImporter(overwriteExisting);
+                            GenericImporter genericImporter = new GedcomImporter(progressBar, importTextArea, overwriteExisting);
                             if (importFileString != null) {
                                 if (!genericImporter.canImport(importFileString)) {
-                                    genericImporter = new CsvImporter(overwriteExisting);
+                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting);
                                 }
                             } else {
                                 if (!genericImporter.canImport(importFile.toString())) {
-                                    genericImporter = new CsvImporter(overwriteExisting);
+                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting);
                                 }
                             }
-                            genericImporter.setProgressBar(progressBar);
                             URI[] treeNodesArray;
                             if (importFileString != null) {
-                                treeNodesArray = genericImporter.importFile(importTextArea, importFileString);
+                                treeNodesArray = genericImporter.importFile(importFileString);
                             } else {
-                                treeNodesArray = genericImporter.importFile(importTextArea, importFile);
+                                treeNodesArray = genericImporter.importFile(importFile);
                             }
                             boolean checkFilesAfterImport = validateImportedXml.isSelected();
                             if (treeNodesArray != null && checkFilesAfterImport) {
