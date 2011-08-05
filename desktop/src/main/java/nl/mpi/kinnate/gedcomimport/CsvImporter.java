@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
@@ -19,8 +20,8 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class CsvImporter extends EntityImporter implements GenericImporter {
 
-    public CsvImporter(boolean overwriteExistingLocal) {
-        super(overwriteExistingLocal);
+    public CsvImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal) {
+        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal);
     }
 
     @Override
@@ -36,9 +37,8 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
     }
 
     @Override
-    public URI[] importFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
+    public URI[] importFile(InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
-        HashMap<String, EntityDocument> createdDocuments = new HashMap<String, EntityDocument>();
         createdNodeIds = new HashMap<String, ArrayList<UniqueIdentifier>>();
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         File destinationDirectory = super.getDestinationDirectory();
@@ -64,23 +64,23 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                             String cleanValue = cleanCsvString(entityLineString);
                             String headingString = allHeadings.get(valueCount);
                             if (currentEntity == null) {
-                                currentEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+                                currentEntity = getEntityDocument(destinationDirectory, createdNodes, cleanValue);
                             } else if (cleanValue.length() > 0) {
                                 if (headingString.matches("Spouses[\\d]*-ID")) {
-                                    relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+                                    relatedEntity = getEntityDocument(destinationDirectory, createdNodes, cleanValue);
                                     currentEntity.insertRelation(relatedEntity.entityData, RelationType.union, relatedEntity.getFileName());
                                     relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                                 } else if (headingString.matches("Parents[\\d]*-ID")) {
-                                    relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+                                    relatedEntity = getEntityDocument(destinationDirectory, createdNodes, cleanValue);
                                     currentEntity.insertRelation(relatedEntity.entityData, RelationType.ancestor, relatedEntity.getFileName());
                                     relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                                 } else if (headingString.matches("Children[\\d]*-ID")) {
-                                    relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+                                    relatedEntity = getEntityDocument(destinationDirectory, createdNodes, cleanValue);
                                     currentEntity.insertRelation(relatedEntity.entityData, RelationType.descendant, relatedEntity.getFileName());
                                     relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                                 } else if (relatedEntityPrefix != null && headingString.startsWith(relatedEntityPrefix)) {
                                     relatedEntity.insertValue(headingString.substring(relatedEntityPrefix.length()), cleanValue);
-                                    appendToTaskOutput(importTextArea, "Setting value in related entity: " + allHeadings.get(valueCount) + " : " + cleanValue);
+                                    appendToTaskOutput("Setting value in related entity: " + allHeadings.get(valueCount) + " : " + cleanValue);
 //                                    appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
                                 } else if (headingString.equals("Gender")) {
                                     String genderString = cleanValue;
@@ -94,10 +94,10 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                                         throw new ImportException("Unknown gender type: " + genderString);
                                     }
                                     currentEntity.insertValue(headingString, genderString);
-                                    appendToTaskOutput(importTextArea, "Setting value: " + allHeadings.get(valueCount) + " : " + cleanValue);
+                                    appendToTaskOutput("Setting value: " + allHeadings.get(valueCount) + " : " + cleanValue);
                                 } else {
                                     currentEntity.insertValue(headingString, cleanValue);
-                                    appendToTaskOutput(importTextArea, "Setting value: " + allHeadings.get(valueCount) + " : " + cleanValue);
+                                    appendToTaskOutput("Setting value: " + allHeadings.get(valueCount) + " : " + cleanValue);
                                 }
                             }
                             valueCount++;
@@ -108,24 +108,13 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 //                        }
                     }
                 } catch (ImportException exception) {
-                    appendToTaskOutput(importTextArea, exception.getMessage());
+                    appendToTaskOutput(exception.getMessage());
                 }
             }
-
-            appendToTaskOutput(importTextArea, "Saving all documents");
-            for (EntityDocument currentDocument : createdDocuments.values()) {
-                // todo: add progress for this
-                try {
-                    currentDocument.saveDocument();
-                } catch (ImportException exception) {
-                    new ArbilBugCatcher().logError(exception);
-                    appendToTaskOutput(importTextArea, "Error saving file: " + exception.getMessage());
-                }
-//                appendToTaskOutput(importTextArea, "saved: " + currentDocument.getFilePath());
-            }
+            saveAllDocuments();
         } catch (IOException exception) {
             new ArbilBugCatcher().logError(exception);
-            appendToTaskOutput(importTextArea, "Error: " + exception.getMessage());
+            appendToTaskOutput("Error: " + exception.getMessage());
         }
         return createdNodes.toArray(new URI[]{});
     }
