@@ -222,7 +222,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         try {
             String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
             ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
-            EntityData[] graphNodes = entityIndex.getRelationsOfEgo(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters());
+            EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters());
             boolean visibleNodeFound = false;
             for (EntityData currentNode : graphNodes) {
                 if (currentNode.isVisible) {
@@ -402,6 +402,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     }
 
     public void dataNodeIconCleared(ArbilDataNode arbilDataNode) {
+        // todo: this needs to be updated to be multi threaded so users can link or save multiple nodes at once
         boolean dataBaseRequiresUpdate = false;
         boolean redrawRequired = false;
         // find the entity data for this arbil data node
@@ -410,6 +411,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
                 String entityPath = entityData.getEntityPath();
                 if (entityPath != null && arbilDataNode.getURI().equals(new URI(entityPath))) {
                     // check if the metadata has been changed
+                    // todo: something here fails to act on multiple nodes that have changed (it is the db update that was missed)
                     if (entityData.metadataRequiresSave && !arbilDataNode.getNeedsSaveToDisk(false)) {
                         dataBaseRequiresUpdate = true;
                         redrawRequired = true;
