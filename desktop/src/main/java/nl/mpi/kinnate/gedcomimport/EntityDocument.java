@@ -128,7 +128,7 @@ public class EntityDocument {
     }
 
     public void insertRelation(EntityData alterNodeLocal, RelationType relationType/*, UniqueIdentifier relationUniquieIdentifier*/, String fileNameString) {
-        entityData.addRelatedNode(alterNodeLocal, 1, relationType, RelationLineType.sanguineLine, null, null);
+        entityData.addRelatedNode(alterNodeLocal, relationType, RelationLineType.sanguineLine, null, null);
 
 //        Element relationElement = metadataDom.createElement("Relation");
 //        metadataDom.getDocumentElement().appendChild(relationElement);
