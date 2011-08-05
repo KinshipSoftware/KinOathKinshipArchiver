@@ -14,8 +14,8 @@ public class EntityRelation implements Comparable<EntityRelation> {
 
     @XmlTransient
     private EntityData alterNode;
-    @XmlElement(name = "GenerationalDistance", namespace = "http://mpi.nl/tla/kin")
-    public int generationalDistance;
+//    @XmlElement(name = "GenerationalDistance", namespace = "http://mpi.nl/tla/kin")
+//    public int generationalDistance;
     @XmlElement(name = "Identifier", namespace = "http://mpi.nl/tla/kin")
     public UniqueIdentifier alterUniqueIdentifier = null;
     @XmlAttribute(name = "Type", namespace = "http://mpi.nl/tla/kin")
@@ -42,7 +42,7 @@ public class EntityRelation implements Comparable<EntityRelation> {
 
     public int compareTo(EntityRelation o) {
         if (o.alterUniqueIdentifier.equals(alterUniqueIdentifier)
-                && o.generationalDistance == generationalDistance
+//                && o.generationalDistance == generationalDistance
                 && o.relationLineType.equals(relationLineType)
                 && o.relationType.equals(relationType)
                 && ((labelString == null && labelString == null) || o.labelString.equals(labelString))
