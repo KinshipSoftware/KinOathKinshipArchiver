@@ -78,6 +78,8 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                 try {
                     while ((inputLine = bufferedReader.readLine()) != null) {
                         EntityDocument currentEntity = null;
+                        EntityDocument relatedEntity = null;
+                        String relatedEntityPrefix = null;
                         int valueCount = 0;
                         for (String entityLineString : inputLine.split(",")) {
                             String cleanValue = cleanCsvString(entityLineString);
@@ -86,33 +88,30 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                                 currentEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
 
                             } else if (cleanValue.length() > 0) {
-                                if (headingString.startsWith("Spouses")) {
-                                    if (headingString.matches("Spouses[\\d]*-ID")) {
-                                        EntityDocument relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
-                                        currentEntity.insertRelation(relatedEntity.entityData, RelationType.union, relatedEntity.getFileName());
-                                    } else {
-                                        appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
-                                    }
-                                } else if (headingString.startsWith("Parents")) {
-                                    if (headingString.matches("Parents[\\d]*-ID")) {
-                                        EntityDocument relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
-                                        currentEntity.insertRelation(relatedEntity.entityData, RelationType.ancestor, relatedEntity.getFileName());
-                                    } else {
-                                        appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
-                                    }
-                                } else if (headingString.startsWith("Children")) {
-                                    if (headingString.matches("Children[\\d]*-ID")) {
-                                        EntityDocument relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
-                                        currentEntity.insertRelation(relatedEntity.entityData, RelationType.descendant, relatedEntity.getFileName());
-                                    } else {
-                                        appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
-                                    }
+                                if (headingString.matches("Spouses[\\d]*-ID")) {
+                                    relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+                                    currentEntity.insertRelation(relatedEntity.entityData, RelationType.union, relatedEntity.getFileName());
+                                    relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
+                                } else if (headingString.matches("Parents[\\d]*-ID")) {
+                                    relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+                                    currentEntity.insertRelation(relatedEntity.entityData, RelationType.ancestor, relatedEntity.getFileName());
+                                    relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
+                                } else if (headingString.matches("Children[\\d]*-ID")) {
+                                    relatedEntity = getEntityDocument(importTextArea, destinationDirectory, createdDocuments, createdNodes, cleanValue);
+                                    currentEntity.insertRelation(relatedEntity.entityData, RelationType.descendant, relatedEntity.getFileName());
+                                    relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
+                                } else if (relatedEntityPrefix != null && headingString.startsWith(relatedEntityPrefix)) {
+                                    relatedEntity.insertValue(headingString.substring(relatedEntityPrefix.length()), cleanValue);
+                                    appendToTaskOutput(importTextArea, "Setting value in related entity: " + allHeadings.get(valueCount) + " : " + cleanValue);
+//                                    appendToTaskOutput(importTextArea, "Ignoring: " + allHeadings.get(valueCount) + " : " + cleanValue);
                                 } else if (headingString.equals("Gender")) {
                                     String genderString = cleanValue;
                                     if ("0".equals(cleanValue)) {
                                         genderString = "female";
+//                                        currentEntity.entityData.setSymbolType(SymbolType.circle);
                                     } else if ("1".equals(cleanValue)) {
                                         genderString = "male";
+//                                        currentEntity.entityData.setSymbolType(SymbolType.triangle);
                                     } else {
                                         throw new ImportException("Unknown gender type: " + genderString);
                                     }
@@ -161,19 +160,19 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
             new ArbilBugCatcher().logError(exception);
             appendToTaskOutput(importTextArea, "Error: " + exception.getMessage());
         }
-//        catch (ParserConfigurationException parserConfigurationException) {
-//            new ArbilBugCatcher().logError(parserConfigurationException);
-//            appendToTaskOutput(importTextArea, "Error: " + parserConfigurationException.getMessage());
-//        } catch (DOMException dOMException) {
-//            new ArbilBugCatcher().logError(dOMException);
-//            appendToTaskOutput(importTextArea, "Error: " + dOMException.getMessage());
-//        } catch (SAXException sAXException) {
-//            new ArbilBugCatcher().logError(sAXException);
-//            appendToTaskOutput(importTextArea, "Error: " + sAXException.getMessage());
-//        }catch (SAXException sAXException) {
-//            new ArbilBugCatcher().logError(sAXException);
-//            appendToTaskOutput(importTextArea, "Error: " + sAXException.getMessage());
-//        }
+        //        catch (ParserConfigurationException parserConfigurationException) {
+        //            new ArbilBugCatcher().logError(parserConfigurationException);
+        //            appendToTaskOutput(importTextArea, "Error: " + parserConfigurationException.getMessage());
+        //        } catch (DOMException dOMException) {
+        //            new ArbilBugCatcher().logError(dOMException);
+        //            appendToTaskOutput(importTextArea, "Error: " + dOMException.getMessage());
+        //        } catch (SAXException sAXException) {
+        //            new ArbilBugCatcher().logError(sAXException);
+        //            appendToTaskOutput(importTextArea, "Error: " + sAXException.getMessage());
+        //        }catch (SAXException sAXException) {
+        //            new ArbilBugCatcher().logError(sAXException);
+        //            appendToTaskOutput(importTextArea, "Error: " + sAXException.getMessage());
+        //        }
         return createdNodes.toArray(new URI[]{});
     }
 }
