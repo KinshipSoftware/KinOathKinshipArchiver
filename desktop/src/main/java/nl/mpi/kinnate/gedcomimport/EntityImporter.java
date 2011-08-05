@@ -26,14 +26,18 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 public class EntityImporter implements GenericImporter {
 
     protected JProgressBar progressBar = null;
+    protected JTextArea importTextArea;
     protected int inputLineCount;
     protected String inputFileMd5Sum;
     protected boolean overwriteExisting;
     protected HashMap<String, ArrayList<UniqueIdentifier>> createdNodeIds;
+    HashMap<String, EntityDocument> createdDocuments = new HashMap<String, EntityDocument>();
 //    private MetadataBuilder metadataBuilder;
 
-    public EntityImporter(boolean overwriteExistingLocal) {
+    public EntityImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal) {
         overwriteExisting = overwriteExistingLocal;
+        importTextArea = importTextAreaLocal;
+        progressBar = progressBarLocal;
 //        metadataBuilder = new MetadataBuilder();
     }
 
@@ -41,13 +45,9 @@ public class EntityImporter implements GenericImporter {
         return createdNodeIds;
     }
 
-    public void appendToTaskOutput(JTextArea importTextArea, String lineOfText) {
+    public void appendToTaskOutput(String lineOfText) {
         importTextArea.append(lineOfText + "\n");
         importTextArea.setCaretPosition(importTextArea.getText().length());
-    }
-
-    public void setProgressBar(JProgressBar progressBarLocal) {
-        progressBar = progressBarLocal;
     }
 
     public void calculateFileNameAndFileLength(BufferedReader bufferedReader) {
@@ -81,13 +81,13 @@ public class EntityImporter implements GenericImporter {
         return destinationDirectory;
     }
 
-    protected EntityDocument getEntityDocument(JTextArea importTextArea, File destinationDirectory, HashMap<String, EntityDocument> createdDocuments, ArrayList<URI> createdNodes, String idString) throws ImportException {
+    protected EntityDocument getEntityDocument(File destinationDirectory, ArrayList<URI> createdNodes, String idString) throws ImportException {
         idString = cleanFileName(idString);
         EntityDocument currentEntity = createdDocuments.get(idString);
         if (currentEntity == null) {
             // create a new entity file
             currentEntity = new EntityDocument(destinationDirectory, idString);
-            appendToTaskOutput(importTextArea, "created: " + currentEntity.getFilePath());
+            appendToTaskOutput("created: " + currentEntity.getFilePath());
             createdNodes.add(currentEntity.createDocument(overwriteExisting));
             createdDocuments.put(idString, currentEntity);
             String typeString = "Entity";
@@ -102,27 +102,41 @@ public class EntityImporter implements GenericImporter {
         return currentEntity;
     }
 
+    protected void saveAllDocuments() {
+        appendToTaskOutput("Saving all documents");
+        for (EntityDocument currentDocument : createdDocuments.values()) {
+            // todo: add progress for this
+            try {
+                currentDocument.saveDocument();
+            } catch (ImportException exception) {
+                new ArbilBugCatcher().logError(exception);
+                appendToTaskOutput("Error saving file: " + exception.getMessage());
+            }
+//                appendToTaskOutput(importTextArea, "saved: " + currentDocument.getFilePath());
+        }
+    }
+
     public String cleanFileName(String fileName) {
         // prevent bad file names being created from the gedcom internal name part
         return fileName.replaceAll("[^A-z0-9]", "_") + ".cmdi";
     }
 
-    public URI[] importFile(JTextArea importTextArea, File testFile) {
+    public URI[] importFile(File testFile) {
         try {
             calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
-            return importFile(importTextArea, new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
+            return importFile(new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
         } catch (FileNotFoundException exception) {
             // todo: handle this
             return null;
         }
     }
 
-    public URI[] importFile(JTextArea importTextArea, String testFileString) {
+    public URI[] importFile(String testFileString) {
         calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
-        return importFile(importTextArea, new InputStreamReader(getClass().getResourceAsStream(testFileString)));
+        return importFile(new InputStreamReader(getClass().getResourceAsStream(testFileString)));
     }
 
-    public URI[] importFile(JTextArea importTextArea, InputStreamReader inputStreamReader) {
+    public URI[] importFile(InputStreamReader inputStreamReader) {
         throw new UnsupportedOperationException("Not supported");
     }
 
