@@ -34,6 +34,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private GraphPanel graphPanel;
     private GraphPanelSize graphPanelSize;
     private JMenuItem addRelationEntityMenu;
+    private JMenuItem removeRelationEntityMenu;
     private JMenuItem setAsEgoMenuItem;
     private JMenuItem addAsEgoMenuItem;
     private JMenuItem removeEgoMenuItem;
@@ -120,6 +121,24 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 });
                 addRelationEntityMenu.add(addRelationEntityMenuItem);
             }
+
+            removeRelationEntityMenu = new JMenu("Remove Relations"); // todo: if one node only then "remove all relations of this entity"
+            this.add(removeRelationEntityMenu);
+//            for (RelationType relationType : RelationType.values()) {
+//            relationType.name()
+            String actionString = "Remove Relations to Lead Selection";
+            JMenuItem removeRelationEntityMenuItem = new JMenuItem(actionString);
+            removeRelationEntityMenuItem.setActionCommand(actionString);
+            removeRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    new RelationLinker().unlinkEntities(graphPanel, selectedIdentifiers);
+                    egoSelectionPanel.entityRelationsChanged(selectedIdentifiers);
+                }
+            });
+            removeRelationEntityMenu.add(removeRelationEntityMenuItem);
+//            }
+
             JMenu shapeSubMenu = new JMenu("Add Geometry");
             for (String currentType : new String[]{"Label", "Circle", "Square", "Polyline"}) {
                 JMenuItem addLabel = new JMenuItem("Add " + currentType);
