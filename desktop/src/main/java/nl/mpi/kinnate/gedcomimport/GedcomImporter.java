@@ -1,18 +1,17 @@
 package nl.mpi.kinnate.gedcomimport;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : GedcomImporter
@@ -33,42 +32,12 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
     @Override
     public URI[] importFile(InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
-        createdNodeIds = new HashMap<String, ArrayList<UniqueIdentifier>>();
-//        Hashtable<String, URI> createdNodesTable = new Hashtable<String, URI>();
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//        ArrayList<ImdiTreeObject> linkNodes = new ArrayList<ImdiTreeObject>();
-        // really should close the file properly but this is only for testing at this stage
-
-//        URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), gedcomXsdLocation);
-//        try {
-//            targetFileURI = componentBuilder.createComponentFile(targetFileURI, this.getClass().getResource(gedcomXsdLocation).toURI(), false);
-//        } catch (URISyntaxException ex) {
-//            new ArbilBugCatcher().logError(ex);
-//            return;
-//        }
-
-//        metadataBuilder.addChildNode(gedcomImdiObject, ".Gedcom.Relation", null, null, null);
-//        gedcomImdiObject.loadImdiDom();
-//        gedcomImdiObject.waitTillLoaded();
-
         try {
             String strLine;
             int gedcomLevel = 0;
-            String xsdString = ""; // temp string to create the xsd
-            ArrayList<String> xsdTagsDone = new ArrayList<String>(); // temp array to create the xsd
             ArrayList<String> gedcomLevelStrings = new ArrayList<String>();
-            ArrayList<String> xsdLevelStrings = new ArrayList<String>(); // temp array to create the xsd
-
-//            ImdiTreeObject gedcomImdiObject = null;
-            File entityFile = null;
             EntityDocument currentEntity = null;
-            ArrayList<String> metadataPath = new ArrayList<String>();
-//            Element previousField = null;
-//            Node currentDomNode = null;
-
-            File destinationDirectory = super.getDestinationDirectory();
-
-//            String gedcomPreviousPath = "";
             int currntLineCounter = 0;
             boolean skipFileEntity = false;
             while ((strLine = bufferedReader.readLine()) != null) {
@@ -85,14 +54,9 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                 while (gedcomLevelStrings.size() > gedcomLevel) {
                     gedcomLevelStrings.remove(gedcomLevelStrings.size() - 1);
                 }
-                while (xsdLevelStrings.size() > gedcomLevel) {
-                    xsdLevelStrings.remove(xsdLevelStrings.size() - 1);
-                    xsdString += "</xs:sequence>\n</xs:complexType>\n</xs:element>\n";
-                    //currentDomNode = currentDomNode.getParentNode();
-                }
                 gedcomLevelStrings.add(lineParts[1]);
                 System.out.println(strLine);
-                System.out.println("gedcomLevelString: " + gedcomLevelStrings);
+//                System.out.println("gedcomLevelString: " + gedcomLevelStrings);
 //                appendToTaskOutput(importTextArea, strLine);
                 boolean lastFieldContinued = false;
                 if (lineParts[1].equals("CONT")) {
@@ -114,14 +78,6 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                 }
                 if (lastFieldContinued == false) {
                     if (gedcomLevel == 0) {
-//                        if (createdNodes.size() > 20) {
-//                            appendToTaskOutput(importTextArea, "stopped import at node count: " + createdNodes.size());
-//                            break;
-//                        }
-//                        if (metadataDom != null) {
-//                            ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
-//                            metadataDom = null;
-//                        }
                         if (lineParts[1].equals("TRLR")) {
                             appendToTaskOutput("End of file found");
                         } else {
@@ -134,7 +90,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 typeString = lineParts[1];
                             }
                             // todo: the type string needs to determine if this is an entity or a metadata file
-                            currentEntity = getEntityDocument(destinationDirectory, createdNodes, lineParts[1]);
+                            currentEntity = getEntityDocument(createdNodes, typeString, lineParts[1]);
                             if (lineParts[1].equals("HEAD")) {
                                 // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
                                 appendToTaskOutput("Reading Gedcom Header");
@@ -314,6 +270,31 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             // todo: filter the links found and handled below from being added here as metadata
                             currentEntity.appendValue(lineParts[1], lineParts[2], gedcomLevel);
 
+                            if (gedcomLevelStrings.size() == 3) {
+                                if (gedcomLevelStrings.get(2).equals("DATE")) {
+                                    if (gedcomLevelStrings.get(1).equals("BIRT") || gedcomLevelStrings.get(1).equals("DEAT")) {
+                                        SimpleDateFormat formatter;
+                                        if (lineParts[2].matches("[0-9]{4}")) {
+                                            formatter = new SimpleDateFormat("yyyy");
+                                        } else if (lineParts[2].matches("[a-zA-Z]{3} [0-9]{4}")) {
+                                            formatter = new SimpleDateFormat("MMM yyyy");
+                                        } else {
+                                            formatter = new SimpleDateFormat("dd MMM yyyy");
+                                        }
+                                        try {
+                                            if (gedcomLevelStrings.get(1).equals("BIRT")) {
+                                                currentEntity.entityData.setDateOfBirth(formatter.parse(lineParts[2]));
+                                            } else {
+                                                currentEntity.entityData.setDateOfDeath(formatter.parse(lineParts[2]));
+                                            }
+                                        } catch (ParseException exception) {
+                                            System.out.println(exception.getMessage());
+                                            appendToTaskOutput("Failed to parse date of birth: " + strLine);
+                                        }
+                                    }
+                                }
+                            }
+
 
 //                            currentDomNode.setTextContent(/*gedcomPath + " : " +*/lineParts[2]);
 //                            if (addedExtraElement != null) {
@@ -351,16 +332,46 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
                                 appendToTaskOutput("--> adding relation");
                                 RelationType targetRelation = RelationType.none;
-                                if (lineParts[2].equals("FAMS")) {
+                                if (lineParts[1].equals("FAMS")) {
                                     targetRelation = RelationType.union;
-                                } else if (lineParts[2].equals("FAMC")) {
+                                } else if (lineParts[1].equals("FAMC")) {
                                     targetRelation = RelationType.ancestor;
+                                } else if (lineParts[1].equals("HUSB")) {
+                                    targetRelation = RelationType.union;
+                                } else if (lineParts[1].equals("WIFE")) {
+                                    targetRelation = RelationType.union;
+                                } else if (lineParts[1].equals("CHIL")) {
+                                    targetRelation = RelationType.descendant;
+                                } else if (lineParts[1].equals("SUBM")) {
+                                    targetRelation = RelationType.collector;
+                                } else if (lineParts[1].equals("SUBN")) {
+                                    targetRelation = RelationType.metadata;
+                                } else if (lineParts[1].equals("NOTE")) {
+                                    targetRelation = RelationType.metadata;
+                                } else if (lineParts[1].equals("ALIA")) {
+                                    targetRelation = RelationType.metadata;
+                                } else if (lineParts[1].equals("ASSO")) {
+                                    targetRelation = RelationType.affiliation;
+                                } else if (lineParts[1].equals("ANCI")) {
+                                    targetRelation = RelationType.collector;
+                                } else if (lineParts[1].equals("DESI")) {
+                                    targetRelation = RelationType.collector;
+                                } else if (lineParts[1].equals("REPO")) {
+                                    targetRelation = RelationType.metadata;
+                                } else if (lineParts[1].equals("OBJE")) {
+                                    targetRelation = RelationType.resource;
+                                } else if (lineParts[1].equals("SOUR")) {
+                                    targetRelation = RelationType.metadata;
+                                } else if (lineParts[1].equals("_HME")) {
+                                    targetRelation = RelationType.none;
+                                    // todo: the gedcom test file uses the custom _HME tag: "In uses one custom tag ("_HME") to see what the software will say about custom tags."
+                                    // for the case of custom tags we could ask the user what relation type is relevant
                                 } else {
                                     appendToTaskOutput("Unknown relation type: " + lineParts[2]);
                                     targetRelation = RelationType.ancestor;
                                 }
                                 // todo: modify the fam relations to consist of associations and direct sanuine links to the related entities
-                                currentEntity.insertRelation(getEntityDocument(destinationDirectory, createdNodes, lineParts[2]).entityData, targetRelation, lineParts[2]);
+                                currentEntity.insertRelation(getEntityDocument(createdNodes, null, lineParts[2]).entityData, targetRelation, lineParts[2]);
                             }
                         }
                     }
