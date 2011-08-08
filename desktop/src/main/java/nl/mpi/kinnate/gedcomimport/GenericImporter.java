@@ -2,8 +2,8 @@ package nl.mpi.kinnate.gedcomimport;
 
 import java.io.File;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -15,7 +15,7 @@ public interface GenericImporter {
 
     public boolean canImport(String inputFileString);
 
-    public HashMap<String, ArrayList<UniqueIdentifier>> getCreatedNodeIds();
+    public HashMap<String, HashSet<UniqueIdentifier>> getCreatedNodeIds();
 
     public URI[] importFile(File inputFile);
 
