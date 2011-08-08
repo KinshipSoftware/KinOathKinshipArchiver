@@ -20,6 +20,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -33,7 +34,6 @@ public class EntityDocument {
     String idString;
     File entityFile = null;
     Document metadataDom = null;
-    Element previousField = null;
     Node kinnateNode = null;
     Element metadataNode = null;
     Node currentDomNode = null;
@@ -96,7 +96,8 @@ public class EntityDocument {
     }
 
     public void insertValue(String nodeName, String valueString) {
-//        System.out.println("insertValue: " + nodeName + " : " + valueString);
+        // this method will create a flat xml file and reuse any existing nodes of the target name
+        System.out.println("insertValue: " + nodeName + " : " + valueString);
         nodeName = nodeName.replaceAll("\\s", "_");
         Node currentNode = currentDomNode.getFirstChild();
         if (currentNode == null) {
@@ -119,6 +120,55 @@ public class EntityDocument {
         Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ nodeName);
         valueElement.setTextContent(valueString);
         currentDomNode.appendChild(valueElement);
+    }
+
+    public Node insertNode(String nodeName, String valueString) {
+        System.out.println("nodeName: " + nodeName + " : " + valueString);
+        nodeName = nodeName.replaceAll("\\s", "_");
+        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ nodeName);
+        valueElement.setTextContent(valueString);
+        currentDomNode.appendChild(valueElement);
+        return valueElement;
+    }
+
+    public void assendToLevel(int nodeLevel) {
+        int levelCount = 0;
+        Node counterNode = currentDomNode;
+        while (counterNode != null) {
+            levelCount++;
+            counterNode = counterNode.getParentNode();
+        }
+        levelCount = levelCount - 1; // always keep the kinnate.metadata nodes
+        while (levelCount > nodeLevel) {
+            levelCount--;
+            currentDomNode = currentDomNode.getParentNode();
+        }
+    }
+
+    public void appendValueToLast(String valueString) {
+        System.out.println("appendValueToLast: " + valueString);
+        currentDomNode.setTextContent(currentDomNode.getTextContent() + valueString);
+    }
+
+    public void appendValue(String nodeName, String valueString, int targetLevel) {
+        // this method will create a structured xml file
+        System.out.println("appendValue: " + nodeName + " : " + valueString + " : " + targetLevel);
+        assendToLevel(targetLevel);
+        NodeList childNodes = currentDomNode.getChildNodes();
+        if (childNodes.getLength() == 1 && childNodes.item(0).getNodeType() == Node.TEXT_NODE) { // getTextContent returns the text value of all sub nodes so make sure there is only one node which would be the text node
+            String currentValue = currentDomNode.getTextContent();
+            if (currentValue != null && currentValue.trim().length() > 0) {
+                Node spacerElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ currentDomNode.getLocalName());
+                Node parentNode = currentDomNode.getParentNode();
+                parentNode.removeChild(currentDomNode);
+                spacerElement.appendChild(currentDomNode);
+                parentNode.appendChild(spacerElement);
+                currentDomNode = spacerElement;
+//            currentDomNode.setTextContent("");
+                //insertNode(currentDomNode.getLocalName(), currentValue);
+            }
+        }
+        currentDomNode = insertNode(nodeName, valueString);
     }
 
     public void insertDefaultMetadata() {
