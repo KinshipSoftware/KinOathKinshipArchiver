@@ -188,7 +188,9 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 ////                            currentDomNode = addedElement;
 //                        }
                         // if the current line has a value then enter it into the node
-                        if (lineParts.length > 2) {
+                        if (lineParts.length == 2) {
+                            currentEntity.appendValue(lineParts[1], null, gedcomLevel);
+                        } else if (lineParts.length > 2) {
 //                        if (lineParts[1].equals("NAME")) {
 //                            ImdiField[] currentField = gedcomImdiObject.getFields().get("Gedcom.Name");
 //                            if (currentField != null && currentField.length > 0) {
@@ -292,6 +294,19 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                             appendToTaskOutput("Failed to parse date of birth: " + strLine);
                                         }
                                     }
+                                }
+                            }
+                            if (gedcomLevelStrings.size() == 2) {
+                                if (gedcomLevelStrings.get(1).equals("SEX")) {
+                                    String genderString = lineParts[2];
+                                    if ("F".equals(genderString)) {
+                                        genderString = "female";
+                                    } else if ("M".equals(genderString)) {
+                                        genderString = "male";
+                                    } else {
+                                        appendToTaskOutput("Unknown gender type: " + genderString);
+                                    }
+                                    currentEntity.insertValue("Gender", genderString);
                                 }
                             }
 
