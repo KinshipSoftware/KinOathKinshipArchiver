@@ -12,6 +12,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
@@ -30,7 +31,7 @@ public class EntityImporter implements GenericImporter {
     protected int inputLineCount;
     protected String inputFileMd5Sum;
     protected boolean overwriteExisting;
-    protected HashMap<String, ArrayList<UniqueIdentifier>> createdNodeIds;
+    protected HashMap<String, HashSet<UniqueIdentifier>> createdNodeIds;
     HashMap<String, EntityDocument> createdDocuments = new HashMap<String, EntityDocument>();
 //    private MetadataBuilder metadataBuilder;
 
@@ -39,9 +40,10 @@ public class EntityImporter implements GenericImporter {
         importTextArea = importTextAreaLocal;
         progressBar = progressBarLocal;
 //        metadataBuilder = new MetadataBuilder();
+        createdNodeIds = new HashMap<String, HashSet<UniqueIdentifier>>();
     }
 
-    public HashMap<String, ArrayList<UniqueIdentifier>> getCreatedNodeIds() {
+    public HashMap<String, HashSet<UniqueIdentifier>> getCreatedNodeIds() {
         return createdNodeIds;
     }
 
@@ -81,20 +83,22 @@ public class EntityImporter implements GenericImporter {
         return destinationDirectory;
     }
 
-    protected EntityDocument getEntityDocument(File destinationDirectory, ArrayList<URI> createdNodes, String idString) throws ImportException {
+    protected EntityDocument getEntityDocument(ArrayList<URI> createdNodes, String typeString, String idString) throws ImportException {
         idString = cleanFileName(idString);
         EntityDocument currentEntity = createdDocuments.get(idString);
         if (currentEntity == null) {
             // create a new entity file
-            currentEntity = new EntityDocument(destinationDirectory, idString);
+            currentEntity = new EntityDocument(getDestinationDirectory(), idString);
             appendToTaskOutput("created: " + currentEntity.getFilePath());
             createdNodes.add(currentEntity.createDocument(overwriteExisting));
             createdDocuments.put(idString, currentEntity);
-            String typeString = "Entity";
+        }
+        if (typeString != null) {
+            // make sure the entity is listed under its type for later in the UI
             if (createdNodeIds.get(typeString) == null) {
-                ArrayList<UniqueIdentifier> idArray = new ArrayList<UniqueIdentifier>();
-                idArray.add(currentEntity.getUniqueIdentifier());
-                createdNodeIds.put(typeString, idArray);
+                HashSet<UniqueIdentifier> idSet = new HashSet<UniqueIdentifier>();
+                idSet.add(currentEntity.getUniqueIdentifier());
+                createdNodeIds.put(typeString, idSet);
             } else {
                 createdNodeIds.get(typeString).add(currentEntity.getUniqueIdentifier());
             }
