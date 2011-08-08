@@ -99,10 +99,7 @@ public class EntityDocument {
         // this method will create a flat xml file and reuse any existing nodes of the target name
         System.out.println("insertValue: " + nodeName + " : " + valueString);
         nodeName = nodeName.replaceAll("\\s", "_");
-        Node currentNode = currentDomNode.getFirstChild();
-        if (currentNode == null) {
-            currentNode = metadataNode;
-        }
+        Node currentNode = metadataNode.getFirstChild();
         while (currentNode != null) {
             if (nodeName.equals(currentNode.getLocalName())) {
                 if (currentNode.getTextContent() == null || currentNode.getTextContent().length() == 0) {
@@ -119,7 +116,7 @@ public class EntityDocument {
         }
         Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ nodeName);
         valueElement.setTextContent(valueString);
-        currentDomNode.appendChild(valueElement);
+        metadataNode.appendChild(valueElement);
     }
 
     public Node insertNode(String nodeName, String valueString) {
