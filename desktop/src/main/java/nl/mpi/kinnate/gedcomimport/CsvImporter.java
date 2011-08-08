@@ -1,17 +1,14 @@
 package nl.mpi.kinnate.gedcomimport;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : CsvImporter
@@ -39,9 +36,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
     @Override
     public URI[] importFile(InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
-        createdNodeIds = new HashMap<String, ArrayList<UniqueIdentifier>>();
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        File destinationDirectory = super.getDestinationDirectory();
         String inputLine;
         try {
             int maxImportCount = 10;
@@ -64,18 +59,18 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                             String cleanValue = cleanCsvString(entityLineString);
                             String headingString = allHeadings.get(valueCount);
                             if (currentEntity == null) {
-                                currentEntity = getEntityDocument(destinationDirectory, createdNodes, cleanValue);
+                                currentEntity = getEntityDocument(createdNodes, "Entity", cleanValue);
                             } else if (cleanValue.length() > 0) {
                                 if (headingString.matches("Spouses[\\d]*-ID")) {
-                                    relatedEntity = getEntityDocument(destinationDirectory, createdNodes, cleanValue);
+                                    relatedEntity = getEntityDocument(createdNodes, "Entity", cleanValue);
                                     currentEntity.insertRelation(relatedEntity.entityData, RelationType.union, relatedEntity.getFileName());
                                     relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                                 } else if (headingString.matches("Parents[\\d]*-ID")) {
-                                    relatedEntity = getEntityDocument(destinationDirectory, createdNodes, cleanValue);
+                                    relatedEntity = getEntityDocument(createdNodes, "Entity", cleanValue);
                                     currentEntity.insertRelation(relatedEntity.entityData, RelationType.ancestor, relatedEntity.getFileName());
                                     relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                                 } else if (headingString.matches("Children[\\d]*-ID")) {
-                                    relatedEntity = getEntityDocument(destinationDirectory, createdNodes, cleanValue);
+                                    relatedEntity = getEntityDocument(createdNodes, "Entity", cleanValue);
                                     currentEntity.insertRelation(relatedEntity.entityData, RelationType.descendant, relatedEntity.getFileName());
                                     relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                                 } else if (relatedEntityPrefix != null && headingString.startsWith(relatedEntityPrefix)) {
