@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -69,7 +70,7 @@ public class GedcomImportPanel extends JPanel {
             showButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    ArrayList<UniqueIdentifier> selectedIds = new ArrayList<UniqueIdentifier>();
+                    HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>();
                     for (JCheckBox currentCheckBox : checkBoxArray) {
                         if (currentCheckBox.isSelected()) {
                             selectedIds.addAll((gedcomImporter.getCreatedNodeIds().get(currentCheckBox.getActionCommand())));
