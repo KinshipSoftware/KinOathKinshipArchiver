@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.kindata;
 
+import java.net.URI;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +51,8 @@ public class EntityData {
     private EntityRelation[] relatedNodes;
     @XmlElement(name = "ArchiveLink", namespace = "http://mpi.nl/tla/kin")
     // todo: this needs to provide both the archive handle (for opening the browser) and the url to open localy stored copy of the file
-    public String[] archiveLinkArray = null; //new String[]{"http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7", "http://www.google.com", "http://www.mpi.nl"};
+    //@Deprecated // todo: should this be separate from the relations? can it even work that way? replace this archive link with a relation of type resource: but then again a resource link such as a jpg cannot be a relaion it is metadata only, maybe this is also the case for collector?
+    public URI[] archiveLinkArray = null; //new String[]{"http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7", "http://www.google.com", "http://www.mpi.nl"};
 //    @XmlElement(name = "ResourceLink")
 //    public String[] resourceLinkArray;
     @XmlTransient
@@ -126,6 +128,17 @@ public class EntityData {
 //        this.symbolTypeString = symbolTypeLocal.name();
 //    }
     // end code used for importing gedcom and other file types
+    public void addArchiveLink(URI resourceUri) {
+        ArrayList<URI> linksList;
+        if (archiveLinkArray != null) {
+            linksList = new ArrayList<URI>(Arrays.asList(archiveLinkArray));
+        } else {
+            linksList = new ArrayList<URI>();
+        }
+        linksList.add(resourceUri);
+        archiveLinkArray = linksList.toArray(new URI[]{});
+    }
+
     public String getSymbolType() {
         if (symbolType != null) {
             return symbolType.name();
