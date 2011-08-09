@@ -49,7 +49,7 @@ public class QueryBuilder {
             stringBuilder.append("for $labelNode in ");
             stringBuilder.append(docRootVar);
             stringBuilder.append(currentEntry.getXpathString());
-            stringBuilder.append("\nreturn\ninsert node <kin:Label xmlns:kin=\"http://mpi.nl/tla/kin\">{$labelNode/text()}</kin:Label>  into $copyNode,\n");
+            stringBuilder.append("\nreturn\ninsert node <kin:Label xmlns:kin=\"http://mpi.nl/tla/kin\">{$labelNode/text()}</kin:Label> after $copyNode/*:Identifier,\n"); // into $copyNode
         }
         return stringBuilder.toString();
     }
@@ -66,7 +66,7 @@ public class QueryBuilder {
             stringBuilder.append(currentEntry.getSelectedValue());
             stringBuilder.append("\"\n else ");
         }
-        stringBuilder.append("()\n}</kin:Symbol> into $copyNode,\n");
+        stringBuilder.append("()\n}</kin:Symbol> after $copyNode/*:Identifier,\n"); // into $copyNode
         return stringBuilder.toString();
     }
 
@@ -131,7 +131,8 @@ public class QueryBuilder {
                 // loop the label fields and add a node for any that exist
                 + this.getLabelsClause(indexParameters, "root($entityNode)/")
                 + this.getSymbolClause(indexParameters, "root($entityNode)/")
-                + "insert nodes <kin:Path xmlns:kin=\"http://mpi.nl/tla/kin\">{base-uri($entityNode)}</kin:Path> into $copyNode\n" // for some reason "after" fails re attributes: after $copyNode/*:Identifier" maybe copy is failing to keep the namespace
+                + "insert nodes <kin:Path xmlns:kin=\"http://mpi.nl/tla/kin\">{base-uri($entityNode)}</kin:Path> after $copyNode/*:Identifier\n" // when using a basex version younger than 6.62 the "after" fails re attributes: after $copyNode/*:Identifier" maybe copy is failing to keep the namespace, for earlier version the following can be used "into $copyNode"
+                // todo: test if "insert after" take longer than "insert into"
                 + ")\n"
                 + "return $copyNode\n";
     }
