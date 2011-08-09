@@ -134,7 +134,7 @@
         <dependency>
             <groupId>org.basex</groupId>
             <artifactId>basex</artifactId>
-            <version>6.5</version>
+            <version>6.7.1</version>
         </dependency>
     </dependencies>
     <repositories>
