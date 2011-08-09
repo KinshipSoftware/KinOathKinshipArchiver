@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.geom.AffineTransform;
+import java.net.URI;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -491,11 +492,11 @@ public class EntitySvg {
 
             Text textNode = graphPanel.doc.createTextNode("archive ref: ");
             labelText.appendChild(textNode);
-            for (String linkString : currentNode.archiveLinkArray) {
+            for (URI linkURI : currentNode.archiveLinkArray) {
                 linkCounter++;
                 Element labelTagA = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "a");
 
-                labelTagA.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", linkString);
+                labelTagA.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", linkURI.toASCIIString());
                 labelTagA.setAttribute("target", "_blank");
                 if (linkCounter == 1) {
                     labelTagA.appendChild(graphPanel.doc.createTextNode("" + linkCounter));
