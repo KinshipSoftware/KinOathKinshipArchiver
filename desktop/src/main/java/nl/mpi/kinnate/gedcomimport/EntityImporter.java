@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 public class EntityImporter implements GenericImporter {
 
     protected JProgressBar progressBar = null;
+    protected URI inputFileUri = null; // used only for copying resource files
     protected JTextArea importTextArea;
     protected int inputLineCount;
     protected String inputFileMd5Sum;
@@ -127,6 +129,7 @@ public class EntityImporter implements GenericImporter {
 
     public URI[] importFile(File testFile) {
         try {
+            inputFileUri = testFile.toURI();
             calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
             return importFile(new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
         } catch (FileNotFoundException exception) {
@@ -136,6 +139,12 @@ public class EntityImporter implements GenericImporter {
     }
 
     public URI[] importFile(String testFileString) {
+        try {
+            inputFileUri = getClass().getResource(testFileString).toURI();
+        } catch (URISyntaxException exception) {
+            new ArbilBugCatcher().logError(exception);
+            appendToTaskOutput("Error getting the import directory attached resources might not be correctly resolved");
+        }
         calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
         return importFile(new InputStreamReader(getClass().getResourceAsStream(testFileString)));
     }
