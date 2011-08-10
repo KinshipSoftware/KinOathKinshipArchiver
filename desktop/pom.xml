@@ -85,6 +85,7 @@
                     </execution>
                 </executions>
             </plugin>--> 
+<!--       this mac installer plugin kept making a un deletable file breaking subsequent builds
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>osxappbundle-maven-plugin</artifactId>
@@ -92,7 +93,7 @@
                 <configuration>
                     <mainClass>nl.mpi.kinnate.ui.MainFrame</mainClass>
                     <jvmVersion>1.5+</jvmVersion>
-<!--                        <iconFile>${basedir}/src/main/app-resources/myapplication.icns</iconFile>-->
+                        <iconFile>${basedir}/src/main/app-resources/myapplication.icns</iconFile>
                     <iconFile>${basedir}/src/main/resources/kinoath.icns</iconFile>
                 </configuration>
                 <executions>
@@ -103,7 +104,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
     <dependencies>
@@ -120,12 +121,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <!-- this dependency can be produced and installed by: "ant -f arbil.xml maven-deploy" -->
-            <groupId>nl.mpi</groupId>
-            <artifactId>arbil</artifactId>
-            <version>2.2.23859</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-swing</artifactId>
             <version>1.7</version>
@@ -135,6 +130,16 @@
             <groupId>org.basex</groupId>
             <artifactId>basex</artifactId>
             <version>6.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>arbil</artifactId>
+            <version>2.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+            <version>1.7</version>
         </dependency>
     </dependencies>
     <repositories>
