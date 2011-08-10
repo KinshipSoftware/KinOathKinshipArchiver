@@ -10,6 +10,7 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
@@ -135,7 +136,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 for (UniqueIdentifier currentSelectedId : graphPanel.selectedGroupId) {
                     String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
                     if (currentSelectedPath != null) {
-                        graphPanel.arbilTableModel.addArbilDataNode(new URI(currentSelectedPath));
+                        graphPanel.arbilTableModel.addSingleArbilDataNode(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentSelectedPath)));
                     }
                 }
             } catch (URISyntaxException urise) {
