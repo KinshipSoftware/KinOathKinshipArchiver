@@ -174,30 +174,30 @@ public class EntityDocument {
         insertValue("Name", "unspecified");
     }
 
-    public void insertRelation(EntityData alterNodeLocal, RelationType relationType/*, UniqueIdentifier relationUniquieIdentifier*/, String fileNameString) {
-        entityData.addRelatedNode(alterNodeLocal, relationType, RelationLineType.sanguineLine, null, null);
-
-//        Element relationElement = metadataDom.createElement("Relation");
-//        metadataDom.getDocumentElement().appendChild(relationElement);
-
-//        Element linkElement = metadataDom.createElement("Link");
-//        linkElement.setTextContent("./" + fileNameString);
-//        relationElement.appendChild(linkElement);
-
-//        Element uniqueIdentifierElement = metadataDom.createElement("UniqueIdentifier");
-//        Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
-//        localIdentifierElement.setTextContent(relationUniquieIdentifier);
-//        uniqueIdentifierElement.appendChild(localIdentifierElement);
-//        relationElement.appendChild(uniqueIdentifierElement);
-
-//        Element typeElement = metadataDom.createElement("Type");
-//        typeElement.setTextContent(relationType.name());
-//        relationElement.appendChild(typeElement);
-
-//        Element targetNameElement = metadataDom.createElement("TargetName");
-//        targetNameElement.setTextContent(lineParts[2]);
-//        relationElement.appendChild(targetNameElement);
-    }
+//    public void insertRelation(EntityData alterNodeLocal, RelationType relationType, RelationLineType relationLineType/*, UniqueIdentifier relationUniquieIdentifier*/, String fileNameString) {
+//        entityData.addRelatedNode(alterNodeLocal, relationType, relationLineType, null, null);
+//
+////        Element relationElement = metadataDom.createElement("Relation");
+////        metadataDom.getDocumentElement().appendChild(relationElement);
+//
+////        Element linkElement = metadataDom.createElement("Link");
+////        linkElement.setTextContent("./" + fileNameString);
+////        relationElement.appendChild(linkElement);
+//
+////        Element uniqueIdentifierElement = metadataDom.createElement("UniqueIdentifier");
+////        Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
+////        localIdentifierElement.setTextContent(relationUniquieIdentifier);
+////        uniqueIdentifierElement.appendChild(localIdentifierElement);
+////        relationElement.appendChild(uniqueIdentifierElement);
+//
+////        Element typeElement = metadataDom.createElement("Type");
+////        typeElement.setTextContent(relationType.name());
+////        relationElement.appendChild(typeElement);
+//
+////        Element targetNameElement = metadataDom.createElement("TargetName");
+////        targetNameElement.setTextContent(lineParts[2]);
+////        relationElement.appendChild(targetNameElement);
+//    }
 
     public File getFile() {
         return entityFile;
