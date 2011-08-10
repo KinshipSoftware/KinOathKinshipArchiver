@@ -7,11 +7,15 @@ import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.kindata.DataTypes.RelationLineType;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
+import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : GedcomImporter
@@ -29,9 +33,20 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         return (inputFileString.toLowerCase().endsWith(".ged"));
     }
 
+    class SocialMemberElement {
+
+        public SocialMemberElement(String typeString, EntityData memberEntity) {
+            this.typeString = typeString;
+            this.memberEntity = memberEntity;
+        }
+        String typeString;
+        EntityData memberEntity;
+    }
+
     @Override
     public URI[] importFile(InputStreamReader inputStreamReader) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
+        HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>> socialGroupRoleMap = new HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>>(); // GroupID: @XX@, RoleType: WIFE HUSB CHIL, EntityData
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         try {
             String strLine;
@@ -349,18 +364,24 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                            }
                             // create the link node when required
                             if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
-                                appendToTaskOutput("--> adding relation");
+                                appendToTaskOutput("--> adding social relation");
                                 RelationType targetRelation = RelationType.none;
-                                if (lineParts[1].equals("FAMS")) {
-                                    targetRelation = RelationType.union;
-                                } else if (lineParts[1].equals("FAMC")) {
-                                    targetRelation = RelationType.ancestor;
-                                } else if (lineParts[1].equals("HUSB")) {
-                                    targetRelation = RelationType.union;
-                                } else if (lineParts[1].equals("WIFE")) {
-                                    targetRelation = RelationType.union;
-                                } else if (lineParts[1].equals("CHIL")) {
-                                    targetRelation = RelationType.descendant;
+                                // here the following five relation types are mapped to the correct relation types after this the association is cretaed and later the indigiduals are linked with sanguine relations
+                                if (lineParts[1].equals("FAMS") || lineParts[1].equals("FAMC") || lineParts[1].equals("HUSB") || lineParts[1].equals("WIFE") || lineParts[1].equals("CHIL")) {
+                                    UniqueIdentifier socialGroupIdentifier;
+                                    EntityData socialGroupMember;
+                                    if (lineParts[1].equals("FAMS") || lineParts[1].equals("FAMC")) {
+                                        socialGroupIdentifier = getEntityDocument(createdNodes, null, lineParts[2]).entityData.getUniqueIdentifier();
+                                        socialGroupMember = currentEntity.entityData;
+                                    } else {
+                                        socialGroupIdentifier = currentEntity.entityData.getUniqueIdentifier();
+                                        socialGroupMember = getEntityDocument(createdNodes, null, lineParts[2]).entityData;
+                                    }
+                                    if (!socialGroupRoleMap.containsKey(socialGroupIdentifier)) {
+                                        socialGroupRoleMap.put(socialGroupIdentifier, new ArrayList<SocialMemberElement>());
+                                    }
+                                    socialGroupRoleMap.get(socialGroupIdentifier).add(new SocialMemberElement(lineParts[1], socialGroupMember));
+                                    targetRelation = RelationType.affiliation;
                                 } else if (lineParts[1].equals("SUBM")) {
                                     targetRelation = RelationType.collector;
                                 } else if (lineParts[1].equals("SUBN")) {
@@ -387,10 +408,10 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                     // for the case of custom tags we could ask the user what relation type is relevant
                                 } else {
                                     appendToTaskOutput("Unknown relation type: " + lineParts[2]);
-                                    targetRelation = RelationType.ancestor;
+                                    targetRelation = RelationType.metadata;
                                 }
-                                // todo: modify the fam relations to consist of associations and direct sanuine links to the related entities
-                                currentEntity.insertRelation(getEntityDocument(createdNodes, null, lineParts[2]).entityData, targetRelation, lineParts[2]);
+                                // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
+                                currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, null, lineParts[2]).entityData, targetRelation, RelationLineType.none, null, null);
                             }
                         }
                     }
@@ -399,6 +420,28 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                 int currentProgressPercent = (int) ((double) currntLineCounter / (double) inputLineCount * 100);
                 if (progressBar != null) {
                     progressBar.setValue(currentProgressPercent);
+                }
+            }
+            for (ArrayList<SocialMemberElement> currentSocialGroup : socialGroupRoleMap.values()) {
+                for (SocialMemberElement outerMemberElement : currentSocialGroup) {
+                    for (SocialMemberElement innerMemberElement : currentSocialGroup) {
+                        if (!innerMemberElement.memberEntity.equals(outerMemberElement.memberEntity)) {
+                            if (innerMemberElement.typeString.equals("FAMC") || innerMemberElement.typeString.equals("CHIL")) {
+                                if (outerMemberElement.typeString.equals("FAMC") || outerMemberElement.typeString.equals("CHIL")) {
+                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.sibling, RelationLineType.sanguineLine, null, null);
+                                } else {
+                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.ancestor, RelationLineType.sanguineLine, null, null);
+                                }
+                            } else {
+                                if (outerMemberElement.typeString.equals("FAMC") || outerMemberElement.typeString.equals("CHIL")) {
+                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.descendant, RelationLineType.sanguineLine, null, null);
+                                } else {
+                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.union, RelationLineType.sanguineLine, null, null);
+                                }
+                            }
+                            appendToTaskOutput("--> adding sanguine relation");
+                        }
+                    }
                 }
             }
 
