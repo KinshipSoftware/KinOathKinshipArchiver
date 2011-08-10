@@ -211,6 +211,7 @@ public class RelationSvg {
         float toX = (alterSymbolPoint[0]); // * hSpacing + hSpacing
         float toY = (alterSymbolPoint[1]); // * vSpacing + vSpacing
 
+        boolean addedRelationLine = false;
         switch (graphLinkNode.relationLineType) {
             case kinTermLine:
             // this case uses the following case
@@ -248,6 +249,7 @@ public class RelationSvg {
                 linkLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                 linkLine.setAttribute("id", lineIdString);
                 defsNode.appendChild(linkLine);
+                addedRelationLine = true;
                 break;
             case sanguineLine:
                 //                            Element squareLinkLine = doc.createElement("line");
@@ -267,35 +269,37 @@ public class RelationSvg {
                 squareLinkLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                 squareLinkLine.setAttribute("id", lineIdString);
                 defsNode.appendChild(squareLinkLine);
+                addedRelationLine = true;
                 break;
         }
         groupNode.appendChild(defsNode);
 
-        // insert the node that uses the above definition
-        addUseNode(graphPanel.doc, svgNameSpace, groupNode, lineIdString);
-
-        // add the relation label
-        if (graphLinkNode.labelString != null) {
-            Element labelText = graphPanel.doc.createElementNS(svgNameSpace, "text");
-            labelText.setAttribute("text-anchor", "middle");
-            //                        labelText.setAttribute("x", Integer.toString(labelX));
-            //                        labelText.setAttribute("y", Integer.toString(labelY));
-            if (graphLinkNode.lineColour != null) {
-                labelText.setAttribute("fill", graphLinkNode.lineColour);
-            } else {
-                labelText.setAttribute("fill", "blue");
+        if (addedRelationLine) {
+            // insert the node that uses the above definition
+            addUseNode(graphPanel.doc, svgNameSpace, groupNode, lineIdString);
+            // add the relation label
+            if (graphLinkNode.labelString != null) {
+                Element labelText = graphPanel.doc.createElementNS(svgNameSpace, "text");
+                labelText.setAttribute("text-anchor", "middle");
+                //                        labelText.setAttribute("x", Integer.toString(labelX));
+                //                        labelText.setAttribute("y", Integer.toString(labelY));
+                if (graphLinkNode.lineColour != null) {
+                    labelText.setAttribute("fill", graphLinkNode.lineColour);
+                } else {
+                    labelText.setAttribute("fill", "blue");
+                }
+                labelText.setAttribute("stroke-width", "0");
+                labelText.setAttribute("font-size", "14");
+                //                        labelText.setAttribute("transform", "rotate(45)");
+                Element textPath = graphPanel.doc.createElementNS(svgNameSpace, "textPath");
+                textPath.setAttributeNS("http://www.w3.rg/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
+                textPath.setAttribute("startOffset", "50%");
+                textPath.setAttribute("id", "relation" + relationLineIndex + "label");
+                Text textNode = graphPanel.doc.createTextNode(graphLinkNode.labelString);
+                textPath.appendChild(textNode);
+                labelText.appendChild(textPath);
+                groupNode.appendChild(labelText);
             }
-            labelText.setAttribute("stroke-width", "0");
-            labelText.setAttribute("font-size", "14");
-            //                        labelText.setAttribute("transform", "rotate(45)");
-            Element textPath = graphPanel.doc.createElementNS(svgNameSpace, "textPath");
-            textPath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
-            textPath.setAttribute("startOffset", "50%");
-            textPath.setAttribute("id", "relation" + relationLineIndex + "label");
-            Text textNode = graphPanel.doc.createTextNode(graphLinkNode.labelString);
-            textPath.appendChild(textNode);
-            labelText.appendChild(textPath);
-            groupNode.appendChild(labelText);
         }
         relationGroupNode.appendChild(groupNode);
     }
