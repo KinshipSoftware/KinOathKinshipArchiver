@@ -6,15 +6,15 @@ package nl.mpi.kinnate.kindata;
  *  Author     : Peter Withers
  */
 public class DataTypes {
+
     public enum RelationLineType {
 
         sanguineLine, kinTermLine, verticalCurve, none
     }
 
     public enum RelationType {
-        // the term sibling is too specific and needs to encompas anything on the same generation such as union
 
-        sibling, ancestor, descendant, union, none
+        sibling, ancestor, descendant, union, affiliation, resource, collector, metadata, none // todo: should metadata relations use the same link type as jpg files?
     }
 
     public static RelationType getOpposingRelationType(RelationType relationType) {
@@ -23,11 +23,7 @@ public class DataTypes {
                 return DataTypes.RelationType.descendant;
             case descendant:
                 return DataTypes.RelationType.ancestor;
-            case sibling:
-                return DataTypes.RelationType.sibling;
-            case union:
-                return DataTypes.RelationType.union;
         }
-        return DataTypes.RelationType.sibling;
+        return relationType;
     }
 }
