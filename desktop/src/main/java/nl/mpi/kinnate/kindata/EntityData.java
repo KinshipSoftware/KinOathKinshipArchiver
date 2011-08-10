@@ -260,7 +260,7 @@ public class EntityData {
         // add this relation to any existing relations
         if (!relationType.equals(DataTypes.RelationType.none)) {
             DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(relationType);
-            alterNodeLocal.addRelatedNode(this, opposingRelationType, DataTypes.RelationLineType.sanguineLine, null, null);
+            alterNodeLocal.addRelatedNode(this, opposingRelationType, relationLineType, null, null);
             // if a parent relation is beig added then update the sibling relations of the other children of that parent
             if (relationType.equals(DataTypes.RelationType.ancestor)) {
                 this.insertSiblingRelations(alterNodeLocal);
