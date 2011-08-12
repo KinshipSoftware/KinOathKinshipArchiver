@@ -3,7 +3,6 @@ package nl.mpi.kinnate;
 import java.awt.datatransfer.ClipboardOwner;
 import nl.mpi.arbil.ArbilInjector;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
-import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.data.DataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
@@ -13,7 +12,6 @@ import nl.mpi.arbil.util.ArbilMimeHashQueue;
 import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.arbil.util.MimeHashQueue;
-import nl.mpi.arbil.util.TreeHelper;
 import nl.mpi.arbil.util.WindowManager;
 
 /**
@@ -62,7 +60,7 @@ public class KinnateArbilInjector extends ArbilInjector {
         ArbilMimeHashQueue.setDataNodeLoader(dataNodeLoader);
         injectDataNodeLoader(dataNodeLoader);
 
-        final TreeHelper treeHelper = ArbilTreeHelper.getSingleInstance();
-        injectTreeHelper(treeHelper);
+//        final TreeHelper treeHelper = ArbilTreeHelper.getSingleInstance();
+//        injectTreeHelper(treeHelper);
     }
 }
