@@ -38,7 +38,7 @@ public class KinTypeStringTestPanel extends JPanel implements SavePanel, KinTerm
 
         JPanel kintermSplitPane = new JPanel(new BorderLayout());
         kintermSplitPane.add(graphPanel, BorderLayout.CENTER);
-        kinTermHidePane = new HidePane(kinTermPanel, "Kin Terms", BorderLayout.LINE_START);
+        kinTermHidePane = new HidePane(kinTermPanel, "Kin Terms", HidePane.HidePanePosition.top, 0);
         kintermSplitPane.add(kinTermHidePane, BorderLayout.LINE_END);
         this.add(kinTypeStringInput, BorderLayout.PAGE_START);
         this.add(kintermSplitPane, BorderLayout.CENTER);
