@@ -38,7 +38,7 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         kinTree.setTransferHandler(linkerDragHandler);
         archiveTree.setTransferHandler(linkerDragHandler);
         this.setLayout(new BorderLayout());
-        this.add(new HidePane(kinTree, "Kin Entities", BorderLayout.LINE_END), BorderLayout.LINE_START);
+        this.add(new HidePane(kinTree, "Kin Entities", HidePane.HidePanePosition.left, 0), BorderLayout.LINE_START);
         JPanel treePanel = new JPanel(new BorderLayout());
         tabbedPane = new JTabbedPane();
         tabbedPane.add("Archive Branch Selection", treePanel);
