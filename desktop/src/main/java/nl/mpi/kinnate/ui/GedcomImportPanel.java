@@ -41,9 +41,9 @@ public class GedcomImportPanel extends JPanel {
     private JButton startButton;
     private JPanel endPagePanel;
 
-    public GedcomImportPanel(EntityCollection entityCollectionLocal, JTabbedPane jTabbedPaneLocal) {
+    public GedcomImportPanel(JTabbedPane jTabbedPaneLocal) {
         jTabbedPane1 = jTabbedPaneLocal;
-        entityCollection = entityCollectionLocal;
+        entityCollection = new EntityCollection();
 
 //        private ImdiTree leftTree;
 ////    private GraphPanel graphPanel;
