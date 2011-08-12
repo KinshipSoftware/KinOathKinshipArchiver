@@ -45,7 +45,7 @@ public class UniqueIdentifier {
 
     public UniqueIdentifier(String attributeIdentifier) {
         // reconstruct the identifier from an attribte string originally obtained by getAttributeIdentifier
-        String[] attributeIdentifierParts = attributeIdentifier.split("\\:");
+        String[] attributeIdentifierParts = attributeIdentifier.split("\\_");
         if (attributeIdentifierParts.length != 2) {
             throw new UnsupportedOperationException("Incorrect identifier format: " + attributeIdentifier);
         }
@@ -88,7 +88,7 @@ public class UniqueIdentifier {
     }
 
     public String getAttributeIdentifier() {
-        return identifierType.name() + ":" + identifierString;
+        return identifierType.name() + "_" + identifierString;
     }
 
     public boolean isTransientIdentifier() {
