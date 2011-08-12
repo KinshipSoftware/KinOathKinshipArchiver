@@ -26,7 +26,7 @@ public class HidePane extends JTabbedPane {
     private int dragStartPosition = 0;
     private boolean lastWasDrag = false;
 
-    public HidePane(Component contentComponent, String labelStringLocal, HidePanePosition borderPositionLocal, int startWidth) {
+    public HidePane(HidePanePosition borderPositionLocal, int startWidth) {
         shownWidth = startWidth;
         borderPosition = borderPositionLocal;
         horizontalDivider = (!borderPosition.equals(HidePanePosition.left) && !borderPosition.equals(HidePanePosition.right));
@@ -44,7 +44,7 @@ public class HidePane extends JTabbedPane {
                 this.setTabPlacement(javax.swing.JTabbedPane.TOP);
                 break;
         }
-        this.add(contentComponent, labelStringLocal);
+//        this.add(contentComponent, labelStringLocal);
         this.addMouseMotionListener(new MouseMotionAdapter() {
 
             @Override
@@ -148,7 +148,7 @@ public class HidePane extends JTabbedPane {
             HidePane.this.setPreferredSize(new Dimension(hiddenWidth, HidePane.this.getPreferredSize().height));
         }
     }
-
+    
     public void toggleHiddenState() {
         if (!hiddenState) {
             if (horizontalDivider) {
