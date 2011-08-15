@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -46,6 +45,7 @@ import nl.mpi.kinnate.kintypestrings.ParserHighlight;
  */
 public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, KinTermSavePanel, ArbilDataNodeContainer {
 
+    private EntityCollection entityCollection;
     private JTextPane kinTypeStringInput;
     private GraphPanel graphPanel;
     private GraphSorter graphSorter;
@@ -87,6 +87,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     Color commentColour = Color.GRAY;
 
     public KinTypeEgoSelectionTestPanel(File existingFile) {
+        entityCollection = new EntityCollection();
         EntityData[] svgStoredEntities = null;
         graphPanel = new GraphPanel(this);
         kinTypeStringInput = new JTextPane();
@@ -130,48 +131,57 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         StyleConstants.setForeground(styleUnknown, Color.BLACK);
 
 //        kinTypeStringInput.setText(defaultString);
-//        kinTypeStringInput.setBorder(javax.swing.BorderFactory.createTitledBorder("Kin Type Strings"));
+
         JPanel kinGraphPanel = new JPanel(new BorderLayout());
-//        kinGraphPanel.add(kinTypeStringInput, BorderLayout.PAGE_START);
 
-        JPanel kintermSplitPane = new JPanel(new BorderLayout());
-        kinTypeHidePane = new HidePane(new JScrollPane(kinTypeStringInput), "Kin Type Strings", BorderLayout.PAGE_END);
-        kintermSplitPane.add(kinTypeHidePane, BorderLayout.PAGE_START);
-//        JSplitPane egoSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-//        kinGraphPanel.add(egoSplitPane, BorderLayout.CENTER);
-//        outerSplitPane.setDividerLocation(0.5); // todo: add this to its parent so that the divider position sticks
-        kintermSplitPane.add(new HidePane(egoSelectionPanel, "Ego Selection", BorderLayout.LINE_END), BorderLayout.LINE_START);
-        kintermSplitPane.add(graphPanel, BorderLayout.CENTER);
-        kinTermHidePane = new HidePane(kinTermPanel, "Kin Terms", BorderLayout.LINE_START);
-        kintermSplitPane.add(kinTermHidePane, BorderLayout.LINE_END);
-        kinGraphPanel.add(kintermSplitPane);
-
-        ArbilTableModel imdiTableModel = new ArbilTableModel();
-        ArbilTable imdiTable = new ArbilTable(imdiTableModel, "Selected Nodes");
         TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
-        imdiTable.setTransferHandler(tableCellDragHandler);
-        imdiTable.setDragEnabled(true);
-        graphPanel.setArbilTableModel(imdiTableModel);
 
-        JScrollPane tableScrollPane = new JScrollPane(imdiTable);
-//        Dimension minimumSize = new Dimension(0, 0);
-//        fieldListTabs.setMinimumSize(minimumSize);
-//        tableScrollPane.setMinimumSize(minimumSize);
-
-        // EntityIndex loads the xml files and reads the document for entity data
-//        entityIndex = new EntityIndex(graphPanel.getIndexParameters());
-        // EntityCollection queries the xml collection to get the entity data
-        entityIndex = new QueryParser(svgStoredEntities);
-
-        graphSorter = new GraphSorter();
+        kinTypeHidePane = new HidePane(HidePane.HidePanePosition.top, 0);
+        kinTypeHidePane.add(new JScrollPane(kinTypeStringInput), "Kin Type Strings");
 
         IndexerParametersPanel indexerParametersPanel = new IndexerParametersPanel(this, graphPanel, tableCellDragHandler);
         JPanel advancedPanel = new JPanel(new BorderLayout());
-        advancedPanel.add(tableScrollPane, BorderLayout.CENTER);
-        advancedPanel.add(new HidePane(indexerParametersPanel, "Indexer Parameters", BorderLayout.LINE_START), BorderLayout.LINE_END);
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, kinGraphPanel, advancedPanel);
-        this.add(splitPane);
 
+        ArbilTableModel imdiTableModel = new ArbilTableModel();
+        graphPanel.setArbilTableModel(imdiTableModel);
+        ArbilTable imdiTable = new ArbilTable(imdiTableModel, "Selected Nodes");
+
+        imdiTable.setTransferHandler(tableCellDragHandler);
+        imdiTable.setDragEnabled(true);
+
+        JScrollPane tableScrollPane = new JScrollPane(imdiTable);
+        advancedPanel.add(tableScrollPane, BorderLayout.CENTER);
+        HidePane indexParamHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
+        indexParamHidePane.add(indexerParametersPanel, "Indexer Parameters");
+        advancedPanel.add(indexParamHidePane, BorderLayout.LINE_END);
+
+        HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 0);
+        tableHidePane.add(advancedPanel, "Metadata");
+
+        DragTransferHandler dragTransferHandler = new DragTransferHandler();
+        this.setTransferHandler(dragTransferHandler);
+
+        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection);
+        entitySearchPanel.setTransferHandler(dragTransferHandler);
+
+        HidePane egoSelectionHidePane = new HidePane(HidePane.HidePanePosition.left, 0);
+        egoSelectionHidePane.add(egoSelectionPanel, "Ego Selection");
+        egoSelectionHidePane.add(entitySearchPanel, "Search Entities");
+
+        kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
+        kinTermHidePane.add(kinTermPanel, "Kin Terms");
+        kinTermHidePane.add(new ArchiveEntityLinkerPanel(), "Archive Linker");
+
+        kinGraphPanel.add(kinTypeHidePane, BorderLayout.PAGE_START);
+        kinGraphPanel.add(egoSelectionHidePane, BorderLayout.LINE_START);
+        kinGraphPanel.add(graphPanel, BorderLayout.CENTER);
+        kinGraphPanel.add(kinTermHidePane, BorderLayout.LINE_END);
+        kinGraphPanel.add(tableHidePane, BorderLayout.PAGE_END);
+
+        this.add(kinGraphPanel);
+
+        entityIndex = new QueryParser(svgStoredEntities);
+        graphSorter = new GraphSorter();
 
         kinTypeStringInput.addFocusListener(new FocusListener() {
 
@@ -402,7 +412,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
     }
 
     public void dataNodeIconCleared(ArbilDataNode arbilDataNode) {
-        // todo: this needs to be updated to be multi threaded so users can link or save multiple nodes at once
+//         todo: this needs to be updated to be multi threaded so users can link or save multiple nodes at once.
         boolean dataBaseRequiresUpdate = false;
         boolean redrawRequired = false;
         // find the entity data for this arbil data node
@@ -427,7 +437,6 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
             }
         }
         if (dataBaseRequiresUpdate) {
-            EntityCollection entityCollection = new EntityCollection();
             entityCollection.updateDatabase(arbilDataNode.getURI());
             graphPanel.getIndexParameters().valuesChanged = true;
         }
