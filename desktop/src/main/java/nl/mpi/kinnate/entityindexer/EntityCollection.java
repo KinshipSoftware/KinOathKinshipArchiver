@@ -206,7 +206,7 @@ public class EntityCollection {
             searchResults.statusMessage = exception.getMessage();
         }
         searchResults.resultsPathArray = resultPaths.toArray(new String[]{});
-        searchResults.statusMessage = searchResults.statusMessage + "\n query: " + queryString;
+//        searchResults.statusMessage = searchResults.statusMessage + "\n query: " + queryString;
         return searchResults;
     }
 
