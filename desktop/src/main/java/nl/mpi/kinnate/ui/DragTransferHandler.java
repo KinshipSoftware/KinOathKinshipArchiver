@@ -5,13 +5,22 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.ui.ArbilTree;
+import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  * Document   : DragTransferHandler
@@ -99,18 +108,43 @@ public class DragTransferHandler extends TransferHandler implements Transferable
         Component dropLocation = support.getComponent();
         if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
             System.out.println("dropped to KinTypeEgoSelectionTestPanel");
-            ArrayList<URI> slectedUris = new ArrayList<URI>();
             ArrayList<UniqueIdentifier> slectedIdentifiers = new ArrayList<UniqueIdentifier>();
-            for (ArbilDataNode currentArbilNode : selectedNodes) {
-                slectedUris.add(currentArbilNode.getURI());
-                for (String currentIdentifierType : new String[]{"Kinnate.Gedcom.UniqueIdentifier.LocalIdentifier", "Kinnate.Entity.UniqueIdentifier.LocalIdentifier", "Kinnate.Gedcom.UniqueIdentifier.PersistantIdentifier", "Kinnate.Entity.UniqueIdentifier.PersistantIdentifier"}) {
-                    if (currentArbilNode.getFields().containsKey(currentIdentifierType)) {
-                        slectedIdentifiers.add(new UniqueIdentifier(currentArbilNode.getFields().get(currentIdentifierType)[0]));
-                        break;
+            try {
+                JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifier.class);
+                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+                for (ArbilDataNode currentArbilNode : selectedNodes) {
+                    try {
+                        Document metadataDom = ArbilComponentBuilder.getDocument(currentArbilNode.getURI());
+                        Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/kin:Entity/kin:Identifier"); // note that this is using the name space prefix not the namespace url
+                        try {
+                            UniqueIdentifier uniqueIdentifier = (UniqueIdentifier) unmarshaller.unmarshal(uniqueIdentifierNode, UniqueIdentifier.class).getValue();
+                            slectedIdentifiers.add(uniqueIdentifier);
+                        } catch (JAXBException exception) {
+                            new ArbilBugCatcher().logError(exception);
+                        }
+                    } catch (IOException exception) {
+                        new ArbilBugCatcher().logError(exception);
+                    } catch (ParserConfigurationException exception) {
+                        new ArbilBugCatcher().logError(exception);
+                    } catch (SAXException exception) {
+                        new ArbilBugCatcher().logError(exception);
+                    } catch (TransformerException exception) {
+                        new ArbilBugCatcher().logError(exception);
                     }
+                    // todo: new UniqueIdentifier could take ArbilDataNode as a constructor parameter, which would move this code out of this class
+//                    for (String currentIdentifierType : new String[]{"Kinnate.Entity.Identifier.LocalIdentifier", "Kinnate.Gedcom.UniqueIdentifier.PersistantIdentifier", "Kinnate.Entity.UniqueIdentifier.PersistantIdentifier"}) {
+//                        if (currentArbilNode.getFields().containsKey(currentIdentifierType)) {
+//                            slectedIdentifiers.add(new UniqueIdentifier(currentArbilNode.getFields().get(currentIdentifierType)[0]));
+//                            break;
+//                        }
+//                    }
+
                 }
+            } catch (JAXBException exception) {
+                new ArbilBugCatcher().logError(exception);
             }
-            ((KinTypeEgoSelectionTestPanel) dropLocation).addRequiredNodes(slectedUris.toArray(new URI[]{}), slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
+            ((KinTypeEgoSelectionTestPanel) dropLocation).addRequiredNodes(slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
             return true;
         }
         return false;
