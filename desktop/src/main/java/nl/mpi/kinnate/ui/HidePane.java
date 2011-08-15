@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -18,6 +17,7 @@ public class HidePane extends JTabbedPane {
         left, right, top, bottom
     }
     private boolean hiddenState = true;
+    private int lastSelectedTab = -1;
     private int defaultShownWidth = 300;
     private int shownWidth;
     private int hiddenWidth = 30;
@@ -49,6 +49,7 @@ public class HidePane extends JTabbedPane {
 
             @Override
             public void mouseDragged(MouseEvent e) {
+                // todo: check the max space and prevent oversizing
                 lastWasDrag = true;
                 if (hiddenState) {
                     hiddenState = false;
@@ -56,20 +57,20 @@ public class HidePane extends JTabbedPane {
                 }
                 switch (borderPosition) {
                     case left:
-                        shownWidth = shownWidth - dragStartPosition + e.getX();
-                        dragStartPosition = e.getX();
+                        shownWidth = shownWidth - dragStartPosition + e.getXOnScreen();
+                        dragStartPosition = e.getXOnScreen();
                         break;
                     case right:
-                        shownWidth = shownWidth - dragStartPosition + e.getX();
-                        dragStartPosition = e.getX();
+                        shownWidth = shownWidth + dragStartPosition - e.getXOnScreen();
+                        dragStartPosition = e.getXOnScreen();
                         break;
                     case top:
-                        shownWidth = shownWidth - dragStartPosition + e.getY();
-                        dragStartPosition = e.getY();
+                        shownWidth = shownWidth - dragStartPosition + e.getYOnScreen();
+                        dragStartPosition = e.getYOnScreen();
                         break;
                     case bottom:
-                        shownWidth = shownWidth - dragStartPosition + e.getY();
-                        dragStartPosition = e.getY();
+                        shownWidth = shownWidth + dragStartPosition - e.getYOnScreen();
+                        dragStartPosition = e.getYOnScreen();
                         break;
                 }
                 if (shownWidth < hiddenWidth) {
@@ -116,6 +117,13 @@ public class HidePane extends JTabbedPane {
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                if (!hiddenState && lastSelectedTab != HidePane.this.getSelectedIndex()) {
+                    // skip hide action when the selected tab changes 
+                    lastSelectedTab = HidePane.this.getSelectedIndex();
+                    return;
+                }
+                lastSelectedTab = HidePane.this.getSelectedIndex();
                 if (!lastWasDrag) {
                     toggleHiddenState();
                 } else if (shownWidth < hiddenWidth * 2) {
@@ -135,9 +143,9 @@ public class HidePane extends JTabbedPane {
             public void mousePressed(MouseEvent e) {
                 lastWasDrag = false;
                 if (horizontalDivider) {
-                    dragStartPosition = e.getY();
+                    dragStartPosition = e.getYOnScreen();
                 } else {
-                    dragStartPosition = e.getX();
+                    dragStartPosition = e.getXOnScreen();
                 }
                 super.mousePressed(e);
             }
@@ -148,7 +156,7 @@ public class HidePane extends JTabbedPane {
             HidePane.this.setPreferredSize(new Dimension(hiddenWidth, HidePane.this.getPreferredSize().height));
         }
     }
-    
+
     public void toggleHiddenState() {
         if (!hiddenState) {
             if (horizontalDivider) {
