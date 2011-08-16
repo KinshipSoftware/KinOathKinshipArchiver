@@ -298,12 +298,12 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         drawGraph();
     }
 
-    public void setEgoNodes(URI[] egoPathArray, UniqueIdentifier[] egoIdentifierArray) {
+    public void setEgoNodes(UniqueIdentifier[] egoIdentifierArray) {
         graphPanel.dataStoreSvg.egoEntities = new HashSet<UniqueIdentifier>(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
-    public void addEgoNodes(URI[] egoPathArray, UniqueIdentifier[] egoIdentifierArray) {
+    public void addEgoNodes(UniqueIdentifier[] egoIdentifierArray) {
         graphPanel.dataStoreSvg.egoEntities.addAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
@@ -313,7 +313,7 @@ public class KinTypeEgoSelectionTestPanel extends JPanel implements SavePanel, K
         drawGraph();
     }
 
-    public void addRequiredNodes(URI[] egoPathArray, UniqueIdentifier[] egoIdentifierArray) {
+    public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray) {
         graphPanel.dataStoreSvg.requiredEntities.addAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
