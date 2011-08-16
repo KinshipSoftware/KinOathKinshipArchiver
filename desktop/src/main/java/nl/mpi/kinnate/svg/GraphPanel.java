@@ -23,7 +23,7 @@ import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
-import nl.mpi.kinnate.ui.KinTypeEgoSelectionTestPanel;
+import nl.mpi.kinnate.ui.KinDiagramPanel;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
@@ -105,8 +105,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         jSVGScrollPane = new JSVGScrollPane(svgCanvas);
 //        svgCanvas.setBackground(Color.LIGHT_GRAY);
         this.add(BorderLayout.CENTER, jSVGScrollPane);
-        if (egoSelectionPanel instanceof KinTypeEgoSelectionTestPanel) {
-            svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu((KinTypeEgoSelectionTestPanel) egoSelectionPanel, this, graphPanelSize));
+        if (egoSelectionPanel instanceof KinDiagramPanel) {
+            svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu((KinDiagramPanel) egoSelectionPanel, this, graphPanelSize));
         } else {
             svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(null, this, graphPanelSize));
         }
