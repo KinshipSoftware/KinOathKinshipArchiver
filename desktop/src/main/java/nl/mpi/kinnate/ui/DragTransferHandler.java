@@ -78,7 +78,7 @@ public class DragTransferHandler extends TransferHandler implements Transferable
         }
 
         Component dropLocation = support.getComponent(); // getDropLocation
-        if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
+        if (dropLocation instanceof KinDiagramPanel) {
             return true;
         }
 
@@ -106,7 +106,7 @@ public class DragTransferHandler extends TransferHandler implements Transferable
 //        }
 
         Component dropLocation = support.getComponent();
-        if (dropLocation instanceof KinTypeEgoSelectionTestPanel) {
+        if (dropLocation instanceof KinDiagramPanel) {
             System.out.println("dropped to KinTypeEgoSelectionTestPanel");
             ArrayList<UniqueIdentifier> slectedIdentifiers = new ArrayList<UniqueIdentifier>();
             try {
@@ -144,7 +144,7 @@ public class DragTransferHandler extends TransferHandler implements Transferable
             } catch (JAXBException exception) {
                 new ArbilBugCatcher().logError(exception);
             }
-            ((KinTypeEgoSelectionTestPanel) dropLocation).addRequiredNodes(slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
+            ((KinDiagramPanel) dropLocation).addRequiredNodes(slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
             return true;
         }
         return false;
