@@ -30,7 +30,7 @@ import nl.mpi.kinnate.svg.GraphPanelSize;
  */
 public class GraphPanelContextMenu extends JPopupMenu implements ActionListener {
 
-    private KinTypeEgoSelectionTestPanel egoSelectionPanel;
+    private KinDiagramPanel kinDiagramPanel;
     private GraphPanel graphPanel;
     private GraphPanelSize graphPanelSize;
     private JMenuItem addRelationEntityMenu;
@@ -55,8 +55,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private float xPos;
     private float yPos;
 
-    public GraphPanelContextMenu(KinTypeEgoSelectionTestPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, GraphPanelSize graphPanelSizeLocal) {
-        egoSelectionPanel = egoSelectionPanelLocal;
+    public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, GraphPanelSize graphPanelSizeLocal) {
+        kinDiagramPanel = egoSelectionPanelLocal;
         graphPanel = graphPanelLocal;
         graphPanelSize = graphPanelSizeLocal;
         if (egoSelectionPanelLocal != null) {
@@ -74,7 +74,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                         entityDocument.saveDocument();
                         URI addedEntityUri = entityDocument.getFile().toURI();
                         new EntityCollection().updateDatabase(addedEntityUri);
-                        egoSelectionPanel.addRequiredNodes(new URI[]{addedEntityUri}, new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
+                        kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
                     } catch (ImportException exception) {
                         // todo: warn user with a dialog
                         new ArbilBugCatcher().logError(exception);
@@ -94,7 +94,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         new RelationLinker().linkEntities(graphPanel, selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()));
-                        egoSelectionPanel.entityRelationsChanged(selectedIdentifiers);
+                        kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
 //                    graphPanel.
 //                    selectedIdentifiers
 //                            graphPanel.getPathForElementId()
@@ -133,7 +133,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     new RelationLinker().unlinkEntities(graphPanel, selectedIdentifiers);
-                    egoSelectionPanel.entityRelationsChanged(selectedIdentifiers);
+                    kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                 }
             });
             removeRelationEntityMenu.add(removeRelationEntityMenuItem);
@@ -157,7 +157,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         setAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                egoSelectionPanel.setEgoNodes(getSelectedUriArray(), selectedIdentifiers);
+                kinDiagramPanel.setEgoNodes(selectedIdentifiers); // getSelectedUriArray(),
             }
         });
         this.add(setAsEgoMenuItem);
@@ -165,7 +165,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         addAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                egoSelectionPanel.addEgoNodes(getSelectedUriArray(), selectedIdentifiers);
+                kinDiagramPanel.addEgoNodes(selectedIdentifiers); //getSelectedUriArray(),
             }
         });
         this.add(addAsEgoMenuItem);
@@ -173,7 +173,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         removeEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                egoSelectionPanel.removeEgoNodes(selectedIdentifiers);
+                kinDiagramPanel.removeEgoNodes(selectedIdentifiers);
             }
         });
         this.add(removeEgoMenuItem);
@@ -181,7 +181,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         addAsRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                egoSelectionPanel.addRequiredNodes(getSelectedUriArray(), selectedIdentifiers);
+                kinDiagramPanel.addRequiredNodes(selectedIdentifiers); //getSelectedUriArray(),
             }
         });
         this.add(addAsRequiredMenuItem);
@@ -189,7 +189,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         removeRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                egoSelectionPanel.removeRequiredNodes(selectedIdentifiers);
+                kinDiagramPanel.removeRequiredNodes(selectedIdentifiers);
             }
         });
         this.add(removeRequiredMenuItem);
