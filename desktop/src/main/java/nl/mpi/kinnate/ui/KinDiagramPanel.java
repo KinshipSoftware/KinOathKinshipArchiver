@@ -54,6 +54,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private HidePane kinTypeHidePane;
     private KinTermTabPane kinTermPanel;
     private EntityService entityIndex;
+    public ArbilTable imdiTable;
     private HashMap<UniqueIdentifier, ArbilDataNode> registeredArbilDataNode;
     private String defaultString = "# The kin type strings entered here will determine how the entities show on the graph below\n";
     public static String defaultGraphString = "# The kin type strings entered here will determine how the entities show on the graph below\n"
@@ -111,8 +112,17 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             graphPanel.generateDefaultSvg();
         }
         this.setLayout(new BorderLayout());
+
+        ArbilTableModel imdiTableModel = new ArbilTableModel();
+        graphPanel.setArbilTableModel(imdiTableModel);
+        imdiTable = new ArbilTable(imdiTableModel, "Selected Nodes");
+
+        TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
+        imdiTable.setTransferHandler(tableCellDragHandler);
+        imdiTable.setDragEnabled(true);
+
         registeredArbilDataNode = new HashMap<UniqueIdentifier, ArbilDataNode>();
-        egoSelectionPanel = new EgoSelectionPanel();
+        egoSelectionPanel = new EgoSelectionPanel(imdiTable);
         kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
         // set the styles for the kin type string text
         Style styleComment = kinTypeStringInput.addStyle("Comment", null);
@@ -134,20 +144,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         JPanel kinGraphPanel = new JPanel(new BorderLayout());
 
-        TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
-
         kinTypeHidePane = new HidePane(HidePane.HidePanePosition.top, 0);
         kinTypeHidePane.add(new JScrollPane(kinTypeStringInput), "Kin Type Strings");
 
         IndexerParametersPanel indexerParametersPanel = new IndexerParametersPanel(this, graphPanel, tableCellDragHandler);
         JPanel advancedPanel = new JPanel(new BorderLayout());
-
-        ArbilTableModel imdiTableModel = new ArbilTableModel();
-        graphPanel.setArbilTableModel(imdiTableModel);
-        ArbilTable imdiTable = new ArbilTable(imdiTableModel, "Selected Nodes");
-
-        imdiTable.setTransferHandler(tableCellDragHandler);
-        imdiTable.setDragEnabled(true);
 
         JScrollPane tableScrollPane = new JScrollPane(imdiTable);
         advancedPanel.add(tableScrollPane, BorderLayout.CENTER);
@@ -161,7 +162,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         DragTransferHandler dragTransferHandler = new DragTransferHandler();
         this.setTransferHandler(dragTransferHandler);
 
-        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection);
+        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, imdiTable);
         entitySearchPanel.setTransferHandler(dragTransferHandler);
 
         HidePane egoSelectionHidePane = new HidePane(HidePane.HidePanePosition.left, 0);
@@ -170,7 +171,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
         kinTermHidePane.add(kinTermPanel, "Kin Terms");
-        kinTermHidePane.add(new ArchiveEntityLinkerPanel(), "Archive Linker");
+        kinTermHidePane.add(new ArchiveEntityLinkerPanel(imdiTable), "Archive Linker");
 
         kinGraphPanel.add(kinTypeHidePane, BorderLayout.PAGE_START);
         kinGraphPanel.add(egoSelectionHidePane, BorderLayout.LINE_START);
