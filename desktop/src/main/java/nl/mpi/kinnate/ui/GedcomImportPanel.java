@@ -76,9 +76,9 @@ public class GedcomImportPanel extends JPanel {
                             selectedIds.addAll((gedcomImporter.getCreatedNodeIds().get(currentCheckBox.getActionCommand())));
                         }
                     }
-                    KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
+                    KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(null);
 //                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
-                    egoSelectionTestPanel.addRequiredNodes(null, selectedIds.toArray(new UniqueIdentifier[]{}));
+                    egoSelectionTestPanel.addRequiredNodes(selectedIds.toArray(new UniqueIdentifier[]{}));
                     jTabbedPane1.add("Imported Entities", egoSelectionTestPanel);
                     jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
                 }
