@@ -31,14 +31,16 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
     private JButton nextButton;
 //    ArbilNodeSearchPanel archiveSearch = new ArbilNodeSearchPanel();
 
-    public ArchiveEntityLinkerPanel() {
+    public ArchiveEntityLinkerPanel(ArbilTable previewTable) {
         kinTree = new ArbilTree();
         archiveTree = new ArbilTree();
         ArchiveEntityLinkerDragHandler linkerDragHandler = new ArchiveEntityLinkerDragHandler(kinTree);
         kinTree.setTransferHandler(linkerDragHandler);
         archiveTree.setTransferHandler(linkerDragHandler);
         this.setLayout(new BorderLayout());
-        this.add(new HidePane(kinTree, "Kin Entities", HidePane.HidePanePosition.left, 0), BorderLayout.LINE_START);
+        HidePane hidePane = new HidePane(HidePane.HidePanePosition.left, 0);
+        hidePane.add(kinTree, "Kin Entities");
+        this.add(hidePane, BorderLayout.LINE_START);
         JPanel treePanel = new JPanel(new BorderLayout());
         tabbedPane = new JTabbedPane();
         tabbedPane.add("Archive Branch Selection", treePanel);
@@ -48,6 +50,8 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         nextButton.addActionListener(this);
         treePanel.add(new JScrollPane(archiveTree), BorderLayout.CENTER);
         treePanel.add(nextButton, BorderLayout.PAGE_END);
+        kinTree.setCustomPreviewTable(previewTable);
+        archiveTree.setCustomPreviewTable(previewTable);
         loadTreeNodes();
     }
 
