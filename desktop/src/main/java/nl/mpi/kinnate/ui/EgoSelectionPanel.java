@@ -8,9 +8,9 @@ import java.util.HashSet;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.ui.ArbilTreeRenderer;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -35,8 +35,7 @@ public class EgoSelectionPanel extends JPanel {
     JPanel labelPanel3;
     JLabel transientLabel;
 
-    public EgoSelectionPanel() {
-        DefaultTreeCellRenderer cellRenderer = new DefaultTreeCellRenderer();
+    public EgoSelectionPanel(ArbilTable previewTable) {
 
 //        egoRootNode = new DefaultMutableTreeNode(new JLabel("Ego", cellRenderer.getDefaultOpenIcon(), JLabel.LEFT));
 //        egoModel = new DefaultTreeModel(egoRootNode);
@@ -87,6 +86,9 @@ public class EgoSelectionPanel extends JPanel {
         treePanel2.add(labelPanel2, BorderLayout.PAGE_START);
         treePanel2.add(labelPanel3, BorderLayout.CENTER);
         this.add(outerScrolPane, BorderLayout.CENTER);
+        egoTree.setCustomPreviewTable(previewTable);
+        requiredTree.setCustomPreviewTable(previewTable);
+        impliedTree.setCustomPreviewTable(previewTable);
     }
 
     public void setTreeNodes(HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, EntityData[] allEntities) {
