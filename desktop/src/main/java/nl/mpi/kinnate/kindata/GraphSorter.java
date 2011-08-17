@@ -270,11 +270,13 @@ public class GraphSorter {
                 entityPositions.remove(currentRemoveId);
             }
         }
-        for (SortingEntity currentSorter : knownSortingEntities.values()) {
-            Rectangle rectangle = getGraphSize(entityPositions);
-            float[] defaultPosition = new float[]{rectangle.width, rectangle.height};
-            currentSorter.getPosition(entityPositions, defaultPosition);
-            currentSorter.getRelatedPositions(entityPositions);
+        if (knownSortingEntities != null) {
+            for (SortingEntity currentSorter : knownSortingEntities.values()) {
+                Rectangle rectangle = getGraphSize(entityPositions);
+                float[] defaultPosition = new float[]{rectangle.width, rectangle.height};
+                currentSorter.getPosition(entityPositions, defaultPosition);
+                currentSorter.getRelatedPositions(entityPositions);
+            }
         }
 
 //        requiresRedraw = (yOffset != 0 || xOffset != 0);
