@@ -3,15 +3,10 @@ package nl.mpi.kinnate.ui;
 import java.awt.BorderLayout;
 import java.io.File;
 import javax.swing.JFileChooser;
-import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
-import nl.mpi.arbil.ui.ArbilTable;
-import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.ui.PreviewSplitPanel;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.export.ExportToR;
 import nl.mpi.kinnate.transcoder.DiagramTranscoder;
 
@@ -22,13 +17,8 @@ import nl.mpi.kinnate.transcoder.DiagramTranscoder;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    private EntitySearchPanel entitySearchPanel;
 //    private GraphPanel graphPanel;
 //    private JungGraph jungGraph;
-    private ArbilTable previewTable;
-    private ArbilTableModel imdiTableModel;
-    private DragTransferHandler dragTransferHandler;
-    private EntityCollection entityCollection;
     private RecentFileMenu recentFileMenu;
 
     /** Creates new form MainFrame */
@@ -36,9 +26,8 @@ public class MainFrame extends javax.swing.JFrame {
         recentFileMenu = new RecentFileMenu(this);
         initComponents();
         ((EditMenu) editMenu).enableMenuKeys();
-        nl.mpi.kinnate.ArbilInjector.injectHandlers();
-        entityCollection = new EntityCollection();
-        entitySearchPanel = new EntitySearchPanel(entityCollection);
+        nl.mpi.kinnate.KinnateArbilInjector.injectHandlers();
+//        entityCollection = new EntityCollection();
 //        GraphPanel0 graphPanel0Deprecated;
 //        graphPanel0Deprecated = new GraphPanel0();
 //        graphPanel = new GraphPanel();
@@ -47,32 +36,28 @@ public class MainFrame extends javax.swing.JFrame {
 //        graphData.readData();
 //        graphPanel.drawNodes(graphData);
 //        jungGraph = new JungGraph();
-        imdiTableModel = new ArbilTableModel();
-        previewTable = new ArbilTable(imdiTableModel, "Preview Table");
 
-        JScrollPane tableScrollPane = new JScrollPane(previewTable);
-        this.add(new HidePane(entitySearchPanel, "Search Entities", BorderLayout.LINE_END), BorderLayout.LINE_START);
+//        JScrollPane tableScrollPane = new JScrollPane(previewTable);       
         this.add(jTabbedPane1, BorderLayout.CENTER);
-        KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
-//        egoSelectionTestPanel.createDefaultGraph(KinTypeEgoSelectionTestPanel.defaultGraphString);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(null);
+//        egoSelectionTestPanel.createDefaultGraph(KinDiagramPanel.defaultGraphString);
         jTabbedPane1.add("Unsaved Diagram", egoSelectionTestPanel);
-        jTabbedPane1.add("Kin Type String", new KinTypeStringTestPanel());
+//        jTabbedPane1.add("Kin Type String", new KinTypeStringTestPanel());
 //        jTabbedPane1.add("Kin Term Mapping for KinType Strings", new KinTypeStringTestPanel());
-        jTabbedPane1.add("Archive Entity Linker", new ArchiveEntityLinkerPanel());
+        // todo: move these into the menu and only add on menu actions        
         jTabbedPane1.add("Entity Upload", new EntityUploadPanel());
 //        jTabbedPane1.add("Graph", graphPanel);
 //        jTabbedPane1.add("SVG2  (deprecated)", new GraphPanel1());
 //        jTabbedPane1.add("Jung", jungGraph);
-        jTabbedPane1.add("Table", tableScrollPane);
+//        jTabbedPane1.add("Table", tableScrollPane);
 //        jTabbedPane1.add("SVG (deprecated)", graphPanel0Deprecated);
-        PreviewSplitPanel.previewTable = previewTable;
-        PreviewSplitPanel.previewTableShown = true;
+//        PreviewSplitPanel.previewTable = previewTable;
+//        PreviewSplitPanel.previewTableShown = true;
 
-//        System.out.println();        
-        dragTransferHandler = new DragTransferHandler();
-        entitySearchPanel.setTransferHandler(dragTransferHandler);
-        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
+//        System.out.println();
+
         jMenuBar1.add(new KinTermsMenu(this)); // the main frame is stored in the kin term menu for later use
+        jMenuBar1.add(new ArchiveMenu(this));
         this.doLayout();
         this.pack();
     }
@@ -100,15 +85,15 @@ public class MainFrame extends javax.swing.JFrame {
             // prevent files from the samples menu being added to the recent files menu
             recentFileMenu.addRecentFile(selectedFile.getAbsolutePath());
         }
-        KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(selectedFile);
-        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedFile);
+//        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
         egoSelectionTestPanel.drawGraph();
     }
 
     public void importEntities(String importPath) {
-        new GedcomImportPanel(entityCollection, jTabbedPane1).startImportJar(importPath);
+        new GedcomImportPanel(jTabbedPane1).startImportJar(importPath);
     }
 
     /** This method is called from within the constructor to
@@ -222,7 +207,6 @@ public class MainFrame extends javax.swing.JFrame {
         fileMenu.add(saveDiagramAs);
 
         jMenuItem1.setText("Export as PDF");
-        jMenuItem1.setEnabled(false);
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -382,8 +366,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_closeTabMenuItemActionPerformed
 
     private void newDiagramMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newDiagramMenuItemActionPerformed
-        KinTypeEgoSelectionTestPanel egoSelectionTestPanel = new KinTypeEgoSelectionTestPanel(null);
-        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(null);
         jTabbedPane1.add("Unsaved Diagram", egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
     }//GEN-LAST:event_newDiagramMenuItemActionPerformed
@@ -410,7 +393,7 @@ public class MainFrame extends javax.swing.JFrame {
             "http://GedcomLibrary.com/gedcoms/misc2a.ged", //
             "http://GedcomLibrary.com/gedcoms/gl120372.ged"};
         for (String importUrlString : importList) {
-            new GedcomImportPanel(entityCollection, jTabbedPane1).startImport(importUrlString);
+            new GedcomImportPanel(jTabbedPane1).startImport(importUrlString);
         }
     }//GEN-LAST:event_ImportGedcomUrlActionPerformed
 
