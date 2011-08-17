@@ -409,10 +409,12 @@ public class SvgUpdateHandler {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
 
                 public void run() {
-                    Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
-                    // todo: handle case where the diagram has not been drawn yet and the graph data and graph size is not available
-//                    if (graphSize == null) {
+                    Rectangle graphSize;
+//                    if (graphPanel.dataStoreSvg.graphData == null) {
+                    // handle case where the diagram has not been drawn yet and the graph data and graph size is not available
 //                        graphSize = new Rectangle(0, 0, 0, 0);
+//                    } else {
+                    graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
 //                    }
                     Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
                     Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
@@ -434,6 +436,7 @@ public class SvgUpdateHandler {
                     graphPanel.entitySvg.entityPositions.put(labelId, labelPosition);
 //                    graphPanel.doc.getDocumentElement().appendChild(labelText);
                     ((EventTarget) labelText).addEventListener("mousedown", new MouseListenerSvg(graphPanel), false);
+                    resizeCanvas(graphPanel.doc.getDocumentElement(), graphPanel.doc.getElementById("DiagramGroup"));
                 }
             });
         }
