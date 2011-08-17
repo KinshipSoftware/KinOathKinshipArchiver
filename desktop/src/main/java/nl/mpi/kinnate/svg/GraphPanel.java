@@ -227,6 +227,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             diagramGroup.appendChild(labelsGroup);
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc));
             svgCanvas.setSVGDocument(doc);
+            dataStoreSvg.graphData = new GraphSorter();
         } catch (IOException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
         }
