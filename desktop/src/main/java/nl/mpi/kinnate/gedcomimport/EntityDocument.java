@@ -12,8 +12,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.util.ArbilBugCatcher;
-import nl.mpi.kinnate.kindata.DataTypes.RelationLineType;
-import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.DOMException;
@@ -38,8 +36,10 @@ public class EntityDocument {
     Element metadataNode = null;
     Node currentDomNode = null;
     public EntityData entityData;
+    private ImportTranslator importTranslator;
 
-    public EntityDocument(File destinationDirectory, String nameString) {
+    public EntityDocument(File destinationDirectory, String nameString, ImportTranslator importTranslator) {
+        this.importTranslator = importTranslator;
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
         if (nameString != null) {
             idString = nameString;
@@ -72,7 +72,12 @@ public class EntityDocument {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 documentBuilderFactory.setNamespaceAware(true);
                 String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                        + "<Kinnate xmlns:kin=\"http://mpi.nl/tla/kin\" xmlns=\"http://www.clarin.eu/cmd/\" version=\"1.0\"/>"; //<cmd:Metadata/></Kinnate>
+                        + "<Kinnate xmlns:kin=\"http://mpi.nl/tla/kin\" "
+                        + "xmlns=\"http://www.clarin.eu/cmd/\" "
+//                        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+//                        + "xsi:schemaLocation=\"http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1297242111880/xsd\" "
+                        + "version=\"1.0\" "
+                        + "CMDVersion=\"1.1\" />"; //<cmd:Metadata/></Kinnate>
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                 metadataDom = documentBuilder.parse(new InputSource(new StringReader(templateXml)));
                 metadataNode = metadataDom.createElementNS("http://www.clarin.eu/cmd/", "Metadata");
@@ -97,33 +102,34 @@ public class EntityDocument {
 
     public void insertValue(String nodeName, String valueString) {
         // this method will create a flat xml file and reuse any existing nodes of the target name
-        System.out.println("insertValue: " + nodeName + " : " + valueString);
-        nodeName = nodeName.replaceAll("\\s", "_");
+        ImportTranslator.TranslationElement translationElement = importTranslator.translate(nodeName, valueString);
+
+        System.out.println("insertValue: " + translationElement.fieldName + " : " + translationElement.fieldValue);
         Node currentNode = metadataNode.getFirstChild();
         while (currentNode != null) {
-            if (nodeName.equals(currentNode.getLocalName())) {
+            if (translationElement.fieldName.equals(currentNode.getLocalName())) {
                 if (currentNode.getTextContent() == null || currentNode.getTextContent().length() == 0) {
                     // put the value into this node
-                    currentNode.setTextContent(valueString);
+                    currentNode.setTextContent(translationElement.fieldValue);
                     return;
                 }
-                if (currentNode.getTextContent().equals(valueString)) {
+                if (currentNode.getTextContent().equals(translationElement.fieldValue)) {
                     // if the value already exists then do not add again
                     return;
                 }
             }
             currentNode = currentNode.getNextSibling();
         }
-        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ nodeName);
-        valueElement.setTextContent(valueString);
+        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ translationElement.fieldName);
+        valueElement.setTextContent(translationElement.fieldValue);
         metadataNode.appendChild(valueElement);
     }
 
     public Node insertNode(String nodeName, String valueString) {
-        System.out.println("nodeName: " + nodeName + " : " + valueString);
-        nodeName = nodeName.replaceAll("\\s", "_");
-        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ nodeName);
-        valueElement.setTextContent(valueString);
+        ImportTranslator.TranslationElement translationElement = importTranslator.translate(nodeName, valueString);
+        System.out.println("nodeName: " + translationElement.fieldName + " : " + translationElement.fieldValue);
+        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ translationElement.fieldName);
+        valueElement.setTextContent(translationElement.fieldValue);
         currentDomNode.appendChild(valueElement);
         return valueElement;
     }
@@ -149,6 +155,7 @@ public class EntityDocument {
 
     public void appendValue(String nodeName, String valueString, int targetLevel) {
         // this method will create a structured xml file
+        // the nodeName will be translated if required in insertNode()
         System.out.println("appendValue: " + nodeName + " : " + valueString + " : " + targetLevel);
         assendToLevel(targetLevel);
         NodeList childNodes = currentDomNode.getChildNodes();
@@ -198,7 +205,6 @@ public class EntityDocument {
 ////        targetNameElement.setTextContent(lineParts[2]);
 ////        relationElement.appendChild(targetNameElement);
 //    }
-
     public File getFile() {
         return entityFile;
     }
