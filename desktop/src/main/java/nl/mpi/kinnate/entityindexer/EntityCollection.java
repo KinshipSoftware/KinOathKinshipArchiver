@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.xml.bind.JAXBContext;
@@ -127,17 +128,33 @@ public class EntityCollection {
             // add appears not to have been tested by anybody, I am not sure if I like basex now, but the following works
             new Add(urlString, null, urlString.replaceFirst("[^/]*$", "")).execute(context);
         } catch (BaseXException baseXException) {
+            // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             new ArbilBugCatcher().logError(baseXException);
         }
     }
 
-    public void updateDatabase(URI[] updatedFileArray) {
+    public void updateDatabase(URI[] updatedFileArray, JProgressBar progressBar) {
         try {
+            if (progressBar != null) {
+                progressBar.setMinimum(0);
+                progressBar.setMaximum(updatedFileArray.length);
+                progressBar.setIndeterminate(false);
+                progressBar.setValue(0);
+            }
             new Open(databaseName).execute(context);
             for (URI updatedFile : updatedFileArray) {
                 addFileToDB(updatedFile);
+                if (progressBar != null) {
+                    progressBar.setValue(progressBar.getValue() + 1);
+                }
+            }
+            if (progressBar != null) {
+                progressBar.setIndeterminate(true);
             }
             new Optimize().execute(context);
+            if (progressBar != null) {
+                progressBar.setIndeterminate(false);
+            }
             new Close().execute(context);
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
@@ -163,14 +180,12 @@ public class EntityCollection {
 //        String queryString = "distinct-values(collection('nl-mpi-kinnate')/*:Kinnate/*:Gedcom[*:Entity/*:GedcomType='FAM']/*:UniqueIdentifier//text())";
 //        return performQuery(queryString);
 //    }
-
 //    public SearchResults listAllRelationTypes() {
 //        // todo: probably needs to be updated.
 //        // todo: use this to populate the InderParametersFormUI
 //        String queryString = "distinct-values(collection('nl-mpi-kinnate')/Kinnate/Relation/Type/text())";
 //        return performQuery(queryString);
 //    }
-
     public SearchResults searchByName(String namePartString) {
         String queryString = "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + namePartString + "\") return base-uri($doc)";
         return performQuery(queryString);
@@ -180,7 +195,7 @@ public class EntityCollection {
         String queryString = "for $doc in collection('nl-mpi-kinnate') where exists(/*:Kinnate/*:Entity/*:Identifier/@*:type=\"lid\") return base-uri($doc)";
         return performQuery(queryString);
     }
-    
+
     private SearchResults performQuery(String queryString) {
         SearchResults searchResults = new SearchResults();
         ArrayList<String> resultPaths = new ArrayList<String>();
