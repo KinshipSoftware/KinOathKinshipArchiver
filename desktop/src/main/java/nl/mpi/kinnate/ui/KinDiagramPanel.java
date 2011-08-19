@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.text.Style;
@@ -54,6 +55,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private HidePane kinTypeHidePane;
     private KinTermTabPane kinTermPanel;
     private EntityService entityIndex;
+    private JProgressBar progressBar;
     public ArbilTable imdiTable;
     private HashMap<UniqueIdentifier, ArbilDataNode> registeredArbilDataNode;
     private String defaultString = "# The kin type strings entered here will determine how the entities show on the graph below\n";
@@ -89,6 +91,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
     public KinDiagramPanel(File existingFile) {
         entityCollection = new EntityCollection();
+        progressBar = new JProgressBar();
         EntityData[] svgStoredEntities = null;
         graphPanel = new GraphPanel(this);
         kinTypeStringInput = new JTextPane();
@@ -115,6 +118,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         ArbilTableModel imdiTableModel = new ArbilTableModel();
         graphPanel.setArbilTableModel(imdiTableModel);
+        graphPanel.add(progressBar, BorderLayout.PAGE_END);
         imdiTable = new ArbilTable(imdiTableModel, "Selected Nodes");
 
         TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
@@ -233,7 +237,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         try {
             String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
             ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
-            EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters());
+            progressBar.setValue(0);
+            progressBar.setVisible(true);
+            EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), progressBar);
             boolean visibleNodeFound = false;
             for (EntityData currentNode : graphNodes) {
                 if (currentNode.isVisible) {
@@ -281,6 +287,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             GuiHelper.linorgBugCatcher.logError(exception);
             ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
         }
+        progressBar.setVisible(false);
     }
 
     @Deprecated
