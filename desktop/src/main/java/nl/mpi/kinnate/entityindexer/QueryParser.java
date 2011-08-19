@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import javax.swing.JProgressBar;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -140,7 +141,7 @@ public class QueryParser implements EntityService {
 //        }
 //        return visibleEntityFound;
 //    }
-    public EntityData[] processKinTypeStrings(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] processKinTypeStrings(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters, JProgressBar progressBar) throws EntityServiceException {
         foundOrder = 0; // temp for testing // todo: remove testing labels
         if (indexParameters.valuesChanged) {
             // discard all entity data from previous queries
@@ -155,6 +156,11 @@ public class QueryParser implements EntityService {
             graphDataNode.clearVisibility();
             graphDataNode.clearTempLabels();
         }
+        int totalProgressRequired = requiredEntityIdentifiers.size() /*+ egoIdentifiers.size()*/ + kinTypeStrings.length;
+        progressBar.setMaximum(totalProgressRequired);
+        progressBar.setMinimum(0);
+        progressBar.setValue(0);
+
         int lineCounter = -1;
         // process each line of the users input
         for (String currentKinString : kinTypeStrings) {
@@ -251,6 +257,7 @@ public class QueryParser implements EntityService {
 //                    }
                 }
             }
+            progressBar.setValue(progressBar.getValue() + 1);
         }
         for (UniqueIdentifier currentEgoId : requiredEntityIdentifiers) {
             // load and show any mandatory entities
@@ -262,6 +269,7 @@ public class QueryParser implements EntityService {
                 loadedGraphNodes.put(requiredNode.getUniqueIdentifier(), requiredNode);
             }
             requiredNode.isVisible = true;
+            progressBar.setValue(progressBar.getValue() + 1);
         }
         // set the alter entity for each relation if not already set (based on the known unique identifier)
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
