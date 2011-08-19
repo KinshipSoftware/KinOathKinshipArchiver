@@ -66,7 +66,9 @@ public class QueryBuilder {
             stringBuilder.append(currentEntry.getSelectedValue());
             stringBuilder.append("\"\n else ");
         }
-        stringBuilder.append("()\n}</kin:Symbol> after $copyNode/*:Identifier,\n"); // into $copyNode
+        stringBuilder.append("(\"");
+        stringBuilder.append(indexParameters.defaultSymbol);
+        stringBuilder.append("\")\n}</kin:Symbol> after $copyNode/*:Identifier,\n"); // into $copyNode
         return stringBuilder.toString();
     }
 
