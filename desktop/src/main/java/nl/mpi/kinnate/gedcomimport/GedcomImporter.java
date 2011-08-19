@@ -48,12 +48,15 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
         HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>> socialGroupRoleMap = new HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>>(); // GroupID: @XX@, RoleType: WIFE HUSB CHIL, EntityData
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+        ImportTranslator importTranslator = new ImportTranslator();
+        // todo: add the translator values if required
+
         try {
             String strLine;
             int gedcomLevel = 0;
             ArrayList<String> gedcomLevelStrings = new ArrayList<String>();
-            EntityDocument currentEntity = null;
-            int currntLineCounter = 0;
+            EntityDocument currentEntity = null;            
             boolean skipFileEntity = false;
             while ((strLine = bufferedReader.readLine()) != null) {
                 if (skipFileEntity) {
@@ -105,7 +108,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 typeString = lineParts[1];
                             }
                             // todo: the type string needs to determine if this is an entity or a metadata file
-                            currentEntity = getEntityDocument(createdNodes, typeString, lineParts[1]);
+                            currentEntity = getEntityDocument(createdNodes, typeString, lineParts[1], importTranslator);
                             if (lineParts[1].equals("HEAD")) {
                                 // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
                                 appendToTaskOutput("Reading Gedcom Header");
@@ -371,11 +374,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                     UniqueIdentifier socialGroupIdentifier;
                                     EntityData socialGroupMember;
                                     if (lineParts[1].equals("FAMS") || lineParts[1].equals("FAMC")) {
-                                        socialGroupIdentifier = getEntityDocument(createdNodes, null, lineParts[2]).entityData.getUniqueIdentifier();
+                                        socialGroupIdentifier = getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData.getUniqueIdentifier();
                                         socialGroupMember = currentEntity.entityData;
                                     } else {
                                         socialGroupIdentifier = currentEntity.entityData.getUniqueIdentifier();
-                                        socialGroupMember = getEntityDocument(createdNodes, null, lineParts[2]).entityData;
+                                        socialGroupMember = getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData;
                                     }
                                     if (!socialGroupRoleMap.containsKey(socialGroupIdentifier)) {
                                         socialGroupRoleMap.put(socialGroupIdentifier, new ArrayList<SocialMemberElement>());
@@ -411,16 +414,12 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                     targetRelation = RelationType.metadata;
                                 }
                                 // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
-                                currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, null, lineParts[2]).entityData, targetRelation, RelationLineType.none, null, null);
+                                currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData, targetRelation, RelationLineType.none, null, null);
                             }
                         }
                     }
                 }
-                currntLineCounter++;
-                int currentProgressPercent = (int) ((double) currntLineCounter / (double) inputLineCount * 100);
-                if (progressBar != null) {
-                    progressBar.setValue(currentProgressPercent);
-                }
+                super.incrementLineProgress();
             }
             for (ArrayList<SocialMemberElement> currentSocialGroup : socialGroupRoleMap.values()) {
                 for (SocialMemberElement outerMemberElement : currentSocialGroup) {
