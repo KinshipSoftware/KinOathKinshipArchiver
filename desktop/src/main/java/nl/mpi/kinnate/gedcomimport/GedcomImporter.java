@@ -56,7 +56,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
             String strLine;
             int gedcomLevel = 0;
             ArrayList<String> gedcomLevelStrings = new ArrayList<String>();
-            EntityDocument currentEntity = null;            
+            EntityDocument currentEntity = null;
             boolean skipFileEntity = false;
             while ((strLine = bufferedReader.readLine()) != null) {
                 if (skipFileEntity) {
@@ -117,7 +117,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes                                
                                 if (lineParts.length > 2) {
                                     currentEntity.appendValue(lineParts[2], lineParts[1], gedcomLevel);
-                                    appendToTaskOutput(lineParts[2]);
+//                                    appendToTaskOutput(lineParts[2]);
 //                                    currentEntity.insertValue("gedcom-type", lineParts[2]);
 //                                    if (lineParts[2].equals("NOTE")) {
 //                                        currentEntity.insertValue("NoteText", lineParts[2]);
@@ -293,19 +293,30 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             if (gedcomLevelStrings.size() == 3) {
                                 if (gedcomLevelStrings.get(2).equals("DATE")) {
                                     if (gedcomLevelStrings.get(1).equals("BIRT") || gedcomLevelStrings.get(1).equals("DEAT")) {
+                                        String dateText = lineParts[2].trim();
+                                        for (String prefixString : new String[]{"ABT", "BEF", "AFT"}) {
+                                            if (dateText.startsWith(prefixString)) {
+                                                appendToTaskOutput("Unsupported Date Type: " + dateText);
+                                                dateText = dateText.substring(prefixString.length()).trim();
+                                            }
+                                        }
                                         SimpleDateFormat formatter;
-                                        if (lineParts[2].matches("[0-9]{4}")) {
+                                        if (dateText.matches("[0-9]{1,4}")) {
+                                            while (dateText.length() < 4) {
+                                                // make sure that 812 has four digits like 0812
+                                                dateText = "0" + dateText;
+                                            }
                                             formatter = new SimpleDateFormat("yyyy");
-                                        } else if (lineParts[2].matches("[a-zA-Z]{3} [0-9]{4}")) {
+                                        } else if (dateText.matches("[a-zA-Z]{3} [0-9]{4}")) {
                                             formatter = new SimpleDateFormat("MMM yyyy");
                                         } else {
                                             formatter = new SimpleDateFormat("dd MMM yyyy");
                                         }
                                         try {
                                             if (gedcomLevelStrings.get(1).equals("BIRT")) {
-                                                currentEntity.entityData.setDateOfBirth(formatter.parse(lineParts[2]));
+                                                currentEntity.entityData.setDateOfBirth(formatter.parse(dateText));
                                             } else {
-                                                currentEntity.entityData.setDateOfDeath(formatter.parse(lineParts[2]));
+                                                currentEntity.entityData.setDateOfDeath(formatter.parse(dateText));
                                             }
                                         } catch (ParseException exception) {
                                             System.out.println(exception.getMessage());
@@ -367,7 +378,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                            }
                             // create the link node when required
                             if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
-                                appendToTaskOutput("--> adding social relation");
+//                                appendToTaskOutput("--> adding social relation");
                                 RelationType targetRelation = RelationType.none;
                                 // here the following five relation types are mapped to the correct relation types after this the association is cretaed and later the indigiduals are linked with sanguine relations
                                 if (lineParts[1].equals("FAMS") || lineParts[1].equals("FAMC") || lineParts[1].equals("HUSB") || lineParts[1].equals("WIFE") || lineParts[1].equals("CHIL")) {
@@ -438,7 +449,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                     innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.union, RelationLineType.sanguineLine, null, null);
                                 }
                             }
-                            appendToTaskOutput("--> adding sanguine relation");
+//                            appendToTaskOutput("--> adding sanguine relation");
                         }
                     }
                 }
@@ -483,7 +494,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                }
 //            }
             saveAllDocuments();
-            appendToTaskOutput("Import finished with a node count of: " + createdNodes.size());
+//            appendToTaskOutput("Import finished with a node count of: " + createdNodes.size());
 
 //            gedcomImdiObject.saveChangesToCache(true);
 //            gedcomImdiObject.loadImdiDom();
