@@ -70,17 +70,23 @@ public class GedcomImportPanel extends JPanel {
             showButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>();
-                    for (JCheckBox currentCheckBox : checkBoxArray) {
-                        if (currentCheckBox.isSelected()) {
-                            selectedIds.addAll((gedcomImporter.getCreatedNodeIds().get(currentCheckBox.getActionCommand())));
-                        }
-                    }
-                    KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(null);
+                    final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(null);
 //                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
-                    egoSelectionTestPanel.addRequiredNodes(selectedIds.toArray(new UniqueIdentifier[]{}));
                     jTabbedPane1.add("Imported Entities", egoSelectionTestPanel);
                     jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
+                    new Thread() {
+
+                        @Override
+                        public void run() {
+                            final HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>();
+                            for (final JCheckBox currentCheckBox : checkBoxArray) {
+                                if (currentCheckBox.isSelected()) {
+                                    selectedIds.addAll((gedcomImporter.getCreatedNodeIds().get(currentCheckBox.getActionCommand())));
+                                }
+                            }
+                            egoSelectionTestPanel.addRequiredNodes(selectedIds.toArray(new UniqueIdentifier[]{}));
+                        }
+                    }.start();
                 }
             });
             createdNodesPanel.add(showButton);
@@ -145,6 +151,7 @@ public class GedcomImportPanel extends JPanel {
                                 }
                             }
                             URI[] treeNodesArray;
+                            importTextArea.append("Importing the kinship data (step 1/4)\n");
                             if (importFileString != null) {
                                 treeNodesArray = genericImporter.importFile(importFileString);
                             } else {
@@ -154,7 +161,7 @@ public class GedcomImportPanel extends JPanel {
                             if (treeNodesArray != null && checkFilesAfterImport) {
 //                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();                    
                                 int maxXsdErrorToShow = 3;
-                                importTextArea.append("Checking XML of imported data\n");
+                                importTextArea.append("Checking XML of imported data  (step 3/4)\n");
                                 progressBar.setValue(0);
                                 progressBar.setMaximum(treeNodesArray.length + 1);
                                 for (URI currentNodeUri : treeNodesArray) {
@@ -170,7 +177,7 @@ public class GedcomImportPanel extends JPanel {
                                             xsdChecker.checkXML(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, currentNodeUri));
                                             xsdChecker.setDividerLocation(0.5);
                                             maxXsdErrorToShow--;
-                                            if (maxXsdErrorToShow == 0) {
+                                            if (maxXsdErrorToShow <= 0) {
                                                 importTextArea.append("maximum xsd errors shown, no more files will be tested" + "\n");
                                             }
                                         }
@@ -190,14 +197,16 @@ public class GedcomImportPanel extends JPanel {
 //                    leftTree.rootNodeChildren = tempArray.toArray(new ImdiTreeObject[]{});
 //                    imdiTableModel.removeAllImdiRows();
 //                    imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
+                            } else {
+                                importTextArea.append("Skipping check XML of imported data  (step 3/4)\n");
                             }
                             progressBar.setIndeterminate(true);
                             // todo: it might be more efficient to only update the new files
-                            importTextArea.append("Starting update of entity database" + "\n");
+                            importTextArea.append("Starting update of entity database (step 4/4)\n");
                             entityCollection.updateDatabase(treeNodesArray);
-                            importTextArea.append("Updated entity database" + "\n");
+                            importTextArea.append("Import complete" + "\n");
                             importTextArea.setCaretPosition(importTextArea.getText().length());
-                            System.out.println("added the imported files to the database");
+//                            System.out.println("added the imported files to the database");
                             progressBar.setIndeterminate(false);
                             progressBar.setVisible(false);
 //                leftTree.requestResort();
