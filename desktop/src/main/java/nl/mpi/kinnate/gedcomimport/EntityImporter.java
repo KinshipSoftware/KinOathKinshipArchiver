@@ -30,7 +30,8 @@ public class EntityImporter implements GenericImporter {
     protected JProgressBar progressBar = null;
     protected URI inputFileUri = null; // used only for copying resource files
     protected JTextArea importTextArea;
-    protected int inputLineCount;
+    private int inputLineCount;
+    private int currntLineCounter;
     protected String inputFileMd5Sum;
     protected boolean overwriteExisting;
     protected HashMap<String, HashSet<UniqueIdentifier>> createdNodeIds;
@@ -56,6 +57,7 @@ public class EntityImporter implements GenericImporter {
 
     public void calculateFileNameAndFileLength(BufferedReader bufferedReader) {
         // count the lines in the file (for progress) and calculate the md5 sum (for unique file naming)
+        currntLineCounter = 0;
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             StringBuilder hexString = new StringBuilder();
@@ -77,6 +79,21 @@ public class EntityImporter implements GenericImporter {
         }
     }
 
+    protected void incrementLineProgress() {
+        currntLineCounter++;
+        int currentProgressPercent = (int) ((double) currntLineCounter / (double) inputLineCount * 100);
+        if (progressBar != null) {
+            progressBar.setValue(currentProgressPercent);
+        }
+    }
+
+    protected void incrementSaveProgress(int documentCount, int savedCount) {
+        int currentProgressPercent = (int) ((double) savedCount / (double) documentCount * 100);
+        if (progressBar != null) {
+            progressBar.setValue(currentProgressPercent);
+        }
+    }
+
     protected File getDestinationDirectory() {
         File destinationDirectory = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), inputFileMd5Sum);
         if (!destinationDirectory.exists()) {
@@ -85,13 +102,13 @@ public class EntityImporter implements GenericImporter {
         return destinationDirectory;
     }
 
-    protected EntityDocument getEntityDocument(ArrayList<URI> createdNodes, String typeString, String idString) throws ImportException {
+    protected EntityDocument getEntityDocument(ArrayList<URI> createdNodes, String typeString, String idString, ImportTranslator importTranslator) throws ImportException {
         idString = cleanFileName(idString);
         EntityDocument currentEntity = createdDocuments.get(idString);
         if (currentEntity == null) {
             // create a new entity file
-            currentEntity = new EntityDocument(getDestinationDirectory(), idString);
-            appendToTaskOutput("created: " + currentEntity.getFilePath());
+            currentEntity = new EntityDocument(getDestinationDirectory(), idString, importTranslator);
+//            appendToTaskOutput("created: " + currentEntity.getFilePath());
             createdNodes.add(currentEntity.createDocument(overwriteExisting));
             createdDocuments.put(idString, currentEntity);
         }
@@ -109,11 +126,15 @@ public class EntityImporter implements GenericImporter {
     }
 
     protected void saveAllDocuments() {
-        appendToTaskOutput("Saving all documents");
+        appendToTaskOutput("Saving imported documents (step 2/4)");
+        int documentCount = createdDocuments.size();
+        int savedCount = 0;
         for (EntityDocument currentDocument : createdDocuments.values()) {
             // todo: add progress for this
             try {
                 currentDocument.saveDocument();
+                savedCount++;
+                incrementSaveProgress(documentCount, savedCount);
             } catch (ImportException exception) {
                 new ArbilBugCatcher().logError(exception);
                 appendToTaskOutput("Error saving file: " + exception.getMessage());
