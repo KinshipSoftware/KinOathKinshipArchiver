@@ -166,7 +166,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         DragTransferHandler dragTransferHandler = new DragTransferHandler();
         this.setTransferHandler(dragTransferHandler);
 
-        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, imdiTable);
+        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, imdiTable, graphPanel.getIndexParameters());
         entitySearchPanel.setTransferHandler(dragTransferHandler);
 
         HidePane egoSelectionHidePane = new HidePane(HidePane.HidePanePosition.left, 0);
@@ -387,6 +387,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private void registerCurrentNodes(EntityData[] currentEntities) {
         // todo: i think this is resolved but double check the issue where arbil nodes update frequency is too high and breaks basex
         // todo: load the nodes in the KinDataNode when putting them in the table and pass on the reload requests here when they occur
+        // todo: replace the data node registering process
 //        for (EntityData entityData : currentEntities) {
 //            ArbilDataNode arbilDataNode = null;
 //            if (!registeredArbilDataNode.containsKey(entityData.getUniqueIdentifier())) {
