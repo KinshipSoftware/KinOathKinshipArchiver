@@ -152,6 +152,7 @@ public class GedcomImportPanel extends JPanel {
                             }
                             URI[] treeNodesArray;
                             importTextArea.append("Importing the kinship data (step 1/4)\n");
+                            importTextArea.setCaretPosition(importTextArea.getText().length());
                             if (importFileString != null) {
                                 treeNodesArray = genericImporter.importFile(importFileString);
                             } else {
@@ -162,6 +163,7 @@ public class GedcomImportPanel extends JPanel {
 //                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();                    
                                 int maxXsdErrorToShow = 3;
                                 importTextArea.append("Checking XML of imported data  (step 3/4)\n");
+                                importTextArea.setCaretPosition(importTextArea.getText().length());
                                 progressBar.setValue(0);
                                 progressBar.setMaximum(treeNodesArray.length + 1);
                                 for (URI currentNodeUri : treeNodesArray) {
@@ -203,6 +205,7 @@ public class GedcomImportPanel extends JPanel {
                             progressBar.setIndeterminate(true);
                             // todo: it might be more efficient to only update the new files
                             importTextArea.append("Starting update of entity database (step 4/4)\n");
+                            importTextArea.setCaretPosition(importTextArea.getText().length());
                             entityCollection.updateDatabase(treeNodesArray, progressBar);
                             importTextArea.append("Import complete" + "\n");
                             importTextArea.setCaretPosition(importTextArea.getText().length());
