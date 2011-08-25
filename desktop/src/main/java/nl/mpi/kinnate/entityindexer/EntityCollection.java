@@ -21,6 +21,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.kindata.EntityArray;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
@@ -260,6 +261,30 @@ public class EntityCollection {
             new ArbilBugCatcher().logError(exception);
         }
         return returnArray;
+    }
+
+    public EntityData[] getEntityByKeyWord(String keyWords, IndexerParameters indexParameters) {
+        long startTime = System.currentTimeMillis();
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String query1String = queryBuilder.getEntityByKeyWordQuery(keyWords, indexParameters);
+        System.out.println("query1String: " + query1String);
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(EntityArray.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            String queryResult = new XQuery(query1String).execute(context);
+            System.out.println("queryResult: " + queryResult);
+            EntityArray foundEntities = (EntityArray) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityArray.class).getValue();
+            long queryMils = System.currentTimeMillis() - startTime;
+            String queryTimeString = "Query time: " + queryMils + "ms for " + foundEntities.getEntityDataArray().length + " entities";
+            System.out.println(queryTimeString);
+//            selectedEntity.appendTempLabel(queryTimeString);
+            return foundEntities.getEntityDataArray();
+        } catch (JAXBException exception) {
+            new ArbilBugCatcher().logError(exception);
+        } catch (BaseXException exception) {
+            new ArbilBugCatcher().logError(exception);
+        }
+        return new EntityData[]{};
     }
 
     public EntityData[] getEntityWithRelations(UniqueIdentifier uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
