@@ -1,18 +1,14 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import nl.mpi.arbil.data.ArbilDataNode;
-import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTable;
-import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.ui.ArbilTreeRenderer;
+import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -23,24 +19,36 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class EgoSelectionPanel extends JPanel {
 
-    private ArbilTree egoTree;
+    private KinTree egoTree;
 //    DefaultTreeModel egoModel;
 //    DefaultMutableTreeNode egoRootNode;
-    private ArbilTree requiredTree;
+    private KinTree requiredTree;
 //    DefaultTreeModel requiredModel;
 //    DefaultMutableTreeNode requiredRootNode;
-    private ArbilTree impliedTree;
+    private KinTree impliedTree;
+    private KinTree transientTree;
 //    DefaultTreeModel impliedModel;
 //    DefaultMutableTreeNode impliedRootNode;
     JPanel labelPanel3;
-    JLabel transientLabel;
+//    JLabel transientLabel;
+    JScrollPane metadataNodeScrolPane;
+    JScrollPane transientNodeScrolPane;
 
     public EgoSelectionPanel(ArbilTable previewTable) {
+        JPanel metadataNodePanel;
+        JPanel transientNodePanel;
+        transientNodePanel = new JPanel(new BorderLayout());
+        transientNodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Transient Entities"));
+        transientTree = new KinTree();
+        transientTree.setBackground(transientNodePanel.getBackground());
+        transientNodePanel.add(transientTree, BorderLayout.CENTER);
+        transientNodeScrolPane = new JScrollPane(transientNodePanel);
 
+        metadataNodePanel = new JPanel(new BorderLayout());
 //        egoRootNode = new DefaultMutableTreeNode(new JLabel("Ego", cellRenderer.getDefaultOpenIcon(), JLabel.LEFT));
 //        egoModel = new DefaultTreeModel(egoRootNode);
 //        egoTree = new JTree(egoModel);
-        egoTree = new ArbilTree();
+        egoTree = new KinTree();
         // todo: add trac task to modify the arbil tree such that each tree can have its own preview table
 //        egoTree.getModel().
 //        egoTree.setRootVisible(false);
@@ -49,23 +57,22 @@ public class EgoSelectionPanel extends JPanel {
 //        requiredRootNode = new DefaultMutableTreeNode(new JLabel("Required", cellRenderer.getDefaultOpenIcon(), JLabel.LEFT));
 //        requiredModel = new DefaultTreeModel(requiredRootNode);
 //        requiredTree = new JTree(requiredModel);
-        requiredTree = new ArbilTree();
+        requiredTree = new KinTree();
 //        requiredTree.setRootVisible(false);
         requiredTree.setCellRenderer(new ArbilTreeRenderer());
 
 //        impliedRootNode = new DefaultMutableTreeNode(new JLabel("Implied", cellRenderer.getDefaultOpenIcon(), JLabel.LEFT));
 //        impliedModel = new DefaultTreeModel(impliedRootNode);
 //        impliedTree = new JTree(impliedModel);
-        impliedTree = new ArbilTree();
+        impliedTree = new KinTree();
 //        impliedTree.setRootVisible(false);
         impliedTree.setCellRenderer(new ArbilTreeRenderer());
 
 //        egoTree.setRootVisible(false);
         this.setLayout(new BorderLayout());
-        JPanel treePanel1 = new JPanel(new BorderLayout());
         JPanel treePanel2 = new JPanel(new BorderLayout());
 //        treePanel.setLayout(new BoxLayout(treePanel, BoxLayout.PAGE_AXIS));
-        JScrollPane outerScrolPane = new JScrollPane(treePanel1);
+        metadataNodeScrolPane = new JScrollPane(metadataNodePanel);
 //        this.setBorder(javax.swing.BorderFactory.createTitledBorder("Selected Ego"));
         JPanel labelPanel1 = new JPanel(new BorderLayout());
         JPanel labelPanel2 = new JPanel(new BorderLayout());
@@ -81,64 +88,76 @@ public class EgoSelectionPanel extends JPanel {
         egoTree.setBackground(labelPanel1.getBackground());
         requiredTree.setBackground(labelPanel1.getBackground());
         impliedTree.setBackground(labelPanel1.getBackground());
-        treePanel1.add(labelPanel1, BorderLayout.PAGE_START);
-        treePanel1.add(treePanel2, BorderLayout.CENTER);
+        metadataNodePanel.add(labelPanel1, BorderLayout.PAGE_START);
+        metadataNodePanel.add(treePanel2, BorderLayout.CENTER);
         treePanel2.add(labelPanel2, BorderLayout.PAGE_START);
         treePanel2.add(labelPanel3, BorderLayout.CENTER);
-        this.add(outerScrolPane, BorderLayout.CENTER);
+        this.add(metadataNodeScrolPane, BorderLayout.CENTER);
         egoTree.setCustomPreviewTable(previewTable);
         requiredTree.setCustomPreviewTable(previewTable);
         impliedTree.setCustomPreviewTable(previewTable);
+        transientTree.setCustomPreviewTable(previewTable);
     }
 
     public void setTreeNodes(HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, EntityData[] allEntities) {
-        ArrayList<ArbilDataNode> egoNodeArray = new ArrayList<ArbilDataNode>();
-        ArrayList<ArbilDataNode> requiredNodeArray = new ArrayList<ArbilDataNode>();
-        ArrayList<ArbilDataNode> remainingNodeArray = new ArrayList<ArbilDataNode>();
+        this.remove(transientNodeScrolPane);
+        this.add(metadataNodeScrolPane, BorderLayout.CENTER);
+        this.revalidate();
+        ArrayList<KinTreeNode> egoNodeArray = new ArrayList<KinTreeNode>();
+        ArrayList<KinTreeNode> requiredNodeArray = new ArrayList<KinTreeNode>();
+        ArrayList<KinTreeNode> remainingNodeArray = new ArrayList<KinTreeNode>();
         for (EntityData entityData : allEntities) {
             if (entityData.isVisible) {
-                try {
-                    String entityPath = entityData.getEntityPath();
-                    if (entityPath != null) {
-                        ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityPath));
-                        if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
-                            egoNodeArray.add(arbilDataNode);
-                        } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
-                            requiredNodeArray.add(arbilDataNode);
-                        } else {
-                            remainingNodeArray.add(arbilDataNode);
-                        }
-                    }
-                } catch (URISyntaxException exception) {
-                    System.err.println(exception.getMessage());
+                KinTreeNode kinTreeNode = new KinTreeNode(entityData);
+                if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                    egoNodeArray.add(kinTreeNode);
+                } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                    requiredNodeArray.add(kinTreeNode);
+                } else {
+                    remainingNodeArray.add(kinTreeNode);
                 }
             }
         }
 //            setEgoNodes(egoNodeArray, egoTree, egoModel, egoRootNode);
-        egoTree.rootNodeChildren = egoNodeArray.toArray(new ArbilDataNode[]{});
+        egoTree.rootNodeChildren = egoNodeArray.toArray(new ArbilNode[]{});
         egoTree.requestResort();
 //            setEgoNodes(requiredNodeArray, requiredTree, requiredModel, requiredRootNode);
-        requiredTree.rootNodeChildren = requiredNodeArray.toArray(new ArbilDataNode[]{});
+        requiredTree.rootNodeChildren = requiredNodeArray.toArray(new ArbilNode[]{});
         requiredTree.requestResort();
 //            setEgoNodes(remainingNodeArray, impliedTree, impliedModel, impliedRootNode);
-        impliedTree.rootNodeChildren = remainingNodeArray.toArray(new ArbilDataNode[]{});
+        impliedTree.rootNodeChildren = remainingNodeArray.toArray(new ArbilNode[]{});
         impliedTree.requestResort();
-        if (transientLabel != null) {
-            labelPanel3.remove(transientLabel);
-        }
+        transientTree.rootNodeChildren = new ArbilNode[]{};
+        transientTree.requestResort();
+//        if (transientLabel != null) {
+//            labelPanel3.remove(transientLabel);
+//        }
     }
 
     public void setTransientNodes(EntityData[] allEntities) {
-        egoTree.rootNodeChildren = new ArbilDataNode[]{};
+        this.remove(metadataNodeScrolPane);
+        this.add(transientNodeScrolPane, BorderLayout.CENTER);
+        this.revalidate();
+        ArrayList<KinTreeNode> transientNodeArray = new ArrayList<KinTreeNode>();
+        for (EntityData entityData : allEntities) {
+            KinTreeNode kinTreeNode = new KinTreeNode(entityData);
+            transientNodeArray.add(kinTreeNode);
+        }
+        transientTree.rootNodeChildren = transientNodeArray.toArray(new ArbilNode[]{});
+        transientTree.requestResort();
+
+        egoTree.rootNodeChildren = new ArbilNode[]{};
         egoTree.requestResort();
 //            setEgoNodes(requiredNodeArray, requiredTree, requiredModel, requiredRootNode);
-        requiredTree.rootNodeChildren = new ArbilDataNode[]{};
+        requiredTree.rootNodeChildren = new ArbilNode[]{};
         requiredTree.requestResort();
 //            setEgoNodes(remainingNodeArray, impliedTree, impliedModel, impliedRootNode);
-        impliedTree.rootNodeChildren = new ArbilDataNode[]{};
+        impliedTree.rootNodeChildren = new ArbilNode[]{};
         impliedTree.requestResort();
-        transientLabel = new JLabel(allEntities.length + " transient entities have been generated");
-        labelPanel3.add(transientLabel, BorderLayout.PAGE_START);
+
+
+//        transientLabel = new JLabel(allEntities.length + " transient entities have been generated");
+//        labelPanel3.add(transientLabel, BorderLayout.PAGE_START);
     }
 //    private void setEgoNodes(ArrayList<ArbilDataNode> selectedNodes, JTree currentTree, DefaultTreeModel currentModel, DefaultMutableTreeNode currentRootNode) {
 //        currentRootNode.removeAllChildren();
