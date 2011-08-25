@@ -11,10 +11,6 @@ import nl.mpi.arbil.ui.ArbilTree;
  */
 public class KinTree extends ArbilTree {
 
-    public KinTree() {
-        super.init();
-    }
-
     @Override
     protected void putSelectionIntoPreviewTable() {
         ArbilNode arbilNode = getLeadSelectionNode();
