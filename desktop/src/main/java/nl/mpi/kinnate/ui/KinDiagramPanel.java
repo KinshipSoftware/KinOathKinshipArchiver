@@ -21,7 +21,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeContainer;
-import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
@@ -386,29 +386,32 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
     private void registerCurrentNodes(EntityData[] currentEntities) {
         // todo: i think this is resolved but double check the issue where arbil nodes update frequency is too high and breaks basex
-        for (EntityData entityData : currentEntities) {
-            ArbilDataNode arbilDataNode = null;
-            if (!registeredArbilDataNode.containsKey(entityData.getUniqueIdentifier())) {
-                try {
-                    String metadataPath = entityData.getEntityPath();
-                    if (metadataPath != null) {
-                        arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(metadataPath));
-                        registeredArbilDataNode.put(entityData.getUniqueIdentifier(), arbilDataNode);
-                        arbilDataNode.registerContainer(this);
-                        // todo: keep track of registered nodes and remove the unrequired ones here
-                    } else {
-                        GuiHelper.linorgBugCatcher.logError(new Exception("Error getting path for: " + entityData.getUniqueIdentifier().getAttributeIdentifier() + " : " + entityData.getLabel()[0]));
-                    }
-                } catch (URISyntaxException exception) {
-                    GuiHelper.linorgBugCatcher.logError(exception);
-                }
-            } else {
-                arbilDataNode = registeredArbilDataNode.get(entityData.getUniqueIdentifier());
-            }
-            if (arbilDataNode != null) {
-                entityData.metadataRequiresSave = arbilDataNode.getNeedsSaveToDisk(false);
-            }
-        }
+        // todo: load the nodes in the KinDataNode when putting them in the table and pass on the reload requests here when they occur
+//        for (EntityData entityData : currentEntities) {
+//            ArbilDataNode arbilDataNode = null;
+//            if (!registeredArbilDataNode.containsKey(entityData.getUniqueIdentifier())) {
+//                try {
+//                    String metadataPath = entityData.getEntityPath();
+//                    if (metadataPath != null) {
+//                        // todo: this should not load the arbil node only register an interest
+////                        and this needs to be tested
+//                        arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNodeWithoutLoading(new URI(metadataPath));
+//                        registeredArbilDataNode.put(entityData.getUniqueIdentifier(), arbilDataNode);
+//                        arbilDataNode.registerContainer(this);
+//                        // todo: keep track of registered nodes and remove the unrequired ones here
+//                    } else {
+//                        GuiHelper.linorgBugCatcher.logError(new Exception("Error getting path for: " + entityData.getUniqueIdentifier().getAttributeIdentifier() + " : " + entityData.getLabel()[0]));
+//                    }
+//                } catch (URISyntaxException exception) {
+//                    GuiHelper.linorgBugCatcher.logError(exception);
+//                }
+//            } else {
+//                arbilDataNode = registeredArbilDataNode.get(entityData.getUniqueIdentifier());
+//            }
+//            if (arbilDataNode != null) {
+//                entityData.metadataRequiresSave = arbilDataNode.getNeedsSaveToDisk(false);
+//            }
+//        }
     }
 
     public void entityRelationsChanged(UniqueIdentifier[] selectedIdentifiers) {
@@ -419,41 +422,44 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         drawGraph();
     }
 
-    public void dataNodeIconCleared(ArbilDataNode arbilDataNode) {
+    public void dataNodeIconCleared(ArbilNode arbilNode) {
 //         todo: this needs to be updated to be multi threaded so users can link or save multiple nodes at once
         boolean dataBaseRequiresUpdate = false;
         boolean redrawRequired = false;
-        // find the entity data for this arbil data node
-        for (EntityData entityData : graphSorter.getDataNodes()) {
-            try {
-                String entityPath = entityData.getEntityPath();
-                if (entityPath != null && arbilDataNode.getURI().equals(new URI(entityPath))) {
-                    // check if the metadata has been changed
-                    // todo: something here fails to act on multiple nodes that have changed (it is the db update that was missed)
-                    if (entityData.metadataRequiresSave && !arbilDataNode.getNeedsSaveToDisk(false)) {
-                        dataBaseRequiresUpdate = true;
-                        redrawRequired = true;
+        if (arbilNode instanceof ArbilDataNode) {
+            ArbilDataNode arbilDataNode = (ArbilDataNode) arbilNode;
+            // find the entity data for this arbil data node
+            for (EntityData entityData : graphSorter.getDataNodes()) {
+                try {
+                    String entityPath = entityData.getEntityPath();
+                    if (entityPath != null && arbilDataNode.getURI().equals(new URI(entityPath))) {
+                        // check if the metadata has been changed
+                        // todo: something here fails to act on multiple nodes that have changed (it is the db update that was missed)
+                        if (entityData.metadataRequiresSave && !arbilDataNode.getNeedsSaveToDisk(false)) {
+                            dataBaseRequiresUpdate = true;
+                            redrawRequired = true;
+                        }
+                        // clear or set the needs save flag
+                        entityData.metadataRequiresSave = arbilDataNode.getNeedsSaveToDisk(false);
+                        if (entityData.metadataRequiresSave) {
+                            redrawRequired = true;
+                        }
                     }
-                    // clear or set the needs save flag
-                    entityData.metadataRequiresSave = arbilDataNode.getNeedsSaveToDisk(false);
-                    if (entityData.metadataRequiresSave) {
-                        redrawRequired = true;
-                    }
+                } catch (URISyntaxException exception) {
+                    GuiHelper.linorgBugCatcher.logError(exception);
                 }
-            } catch (URISyntaxException exception) {
-                GuiHelper.linorgBugCatcher.logError(exception);
             }
-        }
-        if (dataBaseRequiresUpdate) {
-            entityCollection.updateDatabase(arbilDataNode.getURI());
-            graphPanel.getIndexParameters().valuesChanged = true;
+            if (dataBaseRequiresUpdate) {
+                entityCollection.updateDatabase(arbilDataNode.getURI());
+                graphPanel.getIndexParameters().valuesChanged = true;
+            }
         }
         if (redrawRequired) {
             drawGraph();
         }
     }
 
-    public void dataNodeRemoved(ArbilDataNode adn) {
+    public void dataNodeRemoved(ArbilNode adn) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
