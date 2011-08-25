@@ -7,6 +7,7 @@ import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.svg.SymbolGraphic;
 
 /**
  *  Document   : KinTreeNode
@@ -16,6 +17,7 @@ import nl.mpi.kinnate.kindata.EntityRelation;
 public class KinTreeNode extends ArbilNode implements Comparable {
 
     EntityData entityData;
+    static SymbolGraphic symbolGraphic = new SymbolGraphic();
 
     public KinTreeNode(EntityData entityData) {
         super();
@@ -63,6 +65,24 @@ public class KinTreeNode extends ArbilNode implements Comparable {
         } else {
             return new ArbilNode[]{};
         }
+
+        // todo: inthe case of metadata nodes load them via the arbil data loader
+//                try {
+//                    String entityPath = entityData.getEntityPath();
+//                    if (entityPath != null) {
+////                        ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityPath));
+//                        if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
+//                            egoNodeArray.add(arbilDataNode);
+//                        } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
+//                            requiredNodeArray.add(arbilDataNode);
+//                        } else {
+//                            remainingNodeArray.add(arbilDataNode);
+//                        }
+//                    }
+//                } catch (URISyntaxException exception) {
+//                    System.err.println(exception.getMessage());
+//                }
+
     }
 
     @Override
@@ -72,8 +92,10 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public ImageIcon getIcon() {
+        if (entityData != null) {
+            return symbolGraphic.getSymbolGraphic(entityData.getSymbolType(), entityData.isEgo);
+        }
         return null;
-//        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
