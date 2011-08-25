@@ -126,6 +126,7 @@ public class EntityImporter implements GenericImporter {
     }
 
     protected void saveAllDocuments() {
+        appendToTaskOutput(createdDocuments.size() + " entities imported");
         appendToTaskOutput("Saving imported documents (step 2/4)");
         progressBar.setValue(0);
         int documentCount = createdDocuments.size();
