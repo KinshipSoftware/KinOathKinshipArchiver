@@ -68,7 +68,7 @@ public class EntitySvg {
         }
     }
 
-    public void insertSymbols(SVGDocument doc, String svgNameSpace) {
+    public int insertSymbols(SVGDocument doc, String svgNameSpace) {
         Element svgRoot = doc.getDocumentElement();
         Element defsNode = doc.createElementNS(svgNameSpace, "defs");
         defsNode.setAttribute("id", "KinSymbols");
@@ -78,8 +78,8 @@ public class EntitySvg {
         Element circleNode = doc.createElementNS(svgNameSpace, "circle");
         circleNode.setAttribute("cx", Integer.toString(symbolSize / 2));
         circleNode.setAttribute("cy", Integer.toString(symbolSize / 2));
-        circleNode.setAttribute("r", Integer.toString(symbolSize / 2));
-        circleNode.setAttribute("height", Integer.toString(symbolSize));
+        circleNode.setAttribute("r", Integer.toString((symbolSize - strokeWidth) / 2));
+//        circleNode.setAttribute("height", Integer.toString(symbolSize - (strokeWidth * 3)));
         circleNode.setAttribute("stroke", "black");
         circleNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
         circleGroup.appendChild(circleNode);
@@ -89,10 +89,10 @@ public class EntitySvg {
         Element squareGroup = doc.createElementNS(svgNameSpace, "g");
         squareGroup.setAttribute("id", "square");
         Element squareNode = doc.createElementNS(svgNameSpace, "rect");
-        squareNode.setAttribute("x", "0");
-        squareNode.setAttribute("y", "0");
-        squareNode.setAttribute("width", Integer.toString(symbolSize));
-        squareNode.setAttribute("height", Integer.toString(symbolSize));
+        squareNode.setAttribute("x", Integer.toString(strokeWidth));
+        squareNode.setAttribute("y", Integer.toString(strokeWidth));
+        squareNode.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
+        squareNode.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
         squareNode.setAttribute("stroke", "black");
         squareNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
         squareGroup.appendChild(squareNode);
@@ -164,10 +164,11 @@ public class EntitySvg {
         Element triangleGroup = doc.createElementNS(svgNameSpace, "g");
         triangleGroup.setAttribute("id", "triangle");
         Element triangleNode = doc.createElementNS(svgNameSpace, "polygon");
-        int triangleHeight = (int) (Math.sqrt(3) * symbolSize / 2);
-        triangleNode.setAttribute("points", (symbolSize / 2) + "," + 0 + " "
-                + 0 + "," + triangleHeight
-                + " " + symbolSize + "," + triangleHeight);
+        int triangleSize = symbolSize - strokeWidth / 2;
+        int triangleHeight = (int) (Math.sqrt(3) * triangleSize / 2);
+        triangleNode.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
+                + strokeWidth / 2 + "," + triangleHeight
+                + " " + triangleSize + "," + triangleHeight);
         triangleNode.setAttribute("stroke", "black");
         triangleNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
         triangleGroup.appendChild(triangleNode);
@@ -218,6 +219,7 @@ public class EntitySvg {
         noneGroup.appendChild(noneNode);
         defsNode.appendChild(noneGroup);
         svgRoot.appendChild(defsNode);
+        return symbolSize;
     }
 
     public String[] listSymbolNames(SVGDocument doc) {
@@ -289,6 +291,7 @@ public class EntitySvg {
                 // if all the visible relations are selected then allow y shift
                 allowYshift = true;
             }
+//            allowYshift = true;
             AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
             scaleFactor = affineTransform.getScaleX(); // the drawing should be proportional so only using X is adequate here
             shiftXscaled = shiftXfloat / scaleFactor;
