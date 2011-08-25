@@ -127,7 +127,7 @@ public class QueryBuilder {
 //                + "}</Relation>"
 //                + "}</Relations>\n";
 //    }
-    public String getEntityQueryReturn(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
+    public String getEntityQueryReturn(IndexerParameters indexParameters) {
         return "return copy $copyNode := $entityNode\n"
                 + "modify (\n"
                 // loop the label fields and add a node for any that exist
@@ -139,9 +139,16 @@ public class QueryBuilder {
                 + "return $copyNode\n";
     }
 
+    public String getEntityByKeyWordQuery(String keyWords, IndexerParameters indexParameters) {
+        return "<Entities> { for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + keyWords + "\")\n"
+                + "return let $entityNode := $doc/*:Kinnate/*:Entity\n"
+                + getEntityQueryReturn(indexParameters)
+                + "}</Entities>";
+    }
+
     public String getEntityWithRelationsQuery(UniqueIdentifier uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
         return "for $entityNode := collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[**/*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n" //                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
-                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
+                + getEntityQueryReturn(indexParameters);
 //        return "for $entityNode in collection('nl-mpi-kinnate')//*:UniqueIdentifier[. = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]/ancestor::*:Kinnate\n"
 //                + "where 0 = ($entityNode/(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = " + asSequenceString(excludeUniqueIdentifiers) + ")\n"
 //                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
@@ -149,7 +156,7 @@ public class QueryBuilder {
 
     public String getEntityQuery(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
         return "for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n" //                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
-                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
+                + getEntityQueryReturn(indexParameters);
     }
 
 //    private String getEntityQueryReturn(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
