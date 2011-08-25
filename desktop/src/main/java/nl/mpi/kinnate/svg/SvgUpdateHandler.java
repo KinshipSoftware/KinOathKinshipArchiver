@@ -37,6 +37,18 @@ public class SvgUpdateHandler {
     private float[][] dragRemainders = null;
     private boolean resizeRequired = false;
 
+    public enum GraphicsTypes {
+
+        Label, Circle, Square, Polyline
+//                        *  Rectangle <rect>
+//                        * Circle <circle>
+//                        * Ellipse <ellipse>
+//                        * Line <line>
+//                        * Polyline <polyline>
+//                        * Polygon <polygon>
+//                        * Path <path>
+    }
+
     protected SvgUpdateHandler(GraphPanel graphPanelLocal, KinTermSavePanel kinTermSavePanelLocal) {
         graphPanel = graphPanelLocal;
         kinTermSavePanel = kinTermSavePanelLocal;
@@ -133,7 +145,7 @@ public class SvgUpdateHandler {
                                     Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
                                     if (idAttrubite != null) {
                                         UniqueIdentifier entityId = new UniqueIdentifier(idAttrubite.getTextContent());
-                                        System.out.println("group id: " + entityId.getAttributeIdentifier());
+//                                        System.out.println("group id: " + entityId.getAttributeIdentifier());
                                         Node existingHighlight = null;
                                         // find any existing highlight
                                         for (Node subGoupNode = currentChild.getFirstChild(); subGoupNode != null; subGoupNode = subGoupNode.getNextSibling()) {
@@ -403,7 +415,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    public void addLabel(final String labelString, final float xPos, final float yPos) {
+    public void addGraphics(final GraphicsTypes graphicsType, final float xPos, final float yPos) {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
@@ -417,20 +429,53 @@ public class SvgUpdateHandler {
                     graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
 //                    }
                     Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
-                    Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
+                    Element labelText;
+                    switch (graphicsType) {
+                        case Circle:
+                            labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
+                            labelText.setAttribute("r", "100");
+                            labelText.setAttribute("fill", "none");
+                            labelText.setAttribute("stroke", "black");
+                            labelText.setAttribute("stroke-width", "2");
+                            break;
+                        case Label:
+                            labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
+                            labelText.setAttribute("fill", "black");
+                            labelText.setAttribute("stroke-width", "0");
+                            labelText.setAttribute("font-size", "28");
+                            Text textNode = graphPanel.doc.createTextNode("Label");
+                            labelText.appendChild(textNode);
+                            break;
+                        case Polyline:
+                            labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                            break;
+                        case Square:
+                            labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
+                            labelText.setAttribute("width", "100");
+                            labelText.setAttribute("height", "100");
+                            labelText.setAttribute("fill", "none");
+                            labelText.setAttribute("stroke", "black");
+                            labelText.setAttribute("stroke-width", "2");
+                            break;
+                        default:
+                            return;
+                    }
+//                        *  Rectangle <rect>
+//                        * Circle <circle>
+//                        * Ellipse <ellipse>
+//                        * Line <line>
+//                        * Polyline <polyline>
+//                        * Polygon <polygon>
+//                        * Path <path>
+
                     UniqueIdentifier labelId = new UniqueIdentifier(UniqueIdentifier.IdentifierType.gid);
 //                    String labelIdString = "label" + labelGroup.getChildNodes().getLength();
                     float[] labelPosition = new float[]{graphSize.x + graphSize.width / 2, graphSize.y + graphSize.height / 2};
 //                    labelText.setAttribute("x", "0"); // todo: update this to use the mouse click location // xPos
 //                    labelText.setAttribute("y", "0"); // yPos
-                    labelText.setAttribute("fill", "black");
-                    labelText.setAttribute("stroke-width", "0");
-                    labelText.setAttribute("font-size", "28");
                     labelText.setAttribute("id", labelId.getAttributeIdentifier());
                     labelText.setAttribute("transform", "translate(" + Float.toString(labelPosition[0]) + ", " + Float.toString(labelPosition[1]) + ")");
 //
-                    Text textNode = graphPanel.doc.createTextNode(labelString);
-                    labelText.appendChild(textNode);
                     // todo: put this into a geometry group and allow for selection and drag
                     labelGroup.appendChild(labelText);
                     graphPanel.entitySvg.entityPositions.put(labelId, labelPosition);
