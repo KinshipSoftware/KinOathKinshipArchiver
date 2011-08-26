@@ -83,7 +83,7 @@ public class EntityUploader {
             public void run() {
                 // search file system
                 ModifiedFileSearch modifiedFileSearch = new ModifiedFileSearch();
-                modifiedFileSearch.setSearchType(ModifiedFileSearch.SearchType.cmdi); // todo: change this to kmdi when implemented
+                modifiedFileSearch.setSearchType(ModifiedFileSearch.SearchType.kmdi); // todo: change this to kmdi when implemented
                 modifiedFiles = modifiedFileSearch.getModifiedFiles(ArbilSessionStorage.getSingleInstance().getCacheDirectory()).toArray(new File[]{});
                 actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
             }
