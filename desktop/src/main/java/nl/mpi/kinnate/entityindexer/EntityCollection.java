@@ -93,7 +93,7 @@ public class EntityCollection {
         try {
 //            System.out.println("List: " + new List().execute(context));
             new DropDB(databaseName).execute(context);
-            new Set("CREATEFILTER", "*.cmdi").execute(context);
+            new Set("CREATEFILTER", "*.kmdi").execute(context);
             new CreateDB(databaseName, ArbilSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
 //            System.out.println("List: " + new List().execute(context));
 //            System.out.println("Find: " + new Find(databaseName).title());
@@ -385,7 +385,7 @@ public class EntityCollection {
             public void actionPerformed(ActionEvent e) {
                 resultsText.setText("");
                 try {
-                    new EntityCollection().updateDatabase(new URI("file:/Users/petwit/.arbil/ArbilWorkingFiles/ca1641fc8828f9edb295d1e7b3d37405/_PARENTS_.cmdi"));
+                    new EntityCollection().updateDatabase(new URI("file:/Users/petwit/.arbil/ArbilWorkingFiles/ca1641fc8828f9edb295d1e7b3d37405/_PARENTS_.kmdi"));
                 } catch (URISyntaxException exception) {
                     resultsText.append(exception.getMessage());
                 }
