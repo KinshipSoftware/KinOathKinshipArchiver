@@ -45,7 +45,7 @@ public class EntityDocument {
             idString = nameString;
             entityFile = new File(destinationDirectory, nameString);
         } else {
-            idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".cmdi";
+            idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
             File subDirectory = new File(destinationDirectory, idString.substring(0, 2));
             subDirectory.mkdir();
             entityFile = new File(subDirectory, idString);
