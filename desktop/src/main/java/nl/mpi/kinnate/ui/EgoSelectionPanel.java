@@ -10,6 +10,7 @@ import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTreeRenderer;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -27,26 +28,26 @@ public class EgoSelectionPanel extends JPanel {
     JScrollPane metadataNodeScrolPane;
     JScrollPane transientNodeScrolPane;
 
-    public EgoSelectionPanel(ArbilTable previewTable) {
+    public EgoSelectionPanel(ArbilTable previewTable, GraphPanel graphPanel) {
         JPanel metadataNodePanel;
         JPanel transientNodePanel;
         transientNodePanel = new JPanel(new BorderLayout());
         transientNodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Transient Entities"));
-        transientTree = new KinTree();
+        transientTree = new KinTree(graphPanel);
         transientTree.setBackground(transientNodePanel.getBackground());
         transientNodePanel.add(transientTree, BorderLayout.CENTER);
         transientNodeScrolPane = new JScrollPane(transientNodePanel);
 
         metadataNodePanel = new JPanel(new BorderLayout());
-        egoTree = new KinTree();
+        egoTree = new KinTree(graphPanel);
 //        egoTree.setRootVisible(false);
         egoTree.setCellRenderer(new ArbilTreeRenderer());
 
-        requiredTree = new KinTree();
+        requiredTree = new KinTree(graphPanel);
 //        requiredTree.setRootVisible(false);
         requiredTree.setCellRenderer(new ArbilTreeRenderer());
 
-        impliedTree = new KinTree();
+        impliedTree = new KinTree(graphPanel);
 //        impliedTree.setRootVisible(false);
         impliedTree.setCellRenderer(new ArbilTreeRenderer());
 
