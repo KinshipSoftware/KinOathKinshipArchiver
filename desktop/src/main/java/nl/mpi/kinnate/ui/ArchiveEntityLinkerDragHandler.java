@@ -17,6 +17,7 @@ import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
@@ -169,7 +170,7 @@ public class ArchiveEntityLinkerDragHandler extends TransferHandler implements T
                     if (createdEntity) {
                         // cmdi link types have been considered here but they are very complex and not well suited to kinship needs so we are using the corpus link type for now
 //                    new ArbilComponentBuilder().insertResourceProxy(kinArbilDataNode, currentArbilNode);
-                        ArrayList<ArbilDataNode> kinTreeNodes = new ArrayList<ArbilDataNode>();
+                        ArrayList<ArbilNode> kinTreeNodes = new ArrayList<ArbilNode>();
                         if (kinTree.rootNodeChildren != null) {
                             kinTreeNodes.addAll(Arrays.asList(kinTree.rootNodeChildren));
                         }
