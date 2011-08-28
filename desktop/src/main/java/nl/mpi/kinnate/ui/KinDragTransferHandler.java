@@ -11,9 +11,12 @@ import javax.swing.TransferHandler;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.data.KinTreeNode;
+import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -26,6 +29,11 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     ArbilNode[] selectedNodes;
     DataFlavor dataFlavor = new DataFlavor(ArbilNode[].class, "ArbilObject");
     DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor};
+    KinDiagramPanel kinDiagramPanel;
+
+    public KinDragTransferHandler(KinDiagramPanel kinDiagramPanel) {
+        this.kinDiagramPanel = kinDiagramPanel;
+    }
 
     @Override
     public int getSourceActions(JComponent comp) {
@@ -34,9 +42,16 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
 
     @Override
     public Transferable createTransferable(JComponent comp) {
-        selectedNodes = ((KinTree) comp).getAllSelectedNodes();
+        selectedNodes = ((ArbilTree) comp).getAllSelectedNodes();
         if (selectedNodes.length == 0) {
             return null;
+        }
+        for (ArbilNode arbilNode : selectedNodes) {
+            if (arbilNode instanceof ArbilDataNode) {
+                if (((ArbilDataNode) arbilNode).getParentDomNode().isCorpus() || ((ArbilDataNode) arbilNode).getParentDomNode().isCatalogue() || ((ArbilDataNode) arbilNode).getParentDomNode().isDirectory()) {
+                    return null;
+                }
+            }
         }
         return this;
     }
@@ -72,15 +87,26 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         }
 
         Component dropLocation = support.getComponent(); // getDropLocation
-        if (dropLocation instanceof KinDiagramPanel) {
+//        System.out.println("dropLocation: " + dropLocation.toString());
+        if (dropLocation instanceof GraphPanel) {
             return true;
         }
-
-//        boolean actionSupported = (COPY & support.getSourceDropActions()) == COPY;
-//        if (actionSupported) {
-//            support.setDropAction(COPY);
-//            return true;
-//        }
+        if (dropLocation instanceof KinTree) {
+            if (selectedNodes != null && selectedNodes.length > 0 && selectedNodes[0] instanceof ArbilDataNode) {
+                ArbilNode dropNode = ((KinTree) dropLocation).getLeadSelectionNode();
+                if (dropNode == null) {
+                    return true; //support.setDropAction(NONE);
+                } else if (dropNode instanceof KinTreeNode) {
+                    final KinTreeNode kinTreeNode = (KinTreeNode) dropNode;
+                    if (kinTreeNode.entityData == null || kinTreeNode.entityData.getUniqueIdentifier().isTransientIdentifier()) {
+                        // only allow imdi and cmdi nodes to be droped to a kin entity that is permanent (having metadata)
+                        return false; //support.setDropAction(NONE);
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -92,8 +118,11 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         }
 
         Component dropLocation = support.getComponent();
-        if (dropLocation instanceof KinDiagramPanel) {
-            System.out.println("dropped to KinDiagramPanel");
+        // todo: in the case of dropping to the ego tree add the entity to the ego list
+        // todo: in the case of dropping to the required tree add the entity to the required list and remove from the ego list (if in that list)
+        // todo: in the case of dragging from the transient tree offer to make the entity permanent and create metadata
+        if (dropLocation instanceof GraphPanel) {
+            System.out.println("dropped to GraphPanel");
             ArrayList<UniqueIdentifier> slectedIdentifiers = new ArrayList<UniqueIdentifier>();
             try {
                 JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifier.class);
@@ -130,13 +159,13 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
 //                            break;
 //                        }
 //                    }
-                      // end identifier getting code
+                        // end identifier getting code
                     }
                 }
             } catch (JAXBException exception) {
                 new ArbilBugCatcher().logError(exception);
             }
-            ((KinDiagramPanel) dropLocation).addRequiredNodes(slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
+            kinDiagramPanel.addRequiredNodes(slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
             return true;
         }
         return false;
