@@ -118,7 +118,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         ArbilTableModel imdiTableModel = new ArbilTableModel();
         graphPanel.setArbilTableModel(imdiTableModel);
-        graphPanel.add(progressBar, BorderLayout.PAGE_END);
+        progressBar.setVisible(false);
+        graphPanel.add(progressBar, BorderLayout.PAGE_START);
         imdiTable = new ArbilTable(imdiTableModel, "Selected Nodes");
 
         TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
@@ -235,60 +236,66 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void drawGraph() {
-        try {
-            String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
-            ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
-            progressBar.setValue(0);
-            progressBar.setVisible(true);
-            EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), progressBar);
-            boolean visibleNodeFound = false;
-            for (EntityData currentNode : graphNodes) {
-                if (currentNode.isVisible) {
-                    visibleNodeFound = true;
-                    break;
-                }
-            }
-            if (!visibleNodeFound /*graphNodes.length == 0*/) {
-                KinTypeStringConverter graphData = new KinTypeStringConverter();
-                graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
-                graphPanel.drawNodes(graphData);
-                egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
+                    ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
+                    progressBar.setValue(0);
+                    progressBar.setVisible(true);
+                    EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), progressBar);
+                    boolean visibleNodeFound = false;
+                    for (EntityData currentNode : graphNodes) {
+                        if (currentNode.isVisible) {
+                            visibleNodeFound = true;
+                            break;
+                        }
+                    }
+                    if (!visibleNodeFound /*graphNodes.length == 0*/) {
+                        KinTypeStringConverter graphData = new KinTypeStringConverter();
+                        graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
+                        graphPanel.drawNodes(graphData);
+                        egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
 //                KinDiagramPanel.this.doLayout();
-            } else {
-                graphSorter.setEntitys(graphNodes);
-                // register interest Arbil updates and update the graph when data is edited in the table
-                registerCurrentNodes(graphSorter.getDataNodes());
-                graphPanel.drawNodes(graphSorter);
-                egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes());
-            }
-            StyledDocument styledDocument = kinTypeStringInput.getStyledDocument();
-            int lineStart = 0;
-            for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
-                ParserHighlight currentHighlight = parserHighlight[lineCounter];
+                    } else {
+                        graphSorter.setEntitys(graphNodes);
+                        // register interest Arbil updates and update the graph when data is edited in the table
+                        registerCurrentNodes(graphSorter.getDataNodes());
+                        graphPanel.drawNodes(graphSorter);
+                        egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes());
+                    }
+                    StyledDocument styledDocument = kinTypeStringInput.getStyledDocument();
+                    int lineStart = 0;
+                    for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
+                        ParserHighlight currentHighlight = parserHighlight[lineCounter];
 //                int lineStart = styledDocument.getParagraphElement(lineCounter).getStartOffset();
 //                int lineEnd = styledDocument.getParagraphElement(lineCounter).getEndOffset();
-                int lineEnd = lineStart + kinTypeStrings[lineCounter].length();
-                styledDocument.setCharacterAttributes(lineStart, lineEnd, kinTypeStringInput.getStyle("Unknown"), true);
-                while (currentHighlight.highlight != null) {
-                    int startPos = lineStart + currentHighlight.startChar;
-                    int charCount = lineEnd - lineStart;
-                    if (currentHighlight.nextHighlight.highlight != null) {
-                        charCount = currentHighlight.nextHighlight.startChar - currentHighlight.startChar;
+                        int lineEnd = lineStart + kinTypeStrings[lineCounter].length();
+                        styledDocument.setCharacterAttributes(lineStart, lineEnd, kinTypeStringInput.getStyle("Unknown"), true);
+                        while (currentHighlight.highlight != null) {
+                            int startPos = lineStart + currentHighlight.startChar;
+                            int charCount = lineEnd - lineStart;
+                            if (currentHighlight.nextHighlight.highlight != null) {
+                                charCount = currentHighlight.nextHighlight.startChar - currentHighlight.startChar;
+                            }
+                            if (currentHighlight.highlight != null) {
+                                String styleName = currentHighlight.highlight.name();
+                                styledDocument.setCharacterAttributes(startPos, charCount, kinTypeStringInput.getStyle(styleName), true);
+                            }
+                            currentHighlight = currentHighlight.nextHighlight;
+                        }
+                        lineStart += kinTypeStrings[lineCounter].length() + 1;
                     }
-                    if (currentHighlight.highlight != null) {
-                        String styleName = currentHighlight.highlight.name();
-                        styledDocument.setCharacterAttributes(startPos, charCount, kinTypeStringInput.getStyle(styleName), true);
-                    }
-                    currentHighlight = currentHighlight.nextHighlight;
-                }
-                lineStart += kinTypeStrings[lineCounter].length() + 1;
-            }
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
-        } catch (EntityServiceException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load an entity", "Kinnate");
-        }
-        progressBar.setVisible(false);
+                } catch (EntityServiceException exception) {
+                    GuiHelper.linorgBugCatcher.logError(exception);
+                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load all entities required", "Draw Graph");
+                }
+                progressBar.setVisible(false);
+            }
+        }.start();
     }
 
     @Deprecated
