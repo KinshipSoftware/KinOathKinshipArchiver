@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -16,7 +17,6 @@ import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
-import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
 
@@ -31,10 +31,14 @@ public class EntitySearchPanel extends JPanel {
     private KinTree resultsTree;
     private JTextArea resultsArea = new JTextArea();
     private JTextField searchField;
-    IndexerParameters indexParameters;
+    private JProgressBar progressBar;
+    private JButton searchButton;
+    private JPanel searchPanel;
+    private GraphPanel graphPanel;
 
     public EntitySearchPanel(EntityCollection entityCollection, GraphPanel graphPanel, ArbilTable arbilTable) {
         this.entityCollection = entityCollection;
+        this.graphPanel = graphPanel;
         this.setLayout(new BorderLayout());
         resultsTree = new KinTree(graphPanel);
         resultsTree.setCustomPreviewTable(arbilTable);
@@ -53,14 +57,15 @@ public class EntitySearchPanel extends JPanel {
                 super.keyReleased(e);
             }
         });
-        JButton searchButton = new JButton("Search");
+        progressBar = new JProgressBar();
+        searchButton = new JButton("Search");
         searchButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EntitySearchPanel.this.performSearch();
             }
         });
-        JPanel searchPanel = new JPanel();
+        searchPanel = new JPanel();
         searchPanel.setLayout(new BorderLayout());
         searchPanel.add(searchLabel, BorderLayout.PAGE_START);
         searchPanel.add(searchField, BorderLayout.CENTER);
@@ -75,18 +80,31 @@ public class EntitySearchPanel extends JPanel {
     }
 
     protected void performSearch() {
-        ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
-        EntityData[] searchResults = entityCollection.getEntityByKeyWord(searchField.getText(), indexParameters);
-        resultsArea.setText("Found " + searchResults.length + " entities\n");
-        for (EntityData entityData : searchResults) {
+        searchPanel.remove(searchButton);
+        progressBar.setIndeterminate(true);
+        searchPanel.add(progressBar, BorderLayout.PAGE_END);
+        searchPanel.revalidate();
+        new Thread() {
+
+            @Override
+            public void run() {
+                ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
+                EntityData[] searchResults = entityCollection.getEntityByKeyWord(searchField.getText(), graphPanel.getIndexParameters());
+                resultsArea.setText("Found " + searchResults.length + " entities\n");
+                for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
-            resultsArray.add(new KinTreeNode(entityData));
+                    resultsArray.add(new KinTreeNode(entityData));
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
 //                break;
 //            }
-        }
-        resultsTree.rootNodeChildren = resultsArray.toArray(new KinTreeNode[]{});
-        resultsTree.requestResort();
+                }
+                resultsTree.rootNodeChildren = resultsArray.toArray(new KinTreeNode[]{});
+                resultsTree.requestResort();
+                searchPanel.remove(progressBar);
+                searchPanel.add(searchButton, BorderLayout.PAGE_END);
+                searchPanel.revalidate();
+            }
+        }.start();
     }
 }
