@@ -1,9 +1,11 @@
 package nl.mpi.kinnate.data;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.ImageIcon;
 import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -19,7 +21,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     public EntityData entityData;
     DataTypes.RelationType subnodeFilter;
-    KinTreeNode[] childNodes = null;
+    ArbilNode[] childNodes = null;
     static SymbolGraphic symbolGraphic = new SymbolGraphic();
 
     public KinTreeNode(EntityData entityData) {
@@ -76,7 +78,11 @@ public class KinTreeNode extends ArbilNode implements Comparable {
                     relationList.add(new KinTreeNode(entityRelation.getAlterNode(), entityRelation.relationType));
                 }
             }
-            childNodes = relationList.toArray(new KinTreeNode[]{});
+            for (URI archiveLink : entityData.archiveLinkArray) {
+                ArbilDataNode linkedArbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, archiveLink);
+                relationList.add(linkedArbilDataNode);
+            }
+            childNodes = relationList.toArray(new ArbilNode[]{});
             return childNodes;
         } else {
             return new ArbilNode[]{};
