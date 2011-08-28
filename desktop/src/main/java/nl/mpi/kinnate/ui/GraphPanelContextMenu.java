@@ -18,10 +18,12 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.RelationLinker;
 import nl.mpi.kinnate.gedcomimport.EntityDocument;
 import nl.mpi.kinnate.gedcomimport.ImportException;
+import nl.mpi.kinnate.gedcomimport.ImportTranslator;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.GraphPanelSize;
+import nl.mpi.kinnate.svg.SvgUpdateHandler;
 
 /**
  *  Document   : GraphPanelContextMenu
@@ -67,7 +69,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     // todo: node type is not used here anymore but could still be useful as a user option
 //                    String nodeType = evt.getActionCommand();
-                    EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null);
+                    EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null, new ImportTranslator());
                     try {
                         entityDocument.createDocument(true);
                         entityDocument.insertDefaultMetadata();
@@ -140,11 +142,11 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 //            }
 
             JMenu shapeSubMenu = new JMenu("Add Geometry");
-            for (String currentType : new String[]{"Label", "Circle", "Square", "Polyline"}) {
-                JMenuItem addLabel = new JMenuItem("Add " + currentType);
-                addLabel.setActionCommand(currentType);
+            for (SvgUpdateHandler.GraphicsTypes graphicsType : SvgUpdateHandler.GraphicsTypes.values()) {
+                JMenuItem addLabel = new JMenuItem("Add " + graphicsType.name());
+                addLabel.setActionCommand(graphicsType.name());
                 shapeSubMenu.add(addLabel);
-                if (!"Label".equals(currentType)) {
+                if (SvgUpdateHandler.GraphicsTypes.Polyline.equals(graphicsType)) {
                     addLabel.setEnabled(false);
                 }
                 addLabel.addActionListener(GraphPanelContextMenu.this);
@@ -408,8 +410,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("Label")) {
-            graphPanel.svgUpdateHandler.addLabel("Label", xPos, yPos);
-        }
+        graphPanel.svgUpdateHandler.addGraphics(SvgUpdateHandler.GraphicsTypes.valueOf(e.getActionCommand()), xPos, yPos);
     }
 }
