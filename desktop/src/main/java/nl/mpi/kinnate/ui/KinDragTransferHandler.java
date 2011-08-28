@@ -110,30 +110,18 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         return false;
     }
 
-    @Override
-    public boolean importData(TransferHandler.TransferSupport support) {
-        // if we can't handle the import, say so
-        if (!canImport(support)) {
-            return false;
-        }
+    private boolean addEntitiesToGraph() {
+        ArrayList<UniqueIdentifier> slectedIdentifiers = new ArrayList<UniqueIdentifier>();
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifier.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-        Component dropLocation = support.getComponent();
-        // todo: in the case of dropping to the ego tree add the entity to the ego list
-        // todo: in the case of dropping to the required tree add the entity to the required list and remove from the ego list (if in that list)
-        // todo: in the case of dragging from the transient tree offer to make the entity permanent and create metadata
-        if (dropLocation instanceof GraphPanel) {
-            System.out.println("dropped to GraphPanel");
-            ArrayList<UniqueIdentifier> slectedIdentifiers = new ArrayList<UniqueIdentifier>();
-            try {
-                JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifier.class);
-                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
-                for (ArbilNode currentArbilNode : selectedNodes) {
-                    if (currentArbilNode instanceof KinTreeNode) {
-                        KinTreeNode kinTreeNode = (KinTreeNode) currentArbilNode;
-                        slectedIdentifiers.add(kinTreeNode.entityData.getUniqueIdentifier());
-                        // the following methods use either the xml file or the arbil tree node to get the entity identifier
-                        // while they are no longer used it is probably good to keep them for reference
+            for (ArbilNode currentArbilNode : selectedNodes) {
+                if (currentArbilNode instanceof KinTreeNode) {
+                    KinTreeNode kinTreeNode = (KinTreeNode) currentArbilNode;
+                    slectedIdentifiers.add(kinTreeNode.entityData.getUniqueIdentifier());
+                    // the following methods use either the xml file or the arbil tree node to get the entity identifier
+                    // while they are no longer used it is probably good to keep them for reference
 //                    try {
 //                        Document metadataDom = ArbilComponentBuilder.getDocument(currentArbilNode.getURI());
 //                        Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/kin:Entity/kin:Identifier"); // note that this is using the name space prefix not the namespace url
@@ -152,21 +140,58 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
 //                    } catch (TransformerException exception) {
 //                        new ArbilBugCatcher().logError(exception);
 //                    }
-                        // todo: new UniqueIdentifier could take ArbilDataNode as a constructor parameter, which would move this code out of this class
+                    // todo: new UniqueIdentifier could take ArbilDataNode as a constructor parameter, which would move this code out of this class
 //                    for (String currentIdentifierType : new String[]{"Kinnate.Entity.Identifier.LocalIdentifier", "Kinnate.Gedcom.UniqueIdentifier.PersistantIdentifier", "Kinnate.Entity.UniqueIdentifier.PersistantIdentifier"}) {
 //                        if (currentArbilNode.getFields().containsKey(currentIdentifierType)) {
 //                            slectedIdentifiers.add(new UniqueIdentifier(currentArbilNode.getFields().get(currentIdentifierType)[0]));
 //                            break;
 //                        }
 //                    }
-                        // end identifier getting code
-                    }
+                    // end identifier getting code
                 }
-            } catch (JAXBException exception) {
-                new ArbilBugCatcher().logError(exception);
             }
-            kinDiagramPanel.addRequiredNodes(slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
-            return true;
+        } catch (JAXBException exception) {
+            new ArbilBugCatcher().logError(exception);
+        }
+        kinDiagramPanel.addRequiredNodes(slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
+        return true;
+    }
+
+    private boolean importMetadata() {
+        // todo:
+        return false;
+    }
+
+    private boolean attachMetadata() {
+        // todo: 
+        return false;
+    }
+
+    @Override
+    public boolean importData(TransferHandler.TransferSupport support) {
+        // if we can't handle the import, say so
+        if (!canImport(support)) {
+            return false;
+        }
+
+        boolean isImportingMetadata = (selectedNodes != null && selectedNodes.length > 0 && selectedNodes[0] instanceof ArbilDataNode);
+
+        Component dropLocation = support.getComponent();
+        // todo: in the case of dropping to the ego tree add the entity to the ego list
+        // todo: in the case of dropping to the required tree add the entity to the required list and remove from the ego list (if in that list)
+        // todo: in the case of dragging from the transient tree offer to make the entity permanent and create metadata
+        if (dropLocation instanceof GraphPanel) {
+            System.out.println("dropped to GraphPanel");
+            if (isImportingMetadata) {
+                return importMetadata();
+            } else {
+                return addEntitiesToGraph();
+            }
+        } else if (dropLocation instanceof KinTree) {
+            System.out.println("dropped to KinTree");
+            if (isImportingMetadata) {
+                return attachMetadata();
+            }
         }
         return false;
     }
