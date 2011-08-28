@@ -160,7 +160,8 @@ public class QueryParser implements EntityService {
         progressBar.setMaximum(totalProgressRequired);
         progressBar.setMinimum(0);
         progressBar.setValue(0);
-
+        // only show specific progress when it is meaningful
+        progressBar.setIndeterminate(totalProgressRequired < 3);
         int lineCounter = -1;
         // process each line of the users input
         for (String currentKinString : kinTypeStrings) {
