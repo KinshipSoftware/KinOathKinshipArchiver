@@ -237,7 +237,7 @@ public class EntityCollection {
             JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifierArray.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String queryResult = new XQuery(queryString).execute(context);
-            System.out.println("queryResult: " + queryResult);
+//            System.out.println("queryResult: " + queryResult);
             UniqueIdentifierArray identifierArray;
             if (queryResult.length() > 0) {
                 // filter out the name spaces from the xml
@@ -292,7 +292,7 @@ public class EntityCollection {
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityWithRelationsQuery(uniqueIdentifier, excludeUniqueIdentifiers, indexParameters);
-        System.out.println("query1String: " + query1String);
+//        System.out.println("query1String: " + query1String);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -316,7 +316,7 @@ public class EntityCollection {
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
-        System.out.println("query1String: " + query1String);
+//        System.out.println("query1String: " + query1String);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
