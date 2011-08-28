@@ -165,6 +165,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler();
         this.setTransferHandler(dragTransferHandler);
+        egoSelectionPanel.setTransferHandler(dragTransferHandler);
 
         EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, graphPanel, imdiTable);
         entitySearchPanel.setTransferHandler(dragTransferHandler);
