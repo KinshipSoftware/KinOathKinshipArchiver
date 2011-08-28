@@ -10,13 +10,14 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilNodeSearchPanel;
 import nl.mpi.arbil.ui.ArbilSplitPanel;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilTree;
+import nl.mpi.arbil.ui.GuiHelper;
 
 /**
  *  Document   : ArchiveEntityLinkerPanel
@@ -26,21 +27,12 @@ import nl.mpi.arbil.ui.ArbilTree;
 public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
 
     private JTabbedPane tabbedPane;
-    private ArbilTree kinTree;
     private ArbilTree archiveTree;
     private JButton nextButton;
-//    ArbilNodeSearchPanel archiveSearch = new ArbilNodeSearchPanel();
 
-    public ArchiveEntityLinkerPanel(ArbilTable previewTable) {
-        kinTree = new ArbilTree();
+    public ArchiveEntityLinkerPanel(ArbilTable previewTable, KinDragTransferHandler dragTransferHandler) {
         archiveTree = new ArbilTree();
-        ArchiveEntityLinkerDragHandler linkerDragHandler = new ArchiveEntityLinkerDragHandler(kinTree);
-        kinTree.setTransferHandler(linkerDragHandler);
-        archiveTree.setTransferHandler(linkerDragHandler);
         this.setLayout(new BorderLayout());
-        HidePane hidePane = new HidePane(HidePane.HidePanePosition.left, 0);
-        hidePane.add(kinTree, "Kin Entities");
-        this.add(hidePane, BorderLayout.LINE_START);
         JPanel treePanel = new JPanel(new BorderLayout());
         tabbedPane = new JTabbedPane();
         tabbedPane.add("Archive Branch Selection", treePanel);
@@ -50,20 +42,20 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         nextButton.addActionListener(this);
         treePanel.add(new JScrollPane(archiveTree), BorderLayout.CENTER);
         treePanel.add(nextButton, BorderLayout.PAGE_END);
-        kinTree.setCustomPreviewTable(previewTable);
         archiveTree.setCustomPreviewTable(previewTable);
+        archiveTree.setTransferHandler(dragTransferHandler);
+        archiveTree.setDragEnabled(true);
         loadTreeNodes();
     }
 
     private void loadTreeNodes() {
         try {
-            ArbilDataNode imdiCorporaNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI("http://corpus1.mpi.nl/IMDI/metadata/IMDI.imdi"));
-            ArbilDataNode[] allEntities = new ArbilDataNode[]{imdiCorporaNode};
+            ArbilNode imdiCorporaNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI("http://corpus1.mpi.nl/IMDI/metadata/IMDI.imdi"));
+            ArbilNode[] allEntities = new ArbilNode[]{imdiCorporaNode};
             archiveTree.rootNodeChildren = allEntities;
             archiveTree.requestResort();
         } catch (URISyntaxException exception) {
-            System.err.println(exception.getMessage());
-            exception.printStackTrace();
+            GuiHelper.linorgBugCatcher.logError(exception);
         }
     }
 
