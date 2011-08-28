@@ -5,6 +5,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -14,8 +15,14 @@ import javax.xml.bind.Unmarshaller;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTree;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.data.KinTreeNode;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.gedcomimport.EntityDocument;
+import nl.mpi.kinnate.gedcomimport.ImportException;
+import nl.mpi.kinnate.gedcomimport.ImportTranslator;
+import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -30,6 +37,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     DataFlavor dataFlavor = new DataFlavor(ArbilNode[].class, "ArbilObject");
     DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor};
     KinDiagramPanel kinDiagramPanel;
+    EntityData targetEntity = null;
 
     public KinDragTransferHandler(KinDiagramPanel kinDiagramPanel) {
         this.kinDiagramPanel = kinDiagramPanel;
@@ -79,6 +87,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
 
     @Override
     public boolean canImport(TransferHandler.TransferSupport support) {
+        targetEntity = null;
 //        if (!support.isDrop()) {
 //            return false;
 //        }
@@ -97,8 +106,8 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
                 if (dropNode == null) {
                     return true; //support.setDropAction(NONE);
                 } else if (dropNode instanceof KinTreeNode) {
-                    final KinTreeNode kinTreeNode = (KinTreeNode) dropNode;
-                    if (kinTreeNode.entityData == null || kinTreeNode.entityData.getUniqueIdentifier().isTransientIdentifier()) {
+                    targetEntity = ((KinTreeNode) dropNode).entityData; //  final KinTreeNode kinTreeNode = (KinTreeNode) dropNode;
+                    if (targetEntity == null || targetEntity.getUniqueIdentifier().isTransientIdentifier()) {
                         // only allow imdi and cmdi nodes to be droped to a kin entity that is permanent (having metadata)
                         return false; //support.setDropAction(NONE);
                     } else {
@@ -158,12 +167,53 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     }
 
     private boolean importMetadata() {
-        // todo:
-        return false;
+        System.out.println("importMetadata");
+        EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null, new ImportTranslator());
+        try {
+            entityDocument.createDocument(true);
+            entityDocument.insertValue("Name", selectedNodes[0].toString());
+            if (selectedNodes[0] instanceof ArbilDataNode) {
+                entityDocument.insertValue("Gender", ((ArbilDataNode) selectedNodes[0]).getFields().get("Sex")[0].getFieldValue().toLowerCase());
+                entityDocument.insertValue("DateOfBirth", ((ArbilDataNode) selectedNodes[0]).getFields().get("BirthDate")[0].getFieldValue().toLowerCase());
+            }
+//            entityDocument.insertDefaultMetadata(); // todo: insert copy of metadata from source node
+            attachMetadata(entityDocument.entityData);
+            entityDocument.saveDocument();
+            URI addedEntityUri = entityDocument.getFile().toURI();
+            new EntityCollection().updateDatabase(addedEntityUri);
+            kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
+            return true;
+        } catch (ImportException exception) {
+            // todo: warn user with a dialog
+            new ArbilBugCatcher().logError(exception);
+            return false;
+        }
     }
 
-    private boolean attachMetadata() {
-        // todo: 
+    private boolean attachMetadata(EntityData entityData) {
+        for (ArbilNode currentArbilNode : selectedNodes) {
+            final ArbilDataNode currentArbilDataNode = (ArbilDataNode) currentArbilNode;
+            entityData.addArchiveLink(currentArbilDataNode.getURI());
+            // todo: insert the archive handle here also
+            // todo: insert the entity identifier into the attached metadata
+
+
+
+//                Document metadataDom = ArbilComponentBuilder.getDocument(addedNodePath);
+//                        if (createdEntity) {
+//                            // set the name node
+//                            Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity/:Name");
+//                currentArbilDataNode.get
+//currentArbilNode
+            // todo: if the dropped archive node alreay is linked in the kin database then show that kin entity, if the node is dragged from the archive tree or from one kin entity to another then add or move it to the new target
+            // todo: if multiple are draged then add them all to the same entity
+//                                    entityDocument.
+//currentArbilNode.getUrlString()
+            // create and set the link node
+            // todo: this might well be updated at a later date, or even use the cmdi link type although that is more complex than required
+            // cmdi link types have been considered here but they are very complex and not well suited to kinship needs so we are using the corpus link type for now
+            // save the changes
+        }
         return false;
     }
 
@@ -190,7 +240,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         } else if (dropLocation instanceof KinTree) {
             System.out.println("dropped to KinTree");
             if (isImportingMetadata) {
-                return attachMetadata();
+                return attachMetadata(targetEntity); // todo: this does not save these changes
             }
         }
         return false;
