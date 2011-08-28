@@ -323,6 +323,13 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    public void removeEgo(String[] egoIdentifierArray) {
 //        dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
 //    }
+
+    public void setSelectedIds(UniqueIdentifier[] uniqueIdentifiers) {
+        selectedGroupId.clear();
+        selectedGroupId.addAll(Arrays.asList(uniqueIdentifiers));
+        svgUpdateHandler.updateSvgSelectionHighlights();
+    }
+
     public UniqueIdentifier[] getSelectedIds() {
         return selectedGroupId.toArray(new UniqueIdentifier[]{});
     }
