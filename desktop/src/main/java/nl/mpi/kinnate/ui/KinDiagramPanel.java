@@ -163,7 +163,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 0);
         tableHidePane.add(advancedPanel, "Metadata");
 
-        DragTransferHandler dragTransferHandler = new DragTransferHandler();
+        KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler();
         this.setTransferHandler(dragTransferHandler);
 
         EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, graphPanel, imdiTable);
