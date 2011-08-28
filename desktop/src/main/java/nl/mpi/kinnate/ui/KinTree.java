@@ -34,17 +34,20 @@ public class KinTree extends ArbilTree {
             graphPanel.setSelectedIds(new UniqueIdentifier[]{});
             super.putSelectionIntoPreviewTable();
         } else if (arbilNode instanceof KinTreeNode) {
+            final KinTreeNode kinTreeNode = (KinTreeNode) arbilNode;
             // set the graph selection
-            graphPanel.setSelectedIds(new UniqueIdentifier[]{((KinTreeNode) arbilNode).entityData.getUniqueIdentifier()});
-            final ArbilTableModel previewTableModel = customPreviewTable.getArbilTableModel();
-            try {
-                final ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(((KinTreeNode) arbilNode).entityData.getEntityPath()));
-                if (!(previewTableModel.getArbilDataNodeCount() == 1 && previewTableModel.containsArbilDataNode(arbilDataNode))) {
-                    previewTableModel.removeAllArbilDataNodeRows();
-                    previewTableModel.addSingleArbilDataNode(arbilDataNode);
+            if (kinTreeNode.entityData != null) {
+                graphPanel.setSelectedIds(new UniqueIdentifier[]{kinTreeNode.entityData.getUniqueIdentifier()});
+                final ArbilTableModel previewTableModel = customPreviewTable.getArbilTableModel();
+                try {
+                    final ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(((KinTreeNode) arbilNode).entityData.getEntityPath()));
+                    if (!(previewTableModel.getArbilDataNodeCount() == 1 && previewTableModel.containsArbilDataNode(arbilDataNode))) {
+                        previewTableModel.removeAllArbilDataNodeRows();
+                        previewTableModel.addSingleArbilDataNode(arbilDataNode);
+                    }
+                } catch (URISyntaxException urise) {
+                    GuiHelper.linorgBugCatcher.logError(urise);
                 }
-            } catch (URISyntaxException urise) {
-                GuiHelper.linorgBugCatcher.logError(urise);
             }
         }
     }
