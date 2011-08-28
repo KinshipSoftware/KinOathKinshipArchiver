@@ -164,8 +164,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 0);
         tableHidePane.add(advancedPanel, "Metadata");
 
-        KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler();
-        this.setTransferHandler(dragTransferHandler);
+        KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler(this);
+        graphPanel.setTransferHandler(dragTransferHandler);
         egoSelectionPanel.setTransferHandler(dragTransferHandler);
 
         EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, graphPanel, imdiTable);
@@ -177,7 +177,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
         kinTermHidePane.add(kinTermPanel, "Kin Terms");
-        kinTermHidePane.add(new ArchiveEntityLinkerPanel(imdiTable), "Archive Linker");
+        kinTermHidePane.add(new ArchiveEntityLinkerPanel(imdiTable, dragTransferHandler), "Archive Linker");
 
         kinGraphPanel.add(kinTypeHidePane, BorderLayout.PAGE_START);
         kinGraphPanel.add(egoSelectionHidePane, BorderLayout.LINE_START);
