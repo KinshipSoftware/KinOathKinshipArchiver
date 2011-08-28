@@ -78,6 +78,13 @@ public class EgoSelectionPanel extends JPanel {
         transientTree.setCustomPreviewTable(previewTable);
     }
 
+    public void setTransferHandler(KinDragTransferHandler dragTransferHandler) {
+        for (KinTree currentTree : new KinTree[]{egoTree, requiredTree, impliedTree, transientTree}) {
+            currentTree.setTransferHandler(dragTransferHandler);
+            currentTree.setDragEnabled(true);
+        }
+    }
+
     public void setTreeNodes(HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, EntityData[] allEntities) {
         this.remove(transientNodeScrolPane);
         this.add(metadataNodeScrolPane, BorderLayout.CENTER);
