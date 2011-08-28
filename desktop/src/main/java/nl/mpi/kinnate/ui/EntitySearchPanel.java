@@ -18,6 +18,7 @@ import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
  *  Document   : EntitySearchPanel
@@ -32,11 +33,10 @@ public class EntitySearchPanel extends JPanel {
     private JTextField searchField;
     IndexerParameters indexParameters;
 
-    public EntitySearchPanel(EntityCollection entityCollectionLocal, ArbilTable arbilTable, IndexerParameters indexParameters) {
-        this.indexParameters = indexParameters;
-        entityCollection = entityCollectionLocal;
+    public EntitySearchPanel(EntityCollection entityCollection, GraphPanel graphPanel, ArbilTable arbilTable) {
+        this.entityCollection = entityCollection;
         this.setLayout(new BorderLayout());
-        resultsTree = new KinTree();
+        resultsTree = new KinTree(graphPanel);
         resultsTree.setCustomPreviewTable(arbilTable);
         resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
         resultsTree.setRootVisible(false);
@@ -80,7 +80,7 @@ public class EntitySearchPanel extends JPanel {
         resultsArea.setText("Found " + searchResults.length + " entities\n");
         for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
-                resultsArray.add(new KinTreeNode(entityData));
+            resultsArray.add(new KinTreeNode(entityData));
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
 //                break;
