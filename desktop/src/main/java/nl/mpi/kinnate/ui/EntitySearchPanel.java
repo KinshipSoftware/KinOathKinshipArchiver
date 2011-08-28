@@ -75,7 +75,7 @@ public class EntitySearchPanel extends JPanel {
         this.add(resultsArea, BorderLayout.PAGE_END);
     }
 
-    public void setTransferHandler(DragTransferHandler dragTransferHandler) {
+    public void setTransferHandler(KinDragTransferHandler dragTransferHandler) {
         resultsTree.setTransferHandler(dragTransferHandler);
     }
 
