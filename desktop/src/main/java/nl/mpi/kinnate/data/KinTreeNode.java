@@ -5,6 +5,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.svg.SymbolGraphic;
@@ -16,12 +17,21 @@ import nl.mpi.kinnate.svg.SymbolGraphic;
  */
 public class KinTreeNode extends ArbilNode implements Comparable {
 
-    EntityData entityData;
+    public EntityData entityData;
+    DataTypes.RelationType subnodeFilter;
+    KinTreeNode[] childNodes = null;
     static SymbolGraphic symbolGraphic = new SymbolGraphic();
 
     public KinTreeNode(EntityData entityData) {
         super();
         this.entityData = entityData;
+        this.subnodeFilter = null;
+    }
+
+    public KinTreeNode(EntityData entityData, DataTypes.RelationType subnodeFilter) {
+        super();
+        this.entityData = entityData;
+        this.subnodeFilter = subnodeFilter; // subnode filter should be null unless the child nodes are to be filtered
     }
 
     @Override
@@ -55,13 +65,19 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public ArbilNode[] getChildArray() {
-        if (entityData != null) {
+        if (childNodes != null) {
+            return childNodes;
+        } else if (entityData != null) {
             ArrayList<ArbilNode> relationList = new ArrayList<ArbilNode>();
-            // todo: add metanodes and hide show relation types
+            // todo: add metanodes and ui option to hide show relation types
             for (EntityRelation entityRelation : entityData.getAllRelations()) {
-                relationList.add(new KinTreeNode(entityRelation.getAlterNode()));
+                final boolean showFiltered = subnodeFilter == DataTypes.RelationType.ancestor || subnodeFilter == DataTypes.RelationType.descendant;
+                if (subnodeFilter == null || (subnodeFilter == entityRelation.relationType && showFiltered)) {
+                    relationList.add(new KinTreeNode(entityRelation.getAlterNode(), entityRelation.relationType));
+                }
             }
-            return relationList.toArray(new ArbilNode[]{});
+            childNodes = relationList.toArray(new KinTreeNode[]{});
+            return childNodes;
         } else {
             return new ArbilNode[]{};
         }
