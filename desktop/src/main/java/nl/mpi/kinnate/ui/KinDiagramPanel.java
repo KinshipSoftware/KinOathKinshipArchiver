@@ -126,7 +126,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         imdiTable.setDragEnabled(true);
 
         registeredArbilDataNode = new HashMap<UniqueIdentifier, ArbilDataNode>();
-        egoSelectionPanel = new EgoSelectionPanel(imdiTable);
+        egoSelectionPanel = new EgoSelectionPanel(imdiTable, graphPanel);
         kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
         // set the styles for the kin type string text
         Style styleComment = kinTypeStringInput.addStyle("Comment", null);
@@ -166,7 +166,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         DragTransferHandler dragTransferHandler = new DragTransferHandler();
         this.setTransferHandler(dragTransferHandler);
 
-        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, imdiTable, graphPanel.getIndexParameters());
+        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, graphPanel, imdiTable);
         entitySearchPanel.setTransferHandler(dragTransferHandler);
 
         HidePane egoSelectionHidePane = new HidePane(HidePane.HidePanePosition.left, 0);
