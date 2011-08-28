@@ -6,11 +6,11 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import javax.swing.JProgressBar;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.ui.GuiHelper;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -114,17 +114,17 @@ public class EntityIndex implements EntityService {
     }
 
     public void loadAllEntities(IndexerParameters indexParameters) {
-        String[] treeNodesArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
-        if (treeNodesArray != null) {
-            for (String currentNodeString : treeNodesArray) {
-                try {
-                    URI egoEntityUri = new URI(currentNodeString);
-                    getEntityData(egoEntityUri, indexParameters);
-                } catch (URISyntaxException exception) {
-                    GuiHelper.linorgBugCatcher.logError(exception);
-                }
-            }
-        }
+//        String[] treeNodesArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
+//        if (treeNodesArray != null) {
+//            for (String currentNodeString : treeNodesArray) {
+//                try {
+//                    URI egoEntityUri = new URI(currentNodeString);
+//                    getEntityData(egoEntityUri, indexParameters);
+//                } catch (URISyntaxException exception) {
+//                    GuiHelper.linorgBugCatcher.logError(exception);
+//                }
+//            }
+//        }
     }
 
     public void setKinTypeStringTerm(String symbolString, String fieldPath, String fieldValue) {
@@ -221,7 +221,7 @@ public class EntityIndex implements EntityService {
         }
     }
 
-    public EntityData[] processKinTypeStrings(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
+    public EntityData[] processKinTypeStrings(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters, JProgressBar progressBar) throws EntityServiceException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -251,17 +251,17 @@ public class EntityIndex implements EntityService {
     }
 
     public static void main(String[] args) {
-        String[] entityStringArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
-        URI[] entityUriArray = new URI[entityStringArray.length];
+//        String[] entityStringArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
+//        URI[] entityUriArray = new URI[entityStringArray.length];
         int uriCounter = 0;
-        for (String currentEntityString : entityStringArray) {
-            try {
-                entityUriArray[uriCounter] = new URI(currentEntityString);
-            } catch (URISyntaxException urise) {
-                GuiHelper.linorgBugCatcher.logError(urise);
-            }
-            uriCounter++;
-        }
+//        for (String currentEntityString : entityStringArray) {
+//            try {
+//                entityUriArray[uriCounter] = new URI(currentEntityString);
+//            } catch (URISyntaxException urise) {
+//                GuiHelper.linorgBugCatcher.logError(urise);
+//            }
+//            uriCounter++;
+//        }
         EntityIndex testEntityIndex = new EntityIndex();
         testEntityIndex.loadAllEntities(new IndexerParameters());
         testEntityIndex.printKnownEntities();
