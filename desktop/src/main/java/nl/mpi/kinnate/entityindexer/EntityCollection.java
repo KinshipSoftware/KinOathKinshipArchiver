@@ -272,7 +272,7 @@ public class EntityCollection {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityArray.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String queryResult = new XQuery(query1String).execute(context);
-            System.out.println("queryResult: " + queryResult);
+//            System.out.println("queryResult: " + queryResult);
             EntityArray foundEntities = (EntityArray) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityArray.class).getValue();
             long queryMils = System.currentTimeMillis() - startTime;
             String queryTimeString = "Query time: " + queryMils + "ms for " + foundEntities.getEntityDataArray().length + " entities";
@@ -297,7 +297,7 @@ public class EntityCollection {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String queryResult = new XQuery(query1String).execute(context);
-            System.out.println("queryResult: " + queryResult);
+//            System.out.println("queryResult: " + queryResult);
             EntityData[] selectedEntity = (EntityData[]) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData[].class).getValue();
             long queryMils = System.currentTimeMillis() - startTime;
             String queryTimeString = "Query time: " + queryMils + "ms for " + selectedEntity.length + " entities";
@@ -325,7 +325,7 @@ public class EntityCollection {
             long queryMils = System.currentTimeMillis() - startQueryTime;
             System.out.println("Query time: " + queryMils + "ms");
             long startJaxbTime = System.currentTimeMillis();
-            System.out.println("queryResult: " + queryResult);
+//            System.out.println("queryResult: " + queryResult);
             EntityData selectedEntity = (EntityData) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData.class).getValue();
             long queryJaxBMils = System.currentTimeMillis() - startJaxbTime;
             System.out.println("JaxB time: " + queryJaxBMils + "ms");
