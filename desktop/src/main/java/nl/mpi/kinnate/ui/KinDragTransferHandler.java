@@ -11,16 +11,10 @@ import javax.swing.TransferHandler;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import nl.mpi.arbil.data.ArbilComponentBuilder;
-import nl.mpi.arbil.data.ArbilDataNode;
-import nl.mpi.arbil.ui.ArbilTree;
+import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 /**
  * Document   : KinDragTransferHandler
@@ -29,8 +23,8 @@ import org.xml.sax.SAXException;
  */
 public class KinDragTransferHandler extends TransferHandler implements Transferable {
 
-    ArbilDataNode[] selectedNodes;
-    DataFlavor dataFlavor = new DataFlavor(ArbilDataNode[].class, "ArbilTreeObject");
+    ArbilNode[] selectedNodes;
+    DataFlavor dataFlavor = new DataFlavor(ArbilNode[].class, "ArbilObject");
     DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor};
 
     @Override
@@ -40,7 +34,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
 
     @Override
     public Transferable createTransferable(JComponent comp) {
-        selectedNodes = ((ArbilTree) comp).getSelectedNodes();
+        selectedNodes = ((KinTree) comp).getAllSelectedNodes();
         if (selectedNodes.length == 0) {
             return null;
         }
@@ -96,50 +90,48 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         if (!canImport(support)) {
             return false;
         }
-//        String data;
-//        try {
-//            data = (String) support.getTransferable().getTransferData(DataFlavor.stringFlavor);
-//        } catch (UnsupportedFlavorException e) {
-//            return false;
-//        } catch (java.io.IOException e) {
-//            return false;
-//        }
 
         Component dropLocation = support.getComponent();
         if (dropLocation instanceof KinDiagramPanel) {
-            System.out.println("dropped to KinTypeEgoSelectionTestPanel");
+            System.out.println("dropped to KinDiagramPanel");
             ArrayList<UniqueIdentifier> slectedIdentifiers = new ArrayList<UniqueIdentifier>();
             try {
                 JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifier.class);
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-                for (ArbilDataNode currentArbilNode : selectedNodes) {
-                    try {
-                        Document metadataDom = ArbilComponentBuilder.getDocument(currentArbilNode.getURI());
-                        Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/kin:Entity/kin:Identifier"); // note that this is using the name space prefix not the namespace url
-                        try {
-                            UniqueIdentifier uniqueIdentifier = (UniqueIdentifier) unmarshaller.unmarshal(uniqueIdentifierNode, UniqueIdentifier.class).getValue();
-                            slectedIdentifiers.add(uniqueIdentifier);
-                        } catch (JAXBException exception) {
-                            new ArbilBugCatcher().logError(exception);
-                        }
-                    } catch (IOException exception) {
-                        new ArbilBugCatcher().logError(exception);
-                    } catch (ParserConfigurationException exception) {
-                        new ArbilBugCatcher().logError(exception);
-                    } catch (SAXException exception) {
-                        new ArbilBugCatcher().logError(exception);
-                    } catch (TransformerException exception) {
-                        new ArbilBugCatcher().logError(exception);
-                    }
-                    // todo: new UniqueIdentifier could take ArbilDataNode as a constructor parameter, which would move this code out of this class
+                for (ArbilNode currentArbilNode : selectedNodes) {
+                    if (currentArbilNode instanceof KinTreeNode) {
+                        KinTreeNode kinTreeNode = (KinTreeNode) currentArbilNode;
+                        slectedIdentifiers.add(kinTreeNode.entityData.getUniqueIdentifier());
+                        // the following methods use either the xml file or the arbil tree node to get the entity identifier
+                        // while they are no longer used it is probably good to keep them for reference
+//                    try {
+//                        Document metadataDom = ArbilComponentBuilder.getDocument(currentArbilNode.getURI());
+//                        Node uniqueIdentifierNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/kin:Entity/kin:Identifier"); // note that this is using the name space prefix not the namespace url
+//                        try {
+//                            UniqueIdentifier uniqueIdentifier = (UniqueIdentifier) unmarshaller.unmarshal(uniqueIdentifierNode, UniqueIdentifier.class).getValue();
+//                            slectedIdentifiers.add(uniqueIdentifier);
+//                        } catch (JAXBException exception) {
+//                            new ArbilBugCatcher().logError(exception);
+//                        }
+//                    } catch (IOException exception) {
+//                        new ArbilBugCatcher().logError(exception);
+//                    } catch (ParserConfigurationException exception) {
+//                        new ArbilBugCatcher().logError(exception);
+//                    } catch (SAXException exception) {
+//                        new ArbilBugCatcher().logError(exception);
+//                    } catch (TransformerException exception) {
+//                        new ArbilBugCatcher().logError(exception);
+//                    }
+                        // todo: new UniqueIdentifier could take ArbilDataNode as a constructor parameter, which would move this code out of this class
 //                    for (String currentIdentifierType : new String[]{"Kinnate.Entity.Identifier.LocalIdentifier", "Kinnate.Gedcom.UniqueIdentifier.PersistantIdentifier", "Kinnate.Entity.UniqueIdentifier.PersistantIdentifier"}) {
 //                        if (currentArbilNode.getFields().containsKey(currentIdentifierType)) {
 //                            slectedIdentifiers.add(new UniqueIdentifier(currentArbilNode.getFields().get(currentIdentifierType)[0]));
 //                            break;
 //                        }
 //                    }
-
+                      // end identifier getting code
+                    }
                 }
             } catch (JAXBException exception) {
                 new ArbilBugCatcher().logError(exception);
