@@ -1,4 +1,4 @@
-package nl.mpi.kinnate.gedcomimport;
+package nl.mpi.kinnate.kindocument;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.DOMException;

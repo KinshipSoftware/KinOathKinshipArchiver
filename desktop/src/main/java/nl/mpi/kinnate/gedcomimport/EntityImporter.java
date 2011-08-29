@@ -1,5 +1,7 @@
 package nl.mpi.kinnate.gedcomimport;
 
+import nl.mpi.kinnate.kindocument.EntityDocument;
+import nl.mpi.kinnate.kindocument.ImportTranslator;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
