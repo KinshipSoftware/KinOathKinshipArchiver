@@ -69,7 +69,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     // todo: node type is not used here anymore but could still be useful as a user option
 //                    String nodeType = evt.getActionCommand();
-                    EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null, new ImportTranslator());
+                    EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null, new ImportTranslator(true));
                     try {
                         entityDocument.createDocument(true);
                         entityDocument.insertDefaultMetadata();
