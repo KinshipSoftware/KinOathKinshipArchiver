@@ -40,7 +40,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         String inputLine;
 
-        ImportTranslator importTranslator = new ImportTranslator();
+        ImportTranslator importTranslator = new ImportTranslator(true);
         importTranslator.addTranslationEntry("Gender", "0", "Gender", "female");
         importTranslator.addTranslationEntry("Gender", "1", "Gender", "male");
 
