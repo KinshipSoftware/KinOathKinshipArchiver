@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import javax.swing.JProgressBar;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
@@ -260,7 +261,8 @@ public class QueryParser implements EntityService {
             }
             progressBar.setValue(progressBar.getValue() + 1);
         }
-        for (UniqueIdentifier currentEgoId : requiredEntityIdentifiers) {
+        for (Iterator<UniqueIdentifier> iterator = requiredEntityIdentifiers.iterator(); iterator.hasNext();) {
+            UniqueIdentifier currentEgoId = iterator.next();
             // load and show any mandatory entities
             EntityData requiredNode;
             if (loadedGraphNodes.containsKey(currentEgoId)) {
