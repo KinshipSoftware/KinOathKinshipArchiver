@@ -15,11 +15,12 @@ import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
-import nl.mpi.kinnate.entityindexer.RelationLinker;
-import nl.mpi.kinnate.gedcomimport.EntityDocument;
+import nl.mpi.kinnate.kindocument.RelationLinker;
+import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.gedcomimport.ImportException;
-import nl.mpi.kinnate.gedcomimport.ImportTranslator;
+import nl.mpi.kinnate.kindocument.ImportTranslator;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
+import nl.mpi.kinnate.kindocument.EntityMerger;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.GraphPanelSize;
@@ -35,6 +36,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private KinDiagramPanel kinDiagramPanel;
     private GraphPanel graphPanel;
     private GraphPanelSize graphPanelSize;
+    private JMenuItem mergeEntitiesMenu;
     private JMenuItem addRelationEntityMenu;
     private JMenuItem removeRelationEntityMenu;
     private JMenuItem setAsEgoMenuItem;
@@ -87,6 +89,21 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 }
             });
             this.add(addEntityMenuItem);
+
+            mergeEntitiesMenu = new JMenuItem("Merge Selected Entities");
+            mergeEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
+
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    try {
+                        new EntityMerger().mergeEntities(graphPanel, selectedIdentifiers);
+                        kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
+                    } catch (ImportException exception) {
+                        ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Add Relation");
+                    }
+                }
+            });
+            this.add(mergeEntitiesMenu);
+
             addRelationEntityMenu = new JMenu("Add Relation");
             this.add(addRelationEntityMenu);
             for (RelationType relationType : RelationType.values()) {
@@ -101,28 +118,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                         } catch (ImportException exception) {
                             ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Add Relation");
                         }
-//                    graphPanel.
-//                    selectedIdentifiers
-//                            graphPanel.getPathForElementId()
-                        // todo: add the relation to both selected nodes and show the new relation in the table
-                        // todo: this could be simplified by adapting the Arbil code
-//                    String nodeType = evt.getActionCommand();
-//                    URI addedNodePath;
-//                    URI targetFileURI = LinorgSessionStorage.getSingleInstance().getNewImdiFileName(LinorgSessionStorage.getSingleInstance().getCacheDirectory(), nodeType);
-//                    CmdiComponentBuilder componentBuilder = new CmdiComponentBuilder();
-//                    try {
-//                        addedNodePath = componentBuilder.createComponentFile(targetFileURI, new URI(nodeType), false);
-//                        ArrayList<String> entityArray = new ArrayList<String>(Arrays.asList(LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree")));
-//                        entityArray.add(addedNodePath.toASCIIString());
-//                        LinorgSessionStorage.getSingleInstance().saveStringArray("KinGraphTree", entityArray.toArray(new String[]{}));
-//                        // todo: update the main entity tree
-//                        ArrayList<URI> egoUriList = new ArrayList<URI>(Arrays.asList(graphPanel.getEgoList()));
-//                        egoUriList.add(addedNodePath);
-//                        egoSelectionPanel.addEgoNodes(egoUriList.toArray(new URI[]{}));
-//                    } catch (URISyntaxException ex) {
-//                        new ArbilBugCatcher().logError(ex);
-//                        // todo: warn user with a dialog
-//                    }
                     }
                 });
                 addRelationEntityMenu.add(addRelationEntityMenuItem);
@@ -386,6 +381,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         }
         if (addRelationEntityMenu != null) {
+            mergeEntitiesMenu.setVisible(nonTransientNodeCount > 1);
             addRelationEntityMenu.setVisible(nonTransientNodeCount > 1);
             setAsEgoMenuItem.setVisible(nonTransientNodeCount > 0);
             addAsEgoMenuItem.setVisible(nonTransientNodeCount > 0);
