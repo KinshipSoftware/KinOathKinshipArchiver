@@ -14,6 +14,7 @@ import java.util.HashMap;
 public class ImportTranslator {
 
     private HashMap<TranslationElement, TranslationElement> translateTable;
+    boolean ignoreCase;
 
     public class TranslationElement {
 
@@ -23,6 +24,14 @@ public class ImportTranslator {
         public TranslationElement(String fieldName, String fieldValue) {
             this.fieldName = fieldName.replaceAll("\\s", "_");
             this.fieldValue = fieldValue;
+        }
+
+        private String checkCase(String inputString) {
+            if (ignoreCase) {
+                return inputString.toLowerCase();
+            } else {
+                return inputString;
+            }
         }
 
         @Override
@@ -37,7 +46,7 @@ public class ImportTranslator {
             if ((this.fieldName == null) ? (other.fieldName != null) : !this.fieldName.equals(other.fieldName)) {
                 return false;
             }
-            if ((this.fieldValue == null) ? (other.fieldValue != null) : !this.fieldValue.equals(other.fieldValue)) {
+            if ((this.fieldValue == null) ? (other.fieldValue != null) : !checkCase(this.fieldValue).equals(checkCase(other.fieldValue))) {
                 return false;
             }
             return true;
@@ -47,13 +56,14 @@ public class ImportTranslator {
         public int hashCode() {
             int hash = 5;
             hash = 11 * hash + (this.fieldName != null ? this.fieldName.hashCode() : 0);
-            hash = 11 * hash + (this.fieldValue != null ? this.fieldValue.hashCode() : 0);
+            hash = 11 * hash + (this.fieldValue != null ? checkCase(this.fieldValue).hashCode() : 0);
             return hash;
         }
     }
 
-    public ImportTranslator() {
+    public ImportTranslator(boolean ignoreCase) {
         translateTable = new HashMap<TranslationElement, TranslationElement>();
+        this.ignoreCase = ignoreCase;
     }
 
     public void addTranslationEntry(String fieldName, String fieldValue, String translatedFieldName, String translatedFieldValue) {
@@ -64,7 +74,12 @@ public class ImportTranslator {
         TranslationElement translatedInput = new TranslationElement(fieldName, fieldValue);
         TranslationElement translatedResult = translateTable.get(translatedInput);
         if (translatedResult != null) {
-            return translatedResult;
+            if (translatedResult.fieldValue == null) {
+                // if no field value has been set then just pass the input value back but change the field name as specified
+                return new TranslationElement(translatedResult.fieldName, fieldValue);
+            } else {
+                return translatedResult;
+            }
         } else {
             return translatedInput;
         }
