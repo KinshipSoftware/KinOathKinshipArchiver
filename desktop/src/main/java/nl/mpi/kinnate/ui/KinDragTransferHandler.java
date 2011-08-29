@@ -6,6 +6,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -173,25 +174,32 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         importTranslator.addTranslationEntry("Sex", "Male", "Gender", "male");
         importTranslator.addTranslationEntry("Sex", "Female", "Gender", "female");
         importTranslator.addTranslationEntry("BirthDate", null, "DateOfBirth", null);
-        EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null, importTranslator);
         try {
-            entityDocument.createDocument(true);
-            entityDocument.insertValue("Name", selectedNodes[0].toString());
-            if (selectedNodes[0] instanceof ArbilDataNode) {
-                for (String fieldOfInterest : new String[]{"Sex", "BirthDate"}) {
-                    final ArbilField[] arbilFeildsArray = ((ArbilDataNode) selectedNodes[0]).getFields().get(fieldOfInterest);
-                    if (arbilFeildsArray != null && arbilFeildsArray.length > 0) {
-                        entityDocument.insertValue(fieldOfInterest, arbilFeildsArray[0].getFieldValue().toLowerCase());
+            ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
+            for (ArbilNode draggedNode : selectedNodes) {
+                EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null, importTranslator);
+                entityDocument.createDocument(true);
+                entityDocument.insertValue("Name", draggedNode.toString());
+                if (draggedNode instanceof ArbilDataNode) {
+                    for (String fieldOfInterest : new String[]{"Sex", "BirthDate"}) {
+                        final ArbilField[] arbilFeildsArray = ((ArbilDataNode) draggedNode).getFields().get(fieldOfInterest);
+                        if (arbilFeildsArray != null && arbilFeildsArray.length > 0) {
+                            entityDocument.insertValue(fieldOfInterest, arbilFeildsArray[0].getFieldValue().toLowerCase());
+                        }
                     }
+                    entityDocument.entityData.addArchiveLink(((ArbilDataNode) draggedNode).getURI());
                 }
-            }
-            // todo: based on the DCR entries the relevant data could be selected and inserted, or the user could specify which fields to insert
+                // todo: based on the DCR entries the relevant data could be selected and inserted, or the user could specify which fields to insert
 //            entityDocument.insertDefaultMetadata(); // todo: insert copy of metadata from source node
-            attachMetadata(entityDocument.entityData);
-            entityDocument.saveDocument();
-            URI addedEntityUri = entityDocument.getFile().toURI();
-            new EntityCollection().updateDatabase(addedEntityUri);
-            kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
+                //attachMetadata(entityDocument.entityData); // if a node is dragged to the graph then the odds are that they are all different actors so we create one entity for each rather than using attachMetadata
+                entityDocumentList.add(entityDocument);
+            }
+            for (EntityDocument entityDocument : entityDocumentList) {
+                entityDocument.saveDocument();
+                URI addedEntityUri = entityDocument.getFile().toURI();
+                new EntityCollection().updateDatabase(addedEntityUri);
+                kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
+            }
             return true;
         } catch (ImportException exception) {
             // todo: warn user with a dialog
@@ -230,14 +238,18 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     private boolean attachMetadata() {
         System.out.println("importMetadata");
         try {
-            EntityDocument entityDocument = new EntityDocument(targetEntity, new ImportTranslator(true));
+            EntityDocument entityDocument = new EntityDocument(new URI(targetEntity.getEntityPath()), new ImportTranslator(true));
             attachMetadata(entityDocument.entityData);
             entityDocument.saveDocument();
             URI addedEntityUri = entityDocument.getFile().toURI();
             new EntityCollection().updateDatabase(addedEntityUri);
-            kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
+            kinDiagramPanel.entityRelationsChanged(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
             return true;
         } catch (ImportException exception) {
+            // todo: warn user with a dialog
+            new ArbilBugCatcher().logError(exception);
+            return false;
+        } catch (URISyntaxException exception) {
             // todo: warn user with a dialog
             new ArbilBugCatcher().logError(exception);
             return false;
