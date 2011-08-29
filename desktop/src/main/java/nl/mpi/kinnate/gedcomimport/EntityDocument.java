@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,7 +35,7 @@ public class EntityDocument {
     Node kinnateNode = null;
     Element metadataNode = null;
     Node currentDomNode = null;
-    public EntityData entityData;
+    public EntityData entityData = null;
     private ImportTranslator importTranslator;
 
     public EntityDocument(File destinationDirectory, String nameString, ImportTranslator importTranslator) {
@@ -53,11 +53,9 @@ public class EntityDocument {
         }
     }
 
-    public EntityDocument(EntityData existingEntity, ImportTranslator importTranslator) throws ImportException {
+    public EntityDocument(URI entityUri, ImportTranslator importTranslator) throws ImportException {
         this.importTranslator = importTranslator;
-        entityData = existingEntity;
         try {
-            final URI entityUri = new URI(entityData.getEntityPath());
             entityFile = new File(entityUri);
             metadataDom = ArbilComponentBuilder.getDocument(entityUri);
             kinnateNode = metadataDom.getDocumentElement();
@@ -68,12 +66,20 @@ public class EntityDocument {
             }
             metadataNode = (Element) metadataNodeList.item(0);
             // remove any old entity data which will be replaced on save with the existingEntity data provided
-            final NodeList entityNodeList = ((Element) kinnateNode).getElementsByTagName("Entity");
+            final NodeList entityNodeList = ((Element) kinnateNode).getElementsByTagNameNS("http://mpi.nl/tla/kin", "Entity");
             for (int entityCounter = 0; entityCounter < entityNodeList.getLength(); entityCounter++) {
+                if (entityData == null) {
+                    JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
+                    Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+                    entityData = (EntityData) unmarshaller.unmarshal(entityNodeList.item(entityCounter), EntityData.class).getValue();
+                }
                 kinnateNode.removeChild(entityNodeList.item(entityCounter));
             }
             currentDomNode = metadataNode;
-        } catch (URISyntaxException exception) {
+            if (entityData == null) {
+                throw new ImportException("Entity node not found");
+            }
+        } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         } catch (ParserConfigurationException exception) {
