@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
+import java.net.URISyntaxException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -29,7 +30,6 @@ import org.xml.sax.SAXException;
  */
 public class EntityDocument {
 
-    String idString;
     File entityFile = null;
     Document metadataDom = null;
     Node kinnateNode = null;
@@ -40,6 +40,7 @@ public class EntityDocument {
 
     public EntityDocument(File destinationDirectory, String nameString, ImportTranslator importTranslator) {
         this.importTranslator = importTranslator;
+        String idString;
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
         if (nameString != null) {
             idString = nameString;
@@ -52,6 +53,41 @@ public class EntityDocument {
         }
     }
 
+    public EntityDocument(EntityData existingEntity, ImportTranslator importTranslator) throws ImportException {
+        this.importTranslator = importTranslator;
+        entityData = existingEntity;
+        try {
+            final URI entityUri = new URI(entityData.getEntityPath());
+            entityFile = new File(entityUri);
+            metadataDom = ArbilComponentBuilder.getDocument(entityUri);
+            kinnateNode = metadataDom.getDocumentElement();
+            // final NodeList metadataNodeList = ((Element) kinnateNode).getElementsByTagNameNS("http://mpi.nl/tla/kin", "Metadata");
+            final NodeList metadataNodeList = ((Element) kinnateNode).getElementsByTagName("Metadata");
+            if (metadataNodeList.getLength() < 1) {
+                throw new ImportException("Metadata node not found");
+            }
+            metadataNode = (Element) metadataNodeList.item(0);
+            // remove any old entity data which will be replaced on save with the existingEntity data provided
+            final NodeList entityNodeList = ((Element) kinnateNode).getElementsByTagName("Entity");
+            for (int entityCounter = 0; entityCounter < entityNodeList.getLength(); entityCounter++) {
+                kinnateNode.removeChild(entityNodeList.item(entityCounter));
+            }
+            currentDomNode = metadataNode;
+        } catch (URISyntaxException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        } catch (ParserConfigurationException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        } catch (SAXException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        } catch (IOException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        }
+    }
+
     public String getFileName() {
         return entityFile.getName();
     }
@@ -61,6 +97,9 @@ public class EntityDocument {
     }
 
     public URI createDocument(boolean overwriteExisting) throws ImportException {
+        if (metadataDom != null) {
+            throw new ImportException("The document already exists");
+        }
         String gedcomXsdLocation = "/xsd/StandardEntity.xsd";
         URI entityUri;
 
@@ -74,8 +113,8 @@ public class EntityDocument {
                 String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                         + "<Kinnate xmlns:kin=\"http://mpi.nl/tla/kin\" "
                         + "xmlns=\"http://www.clarin.eu/cmd/\" "
-//                        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-//                        + "xsi:schemaLocation=\"http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1297242111880/xsd\" "
+                        //                        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                        //                        + "xsi:schemaLocation=\"http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1297242111880/xsd\" "
                         + "version=\"1.0\" "
                         + "CMDVersion=\"1.1\" />"; //<cmd:Metadata/></Kinnate>
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
