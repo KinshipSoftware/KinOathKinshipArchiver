@@ -4,23 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.gedcomimport.EntityDocument;
+import nl.mpi.kinnate.gedcomimport.ImportException;
+import nl.mpi.kinnate.gedcomimport.ImportTranslator;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
-import nl.mpi.kinnate.kindata.RelationArray;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.svg.GraphPanel;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -30,21 +27,8 @@ import org.xml.sax.SAXException;
  */
 public class RelationLinker {
 
-    private Node getEntityNode(Document entityDocument) {
-        //org.apache.xpath.XPathAPI.selectSingleNode(metadataDom.getDocumentElement(), "//:Entity/:Relations");
-        Element roodNode = entityDocument.getDocumentElement();
-        NodeList entityNodeList = roodNode.getElementsByTagNameNS("http://mpi.nl/tla/kin", "Entity");
-        Element entityNode = ((Element) entityNodeList.item(0));
-        NodeList relationsNodeList = entityNode.getElementsByTagNameNS("http://mpi.nl/tla/kin", "Relations");
-        Node relationsNode = relationsNodeList.item(0);
-        if (relationsNode != null) {
-            // remove the old relations
-            entityNode.removeChild(relationsNode);
-        }
-        return entityNode;
-    }
-
     private void removeMatchingRelations(Document entityDocument, UniqueIdentifier[] selectedIdentifiers) {
+        // todo: complete the relation removal code
         // todo: this should use the EntityData object to remove the relaitons and then save via jaxb as is done in linkEntities other wise if a user removes a sibling relation and the common parent relation persists then the data will be in a broken state
 //        ArrayList<String> identifierList = new ArrayList<String>();
 //        for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
@@ -78,48 +62,31 @@ public class RelationLinker {
 //        }
     }
 
-    public void linkEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers, DataTypes.RelationType relationType) {
-        HashMap<UniqueIdentifier, EntityData> selectedEntityMap = graphPanel.getEntitiesById(selectedIdentifiers);
-        EntityData leadSelectionEntity = selectedEntityMap.get(selectedIdentifiers[0]);
-        for (EntityData alterEntity : selectedEntityMap.values()) {
-            if (!alterEntity.equals(leadSelectionEntity)) {
+    public void linkEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers, DataTypes.RelationType relationType) throws ImportException {
+        EntityDocument leadEntityDocument = null;
+        ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
+        try {
+            for (EntityData alterEntity : graphPanel.getEntitiesById(selectedIdentifiers).values()) {
+                EntityDocument entityDocument = new EntityDocument(new URI(alterEntity.getEntityPath()), new ImportTranslator(true));
+                if (leadEntityDocument == null) {
+                    leadEntityDocument = entityDocument;
+                } else {
+                    entityDocumentList.add(entityDocument);
+                }
+            }
+            for (EntityDocument alterEntity : entityDocumentList) {
                 // add the new relation
-                leadSelectionEntity.addRelatedNode(alterEntity, relationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                leadEntityDocument.entityData.addRelatedNode(alterEntity.entityData, relationType, DataTypes.RelationLineType.sanguineLine, null, null);
             }
-        }
-        for (EntityData saveEntity : selectedEntityMap.values()) {
-            String targetPath = saveEntity.getEntityPath();
-            try {
-                URI targetUri = new URI(targetPath);
-                Document metadataDom = ArbilComponentBuilder.getDocument(targetUri);
-                Node entityNode = getEntityNode(metadataDom);
-
-                RelationArray relationArray = new RelationArray(saveEntity.getAllRelations());
-                // add all the current relaions
-                JAXBContext jaxbContext = JAXBContext.newInstance(RelationArray.class);
-                Marshaller marshaller = jaxbContext.createMarshaller();
-                marshaller.marshal(relationArray, entityNode);
-                // save the xml file
-                ArbilComponentBuilder.savePrettyFormatting(metadataDom, new File(targetUri));
-                // update the database
-                new EntityCollection().updateDatabase(targetUri);
-            } catch (JAXBException exception) {
-                // todo: inform the user if there is an error
-                new ArbilBugCatcher().logError(exception);
-//                throw new ImportException("Error: " + exception.getMessage());
-//            } catch (TransformerException exception) {
-//                new ArbilBugCatcher().logError(exception);
-            } catch (URISyntaxException exception) {
-                new ArbilBugCatcher().logError(exception);
-            } catch (DOMException exception) {
-                new ArbilBugCatcher().logError(exception);
-            } catch (IOException exception) {
-                new ArbilBugCatcher().logError(exception);
-            } catch (ParserConfigurationException exception) {
-                new ArbilBugCatcher().logError(exception);
-            } catch (SAXException exception) {
-                new ArbilBugCatcher().logError(exception);
+            leadEntityDocument.saveDocument();
+            new EntityCollection().updateDatabase(leadEntityDocument.getFile().toURI());
+            for (EntityDocument entityDocument : entityDocumentList) {
+                entityDocument.saveDocument();
+                new EntityCollection().updateDatabase(entityDocument.getFile().toURI());
             }
+        } catch (URISyntaxException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
         }
     }
 
@@ -155,5 +122,6 @@ public class RelationLinker {
                 new ArbilBugCatcher().logError(exception);
             }
         }
+        throw new UnsupportedOperationException("todo...");
     }
 }
