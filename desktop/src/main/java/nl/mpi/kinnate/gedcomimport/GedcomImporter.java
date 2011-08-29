@@ -49,7 +49,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>> socialGroupRoleMap = new HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>>(); // GroupID: @XX@, RoleType: WIFE HUSB CHIL, EntityData
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-        ImportTranslator importTranslator = new ImportTranslator();
+        ImportTranslator importTranslator = new ImportTranslator(true);
         // todo: add the translator values if required
 
         try {
