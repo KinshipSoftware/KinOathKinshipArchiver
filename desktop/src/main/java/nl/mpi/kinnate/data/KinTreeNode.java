@@ -78,9 +78,11 @@ public class KinTreeNode extends ArbilNode implements Comparable {
                     relationList.add(new KinTreeNode(entityRelation.getAlterNode(), entityRelation.relationType));
                 }
             }
-            for (URI archiveLink : entityData.archiveLinkArray) {
-                ArbilDataNode linkedArbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, archiveLink);
-                relationList.add(linkedArbilDataNode);
+            if (entityData.archiveLinkArray != null) {
+                for (URI archiveLink : entityData.archiveLinkArray) {
+                    ArbilDataNode linkedArbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, archiveLink);
+                    relationList.add(linkedArbilDataNode);
+                }
             }
             childNodes = relationList.toArray(new ArbilNode[]{});
             return childNodes;
