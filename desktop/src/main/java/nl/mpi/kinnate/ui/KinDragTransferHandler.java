@@ -13,6 +13,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilField;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
@@ -168,14 +169,23 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
 
     private boolean importMetadata() {
         System.out.println("importMetadata");
-        EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null, new ImportTranslator());
+        final ImportTranslator importTranslator = new ImportTranslator(true);
+        importTranslator.addTranslationEntry("Sex", "Male", "Gender", "male");
+        importTranslator.addTranslationEntry("Sex", "Female", "Gender", "female");
+        importTranslator.addTranslationEntry("BirthDate", null, "DateOfBirth", null);
+        EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null, importTranslator);
         try {
             entityDocument.createDocument(true);
             entityDocument.insertValue("Name", selectedNodes[0].toString());
             if (selectedNodes[0] instanceof ArbilDataNode) {
-                entityDocument.insertValue("Gender", ((ArbilDataNode) selectedNodes[0]).getFields().get("Sex")[0].getFieldValue().toLowerCase());
-                entityDocument.insertValue("DateOfBirth", ((ArbilDataNode) selectedNodes[0]).getFields().get("BirthDate")[0].getFieldValue().toLowerCase());
+                for (String fieldOfInterest : new String[]{"Sex", "BirthDate"}) {
+                    final ArbilField[] arbilFeildsArray = ((ArbilDataNode) selectedNodes[0]).getFields().get(fieldOfInterest);
+                    if (arbilFeildsArray != null && arbilFeildsArray.length > 0) {
+                        entityDocument.insertValue(fieldOfInterest, arbilFeildsArray[0].getFieldValue().toLowerCase());
+                    }
+                }
             }
+            // todo: based on the DCR entries the relevant data could be selected and inserted, or the user could specify which fields to insert
 //            entityDocument.insertDefaultMetadata(); // todo: insert copy of metadata from source node
             attachMetadata(entityDocument.entityData);
             entityDocument.saveDocument();
@@ -217,6 +227,23 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         return false;
     }
 
+    private boolean attachMetadata() {
+        System.out.println("importMetadata");
+        try {
+            EntityDocument entityDocument = new EntityDocument(targetEntity, new ImportTranslator(true));
+            attachMetadata(entityDocument.entityData);
+            entityDocument.saveDocument();
+            URI addedEntityUri = entityDocument.getFile().toURI();
+            new EntityCollection().updateDatabase(addedEntityUri);
+            kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
+            return true;
+        } catch (ImportException exception) {
+            // todo: warn user with a dialog
+            new ArbilBugCatcher().logError(exception);
+            return false;
+        }
+    }
+
     @Override
     public boolean importData(TransferHandler.TransferSupport support) {
         // if we can't handle the import, say so
@@ -240,7 +267,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         } else if (dropLocation instanceof KinTree) {
             System.out.println("dropped to KinTree");
             if (isImportingMetadata) {
-                return attachMetadata(targetEntity); // todo: this does not save these changes
+                return attachMetadata();
             }
         }
         return false;
