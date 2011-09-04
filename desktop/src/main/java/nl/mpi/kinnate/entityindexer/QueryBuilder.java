@@ -154,6 +154,27 @@ public class QueryBuilder {
 //                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
     }
 
+    public String getEntityPath(UniqueIdentifier uniqueIdentifier) {
+        return "let $identifierNode := collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n"
+                + "return base-uri($identifierNode)";
+    }
+//    public String getEntityPaths(UniqueIdentifier[] uniqueIdentifier) {
+//        StringBuilder builder = new StringBuilder();
+//        for (UniqueIdentifier identifier : uniqueIdentifier) {
+//            if (builder.length() == 0) {
+//                builder.append("[");
+//            } else {
+//                builder.append(",");
+//            }
+//            builder.append(identifier.getQueryIdentifier());
+//        }
+//        builder.append("]");
+//        return "for $identifierNode in collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + builder.toString() + "\"]\n"
+//                + "return\n"
+//                + "<String>base-uri($identifierNode)</String>,"
+//                + "$identifierNode";
+//    }
+
     public String getEntityQuery(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
         return "for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n" //                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
                 + getEntityQueryReturn(indexParameters);
