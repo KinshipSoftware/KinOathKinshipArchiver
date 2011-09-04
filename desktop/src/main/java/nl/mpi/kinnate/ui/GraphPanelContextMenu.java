@@ -36,6 +36,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private KinDiagramPanel kinDiagramPanel;
     private GraphPanel graphPanel;
     private GraphPanelSize graphPanelSize;
+    private JMenuItem duplicateEntitiesMenu;
     private JMenuItem mergeEntitiesMenu;
     private JMenuItem addRelationEntityMenu;
     private JMenuItem removeRelationEntityMenu;
@@ -90,6 +91,21 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             });
             this.add(addEntityMenuItem);
 
+            duplicateEntitiesMenu = new JMenuItem("Duplicate Selected Entities");
+            duplicateEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
+
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    try {
+                        final UniqueIdentifier[] duplicateEntities = new EntityMerger().duplicateEntities(graphPanel, selectedIdentifiers);
+                        kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
+                        kinDiagramPanel.addRequiredNodes(duplicateEntities);
+                    } catch (ImportException exception) {
+                        ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to duplicate: " + exception.getMessage(), duplicateEntitiesMenu.getText());
+                    }
+                }
+            });
+            this.add(duplicateEntitiesMenu);
+
             mergeEntitiesMenu = new JMenuItem("Merge Selected Entities");
             mergeEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
 
@@ -98,7 +114,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                         new EntityMerger().mergeEntities(graphPanel, selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                     } catch (ImportException exception) {
-                        ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Add Relation");
+                        ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
                     }
                 }
             });
@@ -116,7 +132,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                             new RelationLinker().linkEntities(graphPanel, selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()));
                             kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                         } catch (ImportException exception) {
-                            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Add Relation");
+                            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), addRelationEntityMenu.getText());
                         }
                     }
                 });
@@ -381,6 +397,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         }
         if (addRelationEntityMenu != null) {
+            // todo: consider using disable rather than visible
+            duplicateEntitiesMenu.setVisible(nonTransientNodeCount > 0);
             mergeEntitiesMenu.setVisible(nonTransientNodeCount > 1);
             addRelationEntityMenu.setVisible(nonTransientNodeCount > 1);
             setAsEgoMenuItem.setVisible(nonTransientNodeCount > 0);
