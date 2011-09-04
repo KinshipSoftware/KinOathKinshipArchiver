@@ -512,7 +512,7 @@ public class EntitySvg {
 //            textSpanCounter += lineSpacing;
         }
 ////////////////////////////// end alternate method ////////////////////////////////////////////////
-        ((EventTarget) groupNode).addEventListener("mousedown", new MouseListenerSvg(graphPanel), false);
+        ((EventTarget) groupNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false); // todo: use capture (currently false) could be useful for the mouse events
         return groupNode;
     }
 }
