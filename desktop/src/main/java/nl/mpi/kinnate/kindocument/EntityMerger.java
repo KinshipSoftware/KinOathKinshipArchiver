@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
@@ -29,20 +30,30 @@ public class EntityMerger {
             }
             entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
         }
-        for (EntityDocument alterEntity : entityMap.values()) {
+        for (EntityDocument alterEntity : entityMap.values().toArray(new EntityDocument[]{})) {
             for (EntityRelation entityRelation : alterEntity.entityData.getDistinctRelateNodes()) {
                 EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
                 if (relatedDocument == null) {
-                    // todo: this might need to make sure the relate entity is loaded or just get the path from the database
-                    relatedDocument = new EntityDocument(new URI(entityRelation.getAlterNode().getEntityPath()), new ImportTranslator(true));
-                    entityMap.put(relatedDocument.entityData.getUniqueIdentifier(), relatedDocument);
+                    // get the path from the database
+                    final URI entityUri = new URI(new EntityCollection().getEntityPath(entityRelation.alterUniqueIdentifier));
+                    relatedDocument = new EntityDocument(entityUri, new ImportTranslator(true));
+                    entityMap.put(entityRelation.alterUniqueIdentifier, relatedDocument);
+//                    entityRelation.setAlterNode(relatedDocument.entityData);
                 }
             }
         }
+        // set the alter entity for each relation if not already set (based on the known unique identifier)
+        for (EntityDocument entityDocument : entityMap.values()) {
+            for (EntityRelation nodeRelation : entityDocument.entityData.getRelatedNodesToBeLoaded()) {
+                nodeRelation.setAlterNode(entityMap.get(nodeRelation.alterUniqueIdentifier).entityData);
+            }
+        }
+
+
         return leadEntityDocument;
     }
 
-    public UniqueIdentifier[] mergeEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers) throws ImportException {
+    public void mergeEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers) throws ImportException {
         ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
         HashMap<UniqueIdentifier, EntityDocument> entityMap = new HashMap<UniqueIdentifier, EntityDocument>();
         try {
@@ -53,19 +64,22 @@ public class EntityMerger {
                     // add the new relation
                     leadEntityDocument.entityData.addRelatedNode(relatedDocument.entityData, entityRelation.relationType, entityRelation.relationLineType, entityRelation.lineColour, entityRelation.labelString);
                     // remove the old entity relation
+                    // todo: check that the correct relations are being removed from the correct entities
                     relatedDocument.entityData.removeRelationsWithNode(alterEntity.entityData);
                 }
-                alterEntity.setAsDeleteDocument();
+                alterEntity.setAsDeletedDocument();
             }
             leadEntityDocument.saveDocument();
+            new EntityCollection().updateDatabase(leadEntityDocument.getFile().toURI());
             for (EntityDocument entityDocument : entityDocumentList) {
                 entityDocument.saveDocument();
+                new EntityCollection().updateDatabase(entityDocument.getFile().toURI());
             }
         } catch (URISyntaxException exception) {
             new ArbilBugCatcher().logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
-        return selectedIdentifiers;
+//        return selectedIdentifiers;
     }
 
     public UniqueIdentifier[] duplicateEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers) throws ImportException {
@@ -77,6 +91,8 @@ public class EntityMerger {
             for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
                 EntityDocument masterDocument = entityMap.get(uniqueIdentifier);
                 EntityDocument duplicateEntityDocument = new EntityDocument(new ImportTranslator(true));
+                addedIdentifiers.add(duplicateEntityDocument.getUniqueIdentifier());
+                duplicateEntityDocument.createDocument(false);
                 for (EntityRelation entityRelation : masterDocument.entityData.getDistinctRelateNodes()) {
                     EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
                     // copy the relations
@@ -86,6 +102,7 @@ public class EntityMerger {
                 // copy the metadata
                 duplicateEntityDocument.importNode(masterDocument.getMetadataNode());
                 duplicateEntityDocument.saveDocument();
+                new EntityCollection().updateDatabase(duplicateEntityDocument.getFile().toURI());
             }
             return addedIdentifiers.toArray(new UniqueIdentifier[]{});
         } catch (URISyntaxException exception) {
