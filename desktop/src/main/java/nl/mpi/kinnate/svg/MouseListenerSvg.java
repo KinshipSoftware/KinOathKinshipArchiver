@@ -12,6 +12,7 @@ import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -27,10 +28,10 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     private Cursor preDragCursor;
     private GraphPanel graphPanel;
     private Point startDragPoint = null;
-    static private boolean mouseActionOnNode = false;
-    static private boolean mouseActionIsPopupTrigger = false;
-    static private boolean mouseActionIsDrag = false;
-    static private UniqueIdentifier entityToToggle = null;
+    private boolean mouseActionOnNode = false;
+    private boolean mouseActionIsPopupTrigger = false;
+    private boolean mouseActionIsDrag = false;
+    private UniqueIdentifier entityToToggle = null;
 
     public enum ActionCode {
 
@@ -43,23 +44,27 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void mouseDragged(MouseEvent me) {
-        if (startDragPoint != null) {
-//            System.out.println("mouseDragged: " + me.toString());
-            if (graphPanel.selectedGroupId.size() > 0) {
-                checkSelectionClearRequired(me);
-            }
-            if (graphPanel.selectedGroupId.size() > 0) {
-                graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                // limit the drag to the distance draged not the location
-                graphPanel.svgUpdateHandler.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
-            } else {
-                graphPanel.svgUpdateHandler.dragCanvas(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
-            }
-            mouseActionIsDrag = true;
+        if (graphPanel.svgUpdateHandler.relationDragHandleType != null) {
+            graphPanel.svgUpdateHandler.updateDragRelation(me.getPoint().x, me.getPoint().y);
         } else {
-            graphPanel.svgUpdateHandler.startDrag();
+            if (startDragPoint != null) {
+//            System.out.println("mouseDragged: " + me.toString());
+                if (graphPanel.selectedGroupId.size() > 0) {
+                    checkSelectionClearRequired(me);
+                }
+                if (graphPanel.selectedGroupId.size() > 0) {
+                    graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                    // limit the drag to the distance draged not the location
+                    graphPanel.svgUpdateHandler.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
+                } else {
+                    graphPanel.svgUpdateHandler.dragCanvas(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
+                }
+                mouseActionIsDrag = true;
+            } else {
+                graphPanel.svgUpdateHandler.startDrag();
+            }
+            startDragPoint = me.getPoint();
         }
-        startDragPoint = me.getPoint();
     }
 
     private void checkSelectionClearRequired(MouseEvent me) {
@@ -87,6 +92,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         }
         checkSelectionClearRequired(me);
         mouseActionOnNode = false;
+        // todo: if a relation has been set by this drag action then it must be created here
+        graphPanel.svgUpdateHandler.relationDragHandleType = null;
     }
 
     @Override
@@ -105,26 +112,30 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         System.out.println("dom mouse event: " + evt.getCurrentTarget());
         Element currentDraggedElement = ((Element) evt.getCurrentTarget());
         preDragCursor = graphPanel.svgCanvas.getCursor();
-        // get the entityPath
-        // todo: change selected elements to use the ID not the path, but this change will affect th way the imdi path is obtained to show the table
-        UniqueIdentifier entityIdentifier = new UniqueIdentifier(currentDraggedElement.getAttribute("id"));
-        System.out.println("entityPath: " + entityIdentifier.getAttributeIdentifier());
-        boolean nodeAlreadySelected = graphPanel.selectedGroupId.contains(entityIdentifier);
-        if (!shiftDown && !nodeAlreadySelected) {
-            System.out.println("Clear selection");
-            graphPanel.selectedGroupId.clear();
-            graphPanel.selectedGroupId.add(entityIdentifier);
+        final String handleTypeString = currentDraggedElement.getAttribute("handletype");
+        if (handleTypeString != null && handleTypeString.length() > 0) {
+            graphPanel.svgUpdateHandler.relationDragHandleType = DataTypes.RelationType.valueOf(handleTypeString);
         } else {
-            // toggle the highlight            
-            if (shiftDown && nodeAlreadySelected) {
-                // postpone until after a drag action can be tested for and only deselect if not draged
-                entityToToggle = entityIdentifier;
-                // graphPanel.selectedGroupId.remove(entityIdentifier);
-            } else if (!nodeAlreadySelected) {
+            final String attributeString = currentDraggedElement.getAttribute("id");
+            UniqueIdentifier entityIdentifier = new UniqueIdentifier(attributeString);
+            System.out.println("entityPath: " + entityIdentifier.getAttributeIdentifier());
+            boolean nodeAlreadySelected = graphPanel.selectedGroupId.contains(entityIdentifier);
+            if (!shiftDown && !nodeAlreadySelected) {
+                System.out.println("Clear selection");
+                graphPanel.selectedGroupId.clear();
                 graphPanel.selectedGroupId.add(entityIdentifier);
+            } else {
+                // toggle the highlight
+                if (shiftDown && nodeAlreadySelected) {
+                    // postpone until after a drag action can be tested for and only deselect if not draged
+                    entityToToggle = entityIdentifier;
+                    // graphPanel.selectedGroupId.remove(entityIdentifier);
+                } else if (!nodeAlreadySelected) {
+                    graphPanel.selectedGroupId.add(entityIdentifier);
+                }
             }
+            updateSelectionDisplay();
         }
-        updateSelectionDisplay();
     }
 
     private void updateSelectionDisplay() {
