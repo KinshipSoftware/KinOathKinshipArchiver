@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -38,6 +39,16 @@ public class EntityDocument {
     Node currentDomNode = null;
     public EntityData entityData = null;
     private ImportTranslator importTranslator;
+
+    public EntityDocument(ImportTranslator importTranslator) {
+        this.importTranslator = importTranslator;
+        String idString;
+        entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
+        idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
+        File subDirectory = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), idString.substring(0, 2));
+        subDirectory.mkdir();
+        entityFile = new File(subDirectory, idString);
+    }
 
     public EntityDocument(File destinationDirectory, String nameString, ImportTranslator importTranslator) {
         this.importTranslator = importTranslator;
@@ -146,6 +157,10 @@ public class EntityDocument {
         }
     }
 
+    public Node getMetadataNode() {
+        return metadataNode;
+    }
+
     public void insertValue(String nodeName, String valueString) {
         // this method will create a flat xml file and reuse any existing nodes of the target name
         ImportTranslator.TranslationElement translationElement = importTranslator.translate(nodeName, valueString);
@@ -169,6 +184,16 @@ public class EntityDocument {
         Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ translationElement.fieldName);
         valueElement.setTextContent(translationElement.fieldValue);
         metadataNode.appendChild(valueElement);
+    }
+
+    public void importNode(Node foreignNode) {
+        Node importedNode = metadataDom.importNode(foreignNode, true);
+        while (importedNode.hasChildNodes()) {
+            // the metadata node already exists so just add the child nodes of it
+            Node currentChild = importedNode.getFirstChild();
+            currentDomNode.appendChild(currentChild);
+//            importedNode.removeChild(currentChild);
+        }
     }
 
     public Node insertNode(String nodeName, String valueString) {
@@ -257,6 +282,10 @@ public class EntityDocument {
 
     public String getFilePath() {
         return entityFile.getAbsolutePath();
+    }
+
+    public void setAsDeletedDocument() throws ImportException {
+        // todo:
     }
 
     public void saveDocument() throws ImportException {
