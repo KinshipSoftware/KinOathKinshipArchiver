@@ -27,12 +27,13 @@ public class EntityRelation implements Comparable<EntityRelation> {
     public String lineColour = null;
 
     public void setAlterNode(EntityData graphDataNode) {
-        if (graphDataNode != null) {
-            alterNode = graphDataNode;
-            if (alterUniqueIdentifier == null) {
-                alterUniqueIdentifier = alterNode.getUniqueIdentifier();
-            }
+//        if (graphDataNode != null) { // if the nodes has been reloaded then it must always be updated here
+        // todo: it might be better to use a hashmap of all current nodes
+        alterNode = graphDataNode;
+        if (alterUniqueIdentifier == null) {
+            alterUniqueIdentifier = alterNode.getUniqueIdentifier();
         }
+//        }
     }
 
     @XmlTransient
@@ -42,7 +43,7 @@ public class EntityRelation implements Comparable<EntityRelation> {
 
     public int compareTo(EntityRelation o) {
         if (o.alterUniqueIdentifier.equals(alterUniqueIdentifier)
-//                && o.generationalDistance == generationalDistance
+                //                && o.generationalDistance == generationalDistance
                 && o.relationLineType.equals(relationLineType)
                 && o.relationType.equals(relationType)
                 && ((labelString == null && labelString == null) || o.labelString.equals(labelString))
