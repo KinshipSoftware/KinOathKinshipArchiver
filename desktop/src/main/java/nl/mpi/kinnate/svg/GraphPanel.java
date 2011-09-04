@@ -58,6 +58,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     public SvgUpdateHandler svgUpdateHandler;
     private int currentZoom = 0;
     private AffineTransform zoomAffineTransform = null;
+    public MouseListenerSvg mouseListenerSvg;
 
     public GraphPanel(KinTermSavePanel egoSelectionPanel) {
         dataStoreSvg = new DataStoreSvg();
@@ -99,7 +100,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        svgCanvas.setEnableResetTransformInteractor(true);
 //        svgCanvas.setDoubleBufferedRendering(true); // todo: look into reducing the noticable aliasing on the canvas
 
-        MouseListenerSvg mouseListenerSvg = new MouseListenerSvg(this);
+        mouseListenerSvg = new MouseListenerSvg(this);
         svgCanvas.addMouseListener(mouseListenerSvg);
         svgCanvas.addMouseMotionListener(mouseListenerSvg);
         jSVGScrollPane = new JSVGScrollPane(svgCanvas);
@@ -168,7 +169,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             } else {
                 Node currentNode = parentElement.getFirstChild();
                 while (currentNode != null) {
-                    ((EventTarget) currentNode).addEventListener("mousedown", new MouseListenerSvg(this), false);
+                    ((EventTarget) currentNode).addEventListener("mousedown", mouseListenerSvg, false);
                     currentNode = currentNode.getNextSibling();
                 }
             }
