@@ -49,7 +49,7 @@ public class RelationSvg {
         }
     }
 
-    private void setPolylinePointsAttribute(Element targetNode, String svgNameSpace, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    private void setPolylinePointsAttribute(Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float midY = (egoY + alterY) / 2;
         switch (relationType) {
             case affiliation:
@@ -88,7 +88,7 @@ public class RelationSvg {
                 + alterX + "," + alterY);
     }
 
-    private void setPathPointsAttribute(Element targetNode, String svgNameSpace, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    protected void setPathPointsAttribute(Element targetNode, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float fromBezX;
         float fromBezY;
         float toBezX;
@@ -185,16 +185,16 @@ public class RelationSvg {
 //        }
 //
 //    }
-    protected void insertRelation(GraphPanel graphPanel, String svgNameSpace, Element relationGroupNode, EntityData currentNode, EntityRelation graphLinkNode, int hSpacing, int vSpacing) {
+    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData currentNode, EntityRelation graphLinkNode, int hSpacing, int vSpacing) {
         if (graphLinkNode.relationLineType == DataTypes.RelationLineType.sanguineLine) {
             if (hasCommonParent(currentNode, graphLinkNode)) {
                 return; // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
             }
         }
         int relationLineIndex = relationGroupNode.getChildNodes().getLength();
-        Element groupNode = graphPanel.doc.createElementNS(svgNameSpace, "g");
+        Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
         groupNode.setAttribute("id", "relation" + relationLineIndex);
-        Element defsNode = graphPanel.doc.createElementNS(svgNameSpace, "defs");
+        Element defsNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "defs");
         String lineIdString = "relation" + relationLineIndex + "Line";
         new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, graphLinkNode.relationType, graphLinkNode.relationLineType, currentNode.getUniqueIdentifier(), graphLinkNode.getAlterNode().getUniqueIdentifier());
         // set the line end points
@@ -233,9 +233,9 @@ public class RelationSvg {
                 //System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
 
                 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
-                Element linkLine = graphPanel.doc.createElementNS(svgNameSpace, "path");
+                Element linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
 
-                setPathPointsAttribute(linkLine, svgNameSpace, graphLinkNode.relationType, graphLinkNode.relationLineType, hSpacing, vSpacing, fromX, fromY, toX, toY);
+                setPathPointsAttribute(linkLine, graphLinkNode.relationType, graphLinkNode.relationLineType, hSpacing, vSpacing, fromX, fromY, toX, toY);
                 //                    linkLine.setAttribute("x1", );
                 //                    linkLine.setAttribute("y1", );
                 //
@@ -260,9 +260,9 @@ public class RelationSvg {
                 //                            squareLinkLine.setAttribute("y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
                 //                            squareLinkLine.setAttribute("stroke", "grey");
                 //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
-                Element squareLinkLine = graphPanel.doc.createElementNS(svgNameSpace, "polyline");
+                Element squareLinkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
 
-                setPolylinePointsAttribute(squareLinkLine, svgNameSpace, graphLinkNode.relationType, vSpacing, fromX, fromY, toX, toY);
+                setPolylinePointsAttribute(squareLinkLine, graphLinkNode.relationType, vSpacing, fromX, fromY, toX, toY);
 
                 squareLinkLine.setAttribute("fill", "none");
                 squareLinkLine.setAttribute("stroke", "grey");
@@ -276,10 +276,10 @@ public class RelationSvg {
 
         if (addedRelationLine) {
             // insert the node that uses the above definition
-            addUseNode(graphPanel.doc, svgNameSpace, groupNode, lineIdString);
+            addUseNode(graphPanel.doc, graphPanel.svgNameSpace, groupNode, lineIdString);
             // add the relation label
             if (graphLinkNode.labelString != null) {
-                Element labelText = graphPanel.doc.createElementNS(svgNameSpace, "text");
+                Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
                 labelText.setAttribute("text-anchor", "middle");
                 //                        labelText.setAttribute("x", Integer.toString(labelX));
                 //                        labelText.setAttribute("y", Integer.toString(labelY));
@@ -291,7 +291,7 @@ public class RelationSvg {
                 labelText.setAttribute("stroke-width", "0");
                 labelText.setAttribute("font-size", "14");
                 //                        labelText.setAttribute("transform", "rotate(45)");
-                Element textPath = graphPanel.doc.createElementNS(svgNameSpace, "textPath");
+                Element textPath = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "textPath");
                 textPath.setAttributeNS("http://www.w3.rg/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
                 textPath.setAttribute("startOffset", "50%");
                 textPath.setAttribute("id", "relation" + relationLineIndex + "label");
@@ -304,7 +304,7 @@ public class RelationSvg {
         relationGroupNode.appendChild(groupNode);
     }
 
-    public void updateRelationLines(GraphPanel graphPanel, ArrayList<UniqueIdentifier> draggedNodeIds, String svgNameSpace, int hSpacing, int vSpacing) {
+    public void updateRelationLines(GraphPanel graphPanel, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) {
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = graphPanel.doc.getElementById("RelationGroup");
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
@@ -339,14 +339,14 @@ public class RelationSvg {
 
                         if ("polyline".equals(relationLineElement.getLocalName())) {
                             //System.out.println("polyline to update: " + lineElementId);
-                            setPolylinePointsAttribute(relationLineElement, svgNameSpace, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
+                            setPolylinePointsAttribute(relationLineElement, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
                         }
                         if ("path".equals(relationLineElement.getLocalName())) {
                             //System.out.println("path to update: " + relationLineElement.getLocalName());
-                            setPathPointsAttribute(relationLineElement, svgNameSpace, graphRelationData.relationType, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
+                            setPathPointsAttribute(relationLineElement, graphRelationData.relationType, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
                         }
-                        addUseNode(graphPanel.doc, svgNameSpace, (Element) currentChild, lineElementId);
-                        updateLabelNode(graphPanel.doc, svgNameSpace, lineElementId, idAttrubite.getNodeValue());
+                        addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
+                        updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
                     }
                 }
             }
