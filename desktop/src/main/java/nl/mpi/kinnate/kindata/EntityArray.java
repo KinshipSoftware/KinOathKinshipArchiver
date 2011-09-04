@@ -18,6 +18,10 @@ public class EntityArray {
     }
 
     public EntityData[] getEntityDataArray() {
-        return entityDataArray;
+        if (entityDataArray == null) {
+            return new EntityData[]{};
+        } else {
+            return entityDataArray;
+        }
     }
 }
