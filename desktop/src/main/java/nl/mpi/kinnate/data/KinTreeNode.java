@@ -149,12 +149,12 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public boolean isCatalogue() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
     @Override
     public boolean isChildNode() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
     @Override
@@ -164,17 +164,17 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public boolean isCorpus() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
     @Override
     public boolean isDataLoaded() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
     @Override
     public boolean isDirectory() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
     @Override
@@ -204,7 +204,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public boolean isMetaDataNode() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
     @Override
@@ -214,7 +214,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public boolean isSession() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
     public int compareTo(Object o) {
@@ -229,5 +229,27 @@ public class KinTreeNode extends ArbilNode implements Comparable {
             // put kin nodes in front of other nodes
             return 1;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final KinTreeNode other = (KinTreeNode) obj;
+        if (this.entityData.getUniqueIdentifier() != other.entityData.getUniqueIdentifier() && (this.entityData.getUniqueIdentifier() == null || !this.entityData.getUniqueIdentifier().equals(other.entityData.getUniqueIdentifier()))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + (this.entityData.getUniqueIdentifier() != null ? this.entityData.getUniqueIdentifier().hashCode() : 0);
+        return hash;
     }
 }
