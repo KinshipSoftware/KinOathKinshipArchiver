@@ -232,6 +232,19 @@ public class EntityData {
         }
     }
 
+    public void removeRelationsWithNode(EntityData alterNodeLocal) {
+        ArrayList<EntityRelation> uniqueNodes = new ArrayList<EntityRelation>();
+        if (relatedNodes != null) {
+            for (EntityRelation nodeRelation : relatedNodes) {
+                if (!alterNodeLocal.uniqueIdentifier.equals(nodeRelation.alterUniqueIdentifier)) {
+                    uniqueNodes.add(nodeRelation);
+                }
+            }
+        }
+        relatedNodes = uniqueNodes.toArray(new EntityRelation[]{});
+        distinctRelateNodes = null;
+    }
+
     public void addRelatedNode(EntityData alterNodeLocal, /*int generationalDistance,*/ DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String lineColourLocal, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         EntityRelation nodeRelation = new EntityRelation();
