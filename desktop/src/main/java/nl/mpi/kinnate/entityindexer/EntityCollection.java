@@ -312,6 +312,22 @@ public class EntityCollection {
         return new EntityData[]{}; //(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
     }
 
+    public String getEntityPath(UniqueIdentifier uniqueIdentifier) {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String query1String = queryBuilder.getEntityPath(uniqueIdentifier);
+//        System.out.println("query1String: " + query1String);
+        try {
+            long startQueryTime = System.currentTimeMillis();
+            String queryResult = new XQuery(query1String).execute(context);
+            long queryMils = System.currentTimeMillis() - startQueryTime;
+            System.out.println("Query time: " + queryMils + "ms");
+            return queryResult;
+        } catch (BaseXException exception) {
+            new ArbilBugCatcher().logError(exception);
+        }
+        return null;
+    }
+
     public EntityData getEntity(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
