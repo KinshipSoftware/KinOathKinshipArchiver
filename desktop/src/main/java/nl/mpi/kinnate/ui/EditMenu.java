@@ -107,7 +107,7 @@ public class EditMenu extends JMenu implements ActionListener {
             graphPanel = initialGraphPanel;
         }
         if (graphPanel != null) {
-            new MouseListenerSvg(graphPanel).performMenuAction(MouseListenerSvg.ActionCode.valueOf(e.getActionCommand()));
+            graphPanel.mouseListenerSvg.performMenuAction(MouseListenerSvg.ActionCode.valueOf(e.getActionCommand()));
         }
         enableMenuKeys();
     }
