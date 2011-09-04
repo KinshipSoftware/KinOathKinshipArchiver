@@ -54,24 +54,25 @@ public class EntityMerger {
     }
 
     public void mergeEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers) throws ImportException {
-        ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
+        ArrayList<EntityDocument> nonLeadEntityDocuments = new ArrayList<EntityDocument>();
         HashMap<UniqueIdentifier, EntityDocument> entityMap = new HashMap<UniqueIdentifier, EntityDocument>();
         try {
-            EntityDocument leadEntityDocument = getEntityDocuments(graphPanel, selectedIdentifiers, entityMap, entityDocumentList);
-            for (EntityDocument alterEntity : entityDocumentList) {
+            EntityDocument leadEntityDocument = getEntityDocuments(graphPanel, selectedIdentifiers, entityMap, nonLeadEntityDocuments);
+            for (EntityDocument alterEntity : nonLeadEntityDocuments) {
                 for (EntityRelation entityRelation : alterEntity.entityData.getDistinctRelateNodes()) {
                     EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
                     // add the new relation
                     leadEntityDocument.entityData.addRelatedNode(relatedDocument.entityData, entityRelation.relationType, entityRelation.relationLineType, entityRelation.lineColour, entityRelation.labelString);
                     // remove the old entity relation
-                    // todo: check that the correct relations are being removed from the correct entities
+                    // todo: check that the correct relations are being removed from the correct entities.
                     relatedDocument.entityData.removeRelationsWithNode(alterEntity.entityData);
+                    alterEntity.entityData.removeRelationsWithNode(relatedDocument.entityData);
                 }
                 alterEntity.setAsDeletedDocument();
             }
             leadEntityDocument.saveDocument();
             new EntityCollection().updateDatabase(leadEntityDocument.getFile().toURI());
-            for (EntityDocument entityDocument : entityDocumentList) {
+            for (EntityDocument entityDocument : nonLeadEntityDocuments) {
                 entityDocument.saveDocument();
                 new EntityCollection().updateDatabase(entityDocument.getFile().toURI());
             }
