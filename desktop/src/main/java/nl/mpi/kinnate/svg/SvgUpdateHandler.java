@@ -133,7 +133,7 @@ public class SvgUpdateHandler {
         float dragNodeX = relationDragHandle.getTranslatedX(localDragNodeX);
         float dragNodeY = relationDragHandle.getTranslatedY(localDragNodeY);
 
-        relationDragHandle.targetIdentifier = graphPanel.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30);
+        relationDragHandle.targetIdentifier = graphPanel.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30, graphPanel.selectedGroupId);
         if (relationDragHandle.targetIdentifier != null) {
             float[] closestEntityPoint = graphPanel.entitySvg.getEntityLocation(relationDragHandle.targetIdentifier);
             dragNodeX = closestEntityPoint[0];
