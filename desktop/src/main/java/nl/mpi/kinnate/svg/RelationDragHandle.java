@@ -15,12 +15,22 @@ public class RelationDragHandle {
     protected float elementStartY;
     protected float mouseStartX;
     protected float mouseStartY;
+    protected float diagramScaleFactor;
 
-    public RelationDragHandle(RelationType relationType, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY) {
+    public RelationDragHandle(RelationType relationType, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) {
         this.relationType = relationType;
         this.elementStartX = elementStartX;
         this.elementStartY = elementStartY;
         this.mouseStartX = mouseStartX;
         this.mouseStartY = mouseStartY;
+        this.diagramScaleFactor = (float) diagramScaleFactor;
+    }
+
+    protected float getTranslatedX(float localDragNodeX) {
+        return elementStartX + (localDragNodeX - mouseStartX) / diagramScaleFactor;
+    }
+
+    protected float getTranslatedY(float localDragNodeY) {
+        return elementStartY + (localDragNodeY - mouseStartY) / diagramScaleFactor;
     }
 }
