@@ -247,20 +247,22 @@ public class EntitySvg {
         }
     }
 
-    public UniqueIdentifier getClosestEntity(float[] locationArray, int maximumDistance) {
+    public UniqueIdentifier getClosestEntity(float[] locationArray, int maximumDistance, ArrayList<UniqueIdentifier> excludeIdentifiers) {
         double closestDistance = -1;
         UniqueIdentifier closestIdentifier = null;
         for (Entry<UniqueIdentifier, float[]> currentEntry : entityPositions.entrySet()) {
-            float hDistance = locationArray[0] - currentEntry.getValue()[0];
-            float vDistance = locationArray[1] - currentEntry.getValue()[1];
-            double entityDistance = Math.sqrt(hDistance * hDistance + vDistance * vDistance);
-            if (closestIdentifier == null) {
-                closestDistance = entityDistance;
-                closestIdentifier = currentEntry.getKey();
-            }
-            if (entityDistance < closestDistance) {
-                closestDistance = entityDistance;
-                closestIdentifier = currentEntry.getKey();
+            if (!excludeIdentifiers.contains(currentEntry.getKey())) {
+                float hDistance = locationArray[0] - currentEntry.getValue()[0];
+                float vDistance = locationArray[1] - currentEntry.getValue()[1];
+                double entityDistance = Math.sqrt(hDistance * hDistance + vDistance * vDistance);
+                if (closestIdentifier == null) {
+                    closestDistance = entityDistance;
+                    closestIdentifier = currentEntry.getKey();
+                }
+                if (entityDistance < closestDistance) {
+                    closestDistance = entityDistance;
+                    closestIdentifier = currentEntry.getKey();
+                }
             }
         }
 //        System.out.println("closestDistance: " + closestDistance);
