@@ -95,8 +95,11 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         }
         checkSelectionClearRequired(me);
         mouseActionOnNode = false;
-        // todo: if a relation has been set by this drag action then it must be created here
-        graphPanel.svgUpdateHandler.relationDragHandle = null;
+        if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
+            // todo: if a relation has been set by this drag action then it must be created here
+            graphPanel.svgUpdateHandler.relationDragHandle = null;
+            updateSelectionDisplay();
+        }
     }
 
     @Override
