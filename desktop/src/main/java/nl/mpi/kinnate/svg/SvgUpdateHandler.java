@@ -58,7 +58,7 @@ public class SvgUpdateHandler {
         kinTermSavePanel = kinTermSavePanelLocal;
     }
 
-    private void removeHighLights() {
+    private void removeRelationHighLights() {
         // this must be only called from within a svg runnable
         Element relationOldHighlightGroup = graphPanel.doc.getElementById("RelationHighlightGroup");
         if (relationOldHighlightGroup != null) {
@@ -67,9 +67,15 @@ public class SvgUpdateHandler {
         }
     }
 
+    private void removeEntityHighLights() {
+        for (Element entityHighlightGroup = graphPanel.doc.getElementById("highlight"); entityHighlightGroup != null; entityHighlightGroup = graphPanel.doc.getElementById("highlight")) {
+            entityHighlightGroup.getParentNode().removeChild(entityHighlightGroup);
+        }
+    }
+
     private void updateSanguineHighlights(Element entityGroup) {
         // this must be only called from within a svg runnable
-        removeHighLights();
+        removeRelationHighLights();
         if (graphPanel.dataStoreSvg.highlightRelationLines) {
             // add highlights for relation lines
             Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
@@ -121,11 +127,18 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void updateDragRelationLines(Element entityGroup, int localDragNodeX, int localDragNodeY) {
+    private void updateDragRelationLines(Element entityGroup, float localDragNodeX, float localDragNodeY) {
         // this must be only called from within a svg runnable
         // add highlights for relation lines that would be created by the user action
         float dragNodeX = relationDragHandle.getTranslatedX(localDragNodeX);
         float dragNodeY = relationDragHandle.getTranslatedY(localDragNodeY);
+
+        relationDragHandle.targetIdentifier = graphPanel.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30);
+        if (relationDragHandle.targetIdentifier != null) {
+            float[] closestEntityPoint = graphPanel.entitySvg.getEntityLocation(relationDragHandle.targetIdentifier);
+            dragNodeX = closestEntityPoint[0];
+            dragNodeY = closestEntityPoint[1];
+        }
 
         Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
         relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
@@ -161,15 +174,15 @@ public class SvgUpdateHandler {
             highlightLine.setAttribute("stroke-dasharray", "3");
             highlightLine.setAttribute("stroke-dashoffset", "0");
             relationHighlightGroup.appendChild(highlightLine);
-
-            Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
-            symbolNode.setAttribute("cx", Float.toString(dragNodeX));
-            symbolNode.setAttribute("cy", Float.toString(dragNodeY));
-            symbolNode.setAttribute("r", "5");
-            symbolNode.setAttribute("fill", "blue");
-            symbolNode.setAttribute("stroke", "none");
-            relationHighlightGroup.appendChild(symbolNode);
         }
+        Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
+        symbolNode.setAttribute("cx", Float.toString(dragNodeX));
+        symbolNode.setAttribute("cy", Float.toString(dragNodeY));
+        symbolNode.setAttribute("r", "5");
+        symbolNode.setAttribute("fill", "blue");
+        symbolNode.setAttribute("stroke", "none");
+        relationHighlightGroup.appendChild(symbolNode);
+
 //        ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
@@ -339,7 +352,8 @@ public class SvgUpdateHandler {
                         updateDragNodeXLocal = updateDragRelationX;
                         updateDragNodeYLocal = updateDragRelationY;
                     }
-                    removeHighLights();
+                    removeRelationHighLights();
+                    removeEntityHighLights();
                     updateDragRelationLines(entityGroup, updateDragNodeXLocal, updateDragNodeYLocal);
                 }
                 synchronized (SvgUpdateHandler.this) {
@@ -631,7 +645,7 @@ public class SvgUpdateHandler {
 //        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
 //        currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
         try {
-            removeHighLights();
+            removeRelationHighLights();
             Element svgRoot = graphPanel.doc.getDocumentElement();
             Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
             if (diagramGroupNode == null) { // make sure the diagram group exists
