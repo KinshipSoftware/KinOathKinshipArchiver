@@ -343,7 +343,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             if (gedcomLevelStrings.get(gedcomLevelStrings.size() - 1).equals("FILE")) {
                                 // todo: check if the FILE value can contain a path or just the file name and handle the path correctly if required
                                 // todo: copy the file or not according to user options
-                                currentEntity.entityData.addArchiveLink(inputFileUri.resolve(lineParts[2]));
+                                if (lineParts[2].toLowerCase().startsWith("mailto:")) {                                    
+                                    currentEntity.insertValue("mailto", lineParts[2]); // todo: check that this is not already inserted
+                                } else {
+                                    currentEntity.entityData.addArchiveLink(inputFileUri.resolve(lineParts[2]));
+                                }
                             }
 
 //                            currentDomNode.setTextContent(/*gedcomPath + " : " +*/lineParts[2]);
