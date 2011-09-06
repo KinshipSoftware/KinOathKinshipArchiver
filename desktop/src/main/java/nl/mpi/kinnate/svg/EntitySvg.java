@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphLabel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -244,6 +245,29 @@ public class EntitySvg {
         for (UniqueIdentifier currentIdentifier : selectedIdentifiers) {
             entityPositions.remove(currentIdentifier);
         }
+    }
+
+    public UniqueIdentifier getClosestEntity(float[] locationArray, int maximumDistance) {
+        double closestDistance = -1;
+        UniqueIdentifier closestIdentifier = null;
+        for (Entry<UniqueIdentifier, float[]> currentEntry : entityPositions.entrySet()) {
+            float hDistance = locationArray[0] - currentEntry.getValue()[0];
+            float vDistance = locationArray[1] - currentEntry.getValue()[1];
+            double entityDistance = Math.sqrt(hDistance * hDistance + vDistance * vDistance);
+            if (closestIdentifier == null) {
+                closestDistance = entityDistance;
+                closestIdentifier = currentEntry.getKey();
+            }
+            if (entityDistance < closestDistance) {
+                closestDistance = entityDistance;
+                closestIdentifier = currentEntry.getKey();
+            }
+        }
+//        System.out.println("closestDistance: " + closestDistance);
+        if (maximumDistance < closestDistance) {
+            return null;
+        }
+        return closestIdentifier;
     }
 
     public float[] getEntityLocation(UniqueIdentifier entityId) {
