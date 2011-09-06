@@ -44,7 +44,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void mouseDragged(MouseEvent me) {
-        if (graphPanel.svgUpdateHandler.relationDragHandleType != null) {
+        if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
             graphPanel.svgUpdateHandler.updateDragRelation(me.getPoint().x, me.getPoint().y);
         } else {
             if (startDragPoint != null) {
@@ -93,7 +93,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         checkSelectionClearRequired(me);
         mouseActionOnNode = false;
         // todo: if a relation has been set by this drag action then it must be created here
-        graphPanel.svgUpdateHandler.relationDragHandleType = null;
+        graphPanel.svgUpdateHandler.relationDragHandle = null;
     }
 
     @Override
@@ -114,7 +114,15 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         preDragCursor = graphPanel.svgCanvas.getCursor();
         final String handleTypeString = currentDraggedElement.getAttribute("handletype");
         if (handleTypeString != null && handleTypeString.length() > 0) {
-            graphPanel.svgUpdateHandler.relationDragHandleType = DataTypes.RelationType.valueOf(handleTypeString);
+            if (evt instanceof DOMMouseEvent) {
+                graphPanel.svgUpdateHandler.relationDragHandle =
+                        new RelationDragHandle(
+                        DataTypes.RelationType.valueOf(handleTypeString),
+                        Float.valueOf(currentDraggedElement.getAttribute("cx")),
+                        Float.valueOf(currentDraggedElement.getAttribute("cy")),
+                        ((DOMMouseEvent) evt).getClientX(),
+                        ((DOMMouseEvent) evt).getClientY());
+            }
         } else {
             final String attributeString = currentDraggedElement.getAttribute("id");
             UniqueIdentifier entityIdentifier = new UniqueIdentifier(attributeString);
