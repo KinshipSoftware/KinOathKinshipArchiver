@@ -49,7 +49,7 @@ public class RelationSvg {
         }
     }
 
-    private void setPolylinePointsAttribute(Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    protected void setPolylinePointsAttribute(Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float midY = (egoY + alterY) / 2;
         switch (relationType) {
             case affiliation:
