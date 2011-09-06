@@ -39,7 +39,7 @@ public class SvgUpdateHandler {
     private int updateDragRelationY = 0;
     private float[][] dragRemainders = null;
     private boolean resizeRequired = false;
-    protected DataTypes.RelationType relationDragHandleType = null;
+    protected RelationDragHandle relationDragHandle = null;
 
     public enum GraphicsTypes {
 
@@ -121,9 +121,12 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void updateDragRelationLines(Element entityGroup, int updateDragNodeXInner, int updateDragNodeYInner) {
+    private void updateDragRelationLines(Element entityGroup, int localDragNodeX, int localDragNodeY) {
         // this must be only called from within a svg runnable
         // add highlights for relation lines that would be created by the user action
+        float dragNodeX = relationDragHandle.getTranslatedX(localDragNodeX);
+        float dragNodeY = relationDragHandle.getTranslatedY(localDragNodeY);
+
         Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
         relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
         entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
@@ -146,18 +149,26 @@ public class SvgUpdateHandler {
             highlightBackgroundLine.setAttribute("fill", "none");
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
             highlightBackgroundLine.setAttribute("stroke", "white");
-            new RelationSvg().setPathPointsAttribute(highlightBackgroundLine, DataTypes.RelationType.ancestor /* ancestor or descendant makes no difference here */, DataTypes.RelationLineType.sanguineLine, hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], (float) updateDragNodeXInner, (float) updateDragNodeYInner);
+            new RelationSvg().setPolylinePointsAttribute(highlightBackgroundLine, relationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
             relationHighlightGroup.appendChild(highlightBackgroundLine);
             // add a blue dotted line
             Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
             highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
             highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
-            new RelationSvg().setPathPointsAttribute(highlightLine, DataTypes.RelationType.ancestor /* ancestor or descendant makes no difference here */, DataTypes.RelationLineType.sanguineLine, hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], (float) updateDragNodeXInner, (float) updateDragNodeYInner);
+            new RelationSvg().setPolylinePointsAttribute(highlightLine, relationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
             highlightLine.setAttribute("stroke", "blue");
             highlightLine.setAttribute("stroke-dasharray", "3");
             highlightLine.setAttribute("stroke-dashoffset", "0");
             relationHighlightGroup.appendChild(highlightLine);
+
+            Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
+            symbolNode.setAttribute("cx", Float.toString(dragNodeX));
+            symbolNode.setAttribute("cy", Float.toString(dragNodeY));
+            symbolNode.setAttribute("r", "5");
+            symbolNode.setAttribute("fill", "blue");
+            symbolNode.setAttribute("stroke", "none");
+            relationHighlightGroup.appendChild(symbolNode);
         }
 //        ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
@@ -303,6 +314,7 @@ public class SvgUpdateHandler {
     }
 
     protected void updateDragRelation(int updateDragNodeXLocal, int updateDragNodeYLocal) {
+//        System.out.println("updateDragRelation: " + updateDragNodeXLocal + " : " + updateDragNodeYLocal);
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         synchronized (SvgUpdateHandler.this) {
             updateDragRelationX = updateDragNodeXLocal;
