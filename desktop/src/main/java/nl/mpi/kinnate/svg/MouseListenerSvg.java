@@ -3,6 +3,7 @@ package nl.mpi.kinnate.svg;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
@@ -17,6 +18,8 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
+import org.w3c.dom.svg.SVGLocatable;
+import org.w3c.dom.svg.SVGMatrix;
 
 /**
  *  Document   : MouseListenerSvg
@@ -115,13 +118,21 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         final String handleTypeString = currentDraggedElement.getAttribute("handletype");
         if (handleTypeString != null && handleTypeString.length() > 0) {
             if (evt instanceof DOMMouseEvent) {
+                Element entityGroup = graphPanel.doc.getElementById("EntityGroup");
+                SVGMatrix entityGroupMatrix = ((SVGLocatable) entityGroup).getCTM();
+                SVGMatrix entityMatrix = ((SVGLocatable) currentDraggedElement).getCTM();
+                float xTranslate = entityMatrix.getE() - entityGroupMatrix.getE(); // because the target of the drag location is within the diagram translation we must subtract it here
+                float yTranslate = entityMatrix.getF() - entityGroupMatrix.getF();
+                AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
                 graphPanel.svgUpdateHandler.relationDragHandle =
                         new RelationDragHandle(
                         DataTypes.RelationType.valueOf(handleTypeString),
-                        Float.valueOf(currentDraggedElement.getAttribute("cx")),
-                        Float.valueOf(currentDraggedElement.getAttribute("cy")),
+                        Float.valueOf(currentDraggedElement.getAttribute("cx")) + xTranslate,
+                        Float.valueOf(currentDraggedElement.getAttribute("cy")) + yTranslate,
                         ((DOMMouseEvent) evt).getClientX(),
-                        ((DOMMouseEvent) evt).getClientY());
+                        ((DOMMouseEvent) evt).getClientY(),
+                        affineTransform.getScaleX() // the drawing should be proportional so only using X is adequate here
+                        );
             }
         } else {
             final String attributeString = currentDraggedElement.getAttribute("id");
