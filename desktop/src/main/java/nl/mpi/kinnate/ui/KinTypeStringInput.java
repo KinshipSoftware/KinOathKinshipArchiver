@@ -6,6 +6,8 @@ import java.awt.event.FocusListener;
 import javax.swing.JTextPane;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 
 /**
  *  Document   : KinTypeStringInput
@@ -81,5 +83,30 @@ public class KinTypeStringInput extends JTextPane {
 
     public boolean hasChanges() {
         return (previousKinTypeStrings == null || !previousKinTypeStrings.equals(this.getText()));
+    }
+
+    protected void highlightKinTerms(ParserHighlight[] parserHighlight, String[] kinTypeStrings) {
+        StyledDocument styledDocument = this.getStyledDocument();
+        int lineStart = 0;
+        for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
+            ParserHighlight currentHighlight = parserHighlight[lineCounter];
+//                int lineStart = styledDocument.getParagraphElement(lineCounter).getStartOffset();
+//                int lineEnd = styledDocument.getParagraphElement(lineCounter).getEndOffset();
+            int lineEnd = lineStart + kinTypeStrings[lineCounter].length();
+            styledDocument.setCharacterAttributes(lineStart, lineEnd, this.getStyle("Unknown"), true);
+            while (currentHighlight.highlight != null) {
+                int startPos = lineStart + currentHighlight.startChar;
+                int charCount = lineEnd - lineStart;
+                if (currentHighlight.nextHighlight.highlight != null) {
+                    charCount = currentHighlight.nextHighlight.startChar - currentHighlight.startChar;
+                }
+                if (currentHighlight.highlight != null) {
+                    String styleName = currentHighlight.highlight.name();
+                    styledDocument.setCharacterAttributes(startPos, charCount, this.getStyle(styleName), true);
+                }
+                currentHighlight = currentHighlight.nextHighlight;
+            }
+            lineStart += kinTypeStrings[lineCounter].length() + 1;
+        }
     }
 }
