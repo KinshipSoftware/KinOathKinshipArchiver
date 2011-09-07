@@ -67,7 +67,6 @@ public class KinTypeStringConverter extends GraphSorter {
 //        }
 //        return false;
 //    }
-
 //    @Deprecated
 //    public boolean compareRelationsToKinType(EntityData egoEntity, EntityData alterEntity, KinType requiredKinType, EntityRelation entityRelation, int generationalDistance) {
 ////        egoEntity.appendTempLabel("compareRelationsToKinType-egoEntity" + "F: " + QueryParser.foundOrder++);
@@ -91,7 +90,6 @@ public class KinTypeStringConverter extends GraphSorter {
 //        }
 //        return false;
 //    }
-
     public ArrayList<KinTypeElement> getKinTypeElements(String consumableString, ParserHighlight parserHighlight) {
         int initialLength = consumableString.length();
         ArrayList<KinTypeElement> kinTypeElementList = new ArrayList<KinTypeElement>();
@@ -142,7 +140,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                 if (queryTerm.length == 2) {
                                     if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
                                         // todo: *:* like namespace handling might be required here
-                                        currentElement.queryTerm.add(new String[]{queryTerm[0], queryTerm[1]});
+                                        currentElement.queryTerm.add(new String[]{"*:" + queryTerm[0].replaceAll("\\.", "/*:"), queryTerm[1]});
                                     }
                                 }
                             }
