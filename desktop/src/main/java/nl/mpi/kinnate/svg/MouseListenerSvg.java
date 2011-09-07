@@ -7,15 +7,20 @@ import java.awt.geom.AffineTransform;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
+import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindocument.RelationLinker;
+import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGLocatable;
@@ -29,6 +34,7 @@ import org.w3c.dom.svg.SVGMatrix;
 public class MouseListenerSvg extends MouseInputAdapter implements EventListener {
 
     private Cursor preDragCursor;
+    private KinDiagramPanel kinDiagramPanel;
     private GraphPanel graphPanel;
     private Point startDragPoint = null;
     private boolean mouseActionOnNode = false;
@@ -41,7 +47,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         selectAll, selectRelated, expandSelection, deselectAll
     }
 
-    public MouseListenerSvg(GraphPanel graphPanelLocal) {
+    public MouseListenerSvg(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanelLocal) {
+        this.kinDiagramPanel = kinDiagramPanel;
         graphPanel = graphPanelLocal;
     }
 
@@ -96,7 +103,17 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         checkSelectionClearRequired(me);
         mouseActionOnNode = false;
         if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
-            // todo: if a relation has been set by this drag action then it must be created here
+            if (graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier != null) {
+                try {
+                    // if a relation has been set by this drag action then it is created here.
+                    final RelationType relationType = DataTypes.getOpposingRelationType(graphPanel.svgUpdateHandler.relationDragHandle.relationType);
+                    UniqueIdentifier[] changedIdentifiers = new RelationLinker().linkEntities(graphPanel, graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType);
+                    kinDiagramPanel.entityRelationsChanged(changedIdentifiers);
+                } catch (ImportException exception) {
+                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
+                }
+            }
+            
             graphPanel.svgUpdateHandler.relationDragHandle = null;
             updateSelectionDisplay();
         }
