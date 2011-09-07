@@ -1,9 +1,6 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -15,9 +12,6 @@ import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeContainer;
@@ -47,7 +41,7 @@ import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePanel, ArbilDataNodeContainer {
 
     private EntityCollection entityCollection;
-    private JTextPane kinTypeStringInput;
+    private KinTypeStringInput kinTypeStringInput;
     private GraphPanel graphPanel;
     private GraphSorter graphSorter;
     private EgoSelectionPanel egoSelectionPanel;
@@ -87,16 +81,13 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //            + "E=[Bob]M\n"
 //            + "E=[Bob]S";
 //    private String kinTypeStrings[] = new String[]{};
-    Color commentColour = Color.GRAY;
 
     public KinDiagramPanel(File existingFile) {
         entityCollection = new EntityCollection();
         progressBar = new JProgressBar();
         EntityData[] svgStoredEntities = null;
         graphPanel = new GraphPanel(this);
-        kinTypeStringInput = new JTextPane();
-        kinTypeStringInput.setText(defaultString);
-        kinTypeStringInput.setForeground(commentColour);
+        kinTypeStringInput = new KinTypeStringInput(defaultString);
         if (existingFile != null && existingFile.exists()) {
             svgStoredEntities = graphPanel.readSvg(existingFile);
             String kinTermContents = null;
@@ -129,21 +120,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         registeredArbilDataNode = new HashMap<UniqueIdentifier, ArbilDataNode>();
         egoSelectionPanel = new EgoSelectionPanel(imdiTable, graphPanel);
         kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
-        // set the styles for the kin type string text
-        Style styleComment = kinTypeStringInput.addStyle("Comment", null);
-//        StyleConstants.setForeground(styleComment, new Color(247,158,9));
-        StyleConstants.setForeground(styleComment, commentColour);
-        Style styleKinType = kinTypeStringInput.addStyle("KinType", null);
-        StyleConstants.setForeground(styleKinType, new Color(43, 32, 161));
-        Style styleQuery = kinTypeStringInput.addStyle("Query", null);
-        StyleConstants.setForeground(styleQuery, new Color(183, 7, 140));
-        Style styleParamater = kinTypeStringInput.addStyle("Parameter", null);
-        StyleConstants.setForeground(styleParamater, new Color(103, 7, 200));
-        Style styleError = kinTypeStringInput.addStyle("Error", null);
-//        StyleConstants.setForeground(styleError, new Color(172,3,57));
-        StyleConstants.setForeground(styleError, Color.RED);
-        Style styleUnknown = kinTypeStringInput.addStyle("Unknown", null);
-        StyleConstants.setForeground(styleUnknown, Color.BLACK);
 
 //        kinTypeStringInput.setText(defaultString);
 
@@ -189,26 +165,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         entityIndex = new QueryParser(svgStoredEntities);
         graphSorter = new GraphSorter();
-
-        kinTypeStringInput.addFocusListener(new FocusListener() {
-
-            public void focusGained(FocusEvent e) {
-                if (kinTypeStringInput.getText().equals(defaultString)) {
-                    kinTypeStringInput.setText("");
-//                    kinTypeStringInput.setForeground(Color.BLACK);
-                }
-            }
-
-            public void focusLost(FocusEvent e) {
-                if (kinTypeStringInput.getText().length() == 0) {
-                    kinTypeStringInput.setText(defaultString);
-                    kinTypeStringInput.setForeground(commentColour);
-                }
-            }
-        });
         kinTypeStringInput.addKeyListener(new KeyListener() {
-
-            String previousKinTypeStrings = null;
 
             public void keyTyped(KeyEvent e) {
             }
@@ -218,21 +175,13 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
             public void keyReleased(KeyEvent e) {
                 synchronized (e) {
-                    if (previousKinTypeStrings == null || !previousKinTypeStrings.equals(kinTypeStringInput.getText())) {
-                        graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
-//                kinTypeStrings = graphPanel.getKinTypeStrigs();
+                    if (kinTypeStringInput.hasChanges()) {
+                        graphPanel.setKinTypeStrigs(kinTypeStringInput.getCurrentStrings());
                         drawGraph();
-                        previousKinTypeStrings = kinTypeStringInput.getText();
                     }
                 }
             }
         });
-    }
-
-    public void createDefaultGraph(String defaultGraphString) {
-        kinTypeStringInput.setText(defaultGraphString);
-        graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
-        drawGraph();
     }
     boolean graphThreadRunning = false;
     boolean graphUpdateRequired = false;
@@ -245,7 +194,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
                 @Override
                 public void run() {
-                    // todo: there are probably other synchronisation issues to resolve here
+                    // todo: there are probably other synchronisation issues to resolve here.
                     while (graphUpdateRequired) {
                         graphUpdateRequired = false;
                         try {
@@ -309,33 +258,35 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         }
     }
 
-    @Deprecated
-    public void setDisplayNodes(String typeString, String[] egoIdentifierArray) {
-        // todo: should this be replaced by the required nodes?
-        if (kinTypeStringInput.getText().equals(defaultString)) {
-            kinTypeStringInput.setText("");
-        }
-        String kinTermContents = kinTypeStringInput.getText();
-        for (String currentId : egoIdentifierArray) {
-            kinTermContents = kinTermContents + typeString + "=[" + currentId + "]\n";
-        }
-        kinTypeStringInput.setText(kinTermContents);
-        graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
-//        kinTypeStrings = graphPanel.getKinTypeStrigs();
-        drawGraph();
-    }
-
+//    @Deprecated
+//    public void setDisplayNodes(String typeString, String[] egoIdentifierArray) {
+//        // todo: should this be replaced by the required nodes?
+//        if (kinTypeStringInput.getText().equals(defaultString)) {
+//            kinTypeStringInput.setText("");
+//        }
+//        String kinTermContents = kinTypeStringInput.getText();
+//        for (String currentId : egoIdentifierArray) {
+//            kinTermContents = kinTermContents + typeString + "=[" + currentId + "]\n";
+//        }
+//        kinTypeStringInput.setText(kinTermContents);
+//        graphPanel.setKinTypeStrigs(kinTypeStringInput.getText().split("\n"));
+////        kinTypeStrings = graphPanel.getKinTypeStrigs();
+//        drawGraph();
+//    }
     public void setEgoNodes(UniqueIdentifier[] egoIdentifierArray) {
+        // todo: this does not update the ego highlight on the graph and the trees
         graphPanel.dataStoreSvg.egoEntities = new HashSet<UniqueIdentifier>(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
     public void addEgoNodes(UniqueIdentifier[] egoIdentifierArray) {
+        // todo: this does not update the ego highlight on the graph and the trees
         graphPanel.dataStoreSvg.egoEntities.addAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
     public void removeEgoNodes(UniqueIdentifier[] egoIdentifierArray) {
+        // todo: this does not update the ego highlight on the graph and the trees
         graphPanel.dataStoreSvg.egoEntities.removeAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
