@@ -10,9 +10,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
-import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.gedcomimport.ImportException;
-import nl.mpi.kinnate.kindocument.ImportTranslator;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -63,6 +61,25 @@ public class RelationLinker {
 //        }
     }
 
+    public UniqueIdentifier[] linkEntities(GraphPanel graphPanel, UniqueIdentifier targetIdentifier, UniqueIdentifier[] selectedIdentifiers, DataTypes.RelationType relationType) throws ImportException {
+        ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
+        ArrayList<UniqueIdentifier> affectedIdentifiers = new ArrayList<UniqueIdentifier>();
+        try {
+            EntityDocument leadEntityDocument = new EntityDocument(new URI(graphPanel.getPathForElementId(targetIdentifier)), new ImportTranslator(true));
+            affectedIdentifiers.add(targetIdentifier);
+            for (EntityData alterEntity : graphPanel.getEntitiesById(selectedIdentifiers).values()) {
+                EntityDocument entityDocument = new EntityDocument(new URI(alterEntity.getEntityPath()), new ImportTranslator(true));
+                entityDocumentList.add(entityDocument);
+                affectedIdentifiers.add(alterEntity.getUniqueIdentifier());
+            }
+            linkEntities(leadEntityDocument, entityDocumentList, relationType);
+        } catch (URISyntaxException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        }
+        return affectedIdentifiers.toArray(new UniqueIdentifier[]{});
+    }
+
     public void linkEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers, DataTypes.RelationType relationType) throws ImportException {
         EntityDocument leadEntityDocument = null;
         ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
@@ -75,19 +92,23 @@ public class RelationLinker {
                     entityDocumentList.add(entityDocument);
                 }
             }
-            for (EntityDocument alterEntity : entityDocumentList) {
-                // add the new relation
-                leadEntityDocument.entityData.addRelatedNode(alterEntity.entityData, relationType, DataTypes.RelationLineType.sanguineLine, null, null);
-            }
-            leadEntityDocument.saveDocument();
-            new EntityCollection().updateDatabase(leadEntityDocument.getFile().toURI());
-            for (EntityDocument entityDocument : entityDocumentList) {
-                entityDocument.saveDocument();
-                new EntityCollection().updateDatabase(entityDocument.getFile().toURI());
-            }
+            linkEntities(leadEntityDocument, entityDocumentList, relationType);
         } catch (URISyntaxException exception) {
             new ArbilBugCatcher().logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
+        }
+    }
+
+    public void linkEntities(EntityDocument leadEntityDocument, ArrayList<EntityDocument> entityDocumentList, DataTypes.RelationType relationType) throws ImportException {
+        for (EntityDocument alterEntity : entityDocumentList) {
+            // add the new relation
+            leadEntityDocument.entityData.addRelatedNode(alterEntity.entityData, relationType, DataTypes.RelationLineType.sanguineLine, null, null);
+        }
+        leadEntityDocument.saveDocument();
+        new EntityCollection().updateDatabase(leadEntityDocument.getFile().toURI());
+        for (EntityDocument entityDocument : entityDocumentList) {
+            entityDocument.saveDocument();
+            new EntityCollection().updateDatabase(entityDocument.getFile().toURI());
         }
     }
 
