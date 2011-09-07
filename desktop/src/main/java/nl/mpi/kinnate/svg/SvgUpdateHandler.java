@@ -301,7 +301,9 @@ public class SvgUpdateHandler {
 //                                                        }
 //                                                    }
 //                                                }
-                                                addRelationDragHandles(highlightGroupNode, bbox, paddingDistance);
+                                                if (((Element) currentChild).getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path").length() > 0) {
+                                                    addRelationDragHandles(highlightGroupNode, bbox, paddingDistance);
+                                                }
                                                 highlightGroupNode.appendChild(symbolNode);
                                                 currentChild.appendChild(highlightGroupNode);
                                             }
