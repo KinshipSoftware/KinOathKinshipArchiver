@@ -37,7 +37,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
 
     ArbilNode[] selectedNodes;
     DataFlavor dataFlavor = new DataFlavor(ArbilNode[].class, "ArbilObject");
-    DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor};
+    DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor, DataFlavor.stringFlavor};
     KinDiagramPanel kinDiagramPanel;
     EntityData targetEntity = null;
 
@@ -75,7 +75,22 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     //////////////////////////////////////
 
     public Object /*ArbilTreeObject[]*/ getTransferData(DataFlavor df) throws UnsupportedFlavorException, IOException {
-        return ""; //selectedNodes;
+        if (df.equals(DataFlavor.stringFlavor)) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (ArbilNode arbilNode : selectedNodes) {
+                if (arbilNode instanceof KinTreeNode) {
+                    if (stringBuilder.length() == 0) {
+                        stringBuilder.append("\n");
+                    }
+                    stringBuilder.append("[Entity.Identifier=");
+                    stringBuilder.append(((KinTreeNode) arbilNode).entityData.getUniqueIdentifier().getQueryIdentifier());
+                    stringBuilder.append("]");
+                }
+            }
+            return stringBuilder.toString();
+        } else {
+            return ""; //selectedNodes;
+        }
     }
 
     public DataFlavor[] getTransferDataFlavors() {
