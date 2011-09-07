@@ -60,11 +60,11 @@ public class GraphPanel extends JPanel implements SavePanel {
     private AffineTransform zoomAffineTransform = null;
     public MouseListenerSvg mouseListenerSvg;
 
-    public GraphPanel(KinTermSavePanel egoSelectionPanel) {
+    public GraphPanel(KinDiagramPanel kinDiagramPanel) {
         dataStoreSvg = new DataStoreSvg();
         entitySvg = new EntitySvg();
         dataStoreSvg.setDefaults();
-        svgUpdateHandler = new SvgUpdateHandler(this, egoSelectionPanel);
+        svgUpdateHandler = new SvgUpdateHandler(this, kinDiagramPanel);
         selectedGroupId = new ArrayList<UniqueIdentifier>();
         graphPanelSize = new GraphPanelSize();
         this.setLayout(new BorderLayout());
@@ -100,17 +100,13 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        svgCanvas.setEnableResetTransformInteractor(true);
 //        svgCanvas.setDoubleBufferedRendering(true); // todo: look into reducing the noticable aliasing on the canvas
 
-        mouseListenerSvg = new MouseListenerSvg(this);
+        mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this);
         svgCanvas.addMouseListener(mouseListenerSvg);
         svgCanvas.addMouseMotionListener(mouseListenerSvg);
         jSVGScrollPane = new JSVGScrollPane(svgCanvas);
 //        svgCanvas.setBackground(Color.LIGHT_GRAY);
         this.add(BorderLayout.CENTER, jSVGScrollPane);
-        if (egoSelectionPanel instanceof KinDiagramPanel) {
-            svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu((KinDiagramPanel) egoSelectionPanel, this, graphPanelSize));
-        } else {
-            svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(null, this, graphPanelSize));
-        }
+        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, graphPanelSize));
         svgCanvas.addLinkActivationListener(new LinkActivationListener() {
 
             public void linkActivated(LinkActivationEvent lae) {
