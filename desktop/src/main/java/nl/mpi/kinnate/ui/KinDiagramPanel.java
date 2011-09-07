@@ -12,7 +12,6 @@ import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.text.StyledDocument;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeContainer;
 import nl.mpi.arbil.data.ArbilNode;
@@ -223,28 +222,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 graphPanel.drawNodes(graphSorter);
                                 egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes());
                             }
-                            StyledDocument styledDocument = kinTypeStringInput.getStyledDocument();
-                            int lineStart = 0;
-                            for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
-                                ParserHighlight currentHighlight = parserHighlight[lineCounter];
-//                int lineStart = styledDocument.getParagraphElement(lineCounter).getStartOffset();
-//                int lineEnd = styledDocument.getParagraphElement(lineCounter).getEndOffset();
-                                int lineEnd = lineStart + kinTypeStrings[lineCounter].length();
-                                styledDocument.setCharacterAttributes(lineStart, lineEnd, kinTypeStringInput.getStyle("Unknown"), true);
-                                while (currentHighlight.highlight != null) {
-                                    int startPos = lineStart + currentHighlight.startChar;
-                                    int charCount = lineEnd - lineStart;
-                                    if (currentHighlight.nextHighlight.highlight != null) {
-                                        charCount = currentHighlight.nextHighlight.startChar - currentHighlight.startChar;
-                                    }
-                                    if (currentHighlight.highlight != null) {
-                                        String styleName = currentHighlight.highlight.name();
-                                        styledDocument.setCharacterAttributes(startPos, charCount, kinTypeStringInput.getStyle(styleName), true);
-                                    }
-                                    currentHighlight = currentHighlight.nextHighlight;
-                                }
-                                lineStart += kinTypeStrings[lineCounter].length() + 1;
-                            }
+                            kinTypeStringInput.highlightKinTerms(parserHighlight, kinTypeStrings);
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
                         } catch (EntityServiceException exception) {
                             GuiHelper.linorgBugCatcher.logError(exception);
@@ -274,19 +252,19 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //        drawGraph();
 //    }
     public void setEgoNodes(UniqueIdentifier[] egoIdentifierArray) {
-        // todo: this does not update the ego highlight on the graph and the trees
+        // todo: this does not update the ego highlight on the graph and the trees.
         graphPanel.dataStoreSvg.egoEntities = new HashSet<UniqueIdentifier>(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
     public void addEgoNodes(UniqueIdentifier[] egoIdentifierArray) {
-        // todo: this does not update the ego highlight on the graph and the trees
+        // todo: this does not update the ego highlight on the graph and the trees.
         graphPanel.dataStoreSvg.egoEntities.addAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
 
     public void removeEgoNodes(UniqueIdentifier[] egoIdentifierArray) {
-        // todo: this does not update the ego highlight on the graph and the trees
+        // todo: this does not update the ego highlight on the graph and the trees.
         graphPanel.dataStoreSvg.egoEntities.removeAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }
@@ -357,7 +335,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private void registerCurrentNodes(EntityData[] currentEntities) {
         // todo: i think this is resolved but double check the issue where arbil nodes update frequency is too high and breaks basex
         // todo: load the nodes in the KinDataNode when putting them in the table and pass on the reload requests here when they occur
-        // todo: replace the data node registering process
+        // todo: replace the data node registering process.
 //        for (EntityData entityData : currentEntities) {
 //            ArbilDataNode arbilDataNode = null;
 //            if (!registeredArbilDataNode.containsKey(entityData.getUniqueIdentifier())) {
