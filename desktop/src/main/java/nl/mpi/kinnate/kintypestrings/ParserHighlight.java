@@ -14,11 +14,13 @@ public class ParserHighlight {
     public ParserHighlight nextHighlight = null;
     public ParserHighlightType highlight;
     public int startChar = 0;
+    public String tooltipText;
 
-    public ParserHighlight addHighlight(ParserHighlightType highlightType, int startChar) {
+    public ParserHighlight addHighlight(ParserHighlightType highlightType, int startChar, String tooltipText) {
 
         this.highlight = highlightType;
         this.startChar = startChar;
+        this.tooltipText = tooltipText;
         this.nextHighlight = new ParserHighlight();
         return this.nextHighlight;
     }
