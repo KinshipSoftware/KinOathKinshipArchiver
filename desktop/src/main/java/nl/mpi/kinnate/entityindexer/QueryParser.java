@@ -185,7 +185,7 @@ public class QueryParser implements EntityService {
                         }
                         queryNode.isVisible = true;
                         kinTypeElement.entityData.add(queryNode);
-                        queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
+//                        queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
                         if (kinTypeElement.kinType.isEgoType()) {
                             queryNode.isEgo = true; // there might be multiple types for a single entitiy
                             new KinTypeStringConverter().setEgoKinTypeString(queryNode);
@@ -238,7 +238,7 @@ public class QueryParser implements EntityService {
                             if (kinTypeElement.nextType.kinType.matchesRelation(entityRelation, null)) { // todo: this should also take into account the modifier eg -, +, -1, -3, +2 etc..
                                 kinTypeElement.nextType.entityData.add(entityRelation.getAlterNode());
                                 entityRelation.getAlterNode().isVisible = true;
-                                entityRelation.getAlterNode().appendTempLabel(kinTypeElement.kinType.getCodeString());
+//                                entityRelation.getAlterNode().appendTempLabel(kinTypeElement.kinType.getCodeString());
                             }
                         }
                         // todo: continue with the kinTypeElement.prevType
