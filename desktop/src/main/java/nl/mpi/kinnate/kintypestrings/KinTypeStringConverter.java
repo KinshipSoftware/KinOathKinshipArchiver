@@ -92,14 +92,19 @@ public class KinTypeStringConverter extends GraphSorter {
 //    }
     public ArrayList<KinTypeElement> getKinTypeElements(String consumableString, ParserHighlight parserHighlight) {
         int initialLength = consumableString.length();
+        if (consumableString.startsWith("[")) {
+            // todo: this is added so that a query can start with a [ since the initial kin type is redundant, however the addition of x= causes syntax highlighing issues partly because the ParserHighlight always creates an empty highlight ahead of the current one, but also it would be better to not be modifying this string
+            consumableString = "x=" + consumableString;
+        }
         ArrayList<KinTypeElement> kinTypeElementList = new ArrayList<KinTypeElement>();
         KinTypeElement previousElement = null;
         boolean foundKinType = true;
+        String errorMessage = null;
         while (foundKinType && consumableString.length() > 0) {
             for (KinType currentReferenceKinType : KinType.referenceKinTypes) {
                 foundKinType = false;
                 if (consumableString.startsWith(currentReferenceKinType.codeString)) {
-                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, initialLength - consumableString.length());
+                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, initialLength - consumableString.length(), currentReferenceKinType.displayString);
                     KinTypeElement currentElement = new KinTypeElement();
                     if (previousElement != null) {
                         previousElement.nextType = currentElement;
@@ -110,7 +115,8 @@ public class KinTypeStringConverter extends GraphSorter {
                     consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
 
                     if (consumableString.startsWith("=[")) {
-                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length());
+                        int highlightPosition = initialLength - consumableString.length();
+                        String highlightMessage = "Query: ";
                         consumableString = consumableString.substring("=".length());
                         while (consumableString.startsWith("[")) {
                             // todo: allow multiple terms such as "=[foo][bar]" or "=[foo][bar][NAME=Bob]"
@@ -118,13 +124,15 @@ public class KinTypeStringConverter extends GraphSorter {
                             int queryEnd = consumableString.indexOf("]");
                             if (queryEnd == -1) {
                                 // if the terms are incomplete then ignore the rest of the line
-                                System.out.println("no closing bracket ']' found");
+                                highlightMessage += "No closing bracket ']' found";
+                                errorMessage = highlightMessage;
                                 foundKinType = false;
                                 break;
                             }
                             if (queryEnd - queryStart < 3) {
                                 // the query string must be more than 2 chars
-                                System.out.println("Query must be over 2 chars long");
+                                highlightMessage += "Query must be over 2 chars long";
+                                errorMessage = highlightMessage;
                                 foundKinType = false;
                                 break;
                             }
@@ -135,16 +143,19 @@ public class KinTypeStringConverter extends GraphSorter {
                             consumableString = consumableString.substring(queryEnd + 1);
                             if (!queryText.contains("=")) {
                                 currentElement.queryTerm.add(new String[]{"*", queryText});
+                                highlightMessage += "Any field containing '" + queryText + "'";
                             } else {
                                 String[] queryTerm = queryText.split("=");
                                 if (queryTerm.length == 2) {
                                     if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
                                         // todo: *:* like namespace handling might be required here
                                         currentElement.queryTerm.add(new String[]{"*:" + queryTerm[0].replaceAll("\\.", "/*:"), queryTerm[1]});
+                                        highlightMessage += "Only the field '" + queryTerm[0] + "' containing '" + queryTerm[1] + "'";
                                     }
                                 }
                             }
                         }
+                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, highlightPosition, highlightMessage);
                     }
                     kinTypeElementList.add(currentElement);
                     foundKinType = true;
@@ -153,11 +164,11 @@ public class KinTypeStringConverter extends GraphSorter {
             }
         }
         if (!foundKinType && !consumableString.startsWith("#")) {
-            parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - consumableString.length());
+            parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - consumableString.length(), errorMessage);
         }
         if (consumableString.contains("#")) {
             // check for any comments
-            parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length() + consumableString.indexOf("#"));
+            parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length() + consumableString.indexOf("#"), null);
         }
         return kinTypeElementList;
     }
@@ -207,7 +218,7 @@ public class KinTypeStringConverter extends GraphSorter {
             }
             if (inputString != null && inputString.length() > 0) {
                 if (inputString.startsWith("#")) {
-                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, 0);
+                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, 0, null);
                 } else {
 //                    while (inputString.matches("^[\\s]")) {
 //                        inputString = inputString.substring(1);
@@ -239,7 +250,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                     // because kinTypeFound is not set then the error highlight will be added
                                     break;
                                 } else {
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, parserHighlightPosition);
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, parserHighlightPosition, currentReferenceKinType.displayString);
                                 }
                                 String currentKinTypeString = consumableString;
                                 consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
@@ -254,7 +265,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                 LabelStringsParser labelStringsParser = new LabelStringsParser(consumableString, parentDataNode, currentKinTypeString);
                                 if (labelStringsParser.userDefinedIdentifierFound) {
                                     // add a highlight for the label section
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length());
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length(), "Label text");
                                     consumableString = labelStringsParser.remainingInputString;
                                     // get any previously created entity with the same user defined identifier if it exists
                                     currentGraphDataNode = namedEntitiesMap.get(labelStringsParser.uniqueIdentifier);
@@ -262,18 +273,19 @@ public class KinTypeStringConverter extends GraphSorter {
                                 }
                                 if (labelStringsParser.uidStartLocation > -1) {
                                     // add a highlight for the user id section
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Parameter, initialLength - labelStringsParser.uidStartLocation);
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.uidEndLocation);
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Parameter, initialLength - labelStringsParser.uidStartLocation, "User defined identifier");
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.uidEndLocation, "Label text");
                                 }
                                 if (labelStringsParser.dateLocation > -1) {
                                     // add a highlight for the date section
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Parameter, initialLength - labelStringsParser.dateLocation);
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation);
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Parameter, initialLength - labelStringsParser.dateLocation, "Date of birth/death");
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation, "Label text");
                                 }
                                 if (labelStringsParser.dateError) {
                                     // add a highlight for the date error section
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - labelStringsParser.dateLocation);
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation);
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - labelStringsParser.dateLocation, "Incorrect date format:"
+                                            + " Valid formats are yyyy, yyyy/mm, yyyy/mm/dd with the birth date followed by death date eg yyyy/mm/dd-yyyy/mm/dd");
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation, "Label text");
                                 }
                                 if (currentGraphDataNode == null) {
                                     if (parentDataNode != null && !labelStringsParser.userDefinedIdentifierFound /* if a user defined identifier has been specified then skip this and always create or reuse that named entity */) {
@@ -334,14 +346,14 @@ public class KinTypeStringConverter extends GraphSorter {
                         if (kinTypeFound == false) {
                             consumableString = consumableString.replaceAll("^[\\s]*", "");
                             if (consumableString.startsWith("#")) {
-                                parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length());
+                                parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length(), null);
                             } else {
-                                parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - consumableString.length());
+                                parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - consumableString.length(), "Incorrect syntax");
                                 int commentPosition = consumableString.indexOf("#");
                                 if (commentPosition > 0) {
                                     // allow comments after this point
                                     consumableString = consumableString.substring(commentPosition);
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length());
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length(), null);
                                 }
                             }
                             break;
