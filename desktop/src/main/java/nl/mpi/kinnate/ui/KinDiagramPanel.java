@@ -201,26 +201,26 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                             ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
                             progressBar.setValue(0);
                             progressBar.setVisible(true);
-                            EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), progressBar);
-                            boolean visibleNodeFound = false;
-                            for (EntityData currentNode : graphNodes) {
-                                if (currentNode.isVisible) {
-                                    visibleNodeFound = true;
+                            boolean isQuery = false;
+                            for (String currentLine : kinTypeStrings) {
+                                if (currentLine.contains("=")) {
+                                    isQuery = true;
                                     break;
                                 }
                             }
-                            if (!visibleNodeFound /*graphNodes.length == 0*/) {
-                                KinTypeStringConverter graphData = new KinTypeStringConverter();
-                                graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
-                                graphPanel.drawNodes(graphData);
-                                egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
-//                KinDiagramPanel.this.doLayout();
-                            } else {
+                            if (isQuery) {
+                                EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), progressBar);
                                 graphSorter.setEntitys(graphNodes);
                                 // register interest Arbil updates and update the graph when data is edited in the table
                                 registerCurrentNodes(graphSorter.getDataNodes());
                                 graphPanel.drawNodes(graphSorter);
                                 egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes());
+                            } else {
+                                KinTypeStringConverter graphData = new KinTypeStringConverter();
+                                graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
+                                graphPanel.drawNodes(graphData);
+                                egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
+//                KinDiagramPanel.this.doLayout();
                             }
                             kinTypeStringInput.highlightKinTerms(parserHighlight, kinTypeStrings);
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
