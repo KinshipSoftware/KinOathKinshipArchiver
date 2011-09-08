@@ -37,6 +37,7 @@ public class LabelStringsParser {
                 // look for any date information
                 // allow dates in the following formats "yyyy", "yyyy/mm", "yyyy/mm/dd"
                 // allow date of birth followed by date of death eg "yyyy/mm/dd-yyyy/mm/dd" or "yyyy-yyyy" etc.
+                // todo: it would be good to detect and show errors for more potential date format errors, currently they are just read as labels with no warning
                 String remainingString = inputStringParts[1].replaceFirst(";[0-9]{4}(/[0-9]{2}){0,2}(-[0-9]{4}(/[0-9]{2}){0,2})?$", "");//(-[0-9]{4}(/[0-9]{2}){0,2}){1,2})?{1,2}
                 if (remainingString.length() != inputStringParts[1].length()) {
                     String dateString = inputStringParts[1].substring(remainingString.length());
