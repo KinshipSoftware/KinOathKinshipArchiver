@@ -1,8 +1,10 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
 import javax.swing.JTextPane;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -25,9 +27,11 @@ public class KinTypeStringInput extends JTextPane {
     protected Style styleParamater;
     protected Style styleError;
     protected Style styleUnknown;
+    private ParserHighlight[] parserHighlight = null;
 
     public KinTypeStringInput(String defaultString) {
         this.defaultString = defaultString;
+        this.setToolTipText("");
         // set the styles for the kin type string text
         styleComment = this.addStyle("Comment", null);
 //        StyleConstants.setForeground(styleComment, new Color(247,158,9));
@@ -86,6 +90,7 @@ public class KinTypeStringInput extends JTextPane {
     }
 
     protected void highlightKinTerms(ParserHighlight[] parserHighlight, String[] kinTypeStrings) {
+        this.parserHighlight = parserHighlight;
         StyledDocument styledDocument = this.getStyledDocument();
         int lineStart = 0;
         for (int lineCounter = 0; lineCounter < parserHighlight.length; lineCounter++) {
@@ -108,5 +113,26 @@ public class KinTypeStringInput extends JTextPane {
             }
             lineStart += kinTypeStrings[lineCounter].length() + 1;
         }
+    }
+
+    @Override
+    public Point getToolTipLocation(MouseEvent event) {
+        if (parserHighlight != null) {
+            int textPosition = this.viewToModel(event.getPoint());
+            final String[] lineStrings = previousKinTypeStrings.substring(0, textPosition).split("\n");
+
+            int linePosition = lineStrings.length;
+            int lineChar = lineStrings[linePosition - 1].length();
+            ParserHighlight currentHighlight = parserHighlight[linePosition - 1];
+
+            while (currentHighlight.highlight != null && currentHighlight.nextHighlight.highlight != null && currentHighlight.nextHighlight.startChar <= lineChar) {
+                currentHighlight = currentHighlight.nextHighlight;
+            }
+//            this.setToolTipText("loc: " + textPosition + " line: " + linePosition + " char: " + lineChar + " startChar: " + currentHighlight.startChar + " : " + currentHighlight.tooltipText);
+            this.setToolTipText(currentHighlight.tooltipText);
+        } else {
+            this.setToolTipText(null);
+        }
+        return super.getToolTipLocation(event);
     }
 }
