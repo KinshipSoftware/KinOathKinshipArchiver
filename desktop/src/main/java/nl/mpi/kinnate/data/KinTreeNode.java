@@ -240,6 +240,10 @@ public class KinTreeNode extends ArbilNode implements Comparable {
             return false;
         }
         final KinTreeNode other = (KinTreeNode) obj;
+        if (entityData == null || other.entityData == null) {
+            // todo: it would be good for this to never be null, or at least to aways have the UniqueIdentifier to compare
+            return false;
+        }
         if (this.entityData.getUniqueIdentifier() != other.entityData.getUniqueIdentifier() && (this.entityData.getUniqueIdentifier() == null || !this.entityData.getUniqueIdentifier().equals(other.entityData.getUniqueIdentifier()))) {
             return false;
         }
