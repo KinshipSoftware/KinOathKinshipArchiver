@@ -68,9 +68,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
 
     @Override
     public void exportDone(JComponent comp, Transferable trans, int action) {
-//        if (action != MOVE) {
-//            return;
-//        }
+        kinDiagramPanel.redrawIfKinTermsChanged();
     }
     //////////////////////////////////////
 
