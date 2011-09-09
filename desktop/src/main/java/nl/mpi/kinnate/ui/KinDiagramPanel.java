@@ -174,13 +174,17 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
             public void keyReleased(KeyEvent e) {
                 synchronized (e) {
-                    if (kinTypeStringInput.hasChanges()) {
-                        graphPanel.setKinTypeStrigs(kinTypeStringInput.getCurrentStrings());
-                        drawGraph();
-                    }
+                    redrawIfKinTermsChanged();
                 }
             }
         });
+    }
+
+    public void redrawIfKinTermsChanged() {
+        if (kinTypeStringInput.hasChanges()) {
+            graphPanel.setKinTypeStrigs(kinTypeStringInput.getCurrentStrings());
+            drawGraph();
+        }
     }
     boolean graphThreadRunning = false;
     boolean graphUpdateRequired = false;
@@ -202,10 +206,14 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                             progressBar.setValue(0);
                             progressBar.setVisible(true);
                             boolean isQuery = false;
-                            for (String currentLine : kinTypeStrings) {
-                                if (currentLine.contains("=")) {
-                                    isQuery = true;
-                                    break;
+                            if (!graphPanel.dataStoreSvg.egoEntities.isEmpty() || !graphPanel.dataStoreSvg.requiredEntities.isEmpty()) {
+                                isQuery = true;
+                            } else {
+                                for (String currentLine : kinTypeStrings) {
+                                    if (currentLine.contains("=")) {
+                                        isQuery = true;
+                                        break;
+                                    }
                                 }
                             }
                             if (isQuery) {
