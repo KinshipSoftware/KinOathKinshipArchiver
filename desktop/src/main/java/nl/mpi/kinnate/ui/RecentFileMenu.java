@@ -53,12 +53,14 @@ public class RecentFileMenu extends JMenu implements ActionListener {
         this.removeAll();
         try {
             String[] recentFileArray = ArbilSessionStorage.getSingleInstance().loadStringArray("RecentKinFiles");
-            for (int currentIndex = recentFileArray.length - 1; currentIndex >= 0; currentIndex--) {
-                String currentFilePath = recentFileArray[currentIndex];
-                JMenuItem currentMenuItem = new JMenuItem(currentFilePath);
-                currentMenuItem.setActionCommand(currentFilePath);
-                currentMenuItem.addActionListener(this);
-                this.add(currentMenuItem);
+            if (recentFileArray != null) {
+                for (int currentIndex = recentFileArray.length - 1; currentIndex >= 0; currentIndex--) {
+                    String currentFilePath = recentFileArray[currentIndex];
+                    JMenuItem currentMenuItem = new JMenuItem(currentFilePath);
+                    currentMenuItem.setActionCommand(currentFilePath);
+                    currentMenuItem.addActionListener(this);
+                    this.add(currentMenuItem);
+                }
             }
             this.add(new JSeparator());
             JMenuItem clearMenuItem = new JMenuItem("Clear List");
