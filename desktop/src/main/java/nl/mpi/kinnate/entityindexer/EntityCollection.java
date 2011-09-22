@@ -3,6 +3,7 @@ package nl.mpi.kinnate.entityindexer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
@@ -63,6 +64,7 @@ public class EntityCollection {
     public EntityCollection() {
         // make sure the database exists
         try {
+            new Set("dbpath", new File(ArbilSessionStorage.getSingleInstance().getStorageDirectory(), "BaseXData")).execute(context);
             new Open(databaseName).execute(context);
             //context.close();
             new Close().execute(context);
