@@ -12,7 +12,7 @@
         <property name="kinoath.filenameidentifier" value="-testing"/>
         <property name="kinoath.application-title" value="KinOath (testing)"/>
         <property name="kinoath.icon-file-name" value="kinoath${kinoath.filenameidentifier}128x128"/>
-        <property name="SRCDIR" value="../desktop/src/"/>
+        <property name="SRCDIR" value="../desktop/src/main/java/"/>
         <property name="OUTPUTDIR" value="${user.home}/Desktop/kinoath-build-${kinoath.current.major}.${kinoath.current.minor}.x/"/>
         <property name="BUILDDIR" value="${OUTPUTDIR}classes"/>
         <property name="LIBDIR" value="${OUTPUTDIR}lib/"/>
@@ -185,7 +185,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/
             </redirector>
         </exec>
         <exec outputproperty="kinoath.build.date" executable="date" />
-        <echo file="${SRCDIR}nl/mpi/kinnate/LinorgVersion.java" append="false">package nl.mpi.kinoath;
+        <echo file="${SRCDIR}nl/mpi/kinnate/LinorgVersion.java" append="false">package nl.mpi.kinnate;
 public class LinorgVersion {
     public String applicationTitle = "${kinoath.application-title}";
     public String applicationIconName = "${kinoath.icon-file-name}.png";
@@ -240,9 +240,10 @@ public class LinorgVersion {
     </target>
     <target name="maven-jar" depends="getsvnversion, clean"><!-- this could also depend on signkinoath -->
         <!-- while this could be done in a maven and task, this method appears more portable at this stage -->
-        <exec dir="${SRCDIR}/.." executable="mvn">
+        <exec dir="../desktop/" executable="mvn">
             <arg line="clean install" />
             <arg line="-Doutput.jarname=${KinOathJarPrefix}"/>
+            <arg line="-Doutput.directory=${OUTPUTDIR}"/>
         </exec>
     </target>
     <target name="maven-deploy" depends="getsvnversion"><!-- this could also depend on signkinoath -->
