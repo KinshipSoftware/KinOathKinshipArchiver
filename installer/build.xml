@@ -41,7 +41,7 @@
         <desktopEntry
             toFile="${distributionDirectory}/${package.name}.desktop"
             name="${kinoath.application-title}"
-            comment="KinOath is a kinship application with the primary goal of connecting kinship data with archived data, such as audio, video or written resources while also being closely integrated with the archive software such as Arbil. Beyond this primary goal it is designed to be flexible and culturally nonspecific, such that culturally different social structures can equally be represented. Kin type strings are used throughout the application for constructing and searching data sets. The representation of kin terms is also integrated into the application allowing comparative diagrams of kin terms. Graphical representation of the data is an important part of the application and the diagrams produced are intended to very flexible and of publishable quality."
+            comment="KinOath is a kinship application that is flexible, culturally nonspecific and produces diagrams of publishable quality."
             exec="java -jar /usr/share/${package.name}/${package.jarname}"
             path="/usr/share/${package.name}/"
             icon="/usr/share/${package.name}/${kinoath.icon-file-name}.png"
@@ -55,7 +55,7 @@
         > <!-- homepage="http://www.lat-mpi.eu/tools/kinoath" deb doesn't support the "homepage" attribute -->
             <version upstream="${kinoath.current.major}.${kinoath.current.minor}" debian="${kinoath.current.revision}"/>
             <maintainer name="Peter Withers" email="Peter.Withers@mpi.nl"/>
-            <description synopsis="KinOath is a kinship application with the primary goal of connecting kinship data with archived data.">
+            <description synopsis="KinOath is a kinship application that is flexible, culturally nonspecific and produces diagrams of publishable quality.">
 KinOath is a kinship application with the primary goal of connecting kinship data with archived data, such as audio, video or written resources while also being closely integrated with the archive software such as Arbil. Beyond this primary goal it is designed to be flexible and culturally nonspecific, such that culturally different social structures can equally be represented. Kin type strings are used throughout the application for constructing and searching data sets. The representation of kin terms is also integrated into the application allowing comparative diagrams of kin terms. Graphical representation of the data is an important part of the application and the diagrams produced are intended to very flexible and of publishable quality.
 http://www.lat-mpi.eu/tools/imdi/kinoath/
             </description>
@@ -93,7 +93,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/
         <updateSingleFile fileName="Info.plist"/>
         <updateSingleFile fileName="start-kinoath"/>
     </target>
-    <target name="buildWindowsInstaller" depends="updateJnlpAndAppletHtml">
+    <target name="buildWindowsInstaller" depends="signkinoath">
         <!--check that the icon exists and fail if not-->
         <available file="${IconsDir}${kinoath.icon-file-name}.ico" property="installedIconAvail"/>
         <fail unless="installedIconAvail" message="${kinoath.icon-file-name}.ico doesn't exist!"/>
@@ -116,7 +116,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/
         <available file="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip" property="installerZipMissing"/>
         <fail unless="installerZipMissing" message="kinoath${kinoath.filenameidentifier}-installer.zip doesn't exist! Is Inno Setup installed inside wine?"/>
     </target>
-    <target name="buildMacInstaller" depends="updateJnlpAndAppletHtml">
+    <target name="buildMacInstaller" depends="signkinoath">
         <!--check that the icon exists and fail if not-->
         <available file="${SRCDIR}nl/mpi/kinoath/resources/icons/kinoath${kinoath.filenameidentifier}.icns" property="installedIconAvail"/>
         <fail unless="installedIconAvail" message="kinoath${kinoath.filenameidentifier}.icns doesn't exist!"/>
@@ -203,7 +203,7 @@ public class LinorgVersion {
         <property name="KinOathJarPrefix" value="kinoath-${kinoath.current.major}-${kinoath.current.minor}-${kinoath.current.revision}"/>
         <property name="KinOathJarName" value="${KinOathJarPrefix}.jar"/>
     </target>
-    <target name="signkinoath" depends="maven-deploy">
+    <target name="signkinoath" depends="maven-jar">
         <input message="Please enter the latsoftware password:" addproperty="latsoftware.pw">
             <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
         </input>
@@ -221,7 +221,7 @@ public class LinorgVersion {
         keystore="${SRCDIR}/../../../trunk/cert/mpi.keystore"
         alias="latsoftware's max-planck-gesellschaft id" storepass="koekoek" />
     </target> -->
-    <target name="scp_to_lux09" depends="signkinoath, makeDebPackage, updateJnlpAndAppletHtml, buildWindowsInstaller, buildMacInstaller">
+    <target name="scp_to_lux09" depends="makeDebPackage, updateJnlpAndAppletHtml, buildWindowsInstaller, buildMacInstaller">
         <echo file="${OUTPUTDIR}/kinoath${kinoath.filenameidentifier}-current.txt">${kinoath.current.revision}</echo>
         <input message="Please enter lux09 username:" addproperty="lux09.user" />
         <input message="Please enter lux09 password:" addproperty="lux09.pw">
@@ -240,7 +240,7 @@ public class LinorgVersion {
         <scp file= "${BUILDDIR}/kinoath-applet.html" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath-applet${kinoath.filenameidentifier}.html"/>
         <scp file="${OUTPUTDIR}/kinoath${kinoath.filenameidentifier}-current.txt" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
     </target>
-    <target name="maven-jar" depends="getsvnversion, clean"><!-- this could also depend on signkinoath -->
+    <target name="maven-jar" depends="getsvnversion, clean">
         <!-- while this could be done in a maven and task, this method appears more portable at this stage -->
         <exec dir="../desktop/" executable="mvn">
             <arg line="clean install" />
@@ -248,7 +248,7 @@ public class LinorgVersion {
             <arg line="-Doutput.directory=${OUTPUTDIR}"/>
         </exec>
     </target>
-    <target name="maven-deploy" depends="getsvnversion"><!-- this could also depend on signkinoath -->
+    <target name="maven-deploy" depends="getsvnversion">
         <!-- while this could be done in a maven and task, this method appears more portable at this stage -->
         <exec executable="mvn">
             <arg line="install:install-file" />
