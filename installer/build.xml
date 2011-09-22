@@ -72,7 +72,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/
         <macrodef name="updateSingleFile">
             <attribute name="fileName"/>
             <sequential>
-                <copy overwrite="true" file="${SRCDIR}@{fileName}.template" tofile="${BUILDDIR}/@{fileName}">
+                <copy overwrite="true" file="./templates/@{fileName}.template" tofile="${BUILDDIR}/@{fileName}">
                     <filterchain>
                         <replacetokens>
                             <token key="KinOathVersionNumber" value="${kinoath.current.major}-${kinoath.current.minor}-${kinoath.current.revision}"/>
