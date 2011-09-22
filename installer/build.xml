@@ -68,7 +68,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         </deb>
     </target>
 <!-- end package creation -->
-    <target name="updateJnlpAndAppletHtml" depends="getsvnversion">
+    <target name="updateJnlpAndAppletHtml" depends="clean, getsvnversion">
         <macrodef name="updateSingleFile">
             <attribute name="fileName"/>
             <sequential>
@@ -222,7 +222,7 @@ public class LinorgVersion {
         keystore="${SRCDIR}/../../../trunk/cert/mpi.keystore"
         alias="latsoftware's max-planck-gesellschaft id" storepass="koekoek" />
     </target> -->
-    <target name="scp_to_lux09" depends="makeDebPackage, updateJnlpAndAppletHtml, buildWindowsInstaller, buildMacInstaller">
+    <target name="scp_to_lux09" depends="makeDebPackage, buildWindowsInstaller, buildMacInstaller">
         <echo file="${OUTPUTDIR}/kinoath${kinoath.filenameidentifier}-current.txt">${kinoath.current.revision}</echo>
         <input message="Please enter lux09 username:" addproperty="lux09.user" />
         <input message="Please enter lux09 password:" addproperty="lux09.pw">
@@ -241,7 +241,7 @@ public class LinorgVersion {
         <scp file= "${BUILDDIR}/kinoath-applet.html" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath-applet${kinoath.filenameidentifier}.html"/>
         <scp file="${OUTPUTDIR}/kinoath${kinoath.filenameidentifier}-current.txt" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
     </target>
-    <target name="maven-jar" depends="getsvnversion, clean">
+    <target name="maven-jar" depends="updateJnlpAndAppletHtml">
         <!-- while this could be done in a maven and task, this method appears more portable at this stage -->
         <exec dir="../desktop/" executable="mvn">
             <arg line="clean install" />
