@@ -1,6 +1,10 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <properties>
+        <output.directory>${project.build.directory}</output.directory>
+        <output.jarname>${project.build.finalName}</output.jarname>
+    </properties>
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.mpi</groupId>
     <artifactId>Kinnate</artifactId>
@@ -66,7 +70,7 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
-<!--            <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -76,15 +80,30 @@
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
-                        <configuration> 
-                            <outputDirectory>${project.build.directory}/installer/jar</outputDirectory>
+                        <configuration>
+                            <outputDirectory>${output.directory}/lib</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>--> 
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <finalName>${output.jarname}</finalName>
+                    <outputDirectory>${output.directory}</outputDirectory>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>nl.mpi.kinnate.ui.MainFrame</mainClass>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
 <!--       this mac installer plugin kept making a un deletable file breaking subsequent builds
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
