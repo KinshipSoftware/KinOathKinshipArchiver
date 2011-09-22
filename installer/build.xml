@@ -13,9 +13,11 @@
         <property name="kinoath.application-title" value="KinOath (testing)"/>
         <property name="kinoath.icon-file-name" value="kinoath${kinoath.filenameidentifier}128x128"/>
         <property name="SRCDIR" value="../desktop/src/main/java/"/>
+        <property name="IconsDir" value="../desktop/src/main/resources/icons/"/>
         <property name="OUTPUTDIR" value="${user.home}/Desktop/kinoath-build-${kinoath.current.major}.${kinoath.current.minor}.x/"/>
         <property name="BUILDDIR" value="${OUTPUTDIR}classes"/>
         <property name="LIBDIR" value="${OUTPUTDIR}lib/"/>
+        <property name="pathToMpiTrunk" value="../../../trunk/"/> <!-- pathToMpiTrunk is being used until a better method becomes available (such as when the required files are in a maven like repository) -->
     </target>
     <target name="clean" description="remove all artifact files" depends="setproperties">
         <delete dir="${OUTPUTDIR}"/>
@@ -32,7 +34,7 @@
         <property name="package.name" value="kinoath${kinoath.filenameidentifier}"/>
         <property name="package.jarname" value="${KinOathJarName}"/>
         <!--check that the icon exists and fail if not-->
-        <available file="${SRCDIR}/nl/mpi/kinoath/desktop/resources/icons/${kinoath.icon-file-name}.png" property="packageIconAvail"/>
+        <available file="${IconsDir}${kinoath.icon-file-name}.png" property="packageIconAvail"/>
         <fail unless="packageIconAvail" message="${kinoath.icon-file-name}.png doesn't exist!"/>
         <property name="distributionDirectory" value="${OUTPUTDIR}/distribution"/>
         <mkdir dir="${distributionDirectory}"/>
@@ -58,7 +60,7 @@ KinOath is a kinship application with the primary goal of connecting kinship dat
 http://www.lat-mpi.eu/tools/imdi/kinoath/
             </description>
             <tarfileset file="${OUTPUTDIR}/${package.jarname}" prefix="usr/share/${package.name}"/>
-            <tarfileset file="${SRCDIR}/nl/mpi/kinoath/resources/icons/${kinoath.icon-file-name}.png" prefix="usr/share/${package.name}"/>
+            <tarfileset file="${IconsDir}${kinoath.icon-file-name}.png" prefix="usr/share/${package.name}"/>
             <tarfileset dir="${LIBDIR}" prefix="usr/share/${package.name}/lib">
                 <include name="*.jar"/>
             </tarfileset>
@@ -93,11 +95,11 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/
     </target>
     <target name="buildWindowsInstaller" depends="updateJnlpAndAppletHtml">
         <!--check that the icon exists and fail if not-->
-        <available file="${SRCDIR}nl/mpi/kinoath/resources/icons/${kinoath.icon-file-name}.ico" property="installedIconAvail"/>
+        <available file="${IconsDir}${kinoath.icon-file-name}.ico" property="installedIconAvail"/>
         <fail unless="installedIconAvail" message="${kinoath.icon-file-name}.ico doesn't exist!"/>
         <mkdir dir="${OUTPUTDIR}/distribution-win32/temp/"/>
         <copy todir="${OUTPUTDIR}/distribution-win32/temp/">
-            <fileset dir="${SRCDIR}nl/mpi/kinoath/resources/icons/" includes="*.ico"/>
+            <fileset dir="${IconsDir}" includes="*.ico"/>
         </copy>
         <!--get unzip then delete the imagemagick jar-->
         <get src="http://www.mpi.nl/tg/j2se/jnlp/kinoath/lib/ImageMagick-6.5.9-Win32.jar" dest="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar"/>
