@@ -2,7 +2,7 @@
 BASEDIR=`dirname "$0"`
 exec java \
 # todo: add memory increase
-	-classpath "$BASEDIR/@DistName@-@VersionNumber@.jar:$BASEDIR/lib" \
+	-classpath "$BASEDIR/@DistJarName@:$BASEDIR/lib" \
 	-Xdock:name="@ApplicationTitle@" \
         -Xdock:icon="$BASEDIR/../Resources/@DistName@@FilenameIdentifier@.icns" \
 	@MainClass@
