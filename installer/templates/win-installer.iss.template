@@ -6,16 +6,16 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{9B1B10AE-06A3-11DF-3D81-000C29E71C44}
-AppName=Arbil
-AppVerName=Arbil-@ArbilVersionNumber@
+AppName=@AppName@
+AppVerName=@AppName@-@VersionNumber@
 AppPublisher=The Technical Group (TG) of Max Planck Institute for Psycholinguistics
-AppPublisherURL=http://www.lat-mpi.eu/tools/arbil
-AppSupportURL=http://www.lat-mpi.eu/tools/arbil
-AppUpdatesURL=http://www.lat-mpi.eu/tools/arbil
-DefaultDirName={pf}\Arbil
+AppPublisherURL=http://www.lat-mpi.eu/tools/@DistName@
+AppSupportURL=http://www.lat-mpi.eu/tools/@DistName@
+AppUpdatesURL=http://www.lat-mpi.eu/tools/@DistName@
+DefaultDirName={pf}\@AppName@
 DefaultGroupName=Language archiving tools (LAT) 
 OutputDir=C:\users\petwit\Desktop\@BuildDirectory@\distribution-win32
-OutputBaseFilename=arbil-installer-@ArbilVersionNumber@
+OutputBaseFilename=@DistName@-installer-@VersionNumber@
 Compression=lzma
 SolidCompression=yes
 
@@ -48,7 +48,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\users\petwit\Desktop\@BuildDirectory@\arbil-@ArbilVersionNumber@.jar"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\users\petwit\Desktop\@BuildDirectory@\@DistName@-@VersionNumber@.jar"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\users\petwit\Desktop\@BuildDirectory@\distribution-win32\temp\@InstalledIcon@.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\users\petwit\Desktop\@BuildDirectory@\distribution-win32\temp\ImageMagick\*"; DestDir: "{app}\ImageMagick\"; Flags: ignoreversion
 ; todo: include the imagemagick sub directories
@@ -57,16 +57,15 @@ Source: "C:\users\petwit\Desktop\@BuildDirectory@\lib\*"; DestDir: "{app}\lib\";
 
 [Icons]
 ; TODO: put the text "Launch @ApplicationTitle@ Via Webstart" into the language files
-add memory increase
-Name: "{group}\@ApplicationTitle@"; Filename: "{app}\arbil-@ArbilVersionNumber@.jar"; WorkingDir: "{app}"; IconFileName:"{app}\@InstalledIcon@.ico";
-Name: "{group}\{cm:ProgramOnTheWeb,Arbil}"; Filename: "http://www.lat-mpi.eu/tools/arbil"
-Name: "{group}\{cm:ProgramOnTheWeb,Arbil Forum}"; Filename: "http://www.lat-mpi.eu/tools/arbil/Arbil-forum/"
-Name: "{group}\Launch @ApplicationTitle@ Via Webstart"; Filename: "http://www.mpi.nl/tg/j2se/jnlp/arbil/arbil@FilenameIdentifier@.jnlp"
-Name: "{commondesktop}\@ApplicationTitle@"; Filename: "{app}\arbil-@ArbilVersionNumber@.jar"; WorkingDir: "{app}"; Tasks: desktopicon; IconFileName:"{app}\@InstalledIcon@.ico";
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\@ApplicationTitle@"; Filename: "{app}\arbil-@ArbilVersionNumber@.jar"; Tasks: quicklaunchicon; IconFileName:"{app}\@InstalledIcon@.ico";
+Name: "{group}\@ApplicationTitle@"; Filename: "{app}\@DistName@-@VersionNumber@.jar"; WorkingDir: "{app}"; IconFileName:"{app}\@InstalledIcon@.ico";
+Name: "{group}\{cm:ProgramOnTheWeb,@AppName@}"; Filename: "http://www.lat-mpi.eu/tools/@DistName@"
+Name: "{group}\{cm:ProgramOnTheWeb,@AppName@ Forum}"; Filename: "http://www.lat-mpi.eu/tools/@DistName@/@AppName@-forum/"
+Name: "{group}\Launch @ApplicationTitle@ Via Webstart"; Filename: "http://www.mpi.nl/tg/j2se/jnlp/@DistName@/@DistName@@FilenameIdentifier@.jnlp"
+Name: "{commondesktop}\@ApplicationTitle@"; Filename: "{app}\@DistName@-@VersionNumber@.jar"; WorkingDir: "{app}"; Tasks: desktopicon; IconFileName:"{app}\@InstalledIcon@.ico";
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\@ApplicationTitle@"; Filename: "{app}\@DistName@-@VersionNumber@.jar"; Tasks: quicklaunchicon; IconFileName:"{app}\@InstalledIcon@.ico";
 
 [Run]
-Filename: "{app}\arbil-@ArbilVersionNumber@.jar"; WorkingDir: "{app}"; Description: "{cm:LaunchProgram,Arbil}"; Flags: shellexec postinstall skipifsilent
+Filename: "{app}\@DistName@-@VersionNumber@.jar"; WorkingDir: "{app}"; Description: "{cm:LaunchProgram,@AppName@}"; Flags: shellexec postinstall skipifsilent
 
 [Code]
 function InitializeSetup: Boolean;
@@ -94,7 +93,7 @@ begin
     end else
     begin
         Result:=false;
-        GetJavaBool := MsgBox('Arbil requires Java version 1.5 or newer before it can be installed.'#13#10'You will need to re-run this Arbil installer once Java is installed.'#13#10'Do you want open a web browser to download the java installer now?', mbConfirmation, MB_YESNO) = idYes;
+        GetJavaBool := MsgBox('@AppName@ requires Java version 1.5 or newer before it can be installed.'#13#10'You will need to re-run this @AppName@ installer once Java is installed.'#13#10'Do you want open a web browser to download the java installer now?', mbConfirmation, MB_YESNO) = idYes;
         if GetJavaBool then
         begin
 add override for special cases
