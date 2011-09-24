@@ -213,11 +213,12 @@ public class LinorgVersion {
         <input message="Please enter the latsoftware password:" addproperty="latsoftware.pw">
             <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
         </input>
-<!--        <signjar keystore="${SRCDIR}/../../../trunk/cert/mpi.keystore" alias="latsoftware's max-planck-gesellschaft id" storepass="${latsoftware.pw}">
+        <signjar keystore="${pathToMpiTrunk}cert/mpi.keystore"
+        alias="latsoftware's max-planck-gesellschaft id" storepass="${latsoftware.pw}">
             <path>
-                <fileset dir="${LIBDIR}" includes="**/*.jar" />
+                <fileset dir="${OUTPUTDIR}/lib" includes="**/*.jar" />
             </path>
-        </signjar>-->
+        </signjar>
         <signjar jar="${OUTPUTDIR}/${DistJarName}"
         keystore="${pathToMpiTrunk}cert/mpi.keystore"
         alias="latsoftware's max-planck-gesellschaft id" storepass="${latsoftware.pw}" />
@@ -234,10 +235,10 @@ public class LinorgVersion {
             <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
         </input>
         <scp file="${OUTPUTDIR}/${DistJarName}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
-<!--    the lib direcory only needs to be updated when there is a real change so it is commented out for now to save build time
+        <!-- the lib direcory only needs to be updated when there is a real change so can be commented out to save build time -->
         <scp todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/lib">
             <fileset dir="${OUTPUTDIR}/lib"/>
-        </scp>-->
+        </scp>
         <scp file="${IconsDir}${kinoath.icon-file-name}.png" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <!-- push the updated the applet html and the kinoath jnlp files to the server -->
         <scp file="${OUTPUTDIR}/distribution/kinoath.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.jnlp"/>
