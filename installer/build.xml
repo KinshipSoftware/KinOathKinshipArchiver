@@ -15,7 +15,7 @@
         <property name="SRCDIR" value="../desktop/src/main/java/"/>
         <property name="IconsDir" value="../desktop/src/main/resources/icons/"/>
         <property name="OUTPUTDIR" value="${user.home}/Desktop/kinoath-build-${kinoath.current.major}.${kinoath.current.minor}.x/"/>
-        <property name="BUILDDIR" value="${OUTPUTDIR}classes"/>
+        <property name="ClassesDir" value="../desktop/target/classes"/>
         <property name="LIBDIR" value="${OUTPUTDIR}lib/"/>
         <property name="pathToMpiTrunk" value="../../../trunk/"/> <!-- pathToMpiTrunk is being used until a better method becomes available (such as when the required files are in a maven like repository) -->
         <property name="LongDescription" value="KinOath is a kinship application with the primary goal of connecting kinship data with archived data, such as audio, video or written resources while also being closely integrated with the archive software such as Arbil. Beyond this primary goal it is designed to be flexible and culturally nonspecific, such that culturally different social structures can equally be represented. Kin type strings are used throughout the application for constructing and searching data sets. The representation of kin terms is also integrated into the application allowing comparative diagrams of kin terms. Graphical representation of the data is an important part of the application and the diagrams produced are intended to very flexible and of publishable quality.
@@ -75,7 +75,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
                 <copy overwrite="true" file="./templates/@{fileName}.template" tofile="${OUTPUTDIR}/distribution/@{fileName}">
                     <filterchain>
                         <replacetokens>
-                            <token key="KinOathVersionNumber" value="${kinoath.current.major}-${kinoath.current.minor}-${kinoath.current.revision}"/>
+                            <token key="VersionNumber" value="${kinoath.current.major}-${kinoath.current.minor}-${kinoath.current.revision}"/>
                             <token key="BuildDirectory" value="kinoath-build-${kinoath.current.major}.${kinoath.current.minor}.x"/>
                             <token key="InstalledIcon" value="${kinoath.icon-file-name}"/>
                             <token key="TypeCheckVersion" value="${TypeCheckVersion}"/>
@@ -83,6 +83,8 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
                             <token key="ApplicationTitle" value="${kinoath.application-title}"/>
                             <token key="LongDescription" value="${LongDescription}"/>
                             <token key="ShortDescription" value="${ShortDescription}"/>
+                            <token key="DistName" value="kinoath"/>
+                            <token key="AppName" value="KinOath"/>
                         </replacetokens>
                     </filterchain>
                 </copy>
@@ -103,12 +105,12 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
             <fileset dir="${IconsDir}" includes="*.ico"/>
         </copy>
         <!--get unzip then delete the imagemagick jar-->
-        <get src="http://www.mpi.nl/tg/j2se/jnlp/kinoath/lib/ImageMagick-6.5.9-Win32.jar" dest="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar"/>
+<!--        <get src="http://www.mpi.nl/tg/j2se/jnlp/kinoath/lib/ImageMagick-6.5.9-Win32.jar" dest="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar"/>
         <unzip src="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar" dest="${OUTPUTDIR}/distribution-win32/temp/ImageMagick"/>
         <delete file="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar"/>
-        <delete dir="${OUTPUTDIR}/distribution-win32/temp/ImageMagick/META-INF"/>
-        <exec dir="${BUILDDIR}" executable="wine" ><!--os="Windows NT"-->
-            <arg line='"C:\Program Files\Inno Setup 5\iscc.exe" kinoath-win-installer.iss'/>
+        <delete dir="${OUTPUTDIR}/distribution-win32/temp/ImageMagick/META-INF"/>-->
+        <exec dir="${OUTPUTDIR}/distribution/" executable="wine" ><!--os="Windows NT"-->
+            <arg line='"C:\Program Files\Inno Setup 5\iscc.exe" win-installer.iss'/>
         </exec>
         <delete dir="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip"/>
         <zip destfile="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip" >
