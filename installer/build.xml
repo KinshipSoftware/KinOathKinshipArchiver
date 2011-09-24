@@ -109,8 +109,8 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <unzip src="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar" dest="${OUTPUTDIR}/distribution-win32/temp/ImageMagick"/>
         <delete file="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar"/>
         <delete dir="${OUTPUTDIR}/distribution-win32/temp/ImageMagick/META-INF"/>-->
-        <exec dir="${OUTPUTDIR}/distribution/" executable="wine" ><!--os="Windows NT"-->
-            <arg line='"C:\Program Files\Inno Setup 5\iscc.exe" win-installer.iss'/>
+        <exec dir="${OUTPUTDIR}" executable="wine" ><!--os="Windows NT"-->
+            <arg line='"C:\Program Files\Inno Setup 5\iscc.exe" ./distribution/win-installer.iss'/>
         </exec>
         <delete dir="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip"/>
         <zip destfile="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip" >
