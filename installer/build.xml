@@ -234,6 +234,9 @@ public class LinorgVersion {
             <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
         </input>
         <scp file="${OUTPUTDIR}/${DistJarName}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+        <scp todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/lib">
+            <fileset dir="${OUTPUTDIR}/lib"/>
+        </scp>
         <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.deb"/>
         <scp file="${IconsDir}${kinoath.icon-file-name}.png" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
