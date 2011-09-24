@@ -85,6 +85,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
                             <token key="ShortDescription" value="${ShortDescription}"/>
                             <token key="DistName" value="kinoath"/>
                             <token key="AppName" value="KinOath"/>
+                            <token key="MainClass" value="nl.mpi.kinnate.ui.MainFrame"/>
                         </replacetokens>
                     </filterchain>
                 </copy>
