@@ -69,6 +69,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
     </target>
 <!-- end package creation -->
     <target name="updateJnlpAndAppletHtml" depends="clean, getsvnversion">
+<!--todo: the jar name should have the kinoath.filenameidentifier included-->
         <macrodef name="updateSingleFile">
             <attribute name="fileName"/>
             <sequential>
@@ -122,11 +123,11 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
     </target>
     <target name="buildMacInstaller" depends="signkinoath">
         <!--check that the icon exists and fail if not-->
-        <available file="${SRCDIR}nl/mpi/kinoath/resources/icons/kinoath${kinoath.filenameidentifier}.icns" property="installedIconAvail"/>
+        <available file="${IconsDir}kinoath${kinoath.filenameidentifier}.icns" property="installedIconAvail"/>
         <fail unless="installedIconAvail" message="kinoath${kinoath.filenameidentifier}.icns doesn't exist!"/>
         <copy file="${OUTPUTDIR}/distribution/Info.plist" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/"/>
         <copy file="${OUTPUTDIR}/distribution/start" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/"/>
-        <copy file="${SRCDIR}nl/mpi/kinoath/resources/icons/kinoath${kinoath.filenameidentifier}.icns" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/Resources/"/>
+        <copy file="${IconsDir}kinoath${kinoath.filenameidentifier}.icns" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/Resources/"/>
         <copy file="${OUTPUTDIR}/${KinOathJarName}" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/"/>
         <copy todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/lib/">
             <fileset dir="${OUTPUTDIR}/lib/" includes="*.jar"/>
@@ -234,9 +235,9 @@ public class LinorgVersion {
         <scp file="${OUTPUTDIR}/${KinOathJarName}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.deb"/>
-        <scp file="${SRCDIR}/nl/mpi/kinoath/resources/icons/${kinoath.icon-file-name}.png" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+        <scp file="${IconsDir}${kinoath.icon-file-name}.png" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <!-- push the windows installer to the server -->
-        <scp file="${OUTPUTDIR}/distribution-win32/kinoath-installer-${kinoath.current.major}-${kinoath.current.minor}-${kinoath.current.revision}.exe" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+<!--        <scp file="${OUTPUTDIR}/distribution-win32/kinoath-installer-${kinoath.current.major}-${kinoath.current.minor}-${kinoath.current.revision}.exe" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>-->
         <scp file="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <scp file="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}-win-installer.zip"/>
         <scp file="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}-mac.tar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
@@ -248,7 +249,7 @@ public class LinorgVersion {
         <scp file="${OUTPUTDIR}/kinoath${kinoath.filenameidentifier}-current.txt" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
     </target>
     <target name="maven-jar" depends="updateJnlpAndAppletHtml">
-        <!-- while this could be done in a maven and task, this method appears more portable at this stage -->
+        <!-- while this could be done in a maven ant task, this method appears more portable at this stage -->
         <exec dir="../desktop/" executable="mvn">
             <arg line="clean install" />
             <arg line="-Doutput.jarname=${KinOathJarPrefix}"/>
