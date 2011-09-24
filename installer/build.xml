@@ -123,8 +123,8 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <!--check that the icon exists and fail if not-->
         <available file="${SRCDIR}nl/mpi/kinoath/resources/icons/kinoath${kinoath.filenameidentifier}.icns" property="installedIconAvail"/>
         <fail unless="installedIconAvail" message="kinoath${kinoath.filenameidentifier}.icns doesn't exist!"/>
-        <copy file="${BUILDDIR}/Info.plist" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/"/>
-        <copy file="${BUILDDIR}/start-kinoath" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/"/>
+        <copy file="${OUTPUTDIR}/distribution/Info.plist" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/"/>
+        <copy file="${OUTPUTDIR}/distribution/start" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/"/>
         <copy file="${SRCDIR}nl/mpi/kinoath/resources/icons/kinoath${kinoath.filenameidentifier}.icns" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/Resources/"/>
         <copy file="${OUTPUTDIR}/${KinOathJarName}" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/"/>
         <copy todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/lib/">
