@@ -237,21 +237,22 @@ public class LinorgVersion {
         <scp todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/lib">
             <fileset dir="${OUTPUTDIR}/lib"/>
         </scp>
-        <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
-        <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.deb"/>
         <scp file="${IconsDir}${kinoath.icon-file-name}.png" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
-        <!-- push the windows installer to the server -->
-<!--        <scp file="${OUTPUTDIR}/distribution-win32/kinoath-installer-${kinoath.current.major}-${kinoath.current.minor}-${kinoath.current.revision}.exe" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>-->
-        <scp file="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
-        <scp file="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}-win-installer.zip"/>
-        <scp file="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}-mac.tar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
-        <scp file="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}-mac.tar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}-mac.tar"/>
         <!-- push the updated the applet html and the kinoath jnlp files to the server -->
         <scp file="${OUTPUTDIR}/distribution/kinoath.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.jnlp"/>
         <scp file="${OUTPUTDIR}/distribution/kinoath.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}.jnlp"/>
 <!--        <scp file= "${BUILDDIR}/kinoath-applet.html" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath-applet${kinoath.filenameidentifier}.html"/>-->
+        <!-- push the deb package -->
+        <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+        <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.deb"/>
+        <!-- push the windows installer -->
+        <scp file="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+        <scp file="${OUTPUTDIR}/distribution-win32/kinoath${kinoath.filenameidentifier}-installer.zip" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}-win-installer.zip"/>
+        <!-- push the mac installer -->
+        <scp file="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}-mac.tar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+        <scp file="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}-mac.tar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}-mac.tar"/>
+        <!-- only after all the installers have been pushed do we update the version text file -->
         <scp file="${OUTPUTDIR}/kinoath${kinoath.filenameidentifier}-current.txt" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
-
         <!-- copy the current version of allversionslisting.php to make sure it gets kept in svn -->
         <scp file="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/allversionslisting.php" todir="../desktop/src/main/php/" />
     </target>
