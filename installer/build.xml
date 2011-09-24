@@ -35,7 +35,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
     <taskdef name="desktopEntry" classname="com.googlecode.ant_deb_task.DesktopEntry" classpathref="ant-deb.classpath"/>
     <target name="makeDebPackage" depends="signkinoath" description="build the deb file">
         <property name="package.name" value="kinoath${kinoath.filenameidentifier}"/>
-        <property name="package.jarname" value="${KinOathJarName}"/>
+        <property name="package.jarname" value="${DistJarName}"/>
         <!--check that the icon exists and fail if not-->
         <available file="${IconsDir}${kinoath.icon-file-name}.png" property="packageIconAvail"/>
         <fail unless="packageIconAvail" message="${kinoath.icon-file-name}.png doesn't exist!"/>
@@ -77,6 +77,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
                     <filterchain>
                         <replacetokens>
                             <token key="VersionNumber" value="${kinoath.current.major}-${kinoath.current.minor}-${kinoath.current.revision}"/>
+                            <token key="DistJarName" value="${DistJarName}"/>
                             <token key="BuildDirectory" value="kinoath-build-${kinoath.current.major}.${kinoath.current.minor}.x"/>
                             <token key="InstalledIcon" value="${kinoath.icon-file-name}"/>
                             <token key="TypeCheckVersion" value="${TypeCheckVersion}"/>
@@ -128,7 +129,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <copy file="${OUTPUTDIR}/distribution/Info.plist" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/"/>
         <copy file="${OUTPUTDIR}/distribution/start" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/"/>
         <copy file="${IconsDir}kinoath${kinoath.filenameidentifier}.icns" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/Resources/"/>
-        <copy file="${OUTPUTDIR}/${KinOathJarName}" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/"/>
+        <copy file="${OUTPUTDIR}/${DistJarName}" todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/"/>
         <copy todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/lib/">
             <fileset dir="${OUTPUTDIR}/lib/" includes="*.jar"/>
         </copy>
@@ -205,8 +206,8 @@ public class LinorgVersion {
     public String currentVersionFile = "http://www.mpi.nl/tg/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}-current.txt";
 }
         </echo>
-        <property name="KinOathJarPrefix" value="kinoath-${kinoath.current.major}-${kinoath.current.minor}-${kinoath.current.revision}"/>
-        <property name="KinOathJarName" value="${KinOathJarPrefix}.jar"/>
+        <property name="KinOathJarPrefix" value="kinoath${kinoath.filenameidentifier}-${kinoath.current.major}-${kinoath.current.minor}-${kinoath.current.revision}"/>
+        <property name="DistJarName" value="${KinOathJarPrefix}.jar"/>
     </target>
     <target name="signkinoath" depends="maven-jar">
         <input message="Please enter the latsoftware password:" addproperty="latsoftware.pw">
@@ -217,7 +218,7 @@ public class LinorgVersion {
                 <fileset dir="${LIBDIR}" includes="**/*.jar" />
             </path>
         </signjar>-->
-        <signjar jar="${OUTPUTDIR}/${KinOathJarName}"
+        <signjar jar="${OUTPUTDIR}/${DistJarName}"
         keystore="${pathToMpiTrunk}cert/mpi.keystore"
         alias="latsoftware's max-planck-gesellschaft id" storepass="${latsoftware.pw}" />
     </target>
@@ -232,7 +233,7 @@ public class LinorgVersion {
         <input message="Please enter lux09 password:" addproperty="lux09.pw">
             <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
         </input>
-        <scp file="${OUTPUTDIR}/${KinOathJarName}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+        <scp file="${OUTPUTDIR}/${DistJarName}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.deb"/>
         <scp file="${IconsDir}${kinoath.icon-file-name}.png" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
@@ -243,10 +244,13 @@ public class LinorgVersion {
         <scp file="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}-mac.tar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <scp file="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}-mac.tar" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}-mac.tar"/>
         <!-- push the updated the applet html and the kinoath jnlp files to the server -->
-        <scp file="${BUILDDIR}/kinoath.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.jnlp"/>
-        <scp file="${BUILDDIR}/kinoath.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}.jnlp"/>
+        <scp file="${OUTPUTDIR}/distribution/kinoath.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.jnlp"/>
+        <scp file="${OUTPUTDIR}/distribution/kinoath.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}.jnlp"/>
 <!--        <scp file= "${BUILDDIR}/kinoath-applet.html" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath-applet${kinoath.filenameidentifier}.html"/>-->
         <scp file="${OUTPUTDIR}/kinoath${kinoath.filenameidentifier}-current.txt" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+
+        <!-- copy the current version of allversionslisting.php to make sure it gets kept in svn -->
+        <scp file="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/allversionslisting.php" todir="../desktop/src/main/php/" />
     </target>
     <target name="maven-jar" depends="updateJnlpAndAppletHtml">
         <!-- while this could be done in a maven ant task, this method appears more portable at this stage -->
@@ -260,7 +264,7 @@ public class LinorgVersion {
         <!-- while this could be done in a maven and task, this method appears more portable at this stage -->
         <exec executable="mvn">
             <arg line="install:install-file" />
-            <arg line="-Dfile=${OUTPUTDIR}/${KinOathJarName}" />
+            <arg line="-Dfile=${OUTPUTDIR}/${DistJarName}" />
             <arg line="-DgroupId=nl.mpi" />
             <arg line="-DartifactId=kinoath" />
             <arg line="-Dversion=${kinoath.current.major}.${kinoath.current.minor}.${kinoath.current.revision}" />
