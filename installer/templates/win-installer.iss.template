@@ -14,7 +14,7 @@ AppSupportURL=http://www.lat-mpi.eu/tools/@DistName@
 AppUpdatesURL=http://www.lat-mpi.eu/tools/@DistName@
 DefaultDirName={pf}\@AppName@
 DefaultGroupName=Language archiving tools (LAT) 
-OutputDir=C:\users\petwit\Desktop\@BuildDirectory@\distribution-win32
+OutputDir=..\distribution-win32
 OutputBaseFilename=@DistName@-installer-@VersionNumber@
 Compression=lzma
 SolidCompression=yes
@@ -48,11 +48,11 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\users\petwit\Desktop\@BuildDirectory@\@DistName@-@VersionNumber@.jar"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\users\petwit\Desktop\@BuildDirectory@\distribution-win32\temp\@InstalledIcon@.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\users\petwit\Desktop\@BuildDirectory@\distribution-win32\temp\ImageMagick\*"; DestDir: "{app}\ImageMagick\"; Flags: ignoreversion
+Source: "..\@DistName@-@VersionNumber@.jar"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\distribution-win32\temp\@InstalledIcon@.ico"; DestDir: "{app}"; Flags: ignoreversion
+; Source: "..\distribution-win32\temp\ImageMagick\*"; DestDir: "{app}\ImageMagick\"; Flags: ignoreversion
 ; todo: include the imagemagick sub directories
-Source: "C:\users\petwit\Desktop\@BuildDirectory@\lib\*"; DestDir: "{app}\lib\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\lib\*"; DestDir: "{app}\lib\"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -96,7 +96,7 @@ begin
         GetJavaBool := MsgBox('@AppName@ requires Java version 1.5 or newer before it can be installed.'#13#10'You will need to re-run this @AppName@ installer once Java is installed.'#13#10'Do you want open a web browser to download the java installer now?', mbConfirmation, MB_YESNO) = idYes;
         if GetJavaBool then
         begin
-add override for special cases
+// todo: add override for special cases
             ShellExec('open', 'http://www.java.com/getjava/', '','',SW_SHOWNORMAL,ewNoWait,ExecResult);
         end;
    end;
