@@ -58,6 +58,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(new KinTermsMenu(this)); // the main frame is stored in the kin term menu for later use
         jMenuBar1.add(new ArchiveMenu(this));
+        jMenuBar1.add(new DiagramPanelsMenu(this));
         this.doLayout();
         this.pack();
     }
@@ -378,7 +379,7 @@ public class MainFrame extends javax.swing.JFrame {
             "http://GedcomLibrary.com/gedcoms/gl120367.ged", //	Cheryl Marion Follansbee
             // New England Genealogical Detective
             "http://GedcomLibrary.com/gedcoms/gl120368.ged", //	Phil Willaims
-            "http://GedcomLibrary.com/gedcoms/gl120369.ged", //	Francisco Casta–eda
+            "http://GedcomLibrary.com/gedcoms/gl120369.ged", //	Francisco Castaï¿½eda
             "http://GedcomLibrary.com/gedcoms/gl120370.ged", //	Kim Carter
             "http://GedcomLibrary.com/gedcoms/gl120371.ged", //	Maria Perusia
             "http://GedcomLibrary.com/gedcoms/gl120372.ged", //	R. J. Bosman
