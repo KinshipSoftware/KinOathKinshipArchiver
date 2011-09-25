@@ -1,6 +1,9 @@
 package nl.mpi.kinnate.svg;
 
+import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -63,6 +66,18 @@ public class DataStoreSvg {
     @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
     protected GraphSorter graphData;
 
+    public enum PanelType {
+
+        KinTypeStrings,
+        KinTerms,
+        ArchiveLinker,
+        MetaData,
+        IndexerSettings,
+        DiagramTree,
+        EntitySearch
+    }
+    private EnumMap<PanelType, Integer> visiblePanels;
+
     public class GraphRelationData {
 
         public UniqueIdentifier egoNodeId;
@@ -78,6 +93,17 @@ public class DataStoreSvg {
         // todo: it might be better not to add any kin group until the user explicitly adds one from the menu
         kinTermGroups = new KinTermGroup[]{new KinTermGroup(-1)}; //new KinTermGroup(0), new KinTermGroup(1)};
         indexParameters = new IndexerParameters();
+    }
+
+    public Set<Entry<PanelType, Integer>> getVisiblePanels() {
+        return visiblePanels.entrySet();
+    }
+
+    public void setPanelState(PanelType panelType, int panelWidth) {
+        if (visiblePanels == null) {
+            visiblePanels = new EnumMap<PanelType, Integer>(PanelType.class);
+        }
+        visiblePanels.put(panelType, panelWidth);
     }
 
     public GraphRelationData getEntitiesForRelations(Node relationGroup) {
