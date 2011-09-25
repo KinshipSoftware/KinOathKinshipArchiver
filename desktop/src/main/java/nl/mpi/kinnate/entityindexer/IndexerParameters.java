@@ -33,6 +33,7 @@ public class IndexerParameters {
                 , {"*:Kinnate/*:Metadata[*:Gender='female']", "circle"}
 //        , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']", "union"}
             });
+    @XmlElement(name = "DefaultSymbol", namespace = "http://mpi.nl/tla/kin")
     public String defaultSymbol = "square";
 //    @XmlElement(name = "AncestorFields", namespace = "http://mpi.nl/tla/kin")
 //    public IndexerParam ancestorFields = new IndexerParam(new String[][]{{"Kinnate.Gedcom.Entity.FAMC"}, {"Kinnate.Gedcom.Entity.BIRT.FAMC"}, {"Kinnate.Gedcom.Entity.CHR.FAMC"}, {"Kinnate.Gedcom.Entity.ADOP.FAMC"}, {"Kinnate.Gedcom.Entity.SLGC.FAMC"}, {"Kinnate.Gedcom.Entity.HUSB"}, {"Kinnate.Gedcom.Entity.WIFE"}, {"ancestor"}});
