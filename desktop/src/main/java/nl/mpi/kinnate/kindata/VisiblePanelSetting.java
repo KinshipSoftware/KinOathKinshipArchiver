@@ -46,9 +46,9 @@ public class VisiblePanelSetting {
 
     private void setUpdateUiState() {
         if (panelShown) {
-            hidePane.add(targetPanel, displayName);
+            hidePane.addTab(this);
         } else {
-            hidePane.remove(targetPanel);
+            hidePane.remove(this);
         }
     }
 
@@ -63,9 +63,23 @@ public class VisiblePanelSetting {
         return panelShown;
     }
 
+    @XmlTransient
     public void setPanelShown(boolean panelShown) {
         this.panelShown = panelShown;
         setUpdateUiState();
+    }
+
+    @XmlTransient
+    public void setPanelWidth(int panelWidth) {
+        this.panelWidth = panelWidth;
+    }
+
+    public int getPanelWidth() {
+        return panelWidth;
+    }
+
+    public Component getTargetPanel() {
+        return targetPanel;
     }
 
     public String getDisplayName() {
