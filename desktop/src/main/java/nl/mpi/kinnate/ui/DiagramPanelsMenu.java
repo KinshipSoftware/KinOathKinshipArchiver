@@ -43,7 +43,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
         if (kinTermPanel != null) {
             for (VisiblePanelSetting panelSetting : kinTermPanel.getVisiblePanels()) {
                 menuItemsAdded = true;
-                JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(panelSetting.getPanelType().toString());
+                JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(panelSetting.getDisplayName());
                 menuItem.setSelected(panelSetting.isPanelShown());
                 menuItem.setActionCommand(panelSetting.getPanelType().name());
                 menuItem.addActionListener(this);
@@ -58,6 +58,14 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        VisiblePanelSetting.PanelType selectedPanelType = VisiblePanelSetting.PanelType.valueOf(e.getActionCommand());
+        KinTermSavePanel kinTermPanel = mainFrame.getKinTermPanel();
+        if (kinTermPanel != null) {
+            for (VisiblePanelSetting panelSetting : kinTermPanel.getVisiblePanels()) {
+                if (panelSetting.getPanelType().equals(selectedPanelType)) {
+                    panelSetting.setPanelShown(!panelSetting.isPanelShown());
+                }
+            }
+        }
     }
 }
