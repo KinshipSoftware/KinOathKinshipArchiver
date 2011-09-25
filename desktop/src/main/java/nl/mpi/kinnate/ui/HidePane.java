@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -32,10 +33,10 @@ public class HidePane extends JTabbedPane {
         horizontalDivider = (!borderPosition.equals(HidePanePosition.left) && !borderPosition.equals(HidePanePosition.right));
         switch (borderPosition) {
             case left:
-                this.setTabPlacement(javax.swing.JTabbedPane.RIGHT);
+                this.setTabPlacement(javax.swing.JTabbedPane.TOP); // changed from RIGHT because only mac supports rotated tabs and rotated text is debatable usability wise anyway
                 break;
             case right:
-                this.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+                this.setTabPlacement(javax.swing.JTabbedPane.TOP); // changed from LEFT because only mac supports rotated tabs and rotated text is debatable usability wise anyway
                 break;
             case top:
                 this.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
@@ -155,6 +156,18 @@ public class HidePane extends JTabbedPane {
         } else {
             HidePane.this.setPreferredSize(new Dimension(hiddenWidth, HidePane.this.getPreferredSize().height));
         }
+    }
+
+    @Override
+    public void addTab(String title, Component component) {
+        super.addTab(title, component);
+        this.setVisible(true);
+    }
+
+    @Override
+    public void remove(Component component) {
+        super.remove(component);
+        this.setVisible(this.getComponentCount() > 0);
     }
 
     public void toggleHiddenState() {
