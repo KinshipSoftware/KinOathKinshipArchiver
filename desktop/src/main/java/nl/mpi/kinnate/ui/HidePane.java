@@ -1,10 +1,11 @@
 package nl.mpi.kinnate.ui;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.HashSet;
 import javax.swing.JTabbedPane;
+import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 
 /**
  *  Document   : HidePane
@@ -26,8 +27,10 @@ public class HidePane extends JTabbedPane {
     private boolean horizontalDivider;
     private int dragStartPosition = 0;
     private boolean lastWasDrag = false;
+    private HashSet<VisiblePanelSetting> registeredPanelSettings;
 
     public HidePane(HidePanePosition borderPositionLocal, int startWidth) {
+        registeredPanelSettings = new HashSet<VisiblePanelSetting>();
         shownWidth = startWidth;
         borderPosition = borderPositionLocal;
         horizontalDivider = (!borderPosition.equals(HidePanePosition.left) && !borderPosition.equals(HidePanePosition.right));
@@ -138,6 +141,9 @@ public class HidePane extends JTabbedPane {
                     HidePane.this.revalidate();
                     HidePane.this.repaint();
                 }
+                for (VisiblePanelSetting panelSetting : registeredPanelSettings) {
+                    panelSetting.setPanelWidth(shownWidth);
+                }
             }
 
             @Override
@@ -158,16 +164,25 @@ public class HidePane extends JTabbedPane {
         }
     }
 
-    @Override
-    public void addTab(String title, Component component) {
-        super.addTab(title, component);
+    public void addTab(VisiblePanelSetting panelSetting) {
+        super.addTab(panelSetting.getDisplayName(), panelSetting.getTargetPanel());
+        shownWidth = panelSetting.getPanelWidth();
+        hiddenState = false;
+        if (horizontalDivider) {
+            HidePane.this.setPreferredSize(new Dimension(HidePane.this.getPreferredSize().width, shownWidth));
+        } else {
+            HidePane.this.setPreferredSize(new Dimension(shownWidth, HidePane.this.getPreferredSize().height));
+        }
+        HidePane.this.revalidate();
+        HidePane.this.repaint();
         this.setVisible(true);
+        registeredPanelSettings.add(panelSetting);
     }
 
-    @Override
-    public void remove(Component component) {
-        super.remove(component);
+    public void remove(VisiblePanelSetting panelSetting) {
+        super.remove(panelSetting.getTargetPanel());
         this.setVisible(this.getComponentCount() > 0);
+        registeredPanelSettings.remove(panelSetting);
     }
 
     public void toggleHiddenState() {
