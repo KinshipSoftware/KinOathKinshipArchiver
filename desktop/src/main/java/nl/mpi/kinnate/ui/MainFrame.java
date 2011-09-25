@@ -56,9 +56,9 @@ public class MainFrame extends javax.swing.JFrame {
 
 //        System.out.println();
 
+        jMenuBar1.add(new DiagramPanelsMenu(this));
         jMenuBar1.add(new KinTermsMenu(this)); // the main frame is stored in the kin term menu for later use
         jMenuBar1.add(new ArchiveMenu(this));
-        jMenuBar1.add(new DiagramPanelsMenu(this));
         this.doLayout();
         this.pack();
     }
