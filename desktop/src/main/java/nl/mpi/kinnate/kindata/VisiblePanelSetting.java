@@ -1,6 +1,9 @@
 package nl.mpi.kinnate.kindata;
 
+import java.awt.Component;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
+import nl.mpi.kinnate.ui.HidePane;
 
 /**
  *  Document   : VisiblePanelSetting
@@ -25,6 +28,12 @@ public class VisiblePanelSetting {
     boolean panelShown;
     @XmlAttribute(name = "width", namespace = "http://mpi.nl/tla/kin")
     int panelWidth;
+    @XmlTransient
+    private String displayName;
+    @XmlTransient
+    private HidePane hidePane;
+    @XmlTransient
+    private Component targetPanel;
 
     public VisiblePanelSetting() {
     }
@@ -35,8 +44,32 @@ public class VisiblePanelSetting {
         this.panelWidth = panelWidth;
     }
 
+    private void setUpdateUiState() {
+        if (panelShown) {
+            hidePane.add(targetPanel, displayName);
+        } else {
+            hidePane.remove(targetPanel);
+        }
+    }
+
+    public void setTargetPanel(HidePane hidePane, Component targetPanel, String displayName) {
+        this.hidePane = hidePane;
+        this.targetPanel = targetPanel;
+        this.displayName = displayName;
+        setUpdateUiState();
+    }
+
     public boolean isPanelShown() {
         return panelShown;
+    }
+
+    public void setPanelShown(boolean panelShown) {
+        this.panelShown = panelShown;
+        setUpdateUiState();
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public PanelType getPanelType() {
