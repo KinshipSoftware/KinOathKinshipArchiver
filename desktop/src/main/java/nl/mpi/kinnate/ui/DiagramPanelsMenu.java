@@ -2,7 +2,13 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import nl.mpi.kinnate.KinTermSavePanel;
+import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 
 /**
  *  Document   : VisiblePanelSetting
@@ -15,8 +21,40 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
 
     public DiagramPanelsMenu(MainFrame mainFrameLocal) {
         mainFrame = mainFrameLocal;
-        this.setText("Panels");
-        this.addActionListener(this);
+        this.setText("View");
+        this.addMenuListener(new MenuListener() {
+
+            public void menuSelected(MenuEvent e) {
+                setupMenuItems();
+            }
+
+            public void menuDeselected(MenuEvent e) {
+            }
+
+            public void menuCanceled(MenuEvent e) {
+            }
+        });
+    }
+
+    private void setupMenuItems() {
+        this.removeAll();
+        boolean menuItemsAdded = false;
+        KinTermSavePanel kinTermPanel = mainFrame.getKinTermPanel();
+        if (kinTermPanel != null) {
+            for (VisiblePanelSetting panelSetting : kinTermPanel.getVisiblePanels()) {
+                menuItemsAdded = true;
+                JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(panelSetting.getPanelType().toString());
+                menuItem.setSelected(panelSetting.isPanelShown());
+                menuItem.setActionCommand(panelSetting.getPanelType().name());
+                menuItem.addActionListener(this);
+                this.add(menuItem);
+            }
+        }
+        if (menuItemsAdded == false) {
+            JMenuItem noItemsMenu = new JMenuItem("<no items available in this context>");
+            noItemsMenu.setEnabled(false);
+            this.add(noItemsMenu);
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
