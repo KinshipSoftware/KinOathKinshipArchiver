@@ -1,9 +1,6 @@
 package nl.mpi.kinnate.svg;
 
-import java.util.EnumMap;
 import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -14,6 +11,7 @@ import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import org.w3c.dom.Element;
@@ -35,6 +33,7 @@ public class DataStoreSvg {
 //    @XmlElementWrapper(name = "kin:EgoIdList")
     @XmlElement(name = "EgoId", namespace = "http://mpi.nl/tla/kin")
     public HashSet<UniqueIdentifier> egoEntities = new HashSet<UniqueIdentifier>();
+    @XmlElement(name = "RequiredEntities", namespace = "http://mpi.nl/tla/kin")
     public HashSet<UniqueIdentifier> requiredEntities = new HashSet<UniqueIdentifier>();
 //        @XmlElementWrapper(name = "kin:KinTypeStrings")
     @XmlElement(name = "KinTypeString", namespace = "http://mpi.nl/tla/kin")
@@ -65,18 +64,8 @@ public class DataStoreSvg {
     public boolean showDiagramBorder = true;
     @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
     protected GraphSorter graphData;
-
-    public enum PanelType {
-
-        KinTypeStrings,
-        KinTerms,
-        ArchiveLinker,
-        MetaData,
-        IndexerSettings,
-        DiagramTree,
-        EntitySearch
-    }
-    private EnumMap<PanelType, Integer> visiblePanels;
+    @XmlElement(name = "DiagramPanel", namespace = "http://mpi.nl/tla/kin")
+    private HashSet<VisiblePanelSetting> visiblePanels;
 
     public class GraphRelationData {
 
@@ -95,15 +84,15 @@ public class DataStoreSvg {
         indexParameters = new IndexerParameters();
     }
 
-    public Set<Entry<PanelType, Integer>> getVisiblePanels() {
-        return visiblePanels.entrySet();
+    public VisiblePanelSetting[] getVisiblePanels() {
+        return visiblePanels.toArray(new VisiblePanelSetting[]{});
     }
 
-    public void setPanelState(PanelType panelType, int panelWidth) {
+    public void setPanelState(VisiblePanelSetting.PanelType panelType, int panelWidth, boolean panelVisible) {
         if (visiblePanels == null) {
-            visiblePanels = new EnumMap<PanelType, Integer>(PanelType.class);
+            visiblePanels = new HashSet<VisiblePanelSetting>();
         }
-        visiblePanels.put(panelType, panelWidth);
+        visiblePanels.add(new VisiblePanelSetting(panelType, panelVisible, panelWidth));
     }
 
     public GraphRelationData getEntitiesForRelations(Node relationGroup) {
