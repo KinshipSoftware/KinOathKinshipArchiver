@@ -105,12 +105,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             kinTypeStringInput.setText(kinTermContents);
         } else {
             graphPanel.generateDefaultSvg();
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 20, true);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 30, true);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 20, false);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 30, false);
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.DiagramTree, 20, true);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 30, true);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 20, true);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 30, true);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 30, false);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 20, false);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 30, false);
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 20, true);
         }
         this.setLayout(new BorderLayout());
@@ -161,7 +161,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     panelSetting.setTargetPanel(kinTermHidePane, new ArchiveEntityLinkerPanel(imdiTable, dragTransferHandler), "Archive Linker");
                     break;
                 case DiagramTree:
-                    panelSetting.setTargetPanel(egoSelectionHidePane, egoSelectionPanel, "Ego Selection");
+                    panelSetting.setTargetPanel(egoSelectionHidePane, egoSelectionPanel, "Diagram Tree");
                     break;
                 case EntitySearch:
                     panelSetting.setTargetPanel(egoSelectionHidePane, entitySearchPanel, "Search Entities");
