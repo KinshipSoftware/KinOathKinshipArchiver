@@ -32,7 +32,9 @@ public class RecentFileMenu extends JMenu implements ActionListener {
         String[] tempArray;
         try {
             tempArray = ArbilSessionStorage.getSingleInstance().loadStringArray("RecentKinFiles");
-            tempList.addAll(Arrays.asList(tempArray));
+            if (tempArray != null) {
+                tempList.addAll(Arrays.asList(tempArray));
+            }
             // todo: restrict the recent file list to x number but make sure only the oldest gets removed
             // todo: make sure the list is kept in order
             tempList.remove(recentFile);
