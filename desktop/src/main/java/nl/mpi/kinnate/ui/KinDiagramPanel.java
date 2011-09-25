@@ -139,8 +139,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         JScrollPane tableScrollPane = new JScrollPane(imdiTable);
         advancedPanel.add(tableScrollPane, BorderLayout.CENTER);
-        HidePane indexParamHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
-        advancedPanel.add(indexParamHidePane, BorderLayout.LINE_END);
+        //HidePane indexParamHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
+        //advancedPanel.add(indexParamHidePane, BorderLayout.LINE_END);
 
         HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 0);
 
@@ -167,7 +167,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     panelSetting.setTargetPanel(egoSelectionHidePane, entitySearchPanel, "Search Entities");
                     break;
                 case IndexerSettings:
-                    panelSetting.setTargetPanel(indexParamHidePane, indexerParametersPanel, "Indexer Parameters");
+                    panelSetting.setTargetPanel(tableHidePane, indexerParametersPanel, "Indexer Parameters");
                     break;
                 case KinTerms:
                     panelSetting.setTargetPanel(kinTermHidePane, kinTermPanel, "Kin Terms");
