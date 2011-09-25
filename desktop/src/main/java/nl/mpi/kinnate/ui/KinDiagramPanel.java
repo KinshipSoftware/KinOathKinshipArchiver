@@ -21,6 +21,8 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import nl.mpi.kinnate.kindata.VisiblePanelSetting;
+import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
@@ -60,7 +62,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             //            + "E:1:FFE\n"
             //            + "EmWMMM:1:\n"
             //            + "E:1:FFE\n"
-            + "Em:Charles II of Spain:W:Marie Louise d'OrlŽans\n"
+            + "Em:Charles II of Spain:W:Marie Louise d'Orlï¿½ans\n"
             + "Em:Charles II of Spain:F:Philip IV of Spain:F:Philip III of Spain:F:Philip II of Spain:F:Charles V, Holy Roman Emperor:F:Philip I of Castile\n"
             + "Em:Charles II of Spain:M:Mariana of Austria:M:Maria Anna of Spain:M:Margaret of Austria:M:Maria Anna of Bavaria\n"
             + "M:Mariana of Austria:F:Ferdinand III, Holy Roman Emperor:\n"
@@ -332,6 +334,15 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTermPanel.updateKinTerms(graphPanel.getkinTermGroups());
     }
 
+    public VisiblePanelSetting[] getVisiblePanels() {
+        return graphPanel.dataStoreSvg.getVisiblePanels();
+    }
+
+    public void setPanelState(PanelType panelType, int panelWidth, boolean panelVisible) {
+        // todo: show / hide the requested panel
+        graphPanel.dataStoreSvg.setPanelState(panelType, panelWidth, panelVisible);
+    }
+
     public void setSelectedKinTypeSting(String kinTypeStrings) {
         kinTermPanel.setAddableKinTypeSting(kinTypeStrings);
     }
@@ -414,6 +425,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         if (redrawRequired) {
             drawGraph();
         }
+    }
+
+    public void dataNodeChildAdded(ArbilNode destination, ArbilNode newChildNode) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void dataNodeRemoved(ArbilNode adn) {
