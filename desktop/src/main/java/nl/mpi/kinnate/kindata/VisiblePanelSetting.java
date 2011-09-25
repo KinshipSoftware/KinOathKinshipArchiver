@@ -35,6 +35,14 @@ public class VisiblePanelSetting {
         this.panelWidth = panelWidth;
     }
 
+    public boolean isPanelShown() {
+        return panelShown;
+    }
+
+    public PanelType getPanelType() {
+        return panelType;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
