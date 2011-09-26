@@ -24,7 +24,7 @@
     <resources>
         <java max-heap-size="1073741824" version="1.5+"/>
         <jar href="@DistJarName@" main="true" download="eager"/>
-        <jar href="lib/arbil-2.3-SNAPSHOT.jar" download="eager"/>
+        <jar href="lib/arbil-2.4-SNAPSHOT.jar" download="eager"/>
         <jar href="lib/batik-css-1.7.jar" download="eager"/>
         <jar href="lib/batik-svg-dom-1.7.jar" download="eager"/>
         <jar href="lib/colt-1.2.0.jar" download="eager"/>
