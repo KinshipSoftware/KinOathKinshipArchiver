@@ -48,18 +48,18 @@ public class JungGraph extends JPanel {
         g.addEdge("Edge-B", 2, 3);
 
 
-        String[] treeNodesArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
+//        String[] treeNodesArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
         ArrayList<ArbilDataNode> tempArray = new ArrayList<ArbilDataNode>();
-        if (treeNodesArray != null) {
-            for (String currentNodeString : treeNodesArray) {
-                try {
-                    tempArray.add(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentNodeString)));
-                } catch (URISyntaxException exception) {
-                    System.err.println(exception.getMessage());
-                    exception.printStackTrace();
-                }
-            }
-        }
+//        if (treeNodesArray != null) {
+//            for (String currentNodeString : treeNodesArray) {
+//                try {
+//                    tempArray.add(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentNodeString)));
+//                } catch (URISyntaxException exception) {
+//                    System.err.println(exception.getMessage());
+//                    exception.printStackTrace();
+//                }
+//            }
+//        }
         for (ArbilDataNode currentChild : tempArray) {
             currentChild.waitTillLoaded();
             if (!currentChild.isEmptyMetaNode()) {
