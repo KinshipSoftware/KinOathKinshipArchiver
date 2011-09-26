@@ -51,6 +51,7 @@ public class RelationSvg {
 
     protected void setPolylinePointsAttribute(Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float midY = (egoY + alterY) / 2;
+        // todo: Ticket #1064 when an entity is above one that it should be below the line should make a zigzag to indicate it
         switch (relationType) {
             case affiliation:
                 break;
