@@ -22,6 +22,7 @@ public class MainFrame extends javax.swing.JFrame {
 //    private GraphPanel graphPanel;
 //    private JungGraph jungGraph;
     private RecentFileMenu recentFileMenu;
+    private EntityUploadPanel entityUploadPanel;
 
     /** Creates new form MainFrame */
     public MainFrame() {
@@ -435,12 +436,16 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_exportToRActionPerformed
 
     private void entityUploadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entityUploadMenuItemActionPerformed
-        jTabbedPane1.add("Entity Upload", new EntityUploadPanel());
-        JDialog uploadDialog = new JDialog(this, "Entity Upload", true);
-        uploadDialog.setContentPane(new EntityUploadPanel());
-        uploadDialog.setLocationRelativeTo(this);
-        uploadDialog.setPreferredSize(new Dimension(100, 150));
-        uploadDialog.setVisible(true);
+        if (entityUploadPanel == null) {
+            entityUploadPanel = new EntityUploadPanel();
+            jTabbedPane1.add("Entity Upload", entityUploadPanel);
+        }
+        jTabbedPane1.setSelectedComponent(entityUploadPanel);
+//        JDialog uploadDialog = new JDialog(this, "Entity Upload", true);
+//        uploadDialog.setContentPane(new EntityUploadPanel());
+//        uploadDialog.setLocationRelativeTo(this);
+//        uploadDialog.setPreferredSize(new Dimension(100, 150));
+//        uploadDialog.setVisible(true);
     }//GEN-LAST:event_entityUploadMenuItemActionPerformed
 
     /**
