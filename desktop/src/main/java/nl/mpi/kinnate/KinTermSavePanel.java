@@ -1,5 +1,6 @@
 package nl.mpi.kinnate;
 
+import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 
 /**
@@ -8,10 +9,13 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting;
  *  Author     : Peter Withers
  */
 public interface KinTermSavePanel {
+    // todo: the requirements for this have change and much of it should probably be merged with savepanel and the rest made more generic
 
     public VisiblePanelSetting[] getVisiblePanels();
 
     public void setPanelState(VisiblePanelSetting.PanelType panelType, int panelWidth, boolean panelVisible);
+
+    public EntityData[] getGraphEntities();
 
     @Deprecated
     public void hideShow();
