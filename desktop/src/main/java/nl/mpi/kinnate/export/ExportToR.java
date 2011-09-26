@@ -19,6 +19,7 @@ import nl.mpi.kinnate.ui.MainFrame;
 public class ExportToR {
 
     public void doExport(MainFrame mainFrame, KinTermSavePanel savePanel) {
+        // todo: modify this to use the ArbilWindowManager and update the ArbilWindowManager file select to support save file actions
         JFileChooser fc = new JFileChooser();
         String lastSavedFileString = ArbilSessionStorage.getSingleInstance().loadString("kinoath.ExportToR");
         if (lastSavedFileString != null) {
@@ -49,9 +50,9 @@ public class ExportToR {
                 FileWriter fileWriter = new FileWriter(file, false);
                 fileWriter.write(packageExport.createCsvContents(savePanel.getGraphEntities()));
                 fileWriter.close();
-                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Export", "File saved");
+//                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("File saved", "Export");
             } catch (IOException exception) {
-                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Export", "Error, could not save file");
+                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Error, could not save file", "Export");
                 GuiHelper.linorgBugCatcher.logError(exception);
             }
         }
