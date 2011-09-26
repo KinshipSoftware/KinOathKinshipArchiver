@@ -223,6 +223,7 @@ public class EntityData {
     private void insertSiblingRelations(EntityData parentEntity) {
         // update the sibling relations of the parents other children
         for (EntityRelation entityRelation : parentEntity.getAllRelations()) {
+            // todo: Ticket #1062  there is an issue here when you add a child node to a parent that when you add a second child node the alter node is null "getAlterNode()", maybe it is time to put all the nodes into a hash or create some kind of loader (maybe mbased on the ArbilLoader). This would also beable to service the loading branches of the tree.
             if (entityRelation.relationType.equals(DataTypes.RelationType.descendant)) {
                 if (!entityRelation.getAlterNode().equals(this)) {
                     entityRelation.getAlterNode().addRelatedNode(this, DataTypes.RelationType.sibling, DataTypes.RelationLineType.sanguineLine, null, null);
