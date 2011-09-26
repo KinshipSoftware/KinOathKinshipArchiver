@@ -317,7 +317,8 @@ public class EntitySvg {
                 // if all the visible relations are selected then allow y shift
                 allowYshift = true;
             }
-//            allowYshift = true;
+            // todo: Ticket #1064 when the zig zag lines are done the y shift can be allowed
+            allowYshift = true;
             AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
             scaleFactor = affineTransform.getScaleX(); // the drawing should be proportional so only using X is adequate here
             shiftXscaled = shiftXfloat / scaleFactor;
