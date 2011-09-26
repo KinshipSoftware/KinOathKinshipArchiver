@@ -68,6 +68,7 @@ public class HiveManager {
             throw new HiveException("The workspace does not exist: " + workspaceName);
         }
         // todo: look if this is a an existing entity that needs a lock or if it needs a new pid so that it can be added
+        // todo: remove the dummy id and use the id from the kmdi file, updating it from local to server and sending the change back to the local copy so that it can also be changed to a server type
         String kinHivePid = DummyPersistentIds.getPID();
         File targetFile = new File(currentWorkspaceDir, kinHivePid + ".kmdi");
         try {
