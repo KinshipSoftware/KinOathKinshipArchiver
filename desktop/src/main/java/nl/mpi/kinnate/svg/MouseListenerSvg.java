@@ -113,7 +113,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
                 }
             }
-            
+
             graphPanel.svgUpdateHandler.relationDragHandle = null;
             updateSelectionDisplay();
         }
@@ -183,11 +183,16 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         if (graphPanel.arbilTableModel != null) {
             graphPanel.arbilTableModel.removeAllArbilDataNodeRows();
             try {
+                boolean tableContainsRow = false;
                 for (UniqueIdentifier currentSelectedId : graphPanel.selectedGroupId) {
                     String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
                     if (currentSelectedPath != null) {
                         graphPanel.arbilTableModel.addSingleArbilDataNode(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentSelectedPath)));
+                        tableContainsRow = true;
                     }
+                }
+                if (tableContainsRow == graphPanel.editorHidePane.isHidden()) {
+                    graphPanel.editorHidePane.toggleHiddenState();
                 }
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
