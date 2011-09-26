@@ -63,6 +63,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar1.add(new ArchiveMenu(this));
         this.doLayout();
         this.pack();
+        ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
     }
 
     private SavePanel getSavePanel(int tabIndex) {
@@ -429,10 +430,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editMenuMenuSelected
 
     private void exportToRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportToRActionPerformed
-        int selectedIndex = jTabbedPane1.getSelectedIndex();
-//        String currentTabText = jTabbedPane1.getTitleAt(selectedIndex);
-        SavePanel savePanel = getSavePanel(selectedIndex);
-        new ExportToR().doExport(this, savePanel);
+        new ExportToR().doExport(this, getKinTermPanel());
     }//GEN-LAST:event_exportToRActionPerformed
 
     private void entityUploadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entityUploadMenuItemActionPerformed
