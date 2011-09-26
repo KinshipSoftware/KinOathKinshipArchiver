@@ -8,6 +8,7 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilMimeHashQueue;
 import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
@@ -29,7 +30,9 @@ public class KinnateArbilInjector extends ArbilInjector {
     /**
      * Does initial injection into static classes. Needs to be called only once.
      */
-    public static synchronized void injectHandlers() {
+    public static synchronized void injectHandlers(final ApplicationVersionManager versionManager) {
+        injectVersionManager(versionManager);
+
         final BugCatcher bugCatcher = GuiHelper.linorgBugCatcher;
         ArbilSessionStorage.setBugCatcher(bugCatcher);
         ArbilMimeHashQueue.setBugCatcher(bugCatcher);
