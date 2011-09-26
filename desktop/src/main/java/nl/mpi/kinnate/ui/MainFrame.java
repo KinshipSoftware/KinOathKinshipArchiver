@@ -1,7 +1,9 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.io.File;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.ui.ArbilWindowManager;
@@ -44,8 +46,7 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane1.add("Unsaved Diagram", egoSelectionTestPanel);
 //        jTabbedPane1.add("Kin Type String", new KinTypeStringTestPanel());
 //        jTabbedPane1.add("Kin Term Mapping for KinType Strings", new KinTypeStringTestPanel());
-        // todo: move these into the menu and only add on menu actions        
-        jTabbedPane1.add("Entity Upload", new EntityUploadPanel());
+        // todo: move these into the menu and only add on menu actions                
 //        jTabbedPane1.add("Graph", graphPanel);
 //        jTabbedPane1.add("SVG2  (deprecated)", new GraphPanel1());
 //        jTabbedPane1.add("Jung", jungGraph);
@@ -116,6 +117,8 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu1 = new SamplesFileMenu(this);
         jMenu2 = new ImportSamplesFileMenu(this);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        entityUploadMenuItem = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         saveDiagram = new javax.swing.JMenuItem();
         saveDiagramAs = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -186,6 +189,15 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu2.setText("Import Sample Data");
         fileMenu.add(jMenu2);
         fileMenu.add(jSeparator2);
+
+        entityUploadMenuItem.setText("Entity Upload");
+        entityUploadMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                entityUploadMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(entityUploadMenuItem);
+        fileMenu.add(jSeparator4);
 
         saveDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         saveDiagram.setText("Save");
@@ -422,6 +434,15 @@ public class MainFrame extends javax.swing.JFrame {
         new ExportToR().doExport(this, savePanel);
     }//GEN-LAST:event_exportToRActionPerformed
 
+    private void entityUploadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entityUploadMenuItemActionPerformed
+        jTabbedPane1.add("Entity Upload", new EntityUploadPanel());
+        JDialog uploadDialog = new JDialog(this, "Entity Upload", true);
+        uploadDialog.setContentPane(new EntityUploadPanel());
+        uploadDialog.setLocationRelativeTo(this);
+        uploadDialog.setPreferredSize(new Dimension(100, 150));
+        uploadDialog.setVisible(true);
+    }//GEN-LAST:event_entityUploadMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -437,6 +458,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem ImportGedcomUrl;
     private javax.swing.JMenuItem closeTabMenuItem;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JMenuItem entityUploadMenuItem;
     private javax.swing.JMenuItem exitApplication;
     private javax.swing.JMenuItem exportToR;
     private javax.swing.JMenu fileMenu;
@@ -447,6 +469,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JMenuItem newDiagramMenuItem;
     private javax.swing.JMenuItem openDiagram;
