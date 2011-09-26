@@ -376,6 +376,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         return kinTermHidePane.isHidden();
     }
 
+    public EntityData[] getGraphEntities() {
+        return graphSorter.getDataNodes();
+    }
+
     private void registerCurrentNodes(EntityData[] currentEntities) {
         // todo: i think this is resolved but double check the issue where arbil nodes update frequency is too high and breaks basex
         // todo: load the nodes in the KinDataNode when putting them in the table and pass on the reload requests here when they occur
