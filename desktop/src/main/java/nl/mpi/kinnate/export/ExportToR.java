@@ -1,9 +1,14 @@
 package nl.mpi.kinnate.export;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import nl.mpi.kinnate.SavePanel;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
+import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.ui.MainFrame;
 
 /**
@@ -13,8 +18,12 @@ import nl.mpi.kinnate.ui.MainFrame;
  */
 public class ExportToR {
 
-    public void doExport(MainFrame mainFrame, SavePanel savePanel) {
+    public void doExport(MainFrame mainFrame, KinTermSavePanel savePanel) {
         JFileChooser fc = new JFileChooser();
+        String lastSavedFileString = ArbilSessionStorage.getSingleInstance().loadString("kinoath.ExportToR");
+        if (lastSavedFileString != null) {
+            fc.setSelectedFile(new File(lastSavedFileString));
+        }
         fc.addChoosableFileFilter(new FileFilter() {
 
             @Override
@@ -34,10 +43,17 @@ public class ExportToR {
         int returnVal = fc.showSaveDialog(mainFrame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-//            int tabIndex = Integer.valueOf(evt.getActionCommand());
-//            savePanel.saveToFile(file);
-        } else {
-            // todo: warn user that no file selected and so cannot save
+            PedigreePackageExport packageExport = new PedigreePackageExport();
+            ArbilSessionStorage.getSingleInstance().saveString("kinoath.ExportToR", file.getPath());
+            try {
+                FileWriter fileWriter = new FileWriter(file, false);
+                fileWriter.write(packageExport.createCsvContents(savePanel.getGraphEntities()));
+                fileWriter.close();
+                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Export", "File saved");
+            } catch (IOException exception) {
+                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Export", "Error, could not save file");
+                GuiHelper.linorgBugCatcher.logError(exception);
+            }
         }
     }
     // example usage:
