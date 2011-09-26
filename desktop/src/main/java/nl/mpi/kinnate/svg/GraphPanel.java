@@ -17,12 +17,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.GuiHelper;
-import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
+import nl.mpi.kinnate.ui.HidePane;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
@@ -47,6 +47,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     protected JSVGCanvas svgCanvas;
     protected SVGDocument doc;
     protected ArbilTableModel arbilTableModel;
+    protected HidePane editorHidePane;
     private boolean requiresSave = false;
     private File svgFile = null;
     protected GraphPanelSize graphPanelSize;
@@ -136,7 +137,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        zoomAffineTransform.concatenate(scaleTransform);
 //        svgCanvas.setRenderingTransform(zoomAffineTransform);
 //    }
-    public void setArbilTableModel(ArbilTableModel arbilTableModelLocal) {
+    public void setArbilTableModel(ArbilTableModel arbilTableModelLocal, HidePane editorHidePane) {
+        this.editorHidePane = editorHidePane;
         arbilTableModel = arbilTableModelLocal;
     }
 
@@ -320,7 +322,6 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    public void removeEgo(String[] egoIdentifierArray) {
 //        dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
 //    }
-
     public void setSelectedIds(UniqueIdentifier[] uniqueIdentifiers) {
         selectedGroupId.clear();
         selectedGroupId.addAll(Arrays.asList(uniqueIdentifiers));
