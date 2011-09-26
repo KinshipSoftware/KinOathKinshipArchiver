@@ -116,7 +116,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         this.setLayout(new BorderLayout());
 
         ArbilTableModel imdiTableModel = new ArbilTableModel();
-        graphPanel.setArbilTableModel(imdiTableModel);
         progressBar.setVisible(false);
         graphPanel.add(progressBar, BorderLayout.PAGE_START);
         imdiTable = new ArbilTable(imdiTableModel, "Selected Nodes");
@@ -135,10 +134,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         kinTypeHidePane = new HidePane(HidePane.HidePanePosition.top, 0);
         IndexerParametersPanel indexerParametersPanel = new IndexerParametersPanel(this, graphPanel, tableCellDragHandler);
-        JPanel advancedPanel = new JPanel(new BorderLayout());
+//        JPanel advancedPanel = new JPanel(new BorderLayout());
 
         JScrollPane tableScrollPane = new JScrollPane(imdiTable);
-        advancedPanel.add(tableScrollPane, BorderLayout.CENTER);
+//        advancedPanel.add(tableScrollPane, BorderLayout.CENTER);
         //HidePane indexParamHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
         //advancedPanel.add(indexParamHidePane, BorderLayout.LINE_END);
 
@@ -155,6 +154,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
 
+        graphPanel.setArbilTableModel(imdiTableModel, tableHidePane);
+
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
             switch (panelSetting.getPanelType()) {
                 case ArchiveLinker:
@@ -167,7 +168,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     panelSetting.setTargetPanel(egoSelectionHidePane, entitySearchPanel, "Search Entities");
                     break;
                 case IndexerSettings:
-                    panelSetting.setTargetPanel(tableHidePane, indexerParametersPanel, "Indexer Parameters");
+                    panelSetting.setTargetPanel(kinTypeHidePane, indexerParametersPanel, "Indexer Parameters");
                     break;
                 case KinTerms:
                     panelSetting.setTargetPanel(kinTermHidePane, kinTermPanel, "Kin Terms");
@@ -176,7 +177,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     panelSetting.setTargetPanel(kinTypeHidePane, new JScrollPane(kinTypeStringInput), "Kin Type Strings");
                     break;
                 case MetaData:
-                    panelSetting.setTargetPanel(tableHidePane, advancedPanel, "Metadata");
+                    panelSetting.setTargetPanel(tableHidePane, tableScrollPane, "Metadata");
                     break;
             }
         }
