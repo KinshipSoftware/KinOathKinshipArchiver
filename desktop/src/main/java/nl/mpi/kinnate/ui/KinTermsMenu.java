@@ -17,6 +17,7 @@ public class KinTermsMenu extends JMenu {
     JMenuItem newMenu;
     JMenuItem exportMenu;
     JMenuItem importMenu;
+    JMenuItem deleteMenu;
 
     public KinTermsMenu(MainFrame mainFrameLocal) {
         mainFrame = mainFrameLocal;
@@ -32,11 +33,13 @@ public class KinTermsMenu extends JMenu {
         newMenu = new JMenuItem("New Kin Term Group");
         exportMenu = new JMenuItem("Export");
         importMenu = new JMenuItem("Import");
+        deleteMenu = new JMenuItem("Delete");
         this.setText("Kin Terms");
         this.add(hideShowMenu);
         this.add(newMenu);
         this.add(importMenu);
         this.add(exportMenu);
+        this.add(deleteMenu);
         this.addMenuListener(new javax.swing.event.MenuListener() {
 
             public void menuSelected(javax.swing.event.MenuEvent evt) {
@@ -48,11 +51,13 @@ public class KinTermsMenu extends JMenu {
                         exportMenu.setEnabled(false);
                         importMenu.setEnabled(false);
                         newMenu.setEnabled(false);
+                        deleteMenu.setEnabled(false);
                         hideShowMenu.setText("Show");
                     } else {
                         exportMenu.setEnabled(true);
                         importMenu.setEnabled(true);
                         newMenu.setEnabled(true);
+                        deleteMenu.setEnabled(false); // todo: Ticket #1063 enable deleting the current kin term group and update the menu to reflect the group name that would be deleted
                         hideShowMenu.setText("Hide");
                     }
                 } else {
@@ -60,6 +65,7 @@ public class KinTermsMenu extends JMenu {
                     importMenu.setEnabled(false);
                     hideShowMenu.setEnabled(false);
                     newMenu.setEnabled(false);
+                    deleteMenu.setEnabled(false);
                 }
             }
 
