@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import org.w3c.dom.events.Event;
@@ -21,6 +23,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindocument.RelationLinker;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
+import nl.mpi.kinnate.ui.SvgElementEditor;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGLocatable;
@@ -41,6 +44,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     private boolean mouseActionIsPopupTrigger = false;
     private boolean mouseActionIsDrag = false;
     private UniqueIdentifier entityToToggle = null;
+    HashMap<UniqueIdentifier, SvgElementEditor> shownGraphicsEditors;
 
     public enum ActionCode {
 
@@ -50,6 +54,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     public MouseListenerSvg(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanelLocal) {
         this.kinDiagramPanel = kinDiagramPanel;
         graphPanel = graphPanelLocal;
+        shownGraphicsEditors = new HashMap<UniqueIdentifier, SvgElementEditor>();
     }
 
     @Override
@@ -184,12 +189,28 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             graphPanel.arbilTableModel.removeAllArbilDataNodeRows();
             try {
                 boolean tableContainsRow = false;
+                ArrayList<UniqueIdentifier> remainingEditors = new ArrayList<UniqueIdentifier>(shownGraphicsEditors.keySet());
                 for (UniqueIdentifier currentSelectedId : graphPanel.selectedGroupId) {
-                    String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
-                    if (currentSelectedPath != null) {
-                        graphPanel.arbilTableModel.addSingleArbilDataNode(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentSelectedPath)));
+                    remainingEditors.remove(currentSelectedId);
+                    if (currentSelectedId.isGraphicsIdentifier() && !shownGraphicsEditors.containsKey(entityToToggle)) {
+                        Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());
+                        SvgElementEditor elementEditor = new SvgElementEditor(graphicsElement);
+                        graphPanel.editorHidePane.addTab("Graphics Editor", elementEditor);
+                        graphPanel.editorHidePane.setSelectedComponent(elementEditor);
+                        shownGraphicsEditors.put(entityToToggle, elementEditor);
                         tableContainsRow = true;
+                    } else {
+                        String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
+                        if (currentSelectedPath != null) {
+                            graphPanel.arbilTableModel.addSingleArbilDataNode(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentSelectedPath)));
+                            tableContainsRow = true;
+                        }
                     }
+                }
+                for (UniqueIdentifier remainingIdentifier : remainingEditors) {
+                    // remove the unused editors
+                    graphPanel.editorHidePane.remove(shownGraphicsEditors.get(remainingIdentifier));
+                    shownGraphicsEditors.remove(remainingIdentifier);
                 }
                 if (tableContainsRow == graphPanel.editorHidePane.isHidden()) {
                     graphPanel.editorHidePane.toggleHiddenState();
