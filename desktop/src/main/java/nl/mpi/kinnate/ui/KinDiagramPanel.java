@@ -34,6 +34,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
+import nl.mpi.kinnate.ui.DocumentNewMenu.DocumentType;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -86,6 +87,14 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //    private String kinTypeStrings[] = new String[]{};
 
     public KinDiagramPanel(File existingFile) {
+        initKinDiagramPanel(existingFile, null);
+    }
+
+    public KinDiagramPanel(DocumentType documentType) {
+        initKinDiagramPanel(null, documentType);
+    }
+
+    private void initKinDiagramPanel(File existingFile, DocumentType documentType) {
         entityCollection = new EntityCollection();
         progressBar = new JProgressBar();
         EntityData[] svgStoredEntities = null;
@@ -106,14 +115,60 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             }
             kinTypeStringInput.setText(kinTermContents);
         } else {
+            if (documentType == null) {
+                // this is the default document that users see when they run the application for the first time
+                documentType = DocumentType.Simple;
+            }
+            boolean showKinTerms = false;
+            boolean showArchiveLinker = false;
+            boolean showDiagramTree = false;
+            boolean showEntitySearch = false;
+            boolean showIndexerSettings = false;
+            boolean showKinTypeStrings = false;
+            boolean showMetaData = false;
+            switch (documentType) {
+                case ArchiveLinker:
+                    showMetaData = true;
+                    showDiagramTree = true;
+                    showArchiveLinker = true;
+                    break;
+                case CustomQuery:
+                    showMetaData = true;
+                    showKinTypeStrings = true;
+                    showDiagramTree = true;
+                    showIndexerSettings = true;
+                    break;
+                case EntitySearch:
+                    showMetaData = true;
+                    showEntitySearch = true;
+                    showDiagramTree = true;
+                    break;
+                case KinTerms:
+                    showKinTerms = true;
+                    break;
+                case KinTypeString:
+//                    showDiagramTree = true;
+                    showKinTypeStrings = true;
+                    break;
+                case Simple:
+                    showMetaData = true;
+                    showDiagramTree = true;
+                    break;
+                case Query:
+                    showMetaData = true;
+                    showDiagramTree = true;
+                    showKinTypeStrings = true;
+                default:
+                    break;
+            }
             graphPanel.generateDefaultSvg();
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 150, false);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, false);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.DiagramTree, 150, true);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, false);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, false);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, false);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, true);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 150, showKinTerms);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, showArchiveLinker);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.DiagramTree, 150, showDiagramTree);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
         }
         this.setLayout(new BorderLayout());
 
@@ -183,7 +238,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     break;
             }
         }
-
+        tableHidePane.toggleHiddenState(); // put the metadata table plane into the closed state
         kinGraphPanel.add(kinTypeHidePane, BorderLayout.PAGE_START);
         kinGraphPanel.add(egoSelectionHidePane, BorderLayout.LINE_START);
         kinGraphPanel.add(graphPanel, BorderLayout.CENTER);
