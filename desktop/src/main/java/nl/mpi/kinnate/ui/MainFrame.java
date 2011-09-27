@@ -122,6 +122,7 @@ public class MainFrame extends javax.swing.JFrame {
         ImportGedcomUrl = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
+        jMenu3 = new nl.mpi.kinnate.ui.DocumentNewMenu(jTabbedPane1);
         openDiagram = new javax.swing.JMenuItem();
         openRecentMenu = recentFileMenu;
         jMenu1 = new SamplesFileMenu(this);
@@ -131,10 +132,12 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         saveDiagram = new javax.swing.JMenuItem();
         saveDiagramAs = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        savePdfMenuItem = new javax.swing.JMenuItem();
         exportToR = new javax.swing.JMenuItem();
         closeTabMenuItem = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        saveAsDefaultMenuItem = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
         exitApplication = new javax.swing.JMenuItem();
         editMenu = new EditMenu();
 
@@ -167,13 +170,16 @@ public class MainFrame extends javax.swing.JFrame {
         fileMenu.add(jSeparator1);
 
         newDiagramMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        newDiagramMenuItem.setText("New");
+        newDiagramMenuItem.setText("New (default diagram)");
         newDiagramMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newDiagramMenuItemActionPerformed(evt);
             }
         });
         fileMenu.add(newDiagramMenuItem);
+
+        jMenu3.setText("New Diagram of Type");
+        fileMenu.add(jMenu3);
 
         openDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         openDiagram.setText("Open");
@@ -229,13 +235,13 @@ public class MainFrame extends javax.swing.JFrame {
         });
         fileMenu.add(saveDiagramAs);
 
-        jMenuItem1.setText("Export as PDF");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        savePdfMenuItem.setText("Export as PDF");
+        savePdfMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                savePdfMenuItemActionPerformed(evt);
             }
         });
-        fileMenu.add(jMenuItem1);
+        fileMenu.add(savePdfMenuItem);
 
         exportToR.setText("Export to R / SPSS");
         exportToR.addActionListener(new java.awt.event.ActionListener() {
@@ -254,6 +260,15 @@ public class MainFrame extends javax.swing.JFrame {
         });
         fileMenu.add(closeTabMenuItem);
         fileMenu.add(jSeparator3);
+
+        saveAsDefaultMenuItem.setText("Save as Default Diagram");
+        saveAsDefaultMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAsDefaultMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveAsDefaultMenuItem);
+        fileMenu.add(jSeparator5);
 
         exitApplication.setText("Exit");
         exitApplication.setActionCommand("exit");
@@ -366,16 +381,22 @@ public class MainFrame extends javax.swing.JFrame {
         saveDiagram.setActionCommand(Integer.toString(selectedIndex));
         closeTabMenuItem.setText("Close (" + currentTabText + ")");
         closeTabMenuItem.setActionCommand(Integer.toString(selectedIndex));
+        saveAsDefaultMenuItem.setText("Save (" + currentTabText + ") as Default Diagram");
+        saveAsDefaultMenuItem.setActionCommand(Integer.toString(selectedIndex));
         if (savePanel != null) {
             saveDiagram.setEnabled(savePanel.hasSaveFileName() && savePanel.requiresSave());
             saveDiagramAs.setEnabled(true);
             exportToR.setEnabled(true);
             closeTabMenuItem.setEnabled(true);
+            saveAsDefaultMenuItem.setEnabled(true);
+            savePdfMenuItem.setEnabled(true);
         } else {
             saveDiagramAs.setEnabled(false);
             saveDiagram.setEnabled(false);
             exportToR.setEnabled(false);
             closeTabMenuItem.setEnabled(false);
+            saveAsDefaultMenuItem.setEnabled(false);
+            savePdfMenuItem.setEnabled(false);
         }
     }//GEN-LAST:event_fileMenuMenuSelected
 
@@ -389,9 +410,10 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_closeTabMenuItemActionPerformed
 
     private void newDiagramMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newDiagramMenuItemActionPerformed
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(null);
-        jTabbedPane1.add("Unsaved Diagram", egoSelectionTestPanel);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(KinDiagramPanel.getDefaultDiagramFile());
+        jTabbedPane1.add("Unsaved Default Diagram", egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
+        egoSelectionTestPanel.drawGraph();
     }//GEN-LAST:event_newDiagramMenuItemActionPerformed
 
     private void ImportGedcomUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImportGedcomUrlActionPerformed
@@ -420,12 +442,12 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ImportGedcomUrlActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void savePdfMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savePdfMenuItemActionPerformed
         // TODO add your handling code here:
         // todo: implement pdf export
         new DiagramTranscoder().saveAsPdf((SavePanel) jTabbedPane1.getSelectedComponent());
         new DiagramTranscoder().saveAsJpg((SavePanel) jTabbedPane1.getSelectedComponent());
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_savePdfMenuItemActionPerformed
 
     private void editMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuActionPerformed
     }//GEN-LAST:event_editMenuActionPerformed
@@ -454,6 +476,12 @@ public class MainFrame extends javax.swing.JFrame {
 //        uploadDialog.setVisible(true);
     }//GEN-LAST:event_entityUploadMenuItemActionPerformed
 
+    private void saveAsDefaultMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsDefaultMenuItemActionPerformed
+        int tabIndex = Integer.valueOf(evt.getActionCommand());
+        SavePanel savePanel = getSavePanel(tabIndex);
+        savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile());
+    }//GEN-LAST:event_saveAsDefaultMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -475,17 +503,20 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JMenuItem newDiagramMenuItem;
     private javax.swing.JMenuItem openDiagram;
     private javax.swing.JMenu openRecentMenu;
+    private javax.swing.JMenuItem saveAsDefaultMenuItem;
     private javax.swing.JMenuItem saveDiagram;
     private javax.swing.JMenuItem saveDiagramAs;
+    private javax.swing.JMenuItem savePdfMenuItem;
     // End of variables declaration//GEN-END:variables
 }
