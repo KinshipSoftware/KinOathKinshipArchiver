@@ -133,14 +133,14 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <copy todir="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/lib/">
             <fileset dir="${OUTPUTDIR}/lib/" includes="*.jar"/>
         </copy>
-        <chmod file="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/start-kinoath" perm="a+xr"/>
+        <chmod file="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/start" perm="a+xr"/>
         <tar destfile="${OUTPUTDIR}/distribution-mac/kinoath${kinoath.filenameidentifier}-mac.tar">
             <tarfileset dir="${OUTPUTDIR}/distribution-mac/" filemode="755" username="ant" group="ant">
-                <include name="kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/start-kinoath"/>
+                <include name="kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/start"/>
             </tarfileset>
             <tarfileset dir="${OUTPUTDIR}/distribution-mac/" filemode="664" username="ant" group="ant">
                 <include name="kinoath${kinoath.filenameidentifier}.app/**"/>
-                <exclude name="kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/start-kinoath"/>
+                <exclude name="kinoath${kinoath.filenameidentifier}.app/Contents/MacOS/start"/>
             </tarfileset>
         </tar>
     </target>
