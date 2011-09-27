@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
@@ -66,8 +67,8 @@ public class MainFrame extends javax.swing.JFrame {
         this.pack();
         ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
         setTitle(versionManager.getApplicationVersion().applicationTitle + " " + versionManager.getApplicationVersion().compileDate);
-        // todo: Ticket #1067 set the icon for the application (if this is still required for the various OSs). This is not required for Mac but might be needed for windows or linux.
-//        setIconImage(ArbilIcons.getSingleInstance().linorgIcon.getImage());
+        // set the icon for the application (if this is still required for the various OSs). This is not required for Mac but might be needed for windows or linux.
+        setIconImage(ArbilIcons.getSingleInstance().linorgIcon.getImage());
 //	if (arbilMenuBar.checkNewVersionAtStartCheckBoxMenuItem.isSelected()) {
         // todo: Ticket #1066 add the check for updates and check now menu items
         versionManager.checkForUpdate();
