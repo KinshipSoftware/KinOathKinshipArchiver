@@ -5,7 +5,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{9B1B10AE-06A3-11DF-3D81-000C29E71C44}
+AppId={{1f0edb6c-9e6d-4a83-8ecf-92b12df717db}
 AppName=@AppName@
 AppVerName=@AppName@-@VersionNumber@
 AppPublisher=The Technical Group (TG) of Max Planck Institute for Psycholinguistics
