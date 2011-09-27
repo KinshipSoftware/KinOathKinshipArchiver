@@ -44,7 +44,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 //        JScrollPane tableScrollPane = new JScrollPane(previewTable);       
         this.add(jTabbedPane1, BorderLayout.CENTER);
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(null);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(KinDiagramPanel.getDefaultDiagramFile());
 //        egoSelectionTestPanel.createDefaultGraph(KinDiagramPanel.defaultGraphString);
         jTabbedPane1.add("Unsaved Diagram", egoSelectionTestPanel);
 //        jTabbedPane1.add("Kin Type String", new KinTypeStringTestPanel());
