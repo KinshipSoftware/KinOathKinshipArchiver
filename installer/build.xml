@@ -204,7 +204,7 @@ public class KinOathVersion extends ApplicationVersion {
      */
     public KinOathVersion() {
     	applicationTitle = "${kinoath.application-title}";
-    	applicationIconName = "${kinoath.icon-file-name}.png";
+    	applicationIconName = "/nl/mpi/kinnate/resources/icons/${kinoath.icon-file-name}.png";
     	currentMajor = "${kinoath.current.major}";
     	currentMinor = "${kinoath.current.minor}";
     	currentRevision = "${kinoath.current.revision}";
