@@ -4,13 +4,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JTabbedPane;
 
 /**
- *  Document   : NewMenu
+ *  Document   : DocumentNewMenu
  *  Created on : Sep 27, 2011, 10:33:29 AM
  *  Author     : Peter Withers
  */
-public class NewMenu extends JMenu implements ActionListener {
+public class DocumentNewMenu extends JMenu implements ActionListener {
+
+    JTabbedPane targetPane;
 
     enum DocumentTypes {
 
@@ -21,7 +24,8 @@ public class NewMenu extends JMenu implements ActionListener {
         CustomQuery
     }
 
-    public void addMenuItems() {
+    public DocumentNewMenu(JTabbedPane targetPane) {
+        this.targetPane = targetPane;
         for (DocumentTypes documentType : DocumentTypes.values()) {
             JMenuItem menuItem = new JMenuItem(documentType.name());
             menuItem.setActionCommand(documentType.name());
@@ -31,6 +35,8 @@ public class NewMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(null);
+        targetPane.add("Unsaved Diagram", egoSelectionTestPanel);
+        targetPane.setSelectedComponent(egoSelectionTestPanel);
     }
 }
