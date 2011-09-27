@@ -17,19 +17,28 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
 
     public enum DocumentType {
 
-        KinTypeString,
-        KinTerms,
-        Query,
-        ArchiveLinker,
-        EntitySearch,
-        CustomQuery,
-        Simple
+        KinTypeString("Kin Type String"),
+        KinTerms("Kin Terms"),
+        Query("Kin Type String Query"),
+        ArchiveLinker("Archive Data Linker"),
+        EntitySearch("Entity Search"),
+        CustomQuery("Custom Metadata"),
+        Simple("Standard");
+        private String displayName;
+
+        private DocumentType(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 
     public DocumentNewMenu(JTabbedPane targetPane) {
         this.targetPane = targetPane;
         for (DocumentType documentType : DocumentType.values()) {
-            JMenuItem menuItem = new JMenuItem(documentType.name());
+            JMenuItem menuItem = new JMenuItem(documentType.getDisplayName());
             menuItem.setActionCommand(documentType.name());
             menuItem.addActionListener(this);
             this.add(menuItem);
@@ -37,8 +46,9 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentType.valueOf(e.getActionCommand()));
-        targetPane.add("Unsaved Diagram", egoSelectionTestPanel);
+        DocumentType documentType = DocumentType.valueOf(e.getActionCommand());
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType);
+        targetPane.add("Unsaved " + documentType.getDisplayName() + " Diagram", egoSelectionTestPanel);
         targetPane.setSelectedComponent(egoSelectionTestPanel);
     }
 }
