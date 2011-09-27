@@ -70,7 +70,7 @@ public class GedcomImportPanel extends JPanel {
             showButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(null);
+                    final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple);
 //                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
                     jTabbedPane1.add("Imported Entities", egoSelectionTestPanel);
                     jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
