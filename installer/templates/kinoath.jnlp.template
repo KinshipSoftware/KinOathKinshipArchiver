@@ -80,7 +80,7 @@
         <!-- these prperties are now set in the main class<property name="apple.laf.useScreenMenuBar" value="true"/>
         <property name="apple.awt.graphics.UseQuartz" value="true"/>
         <property name="sun.swing.enableImprovedDragGesture" value="true"/>-->
-        <property name="nl.mpi.@DistName@.webstartUpdateUrl" value="http://www.mpi.nl/tg/j2se/jnlp/@DistName@/@DistName@@FilenameIdentifier@.jnlp"/>
+        <property name="nl.mpi.webstartUpdateUrl" value="http://www.mpi.nl/tg/j2se/jnlp/@DistName@/@DistName@@FilenameIdentifier@.jnlp"/>
     </resources>
     <application-desc main-class="@MainClass@">
       <!--<argument>-update_via_javaws</argument>-->
