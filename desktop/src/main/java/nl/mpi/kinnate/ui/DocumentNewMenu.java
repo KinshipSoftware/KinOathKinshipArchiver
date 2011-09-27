@@ -15,18 +15,20 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
 
     JTabbedPane targetPane;
 
-    enum DocumentTypes {
+    public enum DocumentType {
 
         KinTypeString,
+        KinTerms,
         Query,
         ArchiveLinker,
         EntitySearch,
-        CustomQuery
+        CustomQuery,
+        Simple
     }
 
     public DocumentNewMenu(JTabbedPane targetPane) {
         this.targetPane = targetPane;
-        for (DocumentTypes documentType : DocumentTypes.values()) {
+        for (DocumentType documentType : DocumentType.values()) {
             JMenuItem menuItem = new JMenuItem(documentType.name());
             menuItem.setActionCommand(documentType.name());
             menuItem.addActionListener(this);
@@ -35,7 +37,7 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(null);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentType.valueOf(e.getActionCommand()));
         targetPane.add("Unsaved Diagram", egoSelectionTestPanel);
         targetPane.setSelectedComponent(egoSelectionTestPanel);
     }
