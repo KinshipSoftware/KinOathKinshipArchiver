@@ -19,6 +19,7 @@ import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
@@ -52,6 +53,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private EntityService entityIndex;
     private JProgressBar progressBar;
     public ArbilTable imdiTable;
+    static private File defaultDiagramTemplate;
     private HashMap<UniqueIdentifier, ArbilDataNode> registeredArbilDataNode;
     private String defaultString = "# The kin type strings entered here will determine how the entities show on the graph below\n";
     public static String defaultGraphString = "# The kin type strings entered here will determine how the entities show on the graph below\n"
@@ -208,6 +210,13 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         });
     }
 
+    static public File getDefaultDiagramFile() {
+        if (defaultDiagramTemplate == null) {
+            defaultDiagramTemplate = new File(ArbilSessionStorage.getSingleInstance().getStorageDirectory(), "DefaultKinDiagram.svg");
+        }
+        return defaultDiagramTemplate;
+    }
+
     public void redrawIfKinTermsChanged() {
         if (kinTypeStringInput.hasChanges()) {
             graphPanel.setKinTypeStrigs(kinTypeStringInput.getCurrentStrings());
@@ -316,7 +325,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public boolean hasSaveFileName() {
-        return graphPanel.hasSaveFileName();
+        return (graphPanel.hasSaveFileName() && getDefaultDiagramFile() != graphPanel.getFileName());
     }
 
     public File getFileName() {
