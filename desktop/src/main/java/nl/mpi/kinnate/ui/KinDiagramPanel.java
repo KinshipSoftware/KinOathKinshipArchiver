@@ -55,7 +55,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private JProgressBar progressBar;
     public ArbilTable imdiTable;
     static private File defaultDiagramTemplate;
-    private HashMap<UniqueIdentifier, ArbilDataNode> registeredArbilDataNode;
+    private HashMap<ArbilDataNode, UniqueIdentifier> registeredArbilDataNode;
+    private HashSet<ArbilNode> arbilDataNodesFirstLoadDone;
     private String defaultString = "# The kin type strings entered here will determine how the entities show on the graph below\n";
     public static String defaultGraphString = "# The kin type strings entered here will determine how the entities show on the graph below\n"
             + "# Enter one string per line.\n"
@@ -181,7 +182,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         imdiTable.setTransferHandler(tableCellDragHandler);
         imdiTable.setDragEnabled(true);
 
-        registeredArbilDataNode = new HashMap<UniqueIdentifier, ArbilDataNode>();
+        registeredArbilDataNode = new HashMap<ArbilDataNode, UniqueIdentifier>();
+        arbilDataNodesFirstLoadDone = new HashSet<ArbilNode>();
         egoSelectionPanel = new EgoSelectionPanel(imdiTable, graphPanel);
         kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
 
@@ -312,7 +314,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), progressBar);
                                 graphSorter.setEntitys(graphNodes);
                                 // register interest Arbil updates and update the graph when data is edited in the table
-                                registerCurrentNodes(graphSorter.getDataNodes());
+//                                registerCurrentNodes(graphSorter.getDataNodes());
                                 graphPanel.drawNodes(graphSorter);
                                 egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes());
                             } else {
@@ -445,13 +447,16 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         return graphSorter.getDataNodes();
     }
 
-    private void registerCurrentNodes(EntityData[] currentEntities) {
+    public void registerArbilNode(UniqueIdentifier uniqueIdentifier, ArbilDataNode arbilDataNode) {
         // todo: i think this is resolved but double check the issue where arbil nodes update frequency is too high and breaks basex
         // todo: load the nodes in the KinDataNode when putting them in the table and pass on the reload requests here when they occur
         // todo: replace the data node registering process.
 //        for (EntityData entityData : currentEntities) {
 //            ArbilDataNode arbilDataNode = null;
-//            if (!registeredArbilDataNode.containsKey(entityData.getUniqueIdentifier())) {
+        if (!registeredArbilDataNode.containsKey(arbilDataNode)) {
+            arbilDataNode.registerContainer(this);
+            registeredArbilDataNode.put(arbilDataNode, uniqueIdentifier);
+        }
 //                try {
 //                    String metadataPath = entityData.getEntityPath();
 //                    if (metadataPath != null) {
@@ -485,16 +490,16 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void dataNodeIconCleared(ArbilNode arbilNode) {
+        if (arbilDataNodesFirstLoadDone.contains(arbilNode)) {
 //         todo: this needs to be updated to be multi threaded so users can link or save multiple nodes at once
-        boolean dataBaseRequiresUpdate = false;
-        boolean redrawRequired = false;
-        if (arbilNode instanceof ArbilDataNode) {
-            ArbilDataNode arbilDataNode = (ArbilDataNode) arbilNode;
-            // find the entity data for this arbil data node
-            for (EntityData entityData : graphSorter.getDataNodes()) {
-                try {
-                    String entityPath = entityData.getEntityPath();
-                    if (entityPath != null && arbilDataNode.getURI().equals(new URI(entityPath))) {
+            boolean dataBaseRequiresUpdate = false;
+            boolean redrawRequired = false;
+            if (arbilNode instanceof ArbilDataNode) {
+                ArbilDataNode arbilDataNode = (ArbilDataNode) arbilNode;
+                UniqueIdentifier uniqueIdentifier = registeredArbilDataNode.get(arbilDataNode);
+                // find the entity data for this arbil data node
+                for (EntityData entityData : graphSorter.getDataNodes()) {
+                    if (entityData.getUniqueIdentifier().equals(uniqueIdentifier)) {
                         // check if the metadata has been changed
                         // todo: something here fails to act on multiple nodes that have changed (it is the db update that was missed)
                         if (entityData.metadataRequiresSave && !arbilDataNode.getNeedsSaveToDisk(false)) {
@@ -507,17 +512,19 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                             redrawRequired = true;
                         }
                     }
-                } catch (URISyntaxException exception) {
-                    GuiHelper.linorgBugCatcher.logError(exception);
+                }
+                if (dataBaseRequiresUpdate) {
+                    entityCollection.updateDatabase(arbilDataNode.getURI());
+                    graphPanel.getIndexParameters().valuesChanged = true;
                 }
             }
-            if (dataBaseRequiresUpdate) {
-                entityCollection.updateDatabase(arbilDataNode.getURI());
-                graphPanel.getIndexParameters().valuesChanged = true;
+            if (redrawRequired) {
+                drawGraph();
             }
         }
-        if (redrawRequired) {
-            drawGraph();
+        if (!arbilNode.isLoading()) {
+            // this is to make sure that the initial loading process does not cause db updates nor graph redraws
+            arbilDataNodesFirstLoadDone.add(arbilNode);
         }
     }
 
