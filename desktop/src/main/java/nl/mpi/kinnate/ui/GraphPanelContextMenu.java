@@ -96,7 +96,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     try {
-                        final UniqueIdentifier[] duplicateEntities = new EntityMerger().duplicateEntities(graphPanel, selectedIdentifiers);
+                        final UniqueIdentifier[] duplicateEntities = new EntityMerger().duplicateEntities(selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                         kinDiagramPanel.addRequiredNodes(duplicateEntities);
                     } catch (ImportException exception) {
@@ -111,8 +111,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     try {
-                        new EntityMerger().mergeEntities(graphPanel, selectedIdentifiers);
-                        kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
+                        UniqueIdentifier[] affectedIdentifiers = new EntityMerger().mergeEntities(selectedIdentifiers);
+                        kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
                     } catch (ImportException exception) {
                         ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
                     }
@@ -129,8 +129,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         try {
-                            new RelationLinker().linkEntities(graphPanel, selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()));
-                            kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
+                            UniqueIdentifier[] affectedIdentifiers = new RelationLinker().linkEntities(selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()));
+                            kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
                         } catch (ImportException exception) {
                             ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), addRelationEntityMenu.getText());
                         }
