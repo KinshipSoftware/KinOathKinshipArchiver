@@ -14,6 +14,7 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
+import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
@@ -112,13 +113,12 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 try {
                     // if a relation has been set by this drag action then it is created here.
                     final RelationType relationType = DataTypes.getOpposingRelationType(graphPanel.svgUpdateHandler.relationDragHandle.relationType);
-                    UniqueIdentifier[] changedIdentifiers = new RelationLinker().linkEntities(graphPanel, graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType);
+                    UniqueIdentifier[] changedIdentifiers = new RelationLinker().linkEntities(graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType);
                     kinDiagramPanel.entityRelationsChanged(changedIdentifiers);
                 } catch (ImportException exception) {
                     ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
                 }
             }
-
             graphPanel.svgUpdateHandler.relationDragHandle = null;
             updateSelectionDisplay();
         }
@@ -182,7 +182,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         }
     }
 
-    private void updateSelectionDisplay() {
+    protected void updateSelectionDisplay() {
         graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
         // update the table selection
         if (graphPanel.arbilTableModel != null) {
@@ -202,7 +202,10 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     } else {
                         String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
                         if (currentSelectedPath != null) {
-                            graphPanel.arbilTableModel.addSingleArbilDataNode(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentSelectedPath)));
+                            ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentSelectedPath));
+                            // register this node with the graph panel
+                            kinDiagramPanel.registerArbilNode(currentSelectedId, arbilDataNode);
+                            graphPanel.arbilTableModel.addSingleArbilDataNode(arbilDataNode);
                             tableContainsRow = true;
                         }
                     }
