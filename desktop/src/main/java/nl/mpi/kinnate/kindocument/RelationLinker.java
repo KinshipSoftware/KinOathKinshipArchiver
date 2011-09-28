@@ -1,30 +1,20 @@
 package nl.mpi.kinnate.kindocument;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import javax.xml.parsers.ParserConfigurationException;
-import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.util.ArbilBugCatcher;
-import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;
-import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.svg.GraphPanel;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  *  Document   : RelationLinker
  *  Created on : Apr 12, 2011, 1:45:01 PM
  *  Author     : Peter Withers
  */
-public class RelationLinker {
+public class RelationLinker extends DocumentLoader {
 
     private void removeMatchingRelations(Document entityDocument, UniqueIdentifier[] selectedIdentifiers) {
         // todo: complete the relation removal code
@@ -61,89 +51,70 @@ public class RelationLinker {
 //        }
     }
 
-    public UniqueIdentifier[] linkEntities(GraphPanel graphPanel, UniqueIdentifier targetIdentifier, UniqueIdentifier[] selectedIdentifiers, DataTypes.RelationType relationType) throws ImportException {
-        ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
-        ArrayList<UniqueIdentifier> affectedIdentifiers = new ArrayList<UniqueIdentifier>();
+    public UniqueIdentifier[] linkEntities(UniqueIdentifier leadIdentifier, UniqueIdentifier[] otherIdentifiers, DataTypes.RelationType relationType) throws ImportException {
         try {
-            EntityDocument leadEntityDocument = new EntityDocument(new URI(graphPanel.getPathForElementId(targetIdentifier)), new ImportTranslator(true));
-            affectedIdentifiers.add(targetIdentifier);
-            for (EntityData alterEntity : graphPanel.getEntitiesById(selectedIdentifiers).values()) {
-                EntityDocument entityDocument = new EntityDocument(new URI(alterEntity.getEntityPath()), new ImportTranslator(true));
-                entityDocumentList.add(entityDocument);
-                affectedIdentifiers.add(alterEntity.getUniqueIdentifier());
+            EntityDocument leadEntityDocument = getEntityDocument(leadIdentifier);
+            for (UniqueIdentifier uniqueIdentifier : otherIdentifiers) {
+                EntityDocument entityDocument = getEntityDocument(uniqueIdentifier);
+                // add the new relation
+                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, DataTypes.RelationLineType.sanguineLine, null, null);
             }
-            linkEntities(leadEntityDocument, entityDocumentList, relationType);
+            saveAllDocuments();
         } catch (URISyntaxException exception) {
             new ArbilBugCatcher().logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
-        return affectedIdentifiers.toArray(new UniqueIdentifier[]{});
+        return getAffectedIdentifiers();
     }
 
-    public void linkEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers, DataTypes.RelationType relationType) throws ImportException {
-        EntityDocument leadEntityDocument = null;
-        ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
+    public UniqueIdentifier[] linkEntities(UniqueIdentifier[] selectedIdentifiers, DataTypes.RelationType relationType) throws ImportException {
+        ArrayList<EntityDocument> nonLeadEntityDocuments = new ArrayList<EntityDocument>();
         try {
-            for (EntityData alterEntity : graphPanel.getEntitiesById(selectedIdentifiers).values()) {
-                EntityDocument entityDocument = new EntityDocument(new URI(alterEntity.getEntityPath()), new ImportTranslator(true));
-                if (leadEntityDocument == null) {
-                    leadEntityDocument = entityDocument;
-                } else {
-                    entityDocumentList.add(entityDocument);
-                }
+            EntityDocument leadEntityDocument = getEntityDocuments(selectedIdentifiers, nonLeadEntityDocuments);
+            for (EntityDocument entityDocument : nonLeadEntityDocuments) {
+                // add the new relation
+                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, DataTypes.RelationLineType.sanguineLine, null, null);
             }
-            linkEntities(leadEntityDocument, entityDocumentList, relationType);
+            saveAllDocuments();
         } catch (URISyntaxException exception) {
             new ArbilBugCatcher().logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
-    }
-
-    public void linkEntities(EntityDocument leadEntityDocument, ArrayList<EntityDocument> entityDocumentList, DataTypes.RelationType relationType) throws ImportException {
-        for (EntityDocument alterEntity : entityDocumentList) {
-            // add the new relation
-            leadEntityDocument.entityData.addRelatedNode(alterEntity.entityData, relationType, DataTypes.RelationLineType.sanguineLine, null, null);
-        }
-        leadEntityDocument.saveDocument();
-        new EntityCollection().updateDatabase(leadEntityDocument.getFile().toURI());
-        for (EntityDocument entityDocument : entityDocumentList) {
-            entityDocument.saveDocument();
-            new EntityCollection().updateDatabase(entityDocument.getFile().toURI());
-        }
+        return getAffectedIdentifiers();
     }
 
     public void unlinkEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers) {
-        HashMap<UniqueIdentifier, EntityData> selectedEntityMap = graphPanel.getEntitiesById(selectedIdentifiers);
-        EntityData leadSelectionEntity = selectedEntityMap.get(selectedIdentifiers[0]);
-        for (EntityData selectedEntity : selectedEntityMap.values()) {
-            String targetPath = selectedEntity.getEntityPath();
-            try {
-                URI targetUri = new URI(targetPath);
-                Document metadataDom = ArbilComponentBuilder.getDocument(targetUri);
-                if (selectedEntity.equals(leadSelectionEntity)) {
-                    // remove all relations in the list (the lead selection is also in this list but there would not be any links to itself anyway)
-                    removeMatchingRelations(metadataDom, selectedIdentifiers);
-                } else {
-                    // only remove the lead selection from the other entities
-                    removeMatchingRelations(metadataDom, new UniqueIdentifier[]{leadSelectionEntity.getUniqueIdentifier()});
-                }
-                // save the xml file
-                ArbilComponentBuilder.savePrettyFormatting(metadataDom, new File(targetUri));
-                // update the database
-                new EntityCollection().updateDatabase(targetUri);
-            } catch (URISyntaxException exception) {
-                // todo: inform the user if there is an error
-                new ArbilBugCatcher().logError(exception);
-            } catch (DOMException exception) {
-                new ArbilBugCatcher().logError(exception);
-            } catch (IOException exception) {
-                new ArbilBugCatcher().logError(exception);
-            } catch (ParserConfigurationException exception) {
-                new ArbilBugCatcher().logError(exception);
-            } catch (SAXException exception) {
-                new ArbilBugCatcher().logError(exception);
-            }
-        }
+//        HashMap<UniqueIdentifier, EntityData> selectedEntityMap = graphPanel.getEntitiesById(selectedIdentifiers);
+//        EntityData leadSelectionEntity = selectedEntityMap.get(selectedIdentifiers[0]);
+//        for (EntityData selectedEntity : selectedEntityMap.values()) {
+//            String targetPath = selectedEntity.getEntityPath();
+//            try {
+//                URI targetUri = new URI(targetPath);
+//                Document metadataDom = ArbilComponentBuilder.getDocument(targetUri);
+//                if (selectedEntity.equals(leadSelectionEntity)) {
+//                    // remove all relations in the list (the lead selection is also in this list but there would not be any links to itself anyway)
+//                    removeMatchingRelations(metadataDom, selectedIdentifiers);
+//                } else {
+//                    // only remove the lead selection from the other entities
+//                    removeMatchingRelations(metadataDom, new UniqueIdentifier[]{leadSelectionEntity.getUniqueIdentifier()});
+//                }
+//                // save the xml file
+//                ArbilComponentBuilder.savePrettyFormatting(metadataDom, new File(targetUri));
+//                // update the database
+//                saveAllDocuments();
+//            } catch (URISyntaxException exception) {
+//                // todo: inform the user if there is an error
+//                new ArbilBugCatcher().logError(exception);
+//            } catch (DOMException exception) {
+//                new ArbilBugCatcher().logError(exception);
+//            } catch (IOException exception) {
+//                new ArbilBugCatcher().logError(exception);
+//            } catch (ParserConfigurationException exception) {
+//                new ArbilBugCatcher().logError(exception);
+//            } catch (SAXException exception) {
+//                new ArbilBugCatcher().logError(exception);
+//            }
+//        }
         throw new UnsupportedOperationException("todo...");
     }
 }
