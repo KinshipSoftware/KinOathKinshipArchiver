@@ -325,7 +325,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     public void setSelectedIds(UniqueIdentifier[] uniqueIdentifiers) {
         selectedGroupId.clear();
         selectedGroupId.addAll(Arrays.asList(uniqueIdentifiers));
-        svgUpdateHandler.updateSvgSelectionHighlights();
+        mouseListenerSvg.updateSelectionDisplay();
     }
 
     public UniqueIdentifier[] getSelectedIds() {
