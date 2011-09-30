@@ -94,7 +94,7 @@ public class EntitySearchPanel extends JPanel {
                 resultsArea.setText("Found " + searchResults.length + " entities\n");
                 for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
-                    resultsArray.add(new KinTreeNode(entityData));
+                    resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters()));
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
 //                break;
