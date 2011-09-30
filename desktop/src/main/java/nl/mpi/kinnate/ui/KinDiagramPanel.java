@@ -224,7 +224,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     panelSetting.setTargetPanel(egoSelectionHidePane, egoSelectionPanel, "Diagram Tree");
                     break;
                 case EntitySearch:
-                    panelSetting.setTargetPanel(egoSelectionHidePane, entitySearchPanel, "Search Entities");
+                    panelSetting.setTargetPanel(kinTermHidePane, entitySearchPanel, "Search Entities");
                     break;
                 case IndexerSettings:
                     panelSetting.setTargetPanel(kinTypeHidePane, indexerParametersPanel, "Indexer Parameters");
@@ -316,7 +316,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 // register interest Arbil updates and update the graph when data is edited in the table
 //                                registerCurrentNodes(graphSorter.getDataNodes());
                                 graphPanel.drawNodes(graphSorter);
-                                egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes());
+                                egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes(), graphPanel.getIndexParameters());
                             } else {
                                 KinTypeStringConverter graphData = new KinTypeStringConverter();
                                 graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
