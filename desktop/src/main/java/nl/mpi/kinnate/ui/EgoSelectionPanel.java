@@ -9,6 +9,7 @@ import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTreeRenderer;
 import nl.mpi.kinnate.data.KinTreeNode;
+import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -85,7 +86,7 @@ public class EgoSelectionPanel extends JPanel {
         }
     }
 
-    public void setTreeNodes(HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, EntityData[] allEntities) {
+    public void setTreeNodes(HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, EntityData[] allEntities, IndexerParameters indexerParameters) {
         this.remove(transientNodeScrolPane);
         this.add(metadataNodeScrolPane, BorderLayout.CENTER);
         this.revalidate();
@@ -94,7 +95,7 @@ public class EgoSelectionPanel extends JPanel {
         ArrayList<KinTreeNode> remainingNodeArray = new ArrayList<KinTreeNode>();
         for (EntityData entityData : allEntities) {
             if (entityData.isVisible) {
-                KinTreeNode kinTreeNode = new KinTreeNode(entityData);
+                KinTreeNode kinTreeNode = new KinTreeNode(entityData, indexerParameters);
                 if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
                     egoNodeArray.add(kinTreeNode);
                 } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
@@ -120,7 +121,7 @@ public class EgoSelectionPanel extends JPanel {
         this.revalidate();
         ArrayList<KinTreeNode> transientNodeArray = new ArrayList<KinTreeNode>();
         for (EntityData entityData : allEntities) {
-            KinTreeNode kinTreeNode = new KinTreeNode(entityData);
+            KinTreeNode kinTreeNode = new KinTreeNode(entityData, null);
             transientNodeArray.add(kinTreeNode);
         }
         transientTree.rootNodeChildren = transientNodeArray.toArray(new ArbilNode[]{});
