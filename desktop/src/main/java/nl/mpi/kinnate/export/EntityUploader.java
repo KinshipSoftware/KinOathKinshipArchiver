@@ -90,6 +90,15 @@ public class EntityUploader {
         }.start();
     }
 
+    public URI getCreateUrl(String workspaceName) {
+        try {
+            return new URI("http://localhost:8080/kinoath-rest/kinoath/kinspace/" + workspaceName + "/create");
+        } catch (URISyntaxException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+        }
+        return null;
+    }
+
     public void uploadLocalEntites(final ActionListener actionListener, final JProgressBar uploadProgress, final JTextArea outputArea, final String workspaceName, final char[] workspacePassword/*, final boolean createWorkspace*/) {
         new Thread() {
 
