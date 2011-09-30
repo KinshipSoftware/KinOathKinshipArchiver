@@ -53,6 +53,7 @@ public class EntityCollection {
 
     private String databaseName = "nl-mpi-kinnate";
     static Context context = new Context();
+    static final Object databaseLock = new Object();
 
     public class SearchResults {
 
@@ -64,14 +65,18 @@ public class EntityCollection {
     public EntityCollection() {
         // make sure the database exists
         try {
-            new Set("dbpath", new File(ArbilSessionStorage.getSingleInstance().getStorageDirectory(), "BaseXData")).execute(context);
-            new Open(databaseName).execute(context);
-            //context.close();
-            new Close().execute(context);
+            synchronized (databaseLock) {
+                new Set("dbpath", new File(ArbilSessionStorage.getSingleInstance().getStorageDirectory(), "BaseXData")).execute(context);
+                new Open(databaseName).execute(context);
+                //context.close();
+                new Close().execute(context);
+            }
         } catch (BaseXException baseXException) {
             try {
-                new CreateDB(databaseName).execute(context);
+                synchronized (databaseLock) {
+                    new CreateDB(databaseName).execute(context);
 //                new Open(databaseName).execute(context);
+                }
             } catch (BaseXException baseXException2) {
                 new ArbilBugCatcher().logError(baseXException2);
             }
@@ -94,9 +99,10 @@ public class EntityCollection {
         // todo: if this is required then we will need to walk the working directory and add each file via addFileToDB
         try {
 //            System.out.println("List: " + new List().execute(context));
-            new DropDB(databaseName).execute(context);
-            new Set("CREATEFILTER", "*.kmdi").execute(context);
-            new CreateDB(databaseName, ArbilSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
+            synchronized (databaseLock) {
+                new DropDB(databaseName).execute(context);
+                new Set("CREATEFILTER", "*.kmdi").execute(context);
+                new CreateDB(databaseName, ArbilSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
 //            System.out.println("List: " + new List().execute(context));
 //            System.out.println("Find: " + new Find(databaseName).title());
 //            System.out.println("Info: " + new Info().execute(context));
@@ -107,6 +113,7 @@ public class EntityCollection {
 //            new CreateIndex("path").execute(context);
 //            new Close().execute(context);
 //            context.close();
+            }
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
         }
@@ -114,8 +121,10 @@ public class EntityCollection {
 
     public void dropDatabase() {
         try {
-            new DropDB(databaseName).execute(context);
-            System.out.println("List: " + new List().execute(context));
+            synchronized (databaseLock) {
+                new DropDB(databaseName).execute(context);
+                System.out.println("List: " + new List().execute(context));
+            }
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
         }
@@ -124,12 +133,14 @@ public class EntityCollection {
     private void addFileToDB(URI updatedDataUrl) {
         String urlString = updatedDataUrl.toASCIIString();
         try {
-            // delete appears to be fine with a uri string, providing that the document was added as below and not added as a collection, sigh
-            new Delete(urlString).execute(context);
-            // add requires a url other wise it appends the working path when using base-uri in a query
-            // add requires the parent directory otherwise it adds the file name to the root and appends the working path when using base-uri in a query
-            // add appears not to have been tested by anybody, I am not sure if I like basex now, but the following works
-            new Add(urlString, null, urlString.replaceFirst("[^/]*$", "")).execute(context);
+            synchronized (databaseLock) {
+                // delete appears to be fine with a uri string, providing that the document was added as below and not added as a collection, sigh
+                new Delete(urlString).execute(context);
+                // add requires a url other wise it appends the working path when using base-uri in a query
+                // add requires the parent directory otherwise it adds the file name to the root and appends the working path when using base-uri in a query
+                // add appears not to have been tested by anybody, I am not sure if I like basex now, but the following works
+                new Add(urlString, null, urlString.replaceFirst("[^/]*$", "")).execute(context);
+            }
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             new ArbilBugCatcher().logError(baseXException);
@@ -144,21 +155,23 @@ public class EntityCollection {
                 progressBar.setIndeterminate(false);
                 progressBar.setValue(0);
             }
-            new Open(databaseName).execute(context);
-            for (URI updatedFile : updatedFileArray) {
-                addFileToDB(updatedFile);
-                if (progressBar != null) {
-                    progressBar.setValue(progressBar.getValue() + 1);
+            synchronized (databaseLock) {
+                new Open(databaseName).execute(context);
+                for (URI updatedFile : updatedFileArray) {
+                    addFileToDB(updatedFile);
+                    if (progressBar != null) {
+                        progressBar.setValue(progressBar.getValue() + 1);
+                    }
                 }
+                if (progressBar != null) {
+                    progressBar.setIndeterminate(true);
+                }
+                new Optimize().execute(context);
+                if (progressBar != null) {
+                    progressBar.setIndeterminate(false);
+                }
+                new Close().execute(context);
             }
-            if (progressBar != null) {
-                progressBar.setIndeterminate(true);
-            }
-            new Optimize().execute(context);
-            if (progressBar != null) {
-                progressBar.setIndeterminate(false);
-            }
-            new Close().execute(context);
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
         }
@@ -169,10 +182,12 @@ public class EntityCollection {
         // update, this has been updated and adding directories as a collection breaks the update and delete methods in basex so we now do each document individualy
 //        createDatabase();
         try {
-            new Open(databaseName).execute(context);
-            addFileToDB(updatedFile);
-            new Optimize().execute(context);
-            new Close().execute(context);
+            synchronized (databaseLock) {
+                new Open(databaseName).execute(context);
+                addFileToDB(updatedFile);
+                new Optimize().execute(context);
+                new Close().execute(context);
+            }
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
         }
@@ -203,18 +218,19 @@ public class EntityCollection {
         SearchResults searchResults = new SearchResults();
         ArrayList<String> resultPaths = new ArrayList<String>();
         try {
-            //for $doc in collection('nl-mpi-kinnate')  where $doc//NAME="Bob /Cox/" return base-uri($doc)
+            synchronized (databaseLock) {
+                //for $doc in collection('nl-mpi-kinnate')  where $doc//NAME="Bob /Cox/" return base-uri($doc)
 //            String query = "for $doc in collection('nl-mpi-kinnate') where $doc//NAME = \"" + namePartString + "\" return base-uri($doc)";
-            QueryProcessor proc = new QueryProcessor(queryString, context);//Emp[contains(Ename,"AR")]
-            Iter iter = proc.iter();
-            Item item;
-            while ((item = iter.next()) != null) {
+                QueryProcessor proc = new QueryProcessor(queryString, context);//Emp[contains(Ename,"AR")]
+                Iter iter = proc.iter();
+                Item item;
+                while ((item = iter.next()) != null) {
 //                System.out.println(item.toJava());
-                resultPaths.add(item.toJava().toString());
-                searchResults.resultCount++;
+                    resultPaths.add(item.toJava().toString());
+                    searchResults.resultCount++;
+                }
+                proc.close();
             }
-            proc.close();
-
             searchResults.statusMessage = "found " + searchResults.resultCount + " records";
         } catch (QueryException exception) {
             new ArbilBugCatcher().logError(exception);
@@ -238,7 +254,10 @@ public class EntityCollection {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifierArray.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            String queryResult = new XQuery(queryString).execute(context);
+            String queryResult;
+            synchronized (databaseLock) {
+                queryResult = new XQuery(queryString).execute(context);
+            }
 //            System.out.println("queryResult: " + queryResult);
             UniqueIdentifierArray identifierArray;
             if (queryResult.length() > 0) {
@@ -273,7 +292,10 @@ public class EntityCollection {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityArray.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            String queryResult = new XQuery(query1String).execute(context);
+            String queryResult;
+            synchronized (databaseLock) {
+                queryResult = new XQuery(query1String).execute(context);
+            }
 //            System.out.println("queryResult: " + queryResult);
             EntityArray foundEntities = (EntityArray) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityArray.class).getValue();
             long queryMils = System.currentTimeMillis() - startTime;
@@ -298,7 +320,10 @@ public class EntityCollection {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            String queryResult = new XQuery(query1String).execute(context);
+            String queryResult;
+            synchronized (databaseLock) {
+                queryResult = new XQuery(query1String).execute(context);
+            }
 //            System.out.println("queryResult: " + queryResult);
             EntityData[] selectedEntity = (EntityData[]) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData[].class).getValue();
             long queryMils = System.currentTimeMillis() - startTime;
@@ -320,7 +345,10 @@ public class EntityCollection {
 //        System.out.println("query1String: " + query1String);
         try {
             long startQueryTime = System.currentTimeMillis();
-            String queryResult = new XQuery(query1String).execute(context);
+            String queryResult;
+            synchronized (databaseLock) {
+                queryResult = new XQuery(query1String).execute(context);
+            }
             long queryMils = System.currentTimeMillis() - startQueryTime;
             System.out.println("Query time: " + queryMils + "ms");
             return queryResult;
@@ -339,7 +367,10 @@ public class EntityCollection {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             long startQueryTime = System.currentTimeMillis();
-            String queryResult = new XQuery(query1String).execute(context);
+            String queryResult;
+            synchronized (databaseLock) {
+                queryResult = new XQuery(query1String).execute(context);
+            }
             long queryMils = System.currentTimeMillis() - startQueryTime;
             System.out.println("Query time: " + queryMils + "ms");
             long startJaxbTime = System.currentTimeMillis();
