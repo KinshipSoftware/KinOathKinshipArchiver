@@ -50,7 +50,7 @@ public class KinSpace {
     public String createWorkspace(@PathParam("workspaceName") String workspaceName) {
         try {
             new HiveManager().createWorkspace(workspaceName);
-            return "created workspace<br><a href=/kinoath-rest/kinoath/kinspace/" + workspaceName + ">" + workspaceName + "</a>" + listWorkSpacesHref;
+            return "created workspace<br><a href=/kinoath-rest/kinoath/kinspace/" + workspaceName + ">view " + workspaceName + "</a>" + listWorkSpacesHref;
         } catch (HiveException exception) {
             return exception.getMessage() + listWorkSpacesHref;
         }
