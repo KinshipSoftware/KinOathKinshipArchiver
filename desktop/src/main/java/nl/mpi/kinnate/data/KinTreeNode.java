@@ -7,6 +7,8 @@ import javax.swing.ImageIcon;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
@@ -20,18 +22,21 @@ import nl.mpi.kinnate.svg.SymbolGraphic;
 public class KinTreeNode extends ArbilNode implements Comparable {
 
     public EntityData entityData;
+    private IndexerParameters indexerParameters;
     DataTypes.RelationType subnodeFilter;
     ArbilNode[] childNodes = null;
     static SymbolGraphic symbolGraphic = new SymbolGraphic();
 
-    public KinTreeNode(EntityData entityData) {
+    public KinTreeNode(EntityData entityData, IndexerParameters indexerParameters) {
         super();
+        this.indexerParameters = indexerParameters;
         this.entityData = entityData;
         this.subnodeFilter = null;
     }
 
-    public KinTreeNode(EntityData entityData, DataTypes.RelationType subnodeFilter) {
+    public KinTreeNode(EntityData entityData, DataTypes.RelationType subnodeFilter, IndexerParameters indexerParameters) {
         super();
+        this.indexerParameters = indexerParameters;
         this.entityData = entityData;
         this.subnodeFilter = subnodeFilter; // subnode filter should be null unless the child nodes are to be filtered
     }
@@ -75,7 +80,13 @@ public class KinTreeNode extends ArbilNode implements Comparable {
             for (EntityRelation entityRelation : entityData.getAllRelations()) {
                 final boolean showFiltered = subnodeFilter == DataTypes.RelationType.ancestor || subnodeFilter == DataTypes.RelationType.descendant;
                 if (subnodeFilter == null || (subnodeFilter == entityRelation.relationType && showFiltered)) {
-                    relationList.add(new KinTreeNode(entityRelation.getAlterNode(), entityRelation.relationType));
+                    EntityData alterEntity = entityRelation.getAlterNode();
+                    if (alterEntity == null) {
+                        // todo: should these enties be cached? or will the entire tree be discarded on redraw?
+                        alterEntity = new EntityCollection().getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
+                        entityRelation.setAlterNode(alterEntity);
+                    }
+                    relationList.add(new KinTreeNode(alterEntity, entityRelation.relationType, indexerParameters));
                 }
             }
             if (entityData.archiveLinkArray != null) {
