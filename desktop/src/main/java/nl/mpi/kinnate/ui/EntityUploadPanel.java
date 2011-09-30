@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.URI;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -31,6 +32,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
     private JButton searchModifiedButton;
     private JButton uploadButton;
     private JButton viewUploadButton;
+    private JButton createWorkspaceButton;
     private JTextField workspaceName;
 //    private JCheckBox createWorkspace;
     private JPasswordField passwordText;
@@ -47,6 +49,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         searchModifiedButton = new JButton("Search Modified Entities");
         uploadButton = new JButton("Upload Selected");
         viewUploadButton = new JButton("View Uploaded");
+        createWorkspaceButton = new JButton("Create Workspace");
         workspaceName = new JTextField();
         workspaceName.addKeyListener(new KeyAdapter() {
 
@@ -73,7 +76,7 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         workspacePanel.setLayout(new BorderLayout());
         workspacePanel.add(new JLabel("Target Workspace Name"), BorderLayout.LINE_START);
         workspacePanel.add(workspaceName, BorderLayout.CENTER);
-//        workspacePanel.add(createWorkspace, BorderLayout.LINE_END);
+        workspacePanel.add(createWorkspaceButton, BorderLayout.LINE_END);
 
         passwordPanel = new JPanel();
         passwordPanel.setLayout(new BorderLayout());
@@ -101,10 +104,12 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
         searchModifiedButton.addActionListener(this);
         uploadButton.addActionListener(this);
         viewUploadButton.addActionListener(this);
+        createWorkspaceButton.addActionListener(this);
         searchNewButton.setActionCommand("searchnew");
         searchModifiedButton.setActionCommand("searchmodified");
         uploadButton.setActionCommand("upload");
         viewUploadButton.setActionCommand("view");
+        createWorkspaceButton.setActionCommand("create");
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -138,6 +143,9 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
             uploadText.append("Error on upload, does the specified workspace exist?\n");
         } else if (e.getActionCommand().equals("view")) {
             GuiHelper.getSingleInstance().openFileInExternalApplication(entityUploader.getWorkspaceUri());
+        } else if (e.getActionCommand().equals("create")) {
+            URI createUri = entityUploader.getCreateUrl(workspaceName.getText());
+            GuiHelper.getSingleInstance().openFileInExternalApplication(createUri);
         }
 
 //        workspaceName.setEnabled(entityUploader.canUpload());
