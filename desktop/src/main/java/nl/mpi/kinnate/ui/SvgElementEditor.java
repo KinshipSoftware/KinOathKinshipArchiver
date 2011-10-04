@@ -12,8 +12,10 @@ import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import nl.mpi.arbil.ui.GuiHelper;
@@ -53,46 +55,47 @@ public class SvgElementEditor extends JPanel {
                     updateValue(svgElement, textArea.getText());
                 }
             });
-//            SpinnerModel model =
-//                    new SpinnerNumberModel(currentYear, //initial value
-//                    currentYear - 100, //min
-//                    currentYear + 100, //max
-//                    1);                //step
-            Color fillColour = Color.BLACK;
-            try {
-                fillColour = Color.decode(svgElement.getAttribute("fill").trim());
-            } catch (NumberFormatException exception) {
-                GuiHelper.linorgBugCatcher.logError(exception);
-            }
-            addColourInput(svgElement, sidePanel, pickerPanel, "fill", fillColour);
-
-            for (final String attribiteName : new String[]{"fill", "font-size", "stroke-width"}) {
-                sidePanel.add(new JLabel(attribiteName));
-                final JTextField textField = new JTextField(svgElement.getAttribute(attribiteName));
-                textField.addFocusListener(new FocusListener() {
-
-                    public void focusGained(FocusEvent e) {
-                    }
-
-                    public void focusLost(FocusEvent e) {
-                        updateValue(svgElement, attribiteName, textField.getText());
-                    }
-                });
-                sidePanel.add(textField);
-            }
+            addColourInput(svgElement, sidePanel, pickerPanel, "fill");
+            addNumberSpinner(svgElement, sidePanel, "font-size", 1, 100);
             outerPanel.add(textArea, BorderLayout.CENTER);
-//            JPanel sindeInnd
             outerPanel.add(pickerWrapperPanel, BorderLayout.LINE_END);
         } else {
-            sidePanel.add(new JLabel("SvgElementEditor"));
-            sidePanel.add(new JLabel(svgElement.getTagName()));
+            addColourInput(svgElement, sidePanel, pickerPanel, "fill");
+            addColourInput(svgElement, sidePanel, pickerPanel, "stroke");
+            addNumberSpinner(svgElement, sidePanel, "stroke-width", 1, 100);
             outerPanel.add(pickerWrapperPanel, BorderLayout.CENTER);
         }
         this.add(new JScrollPane(outerPanel));
         // todo: Ticket #1065 Enable editing of the text and font size of labels in the diagram.
     }
 
-    private void addColourInput(final Element svgElement, JPanel sidePanel, final JPanel pickerPanel, final String attributeString, Color initialColour) {
+    private void addNumberSpinner(final Element svgElement, JPanel sidePanel, final String attributeString, int minValue, int maxValue) {
+        int initialValue = 0;
+        try {
+            initialValue = Integer.decode(svgElement.getAttribute(attributeString).trim());
+        } catch (NumberFormatException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+        }
+        sidePanel.add(new JLabel(attributeString));
+        SpinnerModel spinnerModel =
+                new SpinnerNumberModel(initialValue, minValue, maxValue, 1);
+        final JSpinner numberSpinner = new JSpinner(spinnerModel);
+        numberSpinner.addChangeListener(new ChangeListener() {
+
+            public void stateChanged(ChangeEvent e) {
+                updateValue(svgElement, attributeString, numberSpinner.getValue().toString());
+            }
+        });
+        sidePanel.add(numberSpinner);
+    }
+
+    private void addColourInput(final Element svgElement, JPanel sidePanel, final JPanel pickerPanel, final String attributeString) {
+        Color initialColour = Color.white;
+        try {
+            initialColour = Color.decode(svgElement.getAttribute(attributeString).trim());
+        } catch (NumberFormatException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+        }
         sidePanel.add(new JLabel(attributeString));
         final JPanel colourSquare = new JPanel();
         colourSquare.setBackground(initialColour);
