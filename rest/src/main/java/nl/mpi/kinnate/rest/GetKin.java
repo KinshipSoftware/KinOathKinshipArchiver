@@ -41,7 +41,7 @@ public class GetKin {
 
     @GET
     @Produces("text/html")
-    @Path("/view")
+    @Path("/view") // todo: Ticket #1103 view fails
     public String getHtml(@QueryParam("kts") List<String> kintypeStrings) {
         StringBuilder stringBuilder = new StringBuilder();
         EntityData[] entiryData = getEntityNodes(kintypeStrings);
@@ -78,6 +78,7 @@ public class GetKin {
         PedigreePackageExport packageExport = new PedigreePackageExport();
         return packageExport.createCsvContents(getEntityNodes(kintypeStrings));
     }
+    // todo: Ticket #1088 Enable kin type string queries to be done via the rest interface (currently only transient kin type strings are enabled).
 //    @Path("/kinput")
 //    @Path("/kinstruct")
 //    @Path("/kinhive")
