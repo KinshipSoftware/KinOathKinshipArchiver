@@ -115,6 +115,7 @@ public class KinTypeStringConverter extends GraphSorter {
                     consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
 
                     if (consumableString.startsWith("=[")) {
+                        // todo: Ticket #1087 Multiple query terms should be possible in the kin type string queries. Eg: Ef=[Kundarr]PM=[Louise] (Based on Joe's data).
                         int highlightPosition = initialLength - consumableString.length();
                         String highlightMessage = "Query: ";
                         consumableString = consumableString.substring("=".length());
