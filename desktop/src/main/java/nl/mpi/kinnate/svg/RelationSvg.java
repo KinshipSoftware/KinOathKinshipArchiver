@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.svg;
 
+import java.awt.Point;
 import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -49,7 +50,7 @@ public class RelationSvg {
         }
     }
 
-    protected void setPolylinePointsAttribute(Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    protected void setPolylinePointsAttribute(LineLookUpTable lineLookUpTable, String lineIdString, Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float midY = (egoY + alterY) / 2;
         // todo: Ticket #1064 when an entity is above one that it should be below the line should make a zigzag to indicate it
         switch (relationType) {
@@ -82,11 +83,21 @@ public class RelationSvg {
 //                midY = alterY + vSpacing / 2;
 //            }
 //        }
-        targetNode.setAttribute("points",
-                egoX + "," + egoY + " "
-                + egoX + "," + midY + " "
-                + alterX + "," + midY + " "
-                + alterX + "," + alterY);
+        Point[] initialPointsList = new Point[]{
+            new Point((int) egoX, (int) egoY),
+            new Point((int) egoX, (int) midY),
+            new Point((int) alterX, (int) midY),
+            new Point((int) alterX, (int) alterY)
+        };
+        Point[] adjustedPointsList = lineLookUpTable.adjustLineToObstructions(lineIdString, initialPointsList);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Point currentPoint : adjustedPointsList) {
+            stringBuilder.append(currentPoint.x);
+            stringBuilder.append(",");
+            stringBuilder.append(currentPoint.y);
+            stringBuilder.append(" ");
+        }
+        targetNode.setAttribute("points", stringBuilder.toString());
     }
 
     protected void setPathPointsAttribute(Element targetNode, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
@@ -263,7 +274,7 @@ public class RelationSvg {
                 //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
                 Element squareLinkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
 
-                setPolylinePointsAttribute(squareLinkLine, graphLinkNode.relationType, vSpacing, fromX, fromY, toX, toY);
+                setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineIdString, squareLinkLine, graphLinkNode.relationType, vSpacing, fromX, fromY, toX, toY);
 
                 squareLinkLine.setAttribute("fill", "none");
                 squareLinkLine.setAttribute("stroke", "grey");
@@ -340,7 +351,7 @@ public class RelationSvg {
 
                         if ("polyline".equals(relationLineElement.getLocalName())) {
                             //System.out.println("polyline to update: " + lineElementId);
-                            setPolylinePointsAttribute(relationLineElement, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
+                            setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineElementId, relationLineElement, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
                         }
                         if ("path".equals(relationLineElement.getLocalName())) {
                             //System.out.println("path to update: " + relationLineElement.getLocalName());
