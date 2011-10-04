@@ -91,7 +91,10 @@ public class SvgElementEditor extends JPanel {
     private void addColourInput(final Element svgElement, JPanel sidePanel, final JPanel pickerPanel, final String attributeString) {
         Color initialColour = Color.white;
         try {
-            initialColour = Color.decode(svgElement.getAttribute(attributeString).trim());
+            final String attributeValue = svgElement.getAttribute(attributeString).trim();
+            if (!attributeValue.equals("none")) {
+                initialColour = Color.decode(attributeValue);
+            }
         } catch (NumberFormatException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
         }
@@ -110,6 +113,8 @@ public class SvgElementEditor extends JPanel {
                 buttonPanel.add(cancelButton);
                 final JButton revertButton = new JButton("Revert");
                 buttonPanel.add(revertButton);
+                final JButton noneButton = new JButton("None (Transparent)");
+                buttonPanel.add(noneButton);
                 final JButton okButton = new JButton("OK");
                 buttonPanel.add(okButton);
                 cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -127,6 +132,14 @@ public class SvgElementEditor extends JPanel {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         colourSquare.setBackground(revertColour);
                         colourChooser.setColor(revertColour);
+                    }
+                });
+                noneButton.addActionListener(new java.awt.event.ActionListener() {
+
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        updateValue(svgElement, attributeString, "none");
+                        colourSquare.setBackground(Color.WHITE);
+//                        colourChooser.setColor(Color.WHITE);
                     }
                 });
                 okButton.addActionListener(new java.awt.event.ActionListener() {
