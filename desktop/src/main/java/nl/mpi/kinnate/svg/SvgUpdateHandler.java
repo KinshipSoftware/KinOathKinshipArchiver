@@ -147,6 +147,7 @@ public class SvgUpdateHandler {
         float hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing();
 //        for (Node currentRelation = relationsGroup.getFirstChild(); currentRelation != null; currentRelation = currentRelation.getNextSibling()) {
         for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
+            String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
             float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
             // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
@@ -162,14 +163,14 @@ public class SvgUpdateHandler {
             highlightBackgroundLine.setAttribute("fill", "none");
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
             highlightBackgroundLine.setAttribute("stroke", "white");
-            new RelationSvg().setPolylinePointsAttribute(highlightBackgroundLine, relationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
+            new RelationSvg().setPolylinePointsAttribute(graphPanel.lineLookUpTable, dragLineElementId, highlightBackgroundLine, relationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
             relationHighlightGroup.appendChild(highlightBackgroundLine);
             // add a blue dotted line
             Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
             highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
             highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
-            new RelationSvg().setPolylinePointsAttribute(highlightLine, relationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
+            new RelationSvg().setPolylinePointsAttribute(graphPanel.lineLookUpTable, dragLineElementId, highlightLine, relationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
             highlightLine.setAttribute("stroke", "blue");
             highlightLine.setAttribute("stroke-dasharray", "3");
             highlightLine.setAttribute("stroke-dashoffset", "0");
@@ -566,7 +567,6 @@ public class SvgUpdateHandler {
 //                    } else {
                     graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
 //                    }
-                    Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
                     Element labelText;
                     switch (graphicsType) {
                         case Circle:
@@ -614,8 +614,14 @@ public class SvgUpdateHandler {
                     labelText.setAttribute("id", labelId.getAttributeIdentifier());
                     labelText.setAttribute("transform", "translate(" + Float.toString(labelPosition[0]) + ", " + Float.toString(labelPosition[1]) + ")");
 //
-                    // todo: put this into a geometry group and allow for selection and drag
-                    labelGroup.appendChild(labelText);
+                    // put this into the geometry group or the label group depending on its type so that labels sit above entitis and graphics sit below entities
+                    if (graphicsType.equals(GraphicsTypes.Label)) {
+                        Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
+                        labelGroup.appendChild(labelText);
+                    } else {
+                        Element graphicsGroup = graphPanel.doc.getElementById("GraphicsGroup");
+                        graphicsGroup.appendChild(labelText);
+                    }
                     graphPanel.entitySvg.entityPositions.put(labelId, labelPosition);
 //                    graphPanel.doc.getDocumentElement().appendChild(labelText);
                     ((EventTarget) labelText).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
@@ -642,6 +648,7 @@ public class SvgUpdateHandler {
 
     public void drawEntities() { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
         graphPanel.dataStoreSvg.graphData.setPadding(graphPanel.graphPanelSize);
+        graphPanel.lineLookUpTable = new LineLookUpTable();
         int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);
         int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); //dataStoreSvg.graphData.gridWidth);
 //        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
