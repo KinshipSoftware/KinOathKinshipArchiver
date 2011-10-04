@@ -66,7 +66,6 @@ public class SvgElementEditor extends JPanel {
             outerPanel.add(pickerWrapperPanel, BorderLayout.CENTER);
         }
         this.add(new JScrollPane(outerPanel));
-        // todo: Ticket #1065 Enable editing of the text and font size of labels in the diagram.
     }
 
     private void addNumberSpinner(final Element svgElement, JPanel sidePanel, final String attributeString, int minValue, int maxValue) {
