@@ -36,10 +36,10 @@ public class KinType {
         if (entityRelation.getAlterNode().isEgo != this.isEgoType()) {
             return false;
         }
-        if (!relationType.equals(entityRelation.relationType)) {
+        if (relationType != null && !relationType.equals(entityRelation.relationType)) {
             return false;
         }
-        if (symbolType == EntityData.SymbolType.square) {
+        if (symbolType == null || symbolType == EntityData.SymbolType.square) {
             return true; // it is better to return all the relations regardless of symbol in this case
             // if the symbol is square then either circle or triangle are matches (square is matched later)
 //            if (EntityData.SymbolType.circle.name().equals(entityRelation.getAlterNode().getSymbolType())) {
@@ -111,6 +111,6 @@ public class KinType {
         // non ego types to be used to start a kin type string but cannot be used except at the beginning
         new KinType("m", DataTypes.RelationType.none, EntityData.SymbolType.triangle, "Male"),
         new KinType("f", DataTypes.RelationType.none, EntityData.SymbolType.circle, "Female"),
-        new KinType("x", DataTypes.RelationType.none, EntityData.SymbolType.square, "Undefined")
-    };
+        new KinType("x", DataTypes.RelationType.none, EntityData.SymbolType.square, "Undefined"),
+        new KinType("*", null, null, "Any Relation"),};
 }
