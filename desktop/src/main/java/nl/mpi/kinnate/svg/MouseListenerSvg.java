@@ -185,6 +185,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     protected void updateSelectionDisplay() {
         graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
         // update the table selection
+        // todo: #1099	Labels should show the blue highlight
         if (graphPanel.arbilTableModel != null) {
             graphPanel.arbilTableModel.removeAllArbilDataNodeRows();
             try {
@@ -194,7 +195,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     remainingEditors.remove(currentSelectedId);
                     if (currentSelectedId.isGraphicsIdentifier() && !shownGraphicsEditors.containsKey(entityToToggle)) {
                         Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());
-                        SvgElementEditor elementEditor = new SvgElementEditor(graphicsElement);
+                        // todo: #1100	Show editors for all selected items at once.
+                        SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement);
                         graphPanel.editorHidePane.addTab("Graphics Editor", elementEditor);
                         graphPanel.editorHidePane.setSelectedComponent(elementEditor);
                         shownGraphicsEditors.put(entityToToggle, elementEditor);
