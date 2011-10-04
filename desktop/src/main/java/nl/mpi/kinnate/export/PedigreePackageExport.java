@@ -51,6 +51,7 @@ public class PedigreePackageExport {
     }
 
     public String createCsvContents(EntityData[] entityDataArray) {
+        // todo: Ticket #1104 this is producing tab delimited not csv, the format and the suffix should match and both txt and csv should be available
         ArrayList<UniqueIdentifier> allIdArray = new ArrayList<UniqueIdentifier>();
         allIdArray.add(orphanId); // in the pedigree package a non existet entity has the id of 0 so we must keep that free
         StringBuilder stringBuilder = new StringBuilder();
