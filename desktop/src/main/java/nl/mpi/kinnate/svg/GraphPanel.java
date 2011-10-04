@@ -51,6 +51,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private boolean requiresSave = false;
     private File svgFile = null;
     protected GraphPanelSize graphPanelSize;
+    protected LineLookUpTable lineLookUpTable;
     protected ArrayList<UniqueIdentifier> selectedGroupId;
     protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     public DataStoreSvg dataStoreSvg;
@@ -153,17 +154,27 @@ public class GraphPanel extends JPanel implements SavePanel {
             requiresSave = false;
             entitySvg.readEntityPositions(doc.getElementById("EntityGroup"));
             entitySvg.readEntityPositions(doc.getElementById("LabelsGroup"));
+            entitySvg.readEntityPositions(doc.getElementById("GraphicsGroup"));
         } catch (IOException ioe) {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
+        Element svgRoot = doc.getDocumentElement();
+        // make sure the diagram group exisits
+        Element diagramElement = doc.getElementById("DiagramGroup");
+        if (diagramElement == null) {
+            diagramElement = doc.createElementNS(svgNameSpace, "g");
+            diagramElement.setAttribute("id", "DiagramGroup");
+            svgRoot.appendChild(diagramElement);
+        }
         // set up the mouse listeners that were lost in the save/re-open process
-        for (String groupForMouseListener : new String[]{"EntityGroup", "LabelsGroup"}) {
+        // add any groups that are required and add them in the required order
+        Element previousElement = null;
+        for (String groupForMouseListener : new String[]{"LabelsGroup", "EntityGroup", "GraphicsGroup"}) {
             Element parentElement = doc.getElementById(groupForMouseListener);
             if (parentElement == null) {
-                Element requiredGroup = doc.createElementNS(svgNameSpace, "g");
-                requiredGroup.setAttribute("id", groupForMouseListener);
-                Element svgRoot = doc.getDocumentElement();
-                svgRoot.appendChild(requiredGroup);
+                parentElement = doc.createElementNS(svgNameSpace, "g");
+                parentElement.setAttribute("id", groupForMouseListener);
+                diagramElement.insertBefore(parentElement, previousElement);
             } else {
                 Node currentNode = parentElement.getFirstChild();
                 while (currentNode != null) {
@@ -171,6 +182,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                     currentNode = currentNode.getNextSibling();
                 }
             }
+            previousElement = parentElement;
         }
         dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc));
         if (dataStoreSvg.graphData == null) {
@@ -212,6 +224,10 @@ public class GraphPanel extends JPanel implements SavePanel {
             diagramGroup = doc.createElementNS(svgNameSpace, "g");
             diagramGroup.setAttribute("id", "DiagramGroup");
             doc.getDocumentElement().appendChild(diagramGroup);
+            // add the graphics group below the entities and relations
+            Element graphicsGroup = doc.createElementNS(svgNameSpace, "g");
+            graphicsGroup.setAttribute("id", "GraphicsGroup");
+            diagramGroup.appendChild(graphicsGroup);
             // add the relation symbols in a group below the relation lines
             relationGroupNode = doc.createElementNS(svgNameSpace, "g");
             relationGroupNode.setAttribute("id", "RelationGroup");
