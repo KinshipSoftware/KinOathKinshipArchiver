@@ -173,6 +173,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         }
         this.setLayout(new BorderLayout());
 
+        // todo: #1101	The metadata pane should always be available rather then for specific diagrams.
         ArbilTableModel imdiTableModel = new ArbilTableModel();
         progressBar.setVisible(false);
         graphPanel.add(progressBar, BorderLayout.PAGE_START);
