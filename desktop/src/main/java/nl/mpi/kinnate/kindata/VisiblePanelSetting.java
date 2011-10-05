@@ -17,7 +17,8 @@ public class VisiblePanelSetting {
         KinTypeStrings,
         KinTerms,
         ArchiveLinker,
-        MetaData,
+//        @Deprecated
+//        MetaData,
         IndexerSettings,
         DiagramTree,
         EntitySearch
