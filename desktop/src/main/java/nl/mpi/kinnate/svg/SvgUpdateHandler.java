@@ -2,8 +2,7 @@ package nl.mpi.kinnate.svg;
 
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
-import java.io.File;
-import nl.mpi.arbil.data.ArbilComponentBuilder;
+import java.util.HashSet;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -40,6 +39,7 @@ public class SvgUpdateHandler {
     private float[][] dragRemainders = null;
     private boolean resizeRequired = false;
     protected RelationDragHandle relationDragHandle = null;
+    private HashSet<UniqueIdentifier> highlightedIdentifiers = new HashSet<UniqueIdentifier>();
 
     public enum GraphicsTypes {
 
@@ -84,43 +84,45 @@ public class SvgUpdateHandler {
             Element relationsGroup = graphPanel.doc.getElementById("RelationGroup");
             for (Node currentRelation = relationsGroup.getFirstChild(); currentRelation != null; currentRelation = currentRelation.getNextSibling()) {
                 Node dataElement = currentRelation.getFirstChild();
-                NamedNodeMap dataAttributes = dataElement.getAttributes();
-                if (dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "lineType").getNodeValue().equals("sanguineLine")) {
-                    Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
-                    if (graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue())) || graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue()))) {
-                        // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
+                if (dataElement != null && dataElement.hasAttributes()) {
+                    NamedNodeMap dataAttributes = dataElement.getAttributes();
+                    if (dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "lineType").getNodeValue().equals("sanguineLine")) {
+                        Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
+                        if (graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue())) || graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue()))) {
+                            // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
 //                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
 //                                            useNode.setAttributeNS(null, "stroke", "blue");
 //                                            relationHighlightGroup.appendChild(useNode);
 
-                        // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
-                        // as a comprimise these highlighs can be removed when a node is dragged
-                        // add a white background
-                        Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-                        highlightBackgroundLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
-                        highlightBackgroundLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
-                        highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
-                        highlightBackgroundLine.setAttribute("stroke", "white");
-                        relationHighlightGroup.appendChild(highlightBackgroundLine);
-                        // add a blue dotted line
-                        Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-                        highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
-                        highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
-                        highlightLine.setAttribute("points", polyLineElement.getAttribute("points"));
-                        highlightLine.setAttribute("stroke", "blue");
-                        highlightLine.setAttribute("stroke-dasharray", "3");
-                        highlightLine.setAttribute("stroke-dashoffset", "0");
-                        relationHighlightGroup.appendChild(highlightLine);
+                            // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
+                            // as a comprimise these highlighs can be removed when a node is dragged
+                            // add a white background
+                            Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                            highlightBackgroundLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
+                            highlightBackgroundLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
+                            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
+                            highlightBackgroundLine.setAttribute("stroke", "white");
+                            relationHighlightGroup.appendChild(highlightBackgroundLine);
+                            // add a blue dotted line
+                            Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                            highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
+                            highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
+                            highlightLine.setAttribute("points", polyLineElement.getAttribute("points"));
+                            highlightLine.setAttribute("stroke", "blue");
+                            highlightLine.setAttribute("stroke-dasharray", "3");
+                            highlightLine.setAttribute("stroke-dashoffset", "0");
+                            relationHighlightGroup.appendChild(highlightLine);
 
-                        // try changing the target lines attributes (does not get updated maybe due to the 'use' node rendering)
+                            // try changing the target lines attributes (does not get updated maybe due to the 'use' node rendering)
 //                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("blue");
 //                                            polyLineElement.setAttributeNS(null, "stroke", "blue");
 //                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth * 2));
-                    } else {
+                        } else {
 //                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("green");
 //                                            polyLineElement.setAttributeNS(null, "stroke", "grey");
 //                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+                        }
                     }
                 }
             }
@@ -230,57 +232,69 @@ public class SvgUpdateHandler {
 //                        for (String groupString : new String[]{"EntityGroup", "LabelsGroup"}) {
 //                            Element entityGroup = graphPanel.doc.getElementById(groupString);
                         {
-                            Element entityGroup = graphPanel.doc.getElementById("EntityGroup");
-                            for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
-                                if ("g".equals(currentChild.getLocalName())) {
-                                    Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
-                                    if (idAttrubite != null) {
-                                        UniqueIdentifier entityId = new UniqueIdentifier(idAttrubite.getTextContent());
+                            boolean isLeadSelection = true;
+                            for (UniqueIdentifier currentIdentifier : highlightedIdentifiers.toArray(new UniqueIdentifier[]{})) {
+                                // remove old highlights but leave existing selections
+                                if (!graphPanel.selectedGroupId.contains(currentIdentifier)) {
+                                    Element existingHighlight = graphPanel.doc.getElementById("highlight_" + currentIdentifier.getAttributeIdentifier());
+                                    existingHighlight.getParentNode().removeChild(existingHighlight);
+                                    highlightedIdentifiers.remove(currentIdentifier);
+                                }
+                            }
+                            for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
+                                Element selectedGroup = graphPanel.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
+                                Element existingHighlight = graphPanel.doc.getElementById("highlight_" + uniqueIdentifier.getAttributeIdentifier());
+//                            for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
+//                                if ("g".equals(currentChild.getLocalName())) {
+//                                    Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
+//                                    if (idAttrubite != null) {
+//                                        UniqueIdentifier entityId = new UniqueIdentifier(idAttrubite.getTextContent());
 //                                        System.out.println("group id: " + entityId.getAttributeIdentifier());
-                                        Node existingHighlight = null;
-                                        // find any existing highlight
-                                        for (Node subGoupNode = currentChild.getFirstChild(); subGoupNode != null; subGoupNode = subGoupNode.getNextSibling()) {
-                                            if ("g".equals(subGoupNode.getLocalName())) {
-                                                Node subGroupIdAttrubite = subGoupNode.getAttributes().getNamedItem("id");
-                                                if (subGroupIdAttrubite != null) {
-                                                    if ("highlight".equals(subGroupIdAttrubite.getTextContent())) {
-                                                        existingHighlight = subGoupNode;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        if (!graphPanel.selectedGroupId.contains(entityId)) {
-                                            // remove all old highlights
-                                            if (existingHighlight != null) {
-                                                currentChild.removeChild(existingHighlight);
-                                            }
-                                            // add the current highlights
-                                        } else {
-                                            if (existingHighlight == null) {
+//                                        Node existingHighlight = null;
+                                // find any existing highlight
+//                                        for (Node subGoupNode = currentChild.getFirstChild(); subGoupNode != null; subGoupNode = subGoupNode.getNextSibling()) {
+//                                            if ("g".equals(subGoupNode.getLocalName())) {
+//                                                Node subGroupIdAttrubite = subGoupNode.getAttributes().getNamedItem("id");
+//                                                if (subGroupIdAttrubite != null) {
+//                                                    if ("highlight".equals(subGroupIdAttrubite.getTextContent())) {
+//                                                        existingHighlight = subGoupNode;
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
+//                                        if (!graphPanel.selectedGroupId.contains(entityId)) {
+                                // remove all old highlights
+//                                            if (existingHighlight != null) {
+//                                                currentChild.removeChild(existingHighlight);
+//                                            }
+                                // add the current highlights
+//                                        } else {
+                                if (existingHighlight == null) {
 //                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                                                SVGRect bbox = ((SVGLocatable) currentChild).getBBox();
+                                    SVGRect bbox = ((SVGLocatable) selectedGroup).getBBox();
 //                                        System.out.println("bbox X: " + bbox.getX());
 //                                        System.out.println("bbox Y: " + bbox.getY());
 //                                        System.out.println("bbox W: " + bbox.getWidth());
 //                                        System.out.println("bbox H: " + bbox.getHeight());
-                                                Element highlightGroupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
-                                                highlightGroupNode.setAttribute("id", "highlight");
-                                                Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
-                                                int paddingDistance = 20;
-                                                symbolNode.setAttribute("x", Float.toString(bbox.getX() - paddingDistance));
-                                                symbolNode.setAttribute("y", Float.toString(bbox.getY() - paddingDistance));
-                                                symbolNode.setAttribute("width", Float.toString(bbox.getWidth() + paddingDistance * 2));
-                                                symbolNode.setAttribute("height", Float.toString(bbox.getHeight() + paddingDistance * 2));
-                                                symbolNode.setAttribute("fill", "none");
-                                                symbolNode.setAttribute("stroke-width", "1");
-                                                if (graphPanel.selectedGroupId.indexOf(entityId) == 0) {
-                                                    symbolNode.setAttribute("stroke-dasharray", "3");
-                                                    symbolNode.setAttribute("stroke-dashoffset", "0");
-                                                } else {
-                                                    symbolNode.setAttribute("stroke-dasharray", "6");
-                                                    symbolNode.setAttribute("stroke-dashoffset", "0");
-                                                }
-                                                symbolNode.setAttribute("stroke", "blue");
+                                    Element highlightGroupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+                                    highlightGroupNode.setAttribute("id", "highlight_" + uniqueIdentifier.getAttributeIdentifier());
+                                    Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
+                                    int paddingDistance = 20;
+                                    symbolNode.setAttribute("x", Float.toString(bbox.getX() - paddingDistance));
+                                    symbolNode.setAttribute("y", Float.toString(bbox.getY() - paddingDistance));
+                                    symbolNode.setAttribute("width", Float.toString(bbox.getWidth() + paddingDistance * 2));
+                                    symbolNode.setAttribute("height", Float.toString(bbox.getHeight() + paddingDistance * 2));
+                                    symbolNode.setAttribute("fill", "none");
+                                    symbolNode.setAttribute("stroke-width", "1");
+                                    //if (graphPanel.selectedGroupId.indexOf(entityId) == 0) {
+                                    if (isLeadSelection) {
+                                        symbolNode.setAttribute("stroke-dasharray", "3");
+                                        symbolNode.setAttribute("stroke-dashoffset", "0");
+                                    } else {
+                                        symbolNode.setAttribute("stroke-dasharray", "6");
+                                        symbolNode.setAttribute("stroke-dashoffset", "0");
+                                    }
+                                    symbolNode.setAttribute("stroke", "blue");
 //                                                if (graphPanel.dataStoreSvg.highlightRelationLines) {
 //                                                    // add highlights for relation lines
 //                                                    Element relationsGroup = graphPanel.doc.getElementById("RelationGroup");
@@ -302,17 +316,23 @@ public class SvgUpdateHandler {
 //                                                        }
 //                                                    }
 //                                                }
-                                                if (((Element) currentChild).getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path").length() > 0) {
-                                                    addRelationDragHandles(highlightGroupNode, bbox, paddingDistance);
-                                                }
-                                                highlightGroupNode.appendChild(symbolNode);
-                                                currentChild.appendChild(highlightGroupNode);
-                                            }
-                                        }
+                                    if (((Element) selectedGroup).getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path").length() > 0) {
+                                        addRelationDragHandles(highlightGroupNode, bbox, paddingDistance);
                                     }
+                                    highlightGroupNode.appendChild(symbolNode);
+                                    if ("g".equals(selectedGroup.getLocalName())) {
+                                        selectedGroup.appendChild(highlightGroupNode);
+                                    } else {
+                                        highlightGroupNode.setAttribute("transform", selectedGroup.getAttribute("transform"));
+                                        selectedGroup.getParentNode().appendChild(highlightGroupNode);
+                                    }
+                                    highlightedIdentifiers.add(uniqueIdentifier);
+//                                            }
+//                                        }
                                 }
+                                isLeadSelection = false;
                             }
-                            updateSanguineHighlights(entityGroup);
+                            updateSanguineHighlights(graphPanel.doc.getElementById("EntityGroup"));
                         }
                     }
                     // Em:1:FMDH:1:
@@ -572,13 +592,13 @@ public class SvgUpdateHandler {
                         case Circle:
                             labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
                             labelText.setAttribute("r", "100");
-                            labelText.setAttribute("fill", "none");
-                            labelText.setAttribute("stroke", "black");
+                            labelText.setAttribute("fill", "#ffffff");
+                            labelText.setAttribute("stroke", "#000000");
                             labelText.setAttribute("stroke-width", "2");
                             break;
                         case Label:
                             labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
-                            labelText.setAttribute("fill", "black");
+                            labelText.setAttribute("fill", "#000000");
                             labelText.setAttribute("stroke-width", "0");
                             labelText.setAttribute("font-size", "28");
                             Text textNode = graphPanel.doc.createTextNode("Label");
@@ -591,8 +611,8 @@ public class SvgUpdateHandler {
                             labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
                             labelText.setAttribute("width", "100");
                             labelText.setAttribute("height", "100");
-                            labelText.setAttribute("fill", "none");
-                            labelText.setAttribute("stroke", "black");
+                            labelText.setAttribute("fill", "#ffffff");
+                            labelText.setAttribute("stroke", "#000000");
                             labelText.setAttribute("stroke-width", "2");
                             break;
                         default:
