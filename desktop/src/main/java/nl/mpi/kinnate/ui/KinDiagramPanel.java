@@ -169,7 +169,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch);
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
+//            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
         }
         this.setLayout(new BorderLayout());
 
@@ -201,7 +201,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         //HidePane indexParamHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
         //advancedPanel.add(indexParamHidePane, BorderLayout.LINE_END);
 
-        HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 0);
+        HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 150);
 
         KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler(this);
         graphPanel.setTransferHandler(dragTransferHandler);
@@ -214,34 +214,37 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
 
-        graphPanel.setArbilTableModel(imdiTableModel, tableHidePane);
+        graphPanel.setArbilTableModel(tableScrollPane, imdiTableModel, tableHidePane);
 
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
-            switch (panelSetting.getPanelType()) {
-                case ArchiveLinker:
-                    panelSetting.setTargetPanel(kinTermHidePane, new ArchiveEntityLinkerPanel(imdiTable, dragTransferHandler), "Archive Linker");
-                    break;
-                case DiagramTree:
-                    panelSetting.setTargetPanel(egoSelectionHidePane, egoSelectionPanel, "Diagram Tree");
-                    break;
-                case EntitySearch:
-                    panelSetting.setTargetPanel(kinTermHidePane, entitySearchPanel, "Search Entities");
-                    break;
-                case IndexerSettings:
-                    panelSetting.setTargetPanel(kinTypeHidePane, indexerParametersPanel, "Indexer Parameters");
-                    break;
-                case KinTerms:
-                    panelSetting.setTargetPanel(kinTermHidePane, kinTermPanel, "Kin Terms");
-                    break;
-                case KinTypeStrings:
-                    panelSetting.setTargetPanel(kinTypeHidePane, new JScrollPane(kinTypeStringInput), "Kin Type Strings");
-                    break;
-                case MetaData:
-                    panelSetting.setTargetPanel(tableHidePane, tableScrollPane, "Metadata");
-                    break;
+            if (panelSetting.getPanelType() != null) {
+                switch (panelSetting.getPanelType()) {
+                    case ArchiveLinker:
+                        panelSetting.setTargetPanel(kinTermHidePane, new ArchiveEntityLinkerPanel(imdiTable, dragTransferHandler), "Archive Linker");
+                        break;
+                    case DiagramTree:
+                        panelSetting.setTargetPanel(egoSelectionHidePane, egoSelectionPanel, "Diagram Tree");
+                        break;
+                    case EntitySearch:
+                        panelSetting.setTargetPanel(kinTermHidePane, entitySearchPanel, "Search Entities");
+                        break;
+                    case IndexerSettings:
+                        panelSetting.setTargetPanel(kinTypeHidePane, indexerParametersPanel, "Indexer Parameters");
+                        break;
+                    case KinTerms:
+                        panelSetting.setTargetPanel(kinTermHidePane, kinTermPanel, "Kin Terms");
+                        break;
+                    case KinTypeStrings:
+                        panelSetting.setTargetPanel(kinTypeHidePane, new JScrollPane(kinTypeStringInput), "Kin Type Strings");
+                        break;
+//                case MetaData:
+//                    panelSetting.setTargetPanel(tableHidePane, tableScrollPane, "Metadata");
+//                    break;
+                }
             }
         }
-        tableHidePane.toggleHiddenState(); // put the metadata table plane into the closed state
+        tableHidePane.setVisible(false);
+//        tableHidePane.toggleHiddenState(); // put the metadata table plane into the closed state
         kinGraphPanel.add(kinTypeHidePane, BorderLayout.PAGE_START);
         kinGraphPanel.add(egoSelectionHidePane, BorderLayout.LINE_START);
         kinGraphPanel.add(graphPanel, BorderLayout.CENTER);
