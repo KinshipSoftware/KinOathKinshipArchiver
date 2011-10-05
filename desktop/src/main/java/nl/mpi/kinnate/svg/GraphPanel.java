@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.xml.parsers.DocumentBuilderFactory;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.ui.ArbilTableModel;
@@ -47,6 +48,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     protected JSVGCanvas svgCanvas;
     protected SVGDocument doc;
     protected ArbilTableModel arbilTableModel;
+    protected JScrollPane tableScrollPane;
     protected HidePane editorHidePane;
     private boolean requiresSave = false;
     private File svgFile = null;
@@ -138,7 +140,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        zoomAffineTransform.concatenate(scaleTransform);
 //        svgCanvas.setRenderingTransform(zoomAffineTransform);
 //    }
-    public void setArbilTableModel(ArbilTableModel arbilTableModelLocal, HidePane editorHidePane) {
+    public void setArbilTableModel(JScrollPane tableScrollPane, ArbilTableModel arbilTableModelLocal, HidePane editorHidePane) {
+        this.tableScrollPane = tableScrollPane;
         this.editorHidePane = editorHidePane;
         arbilTableModel = arbilTableModelLocal;
     }
