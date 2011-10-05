@@ -7,6 +7,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
@@ -63,7 +64,7 @@ public class SvgElementEditor extends JPanel {
             addColourInput(svgElement, sidePanel, pickerPanel, "fill");
             addColourInput(svgElement, sidePanel, pickerPanel, "stroke");
             addNumberSpinner(svgElement, sidePanel, "stroke-width", 1, 100);
-            outerPanel.add(pickerWrapperPanel, BorderLayout.CENTER);
+            outerPanel.add(pickerWrapperPanel, BorderLayout.LINE_END);
         }
         this.add(new JScrollPane(outerPanel));
     }
@@ -109,6 +110,7 @@ public class SvgElementEditor extends JPanel {
                 final JColorChooser colourChooser = new JColorChooser(colourSquare.getBackground());
                 final Color revertColour = colourSquare.getBackground();
                 final JPanel buttonPanel = new JPanel();
+                buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
                 final JButton cancelButton = new JButton("Cancel");
                 buttonPanel.add(cancelButton);
                 final JButton revertButton = new JButton("Revert");
@@ -132,6 +134,7 @@ public class SvgElementEditor extends JPanel {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         colourSquare.setBackground(revertColour);
                         colourChooser.setColor(revertColour);
+                        updateValue(svgElement, attributeString, "#" + Integer.toHexString(colourChooser.getColor().getRGB()).substring(2));
                     }
                 });
                 noneButton.addActionListener(new java.awt.event.ActionListener() {
@@ -160,8 +163,8 @@ public class SvgElementEditor extends JPanel {
                         updateValue(svgElement, attributeString, "#" + Integer.toHexString(colourChooser.getColor().getRGB()).substring(2));
                     }
                 });
-                pickerPanel.add(colourChooser, BorderLayout.CENTER);
-                pickerPanel.add(buttonPanel, BorderLayout.PAGE_START);
+                pickerPanel.add(colourChooser.getChooserPanels()[0], BorderLayout.CENTER);
+                pickerPanel.add(buttonPanel, BorderLayout.LINE_END);
                 revalidate();
                 repaint();
             }
