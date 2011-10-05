@@ -306,6 +306,10 @@ public class EntitySvg {
 
     public float[] moveEntity(GraphPanel graphPanel, UniqueIdentifier entityId, float shiftXfloat, float shiftYfloat, boolean snapToGrid, boolean allRealtionsSelected) {
         Element entitySymbol = graphPanel.doc.getElementById(entityId.getAttributeIdentifier());
+        Element highlightGroup = null;
+        if (entityId.isGraphicsIdentifier()) {
+            highlightGroup = graphPanel.doc.getElementById("highlight_" + entityId.getAttributeIdentifier());
+        }
         float remainderAfterSnapX = 0;
         float remainderAfterSnapY = 0;
         double scaleFactor = 1;
@@ -362,7 +366,11 @@ public class EntitySvg {
 //            entityPositions.put(entityId, new float[]{(float) at.getTranslateX(), (float) at.getTranslateY()});
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(at.getTranslateX()) + ", " + String.valueOf(at.getTranslateY()) + ")");
             entityPositions.put(entityId, new float[]{updatedPositionX, updatedPositionY});
-            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(updatedPositionX) + ", " + String.valueOf(updatedPositionY) + ")");
+            final String translateString = "translate(" + String.valueOf(updatedPositionX) + ", " + String.valueOf(updatedPositionY) + ")";
+            ((Element) entitySymbol).setAttribute("transform", translateString);
+            if (highlightGroup != null) {
+                highlightGroup.setAttribute("transform", translateString);
+            }
             float distanceXmoved = ((float) ((updatedPositionX - entityPosition[0]) * scaleFactor));
             float distanceYmoved = ((float) ((updatedPositionY - entityPosition[1]) * scaleFactor));
             remainderAfterSnapX = shiftXfloat - distanceXmoved;
