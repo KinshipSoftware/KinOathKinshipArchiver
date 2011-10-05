@@ -111,10 +111,10 @@ public class DataStoreSvg {
 
     public void storeRelationParameters(SVGDocument doc, Element relationGroup, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, UniqueIdentifier egoEntity, UniqueIdentifier alterEntity) {
         Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "lineType", relationLineType.name());
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "relationType", relationType.name());
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "ego", egoEntity.getAttributeIdentifier());
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "alter", alterEntity.getAttributeIdentifier());
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:lineType", relationLineType.name());
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:relationType", relationType.name());
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:ego", egoEntity.getAttributeIdentifier());
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:alter", alterEntity.getAttributeIdentifier());
         relationGroup.appendChild(dataRecordNode);
     }
 
@@ -225,6 +225,17 @@ public class DataStoreSvg {
             if (dataStoreNodeList.getLength() > 0) {
                 dataStoreSvg = (DataStoreSvg) unmarshaller.unmarshal(dataStoreNodeList.item(0), DataStoreSvg.class).getValue();
             }
+            // todo: Ticket #1105 When a document is reloaded there are some issues linking entities until the diagram is redrawn.
+//            // set the alter entity for each relation if not already set (based on the known unique identifier)
+//            for (EntityData entityData : dataStoreSvg.graphData.getDataNodes()) {
+//                for (EntityRelation nodeRelation : entityData.getRelatedNodesToBeLoaded()) {
+//                    for (EntityData alterData : dataStoreSvg.graphData.getDataNodes()) {
+//                        if (nodeRelation.alterUniqueIdentifier.equals(alterData.getUniqueIdentifier())) {
+//                            nodeRelation.setAlterNode(alterData);
+//                        }
+//                    }
+//                }
+//            }
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
         }
