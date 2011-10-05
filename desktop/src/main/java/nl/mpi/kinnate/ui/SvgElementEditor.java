@@ -22,6 +22,7 @@ import javax.swing.event.ChangeListener;
 import nl.mpi.arbil.ui.GuiHelper;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  *  Document   : SvgElementEditor
@@ -66,7 +67,33 @@ public class SvgElementEditor extends JPanel {
             addNumberSpinner(svgElement, sidePanel, "stroke-width", 1, 100);
             outerPanel.add(pickerWrapperPanel, BorderLayout.LINE_END);
         }
+        addDeleteButton(svgElement, sidePanel);
         this.add(new JScrollPane(outerPanel));
+    }
+
+    private void addDeleteButton(final Element svgElement, JPanel sidePanel) {
+        final Node parentElement = svgElement.getParentNode();
+        final JButton unDeleteButton = new JButton("Undelete");
+        final JButton deleteButton = new JButton("Delete");
+        sidePanel.add(unDeleteButton);
+        unDeleteButton.setEnabled(false);
+        unDeleteButton.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reAddElement(parentElement, svgElement);
+                unDeleteButton.setEnabled(false);
+                deleteButton.setEnabled(true);
+            }
+        });
+        sidePanel.add(deleteButton);
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeElement(parentElement, svgElement);
+                unDeleteButton.setEnabled(true);
+                deleteButton.setEnabled(false);
+            }
+        });
     }
 
     private void addNumberSpinner(final Element svgElement, JPanel sidePanel, final String attributeString, int minValue, int maxValue) {
@@ -189,6 +216,28 @@ public class SvgElementEditor extends JPanel {
 
                 public void run() {
                     changeTarget.setTextContent(changeValue);
+                }
+            });
+        }
+    }
+
+    protected void removeElement(final Node parentTarget, final Element changeTarget) {
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+
+                public void run() {
+                    parentTarget.removeChild(changeTarget);
+                }
+            });
+        }
+    }
+
+    protected void reAddElement(final Node parentTarget, final Element changeTarget) {
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+
+                public void run() {
+                    parentTarget.appendChild(changeTarget);
                 }
             });
         }
