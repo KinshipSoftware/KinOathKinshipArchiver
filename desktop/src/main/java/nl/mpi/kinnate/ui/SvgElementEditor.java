@@ -58,13 +58,16 @@ public class SvgElementEditor extends JPanel {
                 }
             });
             addColourInput(svgElement, sidePanel, pickerPanel, "fill");
-            addNumberSpinner(svgElement, sidePanel, "font-size", 1, 100);
+            addNumberSpinner(svgElement, sidePanel, "font size", "font-size", 1, 100);
             outerPanel.add(textArea, BorderLayout.CENTER);
             outerPanel.add(pickerWrapperPanel, BorderLayout.LINE_END);
         } else {
             addColourInput(svgElement, sidePanel, pickerPanel, "fill");
             addColourInput(svgElement, sidePanel, pickerPanel, "stroke");
-            addNumberSpinner(svgElement, sidePanel, "stroke-width", 1, 100);
+            addNumberSpinner(svgElement, sidePanel, "stroke width", "stroke-width", 1, 100);
+            if (editorMode.equals("rect")) {
+                addNumberSpinner(svgElement, sidePanel, "corner radius", "rx", 0, 100);
+            }
             outerPanel.add(pickerWrapperPanel, BorderLayout.LINE_END);
         }
         addDeleteButton(svgElement, sidePanel);
@@ -96,14 +99,14 @@ public class SvgElementEditor extends JPanel {
         });
     }
 
-    private void addNumberSpinner(final Element svgElement, JPanel sidePanel, final String attributeString, int minValue, int maxValue) {
+    private void addNumberSpinner(final Element svgElement, JPanel sidePanel, String labelString, final String attributeString, int minValue, int maxValue) {
         int initialValue = 0;
         try {
             initialValue = Integer.decode(svgElement.getAttribute(attributeString).trim());
         } catch (NumberFormatException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
         }
-        sidePanel.add(new JLabel(attributeString));
+        sidePanel.add(new JLabel(labelString));
         SpinnerModel spinnerModel =
                 new SpinnerNumberModel(initialValue, minValue, maxValue, 1);
         final JSpinner numberSpinner = new JSpinner(spinnerModel);
