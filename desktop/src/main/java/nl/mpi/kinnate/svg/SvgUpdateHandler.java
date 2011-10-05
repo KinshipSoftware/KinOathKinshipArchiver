@@ -131,61 +131,64 @@ public class SvgUpdateHandler {
 
     private void updateDragRelationLines(Element entityGroup, float localDragNodeX, float localDragNodeY) {
         // this must be only called from within a svg runnable
-        // add highlights for relation lines that would be created by the user action
-        float dragNodeX = relationDragHandle.getTranslatedX(localDragNodeX);
-        float dragNodeY = relationDragHandle.getTranslatedY(localDragNodeY);
+        if (relationDragHandle instanceof GraphicsDragHandle) {
+            ((GraphicsDragHandle) relationDragHandle).updatedElement(localDragNodeX, localDragNodeY);
+        } else {
+            // add highlights for relation lines that would be created by the user action
+            float dragNodeX = relationDragHandle.getTranslatedX(localDragNodeX);
+            float dragNodeY = relationDragHandle.getTranslatedY(localDragNodeY);
 
-        relationDragHandle.targetIdentifier = graphPanel.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30, graphPanel.selectedGroupId);
-        if (relationDragHandle.targetIdentifier != null) {
-            float[] closestEntityPoint = graphPanel.entitySvg.getEntityLocation(relationDragHandle.targetIdentifier);
-            dragNodeX = closestEntityPoint[0];
-            dragNodeY = closestEntityPoint[1];
-        }
+            relationDragHandle.targetIdentifier = graphPanel.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30, graphPanel.selectedGroupId);
+            if (relationDragHandle.targetIdentifier != null) {
+                float[] closestEntityPoint = graphPanel.entitySvg.getEntityLocation(relationDragHandle.targetIdentifier);
+                dragNodeX = closestEntityPoint[0];
+                dragNodeY = closestEntityPoint[1];
+            }
 
-        Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
-        relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
-        entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
-        float vSpacing = graphPanel.graphPanelSize.getVerticalSpacing();
-        float hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing();
+            Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+            relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
+            entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
+            float vSpacing = graphPanel.graphPanelSize.getVerticalSpacing();
+            float hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing();
 //        for (Node currentRelation = relationsGroup.getFirstChild(); currentRelation != null; currentRelation = currentRelation.getNextSibling()) {
-        for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
-            String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
-            float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-            // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
+            for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
+                String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
+                float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
 //                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
 //                                            useNode.setAttributeNS(null, "stroke", "blue");
 //                                            relationHighlightGroup.appendChild(useNode);
 
-            // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
-            // as a comprimise these highlighs can be removed when a node is dragged
-            // add a white background
-            Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-            highlightBackgroundLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
-            highlightBackgroundLine.setAttribute("fill", "none");
+                // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
+                // as a comprimise these highlighs can be removed when a node is dragged
+                // add a white background
+                Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                highlightBackgroundLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+                highlightBackgroundLine.setAttribute("fill", "none");
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
-            highlightBackgroundLine.setAttribute("stroke", "white");
-            new RelationSvg().setPolylinePointsAttribute(graphPanel.lineLookUpTable, dragLineElementId, highlightBackgroundLine, relationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
-            relationHighlightGroup.appendChild(highlightBackgroundLine);
-            // add a blue dotted line
-            Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-            highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
-            highlightLine.setAttribute("fill", "none");
+                highlightBackgroundLine.setAttribute("stroke", "white");
+                new RelationSvg().setPolylinePointsAttribute(graphPanel.lineLookUpTable, dragLineElementId, highlightBackgroundLine, relationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
+                relationHighlightGroup.appendChild(highlightBackgroundLine);
+                // add a blue dotted line
+                Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+                highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
-            new RelationSvg().setPolylinePointsAttribute(graphPanel.lineLookUpTable, dragLineElementId, highlightLine, relationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
-            highlightLine.setAttribute("stroke", "blue");
-            highlightLine.setAttribute("stroke-dasharray", "3");
-            highlightLine.setAttribute("stroke-dashoffset", "0");
-            relationHighlightGroup.appendChild(highlightLine);
+                new RelationSvg().setPolylinePointsAttribute(graphPanel.lineLookUpTable, dragLineElementId, highlightLine, relationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
+                highlightLine.setAttribute("stroke", "blue");
+                highlightLine.setAttribute("stroke-dasharray", "3");
+                highlightLine.setAttribute("stroke-dashoffset", "0");
+                relationHighlightGroup.appendChild(highlightLine);
+            }
+            Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
+            symbolNode.setAttribute("cx", Float.toString(dragNodeX));
+            symbolNode.setAttribute("cy", Float.toString(dragNodeY));
+            symbolNode.setAttribute("r", "5");
+            symbolNode.setAttribute("fill", "blue");
+            symbolNode.setAttribute("stroke", "none");
+            relationHighlightGroup.appendChild(symbolNode);
         }
-        Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
-        symbolNode.setAttribute("cx", Float.toString(dragNodeX));
-        symbolNode.setAttribute("cy", Float.toString(dragNodeY));
-        symbolNode.setAttribute("r", "5");
-        symbolNode.setAttribute("fill", "blue");
-        symbolNode.setAttribute("stroke", "none");
-        relationHighlightGroup.appendChild(symbolNode);
-
 //        ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
@@ -208,6 +211,18 @@ public class SvgUpdateHandler {
             ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
             highlightGroupNode.appendChild(symbolNode);
         }
+    }
+
+    protected void addGraphicsDragHandles(Element highlightGroupNode, UniqueIdentifier targetIdentifier, SVGRect bbox, int paddingDistance) {
+        Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
+        symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() + paddingDistance));
+        symbolNode.setAttribute("cy", Float.toString(bbox.getY() + bbox.getHeight() + paddingDistance));
+        symbolNode.setAttribute("r", "5");
+        symbolNode.setAttribute("target", targetIdentifier.getAttributeIdentifier());
+        symbolNode.setAttribute("fill", "blue");
+        symbolNode.setAttribute("stroke", "none");
+        ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
+        highlightGroupNode.appendChild(symbolNode);
     }
 
     protected void updateSvgSelectionHighlights() {
@@ -318,6 +333,8 @@ public class SvgUpdateHandler {
 //                                                }
                                     if (((Element) selectedGroup).getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path").length() > 0) {
                                         addRelationDragHandles(highlightGroupNode, bbox, paddingDistance);
+                                    } else {
+                                        addGraphicsDragHandles(highlightGroupNode, uniqueIdentifier, bbox, paddingDistance);
                                     }
                                     highlightGroupNode.appendChild(symbolNode);
                                     if ("g".equals(selectedGroup.getLocalName())) {
