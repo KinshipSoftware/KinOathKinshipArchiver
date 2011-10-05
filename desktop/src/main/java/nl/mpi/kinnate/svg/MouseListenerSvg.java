@@ -141,7 +141,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         Element currentDraggedElement = ((Element) evt.getCurrentTarget());
         preDragCursor = graphPanel.svgCanvas.getCursor();
         final String handleTypeString = currentDraggedElement.getAttribute("handletype");
-        if (handleTypeString != null && handleTypeString.length() > 0) {
+        final String targetIdString = currentDraggedElement.getAttribute("target");
+        if ((targetIdString != null && targetIdString.length() > 0) || (handleTypeString != null && handleTypeString.length() > 0)) {
             if (evt instanceof DOMMouseEvent) {
                 Element entityGroup = graphPanel.doc.getElementById("EntityGroup");
                 SVGMatrix entityGroupMatrix = ((SVGLocatable) entityGroup).getCTM();
@@ -149,15 +150,28 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 float xTranslate = entityMatrix.getE() - entityGroupMatrix.getE(); // because the target of the drag location is within the diagram translation we must subtract it here
                 float yTranslate = entityMatrix.getF() - entityGroupMatrix.getF();
                 AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
-                graphPanel.svgUpdateHandler.relationDragHandle =
-                        new RelationDragHandle(
-                        DataTypes.RelationType.valueOf(handleTypeString),
-                        Float.valueOf(currentDraggedElement.getAttribute("cx")) + xTranslate,
-                        Float.valueOf(currentDraggedElement.getAttribute("cy")) + yTranslate,
-                        ((DOMMouseEvent) evt).getClientX(),
-                        ((DOMMouseEvent) evt).getClientY(),
-                        affineTransform.getScaleX() // the drawing should be proportional so only using X is adequate here
-                        );
+                if (targetIdString != null) {
+                    graphPanel.svgUpdateHandler.relationDragHandle =
+                            new GraphicsDragHandle(
+                            graphPanel.doc.getElementById(targetIdString),
+                            currentDraggedElement,
+                            Float.valueOf(currentDraggedElement.getAttribute("cx")) + xTranslate,
+                            Float.valueOf(currentDraggedElement.getAttribute("cy")) + yTranslate,
+                            ((DOMMouseEvent) evt).getClientX(),
+                            ((DOMMouseEvent) evt).getClientY(),
+                            affineTransform.getScaleX() // the drawing should be proportional so only using X is adequate here
+                            );
+                } else {
+                    graphPanel.svgUpdateHandler.relationDragHandle =
+                            new RelationDragHandle(
+                            DataTypes.RelationType.valueOf(handleTypeString),
+                            Float.valueOf(currentDraggedElement.getAttribute("cx")) + xTranslate,
+                            Float.valueOf(currentDraggedElement.getAttribute("cy")) + yTranslate,
+                            ((DOMMouseEvent) evt).getClientX(),
+                            ((DOMMouseEvent) evt).getClientY(),
+                            affineTransform.getScaleX() // the drawing should be proportional so only using X is adequate here
+                            );
+                }
             }
         } else {
             final String attributeString = currentDraggedElement.getAttribute("id");
@@ -196,7 +210,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     remainingEditors.remove(currentSelectedId);
                     if (currentSelectedId.isGraphicsIdentifier()) {
                         if (!shownGraphicsEditors.containsKey(currentSelectedId)) {
-                            Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());                            
+                            Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());
                             SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement);
                             graphPanel.editorHidePane.addTab("Graphics Editor", elementEditor);
 //                            graphPanel.editorHidePane.setSelectedComponent(elementEditor);
