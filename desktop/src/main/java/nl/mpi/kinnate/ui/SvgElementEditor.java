@@ -102,7 +102,10 @@ public class SvgElementEditor extends JPanel {
     private void addNumberSpinner(final Element svgElement, JPanel sidePanel, String labelString, final String attributeString, int minValue, int maxValue) {
         int initialValue = 0;
         try {
-            initialValue = Integer.decode(svgElement.getAttribute(attributeString).trim());
+            final String initialValueString = svgElement.getAttribute(attributeString).trim();
+            if (initialValueString.length() > 0) {
+                initialValue = Integer.decode(initialValueString);
+            }
         } catch (NumberFormatException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
         }
