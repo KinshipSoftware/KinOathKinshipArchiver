@@ -189,26 +189,29 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         if (graphPanel.arbilTableModel != null) {
             graphPanel.arbilTableModel.removeAllArbilDataNodeRows();
             try {
-                boolean tableContainsRow = false;
+                boolean showEditor = false;
+                boolean tableRowShown = false;
                 ArrayList<UniqueIdentifier> remainingEditors = new ArrayList<UniqueIdentifier>(shownGraphicsEditors.keySet());
                 for (UniqueIdentifier currentSelectedId : graphPanel.selectedGroupId) {
                     remainingEditors.remove(currentSelectedId);
-                    if (currentSelectedId.isGraphicsIdentifier() && !shownGraphicsEditors.containsKey(entityToToggle)) {
-                        Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());
-                        // todo: #1100	Show editors for all selected items at once.
-                        SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement);
-                        graphPanel.editorHidePane.addTab("Graphics Editor", elementEditor);
-                        graphPanel.editorHidePane.setSelectedComponent(elementEditor);
-                        shownGraphicsEditors.put(entityToToggle, elementEditor);
-                        tableContainsRow = true;
+                    if (currentSelectedId.isGraphicsIdentifier()) {
+                        if (!shownGraphicsEditors.containsKey(currentSelectedId)) {
+                            Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());                            
+                            SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement);
+                            graphPanel.editorHidePane.addTab("Graphics Editor", elementEditor);
+//                            graphPanel.editorHidePane.setSelectedComponent(elementEditor);
+                            shownGraphicsEditors.put(currentSelectedId, elementEditor);
+                        }
+                        showEditor = true;
                     } else {
                         String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
-                        if (currentSelectedPath != null) {
+                        if (currentSelectedPath != null && currentSelectedPath.length() > 0) {
                             ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentSelectedPath));
                             // register this node with the graph panel
                             kinDiagramPanel.registerArbilNode(currentSelectedId, arbilDataNode);
                             graphPanel.arbilTableModel.addSingleArbilDataNode(arbilDataNode);
-                            tableContainsRow = true;
+                            showEditor = true;
+                            tableRowShown = true;
                         }
                     }
                 }
@@ -217,9 +220,15 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     graphPanel.editorHidePane.remove(shownGraphicsEditors.get(remainingIdentifier));
                     shownGraphicsEditors.remove(remainingIdentifier);
                 }
-                if (tableContainsRow == graphPanel.editorHidePane.isHidden()) {
+                if (tableRowShown) {
+                    graphPanel.editorHidePane.addTab("Metadata", graphPanel.tableScrollPane);
+                } else {
+                    graphPanel.editorHidePane.remove(graphPanel.tableScrollPane);
+                }
+                if (showEditor && graphPanel.editorHidePane.isHidden()) {
                     graphPanel.editorHidePane.toggleHiddenState();
                 }
+                graphPanel.editorHidePane.setVisible(showEditor);
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
             }
