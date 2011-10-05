@@ -239,12 +239,16 @@ public class KinTypeStringConverter extends GraphSorter {
                         int parserHighlightPosition = initialLength - consumableString.length();
                         boolean kinTypeFound = false;
                         for (KinType currentReferenceKinType : KinType.referenceKinTypes) {
-                            if (consumableString.startsWith(currentReferenceKinType.codeString)) {
+                            if (consumableString.startsWith(currentReferenceKinType.codeString)
+                                    && currentReferenceKinType.relationType != null && currentReferenceKinType.symbolType != null // not allowing wild cards here
+                                    // todo: Ticket #1106 this could provide better feedback and show a message in the tool tip about wild cards not available in this context
+                                    ) {
                                 String previousConsumableString = consumableString;
 //                                if (currentReferenceKinType.isEgoType()) {
 //                                    fullKinTypeString = "";
 //                                }
                                 if (currentReferenceKinType.relationType.equals(DataTypes.RelationType.none) && parentDataNode != null) {
+                                    // todo: Ticket #1106 this could provide better feedback or even allow refrences back to ego here
                                     // prevent multiple egos on one line
                                     // going from one kin type to a second ego cannot specify the relation to the second ego and hence such syntax is not workable
 //                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, parserHighlightPosition);
