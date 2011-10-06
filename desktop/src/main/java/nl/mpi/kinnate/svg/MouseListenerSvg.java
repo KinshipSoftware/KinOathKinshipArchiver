@@ -150,13 +150,13 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 float xTranslate = entityMatrix.getE() - entityGroupMatrix.getE(); // because the target of the drag location is within the diagram translation we must subtract it here
                 float yTranslate = entityMatrix.getF() - entityGroupMatrix.getF();
                 AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
-                if (targetIdString != null) {
+                if (targetIdString != null && targetIdString.length() > 0) {
                     graphPanel.svgUpdateHandler.relationDragHandle =
                             new GraphicsDragHandle(
                             graphPanel.doc.getElementById(targetIdString),
                             currentDraggedElement,
-                            Float.valueOf(currentDraggedElement.getAttribute("cx")) + xTranslate,
-                            Float.valueOf(currentDraggedElement.getAttribute("cy")) + yTranslate,
+                            Float.valueOf(currentDraggedElement.getAttribute("cx")), // + xTranslate,
+                            Float.valueOf(currentDraggedElement.getAttribute("cy")), // + yTranslate,
                             ((DOMMouseEvent) evt).getClientX(),
                             ((DOMMouseEvent) evt).getClientY(),
                             affineTransform.getScaleX() // the drawing should be proportional so only using X is adequate here
