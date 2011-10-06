@@ -89,7 +89,15 @@ public class RelationSvg {
             new Point((int) alterX, (int) midY),
             new Point((int) alterX, (int) alterY)
         };
-        Point[] adjustedPointsList = lineLookUpTable.adjustLineToObstructions(lineIdString, initialPointsList);
+        Point[] adjustedPointsList;
+        if (lineLookUpTable != null) {
+            // this version is used when the relations are drawn on the diagram
+            // or when an entity is dragged before the diagram is redrawn in the case of a reloaded from disk diagram (this case is sub optimal in that on first load the loops will not be drawn)
+            adjustedPointsList = lineLookUpTable.adjustLineToObstructions(lineIdString, initialPointsList);
+        } else {
+            // this version is used when the relation drag handles are used
+            adjustedPointsList = initialPointsList;
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (Point currentPoint : adjustedPointsList) {
             stringBuilder.append(currentPoint.x);
