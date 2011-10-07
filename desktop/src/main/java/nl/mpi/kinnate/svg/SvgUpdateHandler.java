@@ -3,11 +3,13 @@ package nl.mpi.kinnate.svg;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.util.HashSet;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.DOMException;
@@ -43,7 +45,7 @@ public class SvgUpdateHandler {
 
     public enum GraphicsTypes {
 
-        Label, Circle, Square, Polyline
+        Label, Circle, Square, Polyline, Ellipse
 //                        *  Rectangle <rect>
 //                        * Circle <circle>
 //                        * Ellipse <ellipse>
@@ -88,40 +90,45 @@ public class SvgUpdateHandler {
                     NamedNodeMap dataAttributes = dataElement.getAttributes();
                     if (dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "lineType").getNodeValue().equals("sanguineLine")) {
                         Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
-                        if (graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue())) || graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue()))) {
-                            // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
+                        try {
+                            if (graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue())) || graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue()))) {
+                                // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
 //                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
 //                                            useNode.setAttributeNS(null, "stroke", "blue");
 //                                            relationHighlightGroup.appendChild(useNode);
 
-                            // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
-                            // as a comprimise these highlighs can be removed when a node is dragged
-                            // add a white background
-                            Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-                            highlightBackgroundLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
-                            highlightBackgroundLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
-                            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
-                            highlightBackgroundLine.setAttribute("stroke", "white");
-                            relationHighlightGroup.appendChild(highlightBackgroundLine);
-                            // add a blue dotted line
-                            Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-                            highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
-                            highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
-                            highlightLine.setAttribute("points", polyLineElement.getAttribute("points"));
-                            highlightLine.setAttribute("stroke", "blue");
-                            highlightLine.setAttribute("stroke-dasharray", "3");
-                            highlightLine.setAttribute("stroke-dashoffset", "0");
-                            relationHighlightGroup.appendChild(highlightLine);
+                                // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
+                                // as a comprimise these highlighs can be removed when a node is dragged
+                                // add a white background
+                                Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                                highlightBackgroundLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
+                                highlightBackgroundLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
+                                highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
+                                highlightBackgroundLine.setAttribute("stroke", "white");
+                                relationHighlightGroup.appendChild(highlightBackgroundLine);
+                                // add a blue dotted line
+                                Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                                highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
+                                highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
+                                highlightLine.setAttribute("points", polyLineElement.getAttribute("points"));
+                                highlightLine.setAttribute("stroke", "blue");
+                                highlightLine.setAttribute("stroke-dasharray", "3");
+                                highlightLine.setAttribute("stroke-dashoffset", "0");
+                                relationHighlightGroup.appendChild(highlightLine);
 
-                            // try changing the target lines attributes (does not get updated maybe due to the 'use' node rendering)
+                                // try changing the target lines attributes (does not get updated maybe due to the 'use' node rendering)
 //                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("blue");
 //                                            polyLineElement.setAttributeNS(null, "stroke", "blue");
 //                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth * 2));
-                        } else {
+                            } else {
 //                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("green");
 //                                            polyLineElement.setAttributeNS(null, "stroke", "grey");
 //                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+                            }
+                        } catch (IdentifierException exception) {
+                            GuiHelper.linorgBugCatcher.logError(exception);
+                            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to read relation data, highlight might not be correct", "Sanguine Highlights");
                         }
                     }
                 }
@@ -334,6 +341,8 @@ public class SvgUpdateHandler {
 //                                                        }
 //                                                    }
 //                                                }
+                                    // make sure the rect is added before the drag handles, otherwise the rect can block the mouse actions
+                                    highlightGroupNode.appendChild(symbolNode);
                                     if (((Element) selectedGroup).getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path").length() > 0) {
                                         addRelationDragHandles(highlightGroupNode, bbox, paddingDistance);
                                     } else {
@@ -342,7 +351,6 @@ public class SvgUpdateHandler {
                                             addGraphicsDragHandles(highlightGroupNode, uniqueIdentifier, bbox, paddingDistance);
                                         }
                                     }
-                                    highlightGroupNode.appendChild(symbolNode);
                                     if ("g".equals(selectedGroup.getLocalName())) {
                                         selectedGroup.appendChild(highlightGroupNode);
                                     } else {
@@ -615,6 +623,14 @@ public class SvgUpdateHandler {
                         case Circle:
                             labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
                             labelText.setAttribute("r", "100");
+                            labelText.setAttribute("fill", "#ffffff");
+                            labelText.setAttribute("stroke", "#000000");
+                            labelText.setAttribute("stroke-width", "2");
+                            break;
+                        case Ellipse:
+                            labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "ellipse");
+                            labelText.setAttribute("rx", "100");
+                            labelText.setAttribute("ry", "100");
                             labelText.setAttribute("fill", "#ffffff");
                             labelText.setAttribute("stroke", "#000000");
                             labelText.setAttribute("stroke-width", "2");
