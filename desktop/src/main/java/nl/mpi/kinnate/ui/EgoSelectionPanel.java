@@ -1,8 +1,11 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import nl.mpi.arbil.data.ArbilNode;
@@ -19,7 +22,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  *  Created on : Sep 29, 2010, 13:12:01 PM
  *  Author     : Peter Withers
  */
-public class EgoSelectionPanel extends JPanel {
+public class EgoSelectionPanel extends JPanel implements ActionListener {
 
     private KinTree egoTree;
     private KinTree requiredTree;
@@ -34,6 +37,12 @@ public class EgoSelectionPanel extends JPanel {
         JPanel transientNodePanel;
         transientNodePanel = new JPanel(new BorderLayout());
         transientNodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Transient Entities"));
+
+        JButton convertTransientButton = new JButton("Convert to Metadata Diagram");
+        convertTransientButton.setActionCommand("convert");
+        convertTransientButton.addActionListener(this);
+        transientNodePanel.add(convertTransientButton, BorderLayout.PAGE_START);
+
         transientTree = new KinTree(graphPanel);
         transientTree.setBackground(transientNodePanel.getBackground());
         transientNodePanel.add(transientTree, BorderLayout.CENTER);
@@ -133,5 +142,12 @@ public class EgoSelectionPanel extends JPanel {
         requiredTree.requestResort();
         impliedTree.rootNodeChildren = new ArbilNode[]{};
         impliedTree.requestResort();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if ("convert".equals(e.getActionCommand())) {
+             // todo: Ticket #1114 Button to convert freeform diagram to metadata diagram
+            throw new UnsupportedOperationException("Ticket #1114 Button to convert freeform diagram to metadata diagram");
+        }
     }
 }
