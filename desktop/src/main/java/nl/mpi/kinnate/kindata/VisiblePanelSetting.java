@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.kindata;
 
 import java.awt.Component;
+import java.util.HashSet;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import nl.mpi.kinnate.ui.HidePane;
@@ -17,8 +18,8 @@ public class VisiblePanelSetting {
         KinTypeStrings,
         KinTerms,
         ArchiveLinker,
-//        @Deprecated
-//        MetaData,
+        //        @Deprecated
+        //        MetaData,
         IndexerSettings,
         DiagramTree,
         EntitySearch
@@ -34,7 +35,7 @@ public class VisiblePanelSetting {
     @XmlTransient
     private HidePane hidePane;
     @XmlTransient
-    private Component targetPanel;
+    private HashSet<Component> targetPanel = new HashSet<Component>();
 
     public VisiblePanelSetting() {
     }
@@ -45,18 +46,27 @@ public class VisiblePanelSetting {
         this.panelWidth = panelWidth;
     }
 
+    public void setHidePane(HidePane hidePane, String displayName) {
+        this.hidePane = hidePane;
+        this.displayName = displayName;
+    }
+
     private void setUpdateUiState() {
         if (panelShown) {
-            hidePane.addTab(this);
+            for (Component currentPanel : getTargetPanels()) {
+                String tabStringName = currentPanel.getName();
+                if (tabStringName == null || tabStringName.length() < 1) {
+                    tabStringName = displayName;
+                }
+                hidePane.addTab(this, tabStringName, currentPanel);
+            }
         } else {
             hidePane.remove(this);
         }
     }
 
-    public void setTargetPanel(HidePane hidePane, Component targetPanel, String displayName) {
-        this.hidePane = hidePane;
-        this.targetPanel = targetPanel;
-        this.displayName = displayName;
+    public void addTargetPanel(Component targetPanel) {
+        this.targetPanel.add(targetPanel);
         setUpdateUiState();
     }
 
@@ -79,8 +89,9 @@ public class VisiblePanelSetting {
         return panelWidth;
     }
 
-    public Component getTargetPanel() {
-        return targetPanel;
+    @XmlTransient
+    public Component[] getTargetPanels() {
+        return targetPanel.toArray(new Component[]{});
     }
 
     public String getDisplayName() {
