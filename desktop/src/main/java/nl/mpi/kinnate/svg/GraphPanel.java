@@ -154,6 +154,9 @@ public class GraphPanel extends JPanel implements SavePanel {
             doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toURI().toString());
             svgCanvas.setDocument(doc);
             dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc);
+            if (dataStoreSvg.indexParameters == null) {
+                dataStoreSvg.setDefaults();
+            }
             requiresSave = false;
             entitySvg.readEntityPositions(doc.getElementById("EntityGroup"));
             entitySvg.readEntityPositions(doc.getElementById("LabelsGroup"));
@@ -179,6 +182,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                 parentElement.setAttribute("id", groupForMouseListener);
                 diagramElement.insertBefore(parentElement, previousElement);
             } else {
+                diagramElement.insertBefore(parentElement, previousElement); // insert the node to make sure that it is in the diagram group and not in any other location
                 Node currentNode = parentElement.getFirstChild();
                 while (currentNode != null) {
                     ((EventTarget) currentNode).addEventListener("mousedown", mouseListenerSvg, false);
@@ -187,7 +191,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             }
             previousElement = parentElement;
         }
-        dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc));
+        dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
         if (dataStoreSvg.graphData == null) {
             return null;
         }
@@ -243,7 +247,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             Element labelsGroup = doc.createElementNS(svgNameSpace, "g");
             labelsGroup.setAttribute("id", "LabelsGroup");
             diagramGroup.appendChild(labelsGroup);
-            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc));
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
             svgCanvas.setSVGDocument(doc);
             dataStoreSvg.graphData = new GraphSorter();
         } catch (IOException exception) {
