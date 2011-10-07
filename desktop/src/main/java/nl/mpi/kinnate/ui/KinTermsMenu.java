@@ -1,8 +1,10 @@
 package nl.mpi.kinnate.ui;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import nl.mpi.kinnate.KinTermSavePanel;
+import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
 
 /**
  *  Document   : KinTermsMenu
@@ -13,7 +15,7 @@ public class KinTermsMenu extends JMenu {
 
     static private MainFrame mainFrame;
     KinTermSavePanel currentKinTermSavePanel;
-    JMenuItem hideShowMenu;
+    JCheckBoxMenuItem hideShowMenu;
     JMenuItem newMenu;
     JMenuItem exportMenu;
     JMenuItem importMenu;
@@ -29,7 +31,7 @@ public class KinTermsMenu extends JMenu {
     }
 
     private void initMenu() {
-        hideShowMenu = new JMenuItem("Hide/Show");
+        hideShowMenu = new JCheckBoxMenuItem("Show");
         newMenu = new JMenuItem("New Kin Term Group");
         exportMenu = new JMenuItem("Export");
         importMenu = new JMenuItem("Import");
@@ -47,18 +49,20 @@ public class KinTermsMenu extends JMenu {
                 currentKinTermSavePanel = mainFrame.getKinTermPanel();
                 if (currentKinTermSavePanel != null) {
                     hideShowMenu.setEnabled(true);
-                    if (currentKinTermSavePanel.isHidden()) {
+                    if (!currentKinTermSavePanel.getPanelState(PanelType.KinTerms)) {
+                        hideShowMenu.setSelected(false);
                         exportMenu.setEnabled(false);
                         importMenu.setEnabled(false);
                         newMenu.setEnabled(false);
                         deleteMenu.setEnabled(false);
-                        hideShowMenu.setText("Show");
+//                        hideShowMenu.setText("Show");
                     } else {
+                        hideShowMenu.setSelected(true);
                         exportMenu.setEnabled(true);
                         importMenu.setEnabled(true);
                         newMenu.setEnabled(true);
                         deleteMenu.setEnabled(false); // todo: Ticket #1063 enable deleting the current kin term group and update the menu to reflect the group name that would be deleted
-                        hideShowMenu.setText("Hide");
+//                        hideShowMenu.setText("Hide");
                     }
                 } else {
                     exportMenu.setEnabled(false);
@@ -78,7 +82,7 @@ public class KinTermsMenu extends JMenu {
         hideShowMenu.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                currentKinTermSavePanel.hideShow();
+                currentKinTermSavePanel.setPanelState(PanelType.KinTerms, hideShowMenu.isSelected());
             }
         });
         exportMenu.addActionListener(new java.awt.event.ActionListener() {
