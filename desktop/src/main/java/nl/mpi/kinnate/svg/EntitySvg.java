@@ -70,7 +70,7 @@ public class EntitySvg {
                         }
                     }
                 } catch (IdentifierException exception) {
-                    GuiHelper.linorgBugCatcher.logError(exception);
+//                    GuiHelper.linorgBugCatcher.logError(exception);
                     ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to read an entity position, layout might not be preserved", "Restore Layout");
                 }
             }
@@ -231,18 +231,20 @@ public class EntitySvg {
         return symbolSize;
     }
 
-    public String[] listSymbolNames(SVGDocument doc) {
+    public String[] listSymbolNames(SVGDocument doc, String svgNameSpace) {
         // get the symbol list from the dom
         ArrayList<String> symbolArray = new ArrayList<String>();
         Element kinSymbols = doc.getElementById("KinSymbols");
-        if (kinSymbols != null) {
-            for (Node kinSymbolNode = kinSymbols.getFirstChild(); kinSymbolNode != null; kinSymbolNode = kinSymbolNode.getNextSibling()) {
-                NamedNodeMap attributesMap = kinSymbolNode.getAttributes();
-                if (attributesMap != null) {
-                    Node idNode = attributesMap.getNamedItem("id");
-                    if (idNode != null) {
-                        symbolArray.add(idNode.getNodeValue());
-                    }
+        if (kinSymbols == null) {
+            insertSymbols(doc, svgNameSpace);
+            kinSymbols = doc.getElementById("KinSymbols");
+        }
+        for (Node kinSymbolNode = kinSymbols.getFirstChild(); kinSymbolNode != null; kinSymbolNode = kinSymbolNode.getNextSibling()) {
+            NamedNodeMap attributesMap = kinSymbolNode.getAttributes();
+            if (attributesMap != null) {
+                Node idNode = attributesMap.getNamedItem("id");
+                if (idNode != null) {
+                    symbolArray.add(idNode.getNodeValue());
                 }
             }
         }
