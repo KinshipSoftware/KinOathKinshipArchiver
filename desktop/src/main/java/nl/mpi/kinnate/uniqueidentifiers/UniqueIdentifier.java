@@ -43,11 +43,12 @@ public class UniqueIdentifier {
         identifierString = arbilField.getFieldValue();
     }
 
-    public UniqueIdentifier(String attributeIdentifier) {
+    public UniqueIdentifier(String attributeIdentifier) throws IdentifierException {
         // reconstruct the identifier from an attribte string originally obtained by getAttributeIdentifier
         String[] attributeIdentifierParts = attributeIdentifier.split("\\_");
         if (attributeIdentifierParts.length != 2) {
-            throw new UnsupportedOperationException("Incorrect identifier format: " + attributeIdentifier);
+            // this allows invalid files to prevent the application from starting
+            throw new IdentifierException("Incorrect identifier format: " + attributeIdentifier);
         }
         identifierType = IdentifierType.valueOf(attributeIdentifierParts[0]);
         identifierString = attributeIdentifierParts[1];
