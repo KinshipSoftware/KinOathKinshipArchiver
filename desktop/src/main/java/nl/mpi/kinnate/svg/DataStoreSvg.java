@@ -14,6 +14,7 @@ import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
+import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -85,6 +86,9 @@ public class DataStoreSvg {
     }
 
     public VisiblePanelSetting[] getVisiblePanels() {
+        if (visiblePanels == null) {
+            return null;
+        }
         return visiblePanels.toArray(new VisiblePanelSetting[]{});
     }
 
@@ -95,7 +99,7 @@ public class DataStoreSvg {
         visiblePanels.add(new VisiblePanelSetting(panelType, panelVisible, panelWidth));
     }
 
-    public GraphRelationData getEntitiesForRelations(Node relationGroup) {
+    public GraphRelationData getEntitiesForRelations(Node relationGroup) throws IdentifierException {
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
             if ("RelationEntities".equals(currentChild.getLocalName())) {
                 GraphRelationData graphRelationData = new GraphRelationData();
