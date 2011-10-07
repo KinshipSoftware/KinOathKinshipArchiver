@@ -17,8 +17,8 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
 
     public enum DocumentType {
 
-        KinTypeString("Kin Type String"),
-        KinTerms("Kin Terms"),
+        Freeform("Freeform Diagram"),
+        KinTerms("Kin Terms Diagram"),
         Query("Kin Type String Query"),
         ArchiveLinker("Archive Data Linker"),
         EntitySearch("Entity Search"),
