@@ -12,6 +12,7 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
  *  Created on : Apr 8, 2011, 4:24:56 PM
  *  Author     : Peter Withers
  */
+@Deprecated
 public class KinTermTabPane extends JPanel {
 
     JTabbedPane kinTermTabbedPane;
