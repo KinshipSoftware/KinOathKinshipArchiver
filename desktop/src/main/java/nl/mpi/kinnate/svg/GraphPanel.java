@@ -299,10 +299,12 @@ public class GraphPanel extends JPanel implements SavePanel {
         return dataStoreSvg.kinTermGroups;
     }
 
-    public void addKinTermGroup() {
+    public KinTermGroup addKinTermGroup() {
         ArrayList<KinTermGroup> kinTermsList = new ArrayList<KinTermGroup>(Arrays.asList(dataStoreSvg.kinTermGroups));
-        kinTermsList.add(new KinTermGroup());
+        final KinTermGroup kinTermGroup = new KinTermGroup();
+        kinTermsList.add(kinTermGroup);
         dataStoreSvg.kinTermGroups = kinTermsList.toArray(new KinTermGroup[]{});
+        return kinTermGroup;
     }
 
 //    public String[] getEgoUniquiIdentifiersList() {
