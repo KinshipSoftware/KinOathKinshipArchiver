@@ -25,6 +25,7 @@ import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindocument.RelationLinker;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.SvgElementEditor;
+import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGLocatable;
@@ -155,6 +156,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                             new GraphicsDragHandle(
                             graphPanel.doc.getElementById(targetIdString),
                             currentDraggedElement,
+                            (Element) currentDraggedElement.getParentNode().getFirstChild(), // this assumes that the rect is the first element in the highlight
                             Float.valueOf(currentDraggedElement.getAttribute("cx")), // + xTranslate,
                             Float.valueOf(currentDraggedElement.getAttribute("cy")), // + yTranslate,
                             ((DOMMouseEvent) evt).getClientX(),
@@ -175,24 +177,29 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             }
         } else {
             final String attributeString = currentDraggedElement.getAttribute("id");
-            UniqueIdentifier entityIdentifier = new UniqueIdentifier(attributeString);
-            System.out.println("entityPath: " + entityIdentifier.getAttributeIdentifier());
-            boolean nodeAlreadySelected = graphPanel.selectedGroupId.contains(entityIdentifier);
-            if (!shiftDown && !nodeAlreadySelected) {
-                System.out.println("Clear selection");
-                graphPanel.selectedGroupId.clear();
-                graphPanel.selectedGroupId.add(entityIdentifier);
-            } else {
-                // toggle the highlight
-                if (shiftDown && nodeAlreadySelected) {
-                    // postpone until after a drag action can be tested for and only deselect if not draged
-                    entityToToggle = entityIdentifier;
-                    // graphPanel.selectedGroupId.remove(entityIdentifier);
-                } else if (!nodeAlreadySelected) {
+            try {
+                UniqueIdentifier entityIdentifier = new UniqueIdentifier(attributeString);
+                System.out.println("entityPath: " + entityIdentifier.getAttributeIdentifier());
+                boolean nodeAlreadySelected = graphPanel.selectedGroupId.contains(entityIdentifier);
+                if (!shiftDown && !nodeAlreadySelected) {
+                    System.out.println("Clear selection");
+                    graphPanel.selectedGroupId.clear();
                     graphPanel.selectedGroupId.add(entityIdentifier);
+                } else {
+                    // toggle the highlight
+                    if (shiftDown && nodeAlreadySelected) {
+                        // postpone until after a drag action can be tested for and only deselect if not draged
+                        entityToToggle = entityIdentifier;
+                        // graphPanel.selectedGroupId.remove(entityIdentifier);
+                    } else if (!nodeAlreadySelected) {
+                        graphPanel.selectedGroupId.add(entityIdentifier);
+                    }
                 }
+                updateSelectionDisplay();
+            } catch (IdentifierException exception) {
+                GuiHelper.linorgBugCatcher.logError(exception);
+                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to read selection identifier, selection might not be correct", "Selection Highlight");
             }
-            updateSelectionDisplay();
         }
     }
 
