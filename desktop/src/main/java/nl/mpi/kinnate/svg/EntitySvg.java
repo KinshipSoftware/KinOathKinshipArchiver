@@ -8,8 +8,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphLabel;
+import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.Element;
@@ -38,22 +41,23 @@ public class EntitySvg {
         // this now replaces the position values in the entity data and the entity position is now stored in the svg entity visual not the entity data 
         if (entityGroup != null) {
             for (Node entityNode = entityGroup.getFirstChild(); entityNode != null; entityNode = entityNode.getNextSibling()) {
-                NamedNodeMap nodeMap = entityNode.getAttributes();
-                if (nodeMap != null) {
-                    Node idNode = nodeMap.getNamedItem("id");
-                    Node transformNode = nodeMap.getNamedItem("transform");
-                    if (idNode != null && transformNode != null) {
-                        UniqueIdentifier entityId = new UniqueIdentifier(idNode.getNodeValue());
-                        //transform="translate(300.0, 192.5)"
-                        // because the svg dom has not been rendered we cannot get any of the screen data, so we must parse the transform tag
-                        String transformString = transformNode.getNodeValue();
-                        transformString = transformString.replaceAll("\\s", "");
-                        transformString = transformString.replace("translate(", "");
-                        transformString = transformString.replace(")", "");
-                        String[] stringPos = transformString.split(",");
+                try {
+                    NamedNodeMap nodeMap = entityNode.getAttributes();
+                    if (nodeMap != null) {
+                        Node idNode = nodeMap.getNamedItem("id");
+                        Node transformNode = nodeMap.getNamedItem("transform");
+                        if (idNode != null && transformNode != null) {
+                            UniqueIdentifier entityId = new UniqueIdentifier(idNode.getNodeValue());
+                            //transform="translate(300.0, 192.5)"
+                            // because the svg dom has not been rendered we cannot get any of the screen data, so we must parse the transform tag
+                            String transformString = transformNode.getNodeValue();
+                            transformString = transformString.replaceAll("\\s", "");
+                            transformString = transformString.replace("translate(", "");
+                            transformString = transformString.replace(")", "");
+                            String[] stringPos = transformString.split(",");
 //                        System.out.println("entityId: " + entityId);
 //                        System.out.println("transformString: " + transformString);
-                        entityPositions.put(entityId, new float[]{Float.parseFloat(stringPos[0]), Float.parseFloat(stringPos[1])});
+                            entityPositions.put(entityId, new float[]{Float.parseFloat(stringPos[0]), Float.parseFloat(stringPos[1])});
 //                      SVGRect bbox = ((SVGLocatable) entityNode).getBBox();
 //                      SVGMatrix sVGMatrix = ((SVGLocatable) entityNode).getCTM();
 //                      System.out.println("getE: " + sVGMatrix.getE());
@@ -63,7 +67,11 @@ public class EntitySvg {
 ////                    System.out.println("bbox W: " + bbox.getWidth());
 ////                    System.out.println("bbox H: " + bbox.getHeight());
 //                      new float[]{sVGMatrix.getE() + bbox.getWidth() / 2, sVGMatrix.getF() + bbox.getHeight() / 2};
+                        }
                     }
+                } catch (IdentifierException exception) {
+                    GuiHelper.linorgBugCatcher.logError(exception);
+                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to read an entity position, layout might not be preserved", "Restore Layout");
                 }
             }
         }
