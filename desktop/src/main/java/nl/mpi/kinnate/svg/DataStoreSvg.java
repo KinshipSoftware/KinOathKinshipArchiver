@@ -81,7 +81,7 @@ public class DataStoreSvg {
 
     public void setDefaults() {
         // todo: it might be better not to add any kin group until the user explicitly adds one from the menu
-        kinTermGroups = new KinTermGroup[]{new KinTermGroup(-1)}; //new KinTermGroup(0), new KinTermGroup(1)};
+        kinTermGroups = new KinTermGroup[]{}; //new KinTermGroup(0), new KinTermGroup(1)};
         indexParameters = new IndexerParameters();
     }
 
