@@ -1,11 +1,10 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +30,7 @@ import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
@@ -50,7 +50,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private EgoSelectionPanel egoSelectionPanel;
     private HidePane kinTermHidePane;
     private HidePane kinTypeHidePane;
-    private KinTermTabPane kinTermPanel;
+//    private KinTermTabPane kinTermPanel;
     private EntityService entityIndex;
     private JProgressBar progressBar;
     public ArbilTable imdiTable;
@@ -101,6 +101,15 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         EntityData[] svgStoredEntities = null;
         graphPanel = new GraphPanel(this);
         kinTypeStringInput = new KinTypeStringInput(defaultString);
+
+        boolean showKinTerms = false;
+        boolean showArchiveLinker = false;
+        boolean showDiagramTree = false;
+        boolean showEntitySearch = false;
+        boolean showIndexerSettings = false;
+        boolean showKinTypeStrings = false;
+        boolean showMetaData = false;
+
         if (existingFile != null && existingFile.exists()) {
             svgStoredEntities = graphPanel.readSvg(existingFile);
             String kinTermContents = null;
@@ -120,13 +129,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 // this is the default document that users see when they run the application for the first time
                 documentType = DocumentType.Simple;
             }
-            boolean showKinTerms = false;
-            boolean showArchiveLinker = false;
-            boolean showDiagramTree = false;
-            boolean showEntitySearch = false;
-            boolean showIndexerSettings = false;
-            boolean showKinTypeStrings = false;
-            boolean showMetaData = false;
             switch (documentType) {
                 case ArchiveLinker:
                     showMetaData = true;
@@ -163,13 +165,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     break;
             }
             graphPanel.generateDefaultSvg();
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 150, showKinTerms);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, showArchiveLinker);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.DiagramTree, 150, showDiagramTree);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
-//            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
         }
         this.setLayout(new BorderLayout());
 
@@ -186,7 +181,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         registeredArbilDataNode = new HashMap<ArbilDataNode, UniqueIdentifier>();
         arbilDataNodesFirstLoadDone = new HashSet<ArbilNode>();
         egoSelectionPanel = new EgoSelectionPanel(imdiTable, graphPanel);
-        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
+//        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
 
 //        kinTypeStringInput.setText(defaultString);
 
@@ -216,26 +211,46 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         graphPanel.setArbilTableModel(tableScrollPane, imdiTableModel, tableHidePane);
 
+        if (graphPanel.dataStoreSvg.getVisiblePanels() == null) {
+            // in some older files and non kinoath files these values would not be set, so we make sure that they are here
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 150, showKinTerms);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, showArchiveLinker);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.DiagramTree, 150, showDiagramTree);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
+//            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
+        }
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
             if (panelSetting.getPanelType() != null) {
                 switch (panelSetting.getPanelType()) {
                     case ArchiveLinker:
-                        panelSetting.setTargetPanel(kinTermHidePane, new ArchiveEntityLinkerPanel(imdiTable, dragTransferHandler), "Archive Linker");
+                        panelSetting.setHidePane(kinTermHidePane, "Archive Linker");
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(imdiTable, dragTransferHandler));
                         break;
                     case DiagramTree:
-                        panelSetting.setTargetPanel(egoSelectionHidePane, egoSelectionPanel, "Diagram Tree");
+                        panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
+                        panelSetting.addTargetPanel(egoSelectionPanel);
                         break;
                     case EntitySearch:
-                        panelSetting.setTargetPanel(kinTermHidePane, entitySearchPanel, "Search Entities");
+                        panelSetting.setHidePane(kinTermHidePane, "Search Entities");
+                        panelSetting.addTargetPanel(entitySearchPanel);
                         break;
                     case IndexerSettings:
-                        panelSetting.setTargetPanel(kinTypeHidePane, indexerParametersPanel, "Indexer Parameters");
+                        panelSetting.setHidePane(kinTypeHidePane, "Indexer Parameters");
+                        panelSetting.addTargetPanel(indexerParametersPanel);
                         break;
                     case KinTerms:
-                        panelSetting.setTargetPanel(kinTermHidePane, kinTermPanel, "Kin Terms");
+//                        panelSetting.setTargetPanel(kinTermHidePane, kinTermPanel, "Kin Terms");
+                        graphPanel.addKinTermGroup();
+                        panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
+                        for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
+                            panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, "")); //  + kinTerms.titleString
+                        }
                         break;
                     case KinTypeStrings:
-                        panelSetting.setTargetPanel(kinTypeHidePane, new JScrollPane(kinTypeStringInput), "Kin Type Strings");
+                        panelSetting.setHidePane(kinTypeHidePane, "Kin Type Strings");
+                        panelSetting.addTargetPanel(new JScrollPane(kinTypeStringInput));
                         break;
 //                case MetaData:
 //                    panelSetting.setTargetPanel(tableHidePane, tableScrollPane, "Metadata");
@@ -414,7 +429,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void exportKinTerms() {
-        kinTermPanel.getSelectedKinTermPanel().exportKinTerms();
+        Component tabComponent = kinTermHidePane.getSelectedComponent();
+        if (tabComponent instanceof KinTermPanel) {
+            ((KinTermPanel) tabComponent).exportKinTerms();
+        }
     }
 
     public void hideShow() {
@@ -422,25 +440,49 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void importKinTerms() {
-        kinTermPanel.getSelectedKinTermPanel().importKinTerms();
+        Component tabComponent = kinTermHidePane.getSelectedComponent();
+        if (tabComponent instanceof KinTermPanel) {
+            ((KinTermPanel) tabComponent).importKinTerms();
+        }
     }
 
     public void addKinTermGroup() {
-        graphPanel.addKinTermGroup();
-        kinTermPanel.updateKinTerms(graphPanel.getkinTermGroups());
+        final KinTermGroup kinTermGroup = graphPanel.addKinTermGroup();
+        for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
+            if (panelSetting.getPanelType() == PanelType.KinTerms) {
+                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup, ""));
+            }
+        }
     }
 
     public VisiblePanelSetting[] getVisiblePanels() {
         return graphPanel.dataStoreSvg.getVisiblePanels();
     }
 
-    public void setPanelState(PanelType panelType, int panelWidth, boolean panelVisible) {
-        // todo: show / hide the requested panel
-        graphPanel.dataStoreSvg.setPanelState(panelType, panelWidth, panelVisible);
+    public void setPanelState(PanelType panelType, boolean panelVisible) {
+        for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
+            if (panelSetting.getPanelType() == panelType) {
+                panelSetting.setPanelShown(panelVisible);
+            }
+        }
+    }
+
+    public boolean getPanelState(PanelType panelType) {
+        for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
+            if (panelSetting.getPanelType() == panelType) {
+                return panelSetting.isPanelShown();
+            }
+        }
+        return false;
     }
 
     public void setSelectedKinTypeSting(String kinTypeStrings) {
-        kinTermPanel.setAddableKinTypeSting(kinTypeStrings);
+        for (Component tabComponent : kinTermHidePane.getComponents()) {
+            if (tabComponent instanceof KinTermPanel) {
+                KinTermPanel kinTermPanel = (KinTermPanel) tabComponent;
+                kinTermPanel.setDefaultKinType(kinTypeStrings);
+            }
+        }
     }
 
     public boolean isHidden() {
