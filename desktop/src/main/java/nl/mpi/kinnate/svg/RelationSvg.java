@@ -3,8 +3,10 @@ package nl.mpi.kinnate.svg;
 import java.awt.Point;
 import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -331,23 +333,24 @@ public class RelationSvg {
             if ("g".equals(currentChild.getLocalName())) {
                 Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
                 //System.out.println("idAttrubite: " + idAttrubite.getNodeValue());
-                DataStoreSvg.GraphRelationData graphRelationData = new DataStoreSvg().getEntitiesForRelations(currentChild);
-                if (graphRelationData != null) {
-                    if (draggedNodeIds.contains(graphRelationData.egoNodeId) || draggedNodeIds.contains(graphRelationData.alterNodeId)) {
-                        // todo: update the relation lines
-                        //System.out.println("needs update on: " + idAttrubite.getNodeValue());
-                        String lineElementId = idAttrubite.getNodeValue() + "Line";
-                        Element relationLineElement = graphPanel.doc.getElementById(lineElementId);
-                        //System.out.println("type: " + relationLineElement.getLocalName());
-                        float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
-                        float[] alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+                try {
+                    DataStoreSvg.GraphRelationData graphRelationData = new DataStoreSvg().getEntitiesForRelations(currentChild);
+                    if (graphRelationData != null) {
+                        if (draggedNodeIds.contains(graphRelationData.egoNodeId) || draggedNodeIds.contains(graphRelationData.alterNodeId)) {
+                            // todo: update the relation lines
+                            //System.out.println("needs update on: " + idAttrubite.getNodeValue());
+                            String lineElementId = idAttrubite.getNodeValue() + "Line";
+                            Element relationLineElement = graphPanel.doc.getElementById(lineElementId);
+                            //System.out.println("type: " + relationLineElement.getLocalName());
+                            float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
+                            float[] alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
 //                        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.egoNodeId);
 //                        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.alterNodeId);
 
-                        float egoX = egoSymbolPoint[0];
-                        float egoY = egoSymbolPoint[1];
-                        float alterX = alterSymbolPoint[0];
-                        float alterY = alterSymbolPoint[1];
+                            float egoX = egoSymbolPoint[0];
+                            float egoY = egoSymbolPoint[1];
+                            float alterX = alterSymbolPoint[0];
+                            float alterY = alterSymbolPoint[1];
 
 //                        SVGRect egoSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.egoNodeId);
 //                        SVGRect alterSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.alterNodeId);
@@ -357,17 +360,21 @@ public class RelationSvg {
 //                        float alterX = alterSymbolRect.getX() + alterSymbolRect.getWidth() / 2;
 //                        float alterY = alterSymbolRect.getY() + alterSymbolRect.getHeight() / 2;
 
-                        if ("polyline".equals(relationLineElement.getLocalName())) {
-                            //System.out.println("polyline to update: " + lineElementId);
-                            setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineElementId, relationLineElement, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
+                            if ("polyline".equals(relationLineElement.getLocalName())) {
+                                //System.out.println("polyline to update: " + lineElementId);
+                                setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineElementId, relationLineElement, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
+                            }
+                            if ("path".equals(relationLineElement.getLocalName())) {
+                                //System.out.println("path to update: " + relationLineElement.getLocalName());
+                                setPathPointsAttribute(relationLineElement, graphRelationData.relationType, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
+                            }
+                            addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
+                            updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
                         }
-                        if ("path".equals(relationLineElement.getLocalName())) {
-                            //System.out.println("path to update: " + relationLineElement.getLocalName());
-                            setPathPointsAttribute(relationLineElement, graphRelationData.relationType, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
-                        }
-                        addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
-                        updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
                     }
+                } catch (IdentifierException exception) {
+//                    GuiHelper.linorgBugCatcher.logError(exception);
+                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to read related entities, sanguine lines might be incorrect", "Update Sanguine Lines");
                 }
             }
         }
