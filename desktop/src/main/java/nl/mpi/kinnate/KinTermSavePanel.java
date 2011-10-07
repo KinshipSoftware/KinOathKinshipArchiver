@@ -13,12 +13,11 @@ public interface KinTermSavePanel {
 
     public VisiblePanelSetting[] getVisiblePanels();
 
-    public void setPanelState(VisiblePanelSetting.PanelType panelType, int panelWidth, boolean panelVisible);
+    public void setPanelState(VisiblePanelSetting.PanelType panelType, boolean panelVisible);
+
+    public boolean getPanelState(VisiblePanelSetting.PanelType panelType);
 
     public EntityData[] getGraphEntities();
-
-    @Deprecated
-    public void hideShow();
 
     public void addKinTermGroup();
 
@@ -27,7 +26,4 @@ public interface KinTermSavePanel {
     public void exportKinTerms();
 
     public void setSelectedKinTypeSting(String kinTypeStrings);
-
-    @Deprecated
-    public boolean isHidden();
 }
