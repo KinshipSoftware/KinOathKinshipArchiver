@@ -1,8 +1,10 @@
 package nl.mpi.kinnate.ui;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import nl.mpi.kinnate.KinTermSavePanel;
+import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
 
 /**
  *  Document   : KinTermsMenu
@@ -13,7 +15,7 @@ public class ArchiveMenu extends JMenu {
 
     static private MainFrame mainFrame;
     KinTermSavePanel currentKinTermSavePanel;
-    JMenuItem hideShowMenu;
+    JCheckBoxMenuItem hideShowMenu;
     JMenuItem showRemoteTreeMenu;
     JMenuItem showLocalTreeMenu;
     JMenu showResultsMenu;
@@ -29,7 +31,7 @@ public class ArchiveMenu extends JMenu {
     }
 
     private void initMenu() {
-        hideShowMenu = new JMenuItem("Hide/Show");
+        hideShowMenu = new JCheckBoxMenuItem("Show");
         showRemoteTreeMenu = new JMenuItem("Archive Tree");
         showLocalTreeMenu = new JMenuItem("Local Tree");
         closeResultsMenu = new JMenu("Close Results");
@@ -46,24 +48,24 @@ public class ArchiveMenu extends JMenu {
                 // todo: check if a kin term pane is showing or associated with the diagram and that a diagam is showing
                 currentKinTermSavePanel = mainFrame.getKinTermPanel();
                 if (currentKinTermSavePanel != null) {
-                    hideShowMenu.setEnabled(true);
-                    if (currentKinTermSavePanel.isHidden()) {
+//                    hideShowMenu.setEnabled(true);
+                    if (currentKinTermSavePanel.getPanelState(PanelType.ArchiveLinker)) {
 //                        exportMenu.setEnabled(false);
 //                        importMenu.setEnabled(false);
 //                        newMenu.setEnabled(false);
 //                        deleteMenu.setEnabled(false);
-                        hideShowMenu.setText("Show");
+                        hideShowMenu.setSelected(true);
                     } else {
 //                        exportMenu.setEnabled(true);
 //                        importMenu.setEnabled(true);
 //                        newMenu.setEnabled(true);
 //                        deleteMenu.setEnabled(false); // todo: enable deleting the current kin term group and update the menu to reflect the group name that would be deleted
-                        hideShowMenu.setText("Hide");
+                        hideShowMenu.setSelected(false);
                     }
                 } else {
 //                    exportMenu.setEnabled(false);
 //                    importMenu.setEnabled(false);
-                    hideShowMenu.setEnabled(false);
+//                    hideShowMenu.setEnabled(false);
 //                    newMenu.setEnabled(false);
 //                    deleteMenu.setEnabled(false);
                 }
@@ -78,7 +80,7 @@ public class ArchiveMenu extends JMenu {
         hideShowMenu.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                currentKinTermSavePanel.hideShow();
+                currentKinTermSavePanel.setPanelState(PanelType.ArchiveLinker, hideShowMenu.isSelected());
             }
         });
 //        exportMenu.addActionListener(new java.awt.event.ActionListener() {
