@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -164,8 +165,8 @@ public class HidePane extends JTabbedPane {
         }
     }
 
-    public void addTab(VisiblePanelSetting panelSetting) {
-        super.addTab(panelSetting.getDisplayName(), panelSetting.getTargetPanel());
+    public void addTab(VisiblePanelSetting panelSetting, String tabString, Component tabComponent) {
+        super.addTab(tabString, tabComponent);
         shownWidth = panelSetting.getPanelWidth();
         hiddenState = false;
         if (horizontalDivider) {
@@ -180,7 +181,9 @@ public class HidePane extends JTabbedPane {
     }
 
     public void remove(VisiblePanelSetting panelSetting) {
-        super.remove(panelSetting.getTargetPanel());
+        for (Component currentPanel : panelSetting.getTargetPanels()) {
+            super.remove(currentPanel);
+        }
         this.setVisible(this.getComponentCount() > 0);
         registeredPanelSettings.remove(panelSetting);
     }
