@@ -116,6 +116,11 @@ public class KinTermPanel extends JPanel {
         this.add(new JScrollPane(paddingPanel), BorderLayout.CENTER);
     }
 
+    @Override
+    public String getName() {
+        return kinTerms.titleString;
+    }
+
     private void populateKinTermList() {
         outerPanel.removeAll();
         outerPanel.add(kinTypeGroupName);
@@ -123,7 +128,7 @@ public class KinTermPanel extends JPanel {
         outerPanel.add(showOnGraphCheckBox);
         outerPanel.add(colourSelectBox);
         outerPanel.add(autoGenerateCheckBox);
-        
+
         populateAddForm();
 //        this.add(new JLabel("KinTerms"));
         for (final KinTerm currentKinTerm : kinTerms.getKinTerms()) {
