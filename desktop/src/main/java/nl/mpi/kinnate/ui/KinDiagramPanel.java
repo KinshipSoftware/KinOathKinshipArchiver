@@ -189,13 +189,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         JPanel kinGraphPanel = new JPanel(new BorderLayout());
 
         kinTypeHidePane = new HidePane(HidePane.HidePanePosition.top, 0);
-        IndexerParametersPanel indexerParametersPanel = new IndexerParametersPanel(this, graphPanel, tableCellDragHandler);
-//        JPanel advancedPanel = new JPanel(new BorderLayout());
 
         JScrollPane tableScrollPane = new JScrollPane(imdiTable);
-//        advancedPanel.add(tableScrollPane, BorderLayout.CENTER);
-        //HidePane indexParamHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
-        //advancedPanel.add(indexParamHidePane, BorderLayout.LINE_END);
 
         HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 150);
 
@@ -239,7 +234,14 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         break;
                     case IndexerSettings:
                         panelSetting.setHidePane(kinTypeHidePane, "Indexer Parameters");
-                        panelSetting.addTargetPanel(indexerParametersPanel);
+                        graphPanel.getIndexParameters().symbolFieldsFields.setParent(graphPanel.getIndexParameters());
+                        graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
+                        final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
+                        final JScrollPane labelFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().labelFields, tableCellDragHandler));
+                        symbolFieldsPanel.setName("Symbol Fields");
+                        labelFieldsPanel.setName("Label Fields");
+                        panelSetting.addTargetPanel(symbolFieldsPanel);
+                        panelSetting.addTargetPanel(labelFieldsPanel);
                         break;
                     case KinTerms:
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
