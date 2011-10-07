@@ -262,7 +262,9 @@ public class SvgUpdateHandler {
                                 // remove old highlights but leave existing selections
                                 if (!graphPanel.selectedGroupId.contains(currentIdentifier)) {
                                     Element existingHighlight = graphPanel.doc.getElementById("highlight_" + currentIdentifier.getAttributeIdentifier());
-                                    existingHighlight.getParentNode().removeChild(existingHighlight);
+                                    if (existingHighlight != null) {
+                                        existingHighlight.getParentNode().removeChild(existingHighlight);
+                                    }
                                     highlightedIdentifiers.remove(currentIdentifier);
                                 }
                             }
