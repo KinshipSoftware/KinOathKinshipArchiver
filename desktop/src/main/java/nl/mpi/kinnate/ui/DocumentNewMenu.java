@@ -23,7 +23,7 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
         ArchiveLinker("Archive Data Linker"),
         EntitySearch("Entity Search"),
         CustomQuery("Custom Metadata"),
-        Simple("Standard");
+        Simple("Standard Diagram");
         private String displayName;
 
         private DocumentType(String displayName) {
@@ -48,7 +48,7 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         DocumentType documentType = DocumentType.valueOf(e.getActionCommand());
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType);
-        targetPane.add("Unsaved " + documentType.getDisplayName() + " Diagram", egoSelectionTestPanel);
+        targetPane.add("Unsaved " + documentType.getDisplayName(), egoSelectionTestPanel);
         targetPane.setSelectedComponent(egoSelectionTestPanel);
     }
 }
