@@ -148,6 +148,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     break;
                 case KinTerms:
                     showKinTerms = true;
+                    graphPanel.addKinTermGroup();
                     break;
                 case Freeform:
 //                    showDiagramTree = true;
@@ -241,8 +242,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         panelSetting.addTargetPanel(indexerParametersPanel);
                         break;
                     case KinTerms:
-//                        panelSetting.setTargetPanel(kinTermHidePane, kinTermPanel, "Kin Terms");
-                        graphPanel.addKinTermGroup();
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
                         for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
                             panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, "")); //  + kinTerms.titleString
