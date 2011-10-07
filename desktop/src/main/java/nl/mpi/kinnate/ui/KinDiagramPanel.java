@@ -149,7 +149,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 case KinTerms:
                     showKinTerms = true;
                     break;
-                case KinTypeString:
+                case Freeform:
 //                    showDiagramTree = true;
                     showKinTypeStrings = true;
                     break;
