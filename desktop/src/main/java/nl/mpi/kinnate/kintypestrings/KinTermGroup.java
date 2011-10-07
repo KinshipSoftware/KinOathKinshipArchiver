@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlElement;
 public class KinTermGroup {
 
     @XmlAttribute(name = "GroupName", namespace = "http://mpi.nl/tla/kin")
-    public String titleString;
+    public String titleString = "Kin Term Group (unnamed)";
     @XmlAttribute(name = "GroupDescription", namespace = "http://mpi.nl/tla/kin")
     public String descriptionString;
     @XmlAttribute(name = "GroupColour", namespace = "http://mpi.nl/tla/kin")
