@@ -13,13 +13,16 @@ public class GraphicsDragHandle extends RelationDragHandle {
     protected UniqueIdentifier graphicsIdentifier;
     protected Element graphicsElement;
     protected Element highlightElement;
+    protected Element highlightRectElement;
     private String xAttribute;
     private String yAttribute;
 
-    public GraphicsDragHandle(Element graphicsElement, Element highlightElement, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) {
+    public GraphicsDragHandle(Element graphicsElement, Element highlightElement, Element highlightRectElement, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) {
         super(null, elementStartX, elementStartY, mouseStartX, mouseStartY, diagramScaleFactor);
         this.graphicsElement = graphicsElement;
         this.highlightElement = highlightElement;
+        this.highlightRectElement = highlightRectElement;
+//               this.highlightPadding
         String elementType = graphicsElement.getTagName();
         if (elementType.equals("circle")) {
             xAttribute = "r";
@@ -45,11 +48,15 @@ public class GraphicsDragHandle extends RelationDragHandle {
         if (dragNodeY < 1) {
             dragNodeY = 1;
         }
+        int highlightRectMultiplier = 2;
         graphicsElement.setAttribute(xAttribute, Float.toString(dragNodeX));
         if (yAttribute != null) {
+            highlightRectMultiplier = 1;
             graphicsElement.setAttribute(yAttribute, Float.toString(dragNodeY));
         }
         highlightElement.setAttribute("cx", Float.toString(dragNodeX));
         highlightElement.setAttribute("cy", Float.toString(dragNodeY));
+        highlightRectElement.setAttribute("width", Float.toString(dragNodeX * highlightRectMultiplier));
+        highlightRectElement.setAttribute("height", Float.toString(dragNodeY * highlightRectMultiplier));
     }
 }
