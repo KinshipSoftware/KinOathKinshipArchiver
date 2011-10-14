@@ -54,6 +54,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private EntityService entityIndex;
     private JProgressBar progressBar;
     public ArbilTable imdiTable;
+    public KinTree imdiTableTree;
     static private File defaultDiagramTemplate;
     private HashMap<ArbilDataNode, UniqueIdentifier> registeredArbilDataNode;
     private HashSet<ArbilNode> arbilDataNodesFirstLoadDone;
@@ -173,6 +174,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         ArbilTableModel imdiTableModel = new ArbilTableModel();
         progressBar.setVisible(false);
         graphPanel.add(progressBar, BorderLayout.PAGE_START);
+        imdiTableTree = new KinTree(graphPanel);
         imdiTable = new ArbilTable(imdiTableModel, "Selected Nodes");
 
         TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
@@ -205,7 +207,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
 
-        graphPanel.setArbilTableModel(tableScrollPane, imdiTableModel, tableHidePane);
+        graphPanel.setArbilTableModel(new MetadataPanel(imdiTableTree, tableScrollPane, imdiTableModel, tableHidePane));
 
         if (graphPanel.dataStoreSvg.getVisiblePanels() == null) {
             // in some older files and non kinoath files these values would not be set, so we make sure that they are here
@@ -238,6 +240,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
                         final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
                         final JScrollPane labelFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().labelFields, tableCellDragHandler));
+                        // todo: Ticket #1115 add overlay fields as paramters
                         symbolFieldsPanel.setName("Symbol Fields");
                         labelFieldsPanel.setName("Label Fields");
                         panelSetting.addTargetPanel(symbolFieldsPanel);
