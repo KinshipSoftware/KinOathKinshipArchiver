@@ -53,8 +53,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //    private KinTermTabPane kinTermPanel;
     private EntityService entityIndex;
     private JProgressBar progressBar;
-    public ArbilTable imdiTable;
-    public KinTree imdiTableTree;
     static private File defaultDiagramTemplate;
     private HashMap<ArbilDataNode, UniqueIdentifier> registeredArbilDataNode;
     private HashSet<ArbilNode> arbilDataNodesFirstLoadDone;
@@ -170,20 +168,13 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         }
         this.setLayout(new BorderLayout());
 
-        // todo: #1101	The metadata pane should always be available rather then for specific diagrams.
-        ArbilTableModel imdiTableModel = new ArbilTableModel();
         progressBar.setVisible(false);
         graphPanel.add(progressBar, BorderLayout.PAGE_START);
-        imdiTableTree = new KinTree(graphPanel);
-        imdiTable = new ArbilTable(imdiTableModel, "Selected Nodes");
 
-        TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
-        imdiTable.setTransferHandler(tableCellDragHandler);
-        imdiTable.setDragEnabled(true);
 
         registeredArbilDataNode = new HashMap<ArbilDataNode, UniqueIdentifier>();
         arbilDataNodesFirstLoadDone = new HashSet<ArbilNode>();
-        egoSelectionPanel = new EgoSelectionPanel(imdiTable, graphPanel);
+        egoSelectionPanel = new EgoSelectionPanel(graphPanel);
 //        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
 
 //        kinTypeStringInput.setText(defaultString);
@@ -192,22 +183,21 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         kinTypeHidePane = new HidePane(HidePane.HidePanePosition.top, 0);
 
-        JScrollPane tableScrollPane = new JScrollPane(imdiTable);
-
         HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 150);
 
         KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler(this);
         graphPanel.setTransferHandler(dragTransferHandler);
         egoSelectionPanel.setTransferHandler(dragTransferHandler);
 
-        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, graphPanel, imdiTable);
+        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, graphPanel);
         entitySearchPanel.setTransferHandler(dragTransferHandler);
 
         HidePane egoSelectionHidePane = new HidePane(HidePane.HidePanePosition.left, 0);
 
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
 
-        graphPanel.setArbilTableModel(new MetadataPanel(imdiTableTree, tableScrollPane, imdiTableModel, tableHidePane));
+        TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
+        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, tableHidePane, tableCellDragHandler));
 
         if (graphPanel.dataStoreSvg.getVisiblePanels() == null) {
             // in some older files and non kinoath files these values would not be set, so we make sure that they are here
@@ -224,7 +214,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 switch (panelSetting.getPanelType()) {
                     case ArchiveLinker:
                         panelSetting.setHidePane(kinTermHidePane, "Archive Linker");
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(imdiTable, dragTransferHandler));
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(graphPanel, dragTransferHandler));
                         break;
                     case DiagramTree:
                         panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
