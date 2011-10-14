@@ -296,7 +296,7 @@ public class SvgUpdateHandler {
 //                                            }
                                 // add the current highlights
 //                                        } else {
-                                if (existingHighlight == null) {
+                                if (existingHighlight == null && selectedGroup != null) {
 //                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                                     SVGRect bbox = ((SVGLocatable) selectedGroup).getBBox();
 //                                        System.out.println("bbox X: " + bbox.getX());
