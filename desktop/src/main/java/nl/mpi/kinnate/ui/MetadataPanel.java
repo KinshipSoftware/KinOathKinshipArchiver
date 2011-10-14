@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
+import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
  *  Document   : MetadataPanel
@@ -21,11 +23,18 @@ public class MetadataPanel extends JPanel {
     private HidePane editorHidePane;
     private ArrayList<ArbilDataNode> tableNodes = new ArrayList<ArbilDataNode>();
 
-    public MetadataPanel(KinTree kinTree, JScrollPane tableScrollPane, ArbilTableModel arbilTableModel, HidePane editorHidePane) {
-        this.kinTree = kinTree;
-        this.arbilTableModel = arbilTableModel;
+    public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler) {
+                // todo: #1101	The metadata pane should always be available rather then for specific diagrams.
+        this.kinTree =  new KinTree(graphPanel);
+        this.arbilTableModel = new ArbilTableModel();
+        ArbilTable imdiTable = new ArbilTable(arbilTableModel, "Selected Nodes");
+
+        imdiTable.setTransferHandler(tableCellDragHandler);
+        imdiTable.setDragEnabled(true);
+        
         this.editorHidePane = editorHidePane;
         this.setLayout(new BorderLayout());
+        JScrollPane tableScrollPane = new JScrollPane(imdiTable);
         this.add(tableScrollPane, BorderLayout.CENTER);
         this.add(kinTree, BorderLayout.LINE_START);
 
