@@ -16,8 +16,8 @@ import nl.mpi.arbil.ui.ArbilNodeSearchPanel;
 import nl.mpi.arbil.ui.ArbilSplitPanel;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
-import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
  *  Document   : ArchiveEntityLinkerPanel
@@ -27,11 +27,11 @@ import nl.mpi.arbil.ui.GuiHelper;
 public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
 
     private JTabbedPane tabbedPane;
-    private ArbilTree archiveTree;
+    private KinTree archiveTree;
     private JButton nextButton;
 
-    public ArchiveEntityLinkerPanel(ArbilTable previewTable, KinDragTransferHandler dragTransferHandler) {
-        archiveTree = new ArbilTree();
+    public ArchiveEntityLinkerPanel(GraphPanel graphPanel, KinDragTransferHandler dragTransferHandler) {
+        archiveTree = new KinTree(graphPanel);
         this.setLayout(new BorderLayout());
         JPanel treePanel = new JPanel(new BorderLayout());
         tabbedPane = new JTabbedPane();
@@ -42,7 +42,6 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         nextButton.addActionListener(this);
         treePanel.add(new JScrollPane(archiveTree), BorderLayout.CENTER);
         treePanel.add(nextButton, BorderLayout.PAGE_END);
-        archiveTree.setCustomPreviewTable(previewTable);
         archiveTree.setTransferHandler(dragTransferHandler);
         archiveTree.setDragEnabled(true);
         loadTreeNodes();
