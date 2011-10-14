@@ -19,35 +19,41 @@ public class MetadataPanel extends JPanel {
 
     private KinTree kinTree;
 //    JScrollPane tableScrollPane;
-    private ArbilTableModel arbilTableModel;
+    private ArbilTableModel kinTableModel;
+    private ArbilTableModel archiveTableModel;
+    private JScrollPane kinTableScrollPane;
     private HidePane editorHidePane;
-    private ArrayList<ArbilDataNode> tableNodes = new ArrayList<ArbilDataNode>();
+    private ArrayList<ArbilDataNode> archiveNodes = new ArrayList<ArbilDataNode>();
 
     public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler) {
-                // todo: #1101	The metadata pane should always be available rather then for specific diagrams.
-        this.kinTree =  new KinTree(graphPanel);
-        this.arbilTableModel = new ArbilTableModel();
-        ArbilTable imdiTable = new ArbilTable(arbilTableModel, "Selected Nodes");
+        // todo: #1101	The metadata pane should always be available rather then for specific diagrams
+        this.kinTree = new KinTree(graphPanel);
+        this.kinTableModel = new ArbilTableModel();
+        this.archiveTableModel = new ArbilTableModel();
+        ArbilTable kinTable = new ArbilTable(kinTableModel, "Selected Nodes");
+        ArbilTable archiveTable = new ArbilTable(archiveTableModel, "Selected Nodes");
+        kinTable.setTransferHandler(tableCellDragHandler);
+        kinTable.setDragEnabled(true);
 
-        imdiTable.setTransferHandler(tableCellDragHandler);
-        imdiTable.setDragEnabled(true);
-        
         this.editorHidePane = editorHidePane;
         this.setLayout(new BorderLayout());
-        JScrollPane tableScrollPane = new JScrollPane(imdiTable);
-        this.add(tableScrollPane, BorderLayout.CENTER);
+        kinTableScrollPane = new JScrollPane(kinTable);
+        JScrollPane archiveTableScrollPane = new JScrollPane(archiveTable);
+        this.add(archiveTableScrollPane, BorderLayout.CENTER);
         this.add(kinTree, BorderLayout.LINE_START);
-
     }
 
     public void removeAllArbilDataNodeRows() {
-        arbilTableModel.removeAllArbilDataNodeRows();
-        tableNodes.clear();
+        kinTableModel.removeAllArbilDataNodeRows();
+        archiveTableModel.removeAllArbilDataNodeRows();
+        archiveNodes.clear();
     }
 
     public void addSingleArbilDataNode(ArbilDataNode arbilDataNode) {
-        arbilTableModel.addSingleArbilDataNode(arbilDataNode);
-        tableNodes.add(arbilDataNode);
+        kinTableModel.addSingleArbilDataNode(arbilDataNode);
+//        if (arbilDataNode instanceof KinTreeNode)
+        archiveTableModel.addSingleArbilDataNode(arbilDataNode);
+        archiveNodes.add(arbilDataNode);
     }
 
     public void addTab(String labelString, Component elementEditor) {
@@ -58,24 +64,21 @@ public class MetadataPanel extends JPanel {
         editorHidePane.remove(elementEditor);
     }
 
-    private void showMetadata() {
-        addTab("Metadata", this);
-    }
-
-    private void hideMetadata() {
-        removeTab(this);
-    }
-
     public void updateEditorPane() {
         // todo: add only imdi nodes to the tree and the root node of them
         // todo: maybe have a table for entities and one for achive metdata
-        if (arbilTableModel.getArbilDataNodeCount() > 0) {
-            showMetadata();
+        if (archiveTableModel.getArbilDataNodeCount() > 0) {
+            addTab("Archive Links", this);
         } else {
-            hideMetadata();
+            removeTab(this);
+        }
+        if (kinTableModel.getArbilDataNodeCount() > 0) {
+            addTab("Metadata", kinTableScrollPane);
+        } else {
+            removeTab(kinTableScrollPane);
         }
         boolean showEditor = editorHidePane.getComponentCount() > 0;
-        kinTree.rootNodeChildren = tableNodes.toArray(new ArbilDataNode[]{});
+        kinTree.rootNodeChildren = archiveNodes.toArray(new ArbilDataNode[]{});
         kinTree.requestResort();
         if (showEditor && editorHidePane.isHidden()) {
             editorHidePane.toggleHiddenState();
