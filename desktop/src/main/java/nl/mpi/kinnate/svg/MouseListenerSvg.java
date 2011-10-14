@@ -207,11 +207,9 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
         // update the table selection
         // todo: #1099	Labels should show the blue highlight
-        if (graphPanel.arbilTableModel != null) {
-            graphPanel.arbilTableModel.removeAllArbilDataNodeRows();
+        if (graphPanel.metadataPanel != null) {
+            graphPanel.metadataPanel.removeAllArbilDataNodeRows();
             try {
-                boolean showEditor = false;
-                boolean tableRowShown = false;
                 ArrayList<UniqueIdentifier> remainingEditors = new ArrayList<UniqueIdentifier>(shownGraphicsEditors.keySet());
                 for (UniqueIdentifier currentSelectedId : graphPanel.selectedGroupId) {
                     remainingEditors.remove(currentSelectedId);
@@ -219,37 +217,26 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                         if (!shownGraphicsEditors.containsKey(currentSelectedId)) {
                             Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());
                             SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement);
-                            graphPanel.editorHidePane.addTab("Graphics Editor", elementEditor);
+                            graphPanel.metadataPanel.addTab("Graphics Editor", elementEditor);
 //                            graphPanel.editorHidePane.setSelectedComponent(elementEditor);
                             shownGraphicsEditors.put(currentSelectedId, elementEditor);
                         }
-                        showEditor = true;
                     } else {
                         String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
                         if (currentSelectedPath != null && currentSelectedPath.length() > 0) {
                             ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentSelectedPath));
                             // register this node with the graph panel
                             kinDiagramPanel.registerArbilNode(currentSelectedId, arbilDataNode);
-                            graphPanel.arbilTableModel.addSingleArbilDataNode(arbilDataNode);
-                            showEditor = true;
-                            tableRowShown = true;
+                            graphPanel.metadataPanel.addSingleArbilDataNode(arbilDataNode);
                         }
                     }
                 }
                 for (UniqueIdentifier remainingIdentifier : remainingEditors) {
                     // remove the unused editors
-                    graphPanel.editorHidePane.remove(shownGraphicsEditors.get(remainingIdentifier));
+                    graphPanel.metadataPanel.removeTab(shownGraphicsEditors.get(remainingIdentifier));
                     shownGraphicsEditors.remove(remainingIdentifier);
                 }
-                if (tableRowShown) {
-                    graphPanel.editorHidePane.addTab("Metadata", graphPanel.tableScrollPane);
-                } else {
-                    graphPanel.editorHidePane.remove(graphPanel.tableScrollPane);
-                }
-                if (showEditor && graphPanel.editorHidePane.isHidden()) {
-                    graphPanel.editorHidePane.toggleHiddenState();
-                }
-                graphPanel.editorHidePane.setVisible(showEditor);
+                graphPanel.metadataPanel.updateEditorPane();
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
             }
