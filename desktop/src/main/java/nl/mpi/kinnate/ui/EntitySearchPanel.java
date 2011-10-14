@@ -14,7 +14,6 @@ import javax.swing.JTextField;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import nl.mpi.arbil.data.ArbilNode;
-import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -36,12 +35,11 @@ public class EntitySearchPanel extends JPanel {
     private JPanel searchPanel;
     private GraphPanel graphPanel;
 
-    public EntitySearchPanel(EntityCollection entityCollection, GraphPanel graphPanel, ArbilTable arbilTable) {
+    public EntitySearchPanel(EntityCollection entityCollection, GraphPanel graphPanel) {
         this.entityCollection = entityCollection;
         this.graphPanel = graphPanel;
         this.setLayout(new BorderLayout());
         resultsTree = new KinTree(graphPanel);
-        resultsTree.setCustomPreviewTable(arbilTable);
         resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
         resultsTree.setRootVisible(false);
         resultsTree.requestResort();
