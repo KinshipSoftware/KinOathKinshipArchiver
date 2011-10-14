@@ -13,18 +13,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.xml.parsers.DocumentBuilderFactory;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
-import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
-import nl.mpi.kinnate.ui.HidePane;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
+import nl.mpi.kinnate.ui.MetadataPanel;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
@@ -47,9 +45,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
     protected SVGDocument doc;
-    protected ArbilTableModel arbilTableModel;
-    protected JScrollPane tableScrollPane;
-    protected HidePane editorHidePane;
+    public MetadataPanel metadataPanel;
     private boolean requiresSave = false;
     private File svgFile = null;
     protected GraphPanelSize graphPanelSize;
@@ -140,10 +136,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        zoomAffineTransform.concatenate(scaleTransform);
 //        svgCanvas.setRenderingTransform(zoomAffineTransform);
 //    }
-    public void setArbilTableModel(JScrollPane tableScrollPane, ArbilTableModel arbilTableModelLocal, HidePane editorHidePane) {
-        this.tableScrollPane = tableScrollPane;
-        this.editorHidePane = editorHidePane;
-        arbilTableModel = arbilTableModelLocal;
+    public void setArbilTableModel(MetadataPanel metadataPanel) {
+        this.metadataPanel = metadataPanel;
     }
 
     public EntityData[] readSvg(File svgFilePath) {
@@ -350,7 +344,8 @@ public class GraphPanel extends JPanel implements SavePanel {
     public void setSelectedIds(UniqueIdentifier[] uniqueIdentifiers) {
         selectedGroupId.clear();
         selectedGroupId.addAll(Arrays.asList(uniqueIdentifiers));
-        mouseListenerSvg.updateSelectionDisplay();
+        svgUpdateHandler.updateSvgSelectionHighlights();
+//        mouseListenerSvg.updateSelectionDisplay();
     }
 
     public UniqueIdentifier[] getSelectedIds() {
