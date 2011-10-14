@@ -32,7 +32,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
     JScrollPane metadataNodeScrolPane;
     JScrollPane transientNodeScrolPane;
 
-    public EgoSelectionPanel(ArbilTable previewTable, GraphPanel graphPanel) {
+    public EgoSelectionPanel(GraphPanel graphPanel) {
         JPanel metadataNodePanel;
         JPanel transientNodePanel;
         transientNodePanel = new JPanel(new BorderLayout());
@@ -82,10 +82,10 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         treePanel2.add(labelPanel2, BorderLayout.PAGE_START);
         treePanel2.add(labelPanel3, BorderLayout.CENTER);
         this.add(metadataNodeScrolPane, BorderLayout.CENTER);
-        egoTree.setCustomPreviewTable(previewTable);
-        requiredTree.setCustomPreviewTable(previewTable);
-        impliedTree.setCustomPreviewTable(previewTable);
-        transientTree.setCustomPreviewTable(previewTable);
+//        egoTree.setCustomPreviewTable(previewTable);
+//        requiredTree.setCustomPreviewTable(previewTable);
+//        impliedTree.setCustomPreviewTable(previewTable);
+//        transientTree.setCustomPreviewTable(previewTable);
     }
 
     public void setTransferHandler(KinDragTransferHandler dragTransferHandler) {
