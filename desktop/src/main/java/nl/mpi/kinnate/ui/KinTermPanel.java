@@ -109,7 +109,7 @@ public class KinTermPanel extends JPanel {
         JPanel paddingPanel = new JPanel();
         paddingPanel.setLayout(new BorderLayout());
         paddingPanel.add(outerPanel, BorderLayout.PAGE_START);
-        this.add(new JScrollPane(paddingPanel), BorderLayout.CENTER);
+        this.add(paddingPanel, BorderLayout.CENTER);
     }
 
     @Override
@@ -127,6 +127,7 @@ public class KinTermPanel extends JPanel {
         kinTermTableModel = new KinTermTableModel(savePanel, kinTerms);
         final JTable kinTermTable = new JTable(kinTermTableModel);
         kinTermTable.setCellSelectionEnabled(true);
+        kinTermTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         outerPanel.add(new JScrollPane(kinTermTable));
     }
 //        populateAddForm();
