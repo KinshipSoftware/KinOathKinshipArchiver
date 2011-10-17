@@ -16,9 +16,21 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
  */
 public class KinTermTableModel extends AbstractTableModel implements TableModelListener {
 
-    KinTermGroup kinTerms;
     SavePanel savePanel;
+    KinTermGroup kinTerms;
     HashSet<KinTerm> checkBoxSet = new HashSet<KinTerm>();
+    String defaultKinType = "";
+
+    public KinTermTableModel(SavePanel savePanel, KinTermGroup kinTerms) {
+        this.savePanel = savePanel;
+        this.kinTerms = kinTerms;
+    }
+
+    public void setDefaultKinType(String defaultKinType) {
+        this.defaultKinType = defaultKinType;
+        setValueAt(defaultKinType, kinTerms.getKinTerms().length, 1);
+        fireTableCellUpdated(kinTerms.getKinTerms().length, 1);
+    }
 
     public void tableChanged(TableModelEvent e) {
         int row = e.getFirstRow();
@@ -29,15 +41,48 @@ public class KinTermTableModel extends AbstractTableModel implements TableModelL
 
     }
 
+    @Override
+    public String getColumnName(int column) {
+        switch (column) {
+            case 0:
+                return "Kin Term";
+            case 1:
+                return "Alter Kin Type Strings";
+            case 2:
+                return "Propositus Kin Type Strings";
+            case 3:
+                return "Anchor Kin Type Strings";
+            case 4:
+                return "Description";
+            case 5:
+                return "";
+            default:
+                throw new UnsupportedOperationException("Too many columns");
+        }
+    }
+
     public int getColumnCount() {
         return 6;
     }
 
     public int getRowCount() {
-        return kinTerms.getKinTerms().length;
+        return kinTerms.getKinTerms().length + 1;
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return true;
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
+        if (kinTerms.getKinTerms().length <= rowIndex) {
+            switch (columnIndex) {
+                case 1:
+                    return defaultKinType;
+                default:
+                    return "";
+            }
+        }
         KinTerm kinTerm = kinTerms.getKinTerms()[rowIndex];
         switch (columnIndex) {
             case 0:
@@ -59,24 +104,43 @@ public class KinTermTableModel extends AbstractTableModel implements TableModelL
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        KinTerm kinTerm = kinTerms.getKinTerms()[rowIndex];
-        super.setValueAt(aValue, rowIndex, columnIndex);
+        KinTerm kinTerm;
+        if (kinTerms.getKinTerms().length <= rowIndex) {
+            switch (columnIndex) {
+                case 1:
+                    return;
+                default:
+                    kinTerm = new KinTerm();
+                    kinTerm.alterKinTypeStrings = defaultKinType;
+                    kinTerms.addKinTerm(kinTerm);
+            }
+        } else {
+            kinTerm = kinTerms.getKinTerms()[rowIndex];
+        }
         switch (columnIndex) {
             case 0:
                 kinTerm.kinTerm = aValue.toString();
+                break;
             case 1:
                 kinTerm.alterKinTypeStrings = aValue.toString();
+                break;
             case 2:
                 kinTerm.propositusKinTypeStrings = aValue.toString();
+                break;
             case 3:
                 kinTerm.anchorKinTypeStrings = aValue.toString();
+                break;
             case 4:
                 kinTerm.kinTermDescription = aValue.toString();
+                break;
             case 5:
                 // todo: check the value
                 checkBoxSet.remove(kinTerm);
+                break;
             default:
                 throw new UnsupportedOperationException("Too many columns");
         }
+        super.setValueAt(aValue, rowIndex, columnIndex);
+        savePanel.updateGraph();
     }
 }
