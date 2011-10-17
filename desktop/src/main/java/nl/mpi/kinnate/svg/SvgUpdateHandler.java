@@ -60,6 +60,18 @@ public class SvgUpdateHandler {
         kinTermSavePanel = kinTermSavePanelLocal;
     }
 
+    public void clearHighlights() {
+        removeRelationHighLights();
+        for (UniqueIdentifier currentIdentifier : highlightedIdentifiers.toArray(new UniqueIdentifier[]{})) {
+            // remove old highlights
+            Element existingHighlight = graphPanel.doc.getElementById("highlight_" + currentIdentifier.getAttributeIdentifier());
+            if (existingHighlight != null) {
+                existingHighlight.getParentNode().removeChild(existingHighlight);
+            }
+            highlightedIdentifiers.remove(currentIdentifier);
+        }
+    }
+
     private void removeRelationHighLights() {
         // this must be only called from within a svg runnable
         Element relationOldHighlightGroup = graphPanel.doc.getElementById("RelationHighlightGroup");
