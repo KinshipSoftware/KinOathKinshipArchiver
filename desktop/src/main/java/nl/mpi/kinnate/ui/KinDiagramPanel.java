@@ -239,7 +239,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     case KinTerms:
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
                         for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
-                            panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, "")); //  + kinTerms.titleString
+                            panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms)); //  + kinTerms.titleString
                         }
                         break;
                     case KinTypeStrings:
@@ -444,7 +444,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         final KinTermGroup kinTermGroup = graphPanel.addKinTermGroup();
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
             if (panelSetting.getPanelType() == PanelType.KinTerms) {
-                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup, ""));
+                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup));
             }
         }
     }
