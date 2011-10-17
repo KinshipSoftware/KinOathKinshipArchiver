@@ -16,7 +16,7 @@ public class KinTermGroup {
     @XmlAttribute(name = "GroupDescription", namespace = "http://mpi.nl/tla/kin")
     public String descriptionString;
     @XmlAttribute(name = "GroupColour", namespace = "http://mpi.nl/tla/kin")
-    public String graphColour;
+    public String graphColour = "blue";
     @XmlAttribute(name = "Show", namespace = "http://mpi.nl/tla/kin")
     public boolean graphShow = true;
     @XmlAttribute(name = "Generate", namespace = "http://mpi.nl/tla/kin")
