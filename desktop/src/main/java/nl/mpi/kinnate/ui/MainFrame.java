@@ -308,8 +308,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_fileMenuActionPerformed
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDiagramActionPerformed
-        for (File selectedFile : ArbilWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false)) {
-            openDiagram(selectedFile, true);
+        final File[] selectedFilesArray = ArbilWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false);
+        if (selectedFilesArray != null) {
+            for (File selectedFile : selectedFilesArray) {
+                openDiagram(selectedFile, true);
+            }
         }
     }//GEN-LAST:event_openDiagramActionPerformed
 
