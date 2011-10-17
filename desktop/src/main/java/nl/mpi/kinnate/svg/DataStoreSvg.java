@@ -42,7 +42,7 @@ public class DataStoreSvg {
     @XmlElement(name = "IndexParameters", namespace = "http://mpi.nl/tla/kin")
     protected IndexerParameters indexParameters;
     @XmlElement(name = "KinTermGroup", namespace = "http://mpi.nl/tla/kin")
-    protected KinTermGroup[] kinTermGroups;
+    protected KinTermGroup[] kinTermGroups = new KinTermGroup[]{};
     @XmlElement(name = "ShowLabels", namespace = "http://mpi.nl/tla/kin")
     public boolean showLabels = true;
     @XmlElement(name = "ShowKinTypeLabels", namespace = "http://mpi.nl/tla/kin")
