@@ -158,33 +158,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         } catch (IOException ioe) {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
-        Element svgRoot = doc.getDocumentElement();
-        // make sure the diagram group exisits
-        Element diagramElement = doc.getElementById("DiagramGroup");
-        if (diagramElement == null) {
-            diagramElement = doc.createElementNS(svgNameSpace, "g");
-            diagramElement.setAttribute("id", "DiagramGroup");
-            svgRoot.appendChild(diagramElement);
-        }
-        // set up the mouse listeners that were lost in the save/re-open process
-        // add any groups that are required and add them in the required order
-        Element previousElement = null;
-        for (String groupForMouseListener : new String[]{"LabelsGroup", "EntityGroup", "GraphicsGroup"}) {
-            Element parentElement = doc.getElementById(groupForMouseListener);
-            if (parentElement == null) {
-                parentElement = doc.createElementNS(svgNameSpace, "g");
-                parentElement.setAttribute("id", groupForMouseListener);
-                diagramElement.insertBefore(parentElement, previousElement);
-            } else {
-                diagramElement.insertBefore(parentElement, previousElement); // insert the node to make sure that it is in the diagram group and not in any other location
-                Node currentNode = parentElement.getFirstChild();
-                while (currentNode != null) {
-                    ((EventTarget) currentNode).addEventListener("mousedown", mouseListenerSvg, false);
-                    currentNode = currentNode.getNextSibling();
-                }
-            }
-            previousElement = parentElement;
-        }
+        configureDiagramGroups();
         dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
         if (dataStoreSvg.graphData == null) {
             return null;
@@ -193,11 +167,46 @@ public class GraphPanel extends JPanel implements SavePanel {
         return dataStoreSvg.graphData.getDataNodes();
     }
 
+    private void configureDiagramGroups() {
+        Element svgRoot = doc.getDocumentElement();
+        // make sure the diagram group exisits
+        Element diagramGroup = doc.getElementById("DiagramGroup");
+        if (diagramGroup == null) {
+            diagramGroup = doc.createElementNS(svgNameSpace, "g");
+            diagramGroup.setAttribute("id", "DiagramGroup");
+            // add the diagram group to the root element (the 'svg' element)
+            svgRoot.appendChild(diagramGroup);
+        }
+        Element previousElement = null;
+        // add the graphics group below the entities and relations
+        // add the relation symbols in a group below the relation lines
+        // add the entity symbols in a group on top of the relation lines
+        // add the labels group on top, also added on svg load if missing
+        for (String groupForMouseListener : new String[]{"LabelsGroup", "EntityGroup", "RelationGroup", "GraphicsGroup"}) {
+            // add any groups that are required and add them in the required order
+            Element parentElement = doc.getElementById(groupForMouseListener);
+            if (parentElement == null) {
+                parentElement = doc.createElementNS(svgNameSpace, "g");
+                parentElement.setAttribute("id", groupForMouseListener);
+                diagramGroup.insertBefore(parentElement, previousElement);
+            } else {
+                diagramGroup.insertBefore(parentElement, previousElement); // insert the node to make sure that it is in the diagram group and not in any other location
+                // set up the mouse listeners that were lost in the save/re-open process
+                if (!groupForMouseListener.equals("RelationGroup")) {
+                    // do not add mouse listeners to the relation group
+                    Node currentNode = parentElement.getFirstChild();
+                    while (currentNode != null) {
+                        ((EventTarget) currentNode).addEventListener("mousedown", mouseListenerSvg, false);
+                        currentNode = currentNode.getNextSibling();
+                    }
+                }
+            }
+            previousElement = parentElement;
+        }
+    }
+
     public void generateDefaultSvg() {
         try {
-            Element diagramGroup;
-            Element relationGroupNode;
-            Element entityGroupNode;
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(true);
             // set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
@@ -221,26 +230,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
             doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
             entitySvg.insertSymbols(doc, svgNameSpace);
-            // add the diagram group to the root element (the 'svg' element)
-            diagramGroup = doc.createElementNS(svgNameSpace, "g");
-            diagramGroup.setAttribute("id", "DiagramGroup");
-            doc.getDocumentElement().appendChild(diagramGroup);
-            // add the graphics group below the entities and relations
-            Element graphicsGroup = doc.createElementNS(svgNameSpace, "g");
-            graphicsGroup.setAttribute("id", "GraphicsGroup");
-            diagramGroup.appendChild(graphicsGroup);
-            // add the relation symbols in a group below the relation lines
-            relationGroupNode = doc.createElementNS(svgNameSpace, "g");
-            relationGroupNode.setAttribute("id", "RelationGroup");
-            diagramGroup.appendChild(relationGroupNode);
-            // add the entity symbols in a group on top of the relation lines
-            entityGroupNode = doc.createElementNS(svgNameSpace, "g");
-            entityGroupNode.setAttribute("id", "EntityGroup");
-            diagramGroup.appendChild(entityGroupNode);
-            // add the labels group on top, also added on svg load if missing
-            Element labelsGroup = doc.createElementNS(svgNameSpace, "g");
-            labelsGroup.setAttribute("id", "LabelsGroup");
-            diagramGroup.appendChild(labelsGroup);
+            configureDiagramGroups();
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
             svgCanvas.setSVGDocument(doc);
             dataStoreSvg.graphData = new GraphSorter();
