@@ -414,7 +414,7 @@ public class MainFrame extends javax.swing.JFrame {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(KinDiagramPanel.getDefaultDiagramFile());
         jTabbedPane1.add("Unsaved Default Diagram", egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
-        egoSelectionTestPanel.drawGraph();
+//        egoSelectionTestPanel.drawGraph();
     }//GEN-LAST:event_newDiagramMenuItemActionPerformed
 
     private void ImportGedcomUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImportGedcomUrlActionPerformed
