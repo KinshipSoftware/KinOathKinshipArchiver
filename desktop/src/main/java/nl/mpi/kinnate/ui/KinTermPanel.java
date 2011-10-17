@@ -99,6 +99,7 @@ public class KinTermPanel extends JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kinTerms.graphShow = showOnGraphCheckBox.isSelected();
                 savePanel.updateGraph();
+                savePanel.setRequiresSave();
             }
         });
         autoGenerateCheckBox = new JCheckBox("Generate Example Entities");
@@ -108,6 +109,7 @@ public class KinTermPanel extends JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kinTerms.graphGenerate = autoGenerateCheckBox.isSelected();
                 savePanel.updateGraph();
+                savePanel.setRequiresSave();
             }
         });
         this.setLayout(new BorderLayout());
@@ -131,8 +133,10 @@ public class KinTermPanel extends JPanel {
         outerPanel.add(kinTypeGroupName);
         outerPanel.add(kinTypeGroupDescription);
         outerPanel.add(getColourPanel());
-        outerPanel.add(showOnGraphCheckBox);
-        outerPanel.add(autoGenerateCheckBox);
+        JPanel optionsPanel = new JPanel(new GridLayout(2, 2));
+        optionsPanel.add(showOnGraphCheckBox);
+        optionsPanel.add(autoGenerateCheckBox);
+        outerPanel.add(optionsPanel);
         kinTermTableModel = new KinTermTableModel(savePanel, kinTerms);
         final JTable kinTermTable = new JTable(kinTermTableModel);
         kinTermTable.setCellSelectionEnabled(true);
@@ -441,6 +445,7 @@ public class KinTermPanel extends JPanel {
 //                populateKinTermList();
                 revalidate();
                 savePanel.updateGraph();
+                savePanel.setRequiresSave();
             } catch (IOException exception) {
                 new ArbilBugCatcher().logError(exception);
             }
