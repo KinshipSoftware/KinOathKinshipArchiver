@@ -313,13 +313,13 @@ public class RelationSvg {
                 labelText.setAttribute("stroke-width", "0");
                 labelText.setAttribute("font-size", "14");
                 //                        labelText.setAttribute("transform", "rotate(45)");
-                Element textPath = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "textPath");
-                textPath.setAttributeNS("http://www.w3.rg/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
-                textPath.setAttribute("startOffset", "50%");
-                textPath.setAttribute("id", "relation" + relationLineIndex + "label");
-                Text textNode = graphPanel.doc.createTextNode(graphLinkNode.labelString);
-                textPath.appendChild(textNode);
-                labelText.appendChild(textPath);
+//                Element textPath = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "textPath");
+//                textPath.setAttributeNS("http://www.w3.rg/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
+//                textPath.setAttribute("startOffset", "50%");
+//                textPath.setAttribute("id", "relation" + relationLineIndex + "label");
+//                Text textNode = graphPanel.doc.createTextNode(graphLinkNode.labelString);
+//                textPath.appendChild(textNode);
+//                labelText.appendChild(textPath);
                 groupNode.appendChild(labelText);
             }
         }
