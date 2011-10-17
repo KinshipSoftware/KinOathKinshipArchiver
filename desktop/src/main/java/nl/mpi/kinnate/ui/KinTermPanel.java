@@ -167,20 +167,20 @@ public class KinTermPanel extends JPanel {
                 });
                 termPanel.add(kinTypeString);
             }
-            if (currentKinTerm.egoType != null) {
-                termPanel.add(new JLabel("Ego Kin Type"));
-                JTextField kinTypeString = new JTextField(currentKinTerm.egoType);
-                kinTypeString.addKeyListener(new KeyAdapter() {
-
-                    @Override
-                    public void keyReleased(KeyEvent ke) {
-                        super.keyReleased(ke);
-                        currentKinTerm.egoType = ((JTextField) ke.getComponent()).getText();
-                        savePanel.updateGraph();
-                    }
-                });
-                termPanel.add(kinTypeString);
-            }
+//            if (currentKinTerm.egoType != null) {
+//                termPanel.add(new JLabel("Ego Kin Type"));
+//                JTextField kinTypeString = new JTextField(currentKinTerm.egoType);
+//                kinTypeString.addKeyListener(new KeyAdapter() {
+//
+//                    @Override
+//                    public void keyReleased(KeyEvent ke) {
+//                        super.keyReleased(ke);
+//                        currentKinTerm.egoType = ((JTextField) ke.getComponent()).getText();
+//                        savePanel.updateGraph();
+//                    }
+//                });
+//                termPanel.add(kinTypeString);
+//            }
             if (currentKinTerm.alterKinTypeStrings != null) {
                 termPanel.add(new JLabel("Alter Kin Type Strings"));
                 JTextField kinTypeString = new JTextField(currentKinTerm.alterKinTypeStrings);
@@ -276,9 +276,9 @@ public class KinTermPanel extends JPanel {
 //                if (addKinTermDescription.getText().length() > 0) {
                 kinTerm.kinTermDescription = addKinTermDescription.getText();
 //                }
-                if (addEgoKinType.getText().length() > 0) {
-                    kinTerm.egoType = addEgoKinType.getText();
-                }
+//                if (addEgoKinType.getText().length() > 0) {
+//                    kinTerm.egoType = addEgoKinType.getText();
+//                }
                 // description and alter are basic requirements
 //                if (addAlterKinType.getText().length() > 0) {
                 kinTerm.alterKinTypeStrings = addAlterKinType.getText();
