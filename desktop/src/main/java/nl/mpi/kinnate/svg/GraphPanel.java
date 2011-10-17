@@ -252,12 +252,9 @@ public class GraphPanel extends JPanel implements SavePanel {
     private void saveSvg(File svgFilePath) {
         svgFile = svgFilePath;
         // todo: make sure the file path ends in .svg lowercase
-        // start temp fix
         selectedGroupId.clear();
-        svgUpdateHandler.drawEntities(); // todo: look into handling the runnable so that this cannot cause any issues
-        // end temp fix
-//        drawNodes(); // re draw the nodes so that any data changes such as the title/description in the kin term groups get updated into the file
-        // end previous menthod before temp fix
+        svgUpdateHandler.clearHighlights();
+        // todo: make sure that any data changes such as the title/description in the kin term groups get updated into the file on save
         ArbilComponentBuilder.savePrettyFormatting(doc, svgFilePath);
         requiresSave = false;
     }
