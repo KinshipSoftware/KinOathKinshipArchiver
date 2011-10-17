@@ -136,12 +136,38 @@ public class KinTermPanel extends JPanel {
         JPanel optionsPanel = new JPanel(new GridLayout(2, 2));
         optionsPanel.add(showOnGraphCheckBox);
         optionsPanel.add(autoGenerateCheckBox);
+        optionsPanel.add(getDeleteKinTermGroupButton());
+        optionsPanel.add(getDeleteSeletedButton());
         outerPanel.add(optionsPanel);
         kinTermTableModel = new KinTermTableModel(savePanel, kinTerms);
         final JTable kinTermTable = new JTable(kinTermTableModel);
         kinTermTable.setCellSelectionEnabled(true);
         kinTermTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         outerPanel.add(new JScrollPane(kinTermTable));
+    }
+
+    private JButton getDeleteKinTermGroupButton() {
+        JButton deleteGroupButton = new JButton("Delete Group");
+        deleteGroupButton.setEnabled(false);
+        deleteGroupButton.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
+        return deleteGroupButton;
+    }
+
+    private JButton getDeleteSeletedButton() {
+        JButton deleteGroupButton = new JButton("Delete Selected");
+        deleteGroupButton.setEnabled(false);
+        deleteGroupButton.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
+        return deleteGroupButton;
     }
 //        populateAddForm();
 ////        this.add(new JLabel("KinTerms"));
