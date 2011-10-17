@@ -61,6 +61,16 @@ public class KinTermTableModel extends AbstractTableModel implements TableModelL
         }
     }
 
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        switch (columnIndex) {
+            case 5:
+                return Boolean.class;
+            default:
+                return super.getColumnClass(columnIndex);
+        }
+    }
+
     public int getColumnCount() {
         return 6;
     }
@@ -79,6 +89,8 @@ public class KinTermTableModel extends AbstractTableModel implements TableModelL
             switch (columnIndex) {
                 case 1:
                     return defaultKinType;
+                case 5:
+                    return false;
                 default:
                     return "";
             }
@@ -96,7 +108,7 @@ public class KinTermTableModel extends AbstractTableModel implements TableModelL
             case 4:
                 return kinTerm.kinTermDescription;
             case 5:
-                return false;
+                return checkBoxSet.contains(kinTerm);
             default:
                 throw new UnsupportedOperationException("Too many columns");
         }
@@ -108,6 +120,7 @@ public class KinTermTableModel extends AbstractTableModel implements TableModelL
         if (kinTerms.getKinTerms().length <= rowIndex) {
             switch (columnIndex) {
                 case 1:
+                case 5:
                     return;
                 default:
                     kinTerm = new KinTerm();
@@ -134,8 +147,11 @@ public class KinTermTableModel extends AbstractTableModel implements TableModelL
                 kinTerm.kinTermDescription = aValue.toString();
                 break;
             case 5:
-                // todo: check the value
-                checkBoxSet.remove(kinTerm);
+                if ((Boolean) aValue) {
+                    checkBoxSet.add(kinTerm);
+                } else {
+                    checkBoxSet.remove(kinTerm);
+                }
                 break;
             default:
                 throw new UnsupportedOperationException("Too many columns");
