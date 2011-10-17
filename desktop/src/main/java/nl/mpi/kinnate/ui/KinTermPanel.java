@@ -1,9 +1,13 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.GridLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,14 +15,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.StringTokenizer;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
+import javax.swing.JColorChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
@@ -36,7 +45,7 @@ public class KinTermPanel extends JPanel {
     SavePanel savePanel;
     JCheckBox autoGenerateCheckBox;
     JCheckBox showOnGraphCheckBox;
-    JComboBox colourSelectBox;
+//    JComboBox colourSelectBox;
     JPanel outerPanel;
 //    JTextField addNewKinTerm;
 //    JTextField addEgoKinType;
@@ -74,15 +83,15 @@ public class KinTermPanel extends JPanel {
                 savePanel.setRequiresSave();
             }
         });
-        colourSelectBox = new JComboBox(new String[]{"red", "blue", "#FF0000", "#FFAA00", "#00FF95", "#62D9A7", "#8000FF", "#FF00D4"});
-        colourSelectBox.setSelectedItem(kinTerms.graphColour);
-        colourSelectBox.addActionListener(new java.awt.event.ActionListener() {
+//        colourSelectBox = new JComboBox(new String[]{"red", "blue", "#FF0000", "#FFAA00", "#00FF95", "#62D9A7", "#8000FF", "#FF00D4"});
+//        colourSelectBox.setSelectedItem(kinTerms.graphColour);
+//        colourSelectBox.addActionListener(new java.awt.event.ActionListener() {
 
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kinTerms.graphColour = colourSelectBox.getSelectedItem().toString();
-                savePanel.updateGraph();
-            }
-        });
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                kinTerms.graphColour = colourSelectBox.getSelectedItem().toString();
+//                savePanel.updateGraph();
+//            }
+//        });
         showOnGraphCheckBox = new JCheckBox("Show On Graph");
         showOnGraphCheckBox.setSelected(kinTerms.graphShow);
         showOnGraphCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -121,8 +130,8 @@ public class KinTermPanel extends JPanel {
         outerPanel.removeAll();
         outerPanel.add(kinTypeGroupName);
         outerPanel.add(kinTypeGroupDescription);
+        outerPanel.add(getColourPanel());
         outerPanel.add(showOnGraphCheckBox);
-        outerPanel.add(colourSelectBox);
         outerPanel.add(autoGenerateCheckBox);
         kinTermTableModel = new KinTermTableModel(savePanel, kinTerms);
         final JTable kinTermTable = new JTable(kinTermTableModel);
@@ -300,6 +309,92 @@ public class KinTermPanel extends JPanel {
 //        termPanel.add(addButton);
 //        outerPanel.add(termPanel);
 //    }
+    private JPanel getColourPanel() {
+        JPanel labelPanel = new JPanel(new GridLayout(1, 2));
+        JPanel outerColourPanel = new JPanel(new BorderLayout());
+        final JPanel pickerPanel = new JPanel(new BorderLayout());
+        outerColourPanel.add(labelPanel, BorderLayout.PAGE_START);
+        outerColourPanel.add(pickerPanel, BorderLayout.CENTER);
+        Color initialColour = Color.blue;
+        try {
+            initialColour = Color.decode(kinTerms.graphColour);
+        } catch (NumberFormatException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+            kinTerms.graphColour = initialColour.toString();
+            savePanel.setRequiresSave();
+        }
+        labelPanel.add(new JLabel("Graph Colour"));
+        final JPanel colourSquare = new JPanel();
+        colourSquare.setBackground(initialColour);
+//        colourSquare.setMinimumSize(new Dimension(100, 100));
+        colourSquare.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                pickerPanel.removeAll();
+                final JColorChooser colourChooser = new JColorChooser(colourSquare.getBackground());
+                final Color revertColour = colourSquare.getBackground();
+                final JPanel buttonPanel = new JPanel();
+                buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
+                final JButton cancelButton = new JButton("Cancel");
+                buttonPanel.add(cancelButton);
+                final JButton revertButton = new JButton("Revert");
+                buttonPanel.add(revertButton);
+                final JButton okButton = new JButton("OK");
+                buttonPanel.add(okButton);
+                cancelButton.addActionListener(new java.awt.event.ActionListener() {
+
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        colourSquare.setBackground(revertColour);
+                        colourChooser.setColor(revertColour);
+                        setColour(revertColour);
+                        pickerPanel.removeAll();
+                        revalidate();
+                        repaint();
+                    }
+                });
+                revertButton.addActionListener(new java.awt.event.ActionListener() {
+
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        colourSquare.setBackground(revertColour);
+                        colourChooser.setColor(revertColour);
+                        setColour(revertColour);
+                    }
+                });
+                okButton.addActionListener(new java.awt.event.ActionListener() {
+
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        pickerPanel.removeAll();
+                        revalidate();
+                        repaint();
+                    }
+                });
+
+
+                colourChooser.setPreviewPanel(new JPanel());
+                colourChooser.getSelectionModel().addChangeListener(new ChangeListener() {
+
+                    public void stateChanged(ChangeEvent e) {
+                        colourSquare.setBackground(colourChooser.getColor());
+                        setColour(colourChooser.getColor());
+                    }
+                });
+                pickerPanel.add(colourChooser.getChooserPanels()[0], BorderLayout.CENTER);
+                pickerPanel.add(buttonPanel, BorderLayout.PAGE_START);
+                revalidate();
+                repaint();
+            }
+        });
+        labelPanel.add(colourSquare);
+        return outerColourPanel;
+    }
+
+    private void setColour(Color desiredColour) {
+        kinTerms.graphColour = "#" + Integer.toHexString(desiredColour.getRGB()).substring(2);
+        savePanel.updateGraph();
+        savePanel.setRequiresSave();
+    }
+
     public void exportKinTerms() {
         File[] exportFile = ArbilWindowManager.getSingleInstance().showFileSelectBox("Export Kin Terms", false, false, false);
         if (exportFile.length != 1) {
