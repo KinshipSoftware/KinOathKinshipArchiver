@@ -28,14 +28,14 @@ public class KinTypeDefinitions extends JPanel {
         TableColumn columnSymbolType = kinTypeTable.getColumnModel().getColumn(2);
 
         JComboBox comboBoxRelationType = new JComboBox();
-        for (EntityData.SymbolType symbolType : EntityData.SymbolType.values()) {
-            comboBoxRelationType.addItem(symbolType);
+        for (DataTypes.RelationType relationType : DataTypes.RelationType.values()) {
+            comboBoxRelationType.addItem(relationType);
         }
         columnRelationType.setCellEditor(new DefaultCellEditor(comboBoxRelationType));
 
         JComboBox comboBoxSymbolType = new JComboBox();
-        for (DataTypes.RelationType relationType : DataTypes.RelationType.values()) {
-            comboBoxSymbolType.addItem(relationType);
+        for (EntityData.SymbolType symbolType : EntityData.SymbolType.values()) {
+            comboBoxSymbolType.addItem(symbolType);
         }
         columnSymbolType.setCellEditor(new DefaultCellEditor(comboBoxSymbolType));
 
