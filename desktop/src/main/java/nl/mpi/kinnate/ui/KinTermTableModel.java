@@ -1,10 +1,7 @@
 package nl.mpi.kinnate.ui;
 
 import java.util.HashSet;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTerm;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
@@ -14,7 +11,7 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
  *  Created on : Oct 17, 2011, 2:50:02 PM
  *  Author     : Peter Withers
  */
-public class KinTermTableModel extends AbstractTableModel implements TableModelListener {
+public class KinTermTableModel extends AbstractTableModel {
 
     SavePanel savePanel;
     KinTermGroup kinTerms;
@@ -30,15 +27,6 @@ public class KinTermTableModel extends AbstractTableModel implements TableModelL
         this.defaultKinType = defaultKinType;
         setValueAt(defaultKinType, kinTerms.getKinTerms().length, 1);
         fireTableCellUpdated(kinTerms.getKinTerms().length, 1);
-    }
-
-    public void tableChanged(TableModelEvent e) {
-        int row = e.getFirstRow();
-        int column = e.getColumn();
-        TableModel model = (TableModel) e.getSource();
-        String columnName = model.getColumnName(column);
-        Object data = model.getValueAt(row, column);
-
     }
 
     @Override
