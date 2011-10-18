@@ -11,6 +11,7 @@ import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
+import nl.mpi.kinnate.svg.DataStoreSvg;
 
 /**
  *  Document   : QueryParser
@@ -142,14 +143,14 @@ public class QueryParser implements EntityService {
 //        }
 //        return visibleEntityFound;
 //    }
-    public EntityData[] processKinTypeStrings(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters, JProgressBar progressBar) throws EntityServiceException {
+    public EntityData[] processKinTypeStrings(URI[] egoNodes, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException {
         foundOrder = 0; // temp for testing // todo: remove testing labels
         if (indexParameters.valuesChanged) {
             // discard all entity data from previous queries
             indexParameters.valuesChanged = false;
             loadedGraphNodes = new HashMap<UniqueIdentifier, EntityData>();
         }
-        KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
+        KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter(dataStoreSvg);
 //        kinTypeStringConverter.highlightComments(kinTypeStrings, parserHighlight);
 //        QueryParser queryParser = new QueryParser();
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
@@ -157,7 +158,7 @@ public class QueryParser implements EntityService {
             graphDataNode.clearVisibility();
             graphDataNode.clearTempLabels();
         }
-        int totalProgressRequired = requiredEntityIdentifiers.size() /*+ egoIdentifiers.size()*/ + kinTypeStrings.length;
+        int totalProgressRequired = dataStoreSvg.requiredEntities.size() /*+ egoIdentifiers.size()*/ + kinTypeStrings.length;
         progressBar.setMaximum(totalProgressRequired);
         progressBar.setMinimum(0);
         progressBar.setValue(0);
@@ -188,7 +189,7 @@ public class QueryParser implements EntityService {
 //                        queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
                         if (kinTypeElement.kinType.isEgoType()) {
                             queryNode.isEgo = true; // there might be multiple types for a single entitiy
-                            new KinTypeStringConverter().setEgoKinTypeString(queryNode);
+                            new KinTypeStringConverter(dataStoreSvg).setEgoKinTypeString(queryNode);
                         }
                     }
                 }
@@ -198,7 +199,7 @@ public class QueryParser implements EntityService {
                 KinTypeStringConverter.KinTypeElement firstKinType = kinTypeElementArray.get(0);
                 if (firstKinType.kinType.isEgoType()) {
                     // the following could be removed if the ego nodes are replaces with the equavelent kin type string eg "E=Identifier" and E at the begining of the line was mandatory (neither are likely to be the case)
-                    for (UniqueIdentifier currentEgoId : egoIdentifiers) {
+                    for (UniqueIdentifier currentEgoId : dataStoreSvg.egoEntities) {
                         // load all entities specified as ego nodes
                         // if a query was not found on the first kintype then add all gernder matching egos to the first kin type
                         EntityData egoNode;
@@ -261,7 +262,7 @@ public class QueryParser implements EntityService {
             }
             progressBar.setValue(progressBar.getValue() + 1);
         }
-        for (Iterator<UniqueIdentifier> iterator = requiredEntityIdentifiers.iterator(); iterator.hasNext();) {
+        for (Iterator<UniqueIdentifier> iterator = dataStoreSvg.requiredEntities.iterator(); iterator.hasNext();) {
             UniqueIdentifier currentEgoId = iterator.next();
             // load and show any mandatory entities
             EntityData requiredNode;
