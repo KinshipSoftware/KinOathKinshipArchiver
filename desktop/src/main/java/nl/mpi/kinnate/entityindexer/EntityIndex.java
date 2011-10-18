@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import javax.swing.JProgressBar;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -13,10 +12,10 @@ import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
+import nl.mpi.kinnate.svg.DataStoreSvg;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -221,12 +220,12 @@ public class EntityIndex implements EntityService {
         }
     }
 
-    public EntityData[] processKinTypeStrings(URI[] egoNodes, HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters, JProgressBar progressBar) throws EntityServiceException {
+    public EntityData[] processKinTypeStrings(URI[] egoNodes, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public EntityData[] getRelationsOfEgo(URI[] egoNodes, String[] uniqueIdentifiers, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters) throws EntityServiceException {
-        KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter();
+        KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter(new DataStoreSvg());
         HashMap<String, EntityData> createdGraphNodes = new HashMap<String, EntityData>();
         for (URI currentEgoUri : egoNodes) {
             EntityData egoNode;
