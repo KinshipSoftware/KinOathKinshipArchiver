@@ -6,7 +6,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -37,8 +39,8 @@ public class DataStoreSvg {
     public HashSet<UniqueIdentifier> egoEntities = new HashSet<UniqueIdentifier>();
     @XmlElement(name = "RequiredEntities", namespace = "http://mpi.nl/tla/kin")
     public HashSet<UniqueIdentifier> requiredEntities = new HashSet<UniqueIdentifier>();
-//        @XmlElementWrapper(name = "kin:KinTypeStrings")
-    @XmlElement(name = "KinTypeDefinitions", namespace = "http://mpi.nl/tla/kin")
+    @XmlElementWrapper(name = "KinTypeDefinitions")
+    @XmlElement(name = "KinType", namespace = "http://mpi.nl/tla/kin")
     protected KinType[] kinTypeDefinitions = null;
     @XmlElement(name = "KinTypeString", namespace = "http://mpi.nl/tla/kin")
     protected String[] kinTypeStrings = new String[]{};
@@ -88,6 +90,7 @@ public class DataStoreSvg {
         indexParameters = new IndexerParameters();
     }
 
+    @XmlTransient
     public KinType[] getKinTypeDefinitions() {
         if (kinTypeDefinitions != null) {
             return kinTypeDefinitions;
