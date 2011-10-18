@@ -92,7 +92,7 @@ public class PedigreePackageExport {
     }
 
     static public void main(String[] argsArray) {
-        KinTypeStringConverter graphData = new KinTypeStringConverter();
+        KinTypeStringConverter graphData = new KinTypeStringConverter(new DataStoreSvg());
         // // todo: an addition to KinTypeStringConverter: EmB does not have any parents but it could however just take the parnents of Em: String kinTypes = "EmB|EmZ|EmM|EmF|EmS|EmD";
         //String kinTypes = "EmM|EmF|EmS|EmD";
         String kinTypes = "EmB|EmZ|EmM|EmF|EmS|EmD";
