@@ -14,6 +14,7 @@ import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
+import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -37,6 +38,8 @@ public class DataStoreSvg {
     @XmlElement(name = "RequiredEntities", namespace = "http://mpi.nl/tla/kin")
     public HashSet<UniqueIdentifier> requiredEntities = new HashSet<UniqueIdentifier>();
 //        @XmlElementWrapper(name = "kin:KinTypeStrings")
+    @XmlElement(name = "KinTypeDefinitions", namespace = "http://mpi.nl/tla/kin")
+    protected KinType[] kinTypeDefinitions = null;
     @XmlElement(name = "KinTypeString", namespace = "http://mpi.nl/tla/kin")
     protected String[] kinTypeStrings = new String[]{};
     @XmlElement(name = "IndexParameters", namespace = "http://mpi.nl/tla/kin")
@@ -83,6 +86,19 @@ public class DataStoreSvg {
         // todo: it might be better not to add any kin group until the user explicitly adds one from the menu
         kinTermGroups = new KinTermGroup[]{}; //new KinTermGroup(0), new KinTermGroup(1)};
         indexParameters = new IndexerParameters();
+    }
+
+    public KinType[] getKinTypeDefinitions() {
+        if (kinTypeDefinitions != null) {
+            return kinTypeDefinitions;
+        } else {
+            // make sure that we do not set kinTypeDefinitions unless the user has changed the default kin types, otherwise it will be stored in the svg
+            return KinType.getReferenceKinTypes();
+        }
+    }
+
+    public void setKinTypeDefinitions(KinType[] kinTypeDefinitions) {
+        this.kinTypeDefinitions = kinTypeDefinitions;
     }
 
     public VisiblePanelSetting[] getVisiblePanels() {
