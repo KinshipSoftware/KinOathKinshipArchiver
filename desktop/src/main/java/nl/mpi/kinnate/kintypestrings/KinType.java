@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.kintypestrings;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -13,16 +14,23 @@ import nl.mpi.kinnate.kindata.EntityRelation;
  */
 public class KinType {
 
+    private KinType() {
+    }
+
     private KinType(String codeStringLocal, DataTypes.RelationType relationTypeLocal, EntityData.SymbolType symbolTypeLocal, String displayStringLocal) {
         codeString = codeStringLocal;
         relationType = relationTypeLocal;
         symbolType = symbolTypeLocal;
         displayString = displayStringLocal;
     }
-    protected String codeString;
-    protected DataTypes.RelationType relationType;
-    protected EntityData.SymbolType symbolType;
-    protected String displayString;
+    @XmlAttribute(name = "code", namespace = "http://mpi.nl/tla/kin")
+    protected String codeString = null;
+    @XmlAttribute(name = "type", namespace = "http://mpi.nl/tla/kin")
+    protected DataTypes.RelationType relationType = null;
+    @XmlAttribute(name = "symbol", namespace = "http://mpi.nl/tla/kin")
+    protected EntityData.SymbolType symbolType = null;
+    @XmlAttribute(name = "name", namespace = "http://mpi.nl/tla/kin")
+    protected String displayString = null;
 
     public String getCodeString() {
         return codeString;
@@ -93,7 +101,6 @@ public class KinType {
     public static KinType[] getReferenceKinTypes() {
         return referenceKinTypes;
     }
-
     protected static KinType[] referenceKinTypes = new KinType[]{
         // other types
         // todo: the gendered ego kin types Em and Ef are probably not correct and should be verified
