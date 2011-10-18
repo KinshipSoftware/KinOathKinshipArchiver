@@ -14,8 +14,6 @@ import javax.swing.JScrollPane;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeContainer;
 import nl.mpi.arbil.data.ArbilNode;
-import nl.mpi.arbil.ui.ArbilTable;
-import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
@@ -35,6 +33,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.ui.DocumentNewMenu.DocumentType;
+import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -235,6 +234,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         labelFieldsPanel.setName("Label Fields");
                         panelSetting.addTargetPanel(symbolFieldsPanel);
                         panelSetting.addTargetPanel(labelFieldsPanel);
+                        panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg));
                         break;
                     case KinTerms:
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
