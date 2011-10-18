@@ -19,6 +19,12 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class KinTypeStringConverter extends GraphSorter {
 
+    DataStoreSvg dataStoreSvg;
+
+    public KinTypeStringConverter(DataStoreSvg dataStoreSvg) {
+        this.dataStoreSvg = dataStoreSvg;
+    }
+
     public class KinTypeElement {
 
         public KinTypeElement() {
@@ -33,7 +39,7 @@ public class KinTypeStringConverter extends GraphSorter {
     }
 
     public void setEgoKinTypeString(EntityData entityData) {
-        for (KinType kinType : KinType.referenceKinTypes) {
+        for (KinType kinType : dataStoreSvg.getKinTypeDefinitions()) {
             if (kinType.isEgoType() && kinType.symbolType.name().equals(entityData.getSymbolType())) {
                 entityData.addKinTypeString(kinType.codeString);
             }
@@ -101,7 +107,7 @@ public class KinTypeStringConverter extends GraphSorter {
         boolean foundKinType = true;
         String errorMessage = null;
         while (foundKinType && consumableString.length() > 0) {
-            for (KinType currentReferenceKinType : KinType.referenceKinTypes) {
+            for (KinType currentReferenceKinType : dataStoreSvg.getKinTypeDefinitions()) {
                 foundKinType = false;
                 if (consumableString.startsWith(currentReferenceKinType.codeString)) {
                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, initialLength - consumableString.length(), currentReferenceKinType.displayString);
@@ -178,7 +184,7 @@ public class KinTypeStringConverter extends GraphSorter {
         ArrayList<KinType> kinTypeList = new ArrayList<KinType>();
         boolean foundKinType = true;
         while (foundKinType && consumableString.length() > 0) {
-            for (KinType currentReferenceKinType : KinType.referenceKinTypes) {
+            for (KinType currentReferenceKinType : dataStoreSvg.getKinTypeDefinitions()) {
                 foundKinType = false;
                 if (consumableString.startsWith(currentReferenceKinType.codeString)) {
                     kinTypeList.add(currentReferenceKinType);
@@ -247,7 +253,7 @@ public class KinTypeStringConverter extends GraphSorter {
                     while (consumableString.length() > 0) {
                         int parserHighlightPosition = initialLength - consumableString.length();
                         boolean kinTypeFound = false;
-                        for (KinType currentReferenceKinType : KinType.referenceKinTypes) {
+                        for (KinType currentReferenceKinType : dataStoreSvg.getKinTypeDefinitions()) {
                             if (consumableString.startsWith(currentReferenceKinType.codeString)
                                     && currentReferenceKinType.relationType != null && currentReferenceKinType.symbolType != null // not allowing wild cards here
                                     // todo: Ticket #1106 this could provide better feedback and show a message in the tool tip about wild cards not available in this context
