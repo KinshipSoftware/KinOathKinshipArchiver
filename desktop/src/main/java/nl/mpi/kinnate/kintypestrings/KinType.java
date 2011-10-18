@@ -101,7 +101,7 @@ public class KinType {
     public static KinType[] getReferenceKinTypes() {
         return referenceKinTypes;
     }
-    protected static KinType[] referenceKinTypes = new KinType[]{
+    private static KinType[] referenceKinTypes = new KinType[]{
         // other types
         // todo: the gendered ego kin types Em and Ef are probably not correct and should be verified
         new KinType("Ef", DataTypes.RelationType.none, EntityData.SymbolType.circle, "Ego Female"),
