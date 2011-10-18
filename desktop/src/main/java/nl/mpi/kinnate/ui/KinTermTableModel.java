@@ -119,10 +119,18 @@ public class KinTermTableModel extends AbstractTableModel implements TableModelL
         KinTerm kinTerm;
         if (kinTerms.getKinTerms().length <= rowIndex) {
             switch (columnIndex) {
-                case 1:
                 case 5:
                     return;
+                case 1:
+                    if (defaultKinType.equals(aValue)) {
+                        // skip if the value is unchanged
+                        return;
+                    } // otherwise add a kin type via the default case below
                 default:
+                    if ("".equals(aValue)) {
+                        // ignore if no text has been entered
+                        return;
+                    }
                     kinTerm = new KinTerm();
                     kinTerm.alterKinTypeStrings = defaultKinType;
                     kinTerms.addKinTerm(kinTerm);
