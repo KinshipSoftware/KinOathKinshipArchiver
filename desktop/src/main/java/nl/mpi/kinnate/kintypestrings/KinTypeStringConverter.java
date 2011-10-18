@@ -202,8 +202,17 @@ public class KinTypeStringConverter extends GraphSorter {
         for (KinTermGroup kinTerms : kinTermsArray) {
             if (kinTerms.graphGenerate) {
                 for (KinTerm kinTerm : kinTerms.getKinTerms()) {
-                    String[] kinTypeStrings = kinTerm.alterKinTypeStrings.split("\\|");
-                    inputStringList.addAll(Arrays.asList(kinTypeStrings));
+                    // todo: if these do not state E then maybe they should continue on from the Alter kin type string, iow the propositus could be specified from alter rather than ego
+                    String[] alterKinTypeStrings = kinTerm.alterKinTypeStrings.split("\\|");
+                    inputStringList.addAll(Arrays.asList(alterKinTypeStrings));
+                    if (kinTerm.propositusKinTypeStrings != null) {
+                        String[] propositusKinTypeStrings = kinTerm.propositusKinTypeStrings.split("\\|");
+                        inputStringList.addAll(Arrays.asList(propositusKinTypeStrings));
+                    }
+                    if (kinTerm.anchorKinTypeStrings != null) {
+                        String[] anchorKinTypeStrings = kinTerm.anchorKinTypeStrings.split("\\|");
+                        inputStringList.addAll(Arrays.asList(anchorKinTypeStrings));
+                    }
                 }
             }
         }
