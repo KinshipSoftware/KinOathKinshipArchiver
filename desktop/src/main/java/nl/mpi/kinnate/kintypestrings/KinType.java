@@ -1,7 +1,9 @@
 package nl.mpi.kinnate.kintypestrings;
 
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityData.SymbolType;
 import nl.mpi.kinnate.kindata.EntityRelation;
 
 /**
@@ -24,6 +26,18 @@ public class KinType {
 
     public String getCodeString() {
         return codeString;
+    }
+
+    public String getDisplayString() {
+        return displayString;
+    }
+
+    public RelationType getRelationType() {
+        return relationType;
+    }
+
+    public SymbolType getSymbolType() {
+        return symbolType;
     }
 
     public boolean isEgoType() {
@@ -75,6 +89,11 @@ public class KinType {
         }
         return true;
     }
+
+    public static KinType[] getReferenceKinTypes() {
+        return referenceKinTypes;
+    }
+
     protected static KinType[] referenceKinTypes = new KinType[]{
         // other types
         // todo: the gendered ego kin types Em and Ef are probably not correct and should be verified
