@@ -137,9 +137,10 @@ public class KinTermPanel extends JPanel {
         optionsPanel.add(showOnGraphCheckBox);
         optionsPanel.add(autoGenerateCheckBox);
         optionsPanel.add(getDeleteKinTermGroupButton());
-        optionsPanel.add(getDeleteSeletedButton());
+        final JButton deleteSeletedButton = new JButton("Delete Selected");
+        optionsPanel.add(deleteSeletedButton);
         outerPanel.add(optionsPanel);
-        kinTermTableModel = new KinTermTableModel(savePanel, kinTerms);
+        kinTermTableModel = new KinTermTableModel(savePanel, kinTerms, deleteSeletedButton);
         final JTable kinTermTable = new JTable(kinTermTableModel);
         kinTermTable.setCellSelectionEnabled(true);
         kinTermTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -158,17 +159,6 @@ public class KinTermPanel extends JPanel {
         return deleteGroupButton;
     }
 
-    private JButton getDeleteSeletedButton() {
-        JButton deleteGroupButton = new JButton("Delete Selected");
-        deleteGroupButton.setEnabled(false);
-        deleteGroupButton.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-        return deleteGroupButton;
-    }
 //        populateAddForm();
 ////        this.add(new JLabel("KinTerms"));
 //        for (final KinTerm currentKinTerm : kinTerms.getKinTerms()) {
@@ -277,7 +267,6 @@ public class KinTermPanel extends JPanel {
 ////        });
 ////        outerPanel.add(saveButton, BorderLayout.LINE_END);
 //    }
-
     public void setDefaultKinType(String kinTypeString) {
         kinTermTableModel.setDefaultKinType(kinTypeString);
 //        defaultKinType = kinTypeString;
