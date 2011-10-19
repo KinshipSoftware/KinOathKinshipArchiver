@@ -104,6 +104,10 @@ public class KinTermGroup {
         }
     }
 
+    public void removeKinTerm(KinTerm kinTerm) {
+        kinTermArray.remove(kinTerm);
+    }
+
     public KinTerm[] getKinTerms() {
         return kinTermArray.toArray(new KinTerm[]{});
     }
