@@ -17,7 +17,7 @@ public class KinType {
     private KinType() {
     }
 
-    private KinType(String codeStringLocal, DataTypes.RelationType relationTypeLocal, EntityData.SymbolType symbolTypeLocal, String displayStringLocal) {
+    public KinType(String codeStringLocal, DataTypes.RelationType relationTypeLocal, EntityData.SymbolType symbolTypeLocal, String displayStringLocal) {
         codeString = codeStringLocal;
         relationType = relationTypeLocal;
         symbolType = symbolTypeLocal;
