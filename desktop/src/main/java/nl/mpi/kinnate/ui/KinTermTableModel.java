@@ -1,6 +1,10 @@
 package nl.mpi.kinnate.ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.HashSet;
+import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTerm;
@@ -11,16 +15,20 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
  *  Created on : Oct 17, 2011, 2:50:02 PM
  *  Author     : Peter Withers
  */
-public class KinTermTableModel extends AbstractTableModel {
+public class KinTermTableModel extends AbstractTableModel implements ActionListener {
 
     SavePanel savePanel;
     KinTermGroup kinTerms;
     HashSet<KinTerm> checkBoxSet = new HashSet<KinTerm>();
     String defaultKinType = "";
+    JButton deleteSelectedButton;
 
-    public KinTermTableModel(SavePanel savePanel, KinTermGroup kinTerms) {
+    public KinTermTableModel(SavePanel savePanel, KinTermGroup kinTerms, JButton deleteSelectedButton) {
         this.savePanel = savePanel;
         this.kinTerms = kinTerms;
+        this.deleteSelectedButton = deleteSelectedButton;
+        deleteSelectedButton.setEnabled(false);
+        deleteSelectedButton.addActionListener(this);
     }
 
     public void setDefaultKinType(String defaultKinType) {
@@ -108,6 +116,13 @@ public class KinTermTableModel extends AbstractTableModel {
         if (kinTerms.getKinTerms().length <= rowIndex) {
             switch (columnIndex) {
                 case 5:
+                    if (checkBoxSet.isEmpty()) {
+                        checkBoxSet.addAll(Arrays.asList(kinTerms.getKinTerms()));
+                    } else {
+                        checkBoxSet.clear();
+                    }
+                    deleteSelectedButton.setEnabled(!checkBoxSet.isEmpty());
+                    fireTableDataChanged();
                     return;
                 case 1:
                     if (defaultKinType.equals(aValue)) {
@@ -152,7 +167,17 @@ public class KinTermTableModel extends AbstractTableModel {
             default:
                 throw new UnsupportedOperationException("Too many columns");
         }
+        deleteSelectedButton.setEnabled(!checkBoxSet.isEmpty());
         super.setValueAt(aValue, rowIndex, columnIndex);
+        savePanel.updateGraph();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        for (KinTerm kinTerm : checkBoxSet) {
+            kinTerms.removeKinTerm(kinTerm);
+        }
+        checkBoxSet.clear();
+        fireTableDataChanged();
         savePanel.updateGraph();
     }
 }
