@@ -16,11 +16,11 @@ public class KinTermGroup {
     @XmlAttribute(name = "GroupDescription", namespace = "http://mpi.nl/tla/kin")
     public String descriptionString;
     @XmlAttribute(name = "GroupColour", namespace = "http://mpi.nl/tla/kin")
-    public String graphColour = "blue";
+    public String graphColour = "#0000FF";
     @XmlAttribute(name = "Show", namespace = "http://mpi.nl/tla/kin")
     public boolean graphShow = true;
     @XmlAttribute(name = "Generate", namespace = "http://mpi.nl/tla/kin")
-    public boolean graphGenerate = false;
+    public boolean graphGenerate = true;
     @XmlElement(name = "KinTerm", namespace = "http://mpi.nl/tla/kin")
     private ArrayList<KinTerm> kinTermArray;
 
@@ -28,6 +28,7 @@ public class KinTermGroup {
         kinTermArray = new ArrayList<KinTerm>();
     }
 
+    @Deprecated
     public KinTermGroup(int type) {
         switch (type) {
             case 0:
