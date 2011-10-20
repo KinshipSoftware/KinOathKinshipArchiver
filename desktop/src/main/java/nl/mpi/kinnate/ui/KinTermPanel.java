@@ -334,12 +334,13 @@ public class KinTermPanel extends JPanel {
         final JPanel pickerPanel = new JPanel(new BorderLayout());
         outerColourPanel.add(labelPanel, BorderLayout.PAGE_START);
         outerColourPanel.add(pickerPanel, BorderLayout.CENTER);
-        Color initialColour = Color.blue;
+        Color initialColour;
         try {
             initialColour = Color.decode(kinTerms.graphColour);
         } catch (NumberFormatException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
-            kinTerms.graphColour = initialColour.toString();
+            kinTerms.graphColour = "#0000FF";
+            initialColour = Color.blue;
             savePanel.setRequiresSave();
         }
         labelPanel.add(new JLabel("Graph Colour"));
