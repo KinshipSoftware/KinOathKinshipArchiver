@@ -246,10 +246,6 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     private void saveSvg(File svgFilePath) {
         svgFile = svgFilePath;
-        if (!svgFile.getName().toLowerCase().endsWith(".svg")) {
-            svgFile = new File(svgFile.getParentFile(), svgFile.getName() + ".svg");
-        }
-        // todo: make sure the file path ends in .svg lowercase
         selectedGroupId.clear();
         svgUpdateHandler.clearHighlights();
         // todo: make sure that any data changes such as the title/description in the kin term groups get updated into the file on save
