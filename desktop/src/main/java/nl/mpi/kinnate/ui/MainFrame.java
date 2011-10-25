@@ -70,7 +70,7 @@ public class MainFrame extends javax.swing.JFrame {
     public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu) {
         if (saveToRecentMenu) {
             // prevent files from the samples menu being added to the recent files menu
-            recentFileMenu.addRecentFile(selectedUri);
+            recentFileMenu.addRecentFile(new File(selectedUri));
         }
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu);
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
@@ -327,7 +327,7 @@ public class MainFrame extends javax.swing.JFrame {
             int tabIndex = Integer.valueOf(evt.getActionCommand());
             SavePanel savePanel = getSavePanel(tabIndex);
             savePanel.saveToFile(file);
-            recentFileMenu.addRecentFile(file.toURI());
+            recentFileMenu.addRecentFile(file);
             jTabbedPane1.setTitleAt(tabIndex, file.getName());
         } else {
             // todo: warn user that no file selected and so cannot save
