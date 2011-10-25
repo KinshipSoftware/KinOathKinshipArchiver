@@ -1,10 +1,12 @@
 package nl.mpi.kinnate.svg;
 
-import java.awt.Component;
 import java.net.URI;
 import java.net.URISyntaxException;
+import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.swing.svg.SVGUserAgentGUIAdapter;
 
 /**
@@ -14,8 +16,11 @@ import org.apache.batik.swing.svg.SVGUserAgentGUIAdapter;
  */
 public class GraphUserAgent extends SVGUserAgentGUIAdapter {
 
-    public GraphUserAgent(Component parentComponent) {
+    GraphPanel graphPanel;
+
+    public GraphUserAgent(GraphPanel parentComponent) {
         super(parentComponent);
+        graphPanel = parentComponent;
     }
 
     @Override
@@ -40,10 +45,22 @@ public class GraphUserAgent extends SVGUserAgentGUIAdapter {
 
     @Override
     public void openLink(String targetUri, boolean newc) {
+        graphPanel.metadataPanel.removeAllArbilDataNodeRows();
         try {
-            GuiHelper.getSingleInstance().openFileInExternalApplication(new URI(targetUri));
-        } catch (URISyntaxException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            // put link target into the table
+            final ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(targetUri));
+            graphPanel.metadataPanel.addSingleArbilDataNode(arbilDataNode);
+        } catch (URISyntaxException urise) {
+            GuiHelper.linorgBugCatcher.logError(urise);
         }
+        // set the graph selection
+        graphPanel.setSelectedIds(new UniqueIdentifier[]{});
+        graphPanel.metadataPanel.updateEditorPane();
+        // todo: provide a url for the imdiviewer or to launch arbil
+//        try {
+//            GuiHelper.getSingleInstance().openFileInExternalApplication(new URI(targetUri));
+//        } catch (URISyntaxException exception) {
+//            GuiHelper.linorgBugCatcher.logError(exception);
+//        }
     }
 }
