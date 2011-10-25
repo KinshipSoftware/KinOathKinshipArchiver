@@ -2,15 +2,13 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
-import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 
@@ -28,7 +26,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
         setupMenu();
     }
 
-    public void addRecentFile(URI recentUri) {
+    public void addRecentFile(File recentFile) {
         // store the accessed and saved files and provide a menu of recent files
         ArrayList<String> tempList = new ArrayList<String>();
         String[] tempArray;
@@ -37,13 +35,16 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             if (tempArray != null) {
                 tempList.addAll(Arrays.asList(tempArray));
             }
-            // todo: restrict the recent file list to x number but make sure only the oldest gets removed
+            // restrict the recent file list to x number but make sure only the oldest gets removed
+            while (tempList.size() > 10) {
+                tempList.remove(0);
+            }
             // todo: make sure the list is kept in order
-            tempList.remove(recentUri.toString());
-            tempList.add(recentUri.toString());
+            tempList.remove(recentFile.toString());
+            tempList.add(recentFile.toString());
         } catch (IOException exception) {
 //            GuiHelper.linorgBugCatcher.logError(exception);
-            tempArray = new String[]{recentUri.toString()};
+            tempArray = new String[]{recentFile.toString()};
         }
         try {
             ArbilSessionStorage.getSingleInstance().saveStringArray("RecentKinFiles", tempList.toArray(new String[]{}));
@@ -87,16 +88,17 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             }
             setupMenu();
         } else {
-            try {
-                final String actionString = e.getActionCommand();
-                final URI recentUri = new URI(actionString);
-                final int startIndex = actionString.lastIndexOf('/');
-                final String recentName = actionString.substring(startIndex + 1);
-                mainFrame.openDiagram(recentName, recentUri, true);
-            } catch (URISyntaxException exception) {
-                GuiHelper.linorgBugCatcher.logError(exception);
-                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
-            }
+//            try {
+            final String actionString = e.getActionCommand();
+            final File recentFile = new File(actionString);
+//                final int startIndex = actionString.lastIndexOf('/');
+//                final String recentName = actionString.substring(startIndex + 1);
+            final String recentName = recentFile.getName();
+            mainFrame.openDiagram(recentName, recentFile.toURI(), true);
+//            } catch (URISyntaxException exception) {
+//                GuiHelper.linorgBugCatcher.logError(exception);
+//                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
+//            }
         }
     }
 }
