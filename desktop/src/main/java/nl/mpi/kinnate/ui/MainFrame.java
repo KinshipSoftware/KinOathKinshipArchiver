@@ -93,16 +93,16 @@ public class MainFrame extends javax.swing.JFrame {
         return kinTermSavePanel;
     }
 
-    public void openDiagram(File selectedFile, boolean saveToRecentMenu) {
+    public void openDiagram(String diagramTitle, File selectedFile, boolean saveToRecentMenu) {
         if (saveToRecentMenu) {
             // prevent files from the samples menu being added to the recent files menu
             recentFileMenu.addRecentFile(selectedFile.getAbsolutePath());
         }
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedFile);
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
-        jTabbedPane1.add(selectedFile.getName(), egoSelectionTestPanel);
+        jTabbedPane1.add(diagramTitle, egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
-        egoSelectionTestPanel.drawGraph();
+//        egoSelectionTestPanel.drawGraph();
     }
 
     public void importEntities(String importPath) {
@@ -311,7 +311,7 @@ public class MainFrame extends javax.swing.JFrame {
         final File[] selectedFilesArray = ArbilWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
-                openDiagram(selectedFile, true);
+                openDiagram(selectedFile.getName(), selectedFile, true);
             }
         }
     }//GEN-LAST:event_openDiagramActionPerformed
