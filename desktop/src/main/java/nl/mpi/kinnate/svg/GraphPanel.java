@@ -69,7 +69,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         selectedGroupId = new ArrayList<UniqueIdentifier>();
         graphPanelSize = new GraphPanelSize();
         this.setLayout(new BorderLayout());
-        svgCanvas = new JSVGCanvas(new GraphUserAgent(kinDiagramPanel), true, true);
+        svgCanvas = new JSVGCanvas(new GraphUserAgent(this), true, true);
 //        svgCanvas.setMySize(new Dimension(600, 400));
         svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
 //        drawNodes();
