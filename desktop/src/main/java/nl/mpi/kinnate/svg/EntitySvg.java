@@ -425,6 +425,8 @@ public class EntitySvg {
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
+            GuiHelper.linorgBugCatcher.logError(new Exception("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier()));
+            storedPosition = new float[]{0, 0};
             // todo: it looks like the stored positon can be null
 //            throw new Exception("Entity position should have been set in the graph sorter");
 //            // loop through the filled locations and move to the right or left if not empty required
@@ -445,7 +447,7 @@ public class EntitySvg {
 //                }
 //                preferedX++;
 //            }
-//            entityPositions.put(currentNode.getUniqueIdentifier(), storedPosition);
+            entityPositions.put(currentNode.getUniqueIdentifier(), storedPosition);
         } else {
 ////            // prevent the y position being changed
 //            storedPosition[1] = currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f;
