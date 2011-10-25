@@ -9,6 +9,7 @@ import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -140,12 +141,16 @@ public class GraphPanel extends JPanel implements SavePanel {
         this.metadataPanel = metadataPanel;
     }
 
-    public EntityData[] readSvg(File svgFilePath) {
-        svgFile = svgFilePath;
+    public EntityData[] readSvg(URI svgFilePath, boolean savableType) {
+        if (savableType) {
+            svgFile = new File(svgFilePath);
+        } else {
+            svgFile = null;
+        }
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
         try {
-            doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toURI().toString());
+            doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toString());
             svgCanvas.setDocument(doc);
             dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc);
             if (dataStoreSvg.indexParameters == null) {
