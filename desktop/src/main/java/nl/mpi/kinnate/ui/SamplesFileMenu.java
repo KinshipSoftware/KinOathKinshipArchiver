@@ -18,8 +18,6 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
     public SamplesFileMenu(MainFrame mainFrameLocal) {
         mainFrame = mainFrameLocal;
         addSampleToMenu("Application Overview", "ApplicationOverview.svg");
-        addSampleToMenu("Imported Data Query Example (ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/)", "QueryExample.svg");
-        addSampleToMenu("Archive Link Example", "ArchiveLinks.svg");
         addSampleToMenu("Hawaiian Kin Terms", "HawaiianKinTerms.svg");
         addSampleToMenu("Japanese Kin Terms", "JapaneseKinTerms.svg");
         addSampleToMenu("Custom Symbols", "CustomSymbols.svg");
@@ -27,7 +25,9 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
 //        addSampleToMenu("Cha'palaa Kin Terms", "ChapalaaKinTerms.svg");
         addSampleToMenu("Gendered Ego", "GenderedEgo.svg");
         addSampleToMenu("Olivier Kyburz Examples", "N40.svg");
+        addSampleToMenu("Archive Link Example", "ArchiveLinks.svg");
         addSampleToMenu("Charles II of Spain", "Charles_II_of_Spain.svg");
+        addSampleToMenu("Imported Data Query Example (ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/)", "QueryExample.svg");
         addSampleToMenu("Imported Entities (600)", "600ImportedEntities.svg");
 //        addSampleToMenu("R Usage of the Entity Server", "R-ServerUsage.svg");
     }
@@ -41,7 +41,14 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        mainFrame.openDiagram(new File(e.getActionCommand()), false);
+        String sampleName;
+        final File sampleFile = new File(e.getActionCommand());
+        if (e.getSource() instanceof JMenuItem) {
+            sampleName = ((JMenuItem) e.getSource()).getText();
+        } else {
+            sampleName = sampleFile.getName();
+        }
+        mainFrame.openDiagram(sampleName, sampleFile, false);
     }
 //    private void addLaunchSampleToMenu(String menuText, String sampleFileString) {
 //        String currentFilePath = SamplesFileMenu.class.getResource("../../../../svgsamples/" + sampleFileString).getPath();
