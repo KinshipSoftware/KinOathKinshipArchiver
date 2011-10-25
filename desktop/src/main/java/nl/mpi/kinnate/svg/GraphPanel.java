@@ -69,7 +69,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         selectedGroupId = new ArrayList<UniqueIdentifier>();
         graphPanelSize = new GraphPanelSize();
         this.setLayout(new BorderLayout());
-        svgCanvas = new JSVGCanvas();
+        svgCanvas = new JSVGCanvas(new GraphUserAgent(kinDiagramPanel), true, true);
 //        svgCanvas.setMySize(new Dimension(600, 400));
         svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
 //        drawNodes();
@@ -108,13 +108,6 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        svgCanvas.setBackground(Color.LIGHT_GRAY);
         this.add(BorderLayout.CENTER, jSVGScrollPane);
         svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, graphPanelSize));
-        svgCanvas.addLinkActivationListener(new LinkActivationListener() {
-
-            public void linkActivated(LinkActivationEvent lae) {
-                // todo: find a better way to block the built in hyper link handler that tries to load the url into the canvas
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
     }
 
 //    private void zoomDrawing() {
