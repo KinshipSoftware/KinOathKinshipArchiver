@@ -2,9 +2,12 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.ui.GuiHelper;
 
 /**
  *  Document   : RecentFileMenu
@@ -33,7 +36,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
     }
 
     private void addSampleToMenu(String menuText, String sampleFileString) {
-        String currentFilePath = SamplesFileMenu.class.getResource("/svgsamples/" + sampleFileString).getPath();
+        String currentFilePath = SamplesFileMenu.class.getResource("/svgsamples/" + sampleFileString).toString();
         JMenuItem currentMenuItem = new JMenuItem(menuText);
         currentMenuItem.setActionCommand(currentFilePath);
         currentMenuItem.addActionListener(this);
@@ -41,14 +44,16 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        String sampleName;
-        final File sampleFile = new File(e.getActionCommand());
-        if (e.getSource() instanceof JMenuItem) {
-            sampleName = ((JMenuItem) e.getSource()).getText();
-        } else {
-            sampleName = sampleFile.getName();
+        try {
+            final URI sampleFile = new URI(e.getActionCommand());
+            if (e.getSource() instanceof JMenuItem) {
+                String sampleName = ((JMenuItem) e.getSource()).getText();
+                mainFrame.openDiagram(sampleName, sampleFile, false);
+            }
+        } catch (URISyntaxException exception) {
+            GuiHelper.linorgBugCatcher.logError(exception);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
         }
-        mainFrame.openDiagram(sampleName, sampleFile, false);
     }
 //    private void addLaunchSampleToMenu(String menuText, String sampleFileString) {
 //        String currentFilePath = SamplesFileMenu.class.getResource("../../../../svgsamples/" + sampleFileString).getPath();
