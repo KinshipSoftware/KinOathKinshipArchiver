@@ -2,6 +2,7 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
 import java.io.File;
+import java.net.URI;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.ArbilIcons;
@@ -20,8 +21,6 @@ import nl.mpi.kinnate.transcoder.DiagramTranscoder;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-//    private GraphPanel graphPanel;
-//    private JungGraph jungGraph;
     private RecentFileMenu recentFileMenu;
     private EntityUploadPanel entityUploadPanel;
 
@@ -32,33 +31,8 @@ public class MainFrame extends javax.swing.JFrame {
         ((EditMenu) editMenu).enableMenuKeys();
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
         nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
-//        entityCollection = new EntityCollection();
-//        GraphPanel0 graphPanel0Deprecated;
-//        graphPanel0Deprecated = new GraphPanel0();
-//        graphPanel = new GraphPanel();
-        // this data load should be elsewhere
-//        GraphData graphData = new GraphData();
-//        graphData.readData();
-//        graphPanel.drawNodes(graphData);
-//        jungGraph = new JungGraph();
-
-//        JScrollPane tableScrollPane = new JScrollPane(previewTable);       
         this.add(jTabbedPane1, BorderLayout.CENTER);
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(KinDiagramPanel.getDefaultDiagramFile());
-//        egoSelectionTestPanel.createDefaultGraph(KinDiagramPanel.defaultGraphString);
-        jTabbedPane1.add("Unsaved Diagram", egoSelectionTestPanel);
-//        jTabbedPane1.add("Kin Type String", new KinTypeStringTestPanel());
-//        jTabbedPane1.add("Kin Term Mapping for KinType Strings", new KinTypeStringTestPanel());
-        // todo: move these into the menu and only add on menu actions                
-//        jTabbedPane1.add("Graph", graphPanel);
-//        jTabbedPane1.add("SVG2  (deprecated)", new GraphPanel1());
-//        jTabbedPane1.add("Jung", jungGraph);
-//        jTabbedPane1.add("Table", tableScrollPane);
-//        jTabbedPane1.add("SVG (deprecated)", graphPanel0Deprecated);
-//        PreviewSplitPanel.previewTable = previewTable;
-//        PreviewSplitPanel.previewTableShown = true;
-
-//        System.out.println();
+        newDiagramMenuItemActionPerformed(null);
 
         jMenuBar1.add(new DiagramPanelsMenu(this));
         jMenuBar1.add(new KinTermsMenu(this)); // the main frame is stored in the kin term menu for later use
@@ -93,12 +67,12 @@ public class MainFrame extends javax.swing.JFrame {
         return kinTermSavePanel;
     }
 
-    public void openDiagram(String diagramTitle, File selectedFile, boolean saveToRecentMenu) {
+    public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu) {
         if (saveToRecentMenu) {
             // prevent files from the samples menu being added to the recent files menu
-            recentFileMenu.addRecentFile(selectedFile.getAbsolutePath());
+            recentFileMenu.addRecentFile(selectedUri);
         }
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedFile);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu);
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         jTabbedPane1.add(diagramTitle, egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
@@ -311,7 +285,7 @@ public class MainFrame extends javax.swing.JFrame {
         final File[] selectedFilesArray = ArbilWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
-                openDiagram(selectedFile.getName(), selectedFile, true);
+                openDiagram(selectedFile.getName(), selectedFile.toURI(), true);
             }
         }
     }//GEN-LAST:event_openDiagramActionPerformed
@@ -353,7 +327,7 @@ public class MainFrame extends javax.swing.JFrame {
             int tabIndex = Integer.valueOf(evt.getActionCommand());
             SavePanel savePanel = getSavePanel(tabIndex);
             savePanel.saveToFile(file);
-            recentFileMenu.addRecentFile(file.getAbsolutePath());
+            recentFileMenu.addRecentFile(file.toURI());
             jTabbedPane1.setTitleAt(tabIndex, file.getName());
         } else {
             // todo: warn user that no file selected and so cannot save
@@ -414,7 +388,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_closeTabMenuItemActionPerformed
 
     private void newDiagramMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newDiagramMenuItemActionPerformed
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(KinDiagramPanel.getDefaultDiagramFile());
+        URI defaultDiagramUri = null;
+        if (KinDiagramPanel.getDefaultDiagramFile().exists()) {
+            defaultDiagramUri = KinDiagramPanel.getDefaultDiagramFile().toURI();
+        }
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false);
         jTabbedPane1.add("Unsaved Default Diagram", egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
 //        egoSelectionTestPanel.drawGraph();
