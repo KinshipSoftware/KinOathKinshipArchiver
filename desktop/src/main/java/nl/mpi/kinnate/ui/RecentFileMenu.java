@@ -2,13 +2,15 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 
@@ -26,7 +28,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
         setupMenu();
     }
 
-    public void addRecentFile(String recentFile) {
+    public void addRecentFile(URI recentUri) {
         // store the accessed and saved files and provide a menu of recent files
         ArrayList<String> tempList = new ArrayList<String>();
         String[] tempArray;
@@ -37,11 +39,11 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             }
             // todo: restrict the recent file list to x number but make sure only the oldest gets removed
             // todo: make sure the list is kept in order
-            tempList.remove(recentFile);
-            tempList.add(recentFile);
+            tempList.remove(recentUri.toString());
+            tempList.add(recentUri.toString());
         } catch (IOException exception) {
 //            GuiHelper.linorgBugCatcher.logError(exception);
-            tempArray = new String[]{recentFile};
+            tempArray = new String[]{recentUri.toString()};
         }
         try {
             ArbilSessionStorage.getSingleInstance().saveStringArray("RecentKinFiles", tempList.toArray(new String[]{}));
@@ -85,8 +87,16 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             }
             setupMenu();
         } else {
-            final File recentFile = new File(e.getActionCommand());
-            mainFrame.openDiagram(recentFile.getName(), recentFile, true);
+            try {
+                final String actionString = e.getActionCommand();
+                final URI recentUri = new URI(actionString);
+                final int startIndex = actionString.lastIndexOf('/');
+                final String recentName = actionString.substring(startIndex + 1);
+                mainFrame.openDiagram(recentName, recentUri, true);
+            } catch (URISyntaxException exception) {
+                GuiHelper.linorgBugCatcher.logError(exception);
+                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
+            }
         }
     }
 }
