@@ -91,7 +91,7 @@ public class GraphSorter {
         }
 
         protected float[] getPosition(HashMap<UniqueIdentifier, float[]> entityPositions, float[] defaultPosition) {
-            System.out.println("getPosition: " + selfEntityId.getAttributeIdentifier());
+//            System.out.println("getPosition: " + selfEntityId.getAttributeIdentifier());
             calculatedPosition = entityPositions.get(selfEntityId);
             if (calculatedPosition == null) {
                 for (SortingEntity sortingEntity : mustBeBelow) {
@@ -165,7 +165,7 @@ public class GraphSorter {
 //                System.out.println("Insert: " + selfEntityId + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
                 entityPositions.put(selfEntityId, calculatedPosition);
             }
-            System.out.println("Position: " + selfEntityId.getAttributeIdentifier() + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
+//            System.out.println("Position: " + selfEntityId.getAttributeIdentifier() + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
 //            float[] debugArray = entityPositions.get("Charles II of Spain");
 //            if (debugArray != null) {
 //                System.out.println("Charles II of Spain: " + debugArray[0] + " : " + debugArray[1]);
