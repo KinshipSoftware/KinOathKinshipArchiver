@@ -85,7 +85,8 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             }
             setupMenu();
         } else {
-            mainFrame.openDiagram(new File(e.getActionCommand()), true);
+            final File recentFile = new File(e.getActionCommand());
+            mainFrame.openDiagram(recentFile.getName(), recentFile, true);
         }
     }
 }
