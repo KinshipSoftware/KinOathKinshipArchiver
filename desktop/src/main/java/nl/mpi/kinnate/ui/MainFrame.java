@@ -322,13 +322,17 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         int returnVal = fc.showSaveDialog(this);
+        // make sure the file path ends in .svg lowercase
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
+            File svgFile = fc.getSelectedFile();
+            if (!svgFile.getName().toLowerCase().endsWith(".svg")) {
+                svgFile = new File(svgFile.getParentFile(), svgFile.getName() + ".svg");
+            }
             int tabIndex = Integer.valueOf(evt.getActionCommand());
             SavePanel savePanel = getSavePanel(tabIndex);
-            savePanel.saveToFile(file);
-            recentFileMenu.addRecentFile(file);
-            jTabbedPane1.setTitleAt(tabIndex, file.getName());
+            savePanel.saveToFile(svgFile);
+            recentFileMenu.addRecentFile(svgFile);
+            jTabbedPane1.setTitleAt(tabIndex, svgFile.getName());
         } else {
             // todo: warn user that no file selected and so cannot save
         }
