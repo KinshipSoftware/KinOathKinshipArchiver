@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -85,15 +86,15 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //            + "E=[Bob]S";
 //    private String kinTypeStrings[] = new String[]{};
 
-    public KinDiagramPanel(File existingFile) {
-        initKinDiagramPanel(existingFile, null);
+    public KinDiagramPanel(URI existingFile, boolean savableType) {
+        initKinDiagramPanel(existingFile, null, savableType);
     }
 
     public KinDiagramPanel(DocumentType documentType) {
-        initKinDiagramPanel(null, documentType);
+        initKinDiagramPanel(null, documentType, false);
     }
 
-    private void initKinDiagramPanel(File existingFile, DocumentType documentType) {
+    private void initKinDiagramPanel(URI existingFile, DocumentType documentType, boolean savableType) {
         entityCollection = new EntityCollection();
         progressBar = new JProgressBar();
         EntityData[] svgStoredEntities = null;
@@ -108,8 +109,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         boolean showKinTypeStrings = false;
         boolean showMetaData = false;
 
-        if (existingFile != null && existingFile.exists()) {
-            svgStoredEntities = graphPanel.readSvg(existingFile);
+        if (existingFile != null) {
+            svgStoredEntities = graphPanel.readSvg(existingFile, savableType);
             String kinTermContents = null;
             for (String currentKinTypeString : graphPanel.getKinTypeStrigs()) {
                 if (currentKinTypeString.trim().length() > 0) {
@@ -395,7 +396,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public boolean hasSaveFileName() {
-        return (graphPanel.hasSaveFileName() && getDefaultDiagramFile() != graphPanel.getFileName());
+        return (graphPanel.hasSaveFileName());
     }
 
     public File getFileName() {
@@ -429,10 +430,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         }
     }
 
-    public void hideShow() {
-        kinTermHidePane.toggleHiddenState();
-    }
-
+//    public void hideShow() {
+//        kinTermHidePane.toggleHiddenState();
+//    }
     public void importKinTerms() {
         Component tabComponent = kinTermHidePane.getSelectedComponent();
         if (tabComponent instanceof KinTermPanel) {
@@ -479,10 +479,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         }
     }
 
-    public boolean isHidden() {
-        return kinTermHidePane.isHidden();
-    }
-
+//    public boolean isHidden() {
+//        return kinTermHidePane.isHidden();
+//    }
     public EntityData[] getGraphEntities() {
         return graphSorter.getDataNodes();
     }
