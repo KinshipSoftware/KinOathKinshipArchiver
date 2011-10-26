@@ -19,6 +19,7 @@ public class IndexerParameters {
     public IndexerParam relevantLinkData = new IndexerParam(new String[][]{{"Type"}});
     @XmlElement(name = "LabelFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam labelFields = new IndexerParam(new String[][]{{"*:Kinnate/*:Metadata/*[starts-with(local-name(), 'Name')]"},
+                {"*:Kinnate/*:Metadata/*:INDI/*:NAME/*:NAME"},
                 {"*:Kinnate/*:Metadata/*:INDI/*:NAME"}
 //    , {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"}
 //    , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"}
