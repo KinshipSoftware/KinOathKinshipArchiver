@@ -2,6 +2,7 @@ package nl.mpi.kinnate.ui.kintypeeditor;
 
 import java.awt.BorderLayout;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,7 +23,8 @@ public class KinTypeDefinitions extends JPanel {
     public KinTypeDefinitions(String panelName, SavePanel savePanel, DataStoreSvg dataStoreSvg) {
         this.setName(panelName);
         this.setLayout(new BorderLayout());
-        JTable kinTypeTable = new JTable(new KinTypeTableModel(savePanel, dataStoreSvg));
+        JButton deleteButton = new JButton("Delete Selected");
+        JTable kinTypeTable = new JTable(new KinTypeTableModel(savePanel, dataStoreSvg, deleteButton));
 
         TableColumn columnRelationType = kinTypeTable.getColumnModel().getColumn(1);
         TableColumn columnSymbolType = kinTypeTable.getColumnModel().getColumn(2);
@@ -35,10 +37,13 @@ public class KinTypeDefinitions extends JPanel {
 
         JComboBox comboBoxSymbolType = new JComboBox();
         for (EntityData.SymbolType symbolType : EntityData.SymbolType.values()) {
+            // todo: this should be the diagram symbols not the enum
             comboBoxSymbolType.addItem(symbolType);
         }
         columnSymbolType.setCellEditor(new DefaultCellEditor(comboBoxSymbolType));
-
         this.add(new JScrollPane(kinTypeTable), BorderLayout.CENTER);
+        JPanel buttonPanel = new JPanel(new BorderLayout());
+        buttonPanel.add(deleteButton, BorderLayout.PAGE_START);
+        this.add(buttonPanel, BorderLayout.LINE_END);
     }
 }
