@@ -2,6 +2,7 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -41,7 +42,9 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
         boolean menuItemsAdded = false;
         KinTermSavePanel kinTermPanel = mainFrame.getKinTermPanel();
         if (kinTermPanel != null) {
-            for (VisiblePanelSetting panelSetting : kinTermPanel.getVisiblePanels()) {
+            VisiblePanelSetting[] visiblePanelsArray = kinTermPanel.getVisiblePanels();
+            Arrays.sort(visiblePanelsArray);
+            for (VisiblePanelSetting panelSetting : visiblePanelsArray) {
                 menuItemsAdded = true;
                 JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(panelSetting.getDisplayName());
                 menuItem.setSelected(panelSetting.isPanelShown());
