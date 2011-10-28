@@ -225,7 +225,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         panelSetting.addTargetPanel(entitySearchPanel);
                         break;
                     case IndexerSettings:
-                        panelSetting.setHidePane(kinTypeHidePane, "Indexer Parameters");
+                        panelSetting.setHidePane(kinTypeHidePane, "Diagram Settings");
                         graphPanel.getIndexParameters().symbolFieldsFields.setParent(graphPanel.getIndexParameters());
                         graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
                         final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
