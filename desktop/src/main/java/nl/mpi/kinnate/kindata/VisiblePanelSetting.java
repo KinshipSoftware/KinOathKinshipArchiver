@@ -11,7 +11,7 @@ import nl.mpi.kinnate.ui.HidePane;
  *  Created on : Sept 25, 2011, 12:02:44 PM
  *  Author     : Peter Withers
  */
-public class VisiblePanelSetting {
+public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
 
     public enum PanelType {
 
@@ -122,5 +122,9 @@ public class VisiblePanelSetting {
         int hash = 7;
         hash = 67 * hash + (this.panelType != null ? this.panelType.hashCode() : 0);
         return hash;
+    }
+
+    public int compareTo(VisiblePanelSetting o) {
+        return getDisplayName().compareTo(o.getDisplayName());
     }
 }
