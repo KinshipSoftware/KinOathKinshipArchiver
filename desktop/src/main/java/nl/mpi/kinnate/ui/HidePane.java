@@ -1,10 +1,14 @@
 package nl.mpi.kinnate.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.HashSet;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 
@@ -13,12 +17,13 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting;
  *  Created on : Mar 11, 2011, 9:03:55 AM
  *  Author     : Peter Withers
  */
-public class HidePane extends JTabbedPane {
+public class HidePane extends JPanel {
 
     public enum HidePanePosition {
 
         left, right, top, bottom
     }
+    private JTabbedPane tabbedPane = new JTabbedPane();
     private boolean hiddenState = true;
     private int lastSelectedTab = -1;
     private int defaultShownWidth = 300;
@@ -31,26 +36,46 @@ public class HidePane extends JTabbedPane {
     private HashSet<VisiblePanelSetting> registeredPanelSettings;
 
     public HidePane(HidePanePosition borderPositionLocal, int startWidth) {
+        this.setLayout(new BorderLayout());
+        JPanel separatorBar = new JPanel();
+        separatorBar.setPreferredSize(new Dimension(5, 5));
+        separatorBar.setMaximumSize(new Dimension(5, 5));
+        separatorBar.setMinimumSize(new Dimension(5, 5));
         registeredPanelSettings = new HashSet<VisiblePanelSetting>();
         shownWidth = startWidth;
         borderPosition = borderPositionLocal;
         horizontalDivider = (!borderPosition.equals(HidePanePosition.left) && !borderPosition.equals(HidePanePosition.right));
         switch (borderPosition) {
             case left:
-                this.setTabPlacement(javax.swing.JTabbedPane.TOP); // changed from RIGHT because only mac supports rotated tabs and rotated text is debatable usability wise anyway
+//                separatorBar = new JSeparator(JSeparator.VERTICAL);
+                separatorBar.setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+                this.add(separatorBar, BorderLayout.LINE_END);
+                tabbedPane.setTabPlacement(javax.swing.JTabbedPane.TOP); // changed from RIGHT because only mac supports rotated tabs and rotated text is debatable usability wise anyway
                 break;
             case right:
-                this.setTabPlacement(javax.swing.JTabbedPane.TOP); // changed from LEFT because only mac supports rotated tabs and rotated text is debatable usability wise anyway
+//                separatorBar = new JSeparator(JSeparator.VERTICAL);
+                separatorBar.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+                this.add(separatorBar, BorderLayout.LINE_START);
+                tabbedPane.setTabPlacement(javax.swing.JTabbedPane.TOP); // changed from LEFT because only mac supports rotated tabs and rotated text is debatable usability wise anyway
                 break;
             case top:
-                this.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+//                separatorBar = new JSeparator(JSeparator.HORIZONTAL);
+                separatorBar.setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+                this.add(separatorBar, BorderLayout.PAGE_END);
+                tabbedPane.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
                 break;
             case bottom:
-                this.setTabPlacement(javax.swing.JTabbedPane.TOP);
+            default:
+//                separatorBar = new JSeparator(JSeparator.HORIZONTAL);
+                separatorBar.setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+                this.add(separatorBar, BorderLayout.PAGE_START);
+                tabbedPane.setTabPlacement(javax.swing.JTabbedPane.TOP);
                 break;
         }
+        separatorBar.setBackground(Color.LIGHT_GRAY);
+        this.add(tabbedPane, BorderLayout.CENTER);
 //        this.add(contentComponent, labelStringLocal);
-        this.addMouseMotionListener(new MouseMotionAdapter() {
+        separatorBar.addMouseMotionListener(new MouseMotionAdapter() {
 
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -118,17 +143,17 @@ public class HidePane extends JTabbedPane {
                 HidePane.this.repaint();
             }
         });
-        this.addMouseListener(new java.awt.event.MouseAdapter() {
+        separatorBar.addMouseListener(new java.awt.event.MouseAdapter() {
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                if (!hiddenState && lastSelectedTab != HidePane.this.getSelectedIndex()) {
+                if (!hiddenState && lastSelectedTab != tabbedPane.getSelectedIndex()) {
                     // skip hide action when the selected tab changes 
-                    lastSelectedTab = HidePane.this.getSelectedIndex();
+                    lastSelectedTab = tabbedPane.getSelectedIndex();
                     return;
                 }
-                lastSelectedTab = HidePane.this.getSelectedIndex();
+                lastSelectedTab = tabbedPane.getSelectedIndex();
                 if (!lastWasDrag) {
                     toggleHiddenState();
                 } else if (shownWidth < hiddenWidth * 2) {
@@ -165,8 +190,12 @@ public class HidePane extends JTabbedPane {
         }
     }
 
+    public void addTab(String tabString, Component tabComponent) {
+        tabbedPane.addTab(tabString, tabComponent);
+    }
+
     public void addTab(VisiblePanelSetting panelSetting, String tabString, Component tabComponent) {
-        super.addTab(tabString, tabComponent);
+        tabbedPane.addTab(tabString, tabComponent);
         shownWidth = panelSetting.getPanelWidth();
         hiddenState = false;
         if (horizontalDivider) {
@@ -174,21 +203,38 @@ public class HidePane extends JTabbedPane {
         } else {
             HidePane.this.setPreferredSize(new Dimension(shownWidth, HidePane.this.getPreferredSize().height));
         }
+        this.setVisible(true);
         HidePane.this.revalidate();
         HidePane.this.repaint();
-        this.setVisible(true);
         registeredPanelSettings.add(panelSetting);
+    }
+
+    public Component getSelectedComponent() {
+        return tabbedPane.getSelectedComponent();
+    }
+
+    public void removeTab(Component comp) {
+        tabbedPane.remove(comp);
+//        this.setVisible(tabbedPane.getComponentCount() > 0);
     }
 
     public void remove(VisiblePanelSetting panelSetting) {
         for (Component currentPanel : panelSetting.getTargetPanels()) {
-            super.remove(currentPanel);
+            tabbedPane.remove(currentPanel);
         }
-        this.setVisible(this.getComponentCount() > 0);
+        this.setVisible(tabbedPane.getComponentCount() > 0);
         registeredPanelSettings.remove(panelSetting);
     }
 
-    public void toggleHiddenState() {
+    public void setHiddeState() {
+        boolean showEditor = tabbedPane.getComponentCount() > 0;
+        if (hiddenState == showEditor) {
+            toggleHiddenState();
+        }
+        this.setVisible(showEditor);
+    }
+
+    private void toggleHiddenState() {
         if (!hiddenState) {
             if (horizontalDivider) {
                 HidePane.this.setPreferredSize(new Dimension(HidePane.this.getPreferredSize().width, hiddenWidth));
@@ -208,9 +254,5 @@ public class HidePane extends JTabbedPane {
         hiddenState = !hiddenState;
         HidePane.this.revalidate();
         HidePane.this.repaint();
-    }
-
-    public boolean isHidden() {
-        return hiddenState;
     }
 }
