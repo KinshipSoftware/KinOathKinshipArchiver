@@ -363,7 +363,7 @@ public class MainFrame extends javax.swing.JFrame {
         saveDiagram.setActionCommand(Integer.toString(selectedIndex));
         closeTabMenuItem.setText("Close (" + currentTabText + ")");
         closeTabMenuItem.setActionCommand(Integer.toString(selectedIndex));
-        saveAsDefaultMenuItem.setText("Save (" + currentTabText + ") as Default Diagram");
+        saveAsDefaultMenuItem.setText("Set Default Diagram as (" + currentTabText + ")");
         saveAsDefaultMenuItem.setActionCommand(Integer.toString(selectedIndex));
         if (savePanel != null) {
             saveDiagram.setEnabled(savePanel.hasSaveFileName() && savePanel.requiresSave());
