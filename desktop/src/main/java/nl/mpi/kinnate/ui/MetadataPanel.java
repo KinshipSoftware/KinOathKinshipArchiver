@@ -26,7 +26,6 @@ public class MetadataPanel extends JPanel {
     private ArrayList<ArbilDataNode> archiveNodes = new ArrayList<ArbilDataNode>();
 
     public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler) {
-        // todo: #1101	The metadata pane should always be available rather then for specific diagrams
         this.kinTree = new KinTree(graphPanel);
         this.kinTableModel = new ArbilTableModel();
         this.archiveTableModel = new ArbilTableModel();
@@ -61,7 +60,7 @@ public class MetadataPanel extends JPanel {
     }
 
     public void removeTab(Component elementEditor) {
-        editorHidePane.remove(elementEditor);
+        editorHidePane.removeTab(elementEditor);
     }
 
     public void updateEditorPane() {
@@ -77,12 +76,8 @@ public class MetadataPanel extends JPanel {
         } else {
             removeTab(kinTableScrollPane);
         }
-        boolean showEditor = editorHidePane.getComponentCount() > 0;
         kinTree.rootNodeChildren = archiveNodes.toArray(new ArbilDataNode[]{});
         kinTree.requestResort();
-        if (showEditor && editorHidePane.isHidden()) {
-            editorHidePane.toggleHiddenState();
-        }
-        editorHidePane.setVisible(showEditor);
+        editorHidePane.setHiddeState();
     }
 }
