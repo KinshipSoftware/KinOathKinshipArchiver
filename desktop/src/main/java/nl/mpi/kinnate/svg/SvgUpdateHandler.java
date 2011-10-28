@@ -561,6 +561,7 @@ public class SvgUpdateHandler {
                         }
                     }
                 }
+                graphPanel.setRequiresSave();
             }
         };
     }
