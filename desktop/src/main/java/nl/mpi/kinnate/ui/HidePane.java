@@ -191,11 +191,18 @@ public class HidePane extends JPanel {
     }
 
     public void addTab(String tabString, Component tabComponent) {
-        tabbedPane.addTab(tabString, tabComponent);
+        int insertIndex = 0;
+        for (int tabCounter = 0; tabCounter < tabbedPane.getTabCount(); tabCounter++) {
+            if (tabString.compareToIgnoreCase(tabbedPane.getTitleAt(tabCounter)) < 0) {
+                break;
+            }
+            insertIndex++;
+        }
+        tabbedPane.insertTab(tabString, null, tabComponent, tabString, insertIndex);
     }
 
     public void addTab(VisiblePanelSetting panelSetting, String tabString, Component tabComponent) {
-        tabbedPane.addTab(tabString, tabComponent);
+        addTab(tabString, tabComponent);
         shownWidth = panelSetting.getPanelWidth();
         hiddenState = false;
         if (horizontalDivider) {
