@@ -125,6 +125,6 @@ public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
     }
 
     public int compareTo(VisiblePanelSetting o) {
-        return getDisplayName().compareTo(o.getDisplayName());
+        return getDisplayName().compareToIgnoreCase(o.getDisplayName());
     }
 }
