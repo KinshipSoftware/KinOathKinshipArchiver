@@ -89,7 +89,7 @@ public class KinTypeStringInput extends JTextPane {
         return (previousKinTypeStrings == null || !previousKinTypeStrings.equals(this.getText()));
     }
 
-    protected void highlightKinTerms(ParserHighlight[] parserHighlight, String[] kinTypeStrings) {
+    protected void highlightKinTypeStrings(ParserHighlight[] parserHighlight, String[] kinTypeStrings) {
         this.parserHighlight = parserHighlight;
         StyledDocument styledDocument = this.getStyledDocument();
         int lineStart = 0;
