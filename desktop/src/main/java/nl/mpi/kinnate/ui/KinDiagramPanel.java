@@ -338,7 +338,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
 //                KinDiagramPanel.this.doLayout();
                             }
-                            kinTypeStringInput.highlightKinTerms(parserHighlight, kinTypeStrings);
+                            kinTypeStringInput.highlightKinTypeStrings(parserHighlight, kinTypeStrings);
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
                         } catch (EntityServiceException exception) {
                             GuiHelper.linorgBugCatcher.logError(exception);
