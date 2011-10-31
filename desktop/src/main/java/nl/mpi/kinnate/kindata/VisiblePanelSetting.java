@@ -70,6 +70,11 @@ public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
         setUpdateUiState();
     }
 
+    public void removeTargetPanel(Component targetPanel) {
+        this.targetPanel.remove(targetPanel);
+        hidePane.removeTab(targetPanel);
+    }
+
     public boolean isPanelShown() {
         return panelShown;
     }
