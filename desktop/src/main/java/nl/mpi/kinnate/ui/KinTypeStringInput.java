@@ -9,7 +9,9 @@ import javax.swing.JTextPane;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
+import nl.mpi.kinnate.svg.DataStoreSvg;
 
 /**
  *  Document   : KinTypeStringInput
@@ -19,7 +21,7 @@ import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 public class KinTypeStringInput extends JTextPane {
 
     private String previousKinTypeStrings = null;
-    private String defaultString;
+    private String lastDefaultString;
     private Color defaultColour = Color.GRAY;
     protected Style styleComment;
     protected Style styleKinType;
@@ -28,9 +30,10 @@ public class KinTypeStringInput extends JTextPane {
     protected Style styleError;
     protected Style styleUnknown;
     private ParserHighlight[] parserHighlight = null;
+    DataStoreSvg dataStore;
 
-    public KinTypeStringInput(String defaultString) {
-        this.defaultString = defaultString;
+    public KinTypeStringInput(DataStoreSvg dataStore) {
+        this.dataStore = dataStore;
         this.setToolTipText("");
         // set the styles for the kin type string text
         styleComment = this.addStyle("Comment", null);
@@ -57,26 +60,54 @@ public class KinTypeStringInput extends JTextPane {
                 checkKinTypeInput();
             }
         });
-        this.setText(defaultString);
         this.setForeground(defaultColour);
+        this.setText(getDefaultText());
+    }
+
+    private String getDefaultText() {
+        StringBuilder defaultString = new StringBuilder();
+        defaultString.append("# The kin type strings entered here will determine the diagram drawn below.\n");
+        defaultString.append("# The available kin types are as follows:\n");
+        for (KinType kinType : dataStore.getKinTypeDefinitions()) {
+            defaultString.append("#           ");
+            defaultString.append(kinType.getCodeString());
+            defaultString.append(" = ");
+            defaultString.append(kinType.getDisplayString());
+            defaultString.append("\n");
+        }
+        defaultString.append("# If required additional kin types can be defined in the 'Diagram Settings' from the view menu.\n");
+        defaultString.append("# Any number of Labels can be added between colons each separated by a semicolon:\n");
+                defaultString.append("#           EM:Jane;Smith:\n");
+        defaultString.append("# Date of birth and death can be appended after the labels with a semicolon ';':\n");
+        defaultString.append("#           EM:Jane;1721: or EM:Jane;1721-1803:\n");
+        defaultString.append("# If a marital ring is required, an identifier can be specified with a hash followed by a number '#n':\n");
+        defaultString.append("#           EM:#1:FFFDDD:#1:\n");
+        defaultString.append("# Comments can be enterd by starting the line with a '#'.\n");
+        defaultString.append("# These optional data  (:#n;Label;Label;DOB-DOD:) can be specified on any kin type:\n");
+        defaultString.append("#           EmM:#1;Jane;1721-1803:FFF:Alfred:D:Betty;Smith:DD:#1:\n");
+        defaultString.append("# If a social centric diagram is required then 'm' or 'f' kin types can be specified at the begining of the line:\n");
+        defaultString.append("#           fM:#1;Jane;1721-1803:FFF:Alfred:D:Betty;Smith:DD:#1:\n");
+        lastDefaultString = defaultString.toString();
+        return lastDefaultString;
     }
 
     public void setDefaultText() {
-        this.setText(defaultString);
-        this.setForeground(defaultColour);
+//        this.setForeground(defaultColour);
+        this.setText(getDefaultText());
+        StyledDocument styledDocument = this.getStyledDocument();
+        styledDocument.setCharacterAttributes(0, styledDocument.getLength(), this.getStyle("Comment"), true);
+        this.setCaretPosition(0);
     }
 
     public void clearDefaultKinTypeInput() {
-        if (this.getText().equals(defaultString)) {
+        if (this.getText().equals(lastDefaultString)) {
             this.setText("");
-//                    kinTypeStringInput.setForeground(Color.BLACK);
         }
     }
 
     public void checkKinTypeInput() {
         if (this.getText().length() == 0) {
-            this.setText(defaultString);
-            this.setForeground(defaultColour);
+            setDefaultText();
         }
     }
 
@@ -117,7 +148,7 @@ public class KinTypeStringInput extends JTextPane {
 
     @Override
     public Point getToolTipLocation(MouseEvent event) {
-        if (parserHighlight != null) {
+        if (parserHighlight != null && !previousKinTypeStrings.isEmpty()) {
             int textPosition = this.viewToModel(event.getPoint());
             final String[] lineStrings = previousKinTypeStrings.substring(0, textPosition).split("\n");
 
