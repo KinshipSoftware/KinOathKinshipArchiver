@@ -29,6 +29,7 @@ import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kintypestrings.KinTermCalculator;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
@@ -55,36 +56,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private JProgressBar progressBar;
     static private File defaultDiagramTemplate;
     private HashMap<ArbilDataNode, UniqueIdentifier> registeredArbilDataNode;
-    private HashSet<ArbilNode> arbilDataNodesFirstLoadDone;
-    private String defaultString = "# The kin type strings entered here will determine how the entities show on the graph below\n";
-    public static String defaultGraphString = "# The kin type strings entered here will determine how the entities show on the graph below\n"
-            + "# Enter one string per line.\n"
-            //+ "# By default all relations of the selected entity will be shown.\n"
-            + "# for example:\n"
-            //            + "EmWMMM\n"
-            //            + "E:1:FFE\n"
-            //            + "EmWMMM:1:\n"
-            //            + "E:1:FFE\n"
-            + "Em:Charles II of Spain:W:Marie Louise d'Orl�ans\n"
-            + "Em:Charles II of Spain:F:Philip IV of Spain:F:Philip III of Spain:F:Philip II of Spain:F:Charles V, Holy Roman Emperor:F:Philip I of Castile\n"
-            + "Em:Charles II of Spain:M:Mariana of Austria:M:Maria Anna of Spain:M:Margaret of Austria:M:Maria Anna of Bavaria\n"
-            + "M:Mariana of Austria:F:Ferdinand III, Holy Roman Emperor:\n"
-            + "F:Philip IV of Spain:M:Margaret of Austria\n"
-            + "F:Ferdinand III, Holy Roman Emperor:\n"
-            + "M:Maria Anna of Spain:\n"
-            + "F:Philip III of Spain\n"
-            + "M:Margaret of Austria\n"
-            + "\n";
-//            + "FS:1:BSSWMDHFF:1:\n"
-//            + "M:2:SSDHMFM:2:\n"
-//            + "F:3:SSDHMF:3:\n"
-//            + "";
-//            + "E=[Bob]MFM\n"
-//            + "E=[Bob]MZ\n"
-//            + "E=[Bob]F\n"
-//            + "E=[Bob]M\n"
-//            + "E=[Bob]S";
-//    private String kinTypeStrings[] = new String[]{};
+    private HashSet<ArbilNode> arbilDataNodesFirstLoadDone; 
 
     public KinDiagramPanel(URI existingFile, boolean savableType) {
         initKinDiagramPanel(existingFile, null, savableType);
@@ -99,7 +71,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         progressBar = new JProgressBar();
         EntityData[] svgStoredEntities = null;
         graphPanel = new GraphPanel(this);
-        kinTypeStringInput = new KinTypeStringInput(defaultString);
+        kinTypeStringInput = new KinTypeStringInput(graphPanel.dataStoreSvg);
 
         boolean showKinTerms = false;
         boolean showArchiveLinker = false;
@@ -214,7 +186,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 switch (panelSetting.getPanelType()) {
                     case ArchiveLinker:
                         panelSetting.setHidePane(kinTermHidePane, "Archive Linker");
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(graphPanel, dragTransferHandler));
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree));
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree));
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree));
                         break;
                     case DiagramTree:
                         panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
@@ -331,12 +305,14 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //                                registerCurrentNodes(graphSorter.getDataNodes());
                                 graphPanel.drawNodes(graphSorter);
                                 egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes(), graphPanel.getIndexParameters());
+                                new KinTermCalculator().insertKinTerms(graphSorter.getDataNodes(), graphPanel.getkinTermGroups());
                             } else {
                                 KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg);
                                 graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
                                 graphPanel.drawNodes(graphData);
                                 egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
 //                KinDiagramPanel.this.doLayout();
+                                new KinTermCalculator().insertKinTerms(graphData.getDataNodes(), graphPanel.getkinTermGroups());
                             }
                             kinTypeStringInput.highlightKinTypeStrings(parserHighlight, kinTypeStrings);
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
