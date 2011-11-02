@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
@@ -9,14 +10,16 @@ import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
+import nl.mpi.arbil.data.AbstractTreeHelper;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilNodeSearchPanel;
 import nl.mpi.arbil.ui.ArbilSplitPanel;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
@@ -26,17 +29,26 @@ import nl.mpi.kinnate.svg.GraphPanel;
  */
 public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
 
-    private JTabbedPane tabbedPane;
     private KinTree archiveTree;
     private JButton nextButton;
+    private TreeType treeType;
+    private VisiblePanelSetting panelSetting;
 
-    public ArchiveEntityLinkerPanel(GraphPanel graphPanel, KinDragTransferHandler dragTransferHandler) {
+    public enum TreeType {
+
+        RemoteTree, LocalTree, MpiTree
+    }
+
+    public ArchiveEntityLinkerPanel(VisiblePanelSetting panelSetting, GraphPanel graphPanel, KinDragTransferHandler dragTransferHandler, TreeType treeType) {
+        this.treeType = treeType;
+        this.panelSetting = panelSetting;
         archiveTree = new KinTree(graphPanel);
         this.setLayout(new BorderLayout());
         JPanel treePanel = new JPanel(new BorderLayout());
-        tabbedPane = new JTabbedPane();
-        tabbedPane.add("Archive Branch Selection", treePanel);
-        this.add(tabbedPane, BorderLayout.CENTER);
+//        tabbedPane = new JTabbedPane();
+//        tabbedPane.add("Archive Branch Selection", treePanel);
+//        this.add(tabbedPane, BorderLayout.CENTER);
+        this.add(treePanel, BorderLayout.CENTER);
         nextButton = new JButton("Search Selected");
         nextButton.setActionCommand("Search");
         nextButton.addActionListener(this);
@@ -44,13 +56,29 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         treePanel.add(nextButton, BorderLayout.PAGE_END);
         archiveTree.setTransferHandler(dragTransferHandler);
         archiveTree.setDragEnabled(true);
-        loadTreeNodes();
+        loadTreeNodes(treeType);
     }
 
-    private void loadTreeNodes() {
+    private void loadTreeNodes(TreeType treeType) {
         try {
-            ArbilNode imdiCorporaNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI("http://corpus1.mpi.nl/IMDI/metadata/IMDI.imdi"));
-            ArbilNode[] allEntities = new ArbilNode[]{imdiCorporaNode};
+            ArbilNode[] allEntities;
+            AbstractTreeHelper treeHelper = ArbilTreeHelper.getSingleInstance();
+            switch (treeType) {
+                case LocalTree:
+                    allEntities = treeHelper.getLocalCorpusNodes();
+                    this.setName("Local Corpus");
+                    break;
+                case RemoteTree:
+                    allEntities = treeHelper.getRemoteCorpusNodes();
+                    this.setName("Remote Corpus");
+                    break;
+                case MpiTree:
+                default:
+                    ArbilNode imdiCorporaNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI("http://corpus1.mpi.nl/IMDI/metadata/IMDI.imdi"));
+                    allEntities = new ArbilNode[]{imdiCorporaNode};
+                    this.setName("Nijmegen Corpus");
+                    break;
+            }
             archiveTree.rootNodeChildren = allEntities;
             archiveTree.requestResort();
         } catch (URISyntaxException exception) {
@@ -73,10 +101,8 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         closeSearch.addActionListener(this);
         searchPanel.add(closeSearch, BorderLayout.PAGE_END);
         imdiSplitPanel.setSplitDisplay();
-//        imdiSplitPanel.addFocusListener(searchFrame);
-//        searchFrame.pack();
-        tabbedPane.add("Archive Branch Search", searchPanel);
-        tabbedPane.setSelectedComponent(searchPanel);
+        searchPanel.setName(this.getName() + " Search");
+        panelSetting.addTargetPanel(searchPanel, true);
     }
 
     public void actionPerformed(ActionEvent ae) {
@@ -84,7 +110,7 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
             getSeachPanel();
         }
         if (ae.getActionCommand().equals("Close Search")) {
-            tabbedPane.remove(tabbedPane.getSelectedComponent());
+            panelSetting.removeTargetPanel(((Component) ae.getSource()).getParent());
         }
     }
 }
