@@ -220,6 +220,10 @@ public class HidePane extends JPanel {
         return tabbedPane.getSelectedComponent();
     }
 
+    public void setSelectedComponent(Component component) {
+        tabbedPane.setSelectedComponent(component);
+    }
+
     public void removeTab(Component comp) {
         tabbedPane.remove(comp);
 //        this.setVisible(tabbedPane.getComponentCount() > 0);
