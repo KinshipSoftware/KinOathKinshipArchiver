@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -45,6 +46,12 @@ public class MetadataPanel extends JPanel {
     public void removeAllArbilDataNodeRows() {
         kinTableModel.removeAllArbilDataNodeRows();
         archiveTableModel.removeAllArbilDataNodeRows();
+        for (ArbilDataNode arbilDataNode : archiveNodes) {
+            if (arbilDataNode.getParentDomNode().getNeedsSaveToDisk(false)) {
+                // reloading will first check if a save is required then save and reload
+                ArbilDataNodeLoader.getSingleInstance().requestReload((ArbilDataNode) arbilDataNode.getParentDomNode());
+            }
+        }
         archiveNodes.clear();
     }
 
