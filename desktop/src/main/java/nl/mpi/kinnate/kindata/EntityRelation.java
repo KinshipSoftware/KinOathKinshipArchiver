@@ -25,6 +25,8 @@ public class EntityRelation implements Comparable<EntityRelation> {
     @XmlElement(name = "Label", namespace = "http://mpi.nl/tla/kin")
     public String labelString;
     public String lineColour = null;
+    @XmlTransient
+    private int relationOrder = 0; // this is used to indicate for instance; first, second child and fist, second husband etc.
 
     public void setAlterNode(EntityData graphDataNode) {
 //        if (graphDataNode != null) { // if the nodes has been reloaded then it must always be updated here
@@ -51,5 +53,22 @@ public class EntityRelation implements Comparable<EntityRelation> {
             return 0;
         }
         return -1;
+    }
+
+    public int getRelationOrder() {
+        // todo: this is limited and a richer syntax will be required because there could be multiple birth orders eg maternal, paternal or only on shared parents or all parents etc.
+//        for (EntityRelation entityRelation : getDistinctRelateNodes()){
+        if (!alterUniqueIdentifier.isTransientIdentifier()) {
+            throw new UnsupportedOperationException("Getting the birth order on a non transient entity is not yet supported");
+        }
+//        }
+        return relationOrder;
+    }
+
+    public void setRelationOrder(int birthOrder) {
+        if (!alterUniqueIdentifier.isTransientIdentifier()) {
+            throw new UnsupportedOperationException("Cannot set the birth order on a non transient entity, it must be calculated from the birth dates");
+        }
+        this.relationOrder = birthOrder;
     }
 }
