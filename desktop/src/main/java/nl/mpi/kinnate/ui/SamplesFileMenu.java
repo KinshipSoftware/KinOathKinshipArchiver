@@ -22,7 +22,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
         mainFrame = mainFrameLocal;
         addSampleToMenu("Application Overview", "ApplicationOverview.svg");
         addSampleToMenu("Hawaiian Kin Terms", "HawaiianKinTerms.svg");
-//        addSampleToMenu("Japanese Kin Terms", "JapaneseKinTerms.svg");
+        addSampleToMenu("Japanese Kin Terms", "JapaneseKinTerms.svg");
 //        addSampleToMenu("Custom Symbols", "CustomSymbols.svg");
         addSampleToMenu("Named Transient Entities", "NamedTransientEntities.svg");
 //        addSampleToMenu("Cha'palaa Kin Terms", "ChapalaaKinTerms.svg");
