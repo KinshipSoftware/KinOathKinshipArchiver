@@ -277,8 +277,8 @@ public class KinTypeStringConverter extends GraphSorter {
                                 consumableString = consumableString.replaceAll("^[-\\+\\d]*", "");
                                 currentKinTypeString = currentKinTypeString.substring(0, currentKinTypeString.length() - consumableString.length());
                                 String kinTypeModifier = currentKinTypeString.substring(currentReferenceKinType.codeString.length());
-                                System.out.println("kinTypeFound: " + currentReferenceKinType.codeString);
-                                System.out.println("consumableString: " + consumableString);
+//                                System.out.println("kinTypeFound: " + currentReferenceKinType.codeString);
+//                                System.out.println("consumableString: " + consumableString);
 //                                System.out.println("fullKinTypeString: " + fullKinTypeString);
                                 EntityData currentGraphDataNode = null;
                                 fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
@@ -343,7 +343,16 @@ public class KinTypeStringConverter extends GraphSorter {
                                 }
                                 if (parentDataNode != null && !currentReferenceKinType.relationType.equals(DataTypes.RelationType.none)) {
                                     // allow relations only for kin types that do not start the kin type string
-                                    parentDataNode.addRelatedNode(currentGraphDataNode, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                    EntityRelation nodeRelation = parentDataNode.addRelatedNode(currentGraphDataNode, currentReferenceKinType.relationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                                    if (kinTypeModifier != null && !kinTypeModifier.isEmpty()) {
+                                        if (kinTypeModifier.equals("-")) {
+                                            nodeRelation.setRelationOrder(-1);
+                                        } else if (kinTypeModifier.equals("+")) {
+                                            nodeRelation.setRelationOrder(1);
+                                        } else {
+                                            nodeRelation.setRelationOrder(Integer.parseInt(kinTypeModifier.replaceFirst("^\\+", "")));
+                                        }
+                                    }
                                 }
                                 currentGraphDataNode.isVisible = true;
                                 // add any child nodes?
