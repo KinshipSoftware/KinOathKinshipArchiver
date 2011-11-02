@@ -59,7 +59,7 @@ public class EntityRelation implements Comparable<EntityRelation> {
         // todo: this is limited and a richer syntax will be required because there could be multiple birth orders eg maternal, paternal or only on shared parents or all parents etc.
 //        for (EntityRelation entityRelation : getDistinctRelateNodes()){
         if (!alterUniqueIdentifier.isTransientIdentifier()) {
-            throw new UnsupportedOperationException("Getting the birth order on a non transient entity is not yet supported");
+//            throw new UnsupportedOperationException("Getting the birth order on a non transient entity is not yet supported");
         }
 //        }
         return relationOrder;
