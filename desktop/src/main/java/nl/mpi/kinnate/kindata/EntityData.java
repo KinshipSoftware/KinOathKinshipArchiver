@@ -246,7 +246,7 @@ public class EntityData {
         distinctRelateNodes = null;
     }
 
-    public void addRelatedNode(EntityData alterNodeLocal, /*int generationalDistance,*/ DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String lineColourLocal, String labelString) {
+    public EntityRelation addRelatedNode(EntityData alterNodeLocal, /*int generationalDistance,*/ DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String lineColourLocal, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         EntityRelation nodeRelation = new EntityRelation();
         nodeRelation.setAlterNode(alterNodeLocal);
@@ -259,7 +259,7 @@ public class EntityData {
             // check for existing relations matching the one to be added and prevent duplicates
             for (EntityRelation entityRelation : relatedNodes) {
                 if (entityRelation.compareTo(nodeRelation) == 0) {
-                    return;
+                    return entityRelation;
                 }
             }
             // add the relation
@@ -283,6 +283,7 @@ public class EntityData {
             }
             // if a sibling has been added then there is no way to know if any of the parents are common to the other sibings, so we do nothing in this case
         }
+        return nodeRelation;
     }
 
     public void clearVisibility() {
