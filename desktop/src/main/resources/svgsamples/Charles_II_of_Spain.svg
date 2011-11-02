@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentScriptType="text/ecmascript" width="1000" zoomAndPan="magnify" contentStyleType="text/css" height="650" preserveAspectRatio="xMidYMid meet" version="1.0">
+<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="text/ecmascript" width="750" zoomAndPan="magnify" contentStyleType="text/css" height="500" preserveAspectRatio="xMidYMid meet" version="1.0">
     <defs id="KinSymbols">
         <g id="circle">
             <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
         </g>
         <g id="square">
-            <rect x="0" width="15" y="0" height="15" stroke-width="2" stroke="black"/>
+            <rect x="0" width="15" stroke-width="2" height="15" y="0" stroke="black"/>
         </g>
         <g id="square45">
             <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
@@ -14,12 +13,12 @@
             <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
         </g>
         <g id="union">
-            <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
-            <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
-            <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
+            <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
+            <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
+            <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
         </g>
         <g id="triangle">
-            <polygon points="7,0 0,12 15,12" stroke-width="2" stroke="black"/>
+            <polygon stroke-width="2" points="7,0 0,12 15,12" stroke="black"/>
         </g>
         <g id="equals">
             <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
@@ -28,262 +27,167 @@
             <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
         </g>
     </defs>  
-<g id="DiagramGroup" transform="translate(500, 250)">
-    <g id="RelationHighlightGroup"/>
+<g id="DiagramGroup" transform="translate(150, 200)">
+    <rect x="-148.0" y="-198.0" fill="none" width="746.0" id="PageBorder" height="496.0" stroke="grey" stroke-width="2"/>
+  <g id="GraphicsGroup"/>
     <g id="RelationGroup">
       <g id="relation0">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Mariana of Austria" lineType="sanguineLine" alter="transient:label:Charles II of Spain;1661-1700" relationType="descendant"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_24d865ba62c6844400ba3f5c809fc7ed" kin:lineType="sanguineLine" kin:alter="tid_afced1c46d6ad494671a5a5281053651" kin:relationType="ancestor"/>
         <defs>
-          <polyline fill="none" id="relation0Line" stroke-width="2" points="207.0,207.0 207.0,257.0 7.0,257.0 7.0,307.0" stroke="grey"/>
+          <polyline fill="none" id="relation0Line" stroke-width="2" points="207,207 207,57 207,57 207,7 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
       </g>
       <g id="relation1">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Mariana of Austria" lineType="sanguineLine" alter="transient:label:Ferdinand III, Holy Roman Emperor" relationType="ancestor"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_24d865ba62c6844400ba3f5c809fc7ed" kin:lineType="sanguineLine" kin:alter="tid_d007b0ab909fc023da4e6b4b3993d33e" kin:relationType="ancestor"/>
         <defs>
-          <polyline fill="none" id="relation1Line" stroke-width="2" points="207.0,207.0 207.0,157.0 307.0,157.0 307.0,107.0" stroke="grey"/>
+          <polyline fill="none" id="relation1Line" stroke-width="2" points="207,207 207,157 407,157 407,107 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
       </g>
       <g id="relation2">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Mariana of Austria" lineType="sanguineLine" alter="transient:label:Maria Anna of Spain" relationType="ancestor"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_6b4e5908d38b3e82a5b473b12a84fd73" kin:lineType="sanguineLine" kin:alter="tid_d007b0ab909fc023da4e6b4b3993d33e" kin:relationType="descendant"/>
         <defs>
-          <polyline fill="none" id="relation2Line" stroke-width="2" points="207.0,207.0 207.0,157.0 -43.0,157.0 -43.0,107.0" stroke="grey"/>
+          <polyline fill="none" id="relation2Line" stroke-width="2" points="407,7 407,57 407,57 407,107 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
       </g>
       <g id="relation3">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Charles II of Austria" lineType="sanguineLine" alter="transient:label:Margaret of Austria" relationType="descendant"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_6b4e5908d38b3e82a5b473b12a84fd73" kin:lineType="sanguineLine" kin:alter="tid_8df34081dacc62a27192de73df463a54" kin:relationType="ancestor"/>
         <defs>
-          <polyline fill="none" id="relation3Line" stroke-width="2" points="57.0,-143.0 57.0,-93.0 57.0,-93.0 57.0,7.0" stroke="grey"/>
+          <polyline fill="none" id="relation3Line" stroke-width="2" points="407,7 407,-43 307,-43 307,-93 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
       </g>
       <g id="relation4">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Philip III of Spain" lineType="sanguineLine" alter="transient:label:Philip IV of Spain;1605-1665" relationType="descendant"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_6b4e5908d38b3e82a5b473b12a84fd73" kin:lineType="sanguineLine" kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:relationType="ancestor"/>
         <defs>
-          <polyline fill="none" id="relation4Line" stroke-width="2" points="-193.0,7.0 -193.0,57.0 -143.0,57.0 -143.0,207.0" stroke="grey"/>
+          <polyline fill="none" id="relation4Line" stroke-width="2" points="407,7 407,-43 57,-43 57,-93 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
       </g>
       <g id="relation5">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Philip III of Spain" lineType="sanguineLine" alter="transient:label:Maria Anna of Spain" relationType="descendant"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_d007b0ab909fc023da4e6b4b3993d33e" kin:lineType="sanguineLine" kin:alter="tid_24d865ba62c6844400ba3f5c809fc7ed" kin:relationType="descendant"/>
         <defs>
-          <polyline fill="none" id="relation5Line" stroke-width="2" points="-193.0,7.0 -193.0,57.0 -43.0,57.0 -43.0,107.0" stroke="grey"/>
+          <polyline fill="none" id="relation5Line" stroke-width="2" points="407,107 407,157 207,157 207,207 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
       </g>
       <g id="relation6">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Philip III of Spain" lineType="sanguineLine" alter="transient:label:Philip II of Spain" relationType="ancestor"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_d007b0ab909fc023da4e6b4b3993d33e" kin:lineType="sanguineLine" kin:alter="tid_6b4e5908d38b3e82a5b473b12a84fd73" kin:relationType="ancestor"/>
         <defs>
-          <polyline fill="none" id="relation6Line" stroke-width="2" points="-193.0,7.0 -193.0,-43.0 -293.0,-43.0 -293.0,-93.0" stroke="grey"/>
+          <polyline fill="none" id="relation6Line" stroke-width="2" points="407,107 407,57 407,57 407,7 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
       </g>
       <g id="relation7">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Philip III of Spain" lineType="sanguineLine" alter="transient:label:Anna of Austria" relationType="ancestor"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_afced1c46d6ad494671a5a5281053651" kin:lineType="sanguineLine" kin:alter="tid_24d865ba62c6844400ba3f5c809fc7ed" kin:relationType="descendant"/>
         <defs>
-          <polyline fill="none" id="relation7Line" stroke-width="2" points="-193.0,7.0 -193.0,-43.0 -93.0,-43.0 -93.0,-93.0" stroke="grey"/>
+          <polyline fill="none" id="relation7Line" stroke-width="2" points="207,7 207,57 207,57 207,207 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
       </g>
       <g id="relation8">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Anna of Austria" lineType="sanguineLine" alter="transient:label:Philip III of Spain" relationType="descendant"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_afced1c46d6ad494671a5a5281053651" kin:lineType="sanguineLine" kin:alter="tid_8df34081dacc62a27192de73df463a54" kin:relationType="ancestor"/>
         <defs>
-          <polyline fill="none" id="relation8Line" stroke-width="2" points="-93.0,-93.0 -93.0,-43.0 -193.0,-43.0 -193.0,7.0" stroke="grey"/>
+          <polyline fill="none" id="relation8Line" stroke-width="2" points="207,7 207,-43 307,-43 307,-93 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
       </g>
       <g id="relation9">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Philip II of Spain" lineType="sanguineLine" alter="transient:label:Philip III of Spain" relationType="descendant"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_afced1c46d6ad494671a5a5281053651" kin:lineType="sanguineLine" kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:relationType="ancestor"/>
         <defs>
-          <polyline fill="none" id="relation9Line" stroke-width="2" points="-293.0,-93.0 -293.0,-43.0 -193.0,-43.0 -193.0,7.0" stroke="grey"/>
+          <polyline fill="none" id="relation9Line" stroke-width="2" points="207,7 207,-43 57,-43 57,-93 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
       </g>
       <g id="relation10">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Ferdinand II, Holy Roman Emperor" lineType="sanguineLine" alter="transient:label:Ferdinand III, Holy Roman Emperor" relationType="descendant"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54" kin:lineType="sanguineLine" kin:alter="tid_afced1c46d6ad494671a5a5281053651" kin:relationType="descendant"/>
         <defs>
-          <polyline fill="none" id="relation10Line" stroke-width="2" points="207.0,7.0 207.0,57.0 307.0,57.0 307.0,107.0" stroke="grey"/>
+          <polyline fill="none" id="relation10Line" stroke-width="2" points="307,-93 307,-43 207,-43 207,7 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
       </g>
       <g id="relation11">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Maria Anna of Bavaria" lineType="sanguineLine" alter="transient:label:Ferdinand III, Holy Roman Emperor" relationType="descendant"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54" kin:lineType="sanguineLine" kin:alter="tid_6b4e5908d38b3e82a5b473b12a84fd73" kin:relationType="descendant"/>
         <defs>
-          <polyline fill="none" id="relation11Line" stroke-width="2" points="207.0,-93.0 207.0,-43.0 307.0,-43.0 307.0,107.0" stroke="grey"/>
+          <polyline fill="none" id="relation11Line" stroke-width="2" points="307,-93 307,-43 407,-43 407,7 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
       </g>
       <g id="relation12">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Maria Anna of Bavaria" lineType="sanguineLine" alter="transient:label:Margaret of Austria" relationType="descendant"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:lineType="sanguineLine" kin:alter="tid_afced1c46d6ad494671a5a5281053651" kin:relationType="descendant"/>
         <defs>
-          <polyline fill="none" id="relation12Line" stroke-width="2" points="207.0,-93.0 207.0,-43.0 57.0,-43.0 57.0,7.0" stroke="grey"/>
+          <polyline fill="none" id="relation12Line" stroke-width="2" points="57,-93 57,-43 207,-43 207,7 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
       </g>
       <g id="relation13">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Charles II of Spain;1661-1700" lineType="sanguineLine" alter="transient:label:Philip IV of Spain;1605-1665" relationType="ancestor"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:lineType="sanguineLine" kin:alter="tid_6b4e5908d38b3e82a5b473b12a84fd73" kin:relationType="descendant"/>
         <defs>
-          <polyline fill="none" id="relation13Line" stroke-width="2" points="7.0,307.0 7.0,257.0 -143.0,257.0 -143.0,207.0" stroke="grey"/>
+          <polyline fill="none" id="relation13Line" stroke-width="2" points="57,-93 57,-43 407,-43 407,7 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
       </g>
-      <g id="relation14">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Charles II of Spain;1661-1700" lineType="sanguineLine" alter="transient:label:Mariana of Austria" relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation14Line" stroke-width="2" points="7.0,307.0 7.0,257.0 207.0,257.0 207.0,207.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
-      </g>
-      <g id="relation15">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Maria Anna of Spain" lineType="sanguineLine" alter="transient:label:Mariana of Austria" relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation15Line" stroke-width="2" points="-43.0,107.0 -43.0,157.0 207.0,157.0 207.0,207.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
-      </g>
-      <g id="relation16">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Maria Anna of Spain" lineType="sanguineLine" alter="transient:label:Philip III of Spain" relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation16Line" stroke-width="2" points="-43.0,107.0 -43.0,57.0 -193.0,57.0 -193.0,7.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
-      </g>
-      <g id="relation17">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Maria Anna of Spain" lineType="sanguineLine" alter="transient:label:Margaret of Austria" relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation17Line" stroke-width="2" points="-43.0,107.0 -43.0,57.0 57.0,57.0 57.0,7.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
-      </g>
-      <g id="relation18">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Philip IV of Spain;1605-1665" lineType="sanguineLine" alter="transient:label:Charles II of Spain;1661-1700" relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation18Line" stroke-width="2" points="-143.0,207.0 -143.0,257.0 7.0,257.0 7.0,307.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
-      </g>
-      <g id="relation19">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Philip IV of Spain;1605-1665" lineType="sanguineLine" alter="transient:label:Philip III of Spain" relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation19Line" stroke-width="2" points="-143.0,207.0 -143.0,57.0 -193.0,57.0 -193.0,7.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation19Line"/>
-      </g>
-      <g id="relation20">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Philip IV of Spain;1605-1665" lineType="sanguineLine" alter="transient:label:Margaret of Austria" relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation20Line" stroke-width="2" points="-143.0,207.0 -143.0,57.0 57.0,57.0 57.0,7.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation20Line"/>
-      </g>
-      <g id="relation21">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Ferdinand III, Holy Roman Emperor" lineType="sanguineLine" alter="transient:label:Mariana of Austria" relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation21Line" stroke-width="2" points="307.0,107.0 307.0,157.0 207.0,157.0 207.0,207.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation21Line"/>
-      </g>
-      <g id="relation22">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Ferdinand III, Holy Roman Emperor" lineType="sanguineLine" alter="transient:label:Ferdinand II, Holy Roman Emperor" relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation22Line" stroke-width="2" points="307.0,107.0 307.0,57.0 207.0,57.0 207.0,7.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation22Line"/>
-      </g>
-      <g id="relation23">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Ferdinand III, Holy Roman Emperor" lineType="sanguineLine" alter="transient:label:Maria Anna of Bavaria" relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation23Line" stroke-width="2" points="307.0,107.0 307.0,-43.0 207.0,-43.0 207.0,-93.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation23Line"/>
-      </g>
-      <g id="relation24">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Margaret of Austria" lineType="sanguineLine" alter="transient:label:Philip IV of Spain;1605-1665" relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation24Line" stroke-width="2" points="57.0,7.0 57.0,57.0 -143.0,57.0 -143.0,207.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation24Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation24Line"/>
-      </g>
-      <g id="relation25">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Margaret of Austria" lineType="sanguineLine" alter="transient:label:Maria Anna of Spain" relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation25Line" stroke-width="2" points="57.0,7.0 57.0,57.0 -43.0,57.0 -43.0,107.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation25Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation25Line"/>
-      </g>
-      <g id="relation26">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Margaret of Austria" lineType="sanguineLine" alter="transient:label:Charles II of Austria" relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation26Line" stroke-width="2" points="57.0,7.0 57.0,-93.0 57.0,-93.0 57.0,-143.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation26Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation26Line"/>
-      </g>
-      <g id="relation27">
-        <kin:RelationEntities xmlns:kin="kin" ego="transient:label:Margaret of Austria" lineType="sanguineLine" alter="transient:label:Maria Anna of Bavaria" relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation27Line" stroke-width="2" points="57.0,7.0 57.0,-43.0 207.0,-43.0 207.0,-93.0" stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation27Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation27Line"/>
-      </g>
     </g>
     <g id="EntityGroup">
-      <g id="transient:label:Mariana of Austria" kin:kintype="EmM" transform="translate(200.0, 200.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Mariana of Austriasymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Mariana of Austria</text>
-      </g>
-      <g id="transient:label:Charles II of Austria" kin:kintype="EmMMMF" transform="translate(50.0, -150.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Charles II of Austriasymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles II of Austria</text>
-      </g>
-      <g id="transient:label:Philip III of Spain" kin:kintype="EmFF|EmMMF" transform="translate(-200.0, 0.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Philip III of Spainsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip III of Spain</text>
-      </g>
-      <g id="transient:label:Anna of Austria" kin:kintype="EmMMFM" transform="translate(-100.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Anna of Austriasymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Anna of Austria</text>
-      </g>
-      <g id="transient:label:Philip II of Spain" kin:kintype="EmMMFF" transform="translate(-300.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Philip II of Spainsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip II of Spain</text>
-      </g>
-      <g id="transient:label:Ferdinand II, Holy Roman Emperor" kin:kintype="EmMFF" transform="translate(200.0, 0.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Ferdinand II, Holy Roman Emperorsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ferdinand II, Holy Roman Emperor</text>
-      </g>
-      <g id="transient:label:Maria Anna of Bavaria" kin:kintype="EmMFM" transform="translate(200.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Maria Anna of Bavariasymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna of Bavaria</text>
-      </g>
-      <g id="transient:label:Charles II of Spain;1661-1700" kin:kintype="Em" transform="translate(0.0, 300.0)" kin:path="">
-        <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Charles II of Spain;1661-1700symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <g id="tid_24d865ba62c6844400ba3f5c809fc7ed" kin:kintype="Em" transform="translate(200.0, 200.0)" kin:path="">
+        <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_24d865ba62c6844400ba3f5c809fc7ed:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles II of Spain</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">1661-1700</text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jan 1, 1661 - Jan 1, 1700</text>
       </g>
-      <g id="transient:label:Maria Anna of Spain" kin:kintype="EmMM" transform="translate(-50.0, 100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Maria Anna of Spainsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <g id="tid_6b4e5908d38b3e82a5b473b12a84fd73" kin:kintype="EmMM" transform="translate(400.0, 0.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_6b4e5908d38b3e82a5b473b12a84fd73:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna of Spain</text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jan 1, 1606 - Jan 1, 1646</text>
       </g>
-      <g id="transient:label:Philip IV of Spain;1605-1665" kin:kintype="EmF" transform="translate(-150.0, 200.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Philip IV of Spain;1605-1665symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+      <g id="tid_d007b0ab909fc023da4e6b4b3993d33e" kin:kintype="EmM" transform="translate(400.0, 100.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_d007b0ab909fc023da4e6b4b3993d33e:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Mariana of Austria</text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jan 1, 1634 - Jan 1, 1696</text>
+      </g>
+      <g id="tid_afced1c46d6ad494671a5a5281053651" kin:kintype="EmF" transform="translate(200.0, 0.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_afced1c46d6ad494671a5a5281053651:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip IV of Spain</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">1605-1665</text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jan 1, 1605 - Jan 1, 1665</text>
       </g>
-      <g id="transient:label:Ferdinand III, Holy Roman Emperor" kin:kintype="EmMF" transform="translate(300.0, 100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Ferdinand III, Holy Roman Emperorsymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ferdinand III, Holy Roman Emperor</text>
+      <g id="tid_8df34081dacc62a27192de73df463a54" kin:kintype="EmFM" transform="translate(300.0, -100.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_8df34081dacc62a27192de73df463a54:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">#1</text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Margaret of Austria</text>
       </g>
-      <g id="transient:label:Margaret of Austria" kin:kintype="EmFM|EmMMM" transform="translate(50.0, 0.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="transient:label:Margaret of Austriasymbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Margaret of Austria</text>
+      <g id="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:kintype="EmFF" transform="translate(50.0, -100.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_9a6b2064ee3e986aee5f9c356e18f27a:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">#2</text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Philip III of Spain</text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="30">Jan 1, 1578 - Jan 1, 1621</text>
       </g>
     </g>
     <g id="LabelsGroup"/>
-    <rect x="-500.0" y="-250.0" fill="none" width="1000.0" id="PageBorder" height="650.0" stroke="grey" stroke-width="2"/>
   </g>
-  <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+  
+<kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+    <kin:KinTypeString>Em:Charles II of Spain;1661-1700:</kin:KinTypeString>
+    <kin:KinTypeString>EmF:Philip IV of Spain;1605-1665:</kin:KinTypeString>
+    <kin:KinTypeString>EmM:Mariana of Austria;1634-1696:</kin:KinTypeString>
+    <kin:KinTypeString>EmMM:Maria Anna of Spain;1606-1646:</kin:KinTypeString>
+    <kin:KinTypeString>EmFM:#1;Margaret of Austria;</kin:KinTypeString>
+    <kin:KinTypeString>EmMMM:#1</kin:KinTypeString>
+    <kin:KinTypeString>EmFF:#2;Philip III of Spain;1578-1621:</kin:KinTypeString>
+    <kin:KinTypeString>EmMMF:#2:</kin:KinTypeString>
+    <kin:KinTypeString/>
+    <kin:KinTypeString/>
+    <kin:KinTypeString>#EmW:Marie Louise d'Orléan;1679–1689:</kin:KinTypeString>
+    <kin:KinTypeString>#EmW:Maria Anna of the Palatinate-Neuburg;1689–1700:</kin:KinTypeString>
+    <kin:KinTypeString>#EmMF:Ferdinand III, Holy Roman Emperor</kin:KinTypeString>
+    <kin:KinTypeString>#EmMFF:Ferdinand II, Holy Roman Emperor</kin:KinTypeString>
+    <kin:KinTypeString>#EmMFM:Maria Anna of Bavaria</kin:KinTypeString>
+    <kin:KinTypeString>#EmMMF:Philip III of Spain</kin:KinTypeString>
+    <kin:KinTypeString>#EmMMFF:Philip II of Spain</kin:KinTypeString>
+    <kin:KinTypeString>#EmMMFM:Anna of Austria</kin:KinTypeString>
+    <kin:KinTypeString>#EmMMM:Margaret of Austria</kin:KinTypeString>
+    <kin:KinTypeString>#EmMMMF:Charles II of Austria</kin:KinTypeString>
+    <kin:KinTypeString>#EmMMMM:Maria Anna of Bavaria</kin:KinTypeString>
     <kin:KinTypeString>#Em:Charles II of Spain:W:Marie Louise d'Orléans</kin:KinTypeString>
     <kin:KinTypeString>#Em:Charles II of Spain:F:Philip IV of Spain:F:Philip III of Spain:F:Philip II of Spain:F:Charles V, Holy Roman Emperor:F:Philip I of Castile</kin:KinTypeString>
     <kin:KinTypeString>#Em:Charles II of Spain:M:Mariana of Austria:M:Maria Anna of Spain:M:Margaret of Austria:M:Maria Anna of Bavaria</kin:KinTypeString>
@@ -293,23 +197,6 @@
     <kin:KinTypeString>#M:Maria Anna of Spain:</kin:KinTypeString>
     <kin:KinTypeString>#F:Philip III of Spain</kin:KinTypeString>
     <kin:KinTypeString>#M:Margaret of Austria</kin:KinTypeString>
-    <kin:KinTypeString>Em:Charles II of Spain;1661-1700:</kin:KinTypeString>
-    <kin:KinTypeString>#EmW:Marie Louise d'Orléan;1679–1689:</kin:KinTypeString>
-    <kin:KinTypeString>#EmW:Maria Anna of the Palatinate-Neuburg;1689–1700:</kin:KinTypeString>
-    <kin:KinTypeString>EmF:Philip IV of Spain;1605-1665:</kin:KinTypeString>
-    <kin:KinTypeString>EmFF:Philip III of Spain</kin:KinTypeString>
-    <kin:KinTypeString>EmFM:Margaret of Austria</kin:KinTypeString>
-    <kin:KinTypeString>EmM:Mariana of Austria</kin:KinTypeString>
-    <kin:KinTypeString>EmMF:Ferdinand III, Holy Roman Emperor</kin:KinTypeString>
-    <kin:KinTypeString>EmMFF:Ferdinand II, Holy Roman Emperor</kin:KinTypeString>
-    <kin:KinTypeString>EmMFM:Maria Anna of Bavaria</kin:KinTypeString>
-    <kin:KinTypeString>EmMM:Maria Anna of Spain</kin:KinTypeString>
-    <kin:KinTypeString>EmMMF:Philip III of Spain</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFF:Philip II of Spain</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFM:Anna of Austria</kin:KinTypeString>
-    <kin:KinTypeString>EmMMM:Margaret of Austria</kin:KinTypeString>
-    <kin:KinTypeString>EmMMMF:Charles II of Austria</kin:KinTypeString>
-    <kin:KinTypeString>EmMMMM:Maria Anna of Bavaria</kin:KinTypeString>
     <kin:IndexParameters>
       <kin:LabelFields>
         <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*[starts-with(local-name(), 'Name')]"/>
@@ -326,29 +213,15 @@
         <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity[*:Gender='female']" kin:Value="circle"/>
         <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']" kin:Value="union"/>
       </kin:SymbolFieldsFields>
-      <kin:AncestorFields>
-        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMC"/>
-        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.BIRT.FAMC"/>
-        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHR.FAMC"/>
-        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.ADOP.FAMC"/>
-        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.SLGC.FAMC"/>
-        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.HUSB"/>
-        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.WIFE"/>
-        <kin:IndexerParam kin:XPath="ancestor"/>
-      </kin:AncestorFields>
-      <kin:DecendantFields>
-        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.CHIL"/>
-        <kin:IndexerParam kin:XPath="Kinnate.Gedcom.Entity.FAMS"/>
-        <kin:IndexerParam kin:XPath="descendant"/>
-      </kin:DecendantFields>
+      <kin:DefaultSymbol>square</kin:DefaultSymbol>
     </kin:IndexParameters>
-    <kin:KinTermGroup kin:Show="true" kin:GroupColour="blue" kin:GroupName="English terms" kin:Generate="false">
+    <kin:KinTermGroup kin:Show="true" kin:GroupColour="#0000FF" kin:GroupName="English terms" kin:Generate="false">
       <kin:KinTerm kin:Term="Grand Mother" kin:Alter="MM"/>
       <kin:KinTerm kin:Term="Aunt" kin:Alter="MZ|FZ"/>
       <kin:KinTerm kin:Term="Uncle" kin:Alter="MB|FB"/>
       <kin:KinTerm kin:Term="Grand Father" kin:Alter="FF"/>
     </kin:KinTermGroup>
-    <kin:KinTermGroup kin:Show="true" kin:GroupColour="cyan" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="false">
+    <kin:KinTermGroup kin:Show="true" kin:GroupColour="#0000FF" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="false">
       <kin:KinTerm kin:Term="Makuakane" kin:Description="Father, Uncle" kin:Alter="F|FB|MB"/>
       <kin:KinTerm kin:Term="Makuahini" kin:Description="Mother, Aunt" kin:Alter="M|MZ|FZ"/>
       <kin:KinTerm kin:Term="Kaikua'ana" kin:Description="" kin:Alter="E(male)B|E(male)FBS|E(male)FZS|E(male)MBS|E(male)MZS"/>
@@ -369,335 +242,131 @@
     <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
     <kin:EntityData>
       <kin:Entity>
-        <Identifier>transient:label:Mariana of Austria</Identifier>
-        <KinType>EmM</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Mariana of Austria</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Charles II of Spain;1661-1700</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Ferdinand III, Holy Roman Emperor</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Maria Anna of Spain</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
+        <kin:Identifier kin:type="tid">24d865ba62c6844400ba3f5c809fc7ed</kin:Identifier>
+        <kin:KinType>Em</kin:KinType>
+        <kin:DateOfBirth>1661-01-01T00:00:00+01:00</kin:DateOfBirth>
+        <kin:DateOfDeath>1700-01-01T00:00:00+01:00</kin:DateOfDeath>
+        <kin:Label>Charles II of Spain</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">afced1c46d6ad494671a5a5281053651</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">d007b0ab909fc023da4e6b4b3993d33e</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+        </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <Identifier>transient:label:Charles II of Austria</Identifier>
-        <KinType>EmMMMF</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Charles II of Austria</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Margaret of Austria</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
+        <kin:Identifier kin:type="tid">6b4e5908d38b3e82a5b473b12a84fd73</kin:Identifier>
+        <kin:KinType>EmMM</kin:KinType>
+        <kin:DateOfBirth>1606-01-01T00:00:00+01:00</kin:DateOfBirth>
+        <kin:DateOfDeath>1646-01-01T00:00:00+01:00</kin:DateOfDeath>
+        <kin:Label>Maria Anna of Spain</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">d007b0ab909fc023da4e6b4b3993d33e</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">afced1c46d6ad494671a5a5281053651</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+        </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <Identifier>transient:label:Philip III of Spain</Identifier>
-        <KinType>EmFF</KinType>
-        <KinType>EmMMF</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Philip III of Spain</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Philip IV of Spain;1605-1665</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Maria Anna of Spain</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Philip II of Spain</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Anna of Austria</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
+        <kin:Identifier kin:type="tid">d007b0ab909fc023da4e6b4b3993d33e</kin:Identifier>
+        <kin:KinType>EmM</kin:KinType>
+        <kin:DateOfBirth>1634-01-01T00:00:00+01:00</kin:DateOfBirth>
+        <kin:DateOfDeath>1696-01-01T00:00:00+01:00</kin:DateOfDeath>
+        <kin:Label>Mariana of Austria</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">24d865ba62c6844400ba3f5c809fc7ed</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">6b4e5908d38b3e82a5b473b12a84fd73</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+        </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <Identifier>transient:label:Anna of Austria</Identifier>
-        <KinType>EmMMFM</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Anna of Austria</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Philip III of Spain</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
+        <kin:Identifier kin:type="tid">afced1c46d6ad494671a5a5281053651</kin:Identifier>
+        <kin:KinType>EmF</kin:KinType>
+        <kin:DateOfBirth>1605-01-01T00:00:00+01:00</kin:DateOfBirth>
+        <kin:DateOfDeath>1665-01-01T00:00:00+01:00</kin:DateOfDeath>
+        <kin:Label>Philip IV of Spain</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">24d865ba62c6844400ba3f5c809fc7ed</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">6b4e5908d38b3e82a5b473b12a84fd73</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+        </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <Identifier>transient:label:Philip II of Spain</Identifier>
-        <KinType>EmMMFF</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Philip II of Spain</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Philip III of Spain</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
+        <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
+        <kin:KinType>EmFM</kin:KinType>
+        <kin:Label>#1</kin:Label>
+        <kin:Label>Margaret of Austria</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">afced1c46d6ad494671a5a5281053651</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">6b4e5908d38b3e82a5b473b12a84fd73</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+        </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <Identifier>transient:label:Ferdinand II, Holy Roman Emperor</Identifier>
-        <KinType>EmMFF</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Ferdinand II, Holy Roman Emperor</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Ferdinand III, Holy Roman Emperor</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-      </kin:Entity>
-      <kin:Entity>
-        <Identifier>transient:label:Maria Anna of Bavaria</Identifier>
-        <KinType>EmMFM</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Maria Anna of Bavaria</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Ferdinand III, Holy Roman Emperor</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Margaret of Austria</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-      </kin:Entity>
-      <kin:Entity>
-        <Identifier>transient:label:Charles II of Spain;1661-1700</Identifier>
-        <KinType>Em</KinType>
-        <isEgo>true</isEgo>
-        <Labels>
-          <String>Charles II of Spain</String>
-          <String>1661-1700</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Philip IV of Spain;1605-1665</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Mariana of Austria</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-      </kin:Entity>
-      <kin:Entity>
-        <Identifier>transient:label:Maria Anna of Spain</Identifier>
-        <KinType>EmMM</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Maria Anna of Spain</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Mariana of Austria</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Philip III of Spain</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Philip IV of Spain;1605-1665</Identifier>
-            <Type>sibling</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Margaret of Austria</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-      </kin:Entity>
-      <kin:Entity>
-        <Identifier>transient:label:Philip IV of Spain;1605-1665</Identifier>
-        <KinType>EmF</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Philip IV of Spain</String>
-          <String>1605-1665</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Charles II of Spain;1661-1700</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Philip III of Spain</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Margaret of Austria</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Maria Anna of Spain</Identifier>
-            <Type>sibling</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-      </kin:Entity>
-      <kin:Entity>
-        <Identifier>transient:label:Ferdinand III, Holy Roman Emperor</Identifier>
-        <KinType>EmMF</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Ferdinand III, Holy Roman Emperor</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Mariana of Austria</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Ferdinand II, Holy Roman Emperor</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Maria Anna of Bavaria</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Margaret of Austria</Identifier>
-            <Type>sibling</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
-      </kin:Entity>
-      <kin:Entity>
-        <Identifier>transient:label:Margaret of Austria</Identifier>
-        <KinType>EmFM</KinType>
-        <KinType>EmMMM</KinType>
-        <isEgo>false</isEgo>
-        <Labels>
-          <String>Margaret of Austria</String>
-        </Labels>
-        <Relations>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Philip IV of Spain;1605-1665</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Maria Anna of Spain</Identifier>
-            <Type>descendant</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Charles II of Austria</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Maria Anna of Bavaria</Identifier>
-            <Type>ancestor</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-          <Relation>
-            <generationalDistance>0</generationalDistance>
-            <Identifier>transient:label:Ferdinand III, Holy Roman Emperor</Identifier>
-            <Type>sibling</Type>
-            <Line>sanguineLine</Line>
-          </Relation>
-        </Relations>
-        <isVisible>true</isVisible>
+        <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+        <kin:KinType>EmFF</kin:KinType>
+        <kin:DateOfBirth>1578-01-01T00:00:00+01:00</kin:DateOfBirth>
+        <kin:DateOfDeath>1621-01-01T00:00:00+01:00</kin:DateOfDeath>
+        <kin:Label>#2</kin:Label>
+        <kin:Label>Philip III of Spain</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">afced1c46d6ad494671a5a5281053651</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:Identifier kin:type="tid">6b4e5908d38b3e82a5b473b12a84fd73</kin:Identifier>
+            <relationOrder>0</relationOrder>
+          </kin:Relation>
+        </kin:Relations>
       </kin:Entity>
       <xPadding>200</xPadding>
       <yPadding>100</yPadding>
     </kin:EntityData>
+    <kin:DiagramPanel kin:type="EntitySearch" kin:show="false" kin:width="150"/>
+    <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150"/>
+    <kin:DiagramPanel kin:type="DiagramTree" kin:show="false" kin:width="150"/>
+    <kin:DiagramPanel kin:type="KinTerms" kin:show="false" kin:width="150"/>
+    <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="true" kin:width="150"/>
+    <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150"/>
   </kin:KinDiagramData>
 </svg>
