@@ -20,6 +20,7 @@ public class DocumentLoader {
 
     protected EntityDocument getEntityDocument(UniqueIdentifier selectedIdentifier) throws ImportException, URISyntaxException {
         EntityDocument entityDocument = new EntityDocument(new URI(new EntityCollection().getEntityPath(selectedIdentifier)), new ImportTranslator(true));
+//        System.out.println("Loaded 1: " + entityDocument.entityData.getUniqueIdentifier().getAttributeIdentifier());
         entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
         for (EntityRelation entityRelation : entityDocument.entityData.getDistinctRelateNodes()) {
             EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
@@ -27,6 +28,7 @@ public class DocumentLoader {
                 // get the path from the database
                 final URI entityUri = new URI(new EntityCollection().getEntityPath(entityRelation.alterUniqueIdentifier));
                 relatedDocument = new EntityDocument(entityUri, new ImportTranslator(true));
+//                System.out.println("Loaded 2: " + entityRelation.alterUniqueIdentifier.getAttributeIdentifier());
                 entityMap.put(entityRelation.alterUniqueIdentifier, relatedDocument);
             }
         }
@@ -43,7 +45,8 @@ public class DocumentLoader {
             } else {
                 entityDocumentList.add(entityDocument);
             }
-            entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
+//            System.out.println("Loaded 3: " + uniqueIdentifier.getAttributeIdentifier());
+//            entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
         }
         return leadEntityDocument;
     }
@@ -52,7 +55,13 @@ public class DocumentLoader {
         // set the alter entity for each relation if not already set (based on the known unique identifier)
         for (EntityDocument entityDocument : entityMap.values()) {
             for (EntityRelation nodeRelation : entityDocument.entityData.getRelatedNodesToBeLoaded()) {
-                nodeRelation.setAlterNode(entityMap.get(nodeRelation.alterUniqueIdentifier).entityData);
+                final EntityDocument entityData = entityMap.get(nodeRelation.alterUniqueIdentifier);
+                if (entityData != null) {
+                    nodeRelation.setAlterNode(entityData.entityData);
+                } else {
+                    // this appears to be ok if a relation is missing because it is not one of the entites being linked
+                    System.out.println("missing: " + nodeRelation.alterUniqueIdentifier.getAttributeIdentifier());
+                }
             }
         }
     }
