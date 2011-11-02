@@ -186,17 +186,17 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 switch (panelSetting.getPanelType()) {
                     case ArchiveLinker:
                         panelSetting.setHidePane(kinTermHidePane, "Archive Linker");
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree));
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree));
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree));
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree), false);
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree), false);
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree), false);
                         break;
                     case DiagramTree:
                         panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
-                        panelSetting.addTargetPanel(egoSelectionPanel);
+                        panelSetting.addTargetPanel(egoSelectionPanel, false);
                         break;
                     case EntitySearch:
                         panelSetting.setHidePane(kinTermHidePane, "Search Entities");
-                        panelSetting.addTargetPanel(entitySearchPanel);
+                        panelSetting.addTargetPanel(entitySearchPanel, false);
                         break;
                     case IndexerSettings:
                         panelSetting.setHidePane(kinTypeHidePane, "Diagram Settings");
@@ -207,19 +207,19 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         // todo: Ticket #1115 add overlay fields as paramters
                         symbolFieldsPanel.setName("Symbol Fields");
                         labelFieldsPanel.setName("Label Fields");
-                        panelSetting.addTargetPanel(symbolFieldsPanel);
-                        panelSetting.addTargetPanel(labelFieldsPanel);
-                        panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg));
+                        panelSetting.addTargetPanel(symbolFieldsPanel, false);
+                        panelSetting.addTargetPanel(labelFieldsPanel, false);
+                        panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg), false);
                         break;
                     case KinTerms:
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
                         for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
-                            panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms)); //  + kinTerms.titleString
+                            panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms), false); //  + kinTerms.titleString
                         }
                         break;
                     case KinTypeStrings:
                         panelSetting.setHidePane(kinTypeHidePane, "Kin Type Strings");
-                        panelSetting.addTargetPanel(new JScrollPane(kinTypeStringInput));
+                        panelSetting.addTargetPanel(new JScrollPane(kinTypeStringInput), false);
                         break;
 //                case MetaData:
 //                    panelSetting.setTargetPanel(tableHidePane, tableScrollPane, "Metadata");
@@ -420,7 +420,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         final KinTermGroup kinTermGroup = graphPanel.addKinTermGroup();
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
             if (panelSetting.getPanelType() == PanelType.KinTerms) {
-                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup));
+                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup), true);
             }
         }
     }
