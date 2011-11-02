@@ -65,9 +65,12 @@ public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
         }
     }
 
-    public void addTargetPanel(Component targetPanel) {
+    public void addTargetPanel(Component targetPanel, boolean setAsSelected) {
         this.targetPanel.add(targetPanel);
         setUpdateUiState();
+        if (setAsSelected) {
+            hidePane.setSelectedComponent(targetPanel);
+        }
     }
 
     public void removeTargetPanel(Component targetPanel) {
