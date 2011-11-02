@@ -61,18 +61,27 @@ public class KinType {
         if (relationType != null && !relationType.equals(entityRelation.relationType)) {
             return false;
         }
-        if (symbolType == null || symbolType == EntityData.SymbolType.square) {
-            return true; // it is better to return all the relations regardless of symbol in this case
-            // if the symbol is square then either circle or triangle are matches (square is matched later)
-//            if (EntityData.SymbolType.circle.name().equals(entityRelation.getAlterNode().getSymbolType())) {
-//                return true;
-//            }
-//            if (EntityData.SymbolType.triangle.name().equals(entityRelation.getAlterNode().getSymbolType())) {
-//                return true;
-//            }
+        if (symbolType != null && symbolType != EntityData.SymbolType.square) {
+            // if the symbol is square or null then skip this and compare the birth order
+            // otherwise compare the symbol types before comparing the birth order
+            if (!symbolType.name().equals(entityRelation.getAlterNode().getSymbolType())) {
+                return false;
+            }
         }
-        if (!symbolType.name().equals(entityRelation.getAlterNode().getSymbolType())) {
-            return false;
+        if (kinTypeModifier != null && !kinTypeModifier.isEmpty()) {
+            int relationOrder = entityRelation.getRelationOrder();
+            if (kinTypeModifier.equals("-")) {
+                if (relationOrder >= 0) {
+                    return false;
+                }
+            } else if (kinTypeModifier.equals("+")) {
+                if (relationOrder <= 0) {
+                    return false;
+                }
+            } else { // handle integer syntax ie EMD+3 for the third daughter
+                int requiredOrder = Integer.parseInt(kinTypeModifier.replaceFirst("^\\+", ""));
+                return (relationOrder == requiredOrder);
+            }
         }
         return true;
     }
