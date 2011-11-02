@@ -56,7 +56,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private JProgressBar progressBar;
     static private File defaultDiagramTemplate;
     private HashMap<ArbilDataNode, UniqueIdentifier> registeredArbilDataNode;
-    private HashSet<ArbilNode> arbilDataNodesFirstLoadDone; 
+    private HashMap<ArbilNode, Boolean> arbilDataNodesChangedStatus;
 
     public KinDiagramPanel(URI existingFile, boolean savableType) {
         initKinDiagramPanel(existingFile, null, savableType);
@@ -145,7 +145,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
 
         registeredArbilDataNode = new HashMap<ArbilDataNode, UniqueIdentifier>();
-        arbilDataNodesFirstLoadDone = new HashSet<ArbilNode>();
+        arbilDataNodesChangedStatus = new HashMap<ArbilNode, Boolean>();
         egoSelectionPanel = new EgoSelectionPanel(graphPanel);
 //        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
 
@@ -505,28 +505,24 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void dataNodeIconCleared(ArbilNode arbilNode) {
-        if (arbilDataNodesFirstLoadDone.contains(arbilNode)) {
-//         todo: this needs to be updated to be multi threaded so users can link or save multiple nodes at once
+        if (arbilDataNodesChangedStatus.containsKey(arbilNode)) {
             boolean dataBaseRequiresUpdate = false;
             boolean redrawRequired = false;
             if (arbilNode instanceof ArbilDataNode) {
                 ArbilDataNode arbilDataNode = (ArbilDataNode) arbilNode;
-                UniqueIdentifier uniqueIdentifier = registeredArbilDataNode.get(arbilDataNode);
-                // find the entity data for this arbil data node
-                for (EntityData entityData : graphSorter.getDataNodes()) {
-                    if (entityData.getUniqueIdentifier().equals(uniqueIdentifier)) {
-                        // check if the metadata has been changed
-                        // todo: something here fails to act on multiple nodes that have changed (it is the db update that was missed)
-                        if (entityData.metadataRequiresSave && !arbilDataNode.getNeedsSaveToDisk(false)) {
-                            dataBaseRequiresUpdate = true;
-                            redrawRequired = true;
-                        }
-                        // clear or set the needs save flag
-                        entityData.metadataRequiresSave = arbilDataNode.getNeedsSaveToDisk(false);
-                        if (entityData.metadataRequiresSave) {
-                            redrawRequired = true;
+                boolean currentlyNeedsSave = arbilDataNode.getNeedsSaveToDisk(false);
+                if (currentlyNeedsSave != arbilDataNodesChangedStatus.get(arbilNode)) {
+                    arbilDataNodesChangedStatus.put(arbilNode, currentlyNeedsSave);
+                    UniqueIdentifier uniqueIdentifier = registeredArbilDataNode.get(arbilDataNode);
+//                     find the entity data for this arbil data node
+                    for (EntityData entityData : graphSorter.getDataNodes()) {
+                        if (entityData.getUniqueIdentifier().equals(uniqueIdentifier)) {
+                            // clear or set the needs save flag
+                            entityData.metadataRequiresSave = currentlyNeedsSave;
                         }
                     }
+                    dataBaseRequiresUpdate = !currentlyNeedsSave; // if there was a change that has been saved then an db update is required
+                    redrawRequired = true;
                 }
                 if (dataBaseRequiresUpdate) {
                     entityCollection.updateDatabase(arbilDataNode.getURI());
@@ -536,10 +532,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             if (redrawRequired) {
                 drawGraph();
             }
-        }
-        if (!arbilNode.isLoading()) {
-            // this is to make sure that the initial loading process does not cause db updates nor graph redraws
-            arbilDataNodesFirstLoadDone.add(arbilNode);
+        } else {
+            // this will occur in the initial loading process, hence this does not perform db updates nor graph redraws
+            arbilDataNodesChangedStatus.put(arbilNode, false);
         }
     }
 
