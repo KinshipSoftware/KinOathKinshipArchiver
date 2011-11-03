@@ -9,7 +9,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import nl.mpi.arbil.data.ArbilNode;
-import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTreeRenderer;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
@@ -32,7 +31,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
     JScrollPane metadataNodeScrolPane;
     JScrollPane transientNodeScrolPane;
 
-    public EgoSelectionPanel(GraphPanel graphPanel) {
+    public EgoSelectionPanel(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel) {
         JPanel metadataNodePanel;
         JPanel transientNodePanel;
         transientNodePanel = new JPanel(new BorderLayout());
@@ -43,21 +42,21 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         convertTransientButton.addActionListener(this);
         transientNodePanel.add(convertTransientButton, BorderLayout.PAGE_START);
 
-        transientTree = new KinTree(graphPanel);
+        transientTree = new KinTree(kinDiagramPanel, graphPanel);
         transientTree.setBackground(transientNodePanel.getBackground());
         transientNodePanel.add(transientTree, BorderLayout.CENTER);
         transientNodeScrolPane = new JScrollPane(transientNodePanel);
 
         metadataNodePanel = new JPanel(new BorderLayout());
-        egoTree = new KinTree(graphPanel);
+        egoTree = new KinTree(kinDiagramPanel, graphPanel);
 //        egoTree.setRootVisible(false);
         egoTree.setCellRenderer(new ArbilTreeRenderer());
 
-        requiredTree = new KinTree(graphPanel);
+        requiredTree = new KinTree(kinDiagramPanel, graphPanel);
 //        requiredTree.setRootVisible(false);
         requiredTree.setCellRenderer(new ArbilTreeRenderer());
 
-        impliedTree = new KinTree(graphPanel);
+        impliedTree = new KinTree(kinDiagramPanel, graphPanel);
 //        impliedTree.setRootVisible(false);
         impliedTree.setCellRenderer(new ArbilTreeRenderer());
 
@@ -146,7 +145,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if ("convert".equals(e.getActionCommand())) {
-             // todo: Ticket #1114 Button to convert freeform diagram to metadata diagram
+            // todo: Ticket #1114 Button to convert freeform diagram to metadata diagram
             throw new UnsupportedOperationException("Ticket #1114 Button to convert freeform diagram to metadata diagram");
         }
     }
