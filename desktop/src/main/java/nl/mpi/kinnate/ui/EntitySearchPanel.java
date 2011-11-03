@@ -35,11 +35,11 @@ public class EntitySearchPanel extends JPanel {
     private JPanel searchPanel;
     private GraphPanel graphPanel;
 
-    public EntitySearchPanel(EntityCollection entityCollection, GraphPanel graphPanel) {
+    public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel) {
         this.entityCollection = entityCollection;
         this.graphPanel = graphPanel;
         this.setLayout(new BorderLayout());
-        resultsTree = new KinTree(graphPanel);
+        resultsTree = new KinTree(kinDiagramPanel, graphPanel);
         resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
         resultsTree.setRootVisible(false);
         resultsTree.requestResort();
