@@ -4,8 +4,6 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,8 +12,6 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
-import nl.mpi.arbil.data.ArbilDataNode;
-import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.gedcomimport.ImportException;
@@ -209,37 +205,30 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         // todo: #1099	Labels should show the blue highlight
         if (graphPanel.metadataPanel != null) {
             graphPanel.metadataPanel.removeAllArbilDataNodeRows();
-            try {
-                ArrayList<UniqueIdentifier> remainingEditors = new ArrayList<UniqueIdentifier>(shownGraphicsEditors.keySet());
-                for (UniqueIdentifier currentSelectedId : graphPanel.selectedGroupId) {
-                    remainingEditors.remove(currentSelectedId);
-                    if (currentSelectedId.isGraphicsIdentifier()) {
-                        if (!shownGraphicsEditors.containsKey(currentSelectedId)) {
-                            Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());
-                            SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement);
-                            graphPanel.metadataPanel.addTab("Graphics Editor", elementEditor);
+            ArrayList<UniqueIdentifier> remainingEditors = new ArrayList<UniqueIdentifier>(shownGraphicsEditors.keySet());
+            for (UniqueIdentifier currentSelectedId : graphPanel.selectedGroupId) {
+                remainingEditors.remove(currentSelectedId);
+                if (currentSelectedId.isGraphicsIdentifier()) {
+                    if (!shownGraphicsEditors.containsKey(currentSelectedId)) {
+                        Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());
+                        SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement);
+                        graphPanel.metadataPanel.addTab("Graphics Editor", elementEditor);
 //                            graphPanel.editorHidePane.setSelectedComponent(elementEditor);
-                            shownGraphicsEditors.put(currentSelectedId, elementEditor);
-                        }
-                    } else {
-                        String currentSelectedPath = graphPanel.getPathForElementId(currentSelectedId);
-                        if (currentSelectedPath != null && currentSelectedPath.length() > 0) {
-                            ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(currentSelectedPath));
-                            // register this node with the graph panel
-                            kinDiagramPanel.registerArbilNode(currentSelectedId, arbilDataNode);
-                            graphPanel.metadataPanel.addSingleArbilDataNode(arbilDataNode);
-                        }
+                        shownGraphicsEditors.put(currentSelectedId, elementEditor);
+                    }
+                } else {
+                    EntityData currentSelectedEntity = graphPanel.getEntityForElementId(currentSelectedId);
+                    if (currentSelectedEntity != null) {
+                        graphPanel.metadataPanel.addEntityDataNode(kinDiagramPanel, currentSelectedEntity);
                     }
                 }
-                for (UniqueIdentifier remainingIdentifier : remainingEditors) {
-                    // remove the unused editors
-                    graphPanel.metadataPanel.removeTab(shownGraphicsEditors.get(remainingIdentifier));
-                    shownGraphicsEditors.remove(remainingIdentifier);
-                }
-                graphPanel.metadataPanel.updateEditorPane();
-            } catch (URISyntaxException urise) {
-                GuiHelper.linorgBugCatcher.logError(urise);
             }
+            for (UniqueIdentifier remainingIdentifier : remainingEditors) {
+                // remove the unused editors
+                graphPanel.metadataPanel.removeTab(shownGraphicsEditors.get(remainingIdentifier));
+                shownGraphicsEditors.remove(remainingIdentifier);
+            }
+            graphPanel.metadataPanel.updateEditorPane();
         }
     }
 
