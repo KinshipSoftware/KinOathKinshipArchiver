@@ -35,7 +35,7 @@ public class KinTree extends ArbilTree {
         for (ArbilNode arbilNode : arbilNodeArray) {
             if (arbilNode instanceof ArbilDataNode) {
 //                uriList.add(((ArbilDataNode) arbilNode).getURI());
-                graphPanel.metadataPanel.addSingleArbilDataNode((ArbilDataNode) arbilNode);
+                graphPanel.metadataPanel.addArbilDataNode((ArbilDataNode) arbilNode);
             } else if (arbilNode instanceof KinTreeNode) {
                 final KinTreeNode kinTreeNode = (KinTreeNode) arbilNode;
                 // set the graph selection
@@ -43,7 +43,7 @@ public class KinTree extends ArbilTree {
                     identifierList.add(kinTreeNode.entityData.getUniqueIdentifier());
                     try {
                         final ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(((KinTreeNode) arbilNode).entityData.getEntityPath()));
-                        graphPanel.metadataPanel.addSingleArbilDataNode(arbilDataNode);
+                        graphPanel.metadataPanel.addArbilDataNode(arbilDataNode);
                     } catch (URISyntaxException urise) {
                         GuiHelper.linorgBugCatcher.logError(urise);
                     }
