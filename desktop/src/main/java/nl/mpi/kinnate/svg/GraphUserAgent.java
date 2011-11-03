@@ -49,7 +49,7 @@ public class GraphUserAgent extends SVGUserAgentGUIAdapter {
         try {
             // put link target into the table
             final ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(targetUri));
-            graphPanel.metadataPanel.addSingleArbilDataNode(arbilDataNode);
+            graphPanel.metadataPanel.addArbilDataNode(arbilDataNode);
         } catch (URISyntaxException urise) {
             GuiHelper.linorgBugCatcher.logError(urise);
         }
