@@ -146,7 +146,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         registeredArbilDataNode = new HashMap<ArbilDataNode, UniqueIdentifier>();
         arbilDataNodesChangedStatus = new HashMap<ArbilNode, Boolean>();
-        egoSelectionPanel = new EgoSelectionPanel(graphPanel);
+        egoSelectionPanel = new EgoSelectionPanel(this, graphPanel);
 //        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
 
 //        kinTypeStringInput.setText(defaultString);
@@ -161,7 +161,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         graphPanel.setTransferHandler(dragTransferHandler);
         egoSelectionPanel.setTransferHandler(dragTransferHandler);
 
-        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, graphPanel);
+        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, this, graphPanel);
         entitySearchPanel.setTransferHandler(dragTransferHandler);
 
         HidePane egoSelectionHidePane = new HidePane(HidePane.HidePanePosition.left, 0);
@@ -186,9 +186,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 switch (panelSetting.getPanelType()) {
                     case ArchiveLinker:
                         panelSetting.setHidePane(kinTermHidePane, "Archive Linker");
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree), false);
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree), false);
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree), false);
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree), false);
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree), false);
+                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree), false);
                         break;
                     case DiagramTree:
                         panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
@@ -239,6 +239,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         entityIndex = new QueryParser(svgStoredEntities);
         graphSorter = new GraphSorter();
+//        egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes(), graphPanel.getIndexParameters());
         kinTypeStringInput.addKeyListener(new KeyListener() {
 
             public void keyTyped(KeyEvent e) {
