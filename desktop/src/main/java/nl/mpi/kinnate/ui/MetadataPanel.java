@@ -32,6 +32,7 @@ public class MetadataPanel extends JPanel {
     private ArrayList<ArbilDataNode> metadataNodes = new ArrayList<ArbilDataNode>();
     private ArrayList<ArbilDataNode> archiveTreeNodes = new ArrayList<ArbilDataNode>();
     private ArrayList<ArbilDataNode> archiveRootNodes = new ArrayList<ArbilDataNode>();
+    private ArrayList<SvgElementEditor> elementEditors = new ArrayList<SvgElementEditor>();
 
     public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler) {
         this.arbilTree = new ArbilTree();
@@ -49,6 +50,12 @@ public class MetadataPanel extends JPanel {
         JScrollPane archiveTableScrollPane = new JScrollPane(archiveTable);
         this.add(archiveTableScrollPane, BorderLayout.CENTER);
         this.add(arbilTree, BorderLayout.LINE_START);
+    }
+
+    public void removeAllEditors() {
+        while (!elementEditors.isEmpty()) {
+            editorHidePane.removeTab(elementEditors.remove(0));
+        }
     }
 
     public void removeAllArbilDataNodeRows() {
@@ -95,8 +102,9 @@ public class MetadataPanel extends JPanel {
         }
     }
 
-    public void addTab(String labelString, Component elementEditor) {
+    public void addTab(String labelString, SvgElementEditor elementEditor) {
         editorHidePane.addTab(labelString, elementEditor);
+        elementEditors.add(elementEditor);
     }
 
     public void removeTab(Component elementEditor) {
@@ -107,12 +115,12 @@ public class MetadataPanel extends JPanel {
         // todo: add only imdi nodes to the tree and the root node of them
         // todo: maybe have a table for entities and one for achive metdata
         if (archiveTableModel.getArbilDataNodeCount() > 0) {
-            addTab("Archive Metadata", this);
+            editorHidePane.addTab("Archive Metadata", this);
         } else {
             removeTab(this);
         }
         if (kinTableModel.getArbilDataNodeCount() > 0) {
-            addTab("Kinship Metadata", kinTableScrollPane);
+            editorHidePane.addTab("Kinship Metadata", kinTableScrollPane);
             editorHidePane.setSelectedComponent(kinTableScrollPane);
         } else {
             removeTab(kinTableScrollPane);
