@@ -28,8 +28,6 @@ import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.JSVGScrollPane;
-import org.apache.batik.swing.svg.LinkActivationEvent;
-import org.apache.batik.swing.svg.LinkActivationListener;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -57,8 +55,6 @@ public class GraphPanel extends JPanel implements SavePanel {
     protected EntitySvg entitySvg;
 //    private URI[] egoPathsTemp = null;
     public SvgUpdateHandler svgUpdateHandler;
-    private int currentZoom = 0;
-    private AffineTransform zoomAffineTransform = null;
     public MouseListenerSvg mouseListenerSvg;
 
     public GraphPanel(KinDiagramPanel kinDiagramPanel) {
@@ -80,22 +76,18 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.addMouseWheelListener(new MouseWheelListener() {
 
             public void mouseWheelMoved(MouseWheelEvent e) {
-                currentZoom = currentZoom + e.getUnitsToScroll();
-                if (currentZoom > 8) {
-                    currentZoom = 8;
-                }
-                if (currentZoom < -6) {
-                    currentZoom = -6;
-                }
                 double scale = 1 - e.getUnitsToScroll() / 10.0;
                 double tx = -e.getX() * (scale - 1);
                 double ty = -e.getY() * (scale - 1);
-                AffineTransform at = new AffineTransform();
-                at.translate(tx, ty);
-                at.scale(scale, scale);
-                at.concatenate(svgCanvas.getRenderingTransform());
-                svgCanvas.setRenderingTransform(at);
-//                zoomDrawing();
+//                System.out.println("scale: " + scale);
+//                System.out.println("scale: " + svgCanvas.getRenderingTransform().getScaleX());
+                if (scale > 1 || svgCanvas.getRenderingTransform().getScaleX() > 0.01) {
+                    AffineTransform at = new AffineTransform();
+                    at.translate(tx, ty);
+                    at.scale(scale, scale);
+                    at.concatenate(svgCanvas.getRenderingTransform());
+                    svgCanvas.setRenderingTransform(at);
+                }
             }
         });
 //        svgCanvas.setEnableResetTransformInteractor(true);
@@ -334,6 +326,15 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public UniqueIdentifier[] getSelectedIds() {
         return selectedGroupId.toArray(new UniqueIdentifier[]{});
+    }
+
+    public EntityData getEntityForElementId(UniqueIdentifier uniqueIdentifier) {
+        for (EntityData entityData : dataStoreSvg.graphData.getDataNodes()) {
+            if (uniqueIdentifier.equals(entityData.getUniqueIdentifier())) {
+                return entityData;
+            }
+        }
+        return null;
     }
 
     public HashMap<UniqueIdentifier, EntityData> getEntitiesById(UniqueIdentifier[] uniqueIdentifiers) {
