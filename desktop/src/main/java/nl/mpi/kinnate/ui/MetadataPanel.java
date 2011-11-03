@@ -2,6 +2,8 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -9,6 +11,9 @@ import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
+import nl.mpi.arbil.ui.ArbilTree;
+import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
@@ -18,20 +23,23 @@ import nl.mpi.kinnate.svg.GraphPanel;
  */
 public class MetadataPanel extends JPanel {
 
-    private KinTree kinTree;
+    private ArbilTree arbilTree;
 //    JScrollPane tableScrollPane;
     private ArbilTableModel kinTableModel;
     private ArbilTableModel archiveTableModel;
     private JScrollPane kinTableScrollPane;
     private HidePane editorHidePane;
-    private ArrayList<ArbilDataNode> archiveNodes = new ArrayList<ArbilDataNode>();
+    private ArrayList<ArbilDataNode> metadataNodes = new ArrayList<ArbilDataNode>();
+    private ArrayList<ArbilDataNode> archiveTreeNodes = new ArrayList<ArbilDataNode>();
+    private ArrayList<ArbilDataNode> archiveRootNodes = new ArrayList<ArbilDataNode>();
 
     public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler) {
-        this.kinTree = new KinTree(graphPanel);
+        this.arbilTree = new ArbilTree();
         this.kinTableModel = new ArbilTableModel();
         this.archiveTableModel = new ArbilTableModel();
         ArbilTable kinTable = new ArbilTable(kinTableModel, "Selected Nodes");
         ArbilTable archiveTable = new ArbilTable(archiveTableModel, "Selected Nodes");
+        this.arbilTree.setCustomPreviewTable(archiveTable);
         kinTable.setTransferHandler(tableCellDragHandler);
         kinTable.setDragEnabled(true);
 
@@ -40,26 +48,51 @@ public class MetadataPanel extends JPanel {
         kinTableScrollPane = new JScrollPane(kinTable);
         JScrollPane archiveTableScrollPane = new JScrollPane(archiveTable);
         this.add(archiveTableScrollPane, BorderLayout.CENTER);
-        this.add(kinTree, BorderLayout.LINE_START);
+        this.add(arbilTree, BorderLayout.LINE_START);
     }
 
     public void removeAllArbilDataNodeRows() {
         kinTableModel.removeAllArbilDataNodeRows();
         archiveTableModel.removeAllArbilDataNodeRows();
-        for (ArbilDataNode arbilDataNode : archiveNodes) {
+        for (ArbilDataNode arbilDataNode : metadataNodes) {
             if (arbilDataNode.getParentDomNode().getNeedsSaveToDisk(false)) {
                 // reloading will first check if a save is required then save and reload
                 ArbilDataNodeLoader.getSingleInstance().requestReload((ArbilDataNode) arbilDataNode.getParentDomNode());
             }
         }
-        archiveNodes.clear();
+        metadataNodes.clear();
     }
 
-    public void addSingleArbilDataNode(ArbilDataNode arbilDataNode) {
-        kinTableModel.addSingleArbilDataNode(arbilDataNode);
-//        if (arbilDataNode instanceof KinTreeNode)
+    public void addArbilDataNode(ArbilDataNode arbilDataNode) {
         archiveTableModel.addSingleArbilDataNode(arbilDataNode);
-        archiveNodes.add(arbilDataNode);
+        archiveRootNodes.clear(); // do not show the tree for archive tree selections
+        metadataNodes.add(arbilDataNode);
+    }
+
+    public void addEntityDataNode(KinDiagramPanel kinDiagramPanel, EntityData entityData) {
+        String entityPath = entityData.getEntityPath();
+        if (entityPath != null && entityPath.length() > 0) {
+            try {
+                ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityPath));
+                // register this node with the graph panel
+                kinDiagramPanel.registerArbilNode(entityData.getUniqueIdentifier(), arbilDataNode);
+                kinTableModel.addSingleArbilDataNode(arbilDataNode);
+                metadataNodes.add(arbilDataNode);
+                // add the corpus links to the other table
+                if (entityData.archiveLinkArray != null) {
+                    for (URI archiveLink : entityData.archiveLinkArray) {
+                        ArbilDataNode archiveLinkNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, archiveLink);
+                        // todo: we do not register this node with the graph panel because it is not rendered on the graph, but if the name of the node changes then it should be updated in the tree which is not yet handled
+                        archiveTableModel.addSingleArbilDataNode(archiveLinkNode);
+                        archiveTreeNodes.add(archiveLinkNode);
+                        archiveRootNodes.add(archiveLinkNode.getParentDomNode());
+                        metadataNodes.add(archiveLinkNode);
+                    }
+                }
+            } catch (URISyntaxException urise) {
+                GuiHelper.linorgBugCatcher.logError(urise);
+            }
+        }
     }
 
     public void addTab(String labelString, Component elementEditor) {
@@ -74,17 +107,22 @@ public class MetadataPanel extends JPanel {
         // todo: add only imdi nodes to the tree and the root node of them
         // todo: maybe have a table for entities and one for achive metdata
         if (archiveTableModel.getArbilDataNodeCount() > 0) {
-            addTab("Archive Links", this);
+            addTab("Archive Metadata", this);
         } else {
             removeTab(this);
         }
         if (kinTableModel.getArbilDataNodeCount() > 0) {
-            addTab("Metadata", kinTableScrollPane);
+            addTab("Kinship Metadata", kinTableScrollPane);
+            editorHidePane.setSelectedComponent(kinTableScrollPane);
         } else {
             removeTab(kinTableScrollPane);
         }
-        kinTree.rootNodeChildren = archiveNodes.toArray(new ArbilDataNode[]{});
-        kinTree.requestResort();
+        if (!archiveRootNodes.isEmpty()) {
+            arbilTree.rootNodeChildren = archiveRootNodes.toArray(new ArbilDataNode[]{});
+            // todo: highlight or select the sub nodes that are actually linked
+            arbilTree.requestResort();
+        }
+        arbilTree.setVisible(!archiveRootNodes.isEmpty());
         editorHidePane.setHiddeState();
     }
 }
