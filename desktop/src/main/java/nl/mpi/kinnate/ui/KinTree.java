@@ -1,13 +1,9 @@
 package nl.mpi.kinnate.ui;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import nl.mpi.arbil.data.ArbilDataNode;
-import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTree;
-import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -19,9 +15,11 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class KinTree extends ArbilTree {
 
+    KinDiagramPanel kinDiagramPanel;
     GraphPanel graphPanel;
 
-    public KinTree(GraphPanel graphPanel) {
+    public KinTree(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel) {
+        this.kinDiagramPanel = kinDiagramPanel;
         this.graphPanel = graphPanel;
     }
 
@@ -32,6 +30,7 @@ public class KinTree extends ArbilTree {
         ArrayList<UniqueIdentifier> identifierList = new ArrayList<UniqueIdentifier>();
 //        ArrayList<URI> uriList = new ArrayList<URI>();
         graphPanel.metadataPanel.removeAllArbilDataNodeRows();
+        graphPanel.metadataPanel.removeAllEditors();
         for (ArbilNode arbilNode : arbilNodeArray) {
             if (arbilNode instanceof ArbilDataNode) {
 //                uriList.add(((ArbilDataNode) arbilNode).getURI());
@@ -41,12 +40,7 @@ public class KinTree extends ArbilTree {
                 // set the graph selection
                 if (kinTreeNode.entityData != null) {
                     identifierList.add(kinTreeNode.entityData.getUniqueIdentifier());
-                    try {
-                        final ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(((KinTreeNode) arbilNode).entityData.getEntityPath()));
-                        graphPanel.metadataPanel.addArbilDataNode(arbilDataNode);
-                    } catch (URISyntaxException urise) {
-                        GuiHelper.linorgBugCatcher.logError(urise);
-                    }
+                    graphPanel.metadataPanel.addEntityDataNode(kinDiagramPanel, ((KinTreeNode) arbilNode).entityData);
                 }
             }
         }
