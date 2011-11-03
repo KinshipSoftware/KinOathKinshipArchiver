@@ -39,10 +39,10 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         RemoteTree, LocalTree, MpiTree
     }
 
-    public ArchiveEntityLinkerPanel(VisiblePanelSetting panelSetting, GraphPanel graphPanel, KinDragTransferHandler dragTransferHandler, TreeType treeType) {
+    public ArchiveEntityLinkerPanel(VisiblePanelSetting panelSetting, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, KinDragTransferHandler dragTransferHandler, TreeType treeType) {
         this.treeType = treeType;
         this.panelSetting = panelSetting;
-        archiveTree = new KinTree(graphPanel);
+        archiveTree = new KinTree(kinDiagramPanel, graphPanel);
         this.setLayout(new BorderLayout());
         JPanel treePanel = new JPanel(new BorderLayout());
 //        tabbedPane = new JTabbedPane();
