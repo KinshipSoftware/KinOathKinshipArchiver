@@ -48,21 +48,31 @@ public class KinTermsMenu extends JMenu {
                 // todo: check if a kin term pane is showing or associated with the diagram and that a diagam is showing
                 currentKinTermSavePanel = mainFrame.getKinTermPanel();
                 if (currentKinTermSavePanel != null) {
-                    hideShowMenu.setEnabled(true);
-                    if (!currentKinTermSavePanel.getPanelState(PanelType.KinTerms)) {
+                    if (currentKinTermSavePanel.getKinTermGroupCount() == 0) {
+                        // if there are no kin term groups then present "new" not "show"
                         hideShowMenu.setSelected(false);
+                        hideShowMenu.setEnabled(false);
                         exportMenu.setEnabled(false);
                         importMenu.setEnabled(false);
-                        newMenu.setEnabled(false);
-                        deleteMenu.setEnabled(false);
-//                        hideShowMenu.setText("Show");
-                    } else {
-                        hideShowMenu.setSelected(true);
-                        exportMenu.setEnabled(true);
-                        importMenu.setEnabled(true);
                         newMenu.setEnabled(true);
-                        deleteMenu.setEnabled(false); // todo: Ticket #1063 enable deleting the current kin term group and update the menu to reflect the group name that would be deleted
+                        deleteMenu.setEnabled(false);
+                    } else {
+                        hideShowMenu.setEnabled(true);
+                        if (!currentKinTermSavePanel.getPanelState(PanelType.KinTerms)) {
+                            hideShowMenu.setSelected(false);
+                            exportMenu.setEnabled(false);
+                            importMenu.setEnabled(false);
+                            newMenu.setEnabled(false);
+                            deleteMenu.setEnabled(false);
+//                        hideShowMenu.setText("Show");
+                        } else {
+                            hideShowMenu.setSelected(true);
+                            exportMenu.setEnabled(true);
+                            importMenu.setEnabled(true);
+                            newMenu.setEnabled(true);
+                            deleteMenu.setEnabled(false); // todo: Ticket #1063 enable deleting the current kin term group and update the menu to reflect the group name that would be deleted
 //                        hideShowMenu.setText("Hide");
+                        }
                     }
                 } else {
                     exportMenu.setEnabled(false);
@@ -100,6 +110,7 @@ public class KinTermsMenu extends JMenu {
         newMenu.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                currentKinTermSavePanel.setPanelState(PanelType.KinTerms, true);
                 currentKinTermSavePanel.addKinTermGroup();
             }
         });
