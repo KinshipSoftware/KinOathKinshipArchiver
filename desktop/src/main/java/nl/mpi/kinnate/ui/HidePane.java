@@ -216,6 +216,11 @@ public class HidePane extends JPanel {
         registeredPanelSettings.add(panelSetting);
     }
 
+    @Override
+    public Component[] getComponents() {
+        return tabbedPane.getComponents();
+    }
+
     public Component getSelectedComponent() {
         return tabbedPane.getSelectedComponent();
     }
