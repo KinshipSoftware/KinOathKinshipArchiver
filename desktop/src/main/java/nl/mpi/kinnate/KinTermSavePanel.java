@@ -21,6 +21,8 @@ public interface KinTermSavePanel {
 
     public void addKinTermGroup();
 
+    public int getKinTermGroupCount();
+
     public void importKinTerms();
 
     public void exportKinTerms();
