@@ -144,6 +144,8 @@ public class KinTermPanel extends JPanel {
         final JTable kinTermTable = new JTable(kinTermTableModel);
         kinTermTable.setCellSelectionEnabled(true);
         kinTermTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        kinTermTable.setShowGrid(true);
+        kinTermTable.setGridColor(Color.LIGHT_GRAY);
         outerPanel.add(new JScrollPane(kinTermTable));
     }
 
