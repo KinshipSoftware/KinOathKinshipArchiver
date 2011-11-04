@@ -12,24 +12,18 @@ public class KinTerm {
     public KinTerm() {
     }
 
-    public KinTerm(String kinTermLocal, String kinTermDescriptionLocal, String egoTypeLocal, String alterKinTypeStringsLocal, String propositusKinTypeStringsLocal, String anchorKinTypeStringsLocal) {
+    public KinTerm(String kinTermLocal, String kinTermDescriptionLocal, String egoTypeLocal, String alterKinTypeStringsLocal, String propositusKinTypeStringsLocal) {
         kinTerm = kinTermLocal;
         kinTermDescription = kinTermDescriptionLocal;
-//        egoType = egoTypeLocal;
         alterKinTypeStrings = alterKinTypeStringsLocal;
         propositusKinTypeStrings = propositusKinTypeStringsLocal;
-        anchorKinTypeStrings = anchorKinTypeStringsLocal;
     }
     @XmlAttribute(name = "Term", namespace = "http://mpi.nl/tla/kin")
     public String kinTerm = null;
     @XmlAttribute(name = "Description", namespace = "http://mpi.nl/tla/kin")
     public String kinTermDescription = null;
-//    @XmlAttribute(name = "Ego", namespace = "http://mpi.nl/tla/kin")
-//    public String egoType = null;
-    @XmlAttribute(name = "Alter", namespace = "http://mpi.nl/tla/kin")
+    @XmlAttribute(name = "Alter", namespace = "http://mpi.nl/tla/kin") // todo: this should be changed to referent rather than alter, but it will affect exiting diagrams
     public String alterKinTypeStrings = null;
     @XmlAttribute(name = "Propositus", namespace = "http://mpi.nl/tla/kin")
     public String propositusKinTypeStrings = null;
-    @XmlAttribute(name = "Anchor", namespace = "http://mpi.nl/tla/kin")
-    public String anchorKinTypeStrings = null;
 }
