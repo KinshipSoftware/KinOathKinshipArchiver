@@ -220,7 +220,15 @@ public class EntityIndex implements EntityService {
         }
     }
 
-    public EntityData[] processKinTypeStrings(URI[] egoNodes, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException {
+    public void clearAbortRequest() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void requestAbortProcess() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public EntityData[] processKinTypeStrings(URI[] egoNodes, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException, ProcessAbortException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
