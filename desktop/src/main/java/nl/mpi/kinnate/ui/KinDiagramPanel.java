@@ -48,11 +48,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private EntityCollection entityCollection;
     private KinTypeStringInput kinTypeStringInput;
     private GraphPanel graphPanel;
-    private GraphSorter graphSorter;
     private EgoSelectionPanel egoSelectionPanel;
     private HidePane kinTermHidePane;
     private HidePane kinTypeHidePane;
-//    private KinTermTabPane kinTermPanel;
     private EntityService entityIndex;
     private JProgressBar progressBar;
     static private File defaultDiagramTemplate;
@@ -70,7 +68,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private void initKinDiagramPanel(URI existingFile, DocumentType documentType, boolean savableType) {
         entityCollection = new EntityCollection();
         progressBar = new JProgressBar();
-        EntityData[] svgStoredEntities = null;
         graphPanel = new GraphPanel(this);
         kinTypeStringInput = new KinTypeStringInput(graphPanel.dataStoreSvg);
 
@@ -83,7 +80,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         boolean showMetaData = false;
 
         if (existingFile != null) {
-            svgStoredEntities = graphPanel.readSvg(existingFile, savableType);
+            graphPanel.readSvg(existingFile, savableType);
             String kinTermContents = null;
             for (String currentKinTypeString : graphPanel.getKinTypeStrigs()) {
                 if (currentKinTypeString.trim().length() > 0) {
@@ -238,9 +235,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         this.add(kinGraphPanel);
 
-        entityIndex = new QueryParser(svgStoredEntities);
-        graphSorter = new GraphSorter();
-//        egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes(), graphPanel.getIndexParameters());
+        entityIndex = new QueryParser(graphPanel.dataStoreSvg.graphData.getDataNodes());
+        egoSelectionPanel.setTreeNodes(graphPanel);
         kinTypeStringInput.addKeyListener(new KeyListener() {
 
             public void keyTyped(KeyEvent e) {
@@ -282,10 +278,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
                 @Override
                 public void run() {
-                    entityIndex.clearAbortRequest();
                     while (graphUpdateRequired) {
                         try {
                             graphUpdateRequired = false;
+                            entityIndex.clearAbortRequest();
                             try {
                                 String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
                                 ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
@@ -304,12 +300,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 }
                                 if (isQuery) {
                                     EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
-                                    graphSorter.setEntitys(graphNodes);
+                                    graphPanel.dataStoreSvg.graphData.setEntitys(graphNodes);
                                     // register interest Arbil updates and update the graph when data is edited in the table
 //                                registerCurrentNodes(graphSorter.getDataNodes());
-                                    graphPanel.drawNodes(graphSorter);
-                                    egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes(), graphPanel.getIndexParameters());
-                                    new KinTermCalculator().insertKinTerms(graphSorter.getDataNodes(), graphPanel.getkinTermGroups());
+                                    graphPanel.drawNodes(graphPanel.dataStoreSvg.graphData);
+                                    egoSelectionPanel.setTreeNodes(graphPanel);
+                                    new KinTermCalculator().insertKinTerms(graphPanel.dataStoreSvg.graphData.getDataNodes(), graphPanel.getkinTermGroups());
                                 } else {
                                     KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg);
                                     graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
@@ -324,11 +320,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 GuiHelper.linorgBugCatcher.logError(exception);
                                 ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load all entities required", "Draw Graph");
                             }
-                            progressBar.setVisible(false);
                         } catch (ProcessAbortException exception) {
                             // if the process has been aborted then it should be safe to let the next thread loop take over from here
                         }
                     }
+                    progressBar.setVisible(false);
                     graphThreadRunning = false;
                 }
             }.start();
@@ -470,7 +466,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //        return kinTermHidePane.isHidden();
 //    }
     public EntityData[] getGraphEntities() {
-        return graphSorter.getDataNodes();
+        return graphPanel.dataStoreSvg.graphData.getDataNodes();
     }
 
     public void registerArbilNode(UniqueIdentifier uniqueIdentifier, ArbilDataNode arbilDataNode) {
@@ -526,7 +522,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     arbilDataNodesChangedStatus.put(arbilNode, currentlyNeedsSave);
                     UniqueIdentifier uniqueIdentifier = registeredArbilDataNode.get(arbilDataNode);
 //                     find the entity data for this arbil data node
-                    for (EntityData entityData : graphSorter.getDataNodes()) {
+                    for (EntityData entityData : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                         if (entityData.getUniqueIdentifier().equals(uniqueIdentifier)) {
                             // clear or set the needs save flag
                             entityData.metadataRequiresSave = currentlyNeedsSave;
