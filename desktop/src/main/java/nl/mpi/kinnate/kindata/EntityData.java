@@ -39,7 +39,7 @@ public class EntityData {
     private Date dateOfBirth; // todo: use this in the graph sort and offer to show on the graph
     @XmlElement(name = "DateOfDeath", namespace = "http://mpi.nl/tla/kin")
     private Date dateOfDeath; // todo: use this in the graph to draw a line through or similar
-    @XmlTransient
+    @XmlElement(name = "Ego", namespace = "http://mpi.nl/tla/kin") // required for populating the tree when first loading a saved svg
     public boolean isEgo = false;
 //    @XmlElementWrapper(name = "Labels", namespace="http://mpi.nl/tla/kin")
     @XmlElement(name = "Label", namespace = "http://mpi.nl/tla/kin")
@@ -57,7 +57,7 @@ public class EntityData {
 //    public String[] resourceLinkArray;
     @XmlTransient
     public boolean metadataRequiresSave = false;
-    @XmlTransient
+    @XmlElement(name = "Visible", namespace = "http://mpi.nl/tla/kin") // required for populating the tree when first loading a saved svg
     public boolean isVisible = false;
     @XmlTransient
     private EntityRelation[] visiblyRelateNodes = null;
