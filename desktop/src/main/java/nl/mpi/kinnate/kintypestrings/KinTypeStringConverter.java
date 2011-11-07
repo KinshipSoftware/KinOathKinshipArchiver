@@ -25,6 +25,23 @@ public class KinTypeStringConverter extends GraphSorter {
         this.dataStoreSvg = dataStoreSvg;
     }
 
+    public enum QueryType {
+
+        Contains, Greater, Less, Equals
+    }
+
+    public class QueryTerm {
+
+        public QueryTerm(String fieldXPath, QueryType comparatorType, String searchValue) {
+            this.fieldXPath = fieldXPath;
+            this.comparatorType = comparatorType;
+            this.searchValue = searchValue;
+        }
+        public String fieldXPath;
+        public QueryType comparatorType;
+        public String searchValue;
+    }
+
     public class KinTypeElement {
 
         public KinTypeElement() {
@@ -33,7 +50,7 @@ public class KinTypeStringConverter extends GraphSorter {
         public KinTypeElement prevType;
         public KinTypeElement nextType;
         public KinType kinType;
-        public ArrayList<String[]> queryTerm;
+        public ArrayList<QueryTerm> queryTerms;
         public ArrayList<EntityData> entityData; // there may be multiple entities for each kin term
         ParserHighlight[] highlightLocs;
     }
@@ -120,11 +137,11 @@ public class KinTypeStringConverter extends GraphSorter {
                     currentElement.kinType = currentReferenceKinType;
                     consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
 
-                    if (consumableString.startsWith("=[")) {
+                    if (consumableString.startsWith("[")) {
                         // todo: Ticket #1087 Multiple query terms should be possible in the kin type string queries. Eg: Ef=[Kundarr]PM=[Louise] (Based on Joe's data).
                         int highlightPosition = initialLength - consumableString.length();
                         String highlightMessage = "Query: ";
-                        consumableString = consumableString.substring("=".length());
+//                        consumableString = consumableString.substring("=".length());
                         while (consumableString.startsWith("[")) {
                             // todo: allow multiple terms such as "=[foo][bar]" or "=[foo][bar][NAME=Bob]"
                             int queryStart = "[".length();
@@ -143,22 +160,41 @@ public class KinTypeStringConverter extends GraphSorter {
                                 foundKinType = false;
                                 break;
                             }
-                            if (currentElement.queryTerm == null) {
-                                currentElement.queryTerm = new ArrayList<String[]>();
+                            if (currentElement.queryTerms == null) {
+                                currentElement.queryTerms = new ArrayList<QueryTerm>();
                             }
                             String queryText = consumableString.substring(queryStart, queryEnd);
                             consumableString = consumableString.substring(queryEnd + 1);
-                            if (!queryText.contains("=")) {
-                                currentElement.queryTerm.add(new String[]{"*", queryText});
+                            String[] queryTerm;
+                            QueryType currentQueryType = null;
+                            queryTerm = queryText.split("=="); // detect which comparitor is used
+                            if (queryTerm.length > 1) {
+                                currentQueryType = QueryType.Contains;
+                            } else {
+                                queryTerm = queryText.split("=");
+                                if (queryTerm.length > 1) {
+                                    currentQueryType = QueryType.Equals;
+                                } else {
+                                    queryTerm = queryText.split("\\>");
+                                    if (queryTerm.length > 1) {
+                                        currentQueryType = QueryType.Greater;
+                                    } else {
+                                        queryTerm = queryText.split("\\<");
+                                        if (queryTerm.length > 1) {
+                                            currentQueryType = QueryType.Less;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (currentQueryType == null) {
+                                currentElement.queryTerms.add(new QueryTerm("*", QueryType.Contains, queryText));
                                 highlightMessage += "Any field containing '" + queryText + "'";
                             } else {
-                                String[] queryTerm = queryText.split("=");
-                                if (queryTerm.length == 2) {
-                                    if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
-                                        // todo: *:* like namespace handling might be required here
-                                        currentElement.queryTerm.add(new String[]{"*:" + queryTerm[0].replaceAll("\\.", "/*:"), queryTerm[1]});
-                                        highlightMessage += "Only the field '" + queryTerm[0] + "' containing '" + queryTerm[1] + "'";
-                                    }
+                                if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
+                                    // namespace wild cards *:* are inserted here so that the user does not need to specify the namespace
+                                    currentElement.queryTerms.add(new QueryTerm("*:" + queryTerm[0].replaceAll("\\.", "/*:"), currentQueryType, queryTerm[1]));
+                                    highlightMessage += "Only the field '" + queryTerm[0] + "' containing '" + queryTerm[1] + "'";
                                 }
                             }
                         }
@@ -214,10 +250,6 @@ public class KinTypeStringConverter extends GraphSorter {
                     if (kinTerm.propositusKinTypeStrings != null) {
                         String[] propositusKinTypeStrings = kinTerm.propositusKinTypeStrings.split("\\|");
                         inputStringList.addAll(Arrays.asList(propositusKinTypeStrings));
-                    }
-                    if (kinTerm.anchorKinTypeStrings != null) {
-                        String[] anchorKinTypeStrings = kinTerm.anchorKinTypeStrings.split("\\|");
-                        inputStringList.addAll(Arrays.asList(anchorKinTypeStrings));
                     }
                 }
             }
