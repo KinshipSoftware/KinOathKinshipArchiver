@@ -69,7 +69,7 @@ public class DataStoreSvg {
     @XmlElement(name = "ShowDiagramBorder", namespace = "http://mpi.nl/tla/kin")
     public boolean showDiagramBorder = true;
     @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
-    protected GraphSorter graphData;
+    public GraphSorter graphData;
     @XmlElement(name = "DiagramPanel", namespace = "http://mpi.nl/tla/kin")
     private HashSet<VisiblePanelSetting> visiblePanels;
 
