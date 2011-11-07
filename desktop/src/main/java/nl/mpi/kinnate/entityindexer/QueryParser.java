@@ -32,6 +32,12 @@ public class QueryParser implements EntityService {
                 loadedGraphNodes.put(svgStoredEntity.getUniqueIdentifier(), svgStoredEntity);
             }
         }
+        // set the alter entity for each relation if not already set (based on the known unique identifier)
+        for (EntityData graphDataNode : loadedGraphNodes.values()) {
+            for (EntityRelation nodeRelation : graphDataNode.getRelatedNodesToBeLoaded()) {
+                nodeRelation.setAlterNode(loadedGraphNodes.get(nodeRelation.alterUniqueIdentifier));
+            }
+        }
     }
 
 //    public String[][] getQueryStrings(String kinTypeString) {
