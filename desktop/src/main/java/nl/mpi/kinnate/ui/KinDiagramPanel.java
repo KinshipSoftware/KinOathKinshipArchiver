@@ -27,6 +27,7 @@ import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
+import nl.mpi.kinnate.entityindexer.ProcessAbortException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinTermCalculator;
@@ -274,54 +275,59 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
     public synchronized void drawGraph() {
         graphUpdateRequired = true;
+        entityIndex.requestAbortProcess();
         if (!graphThreadRunning) {
             graphThreadRunning = true;
             new Thread() {
 
                 @Override
                 public void run() {
-                    // todo: there are probably other synchronisation issues to resolve here.
+                    entityIndex.clearAbortRequest();
                     while (graphUpdateRequired) {
-                        graphUpdateRequired = false;
                         try {
-                            String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
-                            ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
-                            progressBar.setValue(0);
-                            progressBar.setVisible(true);
-                            boolean isQuery = false;
-                            if (!graphPanel.dataStoreSvg.egoEntities.isEmpty() || !graphPanel.dataStoreSvg.requiredEntities.isEmpty()) {
-                                isQuery = true;
-                            } else {
-                                for (String currentLine : kinTypeStrings) {
-                                    if (currentLine.contains("=")) {
-                                        isQuery = true;
-                                        break;
+                            graphUpdateRequired = false;
+                            try {
+                                String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
+                                ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
+                                progressBar.setValue(0);
+                                progressBar.setVisible(true);
+                                boolean isQuery = false;
+                                if (!graphPanel.dataStoreSvg.egoEntities.isEmpty() || !graphPanel.dataStoreSvg.requiredEntities.isEmpty()) {
+                                    isQuery = true;
+                                } else {
+                                    for (String currentLine : kinTypeStrings) {
+                                        if (currentLine.contains("[")) {
+                                            isQuery = true;
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                            if (isQuery) {
-                                EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
-                                graphSorter.setEntitys(graphNodes);
-                                // register interest Arbil updates and update the graph when data is edited in the table
+                                if (isQuery) {
+                                    EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
+                                    graphSorter.setEntitys(graphNodes);
+                                    // register interest Arbil updates and update the graph when data is edited in the table
 //                                registerCurrentNodes(graphSorter.getDataNodes());
-                                graphPanel.drawNodes(graphSorter);
-                                egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes(), graphPanel.getIndexParameters());
-                                new KinTermCalculator().insertKinTerms(graphSorter.getDataNodes(), graphPanel.getkinTermGroups());
-                            } else {
-                                KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg);
-                                graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
-                                graphPanel.drawNodes(graphData);
-                                egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
+                                    graphPanel.drawNodes(graphSorter);
+                                    egoSelectionPanel.setTreeNodes(graphPanel.dataStoreSvg.egoEntities, graphPanel.dataStoreSvg.requiredEntities, graphSorter.getDataNodes(), graphPanel.getIndexParameters());
+                                    new KinTermCalculator().insertKinTerms(graphSorter.getDataNodes(), graphPanel.getkinTermGroups());
+                                } else {
+                                    KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg);
+                                    graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
+                                    graphPanel.drawNodes(graphData);
+                                    egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
 //                KinDiagramPanel.this.doLayout();
-                                new KinTermCalculator().insertKinTerms(graphData.getDataNodes(), graphPanel.getkinTermGroups());
-                            }
-                            kinTypeStringInput.highlightKinTypeStrings(parserHighlight, kinTypeStrings);
+                                    new KinTermCalculator().insertKinTerms(graphData.getDataNodes(), graphPanel.getkinTermGroups());
+                                }
+                                kinTypeStringInput.highlightKinTypeStrings(parserHighlight, kinTypeStrings);
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
-                        } catch (EntityServiceException exception) {
-                            GuiHelper.linorgBugCatcher.logError(exception);
-                            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load all entities required", "Draw Graph");
+                            } catch (EntityServiceException exception) {
+                                GuiHelper.linorgBugCatcher.logError(exception);
+                                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load all entities required", "Draw Graph");
+                            }
+                            progressBar.setVisible(false);
+                        } catch (ProcessAbortException exception) {
+                            // if the process has been aborted then it should be safe to let the next thread loop take over from here
                         }
-                        progressBar.setVisible(false);
                     }
                     graphThreadRunning = false;
                 }
@@ -424,6 +430,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup), true);
             }
         }
+    }
+
+    public int getKinTermGroupCount() {
+        return graphPanel.getkinTermGroups().length;
     }
 
     public VisiblePanelSetting[] getVisiblePanels() {
