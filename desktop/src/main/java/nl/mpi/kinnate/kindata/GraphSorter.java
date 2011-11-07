@@ -16,10 +16,10 @@ public class GraphSorter {
 
     @XmlElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
     private EntityData[] graphDataNodeArray = new EntityData[]{};
-    HashMap<UniqueIdentifier, SortingEntity> knownSortingEntities;
+    private HashMap<UniqueIdentifier, SortingEntity> knownSortingEntities;
     // todo: should these padding vars be stored in the svg, currently they are stored
-    public int xPadding = 100; // todo sort out one place for this var
-    public int yPadding = 100; // todo sort out one place for this var
+    private int xPadding = 100; // todo sort out one place for this var
+    private int yPadding = 100; // todo sort out one place for this var
 //    private boolean requiresRedraw = false;
 //    , int hSpacing, int vSpacing
 //
