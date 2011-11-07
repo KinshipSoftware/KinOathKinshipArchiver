@@ -40,6 +40,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         JButton convertTransientButton = new JButton("Convert to Metadata Diagram");
         convertTransientButton.setActionCommand("convert");
         convertTransientButton.addActionListener(this);
+        convertTransientButton.setEnabled(false);
         transientNodePanel.add(convertTransientButton, BorderLayout.PAGE_START);
 
         transientTree = new KinTree(kinDiagramPanel, graphPanel);
@@ -94,7 +95,17 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         }
     }
 
-    public void setTreeNodes(HashSet<UniqueIdentifier> egoIdentifiers, HashSet<UniqueIdentifier> requiredEntityIdentifiers, EntityData[] allEntities, IndexerParameters indexerParameters) {
+    public void setTreeNodes(GraphPanel graphPanel) {
+        HashSet<UniqueIdentifier> egoIdentifiers = graphPanel.dataStoreSvg.egoEntities;
+        HashSet<UniqueIdentifier> requiredEntityIdentifiers = graphPanel.dataStoreSvg.requiredEntities;
+        EntityData[] allEntities;
+        if (graphPanel.dataStoreSvg.graphData != null) {
+            allEntities = graphPanel.dataStoreSvg.graphData.getDataNodes();
+        } else {
+            allEntities = new EntityData[0];
+        }
+        IndexerParameters indexerParameters = graphPanel.getIndexParameters();
+
         this.remove(transientNodeScrolPane);
         this.add(metadataNodeScrolPane, BorderLayout.CENTER);
         this.revalidate();
