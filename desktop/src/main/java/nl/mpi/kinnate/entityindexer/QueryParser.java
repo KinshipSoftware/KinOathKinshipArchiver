@@ -3,7 +3,6 @@ package nl.mpi.kinnate.entityindexer;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import javax.swing.JProgressBar;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -22,6 +21,7 @@ public class QueryParser implements EntityService {
 
     HashMap<UniqueIdentifier, EntityData> loadedGraphNodes;
     EntityCollection entityCollection;
+    public boolean abortProcess = false; // used to abort queries when another query is requested
 
     public QueryParser(EntityData[] svgEntities) {
         entityCollection = new EntityCollection();
@@ -93,7 +93,6 @@ public class QueryParser implements EntityService {
 //        }
 //    }
     static public int foundOrder; // temp for testing // todo: remove testing labels
-
 //    private boolean loadMatchingRelations(EntityData immediateKinType, KinTypeStringConverter.KinTypeElement adjacentKinType, IndexerParameters indexParameters, int generationalDistance) { //EntityRelation entityRelation
 //        boolean visibleEntityFound = false;
 //        for (EntityRelation entityRelation : immediateKinType.getDistinctRelateNodes()) {
@@ -143,7 +142,16 @@ public class QueryParser implements EntityService {
 //        }
 //        return visibleEntityFound;
 //    }
-    public EntityData[] processKinTypeStrings(URI[] egoNodes, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException {
+
+    public void requestAbortProcess() {
+        abortProcess = true;
+    }
+
+    public void clearAbortRequest() {
+        abortProcess = false;
+    }
+
+    public EntityData[] processKinTypeStrings(URI[] egoNodes, String[] kinTypeStrings, ParserHighlight[] parserHighlight, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException, ProcessAbortException {
         foundOrder = 0; // temp for testing // todo: remove testing labels
         if (indexParameters.valuesChanged) {
             // discard all entity data from previous queries
@@ -167,14 +175,18 @@ public class QueryParser implements EntityService {
         int lineCounter = -1;
         // process each line of the users input
         for (String currentKinString : kinTypeStrings) {
+            // todo: add #n to provide an identifier for an entity for later reference in the kin type strings
             lineCounter++;
             parserHighlight[lineCounter] = new ParserHighlight();
             // convert the line into  kin types with queries if provided
             ArrayList<KinTypeStringConverter.KinTypeElement> kinTypeElementArray = kinTypeStringConverter.getKinTypeElements(currentKinString, parserHighlight[lineCounter]);
             for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeElementArray) {
                 // handle all queries getting all matching entities
-                if (kinTypeElement.queryTerm != null) {
+                if (kinTypeElement.queryTerms != null) {
                     for (UniqueIdentifier currentFoundId : entityCollection.getEntityIdByTerm(kinTypeElement)) {
+                        if (abortProcess) {
+                            throw new ProcessAbortException();
+                        }
                         EntityData queryNode;
 //                        currentFoundId = currentFoundId.trim();
 //                        if (currentFoundId.length() > 0 /* make sure that non results do not get mistaken for an identifier */) {
@@ -194,12 +206,15 @@ public class QueryParser implements EntityService {
                     }
                 }
             }
-            if (kinTypeElementArray.size() > 0 && kinTypeElementArray.get(0).queryTerm == null) {
+            if (kinTypeElementArray.size() > 0 && kinTypeElementArray.get(0).queryTerms == null) {
                 // get any user specified ego nodes and add them as the first kin type if specified
                 KinTypeStringConverter.KinTypeElement firstKinType = kinTypeElementArray.get(0);
                 if (firstKinType.kinType.isEgoType()) {
                     // the following could be removed if the ego nodes are replaces with the equavelent kin type string eg "E=Identifier" and E at the begining of the line was mandatory (neither are likely to be the case)
                     for (UniqueIdentifier currentEgoId : dataStoreSvg.egoEntities) {
+                        if (abortProcess) {
+                            throw new ProcessAbortException();
+                        }
                         // load all entities specified as ego nodes
                         // if a query was not found on the first kintype then add all gernder matching egos to the first kin type
                         EntityData egoNode;
@@ -220,9 +235,15 @@ public class QueryParser implements EntityService {
                 }
             }
             for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeElementArray) {
+                if (abortProcess) {
+                    throw new ProcessAbortException();
+                }
                 // get all entities before and after each entity that has already found
                 for (EntityData kinTypeEntityData : kinTypeElement.entityData) {
                     for (EntityRelation entityRelationToLoad : kinTypeEntityData.getRelatedNodesToBeLoaded()) {
+                        if (abortProcess) {
+                            throw new ProcessAbortException();
+                        }
                         // make sure all relation data is loaded and set in the relations of this entity
                         EntityData relatedNode;
                         if (loadedGraphNodes.containsKey(entityRelationToLoad.alterUniqueIdentifier)) {
@@ -263,6 +284,9 @@ public class QueryParser implements EntityService {
             progressBar.setValue(progressBar.getValue() + 1);
         }
         for (Iterator<UniqueIdentifier> iterator = dataStoreSvg.requiredEntities.iterator(); iterator.hasNext();) {
+            if (abortProcess) {
+                throw new ProcessAbortException();
+            }
             UniqueIdentifier currentEgoId = iterator.next();
             // load and show any mandatory entities
             EntityData requiredNode;
