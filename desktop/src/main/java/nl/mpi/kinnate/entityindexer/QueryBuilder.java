@@ -2,6 +2,7 @@ package nl.mpi.kinnate.entityindexer;
 
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
+import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.QueryTerm;
 
 /**
  *  Document   : QueryBuilder
@@ -204,16 +205,31 @@ public class QueryBuilder {
 //        return
 //        $entityNode/(Entity|Gedcom)/UniqueIdentifier/*/text()
         StringBuilder stringBuilder = new StringBuilder();
-        for (String[] term : queryTerms.queryTerm) {
+        for (QueryTerm queryTerm : queryTerms.queryTerms) {
             if (stringBuilder.length() > 0) {
                 stringBuilder.append(" and ");
             } else {
 //                stringBuilder.append("(");
             }
-            stringBuilder.append("$entityNode//");
-            stringBuilder.append(term[0]);
-            stringBuilder.append("[text() contains text \"");
-            stringBuilder.append(term[1]);
+            stringBuilder.append("$entityNode//*/");
+            stringBuilder.append(queryTerm.fieldXPath);
+            stringBuilder.append("[text() ");
+            switch (queryTerm.comparatorType) {
+                case Equals:
+                    stringBuilder.append("=");
+                    break;
+                case Greater:
+                    stringBuilder.append(">");
+                    break;
+                case Less:
+                    stringBuilder.append("<");
+                    break;
+                case Contains:
+                default:
+                    stringBuilder.append("contains text");
+            }
+            stringBuilder.append(" \"");
+            stringBuilder.append(queryTerm.searchValue);
             stringBuilder.append("\"]");
         }
 //        stringBuilder.append(")");
