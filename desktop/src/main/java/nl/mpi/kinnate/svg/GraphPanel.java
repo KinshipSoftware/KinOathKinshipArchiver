@@ -126,7 +126,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         this.metadataPanel = metadataPanel;
     }
 
-    public EntityData[] readSvg(URI svgFilePath, boolean savableType) {
+    public void readSvg(URI svgFilePath, boolean savableType) {
         if (savableType) {
             svgFile = new File(svgFilePath);
         } else {
@@ -145,16 +145,16 @@ public class GraphPanel extends JPanel implements SavePanel {
             entitySvg.readEntityPositions(doc.getElementById("EntityGroup"));
             entitySvg.readEntityPositions(doc.getElementById("LabelsGroup"));
             entitySvg.readEntityPositions(doc.getElementById("GraphicsGroup"));
+            configureDiagramGroups();
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
+//            if (dataStoreSvg.graphData == null) {
+//                return null;
+//            }
         } catch (IOException ioe) {
             GuiHelper.linorgBugCatcher.logError(ioe);
         }
-        configureDiagramGroups();
-        dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
-        if (dataStoreSvg.graphData == null) {
-            return null;
-        }
-        svgCanvas.setSVGDocument(doc);
-        return dataStoreSvg.graphData.getDataNodes();
+//        svgCanvas.setSVGDocument(doc);
+        return; // dataStoreSvg.graphData.getDataNodes();
     }
 
     private void configureDiagramGroups() {
