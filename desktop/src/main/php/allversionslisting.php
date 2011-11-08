@@ -39,11 +39,13 @@ function listUnusedEntries($directoryListing, $tableTitle) {
 }
 
 $directoryListing = getSortedDirectoryListing();
-outputTable($directoryListing, "/^kinoath-stable.*deb$/", "Stable Debian");
-outputTable($directoryListing, "/^kinoath-testing.*deb$/", "Testing Debian");
-outputTable($directoryListing, "/^kinoath-clarin.*deb$/", "Clarin Debian (merged to the current stable)");
-outputTable($directoryListing, "/^kinoath.*exe$/", "Windows Installers");
-outputTable($directoryListing, "/^kinoath.*tar$/", "Mac Installers");
+#outputTable($directoryListing, "/^kinoath-testing.*jnlp$/", "Testing Webstart");
+#outputTable($directoryListing, "/^kinoath-stable.*deb$/", "Stable Debian");
+#outputTable($directoryListing, "/^kinoath-testing.*deb$/", "Testing Debian");
+#outputTable($directoryListing, "/^kinoath.*jnlp$/", "Webstart");
+outputTable($directoryListing, "/^kinoath.*_.*deb$/", "Debian Packages");
+outputTable($directoryListing, "/^kinoath.*_.*zip$/", "Windows Installers");
+outputTable($directoryListing, "/^kinoath.*_.*tar$/", "Mac Installers");
 outputTable($directoryListing, "/^kinoath.*jar$/", "Raw Jar File (requires the lib directory from an existing installation)");
 //listUnusedEntries($directoryListing, "Otherwise Unlisted Versions")
 ?>
