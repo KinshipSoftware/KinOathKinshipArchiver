@@ -238,13 +238,14 @@ public class KinOathVersion extends ApplicationVersion {
         alias="latsoftware's max-planck-gesellschaft id" storepass="koekoek" />
     </target> -->
     <target name="GetTracTodoList" depends="getsvnversion, GetLoginData">
+<!--        todo: add another file for the rss feed of completed tasks-->        
         <property name="TodoListFile" value="${OUTPUTDIR}/distribution/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_todo.csv"/>
         <get src="https://trac.mpi.nl/query?status=accepted&amp;status=assigned&amp;status=new&amp;status=reopened&amp;component=KinOath-desktop&amp;component=KinOath-web&amp;format=csv&amp;max=1000&amp;col=id&amp;col=summary&amp;col=component&amp;report=24&amp;order=summary"
     dest="${TodoListFile}"
     username="${lux09.user}"
     password="${lux09.pw}"/>
         <scp file="${TodoListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
-        <scp file="${TodoListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_todo.csv"/>
+        <scp file="${TodoListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath-all_todo.csv"/> <!-- ${kinoath.filenameidentifier}-->
     </target>
     <target name="GetLoginData">
         <input message="Please enter lux09 username:" addproperty="lux09.user" />
@@ -277,6 +278,7 @@ public class KinOathVersion extends ApplicationVersion {
         <scp file="${OUTPUTDIR}/kinoath${kinoath.filenameidentifier}-current.txt" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <!-- copy the current version of allversionslisting.php to make sure it gets kept in svn -->
         <scp file="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/allversionslisting.php" todir="../desktop/src/main/php/" />
+        <scp file="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/todolisttable.php" todir="../desktop/src/main/php/" />
     </target>
     <target name="maven-jar" depends="updateJnlpAndAppletHtml">
         <!-- while this could be done in a maven ant task, this method appears more portable at this stage -->
