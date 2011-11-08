@@ -237,12 +237,23 @@ public class KinOathVersion extends ApplicationVersion {
         keystore="${SRCDIR}/../../../trunk/cert/mpi.keystore"
         alias="latsoftware's max-planck-gesellschaft id" storepass="koekoek" />
     </target> -->
-    <target name="scp_to_lux09" depends="makeDebPackage, buildWindowsInstaller, buildMacInstaller">
-        <echo file="${OUTPUTDIR}/kinoath${kinoath.filenameidentifier}-current.txt">${kinoath.current.revision}</echo>
+    <target name="GetTracTodoList" depends="getsvnversion, GetLoginData">
+        <property name="TodoListFile" value="${OUTPUTDIR}/distribution/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_todo.csv"/>
+        <get src="https://trac.mpi.nl/query?status=accepted&amp;status=assigned&amp;status=new&amp;status=reopened&amp;component=KinOath-desktop&amp;component=KinOath-web&amp;format=csv&amp;max=1000&amp;col=id&amp;col=summary&amp;col=component&amp;report=24&amp;order=summary"
+    dest="${TodoListFile}"
+    username="${lux09.user}"
+    password="${lux09.pw}"/>
+        <scp file="${TodoListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+        <scp file="${TodoListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_todo.csv"/>
+    </target>
+    <target name="GetLoginData">
         <input message="Please enter lux09 username:" addproperty="lux09.user" />
         <input message="Please enter lux09 password:" addproperty="lux09.pw">
             <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
         </input>
+    </target>
+    <target name="scp_to_lux09" depends="makeDebPackage, buildWindowsInstaller, buildMacInstaller, GetLoginData, GetTracTodoList">
+        <echo file="${OUTPUTDIR}/kinoath${kinoath.filenameidentifier}-current.txt">${kinoath.current.revision}</echo>
         <scp file="${OUTPUTDIR}/${DistJarName}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <!-- the lib direcory only needs to be updated when there is a real change so can be commented out to save build time -->
         <scp todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/lib">
