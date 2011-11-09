@@ -72,12 +72,13 @@ public class RelationSvg {
                 egoYmid = egoY - midSpacing;
                 alterYmid = alterY - midSpacing;
                 centerX = (egoY < alterY) ? alterX : egoX;
-                centerX = (egoX == alterX) ? midSpacing : centerX;
+                centerX = (egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
             case union:
                 egoYmid = egoY + midSpacing;
                 alterYmid = alterY + midSpacing;
-                centerX = egoX;
+                centerX = (egoY < alterY) ? egoX : alterX;
+                centerX = (egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
             case affiliation:
             case none:
