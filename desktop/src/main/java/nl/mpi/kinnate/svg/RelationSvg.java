@@ -53,28 +53,37 @@ public class RelationSvg {
     }
 
     protected void setPolylinePointsAttribute(LineLookUpTable lineLookUpTable, String lineIdString, Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
-        float midY = (egoY + alterY) / 2;
+        //float midY = (egoY + alterY) / 2;
         // todo: Ticket #1064 when an entity is above one that it should be below the line should make a zigzag to indicate it
+        float midSpacing = vSpacing / 2;
+        float egoYmid;
+        float alterYmid;
+        float centerX = (egoX + alterX) / 2;
         switch (relationType) {
-            case affiliation:
-                break;
             case ancestor:
-                midY = alterY + vSpacing / 2;
+                egoYmid = egoY - midSpacing;
+                alterYmid = alterY + midSpacing;
                 break;
             case descendant:
-                midY = egoY + vSpacing / 2;
-                break;
-            case none:
+                egoYmid = egoY + midSpacing;
+                alterYmid = alterY - midSpacing;
                 break;
             case sibling:
-//                if (commonParentMaxY != null) {
-//                    midY = commonParentMaxY + vSpacing / 2;
-//                } else {
-                midY = (egoY < alterY) ? egoY - vSpacing / 2 : alterY - vSpacing / 2;
-//                }
+                egoYmid = egoY - midSpacing;
+                alterYmid = alterY - midSpacing;
+                centerX = (egoY < alterY) ? alterX : egoX;
+                centerX = (egoX == alterX) ? midSpacing : centerX;
                 break;
             case union:
-                midY = (egoY > alterY) ? egoY + vSpacing / 2 : alterY + vSpacing / 2;
+                egoYmid = egoY + midSpacing;
+                alterYmid = alterY + midSpacing;
+                centerX = egoX;
+                break;
+            case affiliation:
+            case none:
+            default:
+                egoYmid = egoY;
+                alterYmid = alterY;
                 break;
         }
 //        if (alterY == egoY) {
@@ -87,8 +96,10 @@ public class RelationSvg {
 //        }
         Point[] initialPointsList = new Point[]{
             new Point((int) egoX, (int) egoY),
-            new Point((int) egoX, (int) midY),
-            new Point((int) alterX, (int) midY),
+            new Point((int) egoX, (int) egoYmid),
+            new Point((int) centerX, (int) egoYmid),
+            new Point((int) centerX, (int) alterYmid),
+            new Point((int) alterX, (int) alterYmid),
             new Point((int) alterX, (int) alterY)
         };
         Point[] adjustedPointsList;
