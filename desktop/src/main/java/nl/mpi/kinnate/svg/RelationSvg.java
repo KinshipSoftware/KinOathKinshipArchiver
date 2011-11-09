@@ -63,10 +63,14 @@ public class RelationSvg {
             case ancestor:
                 egoYmid = egoY - midSpacing;
                 alterYmid = alterY + midSpacing;
+                centerX = (egoYmid < alterYmid) ? centerX : egoX;
+                centerX = (egoY < alterY && egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
             case descendant:
                 egoYmid = egoY + midSpacing;
                 alterYmid = alterY - midSpacing;
+                centerX = (egoYmid < alterYmid) ? alterX : centerX;
+                centerX = (egoY > alterY && egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
             case sibling:
                 egoYmid = egoY - midSpacing;
