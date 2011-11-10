@@ -78,7 +78,7 @@ public class LabelStringsParser {
                 }
                 if (uniqueIdentifier == null) {
                     // use the entire label sting to identify the entity
-                    uniqueIdentifier = new UniqueIdentifier("label:" + inputStringParts[1], UniqueIdentifier.IdentifierType.tid);
+                    uniqueIdentifier = new UniqueIdentifier("label:" + inputString, UniqueIdentifier.IdentifierType.tid);
                     userDefinedIdentifierFound = true;
                 }
             }
