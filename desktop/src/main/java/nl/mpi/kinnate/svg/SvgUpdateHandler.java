@@ -175,6 +175,7 @@ public class SvgUpdateHandler {
                 for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
                     String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
                     float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                    float[] parentPoint = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
                     // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
 //                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
@@ -189,14 +190,14 @@ public class SvgUpdateHandler {
                     highlightBackgroundLine.setAttribute("fill", "none");
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
                     highlightBackgroundLine.setAttribute("stroke", "white");
-                    new RelationSvg().setPolylinePointsAttribute(null, dragLineElementId, highlightBackgroundLine, localRelationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
+                    new RelationSvg().setPolylinePointsAttribute(null, dragLineElementId, highlightBackgroundLine, localRelationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY, parentPoint);
                     relationHighlightGroup.appendChild(highlightBackgroundLine);
                     // add a blue dotted line
                     Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
                     highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                     highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
-                    new RelationSvg().setPolylinePointsAttribute(null, dragLineElementId, highlightLine, localRelationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY);
+                    new RelationSvg().setPolylinePointsAttribute(null, dragLineElementId, highlightLine, localRelationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY, parentPoint);
                     highlightLine.setAttribute("stroke", "blue");
                     highlightLine.setAttribute("stroke-dasharray", "3");
                     highlightLine.setAttribute("stroke-dashoffset", "0");
@@ -570,12 +571,25 @@ public class SvgUpdateHandler {
         Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
         // set the diagram offset so that no element is less than zero
         diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(-graphSize.x) + ", " + Integer.toString(-graphSize.y) + ")");
+
+//        System.out.println("graphSize: " + graphSize.x + " : " + graphSize.y + " : " + graphSize.width + " : " + graphSize.height);
+//        SVGRect bbox = ((SVGLocatable) svgRoot).getBBox();
+//        System.out.println("bbox X: " + bbox.getX());
+//        System.out.println("bbox Y: " + bbox.getY());
+//        System.out.println("bbox W: " + bbox.getWidth());
+//        System.out.println("bbox H: " + bbox.getHeight());
+
+//        graphSize.x = graphSize.x + (int) bbox.getX();
+//        graphSize.y = graphSize.y + (int) bbox.getY();
+//        svgRoot.setAttribute("viewBox", Float.toString(bbox.getX()) + " " + Float.toString(bbox.getY()) + " " + Float.toString(bbox.getWidth()) + " " + Float.toString(bbox.getHeight()));
+
+//        viewBox="0.0 0.0 1024.0 768.0"
         // Set the width and height attributes on the root 'svg' element.
         svgRoot.setAttribute("width", Integer.toString(graphSize.width - graphSize.x));
         svgRoot.setAttribute("height", Integer.toString(graphSize.height - graphSize.y));
 
         if (graphPanel.dataStoreSvg.showDiagramBorder) {
-            // draw hidious green and yellow rectangle for debugging
+            // draw a grey rectangle to show the diagram bounds
             Element pageBorderNode = graphPanel.doc.getElementById("PageBorder");
             if (pageBorderNode == null) {
                 pageBorderNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
@@ -594,7 +608,7 @@ public class SvgUpdateHandler {
                 pageBorderNode.setAttribute("width", Float.toString(graphSize.width - graphSize.x - 4));
                 pageBorderNode.setAttribute("height", Float.toString(graphSize.height - graphSize.y - 4));
             }
-            // end draw hidious green rectangle for debugging
+            // end draw a grey rectangle to show the diagram bounds
         } else {
             Element pageBorderNode = graphPanel.doc.getElementById("PageBorder");
             if (pageBorderNode != null) {
