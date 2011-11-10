@@ -273,7 +273,7 @@ public class GraphSorter {
         if (knownSortingEntities != null) {
             for (SortingEntity currentSorter : knownSortingEntities.values()) {
                 Rectangle rectangle = getGraphSize(entityPositions);
-                float[] defaultPosition = new float[]{rectangle.width, rectangle.height};
+                float[] defaultPosition = new float[]{rectangle.width + xPadding, rectangle.height + yPadding};
                 currentSorter.getPosition(entityPositions, defaultPosition);
                 currentSorter.getRelatedPositions(entityPositions);
             }
