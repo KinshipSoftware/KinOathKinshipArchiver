@@ -1,1107 +1,1736 @@
-<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="text/ecmascript" width="1200" zoomAndPan="magnify" contentStyleType="text/css" height="1200" preserveAspectRatio="xMidYMid meet" version="1.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:kin="http://mpi.nl/tla/kin"
+     contentScriptType="text/ecmascript"
+     width="1200"
+     zoomAndPan="magnify"
+     contentStyleType="text/css"
+     height="1200"
+     preserveAspectRatio="xMidYMid meet"
+     version="1.0">
   <defs id="KinSymbols">
-    <g id="circle">
-      <circle r="6" stroke-width="2" cx="7" cy="7" stroke="black"/>
-    </g>
-    <g id="square">
-      <rect x="2" width="11" stroke-width="2" height="11" y="2" stroke="black"/>
-    </g>
-    <g id="square45">
-      <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
-    </g>
-    <g id="rhombus">
-      <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
-    </g>
-    <g id="union">
-      <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
-      <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
-      <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
-    </g>
-    <g id="triangle">
-      <polygon stroke-width="2" points="7,1 1,12 14,12" stroke="black"/>
-    </g>
-    <g id="equals">
-      <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
-    </g>
-    <g id="cross">
-      <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
-    </g>
-    <g id="error">
-      <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="red"/>
-    </g>
+      <g id="circle">
+         <circle r="6" stroke-width="2" cx="7" cy="7" stroke="black"/>
+      </g>
+      <g id="square">
+         <rect x="2" width="11" y="2" height="11" stroke-width="2" stroke="black"/>
+      </g>
+      <g id="square45">
+         <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black"
+               stroke-width="2"/>
+      </g>
+      <g id="rhombus">
+         <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15"
+               stroke="black"
+               stroke-width="2"/>
+      </g>
+      <g id="union">
+         <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
+         <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
+         <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
+      </g>
+      <g id="triangle">
+         <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+      </g>
+      <g id="equals">
+         <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
+      </g>
+      <g id="cross">
+         <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
+      </g>
+      <g id="error">
+         <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="red"/>
+      </g>
   </defs>
   <g id="DiagramGroup" transform="translate(-200, 500)">
     
     
     
     
-    <rect x="202.0" y="-498.0" fill="none" width="1196.0" id="PageBorder" height="1196.0" stroke="grey" stroke-width="2"/>
+      <rect x="202.0" y="-498.0" fill="none" width="1196.0" id="PageBorder" height="1196.0"
+            stroke="grey"
+            stroke-width="2"/>
   
     
     
     
-  <g id="GraphicsGroup"/>
-    <g id="RelationGroup">
-      <g id="relation0">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_e8abb8cc035419ec89be3301e8c4f15e" kin:lineType="sanguineLine" kin:alter="tid_08cfcca876369a2f0d89088af2564164" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation0Line" stroke-width="2" points="1157,307 1157,347 1157,347 1157,347 1157,347 1157,407 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
-      </g>
-      <g id="relation1">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_e8abb8cc035419ec89be3301e8c4f15e" kin:lineType="sanguineLine" kin:alter="tid_a978594d4ffeb6704185833d9653d9d5" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation1Line" stroke-width="2" points="1157,307 1157,247 1157,247 1157,247 1057,247 1057,207 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
-      </g>
-      <g id="relation2">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_3a6a1c42c019d20fc089e4db007209aa" kin:lineType="sanguineLine" kin:alter="tid_8df34081dacc62a27192de73df463a54" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation2Line" stroke-width="2" points="1007,-193 1007,-153 1007,-153 1007,-153 1007,-153 1007,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
-      </g>
-      <g id="relation3">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_3a6a1c42c019d20fc089e4db007209aa" kin:lineType="sanguineLine" kin:alter="tid_ba1a3c675f2c842134488bed99e6e413" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation3Line" stroke-width="2" points="1007,-193 1007,-253 1007,-253 1007,-253 1007,-253 1007,-293 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
-      </g>
-      <g id="relation4">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_a978594d4ffeb6704185833d9653d9d5" kin:lineType="sanguineLine" kin:alter="tid_e8abb8cc035419ec89be3301e8c4f15e" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation4Line" stroke-width="2" points="1057,207 1057,247 1107,247 1107,247 1157,247 1157,307 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
-      </g>
-      <g id="relation5">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_a978594d4ffeb6704185833d9653d9d5" kin:lineType="sanguineLine" kin:alter="tid_c54b58ad59775b11c9c1e567d27823ea" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation5Line" stroke-width="2" points="1057,207 1057,247 1007,247 1007,247 957,247 957,307 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
-      </g>
-      <g id="relation6">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ea82affa800cb04b1c6c39ad22e6077b" kin:lineType="sanguineLine" kin:alter="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation6Line" stroke-width="2" points="807,-93 807,-53 707,-53 707,-53 607,-53 607,7 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
-      </g>
-      <g id="relation7">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ba1a3c675f2c842134488bed99e6e413" kin:lineType="sanguineLine" kin:alter="tid_3a6a1c42c019d20fc089e4db007209aa" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation7Line" stroke-width="2" points="1007,-293 1007,-253 1007,-253 1007,-253 1007,-253 1007,-193 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
-      </g>
-      <g id="relation8">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ba1a3c675f2c842134488bed99e6e413" kin:lineType="sanguineLine" kin:alter="tid_e051f2181b3732f3c4d708fcc822a4ce" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation8Line" stroke-width="2" points="1007,-293 1007,-353 1007,-353 1007,-353 1007,-353 1007,-393 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
-      </g>
-      <g id="relation9">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9bd5e5ae60a5227234e14769d335a905" kin:lineType="sanguineLine" kin:alter="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation9Line" stroke-width="2" points="607,107 607,47 607,47 607,47 607,47 607,7 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
-      </g>
-      <g id="relation10">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_4a6f9343d6e79ecff0a41b339cfd8229" kin:lineType="sanguineLine" kin:alter="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation10Line" stroke-width="2" points="607,-93 607,-53 607,-53 607,-53 607,-53 607,7 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
-      </g>
-      <g id="relation11">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_4a6f9343d6e79ecff0a41b339cfd8229" kin:lineType="sanguineLine" kin:alter="tid_d508be2d739149aabed85bd06f230af1" kin:relationType="sibling"/>
-        <defs>
-          <polyline fill="none" id="relation11Line" stroke-width="2" points="607,-93 607,-143 607,-143 607,-143 407,-143 407,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
-      </g>
-      <g id="relation12">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:lineType="sanguineLine" kin:alter="tid_4a6f9343d6e79ecff0a41b339cfd8229" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation12Line" stroke-width="2" points="607,7 607,-53 607,-53 607,-53 607,-53 607,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
-      </g>
-      <g id="relation13">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:lineType="sanguineLine" kin:alter="tid_9bd5e5ae60a5227234e14769d335a905" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation13Line" stroke-width="2" points="607,7 607,47 607,47 607,47 607,47 607,107 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
-      </g>
-      <g id="relation14">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:lineType="sanguineLine" kin:alter="tid_80328c7f829547ce717d75df1c48da39" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation14Line" stroke-width="2" points="607,7 607,47 707,47 707,47 807,47 807,107 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
-      </g>
-      <g id="relation15">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:lineType="sanguineLine" kin:alter="tid_ea82affa800cb04b1c6c39ad22e6077b" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation15Line" stroke-width="2" points="607,7 607,-53 607,-53 607,-53 807,-53 807,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
-      </g>
-      <g id="relation16">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:lineType="sanguineLine" kin:alter="tid_8df34081dacc62a27192de73df463a54" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation16Line" stroke-width="2" points="607,7 607,-53 607,-53 607,-53 1007,-53 1007,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
-      </g>
-      <g id="relation17">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_a1651ac15017a6ff646c5e1d43579eb5" kin:lineType="sanguineLine" kin:alter="tid_d508be2d739149aabed85bd06f230af1" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation17Line" stroke-width="2" points="407,7 407,-53 407,-53 407,-53 407,-53 407,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
-      </g>
-      <g id="relation18">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_a1651ac15017a6ff646c5e1d43579eb5" kin:lineType="sanguineLine" kin:alter="tid_a3f635c6f32859ac172226750a9413e4" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation18Line" stroke-width="2" points="407,7 407,47 407,47 407,47 407,47 407,107 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
-      </g>
-      <g id="relation19">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_af45aebf0c19e2bcaa81fe5014d29190" kin:lineType="sanguineLine" kin:alter="tid_c2188def927c395420c945c695c82978" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation19Line" stroke-width="2" points="1207,-193 1207,-253 1207,-253 1207,-253 1207,-253 1207,-293 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation19Line"/>
-      </g>
-      <g id="relation20">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_af45aebf0c19e2bcaa81fe5014d29190" kin:lineType="sanguineLine" kin:alter="tid_8df34081dacc62a27192de73df463a54" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation20Line" stroke-width="2" points="1207,-193 1207,-153 1107,-153 1107,-153 1007,-153 1007,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation20Line"/>
-      </g>
-      <g id="relation21">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_6cb486e27bc1a01e2c81470ef41a1986" kin:lineType="sanguineLine" kin:alter="tid_5539b55533fd614fea062a1210793c14" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation21Line" stroke-width="2" points="507,307 507,347 507,347 507,347 507,347 507,407 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation21Line"/>
-      </g>
-      <g id="relation22">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_6cb486e27bc1a01e2c81470ef41a1986" kin:lineType="sanguineLine" kin:alter="tid_756cf5182e11de33d21dbfcff7fdce72" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation22Line" stroke-width="2" points="507,307 507,247 507,247 507,247 607,247 607,207 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation22Line"/>
-      </g>
-      <g id="relation23">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_5539b55533fd614fea062a1210793c14" kin:lineType="sanguineLine" kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation23Line" stroke-width="2" points="507,407 507,447 557,447 557,447 607,447 607,507 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation23Line"/>
-      </g>
-      <g id="relation24">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_5539b55533fd614fea062a1210793c14" kin:lineType="sanguineLine" kin:alter="tid_6cb486e27bc1a01e2c81470ef41a1986" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation24Line" stroke-width="2" points="507,407 507,347 507,347 507,347 507,347 507,307 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation24Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation24Line"/>
-      </g>
-      <g id="relation25">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c2188def927c395420c945c695c82978" kin:lineType="sanguineLine" kin:alter="tid_e051f2181b3732f3c4d708fcc822a4ce" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation25Line" stroke-width="2" points="1207,-293 1207,-353 1207,-353 1207,-353 1007,-353 1007,-393 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation25Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation25Line"/>
-      </g>
-      <g id="relation26">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c2188def927c395420c945c695c82978" kin:lineType="sanguineLine" kin:alter="tid_af45aebf0c19e2bcaa81fe5014d29190" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation26Line" stroke-width="2" points="1207,-293 1207,-253 1207,-253 1207,-253 1207,-253 1207,-193 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation26Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation26Line"/>
-      </g>
-      <g id="relation27">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_80328c7f829547ce717d75df1c48da39" kin:lineType="sanguineLine" kin:alter="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation27Line" stroke-width="2" points="807,107 807,47 807,47 807,47 607,47 607,7 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation27Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation27Line"/>
-      </g>
-      <g id="relation28">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_e051f2181b3732f3c4d708fcc822a4ce" kin:lineType="sanguineLine" kin:alter="tid_ba1a3c675f2c842134488bed99e6e413" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation28Line" stroke-width="2" points="1007,-393 1007,-353 1007,-353 1007,-353 1007,-353 1007,-293 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation28Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation28Line"/>
-      </g>
-      <g id="relation29">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_e051f2181b3732f3c4d708fcc822a4ce" kin:lineType="sanguineLine" kin:alter="tid_c2188def927c395420c945c695c82978" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation29Line" stroke-width="2" points="1007,-393 1007,-353 1107,-353 1107,-353 1207,-353 1207,-293 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation29Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation29Line"/>
-      </g>
-      <g id="relation30">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc6f9e885378173306e24efbddd25fe7" kin:lineType="sanguineLine" kin:alter="tid_7dfc27987d722a09257227a8857b90f2" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation30Line" stroke-width="2" points="1057,507 1057,547 1057,547 1057,547 1057,547 1057,607 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation30Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation30Line"/>
-      </g>
-      <g id="relation31">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc6f9e885378173306e24efbddd25fe7" kin:lineType="sanguineLine" kin:alter="tid_08cfcca876369a2f0d89088af2564164" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation31Line" stroke-width="2" points="1057,507 1057,447 1057,447 1057,447 1157,447 1157,407 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation31Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation31Line"/>
-      </g>
-      <g id="relation32">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc6f9e885378173306e24efbddd25fe7" kin:lineType="sanguineLine" kin:alter="tid_062d6742a5a07ab8d7d2788ba95805ee" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation32Line" stroke-width="2" points="1057,507 1057,447 1057,447 1057,447 957,447 957,407 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation32Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation32Line"/>
-      </g>
-      <g id="relation33">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_062d6742a5a07ab8d7d2788ba95805ee" kin:lineType="sanguineLine" kin:alter="tid_c54b58ad59775b11c9c1e567d27823ea" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation33Line" stroke-width="2" points="957,407 957,347 957,347 957,347 957,347 957,307 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation33Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation33Line"/>
-      </g>
-      <g id="relation34">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_062d6742a5a07ab8d7d2788ba95805ee" kin:lineType="sanguineLine" kin:alter="tid_cc6f9e885378173306e24efbddd25fe7" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation34Line" stroke-width="2" points="957,407 957,447 1007,447 1007,447 1057,447 1057,507 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation34Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation34Line"/>
-      </g>
-      <g id="relation35">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_7dfc27987d722a09257227a8857b90f2" kin:lineType="sanguineLine" kin:alter="tid_cc6f9e885378173306e24efbddd25fe7" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation35Line" stroke-width="2" points="1057,607 1057,547 1057,547 1057,547 1057,547 1057,507 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation35Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation35Line"/>
-      </g>
-      <g id="relation36">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c54b58ad59775b11c9c1e567d27823ea" kin:lineType="sanguineLine" kin:alter="tid_a978594d4ffeb6704185833d9653d9d5" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation36Line" stroke-width="2" points="957,307 957,247 957,247 957,247 1057,247 1057,207 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation36Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation36Line"/>
-      </g>
-      <g id="relation37">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c54b58ad59775b11c9c1e567d27823ea" kin:lineType="sanguineLine" kin:alter="tid_062d6742a5a07ab8d7d2788ba95805ee" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation37Line" stroke-width="2" points="957,307 957,347 957,347 957,347 957,347 957,407 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation37Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation37Line"/>
-      </g>
-      <g id="relation38">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54" kin:lineType="sanguineLine" kin:alter="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation38Line" stroke-width="2" points="1007,-93 1007,-53 807,-53 807,-53 607,-53 607,7 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation38Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation38Line"/>
-      </g>
-      <g id="relation39">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54" kin:lineType="sanguineLine" kin:alter="tid_3a6a1c42c019d20fc089e4db007209aa" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation39Line" stroke-width="2" points="1007,-93 1007,-153 1007,-153 1007,-153 1007,-153 1007,-193 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation39Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation39Line"/>
-      </g>
-      <g id="relation40">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54" kin:lineType="sanguineLine" kin:alter="tid_af45aebf0c19e2bcaa81fe5014d29190" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation40Line" stroke-width="2" points="1007,-93 1007,-153 1007,-153 1007,-153 1207,-153 1207,-193 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation40Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation40Line"/>
-      </g>
-      <g id="relation41">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_756cf5182e11de33d21dbfcff7fdce72" kin:lineType="sanguineLine" kin:alter="tid_6cb486e27bc1a01e2c81470ef41a1986" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation41Line" stroke-width="2" points="607,207 607,247 557,247 557,247 507,247 507,307 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation41Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation41Line"/>
-      </g>
-      <g id="relation42">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_756cf5182e11de33d21dbfcff7fdce72" kin:lineType="sanguineLine" kin:alter="tid_c968f6445d89433b09b62258b52cd2f9" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation42Line" stroke-width="2" points="607,207 607,247 657,247 657,247 707,247 707,307 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation42Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation42Line"/>
-      </g>
-      <g id="relation43">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c968f6445d89433b09b62258b52cd2f9" kin:lineType="sanguineLine" kin:alter="tid_756cf5182e11de33d21dbfcff7fdce72" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation43Line" stroke-width="2" points="707,307 707,247 707,247 707,247 607,247 607,207 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation43Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation43Line"/>
-      </g>
-      <g id="relation44">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c968f6445d89433b09b62258b52cd2f9" kin:lineType="sanguineLine" kin:alter="tid_0bb40ba0173a3664133c4f1ee573e711" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation44Line" stroke-width="2" points="707,307 707,347 707,347 707,347 707,347 707,407 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation44Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation44Line"/>
-      </g>
-      <g id="relation45">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:lineType="sanguineLine" kin:alter="tid_37ea920e97460621817fbe90202d6d22" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation45Line" stroke-width="2" points="607,507 607,547 607,547 607,547 607,547 607,607 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation45Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation45Line"/>
-      </g>
-      <g id="relation46">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:lineType="sanguineLine" kin:alter="tid_5539b55533fd614fea062a1210793c14" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation46Line" stroke-width="2" points="607,507 607,447 607,447 607,447 507,447 507,407 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation46Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation46Line"/>
-      </g>
-      <g id="relation47">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:lineType="sanguineLine" kin:alter="tid_0bb40ba0173a3664133c4f1ee573e711" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation47Line" stroke-width="2" points="607,507 607,447 607,447 607,447 707,447 707,407 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation47Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation47Line"/>
-      </g>
-      <g id="relation48">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_0bb40ba0173a3664133c4f1ee573e711" kin:lineType="sanguineLine" kin:alter="tid_c968f6445d89433b09b62258b52cd2f9" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation48Line" stroke-width="2" points="707,407 707,347 707,347 707,347 707,347 707,307 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation48Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation48Line"/>
-      </g>
-      <g id="relation49">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_0bb40ba0173a3664133c4f1ee573e711" kin:lineType="sanguineLine" kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation49Line" stroke-width="2" points="707,407 707,447 657,447 657,447 607,447 607,507 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation49Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation49Line"/>
-      </g>
-      <g id="relation50">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_d508be2d739149aabed85bd06f230af1" kin:lineType="sanguineLine" kin:alter="tid_4a6f9343d6e79ecff0a41b339cfd8229" kin:relationType="sibling"/>
-        <defs>
-          <polyline fill="none" id="relation50Line" stroke-width="2" points="407,-93 407,-143 407,-143 407,-143 607,-143 607,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation50Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation50Line"/>
-      </g>
-      <g id="relation51">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_d508be2d739149aabed85bd06f230af1" kin:lineType="sanguineLine" kin:alter="tid_a1651ac15017a6ff646c5e1d43579eb5" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation51Line" stroke-width="2" points="407,-93 407,-53 407,-53 407,-53 407,-53 407,7 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation51Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation51Line"/>
-      </g>
-      <g id="relation52">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_37ea920e97460621817fbe90202d6d22" kin:lineType="sanguineLine" kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation52Line" stroke-width="2" points="607,607 607,547 607,547 607,547 607,547 607,507 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation52Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation52Line"/>
-      </g>
-      <g id="relation53">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_a3f635c6f32859ac172226750a9413e4" kin:lineType="sanguineLine" kin:alter="tid_a1651ac15017a6ff646c5e1d43579eb5" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation53Line" stroke-width="2" points="407,107 407,47 407,47 407,47 407,47 407,7 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation53Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation53Line"/>
-      </g>
-      <g id="relation54">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_08cfcca876369a2f0d89088af2564164" kin:lineType="sanguineLine" kin:alter="tid_cc6f9e885378173306e24efbddd25fe7" kin:relationType="descendant"/>
-        <defs>
-          <polyline fill="none" id="relation54Line" stroke-width="2" points="1157,407 1157,447 1107,447 1107,447 1057,447 1057,507 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation54Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation54Line"/>
-      </g>
-      <g id="relation55">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_08cfcca876369a2f0d89088af2564164" kin:lineType="sanguineLine" kin:alter="tid_e8abb8cc035419ec89be3301e8c4f15e" kin:relationType="ancestor"/>
-        <defs>
-          <polyline fill="none" id="relation55Line" stroke-width="2" points="1157,407 1157,347 1157,347 1157,347 1157,347 1157,307 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation55Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation55Line"/>
-      </g>
-    </g>
-    <g id="EntityGroup">
-      <g id="tid_e8abb8cc035419ec89be3301e8c4f15e" kin:kintype="fMFF" transform="translate(1150.0, 300.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_e8abb8cc035419ec89be3301e8c4f15e:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_3a6a1c42c019d20fc089e4db007209aa" kin:kintype="EMF" transform="translate(1000.0, -200.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_3a6a1c42c019d20fc089e4db007209aa:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_a978594d4ffeb6704185833d9653d9d5" kin:kintype="fMFFF" transform="translate(1050.0, 200.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_a978594d4ffeb6704185833d9653d9d5:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alfred</text>
-      </g>
-      <g id="tid_ea82affa800cb04b1c6c39ad22e6077b" kin:kintype="EM" transform="translate(800.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_ea82affa800cb04b1c6c39ad22e6077b:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jan 1, 1721 - Jan 1, 1803</text>
-      </g>
-      <g id="tid_ba1a3c675f2c842134488bed99e6e413" kin:kintype="EMFF" transform="translate(1000.0, -300.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_ba1a3c675f2c842134488bed99e6e413:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_9bd5e5ae60a5227234e14769d335a905" kin:kintype="ED" transform="translate(600.0, 100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_9bd5e5ae60a5227234e14769d335a905:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Smith</text>
-      </g>
-      <g id="tid_4a6f9343d6e79ecff0a41b339cfd8229" kin:kintype="EM" transform="translate(600.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_4a6f9343d6e79ecff0a41b339cfd8229:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:kintype="E" transform="translate(600.0, 0.0)" kin:path="">
-        <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#square" xlink:type="simple" xlink:actuate="onLoad" id="tid_8ebae61bc8ae781c07d8974ba0f9054f:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_a1651ac15017a6ff646c5e1d43579eb5" kin:kintype="EMZS" transform="translate(400.0, 0.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_a1651ac15017a6ff646c5e1d43579eb5:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_af45aebf0c19e2bcaa81fe5014d29190" kin:kintype="EMFFFDD" transform="translate(1200.0, -200.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_af45aebf0c19e2bcaa81fe5014d29190:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_6cb486e27bc1a01e2c81470ef41a1986" kin:kintype="EmMFF" transform="translate(500.0, 300.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_6cb486e27bc1a01e2c81470ef41a1986:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_5539b55533fd614fea062a1210793c14" kin:kintype="EmMF" transform="translate(500.0, 400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_5539b55533fd614fea062a1210793c14:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_c2188def927c395420c945c695c82978" kin:kintype="EMFFFD" transform="translate(1200.0, -300.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_c2188def927c395420c945c695c82978:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_80328c7f829547ce717d75df1c48da39" kin:kintype="ED" transform="translate(800.0, 100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_80328c7f829547ce717d75df1c48da39:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jan 1, 1721</text>
-      </g>
-      <g id="tid_e051f2181b3732f3c4d708fcc822a4ce" kin:kintype="EMFFF" transform="translate(1000.0, -400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_e051f2181b3732f3c4d708fcc822a4ce:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_cc6f9e885378173306e24efbddd25fe7" kin:kintype="fM" transform="translate(1050.0, 500.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_cc6f9e885378173306e24efbddd25fe7:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">#3</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jane</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="30">Jan 1, 1721 - Jan 1, 1803</text>
-      </g>
-      <g id="tid_062d6742a5a07ab8d7d2788ba95805ee" kin:kintype="fMFFFDD" transform="translate(950.0, 400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_062d6742a5a07ab8d7d2788ba95805ee:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_7dfc27987d722a09257227a8857b90f2" kin:kintype="f" transform="translate(1050.0, 600.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_7dfc27987d722a09257227a8857b90f2:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_c54b58ad59775b11c9c1e567d27823ea" kin:kintype="fMFFFD" transform="translate(950.0, 300.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_c54b58ad59775b11c9c1e567d27823ea:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Betty</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Smith</text>
-      </g>
-      <g id="tid_8df34081dacc62a27192de73df463a54" kin:kintype="EM" transform="translate(1000.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_8df34081dacc62a27192de73df463a54:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">#1</text>
-      </g>
-      <g id="tid_756cf5182e11de33d21dbfcff7fdce72" kin:kintype="EmMFFF" transform="translate(600.0, 200.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_756cf5182e11de33d21dbfcff7fdce72:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alfred</text>
-      </g>
-      <g id="tid_c968f6445d89433b09b62258b52cd2f9" kin:kintype="EmMFFFD" transform="translate(700.0, 300.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_c968f6445d89433b09b62258b52cd2f9:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Betty</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Smith</text>
-      </g>
-      <g id="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:kintype="EmM" transform="translate(600.0, 500.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_9a6b2064ee3e986aee5f9c356e18f27a:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">#2</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jane</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="30">Jones</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="45">Jan 1, 1721 - Jan 1, 1803</text>
-      </g>
-      <g id="tid_0bb40ba0173a3664133c4f1ee573e711" kin:kintype="EmMFFFDD" transform="translate(700.0, 400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_0bb40ba0173a3664133c4f1ee573e711:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_d508be2d739149aabed85bd06f230af1" kin:kintype="EMZ" transform="translate(400.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_d508be2d739149aabed85bd06f230af1:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_37ea920e97460621817fbe90202d6d22" kin:kintype="Em" transform="translate(600.0, 600.0)" kin:path="">
-        <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_37ea920e97460621817fbe90202d6d22:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_a3f635c6f32859ac172226750a9413e4" kin:kintype="EMZSD" transform="translate(400.0, 100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_a3f635c6f32859ac172226750a9413e4:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-      <g id="tid_08cfcca876369a2f0d89088af2564164" kin:kintype="fMF" transform="translate(1150.0, 400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_08cfcca876369a2f0d89088af2564164:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-      </g>
-    </g>
-    <g id="LabelsGroup"/>
-  </g>
+  
+    
+    
+    
+      <g id="GraphicsGroup"/>
+      <g id="RelationGroup">
+         <g id="relation0">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_e8abb8cc035419ec89be3301e8c4f15e"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_08cfcca876369a2f0d89088af2564164"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation0Line" stroke-width="2"
+                         points="1157,307 1157,357 1157,357 1157,357 1157,357 1157,407 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation0Line"/>
+         </g>
+         <g id="relation1">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_e8abb8cc035419ec89be3301e8c4f15e"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_a978594d4ffeb6704185833d9653d9d5"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation1Line" stroke-width="2"
+                         points="1157,307 1157,257 1157,257 1157,257 1057,257 1057,207 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation1Line"/>
+         </g>
+         <g id="relation2">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_5539b55533fd614fea062a1210793c14"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation2Line" stroke-width="2"
+                         points="507,407 507,457 557,457 557,457 607,457 607,507 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation2Line"/>
+         </g>
+         <g id="relation3">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_5539b55533fd614fea062a1210793c14"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_6cb486e27bc1a01e2c81470ef41a1986"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation3Line" stroke-width="2"
+                         points="507,407 507,357 507,357 507,357 507,357 507,307 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation3Line"/>
+         </g>
+         <g id="relation4">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_6cb486e27bc1a01e2c81470ef41a1986"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_5539b55533fd614fea062a1210793c14"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation4Line" stroke-width="2"
+                         points="507,307 507,357 507,357 507,357 507,357 507,407 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation4Line"/>
+         </g>
+         <g id="relation5">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_6cb486e27bc1a01e2c81470ef41a1986"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_756cf5182e11de33d21dbfcff7fdce72"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation5Line" stroke-width="2"
+                         points="507,307 507,257 507,257 507,257 607,257 607,207 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation5Line"/>
+         </g>
+         <g id="relation6">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation6Line" stroke-width="2"
+                         points="1007,-93 1007,-43 807,-43 807,-43 607,-43 607,7 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation6Line"/>
+         </g>
+         <g id="relation7">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_3a6a1c42c019d20fc089e4db007209aa"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation7Line" stroke-width="2"
+                         points="1007,-93 1007,-143 1007,-143 1007,-143 1007,-143 1007,-193 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation7Line"/>
+         </g>
+         <g id="relation8">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_af45aebf0c19e2bcaa81fe5014d29190"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation8Line" stroke-width="2"
+                         points="1007,-93 1007,-143 1007,-143 1007,-143 1207,-143 1207,-193 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation8Line"/>
+         </g>
+         <g id="relation9">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_d508be2d739149aabed85bd06f230af1"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_4a6f9343d6e79ecff0a41b339cfd8229"
+                                  kin:relationType="sibling"/>
+            <defs>
+               <polyline fill="none" id="relation9Line" stroke-width="2"
+                         points="407,-93 407,-143 407,-143 407,-143 607,-143 607,-93 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation9Line"/>
+         </g>
+         <g id="relation10">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_d508be2d739149aabed85bd06f230af1"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_a1651ac15017a6ff646c5e1d43579eb5"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation10Line" stroke-width="2"
+                         points="407,-93 407,-43 407,-43 407,-43 407,-43 407,7 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation10Line"/>
+         </g>
+         <g id="relation11">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc6f9e885378173306e24efbddd25fe7"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_7dfc27987d722a09257227a8857b90f2"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation11Line" stroke-width="2"
+                         points="1057,507 1057,557 1057,557 1057,557 1057,557 1057,607 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation11Line"/>
+         </g>
+         <g id="relation12">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc6f9e885378173306e24efbddd25fe7"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_08cfcca876369a2f0d89088af2564164"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation12Line" stroke-width="2"
+                         points="1057,507 1057,457 1057,457 1057,457 1157,457 1157,407 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation12Line"/>
+         </g>
+         <g id="relation13">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc6f9e885378173306e24efbddd25fe7"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_062d6742a5a07ab8d7d2788ba95805ee"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation13Line" stroke-width="2"
+                         points="1057,507 1057,457 1057,457 1057,457 957,457 957,407 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation13Line"/>
+         </g>
+         <g id="relation14">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_af45aebf0c19e2bcaa81fe5014d29190"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_c2188def927c395420c945c695c82978"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation14Line" stroke-width="2"
+                         points="1207,-193 1207,-243 1207,-243 1207,-243 1207,-243 1207,-293 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation14Line"/>
+         </g>
+         <g id="relation15">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_af45aebf0c19e2bcaa81fe5014d29190"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_8df34081dacc62a27192de73df463a54"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation15Line" stroke-width="2"
+                         points="1207,-193 1207,-143 1107,-143 1107,-143 1007,-143 1007,-93 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation15Line"/>
+         </g>
+         <g id="relation16">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_a978594d4ffeb6704185833d9653d9d5"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_e8abb8cc035419ec89be3301e8c4f15e"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation16Line" stroke-width="2"
+                         points="1057,207 1057,257 1107,257 1107,257 1157,257 1157,307 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation16Line"/>
+         </g>
+         <g id="relation17">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_a978594d4ffeb6704185833d9653d9d5"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_c54b58ad59775b11c9c1e567d27823ea"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation17Line" stroke-width="2"
+                         points="1057,207 1057,257 1007,257 1007,257 957,257 957,307 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation17Line"/>
+         </g>
+         <g id="relation18">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_e051f2181b3732f3c4d708fcc822a4ce"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_ba1a3c675f2c842134488bed99e6e413"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation18Line" stroke-width="2"
+                         points="1007,-393 1007,-343 1007,-343 1007,-343 1007,-343 1007,-293 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation18Line"/>
+         </g>
+         <g id="relation19">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_e051f2181b3732f3c4d708fcc822a4ce"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_c2188def927c395420c945c695c82978"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation19Line" stroke-width="2"
+                         points="1007,-393 1007,-343 1107,-343 1107,-343 1207,-343 1207,-293 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation19Line"/>
+         </g>
+         <g id="relation20">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_a1651ac15017a6ff646c5e1d43579eb5"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_d508be2d739149aabed85bd06f230af1"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation20Line" stroke-width="2"
+                         points="407,7 407,-43 407,-43 407,-43 407,-43 407,-93 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation20Line"/>
+         </g>
+         <g id="relation21">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_a1651ac15017a6ff646c5e1d43579eb5"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_a3f635c6f32859ac172226750a9413e4"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation21Line" stroke-width="2"
+                         points="407,7 407,57 407,57 407,57 407,57 407,107 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation21Line"/>
+         </g>
+         <g id="relation22">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9bd5e5ae60a5227234e14769d335a905"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation22Line" stroke-width="2"
+                         points="607,107 607,57 607,57 607,57 607,57 607,7 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation22Line"/>
+         </g>
+         <g id="relation23">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9bd5e5ae60a5227234e14769d335a905"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_58c0b18e3c7cb91855ef4f4b62dd22ad"
+                                  kin:relationType="sibling"/>
+            <defs>
+               <polyline fill="none" id="relation23Line" stroke-width="2"
+                         points="607,107 607,57 607,57 607,57 1007,57 1007,107 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation23Line"/>
+         </g>
+         <g id="relation24">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_7dfc27987d722a09257227a8857b90f2"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_cc6f9e885378173306e24efbddd25fe7"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation24Line" stroke-width="2"
+                         points="1057,607 1057,557 1057,557 1057,557 1057,557 1057,507 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation24Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation24Line"/>
+         </g>
+         <g id="relation25">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_08cfcca876369a2f0d89088af2564164"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_cc6f9e885378173306e24efbddd25fe7"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation25Line" stroke-width="2"
+                         points="1157,407 1157,457 1107,457 1107,457 1057,457 1057,507 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation25Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation25Line"/>
+         </g>
+         <g id="relation26">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_08cfcca876369a2f0d89088af2564164"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_e8abb8cc035419ec89be3301e8c4f15e"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation26Line" stroke-width="2"
+                         points="1157,407 1157,357 1157,357 1157,357 1157,357 1157,307 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation26Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation26Line"/>
+         </g>
+         <g id="relation27">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_a3f635c6f32859ac172226750a9413e4"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_a1651ac15017a6ff646c5e1d43579eb5"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation27Line" stroke-width="2"
+                         points="407,107 407,57 407,57 407,57 407,57 407,7 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation27Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation27Line"/>
+         </g>
+         <g id="relation28">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_37ea920e97460621817fbe90202d6d22"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation28Line" stroke-width="2"
+                         points="607,507 607,557 607,557 607,557 607,557 607,607 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation28Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation28Line"/>
+         </g>
+         <g id="relation29">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_5539b55533fd614fea062a1210793c14"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation29Line" stroke-width="2"
+                         points="607,507 607,457 607,457 607,457 507,457 507,407 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation29Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation29Line"/>
+         </g>
+         <g id="relation30">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_0bb40ba0173a3664133c4f1ee573e711"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation30Line" stroke-width="2"
+                         points="607,507 607,457 607,457 607,457 707,457 707,407 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation30Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation30Line"/>
+         </g>
+         <g id="relation31">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ea82affa800cb04b1c6c39ad22e6077b"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation31Line" stroke-width="2"
+                         points="807,-93 807,-43 707,-43 707,-43 607,-43 607,7 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation31Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation31Line"/>
+         </g>
+         <g id="relation32">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c968f6445d89433b09b62258b52cd2f9"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_756cf5182e11de33d21dbfcff7fdce72"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation32Line" stroke-width="2"
+                         points="707,307 707,257 707,257 707,257 607,257 607,207 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation32Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation32Line"/>
+         </g>
+         <g id="relation33">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c968f6445d89433b09b62258b52cd2f9"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_0bb40ba0173a3664133c4f1ee573e711"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation33Line" stroke-width="2"
+                         points="707,307 707,357 707,357 707,357 707,357 707,407 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation33Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation33Line"/>
+         </g>
+         <g id="relation34">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_4a6f9343d6e79ecff0a41b339cfd8229"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation34Line" stroke-width="2"
+                         points="607,-93 607,-43 607,-43 607,-43 607,-43 607,7 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation34Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation34Line"/>
+         </g>
+         <g id="relation35">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_4a6f9343d6e79ecff0a41b339cfd8229"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_d508be2d739149aabed85bd06f230af1"
+                                  kin:relationType="sibling"/>
+            <defs>
+               <polyline fill="none" id="relation35Line" stroke-width="2"
+                         points="607,-93 607,-143 607,-143 607,-143 407,-143 407,-93 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation35Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation35Line"/>
+         </g>
+         <g id="relation36">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c54b58ad59775b11c9c1e567d27823ea"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_a978594d4ffeb6704185833d9653d9d5"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation36Line" stroke-width="2"
+                         points="957,307 957,257 957,257 957,257 1057,257 1057,207 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation36Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation36Line"/>
+         </g>
+         <g id="relation37">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c54b58ad59775b11c9c1e567d27823ea"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_062d6742a5a07ab8d7d2788ba95805ee"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation37Line" stroke-width="2"
+                         points="957,307 957,357 957,357 957,357 957,357 957,407 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation37Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation37Line"/>
+         </g>
+         <g id="relation38">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_4a6f9343d6e79ecff0a41b339cfd8229"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation38Line" stroke-width="2"
+                         points="607,7 607,-43 607,-43 607,-43 607,-43 607,-93 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation38Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation38Line"/>
+         </g>
+         <g id="relation39">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_9bd5e5ae60a5227234e14769d335a905"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation39Line" stroke-width="2"
+                         points="607,7 607,57 607,57 607,57 607,57 607,107 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation39Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation39Line"/>
+         </g>
+         <g id="relation40">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_80328c7f829547ce717d75df1c48da39"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation40Line" stroke-width="2"
+                         points="607,7 607,57 707,57 707,57 807,57 807,107 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation40Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation40Line"/>
+         </g>
+         <g id="relation41">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_ea82affa800cb04b1c6c39ad22e6077b"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation41Line" stroke-width="2"
+                         points="607,7 607,-43 607,-43 607,-43 807,-43 807,-93 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation41Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation41Line"/>
+         </g>
+         <g id="relation42">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_8df34081dacc62a27192de73df463a54"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation42Line" stroke-width="2"
+                         points="607,7 607,-43 607,-43 607,-43 1007,-43 1007,-93 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation42Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation42Line"/>
+         </g>
+         <g id="relation43">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_37ea920e97460621817fbe90202d6d22"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation43Line" stroke-width="2"
+                         points="607,607 607,557 607,557 607,557 607,557 607,507 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation43Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation43Line"/>
+         </g>
+         <g id="relation44">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_062d6742a5a07ab8d7d2788ba95805ee"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_c54b58ad59775b11c9c1e567d27823ea"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation44Line" stroke-width="2"
+                         points="957,407 957,357 957,357 957,357 957,357 957,307 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation44Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation44Line"/>
+         </g>
+         <g id="relation45">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_062d6742a5a07ab8d7d2788ba95805ee"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_cc6f9e885378173306e24efbddd25fe7"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation45Line" stroke-width="2"
+                         points="957,407 957,457 1007,457 1007,457 1057,457 1057,507 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation45Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation45Line"/>
+         </g>
+         <g id="relation46">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c2188def927c395420c945c695c82978"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_e051f2181b3732f3c4d708fcc822a4ce"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation46Line" stroke-width="2"
+                         points="1207,-293 1207,-343 1207,-343 1207,-343 1007,-343 1007,-393 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation46Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation46Line"/>
+         </g>
+         <g id="relation47">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_c2188def927c395420c945c695c82978"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_af45aebf0c19e2bcaa81fe5014d29190"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation47Line" stroke-width="2"
+                         points="1207,-293 1207,-243 1207,-243 1207,-243 1207,-243 1207,-193 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation47Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation47Line"/>
+         </g>
+         <g id="relation48">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_80328c7f829547ce717d75df1c48da39"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation48Line" stroke-width="2"
+                         points="807,107 807,57 807,57 807,57 607,57 607,7 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation48Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation48Line"/>
+         </g>
+         <g id="relation49">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_0bb40ba0173a3664133c4f1ee573e711"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_c968f6445d89433b09b62258b52cd2f9"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation49Line" stroke-width="2"
+                         points="707,407 707,357 707,357 707,357 707,357 707,307 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation49Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation49Line"/>
+         </g>
+         <g id="relation50">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_0bb40ba0173a3664133c4f1ee573e711"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation50Line" stroke-width="2"
+                         points="707,407 707,457 657,457 657,457 607,457 607,507 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation50Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation50Line"/>
+         </g>
+         <g id="relation51">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_58c0b18e3c7cb91855ef4f4b62dd22ad"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_9bd5e5ae60a5227234e14769d335a905"
+                                  kin:relationType="sibling"/>
+            <defs>
+               <polyline fill="none" id="relation51Line" stroke-width="2"
+                         points="1007,107 1007,57 1007,57 1007,57 607,57 607,107 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation51Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation51Line"/>
+         </g>
+         <g id="relation52">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ba1a3c675f2c842134488bed99e6e413"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_3a6a1c42c019d20fc089e4db007209aa"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation52Line" stroke-width="2"
+                         points="1007,-293 1007,-243 1007,-243 1007,-243 1007,-243 1007,-193 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation52Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation52Line"/>
+         </g>
+         <g id="relation53">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ba1a3c675f2c842134488bed99e6e413"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_e051f2181b3732f3c4d708fcc822a4ce"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation53Line" stroke-width="2"
+                         points="1007,-293 1007,-343 1007,-343 1007,-343 1007,-343 1007,-393 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation53Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation53Line"/>
+         </g>
+         <g id="relation54">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_3a6a1c42c019d20fc089e4db007209aa"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_8df34081dacc62a27192de73df463a54"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation54Line" stroke-width="2"
+                         points="1007,-193 1007,-143 1007,-143 1007,-143 1007,-143 1007,-93 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation54Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation54Line"/>
+         </g>
+         <g id="relation55">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_3a6a1c42c019d20fc089e4db007209aa"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_ba1a3c675f2c842134488bed99e6e413"
+                                  kin:relationType="ancestor"/>
+            <defs>
+               <polyline fill="none" id="relation55Line" stroke-width="2"
+                         points="1007,-193 1007,-243 1007,-243 1007,-243 1007,-243 1007,-293 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation55Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation55Line"/>
+         </g>
+         <g id="relation56">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_756cf5182e11de33d21dbfcff7fdce72"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_6cb486e27bc1a01e2c81470ef41a1986"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation56Line" stroke-width="2"
+                         points="607,207 607,257 557,257 557,257 507,257 507,307 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation56Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation56Line"/>
+         </g>
+         <g id="relation57">
+            <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_756cf5182e11de33d21dbfcff7fdce72"
+                                  kin:lineType="sanguineLine"
+                                  kin:alter="tid_c968f6445d89433b09b62258b52cd2f9"
+                                  kin:relationType="descendant"/>
+            <defs>
+               <polyline fill="none" id="relation57Line" stroke-width="2"
+                         points="607,207 607,257 657,257 657,257 707,257 707,307 "
+                         stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad" xlink:type="simple" id="relation57Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation57Line"/>
+         </g>
+      </g>
+      <g id="EntityGroup">
+         <g id="tid_e8abb8cc035419ec89be3301e8c4f15e" kin:kintype="fMFF"
+            transform="translate(1150.0, 300.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_e8abb8cc035419ec89be3301e8c4f15e:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_5539b55533fd614fea062a1210793c14" kin:kintype="EmMF"
+            transform="translate(500.0, 400.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_5539b55533fd614fea062a1210793c14:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_6cb486e27bc1a01e2c81470ef41a1986" kin:kintype="EmMFF"
+            transform="translate(500.0, 300.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_6cb486e27bc1a01e2c81470ef41a1986:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_8df34081dacc62a27192de73df463a54" kin:kintype="EM"
+            transform="translate(1000.0, -100.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_8df34081dacc62a27192de73df463a54:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">#1</text>
+         </g>
+         <g id="tid_d508be2d739149aabed85bd06f230af1" kin:kintype="EMZ"
+            transform="translate(400.0, -100.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_d508be2d739149aabed85bd06f230af1:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_cc6f9e885378173306e24efbddd25fe7" kin:kintype="fM"
+            transform="translate(1050.0, 500.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_cc6f9e885378173306e24efbddd25fe7:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">#3</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jane</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="30">Jan 1, 1721 - Jan 1, 1803</text>
+         </g>
+         <g id="tid_af45aebf0c19e2bcaa81fe5014d29190" kin:kintype="EMFFFDD"
+            transform="translate(1200.0, -200.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_af45aebf0c19e2bcaa81fe5014d29190:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_a978594d4ffeb6704185833d9653d9d5" kin:kintype="fMFFF"
+            transform="translate(1050.0, 200.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_a978594d4ffeb6704185833d9653d9d5:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alfred</text>
+         </g>
+         <g id="tid_e051f2181b3732f3c4d708fcc822a4ce" kin:kintype="EMFFF"
+            transform="translate(1000.0, -400.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_e051f2181b3732f3c4d708fcc822a4ce:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_a1651ac15017a6ff646c5e1d43579eb5" kin:kintype="EMZS"
+            transform="translate(400.0, 0.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_a1651ac15017a6ff646c5e1d43579eb5:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_9bd5e5ae60a5227234e14769d335a905" kin:kintype="ED"
+            transform="translate(600.0, 100.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_9bd5e5ae60a5227234e14769d335a905:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Smith</text>
+         </g>
+         <g id="tid_7dfc27987d722a09257227a8857b90f2" kin:kintype="f"
+            transform="translate(1050.0, 600.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_7dfc27987d722a09257227a8857b90f2:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_08cfcca876369a2f0d89088af2564164" kin:kintype="fMF"
+            transform="translate(1150.0, 400.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_08cfcca876369a2f0d89088af2564164:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_a3f635c6f32859ac172226750a9413e4" kin:kintype="EMZSD"
+            transform="translate(400.0, 100.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_a3f635c6f32859ac172226750a9413e4:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:kintype="EmM"
+            transform="translate(600.0, 500.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_9a6b2064ee3e986aee5f9c356e18f27a:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">#2</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jane</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="30">Jones</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="45">Jan 1, 1721 - Jan 1, 1803</text>
+         </g>
+         <g id="tid_ea82affa800cb04b1c6c39ad22e6077b" kin:kintype="EM"
+            transform="translate(800.0, -100.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_ea82affa800cb04b1c6c39ad22e6077b:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jan 1, 1721 - Jan 1, 1803</text>
+         </g>
+         <g id="tid_c968f6445d89433b09b62258b52cd2f9" kin:kintype="EmMFFFD"
+            transform="translate(700.0, 300.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_c968f6445d89433b09b62258b52cd2f9:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Betty</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Smith</text>
+         </g>
+         <g id="tid_4a6f9343d6e79ecff0a41b339cfd8229" kin:kintype="EM"
+            transform="translate(600.0, -100.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_4a6f9343d6e79ecff0a41b339cfd8229:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_c54b58ad59775b11c9c1e567d27823ea" kin:kintype="fMFFFD"
+            transform="translate(950.0, 300.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_c54b58ad59775b11c9c1e567d27823ea:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Betty</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Smith</text>
+         </g>
+         <g id="tid_8ebae61bc8ae781c07d8974ba0f9054f" kin:kintype="E"
+            transform="translate(600.0, 0.0)"
+            kin:path="">
+            <use fill="black" xlink:href="#square" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_8ebae61bc8ae781c07d8974ba0f9054f:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_37ea920e97460621817fbe90202d6d22" kin:kintype="Em"
+            transform="translate(600.0, 600.0)"
+            kin:path="">
+            <use fill="black" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_37ea920e97460621817fbe90202d6d22:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_062d6742a5a07ab8d7d2788ba95805ee" kin:kintype="fMFFFDD"
+            transform="translate(950.0, 400.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_062d6742a5a07ab8d7d2788ba95805ee:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_c2188def927c395420c945c695c82978" kin:kintype="EMFFFD"
+            transform="translate(1200.0, -300.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_c2188def927c395420c945c695c82978:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_80328c7f829547ce717d75df1c48da39" kin:kintype="ED"
+            transform="translate(800.0, 100.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_80328c7f829547ce717d75df1c48da39:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jan 1, 1721</text>
+         </g>
+         <g id="tid_0bb40ba0173a3664133c4f1ee573e711" kin:kintype="EmMFFFDD"
+            transform="translate(700.0, 400.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_0bb40ba0173a3664133c4f1ee573e711:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_58c0b18e3c7cb91855ef4f4b62dd22ad" kin:kintype="EDZ"
+            transform="translate(1000.0, 100.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_58c0b18e3c7cb91855ef4f4b62dd22ad:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Janet</text>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Jun 9, 1721 - Dec 31, 1803</text>
+         </g>
+         <g id="tid_ba1a3c675f2c842134488bed99e6e413" kin:kintype="EMFF"
+            transform="translate(1000.0, -300.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_ba1a3c675f2c842134488bed99e6e413:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_3a6a1c42c019d20fc089e4db007209aa" kin:kintype="EMF"
+            transform="translate(1000.0, -200.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_3a6a1c42c019d20fc089e4db007209aa:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_756cf5182e11de33d21dbfcff7fdce72" kin:kintype="EmMFFF"
+            transform="translate(600.0, 200.0)"
+            kin:path="">
+            <use fill="white" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad"
+                 id="tid_756cf5182e11de33d21dbfcff7fdce72:symbol"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alfred</text>
+         </g>
+      </g>
+      <g id="LabelsGroup"/>
+   </g>
   
 
-<kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
-    <kin:KinTypeString># The kin type strings entered here will determine the diagram drawn below.</kin:KinTypeString>
-    <kin:KinTypeString># Any sequence of kin types can be used except that if ego is specified then it must be only at the beginning of the string (a full list of the built in kin types are at the bottom of this text).</kin:KinTypeString>
-    <kin:KinTypeString># for example:</kin:KinTypeString>
-    <kin:KinTypeString>EMZSD</kin:KinTypeString>
-    <kin:KinTypeString/>
-    <kin:KinTypeString># The tool tip over this text will give more information and details of any syntax errors.</kin:KinTypeString>
-    <kin:KinTypeString/>
-    <kin:KinTypeString># The extended format includes data between colons after they kin type (the &lt; and &gt; indicate a value that can be entered).</kin:KinTypeString>
-    <kin:KinTypeString># :&lt;id&gt;;&lt;label&gt;;&lt;label...&gt;;&lt;DOB&gt;-&lt;DOD&gt;:</kin:KinTypeString>
-    <kin:KinTypeString/>
-    <kin:KinTypeString># Any number of Labels can be added between colons each separated by a semicolon:</kin:KinTypeString>
-    <kin:KinTypeString>ED:Jane;Smith:</kin:KinTypeString>
-    <kin:KinTypeString/>
-    <kin:KinTypeString># Date of birth and death can be appended after the labels:</kin:KinTypeString>
-    <kin:KinTypeString>ED:Jane;1721:</kin:KinTypeString>
-    <kin:KinTypeString># or</kin:KinTypeString>
-    <kin:KinTypeString>EM:Jane;1721-1803:</kin:KinTypeString>
-    <kin:KinTypeString/>
-    <kin:KinTypeString># If an individual needs to be referred to twice such as in a marital ring, an identifier can be specified with a hash followed by a number '#n':</kin:KinTypeString>
-    <kin:KinTypeString>EM:#1:FFFDDD:#1: </kin:KinTypeString>
-    <kin:KinTypeString/>
-    <kin:KinTypeString># Comments can be entered by starting the line with a '#'.</kin:KinTypeString>
-    <kin:KinTypeString/>
-    <kin:KinTypeString># These optional data (:#n;Label;Label;DOB-DOD:) can be specified on any kin type:</kin:KinTypeString>
-    <kin:KinTypeString>EmM:#2;Jane;Jones;1721-1803:FFF:Alfred:D:Betty;Smith:DD:#2:</kin:KinTypeString>
-    <kin:KinTypeString/>
-    <kin:KinTypeString># If a social centric diagram is required then 'm' or 'f' kin types can be specified at the beginning of the line:</kin:KinTypeString>
-    <kin:KinTypeString>fM:#3;Jane;1721-1803:FFF:Alfred:D:Betty;Smith:DD:#3:</kin:KinTypeString>
-    <kin:KinTypeString/>
-    <kin:KinTypeString># The default kin types are as follows:</kin:KinTypeString>
-    <kin:KinTypeString>#           Ef = Ego Female</kin:KinTypeString>
-    <kin:KinTypeString>#           Em = Ego Male</kin:KinTypeString>
-    <kin:KinTypeString>#           Fa = Father</kin:KinTypeString>
-    <kin:KinTypeString>#           Mo = Mother</kin:KinTypeString>
-    <kin:KinTypeString>#           Br = Brother</kin:KinTypeString>
-    <kin:KinTypeString>#           Si = Sister</kin:KinTypeString>
-    <kin:KinTypeString>#           So = Son</kin:KinTypeString>
-    <kin:KinTypeString>#           Da = Daughter</kin:KinTypeString>
-    <kin:KinTypeString>#           Hu = Husband</kin:KinTypeString>
-    <kin:KinTypeString>#           Wi = Wife</kin:KinTypeString>
-    <kin:KinTypeString>#           Pa = Parent</kin:KinTypeString>
-    <kin:KinTypeString>#           Sb = Sibling</kin:KinTypeString>
-    <kin:KinTypeString>#           Sp = Spouse</kin:KinTypeString>
-    <kin:KinTypeString>#           Ch = Child</kin:KinTypeString>
-    <kin:KinTypeString>#           F = Father</kin:KinTypeString>
-    <kin:KinTypeString>#           M = Mother</kin:KinTypeString>
-    <kin:KinTypeString>#           B = Brother</kin:KinTypeString>
-    <kin:KinTypeString>#           Z = Sister</kin:KinTypeString>
-    <kin:KinTypeString>#           S = Son</kin:KinTypeString>
-    <kin:KinTypeString>#           D = Daughter</kin:KinTypeString>
-    <kin:KinTypeString>#           H = Husband</kin:KinTypeString>
-    <kin:KinTypeString>#           W = Wife</kin:KinTypeString>
-    <kin:KinTypeString>#           P = Parent</kin:KinTypeString>
-    <kin:KinTypeString>#           G = Sibling</kin:KinTypeString>
-    <kin:KinTypeString>#           E = Ego</kin:KinTypeString>
-    <kin:KinTypeString>#           C = Child</kin:KinTypeString>
-    <kin:KinTypeString>#           m = Male</kin:KinTypeString>
-    <kin:KinTypeString>#           f = Female</kin:KinTypeString>
-    <kin:KinTypeString>#           x = Undefined</kin:KinTypeString>
-    <kin:KinTypeString>#           * = Any Relation</kin:KinTypeString>
-    <kin:KinTypeString># If required additional kin types can be defined in the 'Diagram Settings' from the view menu.</kin:KinTypeString>
-    <kin:IndexParameters>
-      <kin:LabelFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata/*[starts-with(local-name(), 'Name')]"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata/*:INDI/*:NAME/*:NAME"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata/*:INDI/*:NAME"/>
-      </kin:LabelFields>
-      <kin:SymbolFieldsFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata[*:Gender='male']" kin:Value="triangle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata[*:Gender='female']" kin:Value="circle"/>
-      </kin:SymbolFieldsFields>
-      <kin:DefaultSymbol>square</kin:DefaultSymbol>
-    </kin:IndexParameters>
-    <kin:ShowLabels>true</kin:ShowLabels>
-    <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
-    <kin:ShowKinTermLabels>false</kin:ShowKinTermLabels>
-    <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
-    <kin:SnapToGrid>true</kin:SnapToGrid>
-    <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
-    <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
-    <kin:HighlightRelationLines>true</kin:HighlightRelationLines>
-    <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
-    <kin:EntityData>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">e8abb8cc035419ec89be3301e8c4f15e</kin:Identifier>
-        <kin:KinType>fMFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">08cfcca876369a2f0d89088af2564164</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">a978594d4ffeb6704185833d9653d9d5</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">c54b58ad59775b11c9c1e567d27823ea</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">3a6a1c42c019d20fc089e4db007209aa</kin:Identifier>
-        <kin:KinType>EMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">ba1a3c675f2c842134488bed99e6e413</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">a978594d4ffeb6704185833d9653d9d5</kin:Identifier>
-        <kin:KinType>fMFFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Label>Alfred</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+
+   <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+      <kin:KinTypeString># The kin type strings entered here will determine the diagram drawn below.</kin:KinTypeString>
+      <kin:KinTypeString># Any sequence of kin types can be used except that if ego is specified then it must be only at the beginning of the string (a full list of the built in kin types are at the bottom of this text).</kin:KinTypeString>
+      <kin:KinTypeString># for example:</kin:KinTypeString>
+      <kin:KinTypeString>EMZSD</kin:KinTypeString>
+      <kin:KinTypeString># The tool tip over this text will give more information and details of any syntax errors.</kin:KinTypeString>
+      <kin:KinTypeString># The extended format includes data between colons after they kin type (the &lt; and &gt; indicate a value that can be entered).</kin:KinTypeString>
+      <kin:KinTypeString># :&lt;id&gt;;&lt;label&gt;;&lt;label...&gt;;&lt;DOB&gt;-&lt;DOD&gt;:</kin:KinTypeString>
+      <kin:KinTypeString># Any number of Labels can be added between colons each separated by a semicolon:</kin:KinTypeString>
+      <kin:KinTypeString>ED:Jane;Smith:</kin:KinTypeString>
+      <kin:KinTypeString># Date of birth and death can be appended after the labels:</kin:KinTypeString>
+      <kin:KinTypeString>ED:Jane;1721:</kin:KinTypeString>
+      <kin:KinTypeString># or</kin:KinTypeString>
+      <kin:KinTypeString>EM:Jane;1721-1803:</kin:KinTypeString>
+      <kin:KinTypeString># or</kin:KinTypeString>
+      <kin:KinTypeString>EDZ:Janet;1719/30/09-1803/12/31:</kin:KinTypeString>
+      <kin:KinTypeString># If an individual needs to be referred to twice such as in a marital ring, an identifier can be specified with a hash followed by a number '#n':</kin:KinTypeString>
+      <kin:KinTypeString>EM:#1:FFFDDD:#1:</kin:KinTypeString>
+      <kin:KinTypeString># Comments can be entered by starting the line with a '#'.</kin:KinTypeString>
+      <kin:KinTypeString># These optional data (:#n;Label;Label;DOB-DOD:) can be specified on any kin type:</kin:KinTypeString>
+      <kin:KinTypeString>EmM:#2;Jane;Jones;1721-1803:FFF:Alfred:D:Betty;Smith:DD:#2:</kin:KinTypeString>
+      <kin:KinTypeString># If a social centric diagram is required then 'm' or 'f' kin types can be specified at the beginning of the line:</kin:KinTypeString>
+      <kin:KinTypeString>fM:#3;Jane;1721-1803:FFF:Alfred:D:Betty;Smith:DD:#3:</kin:KinTypeString>
+      <kin:KinTypeString># The default kin types are as follows:</kin:KinTypeString>
+      <kin:KinTypeString>#           Ef = Ego Female</kin:KinTypeString>
+      <kin:KinTypeString>#           Em = Ego Male</kin:KinTypeString>
+      <kin:KinTypeString>#           Fa = Father</kin:KinTypeString>
+      <kin:KinTypeString>#           Mo = Mother</kin:KinTypeString>
+      <kin:KinTypeString>#           Br = Brother</kin:KinTypeString>
+      <kin:KinTypeString>#           Si = Sister</kin:KinTypeString>
+      <kin:KinTypeString>#           So = Son</kin:KinTypeString>
+      <kin:KinTypeString>#           Da = Daughter</kin:KinTypeString>
+      <kin:KinTypeString>#           Hu = Husband</kin:KinTypeString>
+      <kin:KinTypeString>#           Wi = Wife</kin:KinTypeString>
+      <kin:KinTypeString>#           Pa = Parent</kin:KinTypeString>
+      <kin:KinTypeString>#           Sb = Sibling</kin:KinTypeString>
+      <kin:KinTypeString>#           Sp = Spouse</kin:KinTypeString>
+      <kin:KinTypeString>#           Ch = Child</kin:KinTypeString>
+      <kin:KinTypeString>#           F = Father</kin:KinTypeString>
+      <kin:KinTypeString>#           M = Mother</kin:KinTypeString>
+      <kin:KinTypeString>#           B = Brother</kin:KinTypeString>
+      <kin:KinTypeString>#           Z = Sister</kin:KinTypeString>
+      <kin:KinTypeString>#           S = Son</kin:KinTypeString>
+      <kin:KinTypeString>#           D = Daughter</kin:KinTypeString>
+      <kin:KinTypeString>#           H = Husband</kin:KinTypeString>
+      <kin:KinTypeString>#           W = Wife</kin:KinTypeString>
+      <kin:KinTypeString>#           P = Parent</kin:KinTypeString>
+      <kin:KinTypeString>#           G = Sibling</kin:KinTypeString>
+      <kin:KinTypeString>#           E = Ego</kin:KinTypeString>
+      <kin:KinTypeString>#           C = Child</kin:KinTypeString>
+      <kin:KinTypeString>#           m = Male</kin:KinTypeString>
+      <kin:KinTypeString>#           f = Female</kin:KinTypeString>
+      <kin:KinTypeString>#           x = Undefined</kin:KinTypeString>
+      <kin:KinTypeString>#           * = Any Relation</kin:KinTypeString>
+      <kin:KinTypeString># If required additional kin types can be defined in the 'Diagram Settings' from the view menu.</kin:KinTypeString>
+      <kin:IndexParameters>
+         <kin:LabelFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata/*[starts-with(local-name(), 'Name')]"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata/*:INDI/*:NAME/*:NAME"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata/*:INDI/*:NAME"/>
+         </kin:LabelFields>
+         <kin:SymbolFieldsFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata[*:Gender='male']" kin:Value="triangle"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata[*:Gender='female']" kin:Value="circle"/>
+         </kin:SymbolFieldsFields>
+         <kin:DefaultSymbol>square</kin:DefaultSymbol>
+      </kin:IndexParameters>
+      <kin:ShowLabels>true</kin:ShowLabels>
+      <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
+      <kin:ShowKinTermLabels>false</kin:ShowKinTermLabels>
+      <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
+      <kin:SnapToGrid>true</kin:SnapToGrid>
+      <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
+      <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
+      <kin:HighlightRelationLines>true</kin:HighlightRelationLines>
+      <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
+      <kin:EntityData>
+         <kin:Entity>
             <kin:Identifier kin:type="tid">e8abb8cc035419ec89be3301e8c4f15e</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">c54b58ad59775b11c9c1e567d27823ea</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">ea82affa800cb04b1c6c39ad22e6077b</kin:Identifier>
-        <kin:KinType>EM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1721-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1803-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Label>Jane</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">ba1a3c675f2c842134488bed99e6e413</kin:Identifier>
-        <kin:KinType>EMFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">3a6a1c42c019d20fc089e4db007209aa</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">e051f2181b3732f3c4d708fcc822a4ce</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">c2188def927c395420c945c695c82978</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">9bd5e5ae60a5227234e14769d335a905</kin:Identifier>
-        <kin:KinType>ED</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Label>Jane</kin:Label>
-        <kin:Label>Smith</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">80328c7f829547ce717d75df1c48da39</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">4a6f9343d6e79ecff0a41b339cfd8229</kin:Identifier>
-        <kin:KinType>EM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">d508be2d739149aabed85bd06f230af1</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
-        <kin:KinType>E</kin:KinType>
-        <kin:Symbol>square</kin:Symbol>
-        <kin:Ego>true</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">4a6f9343d6e79ecff0a41b339cfd8229</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">9bd5e5ae60a5227234e14769d335a905</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">80328c7f829547ce717d75df1c48da39</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">ea82affa800cb04b1c6c39ad22e6077b</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">a1651ac15017a6ff646c5e1d43579eb5</kin:Identifier>
-        <kin:KinType>EMZS</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">d508be2d739149aabed85bd06f230af1</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">a3f635c6f32859ac172226750a9413e4</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">af45aebf0c19e2bcaa81fe5014d29190</kin:Identifier>
-        <kin:KinType>EMFFFDD</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">c2188def927c395420c945c695c82978</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">6cb486e27bc1a01e2c81470ef41a1986</kin:Identifier>
-        <kin:KinType>EmMFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:KinType>fMFF</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">08cfcca876369a2f0d89088af2564164</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">a978594d4ffeb6704185833d9653d9d5</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">c54b58ad59775b11c9c1e567d27823ea</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
             <kin:Identifier kin:type="tid">5539b55533fd614fea062a1210793c14</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">756cf5182e11de33d21dbfcff7fdce72</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">c968f6445d89433b09b62258b52cd2f9</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">5539b55533fd614fea062a1210793c14</kin:Identifier>
-        <kin:KinType>EmMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+            <kin:KinType>EmMF</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">6cb486e27bc1a01e2c81470ef41a1986</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
             <kin:Identifier kin:type="tid">6cb486e27bc1a01e2c81470ef41a1986</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">c2188def927c395420c945c695c82978</kin:Identifier>
-        <kin:KinType>EMFFFD</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">e051f2181b3732f3c4d708fcc822a4ce</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">ba1a3c675f2c842134488bed99e6e413</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:KinType>EmMFF</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">5539b55533fd614fea062a1210793c14</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">756cf5182e11de33d21dbfcff7fdce72</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">c968f6445d89433b09b62258b52cd2f9</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
+            <kin:KinType>EM</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>#1</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">3a6a1c42c019d20fc089e4db007209aa</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">af45aebf0c19e2bcaa81fe5014d29190</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">d508be2d739149aabed85bd06f230af1</kin:Identifier>
+            <kin:KinType>EMZ</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">4a6f9343d6e79ecff0a41b339cfd8229</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">a1651ac15017a6ff646c5e1d43579eb5</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
+            <kin:KinType>fM</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:DateOfBirth>1721-01-01T00:00:00+01:00</kin:DateOfBirth>
+            <kin:DateOfDeath>1803-01-01T00:00:00+01:00</kin:DateOfDeath>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>#3</kin:Label>
+            <kin:Label>Jane</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">7dfc27987d722a09257227a8857b90f2</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">08cfcca876369a2f0d89088af2564164</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">062d6742a5a07ab8d7d2788ba95805ee</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
             <kin:Identifier kin:type="tid">af45aebf0c19e2bcaa81fe5014d29190</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">80328c7f829547ce717d75df1c48da39</kin:Identifier>
-        <kin:KinType>ED</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1721-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:Ego>false</kin:Ego>
-        <kin:Label>Jane</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+            <kin:KinType>EMFFFDD</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">c2188def927c395420c945c695c82978</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">a978594d4ffeb6704185833d9653d9d5</kin:Identifier>
+            <kin:KinType>fMFFF</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>Alfred</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">e8abb8cc035419ec89be3301e8c4f15e</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">c54b58ad59775b11c9c1e567d27823ea</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">e051f2181b3732f3c4d708fcc822a4ce</kin:Identifier>
+            <kin:KinType>EMFFF</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">ba1a3c675f2c842134488bed99e6e413</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">c2188def927c395420c945c695c82978</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">a1651ac15017a6ff646c5e1d43579eb5</kin:Identifier>
+            <kin:KinType>EMZS</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">d508be2d739149aabed85bd06f230af1</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">a3f635c6f32859ac172226750a9413e4</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
             <kin:Identifier kin:type="tid">9bd5e5ae60a5227234e14769d335a905</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">e051f2181b3732f3c4d708fcc822a4ce</kin:Identifier>
-        <kin:KinType>EMFFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">ba1a3c675f2c842134488bed99e6e413</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">c2188def927c395420c945c695c82978</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-        <kin:KinType>fM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1721-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1803-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Label>#3</kin:Label>
-        <kin:Label>Jane</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:KinType>ED</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>Jane</kin:Label>
+            <kin:Label>Smith</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">80328c7f829547ce717d75df1c48da39</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">58c0b18e3c7cb91855ef4f4b62dd22ad</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
             <kin:Identifier kin:type="tid">7dfc27987d722a09257227a8857b90f2</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+            <kin:KinType>f</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
             <kin:Identifier kin:type="tid">08cfcca876369a2f0d89088af2564164</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">062d6742a5a07ab8d7d2788ba95805ee</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">062d6742a5a07ab8d7d2788ba95805ee</kin:Identifier>
-        <kin:KinType>fMFFFDD</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">c54b58ad59775b11c9c1e567d27823ea</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">7dfc27987d722a09257227a8857b90f2</kin:Identifier>
-        <kin:KinType>f</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">c54b58ad59775b11c9c1e567d27823ea</kin:Identifier>
-        <kin:KinType>fMFFFD</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Label>Betty</kin:Label>
-        <kin:Label>Smith</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">a978594d4ffeb6704185833d9653d9d5</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">e8abb8cc035419ec89be3301e8c4f15e</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">062d6742a5a07ab8d7d2788ba95805ee</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-        <kin:KinType>EM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Label>#1</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">3a6a1c42c019d20fc089e4db007209aa</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">af45aebf0c19e2bcaa81fe5014d29190</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">756cf5182e11de33d21dbfcff7fdce72</kin:Identifier>
-        <kin:KinType>EmMFFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Label>Alfred</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">6cb486e27bc1a01e2c81470ef41a1986</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">c968f6445d89433b09b62258b52cd2f9</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">c968f6445d89433b09b62258b52cd2f9</kin:Identifier>
-        <kin:KinType>EmMFFFD</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Label>Betty</kin:Label>
-        <kin:Label>Smith</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">756cf5182e11de33d21dbfcff7fdce72</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">6cb486e27bc1a01e2c81470ef41a1986</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">0bb40ba0173a3664133c4f1ee573e711</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-        <kin:KinType>EmM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1721-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1803-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Label>#2</kin:Label>
-        <kin:Label>Jane</kin:Label>
-        <kin:Label>Jones</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">37ea920e97460621817fbe90202d6d22</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">5539b55533fd614fea062a1210793c14</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">0bb40ba0173a3664133c4f1ee573e711</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">0bb40ba0173a3664133c4f1ee573e711</kin:Identifier>
-        <kin:KinType>EmMFFFDD</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">c968f6445d89433b09b62258b52cd2f9</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+            <kin:KinType>fMF</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">e8abb8cc035419ec89be3301e8c4f15e</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">a3f635c6f32859ac172226750a9413e4</kin:Identifier>
+            <kin:KinType>EMZSD</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">a1651ac15017a6ff646c5e1d43579eb5</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
             <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">d508be2d739149aabed85bd06f230af1</kin:Identifier>
-        <kin:KinType>EMZ</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+            <kin:KinType>EmM</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:DateOfBirth>1721-01-01T00:00:00+01:00</kin:DateOfBirth>
+            <kin:DateOfDeath>1803-01-01T00:00:00+01:00</kin:DateOfDeath>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>#2</kin:Label>
+            <kin:Label>Jane</kin:Label>
+            <kin:Label>Jones</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">37ea920e97460621817fbe90202d6d22</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">5539b55533fd614fea062a1210793c14</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">0bb40ba0173a3664133c4f1ee573e711</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">ea82affa800cb04b1c6c39ad22e6077b</kin:Identifier>
+            <kin:KinType>EM</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:DateOfBirth>1721-01-01T00:00:00+01:00</kin:DateOfBirth>
+            <kin:DateOfDeath>1803-01-01T00:00:00+01:00</kin:DateOfDeath>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>Jane</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">c968f6445d89433b09b62258b52cd2f9</kin:Identifier>
+            <kin:KinType>EmMFFFD</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>Betty</kin:Label>
+            <kin:Label>Smith</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">756cf5182e11de33d21dbfcff7fdce72</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">6cb486e27bc1a01e2c81470ef41a1986</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">0bb40ba0173a3664133c4f1ee573e711</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
             <kin:Identifier kin:type="tid">4a6f9343d6e79ecff0a41b339cfd8229</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">a1651ac15017a6ff646c5e1d43579eb5</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">37ea920e97460621817fbe90202d6d22</kin:Identifier>
-        <kin:KinType>Em</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>true</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">a3f635c6f32859ac172226750a9413e4</kin:Identifier>
-        <kin:KinType>EMZSD</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">a1651ac15017a6ff646c5e1d43579eb5</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">08cfcca876369a2f0d89088af2564164</kin:Identifier>
-        <kin:KinType>fMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
-            <kin:Identifier kin:type="tid">e8abb8cc035419ec89be3301e8c4f15e</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-        <kin:Visible>true</kin:Visible>
-      </kin:Entity>
-    </kin:EntityData>
-    <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="true" kin:width="100"/>
-    <kin:DiagramPanel kin:type="KinTerms" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="EntitySearch" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="DiagramTree" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150"/>
-  </kin:KinDiagramData>
+            <kin:KinType>EM</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">d508be2d739149aabed85bd06f230af1</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">c54b58ad59775b11c9c1e567d27823ea</kin:Identifier>
+            <kin:KinType>fMFFFD</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>Betty</kin:Label>
+            <kin:Label>Smith</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">a978594d4ffeb6704185833d9653d9d5</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">e8abb8cc035419ec89be3301e8c4f15e</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">062d6742a5a07ab8d7d2788ba95805ee</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
+            <kin:KinType>E</kin:KinType>
+            <kin:Symbol>square</kin:Symbol>
+            <kin:Ego>true</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">4a6f9343d6e79ecff0a41b339cfd8229</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">9bd5e5ae60a5227234e14769d335a905</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">80328c7f829547ce717d75df1c48da39</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">ea82affa800cb04b1c6c39ad22e6077b</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">37ea920e97460621817fbe90202d6d22</kin:Identifier>
+            <kin:KinType>Em</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>true</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">062d6742a5a07ab8d7d2788ba95805ee</kin:Identifier>
+            <kin:KinType>fMFFFDD</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">c54b58ad59775b11c9c1e567d27823ea</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">c2188def927c395420c945c695c82978</kin:Identifier>
+            <kin:KinType>EMFFFD</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">e051f2181b3732f3c4d708fcc822a4ce</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">ba1a3c675f2c842134488bed99e6e413</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">af45aebf0c19e2bcaa81fe5014d29190</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">80328c7f829547ce717d75df1c48da39</kin:Identifier>
+            <kin:KinType>ED</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:DateOfBirth>1721-01-01T00:00:00+01:00</kin:DateOfBirth>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>Jane</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">8ebae61bc8ae781c07d8974ba0f9054f</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">9bd5e5ae60a5227234e14769d335a905</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">0bb40ba0173a3664133c4f1ee573e711</kin:Identifier>
+            <kin:KinType>EmMFFFDD</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">c968f6445d89433b09b62258b52cd2f9</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">58c0b18e3c7cb91855ef4f4b62dd22ad</kin:Identifier>
+            <kin:KinType>EDZ</kin:KinType>
+            <kin:Symbol>circle</kin:Symbol>
+            <kin:DateOfBirth>1721-06-09T00:00:00+01:00</kin:DateOfBirth>
+            <kin:DateOfDeath>1803-12-31T00:00:00+01:00</kin:DateOfDeath>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>Janet</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">9bd5e5ae60a5227234e14769d335a905</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">ba1a3c675f2c842134488bed99e6e413</kin:Identifier>
+            <kin:KinType>EMFF</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">3a6a1c42c019d20fc089e4db007209aa</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">e051f2181b3732f3c4d708fcc822a4ce</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="sibling" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">c2188def927c395420c945c695c82978</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">3a6a1c42c019d20fc089e4db007209aa</kin:Identifier>
+            <kin:KinType>EMF</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="ancestor" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">ba1a3c675f2c842134488bed99e6e413</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+         <kin:Entity>
+            <kin:Identifier kin:type="tid">756cf5182e11de33d21dbfcff7fdce72</kin:Identifier>
+            <kin:KinType>EmMFFF</kin:KinType>
+            <kin:Symbol>triangle</kin:Symbol>
+            <kin:Ego>false</kin:Ego>
+            <kin:Label>Alfred</kin:Label>
+            <kin:Relations>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">6cb486e27bc1a01e2c81470ef41a1986</kin:Identifier>
+               </kin:Relation>
+               <kin:Relation kin:Type="descendant" kin:Line="sanguineLine">
+                  <kin:Identifier kin:type="tid">c968f6445d89433b09b62258b52cd2f9</kin:Identifier>
+               </kin:Relation>
+            </kin:Relations>
+            <kin:Visible>true</kin:Visible>
+         </kin:Entity>
+      </kin:EntityData>
+      <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150"/>
+      <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150"/>
+      <kin:DiagramPanel kin:type="KinTerms" kin:show="false" kin:width="150"/>
+      <kin:DiagramPanel kin:type="EntitySearch" kin:show="false" kin:width="150"/>
+      <kin:DiagramPanel kin:type="DiagramTree" kin:show="false" kin:width="150"/>
+      <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="true" kin:width="100"/>
+   </kin:KinDiagramData>
 </svg>
