@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.GraphLabel;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -28,13 +31,10 @@ import org.w3c.dom.events.EventTarget;
  */
 public class EntitySvg {
 
-    protected HashMap<UniqueIdentifier, float[]> entityPositions;
+    protected HashMap<UniqueIdentifier, float[]> entityPositions = new HashMap<UniqueIdentifier, float[]>();
+    private HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>> parentIdentifiers = new HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>>();
     private int symbolSize = 15;
     static protected int strokeWidth = 2;
-
-    public EntitySvg() {
-        entityPositions = new HashMap<UniqueIdentifier, float[]>();
-    }
 
     public void readEntityPositions(Node entityGroup) {
         // read the entity positions from the existing dom
@@ -288,6 +288,41 @@ public class EntitySvg {
         float yPos = returnLoc[1] + (symbolSize / 2);
         return new float[]{xPos, yPos};
     }
+
+    public float[] getAverageParentLocation(UniqueIdentifier entityId) {
+        // note that getAverageParentLocation(EntityData entityData) must be called at least once for each entity to poputlate parentIdentifiers
+        Float minY = null;
+        float averageX = 0;
+        int parentCount = 0;
+        for (UniqueIdentifier parentIdentifier : parentIdentifiers.get(entityId)) {
+            float[] parentLoc = getEntityLocation(parentIdentifier);
+            if (minY == null) {
+                minY = parentLoc[1];
+            } else {
+                minY = (minY <= parentLoc[1]) ? minY : parentLoc[1];
+            }
+            averageX += parentLoc[0];
+            parentCount++;
+        }
+        averageX = averageX / parentCount;
+        if (minY == null) {
+            return null;
+        } else {
+            return new float[]{averageX, minY};
+        }
+    }
+
+    public float[] getAverageParentLocation(EntityData entityData) {
+        HashSet<UniqueIdentifier> identifierSet = new HashSet<UniqueIdentifier>();
+        for (EntityRelation entityRelation : entityData.getVisiblyRelateNodes()) {
+            if (entityRelation.relationType == RelationType.ancestor) {
+                identifierSet.add(entityRelation.alterUniqueIdentifier);
+            }
+        }
+        parentIdentifiers.put(entityData.getUniqueIdentifier(), identifierSet);
+        return getAverageParentLocation(entityData.getUniqueIdentifier());
+    }
+
 //    public float[] getEntityLocation(SVGDocument doc, String entityId) {
 //        Element entitySymbol = doc.getElementById(entityId + "symbol");
 ////        Element entitySymbol = doc.getElementById(entityId); // the sybol group node
@@ -313,7 +348,6 @@ public class EntitySvg {
 //            return null;
 //        }
 //    }
-
     public float[] moveEntity(GraphPanel graphPanel, UniqueIdentifier entityId, float shiftXfloat, float shiftYfloat, boolean snapToGrid, boolean allRealtionsSelected) {
         Element entitySymbol = graphPanel.doc.getElementById(entityId.getAttributeIdentifier());
         Element highlightGroup = null;
