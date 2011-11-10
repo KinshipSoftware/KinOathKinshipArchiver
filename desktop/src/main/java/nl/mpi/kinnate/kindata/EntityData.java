@@ -32,7 +32,6 @@ public class EntityData {
     private String[] kinTypeArray = new String[]{};
     @XmlElement(name = "KinTerm", namespace = "http://mpi.nl/tla/kin")
     private GraphLabel[] kinTermArray = new GraphLabel[]{};
-    private SymbolType symbolType;
     @XmlElement(name = "Symbol", namespace = "http://mpi.nl/tla/kin")
     private String symbolTypeString;
     @XmlElement(name = "DateOfBirth", namespace = "http://mpi.nl/tla/kin")
@@ -89,7 +88,7 @@ public class EntityData {
         uniqueIdentifier = labelStringsParser.uniqueIdentifier;
         entityPath = null;
         kinTypeArray = new String[]{kinTypeStringLocal};
-        symbolType = symbolIndex;
+        symbolTypeString = symbolIndex.name();
         labelStringArray = labelStringsParser.labelsStrings;
         isEgo = isEgoLocal;
         dateOfBirth = labelStringsParser.dateOfBirth;
@@ -100,8 +99,7 @@ public class EntityData {
         // this is used only to return error messages from a query that fails to get an entity and to prevent that query being hit again
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = null;
-        symbolType = SymbolType.error;
-        symbolTypeString = null;
+        symbolTypeString = SymbolType.error.name();
         labelStringArray = errorMessage;
         isEgo = false;
     }
@@ -110,7 +108,6 @@ public class EntityData {
     public EntityData(UniqueIdentifier uniqueIdentifierLocal) {
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = null;
-        symbolType = null;
         symbolTypeString = null;
         labelStringArray = null;
         isEgo = false;
@@ -124,9 +121,6 @@ public class EntityData {
         this.dateOfDeath = dateOfDeath;
     }
 
-//    public void setSymbolType(SymbolType symbolTypeLocal) {
-//        this.symbolTypeString = symbolTypeLocal.name();
-//    }
     // end code used for importing gedcom and other file types
     public void addArchiveLink(URI resourceUri) {
         ArrayList<URI> linksList;
@@ -140,9 +134,6 @@ public class EntityData {
     }
 
     public String getSymbolType() {
-        if (symbolType != null) {
-            return symbolType.name();
-        }
         return symbolTypeString;
     }
 
