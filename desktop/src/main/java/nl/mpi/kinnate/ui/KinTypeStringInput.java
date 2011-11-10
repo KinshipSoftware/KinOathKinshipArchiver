@@ -66,27 +66,20 @@ public class KinTypeStringInput extends JTextPane {
 
     private String getDefaultText() {
         StringBuilder defaultString = new StringBuilder();
-        defaultString.append("# The kin type strings entered here will determine the diagram drawn below.\n");
-        defaultString.append("# The available kin types are as follows:\n");
-        for (KinType kinType : dataStore.getKinTypeDefinitions()) {
-            defaultString.append("#           ");
-            defaultString.append(kinType.getCodeString());
-            defaultString.append(" = ");
-            defaultString.append(kinType.getDisplayString());
-            defaultString.append("\n");
-        }
-        defaultString.append("# If required additional kin types can be defined in the 'Diagram Settings' from the view menu.\n");
-        defaultString.append("# Any number of Labels can be added between colons each separated by a semicolon:\n");
-                defaultString.append("#           EM:Jane;Smith:\n");
-        defaultString.append("# Date of birth and death can be appended after the labels with a semicolon ';':\n");
-        defaultString.append("#           EM:Jane;1721: or EM:Jane;1721-1803:\n");
-        defaultString.append("# If a marital ring is required, an identifier can be specified with a hash followed by a number '#n':\n");
-        defaultString.append("#           EM:#1:FFFDDD:#1:\n");
-        defaultString.append("# Comments can be enterd by starting the line with a '#'.\n");
-        defaultString.append("# These optional data  (:#n;Label;Label;DOB-DOD:) can be specified on any kin type:\n");
-        defaultString.append("#           EmM:#1;Jane;1721-1803:FFF:Alfred:D:Betty;Smith:DD:#1:\n");
-        defaultString.append("# If a social centric diagram is required then 'm' or 'f' kin types can be specified at the begining of the line:\n");
-        defaultString.append("#           fM:#1;Jane;1721-1803:FFF:Alfred:D:Betty;Smith:DD:#1:\n");
+        defaultString.append("# The kin type strings entered in this text area will determine the diagram drawn below. For more information see the sample diagram \"Freeform Diagram Syntax\".\n");
+//        defaultString.append("# The tool tip over this text will give more information and details of any syntax errors.\n");
+//        defaultString.append("# The extended format includes data between colons after they kin type (the < and > indicate a value that can be entered).\n");
+//        defaultString.append("# :<id>;<label>;<label...>;<DOB>-<DOD>:\n");
+
+
+//        defaultString.append("# The available kin types are as follows:\n");
+//        for (KinType kinType : dataStore.getKinTypeDefinitions()) {
+//            defaultString.append("#           ");
+//            defaultString.append(kinType.getCodeString());
+//            defaultString.append(" = ");
+//            defaultString.append(kinType.getDisplayString());
+//            defaultString.append("\n");
+//        }
         lastDefaultString = defaultString.toString();
         return lastDefaultString;
     }
