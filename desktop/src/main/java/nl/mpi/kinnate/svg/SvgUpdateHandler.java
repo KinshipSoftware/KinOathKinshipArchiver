@@ -361,9 +361,11 @@ public class SvgUpdateHandler {
                                     if (((Element) selectedGroup).getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path").length() > 0) {
                                         addRelationDragHandles(highlightGroupNode, bbox, paddingDistance);
                                     } else {
-                                        if (!"text".equals(selectedGroup.getLocalName())) {
-                                            // add a drag handle for all graphics but not text nodes
-                                            addGraphicsDragHandles(highlightGroupNode, uniqueIdentifier, bbox, paddingDistance);
+                                        if (uniqueIdentifier.isGraphicsIdentifier()) {
+                                            if (!"text".equals(selectedGroup.getLocalName())) {
+                                                // add a drag handle for all graphics but not text nodes
+                                                addGraphicsDragHandles(highlightGroupNode, uniqueIdentifier, bbox, paddingDistance);
+                                            }
                                         }
                                     }
                                     if ("g".equals(selectedGroup.getLocalName())) {
