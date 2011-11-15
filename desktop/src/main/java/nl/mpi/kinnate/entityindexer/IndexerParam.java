@@ -59,11 +59,13 @@ public class IndexerParam {
     }
 
     public void removeValue(String pathToRemove) {
+        ArrayList<ParameterElement> tempParametersList = new ArrayList<ParameterElement>();
         for (ParameterElement currentEntry : parametersList) {
-            if (currentEntry.getXpathString().equals(pathToRemove)) {
-                parametersList.remove(currentEntry);
+            if (!currentEntry.getXpathString().equals(pathToRemove)) {
+                tempParametersList.add(currentEntry);
             }
         }
+        parametersList = tempParametersList;
         // cause the entity index and entity collection to update based on the new indexer values
         indexerParameters.valuesChanged = true;
     }
