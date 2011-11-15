@@ -57,6 +57,7 @@ public class FieldSelectionList extends JPanel {
                             populateSelectionList();
                             revalidate();
                             savePanel.updateGraph();
+                            savePanel.requiresSave();
                         }
                     });
                 } else {
@@ -76,6 +77,7 @@ public class FieldSelectionList extends JPanel {
                     populateSelectionList();
                     revalidate();
                     savePanel.updateGraph();
+                    savePanel.requiresSave();
                 }
             });
             fieldPanel.add(removeButton);
@@ -101,5 +103,7 @@ public class FieldSelectionList extends JPanel {
     protected void updateUiList() {
         populateSelectionList();
         revalidate();
+        savePanel.updateGraph();
+        savePanel.requiresSave();
     }
 }
