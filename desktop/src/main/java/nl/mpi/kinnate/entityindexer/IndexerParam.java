@@ -43,6 +43,9 @@ public class IndexerParam {
     }
 
     public void setValue(String parameterString, String valueString) {
+        if (valueString != null && valueString.length() == 0) {
+            valueString = availableValuesArray[0];
+        }
         // cause the entity index and entity collection to update based on the new indexer values
         indexerParameters.valuesChanged = true;
         for (ParameterElement currentEntry : parametersList) {
