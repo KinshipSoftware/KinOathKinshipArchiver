@@ -63,13 +63,37 @@ public class TableCellDragHandler extends TransferHandler implements Transferabl
         return COPY;
     }
 
+    private String convertToBooleanQuery(String fieldName, String fieldValue) {
+        final int lastIndexOf = fieldName.lastIndexOf(".");
+        String queryNode = fieldName.substring(lastIndexOf + 1);
+        String queryString = fieldName.substring(0, lastIndexOf);
+        queryString = queryString.replace(".", "/*:");
+        queryString = queryString.substring(1);
+        queryString = queryString + "[*:" + queryNode + "='" + fieldValue + "']";
+        return queryString;
+    }
+
+    private String convertToSelectQuery(String fieldName, String fieldValue) {
+        String queryString = fieldName.replace(".", "/*:");
+        queryString = queryString.substring(1);
+        return queryString;
+    }
+
     @Override
     public boolean importData(TransferSupport ts) {
         IndexerParam indexerParam = ((FieldSelectionList) ts.getComponent()).indexerParam;
 //        ArrayList<String[]> paramValues = new ArrayList<String[]>(Arrays.asList(indexerParam.getValues()));
         //for (ArbilField imdiField : (ArbilField[]) ts.getTransferable().getTransferData(dataFlavor)) {
         for (ArbilField imdiField : selectedFields) {
-            indexerParam.setValue(imdiField.getFullXmlPath(), imdiField.getFieldValue());
+            String queryString;
+            String paramValue = null;
+            if (indexerParam.getAvailableValues() != null) {
+                queryString = convertToBooleanQuery(imdiField.getFullXmlPath(), imdiField.getFieldValue());
+                paramValue = "";
+            } else {
+                queryString = convertToSelectQuery(imdiField.getFullXmlPath(), imdiField.getFieldValue());
+            }
+            indexerParam.setValue(queryString, paramValue);
         }
         ((FieldSelectionList) ts.getComponent()).updateUiList();
         return true;
