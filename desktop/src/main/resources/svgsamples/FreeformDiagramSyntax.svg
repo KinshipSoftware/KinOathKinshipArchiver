@@ -1169,8 +1169,8 @@
       <kin:KinTypeString># for example:</kin:KinTypeString>
       <kin:KinTypeString>EMZSD</kin:KinTypeString>
       <kin:KinTypeString># The tool tip over this text will give more information and details of any syntax errors.</kin:KinTypeString>
-      <kin:KinTypeString># The extended format includes data between colons after they kin type (the &lt; and &gt; indicate a value that can be entered).</kin:KinTypeString>
-      <kin:KinTypeString># :&lt;id&gt;;&lt;label&gt;;&lt;label...&gt;;&lt;DOB&gt;-&lt;DOD&gt;:</kin:KinTypeString>
+      <kin:KinTypeString># The extended format includes data between colons after the kin type (the &lt; and &gt; indicate a value that can be entered).</kin:KinTypeString>
+      <kin:KinTypeString># &lt;KinType&gt;:&lt;id&gt;;&lt;label&gt;;&lt;label...&gt;;&lt;DOB&gt;-&lt;DOD&gt;:&lt;KinType...&gt;</kin:KinTypeString>
       <kin:KinTypeString># Any number of Labels can be added between colons each separated by a semicolon:</kin:KinTypeString>
       <kin:KinTypeString>ED:Jane;Smith:</kin:KinTypeString>
       <kin:KinTypeString># Date of birth and death can be appended after the labels:</kin:KinTypeString>
