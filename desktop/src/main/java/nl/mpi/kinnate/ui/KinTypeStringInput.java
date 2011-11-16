@@ -67,6 +67,7 @@ public class KinTypeStringInput extends JTextPane {
     private String getDefaultText() {
         StringBuilder defaultString = new StringBuilder();
         defaultString.append("# The kin type strings entered in this text area will determine the diagram drawn below. For more information see the sample diagram \"Freeform Diagram Syntax\".\n");
+        defaultString.append("# <KinType>:<id>;<label>;<label...>;<DOB>-<DOD>:<KinType...>");
 //        defaultString.append("# The tool tip over this text will give more information and details of any syntax errors.\n");
 //        defaultString.append("# The extended format includes data between colons after they kin type (the < and > indicate a value that can be entered).\n");
 //        defaultString.append("# :<id>;<label>;<label...>;<DOB>-<DOD>:\n");
