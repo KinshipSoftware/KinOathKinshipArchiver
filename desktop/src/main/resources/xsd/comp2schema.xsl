@@ -70,7 +70,7 @@
             <xsl:call-template name="PrintHeaderType"/>
 
 
-            <xs:element name="CMD">
+            <xs:element name="Kinnate">
                 <xs:complexType>
                     
                     <xs:sequence>
@@ -79,7 +79,7 @@
                         <xsl:call-template name="PrintHeader"/>
 
                         <!-- Then generate the components -->
-                        <xs:element name="Components">
+                        <xs:element name="Metadata">
 
                             <xs:complexType>
                                 <xs:sequence>
