@@ -35,7 +35,7 @@
         <xs:element name="Header">
             <xs:complexType>
                 <xs:sequence>
-                    <xs:element name="Identifier" type="cmd:complextype-UniqueIdentifier" minOccurs="1" maxOccurs="1" />
+                    <xs:element name="Identifier" type="cmd:complextype-UniqueIdentifier" minOccurs="0" maxOccurs="1" />
                     <xs:element maxOccurs="1" minOccurs="0" type="xs:date" name="DateOfBirth"/>
                     <xs:element maxOccurs="1" minOccurs="0" type="xs:date" name="DateOfDeath"/>
                     <xs:element maxOccurs="1" minOccurs="0" type="xs:boolean" name="Ego"/>
@@ -44,7 +44,7 @@
                     <xs:element name="Relations">
                         <xs:complexType>
                             <xs:sequence>
-                                <xs:element name="Relation" maxOccurs="0" minOccurs="unbounded">
+                                <xs:element name="Relation" maxOccurs="unbounded" minOccurs="0">
                                     <xs:complexType>
                                         <xs:sequence>
                                             <xs:element name="Identifier" type="cmd:complextype-UniqueIdentifier" minOccurs="1" maxOccurs="1" />
