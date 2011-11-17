@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:dcr="http://www.isocat.org/ns/dcr"
-           xmlns:ann="http://www.clarin.eu"
            xmlns:cmd="http://www.clarin.eu/cmd/"
            xmlns:kin="http://mpi.nl/tla/kin"
-           targetNamespace="http://www.clarin.eu/cmd/"
+           targetNamespace="http://mpi.nl/tla/kin"
            elementFormDefault="qualified">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace"
             schemaLocation="http://www.w3.org/2001/xml.xsd"/>
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+    <xs:import namespace="http://www.clarin.eu/cmd/"
             schemaLocation="http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1320657629627/xsd"/>
     <xs:simpleType name="simpletype-UniqueIdentifier">
         <xs:restriction base="xs:string">
@@ -17,7 +15,7 @@
     </xs:simpleType>
     <xs:complexType name="complextype-UniqueIdentifier">
         <xs:simpleContent>
-            <xs:extension base="cmd:simpletype-UniqueIdentifier">
+            <xs:extension base="kin:simpletype-UniqueIdentifier">
                 <xs:attribute name="type">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
@@ -39,7 +37,7 @@
                 <xs:element name="Entity">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="Identifier" type="cmd:complextype-UniqueIdentifier" minOccurs="1" maxOccurs="1" />
+                            <xs:element name="Identifier" type="kin:complextype-UniqueIdentifier" minOccurs="1" maxOccurs="1" />
                             <xs:element maxOccurs="1" minOccurs="0" type="xs:boolean" name="Ego"/>
                             <xs:element name="Resources">
                                 <xs:complexType>
@@ -52,28 +50,8 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="Metadata">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="kinship-individual" minOccurs="1" maxOccurs="1">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="Name" minOccurs="1" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:simpleContent>
-                                                    <xs:extension base="xs:string">
-                                                        <xs:attribute ref="xml:lang"/>
-                                                    </xs:extension>
-                                                </xs:simpleContent>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:sequence>
-                                    <xs:attribute name="ref" type="xs:IDREFS"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+                <xs:element name="Identifier" minOccurs="1" maxOccurs="1"
+                      type="cmd:complextype-Identifier-1---"/>
             </xs:sequence>
             <xs:attribute name="KmdiVersion" fixed="1.1" use="required"/>
             <xs:attribute name="CMDVersion" fixed="1.1" use="required"/>
