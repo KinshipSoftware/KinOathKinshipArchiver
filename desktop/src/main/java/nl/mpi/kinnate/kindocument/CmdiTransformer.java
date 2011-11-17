@@ -18,9 +18,9 @@ import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 public class CmdiTransformer {
 
     private String component2SchemaXsl = "http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema.xsl";
-    private String cmdiProfileXml = "http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1320657629627/xsd";
 
     private void transformProfileXmlToXsd(String profileId, String entityType) throws IOException, TransformerException {
+        String cmdiProfileXml = "http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/" + profileId + "/xml";
         File outputFile = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), entityType);
         System.out.println("outputFile: " + outputFile.getAbsolutePath());
         // 1. Instantiate a TransformerFactory.
