@@ -118,23 +118,28 @@ public class EntityDocument {
         if (metadataDom != null) {
             throw new ImportException("The document already exists");
         }
-        String gedcomXsdLocation = "/xsd/StandardEntity.xsd";
         URI entityUri;
-
         if (!overwriteExisting && entityFile.exists()) {
             throw new ImportException("Skipping existing entity file");
         } else { // start skip overwrite
             try {
                 entityUri = entityFile.toURI();
+                URI xsdUri = new CmdiTransformer().getXsdUrlString("individual");
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 documentBuilderFactory.setNamespaceAware(true);
-                String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                        + "<Kinnate xmlns:kin=\"http://mpi.nl/tla/kin\" "
-                        + "xmlns=\"http://www.clarin.eu/cmd/\" "
-                        //                        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                        //                        + "xsi:schemaLocation=\"http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1297242111880/xsd\" "
-                        + "version=\"1.0\" "
-                        + "CMDVersion=\"1.1\" />"; //<cmd:Metadata/></Kinnate>
+                String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                        + "<Kinnate \n"
+                        + "xmlns:kin=\"http://mpi.nl/tla/kin\" \n"
+                        + "xmlns:dcr=\"http://www.isocat.org/ns/dcr\" \n"
+                        + "xmlns:ann=\"http://www.clarin.eu\" \n"
+                        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"
+                        + "xmlns:cmd=\"http://www.clarin.eu/cmd/\" \n"
+                        + "xmlns=\"http://www.clarin.eu/cmd/\" \n"
+                        + "KmdiVersion=\"1.1\" \n"
+                        + "xsi:schemaLocation=\"http://mpi.nl/tla/kin "
+                        + xsdUri.toString()
+                        + "\n \" />";
+                System.out.println("templateXml: " + templateXml);
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                 metadataDom = documentBuilder.parse(new InputSource(new StringReader(templateXml)));
                 metadataNode = metadataDom.createElementNS("http://www.clarin.eu/cmd/", "Metadata");
@@ -150,6 +155,9 @@ public class EntityDocument {
                 new ArbilBugCatcher().logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
             } catch (SAXException exception) {
+                new ArbilBugCatcher().logError(exception);
+                throw new ImportException("Error: " + exception.getMessage());
+            } catch (KinXsdException exception) {
                 new ArbilBugCatcher().logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
             }
