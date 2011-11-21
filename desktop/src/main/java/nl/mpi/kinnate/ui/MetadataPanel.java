@@ -33,11 +33,13 @@ public class MetadataPanel extends JPanel {
     private ArrayList<ArbilDataNode> archiveTreeNodes = new ArrayList<ArbilDataNode>();
     private ArrayList<ArbilDataNode> archiveRootNodes = new ArrayList<ArbilDataNode>();
     private ArrayList<SvgElementEditor> elementEditors = new ArrayList<SvgElementEditor>();
+    private DateEditorPanel dateEditorPanel;
 
     public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler) {
         this.arbilTree = new ArbilTree();
         this.kinTableModel = new ArbilTableModel();
         this.archiveTableModel = new ArbilTableModel();
+        dateEditorPanel = new DateEditorPanel();
         ArbilTable kinTable = new ArbilTable(kinTableModel, "Selected Nodes");
         ArbilTable archiveTable = new ArbilTable(archiveTableModel, "Selected Nodes");
         this.arbilTree.setCustomPreviewTable(archiveTable);
@@ -99,6 +101,15 @@ public class MetadataPanel extends JPanel {
             } catch (URISyntaxException urise) {
                 GuiHelper.linorgBugCatcher.logError(urise);
             }
+        }
+    }
+
+    public void setDateEditorEntities(ArrayList<EntityData> selectedEntities) {
+        if (selectedEntities.isEmpty()) {
+            this.remove(dateEditorPanel);
+        } else {
+            dateEditorPanel.setEntities(selectedEntities);
+            editorHidePane.addTab("Date Editor", dateEditorPanel);
         }
     }
 
