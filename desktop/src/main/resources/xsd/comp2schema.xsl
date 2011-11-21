@@ -56,7 +56,7 @@
     <!-- generate XSD -->
     <xsl:template match="/CMD_ComponentSpec">
 
-        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcr="http://www.isocat.org/ns/dcr" xmlns:cmd="http://www.clarin.eu/cmd/" targetNamespace="http://www.clarin.eu/cmd/" elementFormDefault="qualified">
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcr="http://www.isocat.org/ns/dcr" xmlns:kin="http://mpi.nl/tla/kin" xmlns:cmd="http://www.clarin.eu/cmd/" targetNamespace="http://www.clarin.eu/cmd/" elementFormDefault="qualified">
 
             <!-- import this for the use of the xml:lang attribute -->
             <xs:import namespace="http://www.w3.org/XML/1998/namespace"
@@ -93,7 +93,7 @@
                     </xs:sequence>
                     
                     <!-- CMD version -->
-                    <xs:attribute name="CMDVersion" fixed="{$CMDVersion}" use="required"/>
+                    <xs:attribute name="KmdiVersion" fixed="{$CMDVersion}" use="required"/>
                     
                 </xs:complexType>
             </xs:element>
