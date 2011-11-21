@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.mpi.kinnate.kindocument;
 
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
@@ -9,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Templates;
@@ -30,9 +27,22 @@ public class CmdiTransformer {
 
     private URL component2SchemaXsl = this.getClass().getResource("/xsd/comp2schema.xsl"); // "http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema.xsl";
 
-    private void transformProfileXmlToXsd(String profileId, String entityType) throws IOException, TransformerException {
+    public URI getXsdUrlString(String entityType) throws KinXsdException {
+        try {
+            File xsdFile = transformProfileXmlToXsd("clarin.eu:cr1:p_1320657629627", entityType);
+            return xsdFile.toURI();
+        } catch (IOException exception) {
+            System.out.println("exception: " + exception.getMessage());
+            throw new KinXsdException();
+        } catch (TransformerException exception) {
+            System.out.println("exception: " + exception.getMessage());
+            throw new KinXsdException();
+        }
+    }
+
+    private File transformProfileXmlToXsd(String profileId, String entityType) throws IOException, TransformerException {
         String cmdiProfileXmlUrl = "http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/" + profileId + "/xml";
-        File outputFile = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), entityType + ".xsd");
+        File outputFile = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), entityType + "-" + profileId + ".xsd");
         System.out.println("outputFile: " + outputFile.getAbsolutePath());
 
 //        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema-header.xsl", 1));
@@ -40,9 +50,10 @@ public class CmdiTransformer {
 //        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/cleanup-xsd.xsl", 1));
 
         generateXsd(cmdiProfileXmlUrl, outputFile);
+        return outputFile;
     }
 
-    public void generateXsd(String cmdiProfileXmlUrl, File outputFile) {
+    private void generateXsd(String cmdiProfileXmlUrl, File outputFile) {
         Templates componentToSchemaTemplates;
         try {
             System.setProperty("javax.xml.transform.TransformerFactory", net.sf.saxon.TransformerFactoryImpl.class.getName());
