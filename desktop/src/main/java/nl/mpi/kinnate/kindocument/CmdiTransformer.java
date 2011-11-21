@@ -28,8 +28,12 @@ public class CmdiTransformer {
     private URL component2SchemaXsl = this.getClass().getResource("/xsd/comp2schema.xsl"); // "http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema.xsl";
 
     public URI getXsdUrlString(String entityType) throws KinXsdException {
+        String profileId = "clarin.eu:cr1:p_1320657629627";
+        File xsdFile = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), entityType + "-" + profileId + ".xsd");
         try {
-            File xsdFile = transformProfileXmlToXsd("clarin.eu:cr1:p_1320657629627", entityType);
+            if (!xsdFile.exists()) {
+                transformProfileXmlToXsd(xsdFile, profileId);
+            }
             return xsdFile.toURI();
         } catch (IOException exception) {
             System.out.println("exception: " + exception.getMessage());
@@ -40,9 +44,8 @@ public class CmdiTransformer {
         }
     }
 
-    private File transformProfileXmlToXsd(String profileId, String entityType) throws IOException, TransformerException {
+    private File transformProfileXmlToXsd(File outputFile, String profileId) throws IOException, TransformerException {
         String cmdiProfileXmlUrl = "http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/" + profileId + "/xml";
-        File outputFile = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), entityType + "-" + profileId + ".xsd");
         System.out.println("outputFile: " + outputFile.getAbsolutePath());
 
 //        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema-header.xsl", 1));
@@ -79,7 +82,9 @@ public class CmdiTransformer {
 
     static public void main(String[] args) {
         try {
-            new CmdiTransformer().transformProfileXmlToXsd("clarin.eu:cr1:p_1320657629627", "individual");
+            String profileId = "clarin.eu:cr1:p_1320657629627";
+            File xsdFile = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
+            new CmdiTransformer().transformProfileXmlToXsd(xsdFile, profileId);
         } catch (IOException exception) {
             System.out.println("exception: " + exception.getMessage());
         } catch (TransformerException exception) {
