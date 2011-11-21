@@ -206,6 +206,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         if (graphPanel.metadataPanel != null) {
             graphPanel.metadataPanel.removeAllArbilDataNodeRows();
             ArrayList<UniqueIdentifier> remainingEditors = new ArrayList<UniqueIdentifier>(shownGraphicsEditors.keySet());
+            ArrayList<EntityData> selectedEntities = new ArrayList<EntityData>();
             for (UniqueIdentifier currentSelectedId : graphPanel.selectedGroupId) {
                 remainingEditors.remove(currentSelectedId);
                 if (currentSelectedId.isGraphicsIdentifier()) {
@@ -218,6 +219,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     }
                 } else {
                     EntityData currentSelectedEntity = graphPanel.getEntityForElementId(currentSelectedId);
+                    selectedEntities.add(currentSelectedEntity);
                     if (currentSelectedEntity != null) {
                         graphPanel.metadataPanel.addEntityDataNode(kinDiagramPanel, currentSelectedEntity);
                     }
@@ -229,6 +231,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 shownGraphicsEditors.remove(remainingIdentifier);
             }
             graphPanel.metadataPanel.updateEditorPane();
+            graphPanel.metadataPanel.setDateEditorEntities(selectedEntities);
         }
     }
 
