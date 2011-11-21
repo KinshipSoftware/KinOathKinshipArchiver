@@ -106,7 +106,7 @@ public class MetadataPanel extends JPanel {
 
     public void setDateEditorEntities(ArrayList<EntityData> selectedEntities) {
         if (selectedEntities.isEmpty()) {
-            this.remove(dateEditorPanel);
+            editorHidePane.removeTab(dateEditorPanel);
         } else {
             dateEditorPanel.setEntities(selectedEntities);
             editorHidePane.addTab("Date Editor", dateEditorPanel);
