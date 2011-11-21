@@ -2,7 +2,6 @@ package nl.mpi.kinnate.svg;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -18,16 +17,17 @@ public class LineLookUpTable {
 
     protected class LineRecord {
 
-        public LineRecord(String lineIdString, Point[] initialPointsList) {
+        public LineRecord(String lineIdString, ArrayList<Point> pointsList) {
             this.lineIdSring = lineIdString;
-            this.pointsList = new ArrayList<Point>(Arrays.asList(initialPointsList));
+            this.pointsList = pointsList;
         }
         private String lineIdSring;
         private ArrayList<Point> pointsList;
 
         protected Point getIntersection(LineRecord lineRecord) {
             return null; //Point((lineRecord.startPoint.x + lineRecord.endPoint.x) / 2, (lineRecord.startPoint.y + lineRecord.endPoint.y) / 2);
-            // todo:...
+            // todo: get the actual intersections and insert loops
+            // todo: in RelationSVG on first load the lineLookUpTable is null and loops will not be drawn
         }
 
         @Override
@@ -70,8 +70,8 @@ public class LineLookUpTable {
         return intersectionPoints.toArray(new Point[]{});
     }
 
-    public Point[] adjustLineToObstructions(String lineIdString, Point[] initialPointsList) {
-        LineRecord localLineRecord = new LineRecord(lineIdString, initialPointsList);
+    public Point[] adjustLineToObstructions(String lineIdString, ArrayList<Point> pointsList) {
+        LineRecord localLineRecord = new LineRecord(lineIdString, pointsList);
         getIntersections(localLineRecord);
         //localLineRecord.pointsList.set(3, new Point(0, 0));
         lineRecords.add(localLineRecord);
