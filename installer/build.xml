@@ -8,7 +8,7 @@
 <project name="KinOath" default="scp_to_lux09">
     <target name="setproperties">
         <property name="kinoath.current.major" value="0"/>
-        <property name="kinoath.current.minor" value="0"/>
+        <property name="kinoath.current.minor" value="7"/>
         <property name="kinoath.filenameidentifier" value="-testing"/>
         <property name="kinoath.application-title" value="KinOath (testing)"/>
         <property name="kinoath.icon-file-name" value="kinoath${kinoath.filenameidentifier}128x128"/>
