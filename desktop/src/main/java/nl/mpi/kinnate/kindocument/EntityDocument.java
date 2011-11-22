@@ -45,15 +45,6 @@ public class EntityDocument {
         assignIdentiferAndFile();
     }
 
-    private void assignIdentiferAndFile() {
-        String idString;
-        entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
-        idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
-        File subDirectory = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), idString.substring(0, 2));
-        subDirectory.mkdir();
-        entityFile = new File(subDirectory, idString);
-    }
-
     public EntityDocument(String entityType, ImportTranslator importTranslator) throws ImportException {
         assignIdentiferAndFile();
         try {
@@ -86,6 +77,15 @@ public class EntityDocument {
         this.importTranslator = importTranslator;
         entityFile = new File(entityUri);
         setDomNodesFromExistingFile();
+    }
+
+    private void assignIdentiferAndFile() {
+        String idString;
+        entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
+        idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
+        File subDirectory = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), idString.substring(0, 2));
+        subDirectory.mkdir();
+        entityFile = new File(subDirectory, idString);
     }
 
     private void setDomNodesFromExistingFile() throws ImportException {
