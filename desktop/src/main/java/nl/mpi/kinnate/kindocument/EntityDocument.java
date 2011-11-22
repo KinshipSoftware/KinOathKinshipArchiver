@@ -123,7 +123,7 @@ public class EntityDocument {
             }
             metadataNode = (Element) metadataNodeList.item(0);
             // remove any old entity data which will be replaced on save with the existingEntity data provided
-            final NodeList entityNodeList = ((Element) kinnateNode).getElementsByTagNameNS("http://mpi.nl/tla/kin", "Entity");
+            final NodeList entityNodeList = ((Element) kinnateNode).getElementsByTagNameNS("*", "Entity"); // todo: this name space could be specified when the schema is complete: "http://mpi.nl/tla/kin" instead of "*"
             for (int entityCounter = 0; entityCounter < entityNodeList.getLength(); entityCounter++) {
                 if (entityData == null) {
                     JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
@@ -265,7 +265,7 @@ public class EntityDocument {
             levelCount++;
             counterNode = counterNode.getParentNode();
         }
-        levelCount = levelCount - 1; // always keep the kinnate.metadata nodes
+        levelCount = levelCount - 3; // always keep the kinnate.metadata nodes
         while (levelCount > nodeLevel) {
             levelCount--;
             currentDomNode = currentDomNode.getParentNode();
