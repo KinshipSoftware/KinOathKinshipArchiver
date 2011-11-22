@@ -291,24 +291,24 @@ public class EntitySvg {
 
     public float[] getAverageParentLocation(UniqueIdentifier entityId) {
         // note that getAverageParentLocation(EntityData entityData) must be called at least once for each entity to poputlate parentIdentifiers
-        Float minY = null;
+        Float maxY = null;
         float averageX = 0;
         int parentCount = 0;
         for (UniqueIdentifier parentIdentifier : parentIdentifiers.get(entityId)) {
             float[] parentLoc = getEntityLocation(parentIdentifier);
-            if (minY == null) {
-                minY = parentLoc[1];
+            if (maxY == null) {
+                maxY = parentLoc[1];
             } else {
-                minY = (minY <= parentLoc[1]) ? minY : parentLoc[1];
+                maxY = (maxY >= parentLoc[1]) ? maxY : parentLoc[1];
             }
             averageX += parentLoc[0];
             parentCount++;
         }
         averageX = averageX / parentCount;
-        if (minY == null) {
+        if (maxY == null) {
             return null;
         } else {
-            return new float[]{averageX, minY};
+            return new float[]{averageX, maxY};
         }
     }
 
