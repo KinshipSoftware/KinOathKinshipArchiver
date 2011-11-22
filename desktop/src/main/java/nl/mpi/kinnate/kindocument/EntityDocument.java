@@ -42,12 +42,29 @@ public class EntityDocument {
 
     public EntityDocument(ImportTranslator importTranslator) {
         this.importTranslator = importTranslator;
+        assignIdentiferAndFile();
+    }
+
+    private void assignIdentiferAndFile() {
         String idString;
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
         idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
         File subDirectory = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), idString.substring(0, 2));
         subDirectory.mkdir();
         entityFile = new File(subDirectory, idString);
+    }
+
+    public EntityDocument(String entityType, ImportTranslator importTranslator) throws ImportException {
+        assignIdentiferAndFile();
+        try {
+            // construct the metadata file
+            URI xsdUri = new CmdiTransformer().getXsdUrlString("individual");
+            URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
+        } catch (KinXsdException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        }
+        setDomNodesFromExistingFile();
     }
 
     public EntityDocument(File destinationDirectory, String nameString, ImportTranslator importTranslator) {
@@ -67,9 +84,13 @@ public class EntityDocument {
 
     public EntityDocument(URI entityUri, ImportTranslator importTranslator) throws ImportException {
         this.importTranslator = importTranslator;
+        entityFile = new File(entityUri);
+        setDomNodesFromExistingFile();
+    }
+
+    private void setDomNodesFromExistingFile() throws ImportException {
         try {
-            entityFile = new File(entityUri);
-            metadataDom = ArbilComponentBuilder.getDocument(entityUri);
+            metadataDom = ArbilComponentBuilder.getDocument(entityFile.toURI());
             kinnateNode = metadataDom.getDocumentElement();
             // final NodeList metadataNodeList = ((Element) kinnateNode).getElementsByTagNameNS("http://mpi.nl/tla/kin", "Metadata");
             final NodeList metadataNodeList = ((Element) kinnateNode).getElementsByTagName("Metadata");
@@ -114,7 +135,7 @@ public class EntityDocument {
         return entityData.getUniqueIdentifier();
     }
 
-    public URI createDocument(boolean overwriteExisting) throws ImportException {
+    public URI createBlankDocument(boolean overwriteExisting) throws ImportException {
         if (metadataDom != null) {
             throw new ImportException("The document already exists");
         }
@@ -254,35 +275,10 @@ public class EntityDocument {
         currentDomNode = insertNode(nodeName, valueString);
     }
 
-    public void insertDefaultMetadata() {
-        // todo: this could be done via Arbil code and the schema when that is ready
-        insertValue("Gender", "unspecified");
-        insertValue("Name", "unspecified");
-    }
-
-//    public void insertRelation(EntityData alterNodeLocal, RelationType relationType, RelationLineType relationLineType/*, UniqueIdentifier relationUniquieIdentifier*/, String fileNameString) {
-//        entityData.addRelatedNode(alterNodeLocal, relationType, relationLineType, null, null);
-//
-////        Element relationElement = metadataDom.createElement("Relation");
-////        metadataDom.getDocumentElement().appendChild(relationElement);
-//
-////        Element linkElement = metadataDom.createElement("Link");
-////        linkElement.setTextContent("./" + fileNameString);
-////        relationElement.appendChild(linkElement);
-//
-////        Element uniqueIdentifierElement = metadataDom.createElement("UniqueIdentifier");
-////        Element localIdentifierElement = metadataDom.createElement("LocalIdentifier");
-////        localIdentifierElement.setTextContent(relationUniquieIdentifier);
-////        uniqueIdentifierElement.appendChild(localIdentifierElement);
-////        relationElement.appendChild(uniqueIdentifierElement);
-//
-////        Element typeElement = metadataDom.createElement("Type");
-////        typeElement.setTextContent(relationType.name());
-////        relationElement.appendChild(typeElement);
-//
-////        Element targetNameElement = metadataDom.createElement("TargetName");
-////        targetNameElement.setTextContent(lineParts[2]);
-////        relationElement.appendChild(targetNameElement);
+//    public void insertDefaultMetadata() {
+//        // todo: this could be done via Arbil code and the schema when that is ready
+//        insertValue("Gender", "unspecified");
+//        insertValue("Name", "unspecified");
 //    }
     public File getFile() {
         return entityFile;
