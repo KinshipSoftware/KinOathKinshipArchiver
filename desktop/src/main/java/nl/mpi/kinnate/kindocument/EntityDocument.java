@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
+import java.net.URISyntaxException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -39,6 +40,7 @@ public class EntityDocument {
     Node currentDomNode = null;
     public EntityData entityData = null;
     private ImportTranslator importTranslator;
+    public static String defaultEntityType = "individual";
 
     public EntityDocument(ImportTranslator importTranslator) {
         this.importTranslator = importTranslator;
@@ -49,7 +51,7 @@ public class EntityDocument {
         assignIdentiferAndFile();
         try {
             // construct the metadata file
-            URI xsdUri = new CmdiTransformer().getXsdUrlString("individual");
+            URI xsdUri = new CmdiTransformer().getXsdUrlString(entityType);
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
         } catch (KinXsdException exception) {
             new ArbilBugCatcher().logError(exception);
@@ -58,19 +60,41 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(File destinationDirectory, String nameString, ImportTranslator importTranslator) {
+    public EntityDocument(Node foreignNode, ImportTranslator importTranslator) throws ImportException {
+        assignIdentiferAndFile();
+        try {
+            URI xsdUri = new URI(foreignNode.getNamespaceURI());
+            URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
+        } catch (URISyntaxException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        }
+        setDomNodesFromExistingFile();
+        importNode(foreignNode);
+    }
+
+    public EntityDocument(File destinationDirectory, String nameString, String entityType, ImportTranslator importTranslator) throws ImportException {
         this.importTranslator = importTranslator;
         String idString;
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
         if (nameString != null) {
             idString = nameString;
-            entityFile = new File(destinationDirectory, nameString);
+            entityFile = new File(destinationDirectory, nameString + ".kmdi");
         } else {
             idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
             File subDirectory = new File(destinationDirectory, idString.substring(0, 2));
             subDirectory.mkdir();
             entityFile = new File(subDirectory, idString);
         }
+        try {
+            // construct the metadata file
+            URI xsdUri = new CmdiTransformer().getXsdUrlString(entityType);
+            URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
+        } catch (KinXsdException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        }
+        setDomNodesFromExistingFile();
     }
 
     public EntityDocument(URI entityUri, ImportTranslator importTranslator) throws ImportException {
@@ -215,7 +239,7 @@ public class EntityDocument {
         metadataNode.appendChild(valueElement);
     }
 
-    public void importNode(Node foreignNode) {
+    private void importNode(Node foreignNode) {
         Node importedNode = metadataDom.importNode(foreignNode, true);
         while (importedNode.hasChildNodes()) {
             // the metadata node already exists so just add the child nodes of it
