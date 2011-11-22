@@ -190,8 +190,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         try {
             ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
             for (ArbilNode draggedNode : selectedNodes) {
-                EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null, importTranslator);
-                entityDocument.createDocument(true);
+                EntityDocument entityDocument = new EntityDocument(EntityDocument.defaultEntityType, importTranslator);
                 entityDocument.insertValue("Name", draggedNode.toString());
                 if (draggedNode instanceof ArbilDataNode) {
                     for (String fieldOfInterest : new String[]{"Sex", "BirthDate"}) {
