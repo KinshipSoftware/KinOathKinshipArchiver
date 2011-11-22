@@ -52,26 +52,37 @@ public class RelationSvg {
         }
     }
 
-    protected void setPolylinePointsAttribute(LineLookUpTable lineLookUpTable, String lineIdString, Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    protected void setPolylinePointsAttribute(LineLookUpTable lineLookUpTable, String lineIdString, Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, float[] averageParent) {
         //float midY = (egoY + alterY) / 2;
-        // todo: Ticket #1064 when an entity is above one that it should be below the line should make a zigzag to indicate it
+        // todo: Ticket #1064 when an entity is above one that it should be below the line should make a zigzag to indicate it        
+        ArrayList<Point> initialPointsList = new ArrayList<Point>();
         float midSpacing = vSpacing / 2;
+//        float parentSpacing = 10;
         float egoYmid;
         float alterYmid;
         float centerX = (egoX + alterX) / 2;
         switch (relationType) {
             case ancestor:
                 egoYmid = egoY - midSpacing;
-                alterYmid = alterY + midSpacing;
+                alterYmid = averageParent[1] + 30;
+//                alterYmid = alterY + midSpacing;
+//                egoYmid = alterYmid + 30;
                 centerX = (egoYmid < alterYmid) ? centerX : egoX;
                 centerX = (egoY < alterY && egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
+//                float tempX = egoX;
+//                float tempY = egoY;
+//                egoX = alterX;
+//                egoY = alterY;
+//                alterX = tempX;
+//                alterY = tempY;
             case descendant:
-                egoYmid = egoY + midSpacing;
-                alterYmid = alterY - midSpacing;
-                centerX = (egoYmid < alterYmid) ? alterX : centerX;
-                centerX = (egoY > alterY && egoX == alterX) ? centerX - midSpacing : centerX;
-                break;
+                throw new UnsupportedOperationException("in order to simplify this ancestor relations should be swapped so that ego is the parent");
+//                egoYmid = egoY + midSpacing;
+//                alterYmid = alterY - midSpacing;
+//                centerX = (egoYmid < alterYmid) ? alterX : centerX;
+//                centerX = (egoY > alterY && egoX == alterX) ? centerX - midSpacing : centerX;
+//                break;
             case sibling:
                 egoYmid = egoY - midSpacing;
                 alterYmid = alterY - midSpacing;
@@ -99,14 +110,22 @@ public class RelationSvg {
 //                midY = alterY + vSpacing / 2;
 //            }
 //        }
-        Point[] initialPointsList = new Point[]{
-            new Point((int) egoX, (int) egoY),
-            new Point((int) egoX, (int) egoYmid),
-            new Point((int) centerX, (int) egoYmid),
-            new Point((int) centerX, (int) alterYmid),
-            new Point((int) alterX, (int) alterYmid),
-            new Point((int) alterX, (int) alterY)
-        };
+
+        initialPointsList.add(new Point((int) egoX, (int) egoY));
+        initialPointsList.add(new Point((int) egoX, (int) egoYmid));
+
+        if (averageParent != null) {
+            float averageParentX = averageParent[0];
+//            float minParentY = averageParent[1];
+            initialPointsList.add(new Point((int) averageParentX, (int) egoYmid));
+            initialPointsList.add(new Point((int) averageParentX, (int) alterYmid));
+        } else {
+            initialPointsList.add(new Point((int) centerX, (int) egoYmid));
+            initialPointsList.add(new Point((int) centerX, (int) alterYmid));
+        }
+        initialPointsList.add(new Point((int) alterX, (int) alterYmid));
+        initialPointsList.add(new Point((int) alterX, (int) alterY));
+
         Point[] adjustedPointsList;
         if (lineLookUpTable != null) {
             // this version is used when the relations are drawn on the diagram
@@ -114,7 +133,7 @@ public class RelationSvg {
             adjustedPointsList = lineLookUpTable.adjustLineToObstructions(lineIdString, initialPointsList);
         } else {
             // this version is used when the relation drag handles are used
-            adjustedPointsList = initialPointsList;
+            adjustedPointsList = initialPointsList.toArray(new Point[]{});
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (Point currentPoint : adjustedPointsList) {
@@ -238,8 +257,20 @@ public class RelationSvg {
         // set the line end points
 //        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(currentNode.getUniqueIdentifier());
 //        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
-        float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(currentNode.getUniqueIdentifier());
-        float[] alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
+        float[] egoSymbolPoint;
+        float[] alterSymbolPoint;
+        float[] parentPoint;
+        DataTypes.RelationType directedRelation = graphLinkNode.relationType;
+        if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
+            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
+            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(currentNode.getUniqueIdentifier());
+            parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphLinkNode.getAlterNode());
+            directedRelation = DataTypes.RelationType.ancestor;
+        } else {
+            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(currentNode.getUniqueIdentifier());
+            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
+            parentPoint = graphPanel.entitySvg.getAverageParentLocation(currentNode);
+        }
 //        float fromX = (currentNode.getxPos()); // * hSpacing + hSpacing
 //        float fromY = (currentNode.getyPos()); // * vSpacing + vSpacing
 //        float toX = (graphLinkNode.getAlterNode().getxPos()); // * hSpacing + hSpacing
@@ -273,7 +304,7 @@ public class RelationSvg {
                 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
                 Element linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
 
-                setPathPointsAttribute(linkLine, graphLinkNode.relationType, graphLinkNode.relationLineType, hSpacing, vSpacing, fromX, fromY, toX, toY);
+                setPathPointsAttribute(linkLine, directedRelation, graphLinkNode.relationLineType, hSpacing, vSpacing, fromX, fromY, toX, toY);
                 //                    linkLine.setAttribute("x1", );
                 //                    linkLine.setAttribute("y1", );
                 //
@@ -300,7 +331,7 @@ public class RelationSvg {
                 //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
                 Element squareLinkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
 
-                setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineIdString, squareLinkLine, graphLinkNode.relationType, vSpacing, fromX, fromY, toX, toY);
+                setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineIdString, squareLinkLine, directedRelation, vSpacing, fromX, fromY, toX, toY, parentPoint);
 
                 squareLinkLine.setAttribute("fill", "none");
                 squareLinkLine.setAttribute("stroke", "grey");
@@ -358,11 +389,22 @@ public class RelationSvg {
                             String lineElementId = idAttrubite.getNodeValue() + "Line";
                             Element relationLineElement = graphPanel.doc.getElementById(lineElementId);
                             //System.out.println("type: " + relationLineElement.getLocalName());
-                            float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
-                            float[] alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+                            float[] egoSymbolPoint;
+                            float[] alterSymbolPoint;
+                            float[] parentPoint;
 //                        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.egoNodeId);
 //                        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.alterNodeId);
-
+                            DataTypes.RelationType directedRelation = graphRelationData.relationType;
+                            if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
+                                egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+                                alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
+                                parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.alterNodeId);
+                                directedRelation = DataTypes.RelationType.ancestor;
+                            } else {
+                                egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
+                                alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+                                parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.egoNodeId);
+                            }
                             float egoX = egoSymbolPoint[0];
                             float egoY = egoSymbolPoint[1];
                             float alterX = alterSymbolPoint[0];
@@ -378,11 +420,11 @@ public class RelationSvg {
 
                             if ("polyline".equals(relationLineElement.getLocalName())) {
                                 //System.out.println("polyline to update: " + lineElementId);
-                                setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineElementId, relationLineElement, graphRelationData.relationType, vSpacing, egoX, egoY, alterX, alterY);
+                                setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineElementId, relationLineElement, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
                             }
                             if ("path".equals(relationLineElement.getLocalName())) {
                                 //System.out.println("path to update: " + relationLineElement.getLocalName());
-                                setPathPointsAttribute(relationLineElement, graphRelationData.relationType, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
+                                setPathPointsAttribute(relationLineElement, directedRelation, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
                             }
                             addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
                             updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
