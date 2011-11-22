@@ -149,7 +149,7 @@ public class EntityImporter implements GenericImporter {
 
     public String cleanFileName(String fileName) {
         // prevent bad file names being created from the gedcom internal name part
-        return fileName.replaceAll("[^A-z0-9]", "_") + ".kmdi";
+        return fileName.replaceAll("[^A-z0-9]", "_");
     }
 
     public URI[] importFile(File testFile) {
