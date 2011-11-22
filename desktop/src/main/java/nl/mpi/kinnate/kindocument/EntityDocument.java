@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -48,6 +47,7 @@ public class EntityDocument {
     }
 
     public EntityDocument(String entityType, ImportTranslator importTranslator) throws ImportException {
+        this.importTranslator = importTranslator;
         assignIdentiferAndFile();
         try {
             // construct the metadata file
@@ -60,17 +60,25 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(Node foreignNode, ImportTranslator importTranslator) throws ImportException {
+    public EntityDocument(EntityDocument entityDocumentToCopy, ImportTranslator importTranslator) throws ImportException {
+        this.importTranslator = importTranslator;
         assignIdentiferAndFile();
         try {
-            URI xsdUri = new URI(foreignNode.getNamespaceURI());
-            URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
-        } catch (URISyntaxException exception) {
+            // load the document that needs to be copied so that it can be saved into the new location
+            metadataDom = ArbilComponentBuilder.getDocument(entityDocumentToCopy.entityFile.toURI());
+            ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
+        } catch (IOException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        } catch (ParserConfigurationException exception) {
+            new ArbilBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        } catch (SAXException exception) {
             new ArbilBugCatcher().logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
+        // replace the entity data in the new document
         setDomNodesFromExistingFile();
-        importNode(foreignNode);
     }
 
     public EntityDocument(File destinationDirectory, String nameString, String entityType, ImportTranslator importTranslator) throws ImportException {
@@ -210,10 +218,6 @@ public class EntityDocument {
         }
     }
 
-    public Node getMetadataNode() {
-        return metadataNode;
-    }
-
     public void insertValue(String nodeName, String valueString) {
         // this method will create a flat xml file and reuse any existing nodes of the target name
         ImportTranslator.TranslationElement translationElement = importTranslator.translate(nodeName, valueString);
@@ -334,6 +338,7 @@ public class EntityDocument {
 //            throw new ImportException("Error: " + exception.getMessage());
 //        }
         ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
+        System.out.println("saved: " + entityFile.toURI().toString());
     }
 //    private EntityDocument(File destinationDirectory, String typeString, String idString, HashMap<String, ArrayList<String>> createdNodeIds, boolean overwriteExisting) {
 }
