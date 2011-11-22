@@ -66,26 +66,21 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         graphPanelSize = graphPanelSizeLocal;
         if (egoSelectionPanelLocal != null) {
             JMenuItem addEntityMenuItem = new JMenuItem("Add Entity");
-//            addEntityMenuItem.setActionCommand(GraphPanelContextMenu.class.getResource("/xsd/StandardEntity.xsd").toString());
+            addEntityMenuItem.setActionCommand(EntityDocument.defaultEntityType);
             addEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    // todo: node type is not used here anymore but could still be useful as a user option
-//                    String nodeType = evt.getActionCommand();
-                    EntityDocument entityDocument = new EntityDocument(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), null, new ImportTranslator(true));
+                    // node type will be used to determine the schema used from the diagram options
+                    String nodeType = evt.getActionCommand();
                     try {
-                        entityDocument.createDocument(true);
-                        entityDocument.insertDefaultMetadata();
+                        EntityDocument entityDocument = new EntityDocument(nodeType, new ImportTranslator(true));
                         entityDocument.saveDocument();
                         URI addedEntityUri = entityDocument.getFile().toURI();
                         new EntityCollection().updateDatabase(addedEntityUri);
                         kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
                     } catch (ImportException exception) {
-                        // todo: warn user with a dialog
                         new ArbilBugCatcher().logError(exception);
-//                    } catch (URISyntaxException ex) {
-//                        new ArbilBugCatcher().logError(ex);
-                        // todo: warn user with a dialog
+                        ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create entity: " + exception.getMessage(), "Add Entity");
                     }
                 }
             });
