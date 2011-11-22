@@ -46,17 +46,15 @@ public class EntityMerger extends DocumentLoader {
             getEntityDocuments(selectedIdentifiers, entityDocumentList);
             for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
                 EntityDocument masterDocument = entityMap.get(uniqueIdentifier);
-                EntityDocument duplicateEntityDocument = new EntityDocument(new ImportTranslator(true));
+                EntityDocument duplicateEntityDocument = new EntityDocument(masterDocument, new ImportTranslator(true));
                 addedIdentifiers.add(duplicateEntityDocument.getUniqueIdentifier());
-                duplicateEntityDocument.createDocument(false);
                 for (EntityRelation entityRelation : masterDocument.entityData.getDistinctRelateNodes()) {
                     EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
                     // copy the relations
                     duplicateEntityDocument.entityData.addRelatedNode(relatedDocument.entityData, entityRelation.relationType, entityRelation.relationLineType, entityRelation.lineColour, entityRelation.labelString);
                 }
                 // todo: the date and any other metadata not in the metadata node will be missed by this step, it would be best to move or modify the dates location in the file
-                // copy the metadata
-                duplicateEntityDocument.importNode(masterDocument.getMetadataNode());
+                entityMap.put(duplicateEntityDocument.getUniqueIdentifier(), duplicateEntityDocument);
                 saveAllDocuments();
             }
             return addedIdentifiers.toArray(new UniqueIdentifier[]{});
