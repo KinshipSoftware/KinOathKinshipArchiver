@@ -54,6 +54,10 @@ public class DataStoreSvg {
     public boolean showKinTypeLabels = false;
     @XmlElement(name = "ShowKinTermLabels", namespace = "http://mpi.nl/tla/kin")
     public boolean showKinTermLabels = false;
+    @XmlElement(name = "ShowIdLabels", namespace = "http://mpi.nl/tla/kin")
+    public boolean showIdLabels = false;
+    @XmlElement(name = "ShowDateLabels", namespace = "http://mpi.nl/tla/kin")
+    public boolean showDateLabels = false;
     @XmlElement(name = "ShowKinTermLines", namespace = "http://mpi.nl/tla/kin")
     public boolean showKinTermLines = true;
     @XmlElement(name = "SnapToGrid", namespace = "http://mpi.nl/tla/kin")
