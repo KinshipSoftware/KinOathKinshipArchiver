@@ -300,6 +300,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 }
                                 if (isQuery) {
                                     EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
+                                    progressBar.setIndeterminate(true);
                                     graphPanel.dataStoreSvg.graphData.setEntitys(graphNodes);
                                     // register interest Arbil updates and update the graph when data is edited in the table
 //                                registerCurrentNodes(graphSorter.getDataNodes());
