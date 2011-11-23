@@ -217,10 +217,10 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 //                            graphPanel.editorHidePane.setSelectedComponent(elementEditor);
                         shownGraphicsEditors.put(currentSelectedId, elementEditor);
                     }
-                } else {
+                } else if (!currentSelectedId.isTransientIdentifier()) {
                     EntityData currentSelectedEntity = graphPanel.getEntityForElementId(currentSelectedId);
-                    selectedEntities.add(currentSelectedEntity);
                     if (currentSelectedEntity != null) {
+                        selectedEntities.add(currentSelectedEntity);
                         graphPanel.metadataPanel.addEntityDataNode(kinDiagramPanel, currentSelectedEntity);
                     }
                 }
