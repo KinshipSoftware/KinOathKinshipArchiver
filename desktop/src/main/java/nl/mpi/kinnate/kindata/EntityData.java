@@ -26,6 +26,8 @@ public class EntityData {
     }
     @XmlElement(name = "Identifier", namespace = "http://mpi.nl/tla/kin")
     private UniqueIdentifier uniqueIdentifier;
+    @XmlElement(name = "CustomIdentifier", namespace = "http://mpi.nl/tla/kin")
+    public String customIdentifier;
     @XmlElement(name = "Path", namespace = "http://mpi.nl/tla/kin")
     private String entityPath;
     @XmlElement(name = "KinType", namespace = "http://mpi.nl/tla/kin")
@@ -93,6 +95,7 @@ public class EntityData {
         isEgo = isEgoLocal;
         dateOfBirth = labelStringsParser.dateOfBirth;
         dateOfDeath = labelStringsParser.dateOfDeath;
+        customIdentifier = labelStringsParser.uidString;
     }
 
     public EntityData(UniqueIdentifier uniqueIdentifierLocal, String[] errorMessage) {
