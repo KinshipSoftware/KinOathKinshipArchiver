@@ -169,11 +169,11 @@ public class KinTypeStringConverter extends GraphSorter {
                             QueryType currentQueryType = null;
                             queryTerm = queryText.split("=="); // detect which comparitor is used
                             if (queryTerm.length > 1) {
-                                currentQueryType = QueryType.Contains;
+                                currentQueryType = QueryType.Equals;
                             } else {
                                 queryTerm = queryText.split("=");
                                 if (queryTerm.length > 1) {
-                                    currentQueryType = QueryType.Equals;
+                                    currentQueryType = QueryType.Contains;
                                 } else {
                                     queryTerm = queryText.split("\\>");
                                     if (queryTerm.length > 1) {
