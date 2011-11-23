@@ -294,15 +294,18 @@ public class EntitySvg {
         Float maxY = null;
         float averageX = 0;
         int parentCount = 0;
-        for (UniqueIdentifier parentIdentifier : parentIdentifiers.get(entityId)) {
-            float[] parentLoc = getEntityLocation(parentIdentifier);
-            if (maxY == null) {
-                maxY = parentLoc[1];
-            } else {
-                maxY = (maxY >= parentLoc[1]) ? maxY : parentLoc[1];
+        final HashSet<UniqueIdentifier> parentIdSet = parentIdentifiers.get(entityId);
+        if (parentIdSet != null) {
+            for (UniqueIdentifier parentIdentifier : parentIdSet) {
+                float[] parentLoc = getEntityLocation(parentIdentifier);
+                if (maxY == null) {
+                    maxY = parentLoc[1];
+                } else {
+                    maxY = (maxY >= parentLoc[1]) ? maxY : parentLoc[1];
+                }
+                averageX += parentLoc[0];
+                parentCount++;
             }
-            averageX += parentLoc[0];
-            parentCount++;
         }
         averageX = averageX / parentCount;
         if (maxY == null) {
