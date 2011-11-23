@@ -531,12 +531,16 @@ public class EntitySvg {
 
 ////////////////////////////// alternate method ////////////////////////////////////////////////
         ArrayList<String> labelList = new ArrayList<String>();
+        if (graphPanel.dataStoreSvg.showIdLabels && currentNode.customIdentifier != null) {
+            labelList.add(currentNode.customIdentifier);
+        }
         if (graphPanel.dataStoreSvg.showLabels) {
             labelList.addAll(Arrays.asList(currentNode.getLabel()));
         }
         if (graphPanel.dataStoreSvg.showKinTypeLabels) {
             labelList.addAll(Arrays.asList(currentNode.getKinTypeStringArray()));
         }
+        // todo: why is this not used?
 //        if (graphPanel.dataStoreSvg.showKinTermLabels) {
 //            labelList.addAll(Arrays.asList(currentNode.getKinTermStrings()));
 //        }
@@ -552,21 +556,23 @@ public class EntitySvg {
         for (GraphLabel currentTextLable : currentNode.getKinTermStrings()) {
             textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable.getLabelString(), currentTextLable.getColourString(), textSpanCounter);
         }
-        // add the date of birth/death string
-        String dateString = "";
-        Date dob = currentNode.getDateOfBirth();
-        Date dod = currentNode.getDateOfDeath();
-        if (dob != null) {
-            // todo: the date format should probably be user defined rather than assuming that the system prefs are correct
-            dateString += DateFormat.getDateInstance().format(dob);
+        if (graphPanel.dataStoreSvg.showDateLabels) {
+            // add the date of birth/death string
+            String dateString = "";
+            Date dob = currentNode.getDateOfBirth();
+            Date dod = currentNode.getDateOfDeath();
+            if (dob != null) {
+                // todo: the date format should probably be user defined rather than assuming that the system prefs are correct
+                dateString += DateFormat.getDateInstance().format(dob);
+            }
+            if (dod != null) {
+                dateString += " - " + DateFormat.getDateInstance().format(dod);
+            }
+            if (dateString.length() > 0) {
+                textSpanCounter = addTextLabel(graphPanel, groupNode, dateString, "black", textSpanCounter);
+            }
+            // end date of birth/death label
         }
-        if (dod != null) {
-            dateString += " - " + DateFormat.getDateInstance().format(dod);
-        }
-        if (dateString.length() > 0) {
-            textSpanCounter = addTextLabel(graphPanel, groupNode, dateString, "black", textSpanCounter);
-        }
-        // end date of birth/death label
         int linkCounter = 0;
         if (graphPanel.dataStoreSvg.showArchiveLinks && currentNode.archiveLinkArray != null) {
             // loop through the archive links and optionaly add href tags for each linked archive data <a xlink:href="http://www.mpi.nl/imdi-archive-link" target="_blank"></a>
