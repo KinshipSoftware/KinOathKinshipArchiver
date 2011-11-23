@@ -171,11 +171,23 @@ public class SvgUpdateHandler {
                 entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
                 float vSpacing = graphPanel.graphPanelSize.getVerticalSpacing();
                 float hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing();
-//        for (Node currentRelation = relationsGroup.getFirstChild(); currentRelation != null; currentRelation = currentRelation.getNextSibling()) {
                 for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
                     String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
-                    float[] egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-                    float[] parentPoint = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
+                    float[] egoSymbolPoint;// = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                    float[] parentPoint; // = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
+                    float[] dragPoint;
+//
+                    DataTypes.RelationType directedRelation = localRelationDragHandle.relationType;
+                    if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
+                        egoSymbolPoint = new float[]{dragNodeX, dragNodeY};
+                        dragPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                        parentPoint = dragPoint;
+                        directedRelation = DataTypes.RelationType.ancestor;
+                    } else {
+                        egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                        dragPoint = new float[]{dragNodeX, dragNodeY};
+                        parentPoint = dragPoint;
+                    }
                     // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
 //                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
@@ -190,14 +202,14 @@ public class SvgUpdateHandler {
                     highlightBackgroundLine.setAttribute("fill", "none");
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
                     highlightBackgroundLine.setAttribute("stroke", "white");
-                    new RelationSvg().setPolylinePointsAttribute(null, dragLineElementId, highlightBackgroundLine, localRelationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY, parentPoint);
+                    new RelationSvg().setPolylinePointsAttribute(null, dragLineElementId, highlightBackgroundLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
                     relationHighlightGroup.appendChild(highlightBackgroundLine);
                     // add a blue dotted line
                     Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
                     highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                     highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
-                    new RelationSvg().setPolylinePointsAttribute(null, dragLineElementId, highlightLine, localRelationDragHandle.relationType, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragNodeX, dragNodeY, parentPoint);
+                    new RelationSvg().setPolylinePointsAttribute(null, dragLineElementId, highlightLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
                     highlightLine.setAttribute("stroke", "blue");
                     highlightLine.setAttribute("stroke-dasharray", "3");
                     highlightLine.setAttribute("stroke-dashoffset", "0");
