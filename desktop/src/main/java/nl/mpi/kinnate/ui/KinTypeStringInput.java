@@ -35,6 +35,7 @@ public class KinTypeStringInput extends JTextPane {
     public KinTypeStringInput(DataStoreSvg dataStore) {
         this.dataStore = dataStore;
         this.setToolTipText("");
+        this.setDragEnabled(true);
         // set the styles for the kin type string text
         styleComment = this.addStyle("Comment", null);
 //        StyleConstants.setForeground(styleComment, new Color(247,158,9));
