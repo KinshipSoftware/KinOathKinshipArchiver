@@ -2,6 +2,7 @@ package nl.mpi.kinnate.kintypestrings;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -20,6 +21,7 @@ public class LabelStringsParser {
     public int dateEndLocation = -1;
     public int uidStartLocation = -1;
     public int uidEndLocation = -1;
+    public String uidString = null;
     public String labelsStrings[] = new String[]{};
     public Date dateOfBirth = null; // todo: read in the dates and if found set the in the entities
     public Date dateOfDeath = null; // todo: read in the dates and if found set the in the entities
@@ -71,10 +73,12 @@ public class LabelStringsParser {
                 labelsStrings = inputStringParts[1].split(";");
                 if (labelsStrings[0].matches("^#[0-9]*")) {
                     // use the user defined number to identify the entity
-                    uniqueIdentifier = new UniqueIdentifier("id:" + labelsStrings[0], UniqueIdentifier.IdentifierType.tid);
+                    uidString = labelsStrings[0];
+                    uniqueIdentifier = new UniqueIdentifier("id:" + uidString, UniqueIdentifier.IdentifierType.tid);
                     userDefinedIdentifierFound = true;
                     uidStartLocation = inputString.length() - 1;
                     uidEndLocation = inputString.length() - labelsStrings[0].length() - 1;
+                    labelsStrings = Arrays.copyOfRange(labelsStrings, 1, labelsStrings.length); // remove the user identifer string from the labels
                 }
                 if (uniqueIdentifier == null) {
                     // use the entire label sting to identify the entity
