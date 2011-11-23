@@ -54,6 +54,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private JCheckBoxMenuItem showLabelssMenuItem;
     private JCheckBoxMenuItem showKinTypeLabelssMenuItem;
     private JCheckBoxMenuItem showKinTermLabelssMenuItem;
+    private JCheckBoxMenuItem showIdLabelsMenuItem;
+    private JCheckBoxMenuItem showDateLabelsMenuItem;
     private JCheckBoxMenuItem showArchiveLinksMenuItem;
 //    private JCheckBoxMenuItem showResourceLinksMenuItem;
     private UniqueIdentifier[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
@@ -316,6 +318,31 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(showKinTermLabelssMenuItem);
+
+        // todo: this should not show when no ids are specified by the user
+        showIdLabelsMenuItem = new JCheckBoxMenuItem("Show Id Labels");
+        showIdLabelsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // Hide/Show transient node ids on the graph
+                graphPanel.dataStoreSvg.showIdLabels = !graphPanel.dataStoreSvg.showIdLabels;
+                graphPanel.drawNodes();
+            }
+        });
+        this.add(showIdLabelsMenuItem);
+
+        showDateLabelsMenuItem = new JCheckBoxMenuItem("Show Date Labels");
+        showDateLabelsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // Hide/Show dates on the graph
+                graphPanel.dataStoreSvg.showDateLabels = !graphPanel.dataStoreSvg.showDateLabels;
+                graphPanel.drawNodes();
+            }
+        });
+        this.add(showDateLabelsMenuItem);
+
+
         showArchiveLinksMenuItem = new JCheckBoxMenuItem("Show Archive Links");
         showArchiveLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -416,6 +443,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         showLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showLabels);
         showKinTypeLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTypeLabels);
         showKinTermLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLabels);
+        showIdLabelsMenuItem.setSelected(graphPanel.dataStoreSvg.showIdLabels);
+        showDateLabelsMenuItem.setSelected(graphPanel.dataStoreSvg.showDateLabels);
         showArchiveLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showArchiveLinks);
 //        showResourceLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showResourceLinks);
         saveFileMenuItem.setEnabled(ArbilDataNodeLoader.getSingleInstance().nodesNeedSave());
