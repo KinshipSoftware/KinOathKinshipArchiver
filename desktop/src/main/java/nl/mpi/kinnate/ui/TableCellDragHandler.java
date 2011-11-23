@@ -22,17 +22,19 @@ public class TableCellDragHandler extends TransferHandler implements Transferabl
     private DataFlavor dataFlavor = new DataFlavor(ArbilField[].class, "ArbilField");
 
     public Object getTransferData(DataFlavor df) throws UnsupportedFlavorException, IOException {
-        //if (!df.match(dataFlavor)) {
-//        if (df != dataFlavor) { // make sure that this is the same object not just the same type because we are using selectedFields from the source not the transfer handler because then it needs to be made serialiseable
-//            throw new UnsupportedFlavorException(df);
-//        } else {
-//            return selectedFields;
-//        }
-        return ""; // the imdi fields are not passed here but selectedFields used instead
+        if (df.equals(DataFlavor.stringFlavor)) {
+            String returnString = "";
+            for (ArbilField imdiField : selectedFields) {
+                returnString = returnString + convertToKinTypeStringQuery(imdiField.getFullXmlPath(), imdiField.getFieldValue());
+            }
+            return returnString;
+        } else {
+            throw new UnsupportedFlavorException(df); // the imdi fields are not passed here because importData uses the selectedFields instead
+        }
     }
 
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{dataFlavor};
+        return new DataFlavor[]{dataFlavor, DataFlavor.stringFlavor};
     }
 
     public boolean isDataFlavorSupported(DataFlavor df) {
@@ -48,6 +50,11 @@ public class TableCellDragHandler extends TransferHandler implements Transferabl
         if (dropLocation instanceof FieldSelectionList) {
             return true;
         }
+        if (dropLocation instanceof KinTypeStringInput) {
+            // todo: it would be good to test if this is a kmdi file before allowing drag to the kin type string input
+//            if (selectedFields.length>0 && selectedFields[0].getParentDataNode().is)
+            return true;
+        }
         return false;
     }
 
@@ -61,6 +68,12 @@ public class TableCellDragHandler extends TransferHandler implements Transferabl
     @Override
     public int getSourceActions(JComponent jc) {
         return COPY;
+    }
+
+    private String convertToKinTypeStringQuery(String fieldName, String fieldValue) {
+        fieldName = fieldName.replace(".Kinnate.Metadata.", "");
+        String queryString = "[" + fieldName + "=" + fieldValue + "]";
+        return queryString;
     }
 
     private String convertToBooleanQuery(String fieldName, String fieldValue) {
@@ -81,21 +94,25 @@ public class TableCellDragHandler extends TransferHandler implements Transferabl
 
     @Override
     public boolean importData(TransferSupport ts) {
-        IndexerParam indexerParam = ((FieldSelectionList) ts.getComponent()).indexerParam;
-//        ArrayList<String[]> paramValues = new ArrayList<String[]>(Arrays.asList(indexerParam.getValues()));
-        //for (ArbilField imdiField : (ArbilField[]) ts.getTransferable().getTransferData(dataFlavor)) {
-        for (ArbilField imdiField : selectedFields) {
-            String queryString;
-            String paramValue = null;
-            if (indexerParam.getAvailableValues() != null) {
-                queryString = convertToBooleanQuery(imdiField.getFullXmlPath(), imdiField.getFieldValue());
-                paramValue = "";
-            } else {
-                queryString = convertToSelectQuery(imdiField.getFullXmlPath(), imdiField.getFieldValue());
+        if (ts.getComponent() instanceof FieldSelectionList) {
+            IndexerParam indexerParam = ((FieldSelectionList) ts.getComponent()).indexerParam;
+            for (ArbilField imdiField : selectedFields) {
+                String queryString;
+                String paramValue = null;
+                if (indexerParam.getAvailableValues() != null) {
+                    queryString = convertToBooleanQuery(imdiField.getFullXmlPath(), imdiField.getFieldValue());
+                    paramValue = "";
+                } else {
+                    queryString = convertToSelectQuery(imdiField.getFullXmlPath(), imdiField.getFieldValue());
+                }
+                indexerParam.setValue(queryString, paramValue);
             }
-            indexerParam.setValue(queryString, paramValue);
+            ((FieldSelectionList) ts.getComponent()).updateUiList();
+            return true;
+        } else if (ts.getComponent() instanceof KinTypeStringInput) {
+            return false; // the text area uses its own TransferHandler so this case should not occur
+        } else {
+            return false;
         }
-        ((FieldSelectionList) ts.getComponent()).updateUiList();
-        return true;
     }
 }
