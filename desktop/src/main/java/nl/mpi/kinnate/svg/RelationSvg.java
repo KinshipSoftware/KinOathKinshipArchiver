@@ -243,6 +243,7 @@ public class RelationSvg {
 //
 //    }
     protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData currentNode, EntityRelation graphLinkNode, int hSpacing, int vSpacing) {
+        // Ticket #1250 Prevent duplicate sanguine lines which connect ego-alter vs alter-ego.
         if (graphLinkNode.relationLineType == DataTypes.RelationLineType.sanguineLine) {
             if (hasCommonParent(currentNode, graphLinkNode)) {
                 return; // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
@@ -383,32 +384,35 @@ public class RelationSvg {
                 try {
                     DataStoreSvg.GraphRelationData graphRelationData = new DataStoreSvg().getEntitiesForRelations(currentChild);
                     if (graphRelationData != null) {
-                        if (draggedNodeIds.contains(graphRelationData.egoNodeId) || draggedNodeIds.contains(graphRelationData.alterNodeId)) {
-                            // todo: update the relation lines
-                            //System.out.println("needs update on: " + idAttrubite.getNodeValue());
-                            String lineElementId = idAttrubite.getNodeValue() + "Line";
-                            Element relationLineElement = graphPanel.doc.getElementById(lineElementId);
-                            //System.out.println("type: " + relationLineElement.getLocalName());
-                            float[] egoSymbolPoint;
-                            float[] alterSymbolPoint;
-                            float[] parentPoint;
+                        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        // we update all the relation lines here, rather than cacluating which co parent (parentPoint) lines need updating when the current parent is moved //
+                        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                        if (draggedNodeIds.contains(graphRelationData.egoNodeId) || draggedNodeIds.contains(graphRelationData.alterNodeId)) {
+                        // todo: update the relation lines
+                        //System.out.println("needs update on: " + idAttrubite.getNodeValue());
+                        String lineElementId = idAttrubite.getNodeValue() + "Line";
+                        Element relationLineElement = graphPanel.doc.getElementById(lineElementId);
+                        //System.out.println("type: " + relationLineElement.getLocalName());
+                        float[] egoSymbolPoint;
+                        float[] alterSymbolPoint;
+                        float[] parentPoint;
 //                        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.egoNodeId);
 //                        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.alterNodeId);
-                            DataTypes.RelationType directedRelation = graphRelationData.relationType;
-                            if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
-                                egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
-                                alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
-                                parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.alterNodeId);
-                                directedRelation = DataTypes.RelationType.ancestor;
-                            } else {
-                                egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
-                                alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
-                                parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.egoNodeId);
-                            }
-                            float egoX = egoSymbolPoint[0];
-                            float egoY = egoSymbolPoint[1];
-                            float alterX = alterSymbolPoint[0];
-                            float alterY = alterSymbolPoint[1];
+                        DataTypes.RelationType directedRelation = graphRelationData.relationType;
+                        if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
+                            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+                            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
+                            parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.alterNodeId);
+                            directedRelation = DataTypes.RelationType.ancestor;
+                        } else {
+                            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
+                            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+                            parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.egoNodeId);
+                        }
+                        float egoX = egoSymbolPoint[0];
+                        float egoY = egoSymbolPoint[1];
+                        float alterX = alterSymbolPoint[0];
+                        float alterY = alterSymbolPoint[1];
 
 //                        SVGRect egoSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.egoNodeId);
 //                        SVGRect alterSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.alterNodeId);
@@ -418,17 +422,17 @@ public class RelationSvg {
 //                        float alterX = alterSymbolRect.getX() + alterSymbolRect.getWidth() / 2;
 //                        float alterY = alterSymbolRect.getY() + alterSymbolRect.getHeight() / 2;
 
-                            if ("polyline".equals(relationLineElement.getLocalName())) {
-                                //System.out.println("polyline to update: " + lineElementId);
-                                setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineElementId, relationLineElement, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
-                            }
-                            if ("path".equals(relationLineElement.getLocalName())) {
-                                //System.out.println("path to update: " + relationLineElement.getLocalName());
-                                setPathPointsAttribute(relationLineElement, directedRelation, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
-                            }
-                            addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
-                            updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
+                        if ("polyline".equals(relationLineElement.getLocalName())) {
+                            //System.out.println("polyline to update: " + lineElementId);
+                            setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineElementId, relationLineElement, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
                         }
+                        if ("path".equals(relationLineElement.getLocalName())) {
+                            //System.out.println("path to update: " + relationLineElement.getLocalName());
+                            setPathPointsAttribute(relationLineElement, directedRelation, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
+                        }
+                        addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
+                        updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
+//                        }
                     }
                 } catch (IdentifierException exception) {
 //                    GuiHelper.linorgBugCatcher.logError(exception);
