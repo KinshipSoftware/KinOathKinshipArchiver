@@ -540,7 +540,7 @@ public class EntitySvg {
         if (graphPanel.dataStoreSvg.showKinTypeLabels) {
             labelList.addAll(Arrays.asList(currentNode.getKinTypeStringArray()));
         }
-        // todo: why is this not used?
+        // this option has been hidden from the menu because it is not used here anymore, it has been replaced by the kin terms panel option to hide and show
 //        if (graphPanel.dataStoreSvg.showKinTermLabels) {
 //            labelList.addAll(Arrays.asList(currentNode.getKinTermStrings()));
 //        }
