@@ -12,7 +12,6 @@ import javax.swing.JPopupMenu;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindocument.RelationLinker;
@@ -53,7 +52,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private JCheckBoxMenuItem showSanguineLinesMenuItem;
     private JCheckBoxMenuItem showLabelssMenuItem;
     private JCheckBoxMenuItem showKinTypeLabelssMenuItem;
-    private JCheckBoxMenuItem showKinTermLabelssMenuItem;
+//    private JCheckBoxMenuItem showKinTermLabelssMenuItem;
     private JCheckBoxMenuItem showIdLabelsMenuItem;
     private JCheckBoxMenuItem showDateLabelsMenuItem;
     private JCheckBoxMenuItem showArchiveLinksMenuItem;
@@ -308,16 +307,16 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(showKinTypeLabelssMenuItem);
-        showKinTermLabelssMenuItem = new JCheckBoxMenuItem("Show Kin Term Labels");
-        showKinTermLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Hide/Show Kin Terms on the graph
-                graphPanel.dataStoreSvg.showKinTermLabels = !graphPanel.dataStoreSvg.showKinTermLabels;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(showKinTermLabelssMenuItem);
+//        showKinTermLabelssMenuItem = new JCheckBoxMenuItem("Show Kin Term Labels");
+//        showKinTermLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
+//
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                // Hide/Show Kin Terms on the graph
+//                graphPanel.dataStoreSvg.showKinTermLabels = !graphPanel.dataStoreSvg.showKinTermLabels;
+//                graphPanel.drawNodes();
+//            }
+//        });
+//        this.add(showKinTermLabelssMenuItem);
 
         // todo: this should not show when no ids are specified by the user
         showIdLabelsMenuItem = new JCheckBoxMenuItem("Show Id Labels");
@@ -442,7 +441,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         showKinTermLinesMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLines);
         showLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showLabels);
         showKinTypeLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTypeLabels);
-        showKinTermLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLabels);
+//        showKinTermLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLabels);
         showIdLabelsMenuItem.setSelected(graphPanel.dataStoreSvg.showIdLabels);
         showDateLabelsMenuItem.setSelected(graphPanel.dataStoreSvg.showDateLabels);
         showArchiveLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showArchiveLinks);
