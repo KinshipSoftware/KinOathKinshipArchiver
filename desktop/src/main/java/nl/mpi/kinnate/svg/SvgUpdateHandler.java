@@ -448,7 +448,14 @@ public class SvgUpdateHandler {
 
     protected void startDrag() {
         // dragRemainders is used to store the remainder after snap between drag updates
-        dragRemainders = null;
+        // reset all remainders
+        float[][] tempRemainders = new float[graphPanel.selectedGroupId.size()][];
+        for (int dragCounter = 0; dragCounter < tempRemainders.length; dragCounter++) {
+            tempRemainders[dragCounter] = new float[]{0, 0};
+        }
+        synchronized (SvgUpdateHandler.this) {
+            dragRemainders = tempRemainders;
+        }
     }
 
     protected void updateDragNode(int updateDragNodeXLocal, int updateDragNodeYLocal) {
@@ -469,12 +476,6 @@ public class SvgUpdateHandler {
         return new Runnable() {
 
             public void run() {
-                if (dragRemainders == null) {
-                    dragRemainders = new float[graphPanel.selectedGroupId.size()][];
-                    for (int dragCounter = 0; dragCounter < dragRemainders.length; dragCounter++) {
-                        dragRemainders[dragCounter] = new float[]{0, 0};
-                    }
-                }
 //                Element relationOldHighlightGroup = graphPanel.doc.getElementById("RelationHighlightGroup");
 //                if (relationOldHighlightGroup != null) {
 //                    // remove the relation highlight group because lines will be out of date when the entities are moved
@@ -522,7 +523,11 @@ public class SvgUpdateHandler {
                         int dragCounter = 0;
                         for (UniqueIdentifier entityId : graphPanel.selectedGroupId) {
                             // store the remainder after snap for re use on each update
-                            dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, allRealtionsSelected);
+                            synchronized (SvgUpdateHandler.this) {
+                                if (dragRemainders.length > dragCounter) {
+                                    dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, allRealtionsSelected);
+                                }
+                            }
                             dragCounter++;
                         }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
