@@ -81,7 +81,7 @@ public class RelationSvg {
 //                alterX = tempX;
 //                alterY = tempY;
             case descendant:
-                throw new UnsupportedOperationException("in order to simplify this ancestor relations should be swapped so that ego is the parent");
+                throw new UnsupportedOperationException("in order to simplify section, the ancestor relations should be swapped so that ego is the parent");
 //                egoYmid = egoY + midSpacing;
 //                alterYmid = alterY - midSpacing;
 //                centerX = (egoYmid < alterYmid) ? alterX : centerX;
@@ -94,8 +94,9 @@ public class RelationSvg {
                 centerX = (egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
             case union:
-                egoYmid = egoY + midSpacing;
-                alterYmid = alterY + midSpacing;
+                float unionMid = (egoY > alterY) ? egoY : alterY;
+                egoYmid = unionMid + 30;
+                alterYmid = unionMid + 30;
                 centerX = (egoY < alterY) ? egoX : alterX;
                 centerX = (egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
