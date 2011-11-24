@@ -279,6 +279,7 @@ public class KinOathVersion extends ApplicationVersion {
         <!-- copy the current version of allversionslisting.php to make sure it gets kept in svn -->
         <scp file="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/allversionslisting.php" todir="../desktop/src/main/php/" />
         <scp file="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/todolisttable.php" todir="../desktop/src/main/php/" />
+        <sshexec host="lux09.mpi.nl" username="${lux09.user}" password="${lux09.pw}" command="chmod a+r /data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath*" verbose="true" />
     </target>
     <target name="maven-jar" depends="updateJnlpAndAppletHtml">
         <!-- while this could be done in a maven ant task, this method appears more portable at this stage -->
