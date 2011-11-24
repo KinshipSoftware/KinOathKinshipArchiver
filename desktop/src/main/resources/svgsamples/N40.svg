@@ -892,12 +892,12 @@
   </g>
   
 <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
-    <kin:KinTypeString>FS:1:BSSWMDHFF:1:</kin:KinTypeString>
-    <kin:KinTypeString>M:2:SSDHMFM:2:</kin:KinTypeString>
-    <kin:KinTypeString>F:3:SSDHMF:3: </kin:KinTypeString>
-    <kin:KinTypeString>m:40:FFFSBSSWMDZH:40:</kin:KinTypeString>
-    <kin:KinTypeString>f:155:DDHFFS:a:SDHM:155:</kin:KinTypeString>
-    <kin:KinTypeString>m:35:DDDHFF:35:</kin:KinTypeString>
+    <kin:KinTypeString>FS:#1:BSSWMDHFF:#1:</kin:KinTypeString>
+    <kin:KinTypeString>M:#2:SSDHMFM:#2:</kin:KinTypeString>
+    <kin:KinTypeString>F:#3:SSDHMF:#3:</kin:KinTypeString>
+    <kin:KinTypeString>m:#40:FFFSBSSWMDZH:#40:</kin:KinTypeString>
+    <kin:KinTypeString>f:#155:DDHFFS:a:SDHM:#155:</kin:KinTypeString>
+    <kin:KinTypeString>m:#35:DDDHFF:#35:</kin:KinTypeString>
     <kin:IndexParameters>
       <kin:LabelFields>
         <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*:Name"/>
