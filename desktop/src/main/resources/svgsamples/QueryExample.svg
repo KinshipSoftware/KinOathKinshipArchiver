@@ -368,8 +368,8 @@
 
 <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
     <kin:KinTypeString># this diagram requires the data from "Descententes de Jose Antonio de Figueiredo" to be imported via the "Import Sample Data" menu.</kin:KinTypeString>
-    <kin:KinTypeString>E=[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/]P</kin:KinTypeString>
-    <kin:KinTypeString>E=[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/]SD </kin:KinTypeString>
+    <kin:KinTypeString>E[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/]P</kin:KinTypeString>
+    <kin:KinTypeString>E[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/]SD </kin:KinTypeString>
     <kin:IndexParameters>
       <kin:LabelFields>
         <kin:IndexerParam kin:XPath="*:Kinnate/*:Metadata/*[starts-with(local-name(), 'Name')]"/>
