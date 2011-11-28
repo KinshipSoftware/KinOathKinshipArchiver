@@ -58,15 +58,15 @@ public class RelationSvg {
         ArrayList<Point> initialPointsList = new ArrayList<Point>();
         float midSpacing = vSpacing / 2;
 //        float parentSpacing = 10;
-        if (averageParent == null) {
-            // if no parent location has been provided then just use the current parent
-            averageParent = new float[]{alterX, alterY};
-        }
         float egoYmid;
         float alterYmid;
         float centerX = (egoX + alterX) / 2;
         switch (relationType) {
             case ancestor:
+                if (averageParent == null) {
+                    // if no parent location has been provided then just use the current parent
+                    averageParent = new float[]{alterX, alterY};
+                }
                 egoYmid = egoY - midSpacing;
                 alterYmid = averageParent[1] + 30;
 //                alterYmid = alterY + midSpacing;
@@ -87,7 +87,7 @@ public class RelationSvg {
 //                centerX = (egoYmid < alterYmid) ? alterX : centerX;
 //                centerX = (egoY > alterY && egoX == alterX) ? centerX - midSpacing : centerX;
 //                break;
-            case sibling:
+            case sibling:                
                 egoYmid = egoY - midSpacing;
                 alterYmid = alterY - midSpacing;
                 centerX = (egoY < alterY) ? alterX : egoX;
