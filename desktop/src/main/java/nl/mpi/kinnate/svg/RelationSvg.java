@@ -87,7 +87,7 @@ public class RelationSvg {
 //                centerX = (egoYmid < alterYmid) ? alterX : centerX;
 //                centerX = (egoY > alterY && egoX == alterX) ? centerX - midSpacing : centerX;
 //                break;
-            case sibling:                
+            case sibling:
                 egoYmid = egoY - midSpacing;
                 alterYmid = alterY - midSpacing;
                 centerX = (egoY < alterY) ? alterX : egoX;
@@ -206,7 +206,7 @@ public class RelationSvg {
         targetNode.setAttribute("d", "M " + egoX + "," + egoY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + alterX + "," + alterY);
     }
 
-    private boolean hasCommonParent(EntityData currentNode, EntityRelation graphLinkNode) {
+    public boolean hasCommonParent(EntityData currentNode, EntityRelation graphLinkNode) {
         if (graphLinkNode.relationType == DataTypes.RelationType.sibling) {
             for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getDistinctRelateNodes()) {
                 if (altersRelation.relationType == DataTypes.RelationType.ancestor) {
@@ -247,36 +247,26 @@ public class RelationSvg {
 //        }
 //
 //    }
-    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData currentNode, EntityRelation graphLinkNode, int hSpacing, int vSpacing) {
+    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, DataTypes.RelationLineType relationLineType, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
         // Ticket #1250 Prevent duplicate sanguine lines which connect ego-alter vs alter-ego.
-        if (graphLinkNode.relationLineType == DataTypes.RelationLineType.sanguineLine) {
-            if (hasCommonParent(currentNode, graphLinkNode)) {
-                return; // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
-            }
-        }
+        float[] egoSymbolPoint;
+        float[] alterSymbolPoint;
+        float[] parentPoint;
+        // the ancestral relations should already be unidirectional and duplicates should have been removed
+        egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(leftEntity.getUniqueIdentifier());
+        alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(rightEntity.getUniqueIdentifier());
+        parentPoint = graphPanel.entitySvg.getAverageParentLocation(rightEntity);
+        directedRelation = DataTypes.RelationType.ancestor;
+
         int relationLineIndex = relationGroupNode.getChildNodes().getLength();
         Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
         groupNode.setAttribute("id", "relation" + relationLineIndex);
         Element defsNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "defs");
         String lineIdString = "relation" + relationLineIndex + "Line";
-        new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, graphLinkNode.relationType, graphLinkNode.relationLineType, currentNode.getUniqueIdentifier(), graphLinkNode.getAlterNode().getUniqueIdentifier());
+        new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, directedRelation, relationLineType, leftEntity.getUniqueIdentifier(), rightEntity.getUniqueIdentifier());
         // set the line end points
 //        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(currentNode.getUniqueIdentifier());
 //        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
-        float[] egoSymbolPoint;
-        float[] alterSymbolPoint;
-        float[] parentPoint;
-        DataTypes.RelationType directedRelation = graphLinkNode.relationType;
-        if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
-            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
-            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(currentNode.getUniqueIdentifier());
-            parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphLinkNode.getAlterNode());
-            directedRelation = DataTypes.RelationType.ancestor;
-        } else {
-            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(currentNode.getUniqueIdentifier());
-            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
-            parentPoint = graphPanel.entitySvg.getAverageParentLocation(currentNode);
-        }
 //        float fromX = (currentNode.getxPos()); // * hSpacing + hSpacing
 //        float fromY = (currentNode.getyPos()); // * vSpacing + vSpacing
 //        float toX = (graphLinkNode.getAlterNode().getxPos()); // * hSpacing + hSpacing
@@ -287,7 +277,7 @@ public class RelationSvg {
         float toY = (alterSymbolPoint[1]); // * vSpacing + vSpacing
 
         boolean addedRelationLine = false;
-        switch (graphLinkNode.relationLineType) {
+        switch (relationLineType) {
             case kinTermLine:
             // this case uses the following case
             case verticalCurve:
@@ -310,14 +300,14 @@ public class RelationSvg {
                 //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
                 Element linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
 
-                setPathPointsAttribute(linkLine, directedRelation, graphLinkNode.relationLineType, hSpacing, vSpacing, fromX, fromY, toX, toY);
+                setPathPointsAttribute(linkLine, directedRelation, relationLineType, hSpacing, vSpacing, fromX, fromY, toX, toY);
                 //                    linkLine.setAttribute("x1", );
                 //                    linkLine.setAttribute("y1", );
                 //
                 //                    linkLine.setAttribute("x2", );
                 linkLine.setAttribute("fill", "none");
-                if (graphLinkNode.lineColour != null) {
-                    linkLine.setAttribute("stroke", graphLinkNode.lineColour);
+                if (lineColour != null) {
+                    linkLine.setAttribute("stroke", lineColour);
                 } else {
                     linkLine.setAttribute("stroke", "blue");
                 }
@@ -353,24 +343,25 @@ public class RelationSvg {
             // insert the node that uses the above definition
             addUseNode(graphPanel.doc, graphPanel.svgNameSpace, groupNode, lineIdString);
             // add the relation label
-            if (graphLinkNode.labelString != null) {
+            if (lineLabel != null) {
                 Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
                 labelText.setAttribute("text-anchor", "middle");
                 //                        labelText.setAttribute("x", Integer.toString(labelX));
                 //                        labelText.setAttribute("y", Integer.toString(labelY));
-                if (graphLinkNode.lineColour != null) {
-                    labelText.setAttribute("fill", graphLinkNode.lineColour);
+                if (lineColour != null) {
+                    labelText.setAttribute("fill", lineColour);
                 } else {
                     labelText.setAttribute("fill", "blue");
                 }
                 labelText.setAttribute("stroke-width", "0");
                 labelText.setAttribute("font-size", "14");
                 //                        labelText.setAttribute("transform", "rotate(45)");
+//                // todo: resolve issues with the USE node for the text
 //                Element textPath = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "textPath");
 //                textPath.setAttributeNS("http://www.w3.rg/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
 //                textPath.setAttribute("startOffset", "50%");
 //                textPath.setAttribute("id", "relation" + relationLineIndex + "label");
-//                Text textNode = graphPanel.doc.createTextNode(graphLinkNode.labelString);
+//                Text textNode = graphPanel.doc.createTextNode(lineLabel);
 //                textPath.appendChild(textNode);
 //                labelText.appendChild(textPath);
                 groupNode.appendChild(labelText);
