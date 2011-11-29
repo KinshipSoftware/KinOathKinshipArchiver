@@ -2,6 +2,7 @@ package nl.mpi.kinnate.svg;
 
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 import java.util.HashSet;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
@@ -816,12 +817,50 @@ public class SvgUpdateHandler {
                     entityGroupNode.appendChild(graphPanel.entitySvg.createEntitySymbol(graphPanel, currentNode));
                 }
             }
+            RelationSvg relationSvg = new RelationSvg();
+            ArrayList<String> doneRelations = new ArrayList<String>();
             for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
                         if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.kinTermLine)
                                 && (graphPanel.dataStoreSvg.showSanguineLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.sanguineLine)) {
-                            new RelationSvg().insertRelation(graphPanel, relationGroupNode, currentNode, graphLinkNode, hSpacing, vSpacing);
+                            // make directed and exclude any lines that are already done
+                            DataTypes.RelationType directedRelation = graphLinkNode.relationType;
+                            EntityData leftEntity;
+                            EntityData rightEntity;
+                            if (graphLinkNode.relationType == DataTypes.RelationType.descendant) {
+                                // make sure the ancestral relations are unidirectional
+                                directedRelation = DataTypes.RelationType.ancestor;
+                                leftEntity = graphLinkNode.getAlterNode();
+                                rightEntity = currentNode;
+                            } else if (graphLinkNode.relationType == DataTypes.RelationType.ancestor) {
+                                // make sure the ancestral relations are unidirectional
+                                leftEntity = currentNode;
+                                rightEntity = graphLinkNode.getAlterNode();
+                            } else if (currentNode.getUniqueIdentifier().getQueryIdentifier().compareTo(graphLinkNode.getAlterNode().getUniqueIdentifier().getQueryIdentifier()) > 0) {
+                                // make sure all other relations are directed by the string sort order so that they can be made unique
+                                leftEntity = graphLinkNode.getAlterNode();
+                                rightEntity = currentNode;
+                            } else {
+                                // make sure all other relations are directed by the string sort order so that they can be made unique
+                                leftEntity = currentNode;
+                                rightEntity = graphLinkNode.getAlterNode();
+                            }
+                            String compoundIdentifier = currentNode.getUniqueIdentifier().getQueryIdentifier() + graphLinkNode.getAlterNode().getUniqueIdentifier().getQueryIdentifier();
+                            // make sure each equivalent relation is drawn only once
+                            if (!doneRelations.contains(compoundIdentifier)) {
+                                boolean skipCurrentRelation = false;
+                                if (graphLinkNode.relationLineType == DataTypes.RelationLineType.sanguineLine) {
+                                    if (relationSvg.hasCommonParent(leftEntity, graphLinkNode)) {
+                                        // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
+                                        skipCurrentRelation = true;
+                                    }
+                                }
+                                if (!skipCurrentRelation) {
+                                    doneRelations.add(compoundIdentifier);
+                                    relationSvg.insertRelation(graphPanel, relationGroupNode, leftEntity, rightEntity, directedRelation, graphLinkNode.relationLineType, graphLinkNode.lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
+                                }
+                            }
                         }
                     }
                 }
