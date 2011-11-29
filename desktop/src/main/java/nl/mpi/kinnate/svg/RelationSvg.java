@@ -395,16 +395,11 @@ public class RelationSvg {
 //                        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.egoNodeId);
 //                        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.alterNodeId);
                         DataTypes.RelationType directedRelation = graphRelationData.relationType;
-                        if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
-                            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
-                            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
-                            parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.alterNodeId);
-                            directedRelation = DataTypes.RelationType.ancestor;
-                        } else {
-                            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
-                            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
-                            parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.egoNodeId);
-                        }
+                        // the relation lines are already directed so there is no need to make then unidirectional here
+                        egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
+                        alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+                        parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.egoNodeId);
+
                         float egoX = egoSymbolPoint[0];
                         float egoY = egoSymbolPoint[1];
                         float alterX = alterSymbolPoint[0];
