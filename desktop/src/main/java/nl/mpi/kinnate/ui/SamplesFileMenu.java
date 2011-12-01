@@ -16,10 +16,10 @@ import nl.mpi.arbil.ui.GuiHelper;
  */
 public class SamplesFileMenu extends JMenu implements ActionListener {
 
-    MainFrame mainFrame;
+    DiagramWindowManager diagramWindowManager;
 
-    public SamplesFileMenu(MainFrame mainFrameLocal) {
-        mainFrame = mainFrameLocal;
+    public SamplesFileMenu(DiagramWindowManager diagramWindowManager) {
+        this.diagramWindowManager = diagramWindowManager;
         addSampleToMenu("Freeform Diagram Syntax", "FreeformDiagramSyntax.svg");
         addSampleToMenu("Application Overview", "ApplicationOverview.svg");
         addSampleToMenu("Hawaiian Kin Terms", "HawaiianKinTerms.svg");
@@ -50,7 +50,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
             final URI sampleFile = new URI(e.getActionCommand());
             if (e.getSource() instanceof JMenuItem) {
                 String sampleName = ((JMenuItem) e.getSource()).getText();
-                mainFrame.openDiagram(sampleName, sampleFile, false);
+                diagramWindowManager.openDiagram(sampleName, sampleFile, false);
             }
         } catch (URISyntaxException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
