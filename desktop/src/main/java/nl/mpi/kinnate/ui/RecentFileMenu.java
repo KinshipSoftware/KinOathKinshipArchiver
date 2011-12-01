@@ -19,10 +19,11 @@ import nl.mpi.arbil.userstorage.ArbilSessionStorage;
  */
 public class RecentFileMenu extends JMenu implements ActionListener {
 
-    MainFrame mainFrame;
+    DiagramWindowManager diagramWindowManager;
 
-    public RecentFileMenu(MainFrame mainFrameLocal) {
-        mainFrame = mainFrameLocal;
+    public RecentFileMenu(DiagramWindowManager diagramWindowManager) {
+        this.diagramWindowManager = diagramWindowManager;
+        this.setText("Open Recent Diagram");
         setupMenu();
     }
 
@@ -94,7 +95,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
 //                final int startIndex = actionString.lastIndexOf('/');
 //                final String recentName = actionString.substring(startIndex + 1);
             final String recentName = recentFile.getName();
-            mainFrame.openDiagram(recentName, recentFile.toURI(), true);
+            diagramWindowManager.openDiagram(recentName, recentFile.toURI(), true);
 //            } catch (URISyntaxException exception) {
 //                GuiHelper.linorgBugCatcher.logError(exception);
 //                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
