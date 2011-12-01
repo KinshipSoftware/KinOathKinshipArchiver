@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JTabbedPane;
 
 /**
  *  Document   : DocumentNewMenu
@@ -13,7 +12,7 @@ import javax.swing.JTabbedPane;
  */
 public class DocumentNewMenu extends JMenu implements ActionListener {
 
-    JTabbedPane targetPane;
+    DiagramWindowManager diagramWindowManager;
 
     public enum DocumentType {
 
@@ -35,8 +34,8 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
         }
     }
 
-    public DocumentNewMenu(JTabbedPane targetPane) {
-        this.targetPane = targetPane;
+    public DocumentNewMenu(DiagramWindowManager diagramWindowManager) {
+        this.diagramWindowManager = diagramWindowManager;
         for (DocumentType documentType : DocumentType.values()) {
             JMenuItem menuItem = new JMenuItem(documentType.getDisplayName());
             menuItem.setActionCommand(documentType.name());
@@ -47,8 +46,6 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         DocumentType documentType = DocumentType.valueOf(e.getActionCommand());
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType);
-        targetPane.add("Unsaved " + documentType.getDisplayName(), egoSelectionTestPanel);
-        targetPane.setSelectedComponent(egoSelectionTestPanel);
+        diagramWindowManager.newDiagram(documentType);
     }
 }
