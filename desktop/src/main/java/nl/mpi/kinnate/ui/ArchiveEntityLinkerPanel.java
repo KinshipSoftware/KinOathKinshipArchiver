@@ -56,10 +56,9 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         treePanel.add(nextButton, BorderLayout.PAGE_END);
         archiveTree.setTransferHandler(dragTransferHandler);
         archiveTree.setDragEnabled(true);
-        loadTreeNodes(treeType);
     }
 
-    private void loadTreeNodes(TreeType treeType) {
+    public void loadTreeNodes() {
         try {
             ArbilNode[] allEntities;
             AbstractTreeHelper treeHelper = ArbilTreeHelper.getSingleInstance();
