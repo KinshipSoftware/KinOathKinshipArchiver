@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.export;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,7 +10,6 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.KinTermSavePanel;
-import nl.mpi.kinnate.ui.MainFrame;
 
 /**
  *  Document   : ExportToR
@@ -18,7 +18,7 @@ import nl.mpi.kinnate.ui.MainFrame;
  */
 public class ExportToR {
 
-    public void doExport(MainFrame mainFrame, KinTermSavePanel savePanel) {
+    public void doExport(Component mainFrame, KinTermSavePanel savePanel) {
         // todo: modify this to use the ArbilWindowManager and update the ArbilWindowManager file select to support save file actions
         JFileChooser fc = new JFileChooser();
         String lastSavedFileString = ArbilSessionStorage.getSingleInstance().loadString("kinoath.ExportToR");
