@@ -42,7 +42,7 @@ public class EntitySearchPanel extends JPanel {
         resultsTree = new KinTree(kinDiagramPanel, graphPanel);
         resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
         resultsTree.setRootVisible(false);
-        resultsTree.requestResort();
+        // resultsTree.requestResort();// this resort is unrequred
         JLabel searchLabel = new JLabel("Search Entity Names");
         searchField = new JTextField();
         searchField.addKeyListener(new KeyAdapter() {
