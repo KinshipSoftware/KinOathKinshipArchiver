@@ -58,6 +58,13 @@ public class MainFrame extends javax.swing.JFrame {
         return savePanel;
     }
 
+    public void loadAllTrees() {
+        Object selectedComponent = jTabbedPane1.getSelectedComponent();
+        if (selectedComponent instanceof KinDiagramPanel) {
+            ((KinDiagramPanel) selectedComponent).loadAllTrees();
+        }
+    }
+
     public KinTermSavePanel getKinTermPanel() {
         Object selectedComponent = jTabbedPane1.getComponentAt(jTabbedPane1.getSelectedIndex());
         KinTermSavePanel kinTermSavePanel = null;
@@ -475,7 +482,9 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new MainFrame().setVisible(true);
+                final MainFrame mainFrame = new MainFrame();
+                mainFrame.setVisible(true);
+                mainFrame.loadAllTrees();
             }
         });
     }
