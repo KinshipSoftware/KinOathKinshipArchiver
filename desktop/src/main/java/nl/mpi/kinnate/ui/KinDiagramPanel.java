@@ -19,7 +19,6 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.KinTermSavePanel;
-import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -49,6 +48,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private KinTypeStringInput kinTypeStringInput;
     private GraphPanel graphPanel;
     private EgoSelectionPanel egoSelectionPanel;
+    private ArchiveEntityLinkerPanel archiveEntityLinkerPanelRemote;
+    private ArchiveEntityLinkerPanel archiveEntityLinkerPanelLocal;
+    private ArchiveEntityLinkerPanel archiveEntityLinkerPanelMpiRemote;
     private HidePane kinTermHidePane;
     private HidePane kinTypeHidePane;
     private EntityService entityIndex;
@@ -56,6 +58,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     static private File defaultDiagramTemplate;
     private HashMap<ArbilDataNode, UniqueIdentifier> registeredArbilDataNode;
     private HashMap<ArbilNode, Boolean> arbilDataNodesChangedStatus;
+//    private ArrayList<ArbilTree> treeLoadQueue = new ArrayList<ArbilTree>();
 
     public KinDiagramPanel(URI existingFile, boolean savableType) {
         initKinDiagramPanel(existingFile, null, savableType);
@@ -184,9 +187,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 switch (panelSetting.getPanelType()) {
                     case ArchiveLinker:
                         panelSetting.setHidePane(kinTermHidePane, "Archive Linker");
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree), false);
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree), false);
-                        panelSetting.addTargetPanel(new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree), false);
+                        archiveEntityLinkerPanelRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree);
+                        archiveEntityLinkerPanelLocal = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree);
+                        archiveEntityLinkerPanelMpiRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree);
+                        panelSetting.addTargetPanel(archiveEntityLinkerPanelRemote, false);
+                        panelSetting.addTargetPanel(archiveEntityLinkerPanelLocal, false);
+                        panelSetting.addTargetPanel(archiveEntityLinkerPanelMpiRemote, false);
                         break;
                     case DiagramTree:
                         panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
@@ -236,7 +242,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         this.add(kinGraphPanel);
 
         entityIndex = new QueryParser(graphPanel.dataStoreSvg.graphData.getDataNodes());
-        egoSelectionPanel.setTreeNodes(graphPanel);
         kinTypeStringInput.addKeyListener(new KeyListener() {
 
             public void keyTyped(KeyEvent e) {
@@ -373,6 +378,16 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     public void removeRequiredNodes(UniqueIdentifier[] egoIdentifierArray) {
         graphPanel.dataStoreSvg.requiredEntities.removeAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
+    }
+
+    public void loadAllTrees() {
+        egoSelectionPanel.setTreeNodes(graphPanel); // init the trees in the side panel
+        archiveEntityLinkerPanelRemote.loadTreeNodes();
+        archiveEntityLinkerPanelLocal.loadTreeNodes();
+        archiveEntityLinkerPanelMpiRemote.loadTreeNodes();
+//        while (!treeLoadQueue.isEmpty()) {
+//            treeLoadQueue.remove(0).requestResort();
+//        }
     }
 
     public boolean hasSaveFileName() {
