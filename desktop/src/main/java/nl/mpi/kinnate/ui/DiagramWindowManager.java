@@ -26,6 +26,12 @@ public class DiagramWindowManager {
 //        egoSelectionTestPanel.drawGraph();
     }
 
+    public void newDiagram(DocumentNewMenu.DocumentType documentType) {
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType);
+        jTabbedPane1.add("Unsaved " + documentType.getDisplayName(), egoSelectionTestPanel);
+        jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
+    }
+
     public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu) {
         if (saveToRecentMenu) {
             // prevent files from the samples menu being added to the recent files menu
