@@ -18,10 +18,10 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting;
  */
 public class DiagramPanelsMenu extends JMenu implements ActionListener {
 
-    MainFrame mainFrame;
+    DiagramWindowManager diagramWindowManager;
 
-    public DiagramPanelsMenu(MainFrame mainFrameLocal) {
-        mainFrame = mainFrameLocal;
+    public DiagramPanelsMenu(DiagramWindowManager diagramWindowManager) {
+        this.diagramWindowManager = diagramWindowManager;
         this.setText("View");
         this.addMenuListener(new MenuListener() {
 
@@ -40,7 +40,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
     private void setupMenuItems() {
         this.removeAll();
         boolean menuItemsAdded = false;
-        KinTermSavePanel kinTermPanel = mainFrame.getKinTermPanel();
+        KinTermSavePanel kinTermPanel = diagramWindowManager.getKinTermPanel();
         if (kinTermPanel != null) {
             VisiblePanelSetting[] visiblePanelsArray = kinTermPanel.getVisiblePanels();
             Arrays.sort(visiblePanelsArray);
@@ -62,7 +62,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         VisiblePanelSetting.PanelType selectedPanelType = VisiblePanelSetting.PanelType.valueOf(e.getActionCommand());
-        KinTermSavePanel kinTermPanel = mainFrame.getKinTermPanel();
+        KinTermSavePanel kinTermPanel = diagramWindowManager.getKinTermPanel();
         if (kinTermPanel != null) {
             for (VisiblePanelSetting panelSetting : kinTermPanel.getVisiblePanels()) {
                 if (panelSetting.getPanelType().equals(selectedPanelType)) {
