@@ -13,7 +13,7 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
  */
 public class ArchiveMenu extends JMenu {
 
-    static private MainFrame mainFrame;
+    DiagramWindowManager diagramWindowManager;
     KinTermSavePanel currentKinTermSavePanel;
     JCheckBoxMenuItem hideShowMenu;
     JMenuItem showRemoteTreeMenu;
@@ -21,8 +21,8 @@ public class ArchiveMenu extends JMenu {
     JMenu showResultsMenu;
     JMenu closeResultsMenu;
 
-    public ArchiveMenu(MainFrame mainFrameLocal) {
-        mainFrame = mainFrameLocal;
+    public ArchiveMenu(DiagramWindowManager diagramWindowManager) {
+        this.diagramWindowManager = diagramWindowManager;
         initMenu();
     }
 
@@ -46,7 +46,7 @@ public class ArchiveMenu extends JMenu {
 
             public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // todo: check if a kin term pane is showing or associated with the diagram and that a diagam is showing
-                currentKinTermSavePanel = mainFrame.getKinTermPanel();
+                currentKinTermSavePanel = diagramWindowManager.getKinTermPanel();
                 if (currentKinTermSavePanel != null) {
 //                    hideShowMenu.setEnabled(true);
                     if (currentKinTermSavePanel.getPanelState(PanelType.ArchiveLinker)) {
