@@ -2,6 +2,7 @@ package nl.mpi.kinnate.ui;
 
 import java.io.File;
 import java.net.URI;
+import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 
 /**
@@ -84,6 +85,15 @@ public class DiagramWindowManager {
 
     public void closeSavePanel(int selectedIndex) {
         jTabbedPane1.remove(selectedIndex);
+    }
+
+    public KinTermSavePanel getKinTermPanel() {
+        SavePanel selectedComponent = getCurrentSavePanel();
+        KinTermSavePanel kinTermSavePanel = null;
+        if (selectedComponent instanceof KinTermSavePanel) {
+            kinTermSavePanel = (KinTermSavePanel) selectedComponent;
+        }
+        return kinTermSavePanel;
     }
 
     public void setDiagramTitle(int diagramIndex, String diagramTitle) {
