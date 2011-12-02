@@ -13,7 +13,7 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
  */
 public class KinTermsMenu extends JMenu {
 
-    static private MainFrame mainFrame;
+    DiagramWindowManager diagramWindowManager;
     KinTermSavePanel currentKinTermSavePanel;
     JCheckBoxMenuItem hideShowMenu;
     JMenuItem newMenu;
@@ -21,8 +21,8 @@ public class KinTermsMenu extends JMenu {
     JMenuItem importMenu;
     JMenuItem deleteMenu;
 
-    public KinTermsMenu(MainFrame mainFrameLocal) {
-        mainFrame = mainFrameLocal;
+    public KinTermsMenu(DiagramWindowManager diagramWindowManager) {
+        this.diagramWindowManager = diagramWindowManager;
         initMenu();
     }
 
@@ -46,7 +46,7 @@ public class KinTermsMenu extends JMenu {
 
             public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // todo: check if a kin term pane is showing or associated with the diagram and that a diagam is showing
-                currentKinTermSavePanel = mainFrame.getKinTermPanel();
+                currentKinTermSavePanel = diagramWindowManager.getKinTermPanel();
                 if (currentKinTermSavePanel != null) {
                     if (currentKinTermSavePanel.getKinTermGroupCount() == 0) {
                         // if there are no kin term groups then present "new" not "show"
