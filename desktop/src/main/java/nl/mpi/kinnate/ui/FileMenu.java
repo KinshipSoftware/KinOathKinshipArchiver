@@ -276,8 +276,10 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void exitApplicationActionPerformed(java.awt.event.ActionEvent evt) {
-        // todo: check that things are saved and ask user if not
-        System.exit(0);
+        // check that things are saved and ask user if not
+        if (diagramWindowManager.offerUserToSaveAll()) {
+            System.exit(0);
+        }
     }
 
     private void fileMenuMenuSelected(javax.swing.event.MenuEvent evt) {
