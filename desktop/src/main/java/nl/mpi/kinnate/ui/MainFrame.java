@@ -16,7 +16,7 @@ public class MainFrame extends javax.swing.JFrame {
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
-        DiagramWindowManager diagramWindowManager = new DiagramWindowManager();
+        DiagramWindowManager diagramWindowManager = new DiagramWindowManager(this);
         ((EditMenu) editMenu).enableMenuKeys();
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
         nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
