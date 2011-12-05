@@ -29,6 +29,7 @@ public class EditMenu extends JMenu implements ActionListener {
     GraphPanel initialGraphPanel = null;
 
     public EditMenu() {
+        this.setText("Edit");
         this.addMenuListener(new MenuListener() {
 
             public void menuCanceled(MenuEvent evt) {
