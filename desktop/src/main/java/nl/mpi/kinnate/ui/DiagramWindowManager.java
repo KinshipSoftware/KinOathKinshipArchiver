@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -25,6 +26,8 @@ public class DiagramWindowManager {
     private EntityUploadPanel entityUploadPanel;
 
     public DiagramWindowManager(JFrame mainFrame) {
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        mainFrame.add(jTabbedPane1, BorderLayout.CENTER);
         mainFrame.addWindowListener(new WindowAdapter() {
 
             @Override
@@ -64,6 +67,13 @@ public class DiagramWindowManager {
         jTabbedPane1.add(diagramTitle, egoSelectionTestPanel);
         jTabbedPane1.setSelectedComponent(egoSelectionTestPanel);
 //        egoSelectionTestPanel.drawGraph();
+    }
+
+    public void loadAllTrees() {
+        Object selectedComponent = jTabbedPane1.getSelectedComponent();
+        if (selectedComponent instanceof KinDiagramPanel) {
+            ((KinDiagramPanel) selectedComponent).loadAllTrees();
+        }
     }
 
     public void openImportPanel(String importUrlString) {
