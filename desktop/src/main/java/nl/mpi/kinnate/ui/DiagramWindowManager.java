@@ -28,6 +28,7 @@ public class DiagramWindowManager {
     public DiagramWindowManager(JFrame mainFrame) {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         mainFrame.add(jTabbedPane1, BorderLayout.CENTER);
+        mainFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         mainFrame.addWindowListener(new WindowAdapter() {
 
             @Override
