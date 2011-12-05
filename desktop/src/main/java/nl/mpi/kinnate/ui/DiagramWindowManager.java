@@ -1,7 +1,15 @@
 package nl.mpi.kinnate.ui;
 
+import java.awt.Component;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URI;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 
@@ -15,6 +23,19 @@ public class DiagramWindowManager {
     private RecentFileMenu recentFileMenu;
     private javax.swing.JTabbedPane jTabbedPane1;
     private EntityUploadPanel entityUploadPanel;
+
+    public DiagramWindowManager(JFrame mainFrame) {
+        mainFrame.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // check that all diagrams are saved and ask user if not
+                if (offerUserToSaveAll()) {
+                    System.exit(0);
+                }
+            }
+        });
+    }
 
     public void newDiagram() {
         URI defaultDiagramUri = null;
@@ -98,5 +119,75 @@ public class DiagramWindowManager {
 
     public void setDiagramTitle(int diagramIndex, String diagramTitle) {
         jTabbedPane1.setTitleAt(diagramIndex, diagramTitle);
+    }
+
+    public boolean offerUserToSaveAll() {
+        for (Component selectedComponent : jTabbedPane1.getComponents()) {
+            if (selectedComponent instanceof SavePanel) {
+                SavePanel savePanel = (SavePanel) selectedComponent;
+                if (savePanel.requiresSave()) {
+                    // warn user to save
+                    switch (ArbilWindowManager.getSingleInstance().showDialogBox("There are unsaved changes in:\n" + selectedComponent.getName() + "\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
+                        case JOptionPane.YES_OPTION:
+                            if (savePanel.hasSaveFileName()) {
+                                savePanel.saveToFile();
+                            } else {
+                                saveDiagramAs(savePanel);
+                            }
+                        case JOptionPane.NO_OPTION:
+                            break;
+                        case JOptionPane.CANCEL_OPTION:
+                            return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private String saveDiagramAs(SavePanel savePanel) {
+        // todo: update the file select to limit to svg and test that a file has been selected
+        // todo: move this into the arbil window manager and get the last used directory
+        // todo: make sure the file has the svg suffix
+        JFileChooser fc = new JFileChooser();
+        fc.addChoosableFileFilter(new FileFilter() {
+
+            @Override
+            public boolean accept(File file) {
+                if (file.isDirectory()) {
+                    return true;
+                }
+                return (file.getName().toLowerCase().endsWith(".svg"));
+            }
+
+            @Override
+            public String getDescription() {
+                return "Scalable Vector Graphics (SVG)";
+            }
+        });
+
+        int returnVal = fc.showSaveDialog((Component) savePanel);
+        // make sure the file path ends in .svg lowercase
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File svgFile = fc.getSelectedFile();
+            if (!svgFile.getName().toLowerCase().endsWith(".svg")) {
+                svgFile = new File(svgFile.getParentFile(), svgFile.getName() + ".svg");
+            }
+            savePanel.saveToFile(svgFile);
+            recentFileMenu.addRecentFile(svgFile);
+            return svgFile.getName();
+        } else {
+            // user canceled so there is no file selected and nothing to save
+            return null;
+        }
+//        File selectedFile[] = LinorgWindowManager.getSingleInstance().showFileSelectBox("Save Kin Diagram", false, false, false);
+//        if (selectedFile != null && selectedFile.length > 0) {
+//            int tabIndex = Integer.valueOf(evt.getActionCommand());
+//            SavePanel savePanel = getSavePanel(tabIndex);
+//            savePanel.saveToFile(selectedFile[0]);
+//            jTabbedPane1.setTitleAt(tabIndex, selectedFile[0].getName());
+//        } else {
+//            // todo: warn user that no file selected and so cannot save
+//        }
     }
 }
