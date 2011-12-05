@@ -13,14 +13,15 @@ import nl.mpi.kinnate.KinOathVersion;
  */
 public class MainFrame extends javax.swing.JFrame {
 
+    DiagramWindowManager diagramWindowManager;
+
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
-        DiagramWindowManager diagramWindowManager = new DiagramWindowManager(this);
+        diagramWindowManager = new DiagramWindowManager(this);
         ((EditMenu) editMenu).enableMenuKeys();
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
         nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
-        this.add(jTabbedPane1, BorderLayout.CENTER);
         diagramWindowManager.newDiagram();
         jMenuBar1.add(new FileMenu(diagramWindowManager));
         jMenuBar1.add(new DiagramPanelsMenu(diagramWindowManager));
@@ -39,10 +40,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void loadAllTrees() {
-        Object selectedComponent = jTabbedPane1.getSelectedComponent();
-        if (selectedComponent instanceof KinDiagramPanel) {
-            ((KinDiagramPanel) selectedComponent).loadAllTrees();
-        }
+        diagramWindowManager.loadAllTrees();
     }
 
     /** This method is called from within the constructor to
@@ -53,12 +51,10 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         editMenu = new EditMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.PAGE_START);
 
         editMenu.setText("Edit");
         editMenu.addMenuListener(new javax.swing.event.MenuListener() {
@@ -108,6 +104,5 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }
