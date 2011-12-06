@@ -27,7 +27,6 @@ import nl.mpi.kinnate.ui.menu.RecentFileMenu;
  */
 public abstract class AbstractDiagramManager {
 
-    private RecentFileMenu recentFileMenu;
     private EntityUploadPanel entityUploadPanel;
     private ApplicationVersionManager versionManager;
 
@@ -44,10 +43,6 @@ public abstract class AbstractDiagramManager {
                 }
             }
         });
-    }
-
-    public void setRecentFileMenu(RecentFileMenu recentFileMenu) {
-        this.recentFileMenu = recentFileMenu;
     }
 
     public void setWindowTitle(JFrame windowFrame, String titleString) {
@@ -80,7 +75,7 @@ public abstract class AbstractDiagramManager {
     public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu) {
         if (saveToRecentMenu) {
             // prevent files from the samples menu being added to the recent files menu
-            recentFileMenu.addRecentFile(new File(selectedUri));
+            RecentFileMenu.addRecentFile(new File(selectedUri));
         }
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu);
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
@@ -212,7 +207,7 @@ public abstract class AbstractDiagramManager {
                 svgFile = new File(svgFile.getParentFile(), svgFile.getName() + ".svg");
             }
             savePanel.saveToFile(svgFile);
-            recentFileMenu.addRecentFile(svgFile);
+            RecentFileMenu.addRecentFile(svgFile);
             return svgFile.getName();
         } else {
             // user canceled so there is no file selected and nothing to save
