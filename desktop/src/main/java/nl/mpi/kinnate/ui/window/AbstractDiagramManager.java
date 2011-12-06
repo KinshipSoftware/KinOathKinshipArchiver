@@ -102,9 +102,9 @@ public abstract class AbstractDiagramManager {
 //        uploadDialog.setVisible(true);
     }
 
-    abstract int getSavePanelIndex();
+    public abstract int getSavePanelIndex();
 
-    abstract String getSavePanelTitle(int selectedIndex);
+    public abstract String getSavePanelTitle(int selectedIndex);
 
     public SavePanel getCurrentSavePanel() {
         return getSavePanel(getSavePanelIndex());
@@ -121,7 +121,7 @@ public abstract class AbstractDiagramManager {
         return savePanel;
     }
 
-    abstract void closeSavePanel(int selectedIndex);
+    public abstract void closeSavePanel(int selectedIndex);
 
     public KinTermSavePanel getKinTermPanel() {
         SavePanel selectedComponent = getCurrentSavePanel();
@@ -132,7 +132,7 @@ public abstract class AbstractDiagramManager {
         return kinTermSavePanel;
     }
 
-    abstract void setDiagramTitle(int diagramIndex, String diagramTitle);
+    public abstract void setDiagramTitle(int diagramIndex, String diagramTitle);
 
     abstract public Component[] getAllDiagrams();
 
