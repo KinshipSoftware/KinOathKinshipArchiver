@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui;
 
+import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -44,10 +45,9 @@ public class FileMenu extends javax.swing.JMenu {
         ImportGedcomUrl = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
-        jMenu3 = new nl.mpi.kinnate.ui.DocumentNewMenu(diagramWindowManager);
+        jMenu3 = new nl.mpi.kinnate.ui.menu.DocumentNewMenu(diagramWindowManager);
         openDiagram = new javax.swing.JMenuItem();
         recentFileMenu = new RecentFileMenu(diagramWindowManager);
-        ;
         jMenu1 = new SamplesFileMenu(diagramWindowManager);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
@@ -62,6 +62,7 @@ public class FileMenu extends javax.swing.JMenu {
         saveAsDefaultMenuItem = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         exitApplication = new javax.swing.JMenuItem();
+        // todo: Ticket #1297 add an import gedcom and csv menu item
 
 
         this.setText("File");
@@ -329,6 +330,7 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void ImportGedcomUrlActionPerformed(java.awt.event.ActionEvent evt) {
+        // todo: Ticket #1297 either remove this or change it so it does not open so many tabs / windows
         String[] importList = new String[]{"http://gedcomlibrary.com/gedcoms.html",
             "http://GedcomLibrary.com/gedcoms/gl120365.ged", //	Tammy Carter Inman
             "http://GedcomLibrary.com/gedcoms/gl120366.ged", //	Luis Lemonnier
