@@ -9,7 +9,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
+import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
@@ -27,8 +29,10 @@ public abstract class AbstractDiagramManager {
 
     private RecentFileMenu recentFileMenu;
     private EntityUploadPanel entityUploadPanel;
+    private ApplicationVersionManager versionManager;
 
-    public AbstractDiagramManager(JFrame mainFrame) {
+    public AbstractDiagramManager(ApplicationVersionManager versionManager, JFrame mainFrame) {
+        this.versionManager = versionManager;
         mainFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         mainFrame.addWindowListener(new WindowAdapter() {
 
@@ -40,6 +44,15 @@ public abstract class AbstractDiagramManager {
                 }
             }
         });
+    }
+
+    public void setWindowTitle(JFrame windowFrame, String titleString) {
+        windowFrame.setTitle(versionManager.getApplicationVersion().applicationTitle + " " + versionManager.getApplicationVersion().currentMajor + "." + versionManager.getApplicationVersion().currentMinor + "." + versionManager.getApplicationVersion().currentRevision + " - " + titleString);
+    }
+
+    public void setWindowIcon(JFrame windowFrame) {
+        // set the icon for the application (if this is still required for the various OSs). This is not required for Mac but might be needed for windows or linux.
+        windowFrame.setIconImage(ArbilIcons.getSingleInstance().linorgIcon.getImage());
     }
 
     abstract public void createDiagramContainer(String diagramTitle, Component diagramComponent);
