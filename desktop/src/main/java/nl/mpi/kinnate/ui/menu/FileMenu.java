@@ -288,16 +288,19 @@ public class FileMenu extends javax.swing.JMenu {
     private void fileMenuMenuSelected(javax.swing.event.MenuEvent evt) {
         // set the save, save as and close text to include the tab to which the action will occur
         int selectedIndex = diagramWindowManager.getSavePanelIndex();
-        String currentTabText = diagramWindowManager.getSavePanelTitle(selectedIndex);
-        SavePanel savePanel = diagramWindowManager.getSavePanel(selectedIndex);
-        saveDiagramAs.setText("Save As (" + currentTabText + ")");
-        saveDiagramAs.setActionCommand(Integer.toString(selectedIndex));
-        saveDiagram.setText("Save (" + currentTabText + ")");
-        saveDiagram.setActionCommand(Integer.toString(selectedIndex));
-        closeTabMenuItem.setText("Close (" + currentTabText + ")");
-        closeTabMenuItem.setActionCommand(Integer.toString(selectedIndex));
-        saveAsDefaultMenuItem.setText("Set Default Diagram as (" + currentTabText + ")");
-        saveAsDefaultMenuItem.setActionCommand(Integer.toString(selectedIndex));
+        SavePanel savePanel = null;
+        if (selectedIndex > -1) {
+            String currentTabText = diagramWindowManager.getSavePanelTitle(selectedIndex);
+            savePanel = diagramWindowManager.getSavePanel(selectedIndex);
+            saveDiagramAs.setText("Save As (" + currentTabText + ")");
+            saveDiagramAs.setActionCommand(Integer.toString(selectedIndex));
+            saveDiagram.setText("Save (" + currentTabText + ")");
+            saveDiagram.setActionCommand(Integer.toString(selectedIndex));
+            closeTabMenuItem.setText("Close (" + currentTabText + ")");
+            closeTabMenuItem.setActionCommand(Integer.toString(selectedIndex));
+            saveAsDefaultMenuItem.setText("Set Default Diagram as (" + currentTabText + ")");
+            saveAsDefaultMenuItem.setActionCommand(Integer.toString(selectedIndex));
+        }
         if (savePanel != null) {
             saveDiagram.setEnabled(savePanel.hasSaveFileName() && savePanel.requiresSave());
             saveDiagramAs.setEnabled(true);
