@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 
 /**
@@ -31,6 +32,25 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
         titleMap.put(diagramComponent, diagramTitle);
         diagramArray.add(diagramComponent);
         setSelectedDiagram(diagramComponent);
+    }
+
+    @Override
+    public void createDiagramSubPanel(String diagramTitle, Component diagramComponent) {
+        int currentDiagramIndex = getSavePanelIndex();
+        Component currentComponent = getDiagramAt(currentDiagramIndex);
+        JTabbedPane tabbedPane;
+        if (!(currentComponent instanceof JTabbedPane)) {
+            tabbedPane = new JTabbedPane();
+            final String savePanelTitle = getSavePanelTitle(currentDiagramIndex);
+            tabbedPane.addTab(savePanelTitle, currentComponent);
+            titleMap.remove(currentComponent);
+            titleMap.put(tabbedPane, savePanelTitle);
+            diagramArray.set(currentDiagramIndex, tabbedPane);
+            setSelectedDiagram(currentDiagramIndex);
+        } else {
+            tabbedPane = (JTabbedPane) currentComponent;
+        }
+        tabbedPane.addTab(diagramTitle, diagramComponent);
     }
 
     @Override
