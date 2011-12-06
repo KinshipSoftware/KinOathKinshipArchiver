@@ -1,6 +1,7 @@
 package nl.mpi.kinnate;
 
 import java.io.File;
+import nl.mpi.kinnate.svg.MouseListenerSvg;
 
 /**
  *  Document   : SavePanel
@@ -22,4 +23,6 @@ public interface SavePanel {
     public void saveToFile(File saveFile);
 
     public void updateGraph();
+
+    public void doActionCommand(MouseListenerSvg.ActionCode actionCode);
 }
