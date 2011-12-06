@@ -87,6 +87,8 @@ public abstract class AbstractDiagramManager {
 
     public abstract void setSelectedDiagram(Component diagramComponent);
 
+    public abstract void setSelectedDiagram(int diagramIndex);
+
     public void openEntityUploadPanel() {
         if (entityUploadPanel == null) {
             entityUploadPanel = new EntityUploadPanel();
