@@ -32,6 +32,6 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        diagramWindowManager.openImportPanel(e.getActionCommand());
+        diagramWindowManager.openJarImportPanel(e.getActionCommand());
     }
 }
