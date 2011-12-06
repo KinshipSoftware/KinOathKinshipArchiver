@@ -2,6 +2,8 @@ package nl.mpi.kinnate.ui.window;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JFrame;
 
 /**
@@ -11,58 +13,67 @@ import javax.swing.JFrame;
  */
 public class LayeredDiagramManager extends AbstractDiagramManager {
 
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel mainPanel;
+    private HashMap<Component, String> titleMap = new HashMap<Component, String>();
+    private ArrayList<Component> diagramArray = new ArrayList<Component>();
+    private JFrame mainFrame;
 
     public LayeredDiagramManager(JFrame mainFrame) {
         super(mainFrame);
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        mainFrame.add(jTabbedPane1, BorderLayout.CENTER);
+        this.mainFrame = mainFrame;
+        mainPanel = new javax.swing.JPanel(new BorderLayout());
+        mainFrame.add(mainPanel, BorderLayout.CENTER);
     }
 
     @Override
     public void createDiagramContainer(String diagramTitle, Component diagramComponent) {
-        jTabbedPane1.add(diagramTitle, diagramComponent);
-        jTabbedPane1.setSelectedComponent(diagramComponent);
+        titleMap.put(diagramComponent, diagramTitle);
+        diagramArray.add(diagramComponent);
+        setSelectedDiagram(diagramComponent);
     }
 
     @Override
     Component getSelectedDiagram() {
-        return jTabbedPane1.getSelectedComponent();
+        return mainPanel.getComponent(0);
     }
 
     @Override
     public void setSelectedDiagram(Component diagramComponent) {
-        jTabbedPane1.setSelectedComponent(diagramComponent);
+        mainPanel.removeAll();
+        mainPanel.add(diagramComponent, BorderLayout.CENTER);
+        mainFrame.setTitle(titleMap.get(diagramComponent));
+        mainPanel.revalidate();
     }
 
     @Override
     public void setSelectedDiagram(int diagramIndex) {
-        jTabbedPane1.setSelectedIndex(diagramIndex);
+        setSelectedDiagram(diagramArray.get(diagramIndex));
     }
 
     public int getSavePanelIndex() {
-        return jTabbedPane1.getSelectedIndex();
+        return diagramArray.indexOf(getSelectedDiagram());
     }
 
     public String getSavePanelTitle(int selectedIndex) {
-        return jTabbedPane1.getTitleAt(selectedIndex);
+        return titleMap.get(getSelectedDiagram());
     }
 
     @Override
     Component getDiagramAt(int diagramIndex) {
-        return jTabbedPane1.getComponentAt(diagramIndex);
+        return diagramArray.get(diagramIndex);
     }
 
     public void closeSavePanel(int selectedIndex) {
-        jTabbedPane1.remove(selectedIndex);
+        titleMap.remove(diagramArray.get(selectedIndex));
+        diagramArray.remove(selectedIndex);
     }
 
     public void setDiagramTitle(int diagramIndex, String diagramTitle) {
-        jTabbedPane1.setTitleAt(diagramIndex, diagramTitle);
+        titleMap.put(getSelectedDiagram(), diagramTitle);
     }
 
     @Override
     public Component[] getAllDiagrams() {
-        return jTabbedPane1.getComponents();
+        return diagramArray.toArray(new Component[]{});
     }
 }
