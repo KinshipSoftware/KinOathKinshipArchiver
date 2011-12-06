@@ -10,6 +10,7 @@ import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
+import nl.mpi.kinnate.ui.menu.WindowMenu;
 
 /*
  *  Document   : MainFrame
@@ -32,6 +33,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar1.add(new DiagramPanelsMenu(diagramWindowManager));
         jMenuBar1.add(new KinTermsMenu(diagramWindowManager));
         jMenuBar1.add(new ArchiveMenu(diagramWindowManager));
+        jMenuBar1.add(new WindowMenu(diagramWindowManager));
         this.doLayout();
         this.pack();
         ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
