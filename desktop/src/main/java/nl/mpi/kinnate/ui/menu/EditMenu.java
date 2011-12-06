@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui.menu;
 
-import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
@@ -9,6 +8,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
  *  Document   : SvgKeyListener
@@ -26,9 +26,9 @@ public class EditMenu extends JMenu implements ActionListener {
     JMenuItem expandSelectionMenu = null;
     JMenuItem deselectAllMenu = null;
     SavePanel menuSavePanel = null;
-    DiagramWindowManager diagramWindowManager;
+    AbstractDiagramManager diagramWindowManager;
 
-    public EditMenu(DiagramWindowManager diagramWindowManager) {
+    public EditMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
         this.setText("Edit");
         this.addMenuListener(new MenuListener() {
