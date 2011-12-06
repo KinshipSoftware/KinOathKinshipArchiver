@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui;
 
-import javax.swing.JMenu;
 import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.util.ApplicationVersionManager;
