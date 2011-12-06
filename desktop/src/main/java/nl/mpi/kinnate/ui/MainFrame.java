@@ -1,16 +1,11 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.kinnate.ui.menu.KinTermsMenu;
-import nl.mpi.kinnate.ui.menu.FileMenu;
-import nl.mpi.kinnate.ui.menu.EditMenu;
-import nl.mpi.kinnate.ui.menu.DiagramPanelsMenu;
-import nl.mpi.kinnate.ui.menu.ArchiveMenu;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
-import nl.mpi.kinnate.ui.menu.WindowMenu;
+import nl.mpi.kinnate.ui.menu.MainMenuBar;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
-import nl.mpi.kinnate.ui.window.LayeredDiagramManager;
+import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
 
 /*
  *  Document   : MainFrame
@@ -26,17 +21,13 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
 
-        abstractDiagramManager = new LayeredDiagramManager(versionManager, this);
+//        abstractDiagramManager = new LayeredDiagramManager(versionManager, this);
 //        abstractDiagramManager = new TabbedDiagramManager(versionManager, this);
+        abstractDiagramManager = new WindowedDiagramManager(versionManager, this);
 
         nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
         abstractDiagramManager.newDiagram();
-        jMenuBar1.add(new FileMenu(abstractDiagramManager));
-        jMenuBar1.add(new EditMenu(abstractDiagramManager));
-        jMenuBar1.add(new DiagramPanelsMenu(abstractDiagramManager));
-        jMenuBar1.add(new KinTermsMenu(abstractDiagramManager));
-        jMenuBar1.add(new ArchiveMenu(abstractDiagramManager));
-        jMenuBar1.add(new WindowMenu(abstractDiagramManager));
+        setJMenuBar(new MainMenuBar(abstractDiagramManager));
         this.doLayout();
         this.pack();
         ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
@@ -60,10 +51,7 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenuBar1 = new javax.swing.JMenuBar();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -82,6 +70,5 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuBar jMenuBar1;
     // End of variables declaration//GEN-END:variables
 }
