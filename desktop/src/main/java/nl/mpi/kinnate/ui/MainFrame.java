@@ -4,7 +4,7 @@ import nl.mpi.kinnate.ui.menu.KinTermsMenu;
 import nl.mpi.kinnate.ui.menu.FileMenu;
 import nl.mpi.kinnate.ui.menu.EditMenu;
 import nl.mpi.kinnate.ui.menu.DiagramPanelsMenu;
-import menu.ArchiveMenu;
+import nl.mpi.kinnate.ui.menu.ArchiveMenu;
 import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.ui.ArbilWindowManager;
