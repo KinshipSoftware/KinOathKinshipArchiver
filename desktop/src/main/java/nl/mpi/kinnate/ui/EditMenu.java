@@ -65,6 +65,7 @@ public class EditMenu extends JMenu implements ActionListener {
         EditMenu.this.add(selectRelatedMenu);
         EditMenu.this.add(expandSelectionMenu);
         EditMenu.this.add(deselectAllMenu);
+        enableMenuKeys();
     }
 
     private void initMenu() {
@@ -76,7 +77,7 @@ public class EditMenu extends JMenu implements ActionListener {
         deselectAllMenu.setEnabled(savePanelFocused);
     }
 
-    protected void enableMenuKeys() {
+    private void enableMenuKeys() {
         menuSavePanel = null;
         selectAllMenu.setEnabled(true);
         selectRelatedMenu.setEnabled(true);
