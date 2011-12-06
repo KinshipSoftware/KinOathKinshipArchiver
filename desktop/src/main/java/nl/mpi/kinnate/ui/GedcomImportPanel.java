@@ -111,7 +111,13 @@ public class GedcomImportPanel extends JPanel {
             JScrollPane importScrollPane = new JScrollPane(importTextArea);
             GedcomImportPanel.this.setLayout(new BorderLayout());
             GedcomImportPanel.this.add(importScrollPane, BorderLayout.CENTER);
-            abstractDiagramManager.createDiagramContainer("Import", GedcomImportPanel.this);
+            String titleString;
+            if (importFile != null) {
+                titleString = "Import: " + importFile.getName();
+            } else {
+                titleString = "Import: " + importFileString.substring(importFileString.lastIndexOf("/") + 1);
+            }
+            abstractDiagramManager.createDiagramContainer(titleString, GedcomImportPanel.this);
             progressBar = new JProgressBar(0, 100);
             endPagePanel = new JPanel(new BorderLayout());
             endPagePanel.add(progressBar, BorderLayout.PAGE_START);
@@ -174,7 +180,7 @@ public class GedcomImportPanel extends JPanel {
 //                            JTextPane fileText = new JTextPane();
                                         XsdChecker xsdChecker = new XsdChecker();
                                         if (xsdChecker.simpleCheck(new File(currentNodeUri), currentNodeUri) != null) {
-                                            abstractDiagramManager.createDiagramContainer("XSD Error on Import", xsdChecker);
+                                            abstractDiagramManager.createDiagramSubPanel("XSD Error on Import", xsdChecker);
                                             xsdChecker.checkXML(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, currentNodeUri));
                                             xsdChecker.setDividerLocation(0.5);
                                             maxXsdErrorToShow--;
