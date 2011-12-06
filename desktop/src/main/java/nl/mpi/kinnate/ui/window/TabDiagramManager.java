@@ -3,6 +3,7 @@ package nl.mpi.kinnate.ui.window;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import javax.swing.JFrame;
+import nl.mpi.arbil.util.ApplicationVersionManager;
 
 /**
  *  Document   : DiagramWindowManager
@@ -13,8 +14,8 @@ public class TabDiagramManager extends AbstractDiagramManager {
 
     private javax.swing.JTabbedPane jTabbedPane1;
 
-    public TabDiagramManager(JFrame mainFrame) {
-        super(mainFrame);
+    public TabDiagramManager(ApplicationVersionManager versionManager, JFrame mainFrame) {
+        super(versionManager, mainFrame);
         jTabbedPane1 = new javax.swing.JTabbedPane();
         mainFrame.add(jTabbedPane1, BorderLayout.CENTER);
     }
