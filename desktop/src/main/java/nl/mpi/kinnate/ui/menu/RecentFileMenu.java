@@ -9,6 +9,8 @@ import java.util.Arrays;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
@@ -25,10 +27,21 @@ public class RecentFileMenu extends JMenu implements ActionListener {
     public RecentFileMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
         this.setText("Open Recent Diagram");
-        setupMenu();
+        this.addMenuListener(new MenuListener() {
+
+            public void menuCanceled(MenuEvent evt) {
+            }
+
+            public void menuDeselected(MenuEvent evt) {
+            }
+
+            public void menuSelected(MenuEvent evt) {
+                setupMenu();
+            }
+        });
     }
 
-    public void addRecentFile(File recentFile) {
+    static public void addRecentFile(File recentFile) {
         // store the accessed and saved files and provide a menu of recent files
         ArrayList<String> tempList = new ArrayList<String>();
         String[] tempArray;
@@ -53,7 +66,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
         } catch (IOException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
         }
-        setupMenu();
+//        setupMenu();
     }
 
     private void setupMenu() {
@@ -88,7 +101,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             } catch (IOException exception) {
                 GuiHelper.linorgBugCatcher.logError(exception);
             }
-            setupMenu();
+//            setupMenu();
         } else {
 //            try {
             final String actionString = e.getActionCommand();
