@@ -1,11 +1,9 @@
 package nl.mpi.kinnate.ui.menu;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.kinnate.ui.window.DiagramWindowManager;
@@ -18,7 +16,6 @@ import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 public class WindowMenu extends JMenu implements ActionListener {
 
     DiagramWindowManager diagramWindowManager;
-    ArrayList<Component> diagramArray = new ArrayList<Component>();
 
     public WindowMenu(DiagramWindowManager diagramWindowManager) {
         this.setText("Window");
@@ -38,18 +35,20 @@ public class WindowMenu extends JMenu implements ActionListener {
     }
 
     private void initMenu() {
-        for (Component currentDiagram : diagramWindowManager.getAllDiagrams()) {
-            diagramArray.add(currentDiagram);
-            JMenuItem currentMenuItem = new JMenuItem(currentDiagram.getName());
-            currentMenuItem.setActionCommand(Integer.toString(diagramArray.size() - 1));
+        this.removeAll();
+        int diagramCount = diagramWindowManager.getAllDiagrams().length;
+        int selectedDiagramIndex = diagramWindowManager.getSavePanelIndex();
+        for (int diagramCounter = 0; diagramCounter < diagramCount; diagramCounter++) {
+            JCheckBoxMenuItem currentMenuItem = new JCheckBoxMenuItem(diagramWindowManager.getSavePanelTitle(diagramCounter));
+            currentMenuItem.setActionCommand(Integer.toString(diagramCounter));
             currentMenuItem.addActionListener(this);
+            currentMenuItem.setSelected(diagramCounter == selectedDiagramIndex);
             this.add(currentMenuItem);
         }
     }
 
     public void actionPerformed(ActionEvent e) {
-        int diagramIndex = Integer.getInteger(e.getActionCommand());
-        Component diagramComponent = diagramArray.get(diagramIndex);
-        diagramWindowManager.setSelectedDiagram(diagramComponent);
+        int diagramIndex = Integer.valueOf(e.getActionCommand());
+        diagramWindowManager.setSelectedDiagram(diagramIndex);
     }
 }
