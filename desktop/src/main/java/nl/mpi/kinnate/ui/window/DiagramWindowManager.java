@@ -31,7 +31,7 @@ public class DiagramWindowManager extends AbstractDiagramManager {
     }
 
     @Override
-    void setSelectedDiagram(Component diagramComponent) {
+    public void setSelectedDiagram(Component diagramComponent) {
         jTabbedPane1.setSelectedComponent(diagramComponent);
     }
 
@@ -57,7 +57,7 @@ public class DiagramWindowManager extends AbstractDiagramManager {
     }
 
     @Override
-    Component[] getAllDiagrams() {
+    public Component[] getAllDiagrams() {
         return jTabbedPane1.getComponents();
     }
 }
