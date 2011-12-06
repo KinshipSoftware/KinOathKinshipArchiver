@@ -46,6 +46,10 @@ public abstract class AbstractDiagramManager {
         });
     }
 
+    public void setRecentFileMenu(RecentFileMenu recentFileMenu) {
+        this.recentFileMenu = recentFileMenu;
+    }
+
     public void setWindowTitle(JFrame windowFrame, String titleString) {
         windowFrame.setTitle(versionManager.getApplicationVersion().applicationTitle + " " + versionManager.getApplicationVersion().currentMajor + "." + versionManager.getApplicationVersion().currentMinor + "." + versionManager.getApplicationVersion().currentRevision + " - " + titleString);
     }
