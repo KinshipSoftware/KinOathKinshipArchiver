@@ -10,11 +10,11 @@ import nl.mpi.arbil.util.ApplicationVersionManager;
  *  Created on : Dec 1, 2011, 4:03:01 PM
  *  Author     : Peter Withers
  */
-public class TabDiagramManager extends AbstractDiagramManager {
+public class TabbedDiagramManager extends AbstractDiagramManager {
 
     private javax.swing.JTabbedPane jTabbedPane1;
 
-    public TabDiagramManager(ApplicationVersionManager versionManager, JFrame mainFrame) {
+    public TabbedDiagramManager(ApplicationVersionManager versionManager, JFrame mainFrame) {
         super(versionManager, mainFrame);
         jTabbedPane1 = new javax.swing.JTabbedPane();
         mainFrame.add(jTabbedPane1, BorderLayout.CENTER);
