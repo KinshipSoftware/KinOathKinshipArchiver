@@ -137,12 +137,16 @@ public abstract class AbstractDiagramManager {
     abstract public Component[] getAllDiagrams();
 
     public boolean offerUserToSaveAll() {
-        for (Component selectedComponent : getAllDiagrams()) {
+        int diagramCount = getAllDiagrams().length;
+        for (int diagramCounter = 0; diagramCounter < diagramCount; diagramCounter++) {
+            Component selectedComponent = getDiagramAt(diagramCounter);
             if (selectedComponent instanceof SavePanel) {
                 SavePanel savePanel = (SavePanel) selectedComponent;
+                setSelectedDiagram(selectedComponent);
+                String diagramName = getSavePanelTitle(diagramCounter);
                 if (savePanel.requiresSave()) {
                     // warn user to save
-                    switch (ArbilWindowManager.getSingleInstance().showDialogBox("There are unsaved changes in:\n" + selectedComponent.getName() + "\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
+                    switch (ArbilWindowManager.getSingleInstance().showDialogBox("There are unsaved changes in: \"" + diagramName + "\"\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
                         case JOptionPane.YES_OPTION:
                             if (savePanel.hasSaveFileName()) {
                                 savePanel.saveToFile();
