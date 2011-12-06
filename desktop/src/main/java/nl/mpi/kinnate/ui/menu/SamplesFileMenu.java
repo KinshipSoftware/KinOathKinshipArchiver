@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui.menu;
 
-import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
@@ -9,6 +8,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
  *  Document   : RecentFileMenu
@@ -17,9 +17,9 @@ import nl.mpi.arbil.ui.GuiHelper;
  */
 public class SamplesFileMenu extends JMenu implements ActionListener {
 
-    DiagramWindowManager diagramWindowManager;
+    AbstractDiagramManager diagramWindowManager;
 
-    public SamplesFileMenu(DiagramWindowManager diagramWindowManager) {
+    public SamplesFileMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
         addSampleToMenu("Freeform Diagram Syntax", "FreeformDiagramSyntax.svg");
         addSampleToMenu("Application Overview", "ApplicationOverview.svg");
