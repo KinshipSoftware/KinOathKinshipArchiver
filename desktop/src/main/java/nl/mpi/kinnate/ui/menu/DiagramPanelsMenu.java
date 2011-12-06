@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui.menu;
 
-import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -11,6 +10,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
  *  Document   : VisiblePanelSetting
@@ -19,9 +19,9 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting;
  */
 public class DiagramPanelsMenu extends JMenu implements ActionListener {
 
-    DiagramWindowManager diagramWindowManager;
+    AbstractDiagramManager diagramWindowManager;
 
-    public DiagramPanelsMenu(DiagramWindowManager diagramWindowManager) {
+    public DiagramPanelsMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
         this.setText("View");
         this.addMenuListener(new MenuListener() {
