@@ -35,6 +35,11 @@ public class DiagramWindowManager extends AbstractDiagramManager {
         jTabbedPane1.setSelectedComponent(diagramComponent);
     }
 
+    @Override
+    public void setSelectedDiagram(int diagramIndex) {
+        jTabbedPane1.setSelectedIndex(diagramIndex);
+    }
+
     public int getSavePanelIndex() {
         return jTabbedPane1.getSelectedIndex();
     }
