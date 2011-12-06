@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.XsdChecker;
@@ -74,9 +75,8 @@ public class GedcomImportPanel extends JPanel {
                     final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple);
 //                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
                     abstractDiagramManager.createDiagramContainer("Imported Entities", egoSelectionTestPanel);
-                    new Thread() {
+                    SwingUtilities.invokeLater(new Runnable() {
 
-                        @Override
                         public void run() {
                             final HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>();
                             for (final JCheckBox currentCheckBox : checkBoxArray) {
@@ -86,7 +86,7 @@ public class GedcomImportPanel extends JPanel {
                             }
                             egoSelectionTestPanel.addRequiredNodes(selectedIds.toArray(new UniqueIdentifier[]{}));
                         }
-                    }.start();
+                    });
                 }
             });
             createdNodesPanel.add(showButton);
