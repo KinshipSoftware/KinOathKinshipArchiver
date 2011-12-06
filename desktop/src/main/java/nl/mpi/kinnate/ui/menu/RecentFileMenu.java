@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui.menu;
 
-import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -12,6 +11,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
  *  Document   : RecentFileMenu
@@ -20,9 +20,9 @@ import nl.mpi.arbil.userstorage.ArbilSessionStorage;
  */
 public class RecentFileMenu extends JMenu implements ActionListener {
 
-    DiagramWindowManager diagramWindowManager;
+    AbstractDiagramManager diagramWindowManager;
 
-    public RecentFileMenu(DiagramWindowManager diagramWindowManager) {
+    public RecentFileMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
         this.setText("Open Recent Diagram");
         setupMenu();
