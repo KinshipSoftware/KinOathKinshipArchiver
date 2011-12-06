@@ -85,7 +85,7 @@ public abstract class AbstractDiagramManager {
         new GedcomImportPanel(this).startImportJar(importUrlString);
     }
 
-    abstract void setSelectedDiagram(Component diagramComponent);
+    public abstract void setSelectedDiagram(Component diagramComponent);
 
     public void openEntityUploadPanel() {
         if (entityUploadPanel == null) {
@@ -132,7 +132,7 @@ public abstract class AbstractDiagramManager {
 
     abstract void setDiagramTitle(int diagramIndex, String diagramTitle);
 
-    abstract Component[] getAllDiagrams();
+    abstract public Component[] getAllDiagrams();
 
     public boolean offerUserToSaveAll() {
         for (Component selectedComponent : getAllDiagrams()) {
