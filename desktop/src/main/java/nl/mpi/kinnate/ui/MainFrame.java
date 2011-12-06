@@ -20,7 +20,7 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         diagramWindowManager = new DiagramWindowManager(this);
         JMenu editMenu;
-        editMenu = new EditMenu();
+        editMenu = new EditMenu(diagramWindowManager);
         ((EditMenu) editMenu).enableMenuKeys();
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
         nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
