@@ -235,7 +235,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         }
     }
 
-    private void addRelations(int maxCount, EntityData currentEntity, HashSet<UniqueIdentifier> selectedIds) {
+    private void addRelations(int maxCount, EntityData currentEntity, HashSet<UniqueIdentifier> selectedIds, boolean addRecursively) {
         if (maxCount <= selectedIds.size()) {
             return;
         }
@@ -243,13 +243,16 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             EntityData alterNode = entityRelation.getAlterNode();
             if (alterNode.isVisible && !selectedIds.contains(alterNode.getUniqueIdentifier())) {
                 selectedIds.add(alterNode.getUniqueIdentifier());
-                addRelations(maxCount, alterNode, selectedIds);
+                if (addRecursively) {
+                    addRelations(maxCount, alterNode, selectedIds, addRecursively);
+                }
             }
         }
     }
 
     public void performMenuAction(ActionCode commandCode) {
         System.out.println("commandCode: " + commandCode.name());
+        boolean addRecursively = true;
         switch (commandCode) {
             case selectAll:
                 graphPanel.selectedGroupId.clear();
@@ -261,21 +264,20 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     }
                 }
                 break;
+            case expandSelection:
+                addRecursively = false;
             case selectRelated:
                 HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>(graphPanel.selectedGroupId);
                 for (EntityData currentEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                     if (currentEntity.isVisible) {
                         // todo: continue here
                         if (graphPanel.selectedGroupId.contains(currentEntity.getUniqueIdentifier())) {
-                            addRelations(graphPanel.dataStoreSvg.graphData.getDataNodes().length, currentEntity, selectedIds);
+                            addRelations(graphPanel.dataStoreSvg.graphData.getDataNodes().length, currentEntity, selectedIds, addRecursively);
                         }
                     }
                 }
                 graphPanel.selectedGroupId.clear();
                 graphPanel.selectedGroupId.addAll(selectedIds);
-                break;
-            case expandSelection:
-                // todo: continue here...
                 break;
             case deselectAll:
                 graphPanel.selectedGroupId.clear();
