@@ -34,20 +34,33 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
 
     @Override
     Component getSelectedDiagram() {
-        return mainPanel.getComponent(0);
+        if (mainPanel.getComponents().length > 0) {
+            return mainPanel.getComponent(0);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void setSelectedDiagram(Component diagramComponent) {
         mainPanel.removeAll();
-        mainPanel.add(diagramComponent, BorderLayout.CENTER);
-        mainFrame.setTitle(titleMap.get(diagramComponent));
+        String diagramTitle = null;
+        if (diagramComponent != null) {
+            mainPanel.add(diagramComponent, BorderLayout.CENTER);
+            diagramTitle = titleMap.get(diagramComponent);
+        }
+        mainFrame.setTitle(diagramTitle);
         mainPanel.revalidate();
+        mainPanel.repaint();
     }
 
     @Override
     public void setSelectedDiagram(int diagramIndex) {
-        setSelectedDiagram(diagramArray.get(diagramIndex));
+        if (diagramArray.size() > diagramIndex) {
+            setSelectedDiagram(diagramArray.get(diagramIndex));
+        } else {
+            setSelectedDiagram(null);
+        }
     }
 
     public int getSavePanelIndex() {
@@ -55,7 +68,7 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
     }
 
     public String getSavePanelTitle(int selectedIndex) {
-        return titleMap.get(getSelectedDiagram());
+        return titleMap.get(diagramArray.get(selectedIndex));
     }
 
     @Override
@@ -66,6 +79,10 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
     public void closeSavePanel(int selectedIndex) {
         titleMap.remove(diagramArray.get(selectedIndex));
         diagramArray.remove(selectedIndex);
+        while (diagramArray.size() <= selectedIndex && selectedIndex > 0) {
+            selectedIndex--;
+        }
+        setSelectedDiagram(selectedIndex);
     }
 
     public void setDiagramTitle(int diagramIndex, String diagramTitle) {
