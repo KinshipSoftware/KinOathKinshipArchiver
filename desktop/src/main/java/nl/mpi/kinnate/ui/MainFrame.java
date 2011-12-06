@@ -5,12 +5,13 @@ import nl.mpi.kinnate.ui.menu.FileMenu;
 import nl.mpi.kinnate.ui.menu.EditMenu;
 import nl.mpi.kinnate.ui.menu.DiagramPanelsMenu;
 import nl.mpi.kinnate.ui.menu.ArchiveMenu;
-import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.ui.menu.WindowMenu;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
+import nl.mpi.kinnate.ui.window.LayeredDiagramManager;
 
 /*
  *  Document   : MainFrame
@@ -19,21 +20,22 @@ import nl.mpi.kinnate.ui.menu.WindowMenu;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    DiagramWindowManager diagramWindowManager;
+    AbstractDiagramManager abstractDiagramManager;
 
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
-        diagramWindowManager = new DiagramWindowManager(this);
+//        diagramWindowManager = new DiagramWindowManager(this);
+        abstractDiagramManager = new LayeredDiagramManager(this);
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
         nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
-        diagramWindowManager.newDiagram();
-        jMenuBar1.add(new FileMenu(diagramWindowManager));
-        jMenuBar1.add(new EditMenu(diagramWindowManager));
-        jMenuBar1.add(new DiagramPanelsMenu(diagramWindowManager));
-        jMenuBar1.add(new KinTermsMenu(diagramWindowManager));
-        jMenuBar1.add(new ArchiveMenu(diagramWindowManager));
-        jMenuBar1.add(new WindowMenu(diagramWindowManager));
+        abstractDiagramManager.newDiagram();
+        jMenuBar1.add(new FileMenu(abstractDiagramManager));
+        jMenuBar1.add(new EditMenu(abstractDiagramManager));
+        jMenuBar1.add(new DiagramPanelsMenu(abstractDiagramManager));
+        jMenuBar1.add(new KinTermsMenu(abstractDiagramManager));
+        jMenuBar1.add(new ArchiveMenu(abstractDiagramManager));
+        jMenuBar1.add(new WindowMenu(abstractDiagramManager));
         this.doLayout();
         this.pack();
         ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
@@ -47,7 +49,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void loadAllTrees() {
-        diagramWindowManager.loadAllTrees();
+        abstractDiagramManager.loadAllTrees();
     }
 
     /** This method is called from within the constructor to
