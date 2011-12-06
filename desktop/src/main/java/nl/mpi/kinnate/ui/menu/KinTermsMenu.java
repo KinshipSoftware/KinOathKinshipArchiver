@@ -1,11 +1,11 @@
 package nl.mpi.kinnate.ui.menu;
 
-import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
  *  Document   : KinTermsMenu
@@ -14,7 +14,7 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
  */
 public class KinTermsMenu extends JMenu {
 
-    DiagramWindowManager diagramWindowManager;
+    AbstractDiagramManager diagramWindowManager;
     KinTermSavePanel currentKinTermSavePanel;
     JCheckBoxMenuItem hideShowMenu;
     JMenuItem newMenu;
@@ -22,7 +22,7 @@ public class KinTermsMenu extends JMenu {
     JMenuItem importMenu;
     JMenuItem deleteMenu;
 
-    public KinTermsMenu(DiagramWindowManager diagramWindowManager) {
+    public KinTermsMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
         initMenu();
     }
