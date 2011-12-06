@@ -1,5 +1,6 @@
-package nl.mpi.kinnate.ui;
+package nl.mpi.kinnate.ui.menu;
 
+import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;

@@ -1,5 +1,6 @@
-package nl.mpi.kinnate.ui;
+package nl.mpi.kinnate.ui.menu;
 
+import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;

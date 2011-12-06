@@ -1,4 +1,4 @@
-package nl.mpi.kinnate.ui;
+package nl.mpi.kinnate.ui.window;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -13,6 +13,11 @@ import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
+import nl.mpi.kinnate.ui.EntityUploadPanel;
+import nl.mpi.kinnate.ui.GedcomImportPanel;
+import nl.mpi.kinnate.ui.KinDiagramPanel;
+import nl.mpi.kinnate.ui.menu.RecentFileMenu;
 
 /**
  *  Document   : DiagramWindowManager

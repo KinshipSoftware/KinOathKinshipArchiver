@@ -1,4 +1,4 @@
-package nl.mpi.kinnate.ui;
+package nl.mpi.kinnate.ui.menu;
 
 import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import java.io.File;
@@ -10,6 +10,8 @@ import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.export.ExportToR;
 import nl.mpi.kinnate.transcoder.DiagramTranscoder;
+import nl.mpi.kinnate.ui.ImportSamplesFileMenu;
+import nl.mpi.kinnate.ui.KinDiagramPanel;
 
 /**
  *  Document   : FileMenu
