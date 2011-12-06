@@ -50,6 +50,7 @@ public class FileMenu extends javax.swing.JMenu {
         jMenu3 = new DocumentNewMenu(diagramWindowManager);
         openDiagram = new javax.swing.JMenuItem();
         recentFileMenu = new RecentFileMenu(diagramWindowManager);
+        diagramWindowManager.setRecentFileMenu(recentFileMenu);
         jMenu1 = new SamplesFileMenu(diagramWindowManager);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
