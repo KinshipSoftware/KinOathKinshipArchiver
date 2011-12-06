@@ -34,6 +34,7 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
+import nl.mpi.kinnate.svg.MouseListenerSvg;
 import nl.mpi.kinnate.ui.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
 
@@ -416,6 +417,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
     public void updateGraph() {
         this.drawGraph();
+    }
+
+    public void doActionCommand(MouseListenerSvg.ActionCode actionCode) {
+        graphPanel.mouseListenerSvg.performMenuAction(actionCode);
     }
 
     public void exportKinTerms() {
