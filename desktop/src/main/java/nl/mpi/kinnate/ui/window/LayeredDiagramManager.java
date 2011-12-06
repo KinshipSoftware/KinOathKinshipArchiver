@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
+import nl.mpi.arbil.util.ApplicationVersionManager;
 
 /**
  *  Document   : DiagramWindowManager
@@ -18,8 +19,8 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
     private ArrayList<Component> diagramArray = new ArrayList<Component>();
     private JFrame mainFrame;
 
-    public LayeredDiagramManager(JFrame mainFrame) {
-        super(mainFrame);
+    public LayeredDiagramManager(ApplicationVersionManager versionManager, JFrame mainFrame) {
+        super(versionManager, mainFrame);
         this.mainFrame = mainFrame;
         mainPanel = new javax.swing.JPanel(new BorderLayout());
         mainFrame.add(mainPanel, BorderLayout.CENTER);
@@ -49,7 +50,7 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
             mainPanel.add(diagramComponent, BorderLayout.CENTER);
             diagramTitle = titleMap.get(diagramComponent);
         }
-        mainFrame.setTitle(diagramTitle);
+        setWindowTitle(mainFrame, diagramTitle);
         mainPanel.revalidate();
         mainPanel.repaint();
     }
@@ -87,6 +88,7 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
 
     public void setDiagramTitle(int diagramIndex, String diagramTitle) {
         titleMap.put(getSelectedDiagram(), diagramTitle);
+        setWindowTitle(mainFrame, diagramTitle);
     }
 
     @Override
