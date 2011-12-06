@@ -5,7 +5,6 @@ import nl.mpi.kinnate.ui.menu.FileMenu;
 import nl.mpi.kinnate.ui.menu.EditMenu;
 import nl.mpi.kinnate.ui.menu.DiagramPanelsMenu;
 import nl.mpi.kinnate.ui.menu.ArchiveMenu;
-import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
@@ -25,9 +24,10 @@ public class MainFrame extends javax.swing.JFrame {
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
-//        diagramWindowManager = new DiagramWindowManager(this);
-        abstractDiagramManager = new LayeredDiagramManager(this);
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
+
+        abstractDiagramManager = new LayeredDiagramManager(versionManager, this);
+
         nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
         abstractDiagramManager.newDiagram();
         jMenuBar1.add(new FileMenu(abstractDiagramManager));
@@ -39,9 +39,8 @@ public class MainFrame extends javax.swing.JFrame {
         this.doLayout();
         this.pack();
         ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
-        setTitle(versionManager.getApplicationVersion().applicationTitle + " " + versionManager.getApplicationVersion().compileDate);
-        // set the icon for the application (if this is still required for the various OSs). This is not required for Mac but might be needed for windows or linux.
-        setIconImage(ArbilIcons.getSingleInstance().linorgIcon.getImage());
+        abstractDiagramManager.setWindowTitle(this, versionManager.getApplicationVersion().compileDate);
+        abstractDiagramManager.setWindowIcon(this);
 //	if (arbilMenuBar.checkNewVersionAtStartCheckBoxMenuItem.isSelected()) {
         // todo: Ticket #1066 add the check for updates and check now menu items
         versionManager.checkForUpdate();
