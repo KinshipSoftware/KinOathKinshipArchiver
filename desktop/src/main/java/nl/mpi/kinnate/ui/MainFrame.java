@@ -19,14 +19,11 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         diagramWindowManager = new DiagramWindowManager(this);
-        JMenu editMenu;
-        editMenu = new EditMenu(diagramWindowManager);
-        ((EditMenu) editMenu).enableMenuKeys();
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
         nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
         diagramWindowManager.newDiagram();
         jMenuBar1.add(new FileMenu(diagramWindowManager));
-        jMenuBar1.add(editMenu);
+        jMenuBar1.add(new EditMenu(diagramWindowManager));
         jMenuBar1.add(new DiagramPanelsMenu(diagramWindowManager));
         jMenuBar1.add(new KinTermsMenu(diagramWindowManager));
         jMenuBar1.add(new ArchiveMenu(diagramWindowManager));
