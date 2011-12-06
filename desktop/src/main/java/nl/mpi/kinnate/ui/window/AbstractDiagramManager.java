@@ -61,6 +61,8 @@ public abstract class AbstractDiagramManager {
 
     abstract public void createDiagramContainer(String diagramTitle, Component diagramComponent);
 
+    abstract public void createDiagramSubPanel(String diagramTitle, Component diagramComponent);
+
     public void newDiagram() {
         URI defaultDiagramUri = null;
         if (KinDiagramPanel.getDefaultDiagramFile().exists()) {
