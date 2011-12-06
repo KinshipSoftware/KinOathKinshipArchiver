@@ -1,10 +1,10 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
  *  Document   : RecentFileMenu
@@ -13,9 +13,9 @@ import javax.swing.JMenuItem;
  */
 public class ImportSamplesFileMenu extends JMenu implements ActionListener {
 
-    DiagramWindowManager diagramWindowManager;
+    AbstractDiagramManager diagramWindowManager;
 
-    public ImportSamplesFileMenu(DiagramWindowManager diagramWindowManager) {
+    public ImportSamplesFileMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
         addSampleToMenu("Gedcom Simple File", "/gedcomsamples/wiki-test-ged.ged");
         addSampleToMenu("Gedcom Torture File", "/TestGED/TGC55C.ged");
