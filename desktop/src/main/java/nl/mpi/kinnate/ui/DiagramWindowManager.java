@@ -81,6 +81,10 @@ public class DiagramWindowManager {
         new GedcomImportPanel(jTabbedPane1).startImport(importUrlString);
     }
 
+    public void openJarImportPanel(String importUrlString) {
+        new GedcomImportPanel(jTabbedPane1).startImportJar(importUrlString);
+    }
+
     public void openEntityUploadPanel() {
         if (entityUploadPanel == null) {
             entityUploadPanel = new EntityUploadPanel();
