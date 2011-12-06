@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui.menu;
 
-import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -12,6 +11,7 @@ import nl.mpi.kinnate.export.ExportToR;
 import nl.mpi.kinnate.transcoder.DiagramTranscoder;
 import nl.mpi.kinnate.ui.ImportSamplesFileMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
  *  Document   : FileMenu
@@ -40,14 +40,14 @@ public class FileMenu extends javax.swing.JMenu {
     private javax.swing.JMenuItem saveDiagram;
     private javax.swing.JMenuItem saveDiagramAs;
     private javax.swing.JMenuItem savePdfMenuItem;
-    DiagramWindowManager diagramWindowManager;
+    AbstractDiagramManager diagramWindowManager;
 
-    public FileMenu(DiagramWindowManager diagramWindowManager) {
+    public FileMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
         ImportGedcomUrl = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
-        jMenu3 = new nl.mpi.kinnate.ui.menu.DocumentNewMenu(diagramWindowManager);
+        jMenu3 = new DocumentNewMenu(diagramWindowManager);
         openDiagram = new javax.swing.JMenuItem();
         recentFileMenu = new RecentFileMenu(diagramWindowManager);
         jMenu1 = new SamplesFileMenu(diagramWindowManager);
