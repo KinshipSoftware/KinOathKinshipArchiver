@@ -27,6 +27,7 @@ public class MainFrame extends javax.swing.JFrame {
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
 
         abstractDiagramManager = new LayeredDiagramManager(versionManager, this);
+//        abstractDiagramManager = new TabbedDiagramManager(versionManager, this);
 
         nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
         abstractDiagramManager.newDiagram();
