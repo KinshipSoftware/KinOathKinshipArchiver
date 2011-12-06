@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui;
 
+import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
