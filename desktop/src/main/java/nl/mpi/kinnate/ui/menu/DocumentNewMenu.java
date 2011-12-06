@@ -1,10 +1,10 @@
 package nl.mpi.kinnate.ui.menu;
 
-import nl.mpi.kinnate.ui.window.DiagramWindowManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
  *  Document   : DocumentNewMenu
@@ -13,7 +13,7 @@ import javax.swing.JMenuItem;
  */
 public class DocumentNewMenu extends JMenu implements ActionListener {
 
-    DiagramWindowManager diagramWindowManager;
+    AbstractDiagramManager diagramWindowManager;
 
     public enum DocumentType {
 
@@ -35,7 +35,7 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
         }
     }
 
-    public DocumentNewMenu(DiagramWindowManager diagramWindowManager) {
+    public DocumentNewMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
         for (DocumentType documentType : DocumentType.values()) {
             JMenuItem menuItem = new JMenuItem(documentType.getDisplayName());
