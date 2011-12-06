@@ -6,7 +6,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
-import nl.mpi.kinnate.ui.window.DiagramWindowManager;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
  *  Document   : WindowMenu
@@ -15,9 +15,9 @@ import nl.mpi.kinnate.ui.window.DiagramWindowManager;
  */
 public class WindowMenu extends JMenu implements ActionListener {
 
-    DiagramWindowManager diagramWindowManager;
+    AbstractDiagramManager diagramWindowManager;
 
-    public WindowMenu(DiagramWindowManager diagramWindowManager) {
+    public WindowMenu(AbstractDiagramManager diagramWindowManager) {
         this.setText("Window");
         this.diagramWindowManager = diagramWindowManager;
         this.addMenuListener(new MenuListener() {
