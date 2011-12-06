@@ -72,7 +72,7 @@ public class EditMenu extends JMenu implements ActionListener {
         boolean savePanelFocused = menuSavePanel != null;
         selectAllMenu.setEnabled(savePanelFocused);
         selectRelatedMenu.setEnabled(savePanelFocused);
-        expandSelectionMenu.setEnabled(false); // graphPanelFocused); // removed until the code is completed
+        expandSelectionMenu.setEnabled(savePanelFocused);
         deselectAllMenu.setEnabled(savePanelFocused);
     }
 
