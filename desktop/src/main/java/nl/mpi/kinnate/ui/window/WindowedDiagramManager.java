@@ -7,6 +7,7 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.kinnate.SavePanel;
 
 /**
  *  Document   : DiagramWindowManager
@@ -25,6 +26,27 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
     @Override
     public void createApplicationWindow() {
         // nothing to do for this diagram manager
+    }
+
+    @Override
+    protected void closeWindowAction(JFrame windowFrame) {
+        if (diagramArray.size() == 1) {
+            super.closeWindowAction(windowFrame);
+        } else {
+            final int selectedIndex = diagramArray.indexOf(windowFrame);
+            if (windowFrame instanceof SavePanel) {
+                SavePanel savePanel = (SavePanel) windowFrame;
+                String diagramTitle = getSavePanelTitle(selectedIndex);
+                boolean userCanceled = offerUserToSave(savePanel, diagramTitle);
+                if (!userCanceled) {
+                    closeSavePanel(selectedIndex);
+                    windowFrame.dispose();
+                }
+            } else {
+                closeSavePanel(selectedIndex);
+                windowFrame.dispose();
+            }
+        }
     }
 
     @Override
