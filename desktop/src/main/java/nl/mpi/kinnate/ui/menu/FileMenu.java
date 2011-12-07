@@ -321,13 +321,11 @@ public class FileMenu extends javax.swing.JMenu {
     private void closeTabMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         int tabIndex = Integer.valueOf(evt.getActionCommand());
         SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
-        if (savePanel.requiresSave()) {
-            // todo: warn user to save
-            if (JOptionPane.YES_OPTION == ArbilWindowManager.getSingleInstance().showDialogBox("There are unsaved changes, do you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE)) {
-                savePanel.saveToFile();
-            }
+        String diagramTitle = diagramWindowManager.getSavePanelTitle(tabIndex);
+        boolean userCanceled = diagramWindowManager.offerUserToSave(savePanel, diagramTitle);
+        if (!userCanceled) {
+            diagramWindowManager.closeSavePanel(tabIndex);
         }
-        diagramWindowManager.closeSavePanel(tabIndex);
     }
 
     private void newDiagramMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
