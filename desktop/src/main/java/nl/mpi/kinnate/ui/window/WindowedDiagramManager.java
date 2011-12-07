@@ -1,12 +1,14 @@
 package nl.mpi.kinnate.ui.window;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.KeyboardFocusManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.kinnate.ui.menu.MainMenuBar;
 
 /**
  *  Document   : DiagramWindowManager
@@ -15,38 +17,39 @@ import nl.mpi.arbil.util.ApplicationVersionManager;
  */
 public class WindowedDiagramManager extends AbstractDiagramManager {
 
-    private javax.swing.JPanel mainPanel;
-    private HashMap<Component, String> titleMap = new HashMap<Component, String>();
-    private ArrayList<Component> diagramArray = new ArrayList<Component>();
-    private JFrame mainFrame;
+    private HashMap<JFrame, String> titleMap = new HashMap<JFrame, String>();
+    private ArrayList<JFrame> diagramArray = new ArrayList<JFrame>();
 
     public WindowedDiagramManager(ApplicationVersionManager versionManager, JFrame mainFrame) {
         super(versionManager, mainFrame);
-        this.mainFrame = mainFrame;
-        mainPanel = new javax.swing.JPanel(new BorderLayout());
-        mainFrame.add(mainPanel, BorderLayout.CENTER);
+        titleMap.put(mainFrame, mainFrame.getTitle());
+        diagramArray.add(mainFrame);
     }
 
     @Override
     public void createDiagramContainer(String diagramTitle, Component diagramComponent) {
-        titleMap.put(diagramComponent, diagramTitle);
-        diagramArray.add(diagramComponent);
-        setSelectedDiagram(diagramComponent);
+        JFrame diagramFame = new JFrame(diagramTitle);
+        diagramFame.setJMenuBar(new MainMenuBar(this));
+        diagramFame.setContentPane((Container) diagramComponent);
+        titleMap.put(diagramFame, diagramTitle);
+        diagramArray.add(diagramFame);
+        setWindowIcon(diagramFame);
+        diagramFame.doLayout();
+        diagramFame.pack();
+        diagramFame.setVisible(true);
     }
 
     @Override
     public void createDiagramSubPanel(String diagramTitle, Component diagramComponent) {
         int currentDiagramIndex = getSavePanelIndex();
-        Component currentComponent = getDiagramAt(currentDiagramIndex);
+        JFrame diagramFame = (JFrame) getDiagramAt(currentDiagramIndex);
+        Component currentComponent = diagramFame.getContentPane();
         JTabbedPane tabbedPane;
         if (!(currentComponent instanceof JTabbedPane)) {
             tabbedPane = new JTabbedPane();
             final String savePanelTitle = getSavePanelTitle(currentDiagramIndex);
             tabbedPane.addTab(savePanelTitle, currentComponent);
-            titleMap.remove(currentComponent);
-            titleMap.put(tabbedPane, savePanelTitle);
-            diagramArray.set(currentDiagramIndex, tabbedPane);
-            setSelectedDiagram(currentDiagramIndex);
+            diagramFame.setContentPane(tabbedPane);
         } else {
             tabbedPane = (JTabbedPane) currentComponent;
         }
@@ -55,24 +58,12 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
 
     @Override
     Component getSelectedDiagram() {
-        if (mainPanel.getComponents().length > 0) {
-            return mainPanel.getComponent(0);
-        } else {
-            return null;
-        }
+        return KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
     }
 
     @Override
     public void setSelectedDiagram(Component diagramComponent) {
-        mainPanel.removeAll();
-        String diagramTitle = null;
-        if (diagramComponent != null) {
-            mainPanel.add(diagramComponent, BorderLayout.CENTER);
-            diagramTitle = titleMap.get(diagramComponent);
-        }
-        setWindowTitle(mainFrame, diagramTitle);
-        mainPanel.revalidate();
-        mainPanel.repaint();
+        ((JFrame) diagramComponent).toFront();
     }
 
     @Override
@@ -107,8 +98,8 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
     }
 
     public void setDiagramTitle(int diagramIndex, String diagramTitle) {
-        titleMap.put(getSelectedDiagram(), diagramTitle);
-        setWindowTitle(mainFrame, diagramTitle);
+        titleMap.put(diagramArray.get(diagramIndex), diagramTitle);
+        setWindowTitle(diagramArray.get(diagramIndex), diagramTitle);
     }
 
     @Override
