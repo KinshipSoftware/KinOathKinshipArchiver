@@ -15,7 +15,11 @@ public class TabbedDiagramManager extends AbstractDiagramManager {
     public TabbedDiagramManager(ApplicationVersionManager versionManager) {
         super(versionManager);
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        createDiagramWindow(versionManager.getApplicationVersion().compileDate, jTabbedPane1);
+    }
+
+    @Override
+    public void createApplicationWindow() {
+        createDiagramWindow("", jTabbedPane1);
     }
 
     @Override
