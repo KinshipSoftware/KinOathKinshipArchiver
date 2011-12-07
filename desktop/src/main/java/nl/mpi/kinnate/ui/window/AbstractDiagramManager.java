@@ -39,7 +39,12 @@ public abstract class AbstractDiagramManager {
     abstract public void createApplicationWindow();
 
     public JFrame createDiagramWindow(String diagramTitle, Component diagramComponent) {
-        JFrame diagramFame = new JFrame();
+        JFrame diagramFame;
+        if (diagramComponent instanceof SavePanel) {
+            diagramFame = new SavePanelFrame((SavePanel) diagramComponent);
+        } else {
+            diagramFame = new JFrame();
+        }
         setWindowTitle(diagramFame, diagramTitle);
         diagramFame.setJMenuBar(new MainMenuBar(this));
         if (diagramComponent != null) {
