@@ -54,8 +54,6 @@ public class MainFrame extends javax.swing.JFrame {
                 abstractDiagramManager.newDiagram();
 
                 ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
-//                abstractDiagramManager.setWindowTitle(this, versionManager.getApplicationVersion().compileDate);
-//                abstractDiagramManager.setWindowIcon(this);
 //	if (arbilMenuBar.checkNewVersionAtStartCheckBoxMenuItem.isSelected()) {
                 // todo: Ticket #1066 add the check for updates and check now menu items
                 versionManager.checkForUpdate();
