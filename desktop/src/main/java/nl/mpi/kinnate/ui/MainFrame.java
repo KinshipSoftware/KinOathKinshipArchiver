@@ -3,8 +3,9 @@ package nl.mpi.kinnate.ui;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
-import nl.mpi.kinnate.ui.menu.MainMenuBar;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
+import nl.mpi.kinnate.ui.window.LayeredDiagramManager;
+import nl.mpi.kinnate.ui.window.TabbedDiagramManager;
 import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
 
 /*
@@ -14,33 +15,12 @@ import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    AbstractDiagramManager abstractDiagramManager;
-
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
-        final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
-
-//        abstractDiagramManager = new LayeredDiagramManager(versionManager, this);
-//        abstractDiagramManager = new TabbedDiagramManager(versionManager, this);
-        abstractDiagramManager = new WindowedDiagramManager(versionManager, this);
-
-        nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
-        abstractDiagramManager.newDiagram();
-        setJMenuBar(new MainMenuBar(abstractDiagramManager));
-        this.doLayout();
-        this.pack();
-        ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
-        abstractDiagramManager.setWindowTitle(this, versionManager.getApplicationVersion().compileDate);
-        abstractDiagramManager.setWindowIcon(this);
-//	if (arbilMenuBar.checkNewVersionAtStartCheckBoxMenuItem.isSelected()) {
-        // todo: Ticket #1066 add the check for updates and check now menu items
-        versionManager.checkForUpdate();
-//	}
     }
 
     public void loadAllTrees() {
-        abstractDiagramManager.loadAllTrees();
     }
 
     /** This method is called from within the constructor to
@@ -63,9 +43,23 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                final MainFrame mainFrame = new MainFrame();
-                mainFrame.setVisible(true);
-                mainFrame.loadAllTrees();
+                final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
+                nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
+                AbstractDiagramManager abstractDiagramManager;
+
+//                abstractDiagramManager = new LayeredDiagramManager(versionManager);
+//                abstractDiagramManager = new TabbedDiagramManager(versionManager);
+                abstractDiagramManager = new WindowedDiagramManager(versionManager);
+
+                abstractDiagramManager.newDiagram();
+
+                ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
+//                abstractDiagramManager.setWindowTitle(this, versionManager.getApplicationVersion().compileDate);
+//                abstractDiagramManager.setWindowIcon(this);
+//	if (arbilMenuBar.checkNewVersionAtStartCheckBoxMenuItem.isSelected()) {
+                // todo: Ticket #1066 add the check for updates and check now menu items
+                versionManager.checkForUpdate();
+                abstractDiagramManager.loadAllTrees();
             }
         });
     }
