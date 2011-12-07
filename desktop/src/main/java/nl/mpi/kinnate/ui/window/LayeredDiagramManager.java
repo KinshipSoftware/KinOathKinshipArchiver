@@ -23,7 +23,11 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
     public LayeredDiagramManager(ApplicationVersionManager versionManager) {
         super(versionManager);
         mainPanel = new javax.swing.JPanel(new BorderLayout());
-        this.mainFrame = createDiagramWindow(versionManager.getApplicationVersion().compileDate, mainPanel);
+    }
+
+    @Override
+    public void createApplicationWindow() {
+        this.mainFrame = createDiagramWindow(getSavePanelTitle(getSavePanelIndex()), mainPanel);
     }
 
     @Override
@@ -69,7 +73,9 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
             mainPanel.add(diagramComponent, BorderLayout.CENTER);
             diagramTitle = titleMap.get(diagramComponent);
         }
-        setWindowTitle(mainFrame, diagramTitle);
+        if (mainFrame != null) {
+            setWindowTitle(mainFrame, diagramTitle);
+        }
         mainPanel.revalidate();
         mainPanel.repaint();
     }
@@ -107,7 +113,9 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
 
     public void setDiagramTitle(int diagramIndex, String diagramTitle) {
         titleMap.put(getSelectedDiagram(), diagramTitle);
-        setWindowTitle(mainFrame, diagramTitle);
+        if (mainFrame != null) {
+            setWindowTitle(mainFrame, diagramTitle);
+        }
     }
 
     @Override
