@@ -36,7 +36,8 @@ public abstract class AbstractDiagramManager {
         this.versionManager = versionManager;
     }
 
-//    abstract public void createApplicationWindow();
+    abstract public void createApplicationWindow();
+
     public JFrame createDiagramWindow(String diagramTitle, Component diagramComponent) {
         JFrame diagramFame = new JFrame();
         setWindowTitle(diagramFame, diagramTitle);
