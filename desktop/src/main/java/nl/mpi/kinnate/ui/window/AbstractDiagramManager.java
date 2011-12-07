@@ -59,10 +59,7 @@ public abstract class AbstractDiagramManager {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                // check that all diagrams are saved and ask user if not
-                if (offerUserToSaveAll()) {
-                    System.exit(0);
-                }
+                closeWindowAction((JFrame) e.getWindow());
             }
         });
 //        diagramFame.doLayout();
@@ -78,6 +75,13 @@ public abstract class AbstractDiagramManager {
     public void setWindowIcon(JFrame windowFrame) {
         // set the icon for the application (if this is still required for the various OSs). This is not required for Mac but might be needed for windows or linux.
         windowFrame.setIconImage(ArbilIcons.getSingleInstance().linorgIcon.getImage());
+    }
+
+    protected void closeWindowAction(JFrame windowFrame) {
+        // check that all diagrams are saved and ask user if not
+        if (offerUserToSaveAll()) {
+            System.exit(0);
+        }
     }
 
     abstract public void createDiagramContainer(String diagramTitle, Component diagramComponent);
@@ -184,24 +188,32 @@ public abstract class AbstractDiagramManager {
                 SavePanel savePanel = (SavePanel) selectedComponent;
                 setSelectedDiagram(selectedComponent);
                 String diagramName = getSavePanelTitle(diagramCounter);
-                if (savePanel.requiresSave()) {
-                    // warn user to save
-                    switch (ArbilWindowManager.getSingleInstance().showDialogBox("There are unsaved changes in: \"" + diagramName + "\"\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
-                        case JOptionPane.YES_OPTION:
-                            if (savePanel.hasSaveFileName()) {
-                                savePanel.saveToFile();
-                            } else {
-                                saveDiagramAs(savePanel);
-                            }
-                        case JOptionPane.NO_OPTION:
-                            break;
-                        case JOptionPane.CANCEL_OPTION:
-                            return false;
-                    }
+                boolean userCanceled = offerUserToSave(savePanel, diagramName);
+                if (userCanceled) {
+                    return false;
                 }
             }
         }
         return true;
+    }
+
+    protected boolean offerUserToSave(SavePanel savePanel, String diagramName) {
+        if (savePanel.requiresSave()) {
+            // warn user to save
+            switch (ArbilWindowManager.getSingleInstance().showDialogBox("There are unsaved changes in: \"" + diagramName + "\"\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
+                case JOptionPane.YES_OPTION:
+                    if (savePanel.hasSaveFileName()) {
+                        savePanel.saveToFile();
+                    } else {
+                        saveDiagramAs(savePanel);
+                    }
+                case JOptionPane.NO_OPTION:
+                    break;
+                case JOptionPane.CANCEL_OPTION:
+                    return true;
+            }
+        }
+        return false;
     }
 
     private String saveDiagramAs(SavePanel savePanel) {
