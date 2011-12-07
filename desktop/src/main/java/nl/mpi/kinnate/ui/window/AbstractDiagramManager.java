@@ -197,7 +197,7 @@ public abstract class AbstractDiagramManager {
         return true;
     }
 
-    protected boolean offerUserToSave(SavePanel savePanel, String diagramName) {
+    public boolean offerUserToSave(SavePanel savePanel, String diagramName) {
         if (savePanel.requiresSave()) {
             // warn user to save
             switch (ArbilWindowManager.getSingleInstance().showDialogBox("There are unsaved changes in: \"" + diagramName + "\"\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
