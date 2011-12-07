@@ -1,14 +1,12 @@
 package nl.mpi.kinnate.ui.window;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.KeyboardFocusManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import nl.mpi.arbil.util.ApplicationVersionManager;
-import nl.mpi.kinnate.ui.menu.MainMenuBar;
 
 /**
  *  Document   : DiagramWindowManager
@@ -20,23 +18,15 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
     private HashMap<JFrame, String> titleMap = new HashMap<JFrame, String>();
     private ArrayList<JFrame> diagramArray = new ArrayList<JFrame>();
 
-    public WindowedDiagramManager(ApplicationVersionManager versionManager, JFrame mainFrame) {
-        super(versionManager, mainFrame);
-        titleMap.put(mainFrame, mainFrame.getTitle());
-        diagramArray.add(mainFrame);
+    public WindowedDiagramManager(ApplicationVersionManager versionManager) {
+        super(versionManager);
     }
 
     @Override
     public void createDiagramContainer(String diagramTitle, Component diagramComponent) {
-        JFrame diagramFame = new JFrame(diagramTitle);
-        diagramFame.setJMenuBar(new MainMenuBar(this));
-        diagramFame.setContentPane((Container) diagramComponent);
-        titleMap.put(diagramFame, diagramTitle);
-        diagramArray.add(diagramFame);
-        setWindowIcon(diagramFame);
-        diagramFame.doLayout();
-        diagramFame.pack();
-        diagramFame.setVisible(true);
+        JFrame diagramWindow = super.createDiagramWindow(diagramTitle, diagramComponent);
+        titleMap.put(diagramWindow, diagramTitle);
+        diagramArray.add(diagramWindow);
     }
 
     @Override
