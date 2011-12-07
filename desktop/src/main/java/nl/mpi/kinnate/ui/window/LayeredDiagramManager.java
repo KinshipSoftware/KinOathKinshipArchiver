@@ -20,11 +20,10 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
     private ArrayList<Component> diagramArray = new ArrayList<Component>();
     private JFrame mainFrame;
 
-    public LayeredDiagramManager(ApplicationVersionManager versionManager, JFrame mainFrame) {
-        super(versionManager, mainFrame);
-        this.mainFrame = mainFrame;
+    public LayeredDiagramManager(ApplicationVersionManager versionManager) {
+        super(versionManager);
         mainPanel = new javax.swing.JPanel(new BorderLayout());
-        mainFrame.add(mainPanel, BorderLayout.CENTER);
+        this.mainFrame = createDiagramWindow(versionManager.getApplicationVersion().compileDate, mainPanel);
     }
 
     @Override
