@@ -40,11 +40,9 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
                 boolean userCanceled = offerUserToSave(savePanel, diagramTitle);
                 if (!userCanceled) {
                     closeSavePanel(selectedIndex);
-                    windowFrame.dispose();
                 }
             } else {
                 closeSavePanel(selectedIndex);
-                windowFrame.dispose();
             }
         }
     }
@@ -106,8 +104,10 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
     }
 
     public void closeSavePanel(int selectedIndex) {
+        final JFrame diagramFrame = diagramArray.get(selectedIndex);
         titleMap.remove(diagramArray.get(selectedIndex));
         diagramArray.remove(selectedIndex);
+        diagramFrame.dispose();
         while (diagramArray.size() <= selectedIndex && selectedIndex > 0) {
             selectedIndex--;
         }
