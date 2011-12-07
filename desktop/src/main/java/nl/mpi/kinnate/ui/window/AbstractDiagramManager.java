@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.ui.window;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -18,6 +19,7 @@ import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
 import nl.mpi.kinnate.ui.EntityUploadPanel;
 import nl.mpi.kinnate.ui.GedcomImportPanel;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
+import nl.mpi.kinnate.ui.menu.MainMenuBar;
 import nl.mpi.kinnate.ui.menu.RecentFileMenu;
 
 /**
@@ -30,10 +32,23 @@ public abstract class AbstractDiagramManager {
     private EntityUploadPanel entityUploadPanel;
     private ApplicationVersionManager versionManager;
 
-    public AbstractDiagramManager(ApplicationVersionManager versionManager, JFrame mainFrame) {
+    public AbstractDiagramManager(ApplicationVersionManager versionManager) {
         this.versionManager = versionManager;
-        mainFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        mainFrame.addWindowListener(new WindowAdapter() {
+    }
+
+//    abstract public void createApplicationWindow();
+    public JFrame createDiagramWindow(String diagramTitle, Component diagramComponent) {
+        JFrame diagramFame = new JFrame(diagramTitle);
+        diagramFame.setJMenuBar(new MainMenuBar(this));
+        if (diagramComponent != null) {
+            diagramFame.setContentPane((Container) diagramComponent);
+//        } else {
+//            diagramFame.setMaximumSize(new Dimension(800, 600));
+        }
+
+        setWindowIcon(diagramFame);
+        diagramFame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        diagramFame.addWindowListener(new WindowAdapter() {
 
             @Override
             public void windowClosing(WindowEvent e) {
@@ -43,6 +58,10 @@ public abstract class AbstractDiagramManager {
                 }
             }
         });
+//        diagramFame.doLayout();
+        diagramFame.pack();
+        diagramFame.setVisible(true);
+        return diagramFame;
     }
 
     public void setWindowTitle(JFrame windowFrame, String titleString) {
