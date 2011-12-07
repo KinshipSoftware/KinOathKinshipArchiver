@@ -23,6 +23,11 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
     }
 
     @Override
+    public void createApplicationWindow() {
+        // nothing to do for this diagram manager
+    }
+
+    @Override
     public void createDiagramContainer(String diagramTitle, Component diagramComponent) {
         JFrame diagramWindow = super.createDiagramWindow(diagramTitle, diagramComponent);
         titleMap.put(diagramWindow, diagramTitle);
