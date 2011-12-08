@@ -47,7 +47,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     public MetadataPanel metadataPanel;
     private boolean requiresSave = false;
     private File svgFile = null;
-    protected GraphPanelSize graphPanelSize;
+    public GraphPanelSize graphPanelSize;
     protected LineLookUpTable lineLookUpTable;
     protected ArrayList<UniqueIdentifier> selectedGroupId;
     protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
@@ -101,7 +101,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         jSVGScrollPane = new JSVGScrollPane(svgCanvas);
 //        svgCanvas.setBackground(Color.LIGHT_GRAY);
         this.add(BorderLayout.CENTER, jSVGScrollPane);
-        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, graphPanelSize));
+        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this));
     }
 
 //    private void zoomDrawing() {
