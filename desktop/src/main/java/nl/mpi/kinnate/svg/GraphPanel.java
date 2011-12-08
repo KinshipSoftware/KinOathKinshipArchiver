@@ -448,4 +448,8 @@ public class GraphPanel extends JPanel implements SavePanel {
     public void doActionCommand(MouseListenerSvg.ActionCode actionCode) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public GraphPanel getGraphPanel() {
+        return this;
+    }
 }
