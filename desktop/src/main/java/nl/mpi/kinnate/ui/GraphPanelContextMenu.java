@@ -35,6 +35,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private KinDiagramPanel kinDiagramPanel;
     private GraphPanel graphPanel;
     private GraphPanelSize graphPanelSize;
+    private JMenuItem addEntityMenuItem;
     private JMenuItem duplicateEntitiesMenu;
     private JMenuItem mergeEntitiesMenu;
     private JMenuItem addRelationEntityMenu;
@@ -66,7 +67,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         graphPanel = graphPanelLocal;
         graphPanelSize = graphPanelSizeLocal;
         if (egoSelectionPanelLocal != null) {
-            JMenuItem addEntityMenuItem = new JMenuItem("Add Entity");
+            addEntityMenuItem = new JMenuItem("Add Entity");
             addEntityMenuItem.setActionCommand(EntityDocument.defaultEntityType);
             addEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -368,6 +369,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 // todo: Search the entity database for entities matching the current kin terms and populate he diagram with the results
             }
         });
+        searchEntityServiceMenuItem.setEnabled(false);
         this.add(searchEntityServiceMenuItem);
 
         saveFileMenuItem = new JMenuItem();
@@ -447,6 +449,11 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         showArchiveLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showArchiveLinks);
 //        showResourceLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showResourceLinks);
         saveFileMenuItem.setEnabled(ArbilDataNodeLoader.getSingleInstance().nodesNeedSave());
+
+        // enable/disable the menus based on the diagram type
+        addEntityMenuItem.setEnabled(kinDiagramPanel.getDiagramMode() != KinDiagramPanel.DiagramMode.FreeForm);
+        removeRelationEntityMenu.setEnabled(kinDiagramPanel.getDiagramMode() != KinDiagramPanel.DiagramMode.FreeForm);
+
         super.show(cmpnt, i, i1);
     }
 
