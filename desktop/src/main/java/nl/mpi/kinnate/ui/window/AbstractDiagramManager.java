@@ -170,6 +170,9 @@ public abstract class AbstractDiagramManager {
     public KinTermSavePanel getKinTermPanel() {
         SavePanel selectedComponent = getCurrentSavePanel();
         KinTermSavePanel kinTermSavePanel = null;
+        if (selectedComponent instanceof SavePanelFrame) {
+            selectedComponent = (SavePanel) ((SavePanelFrame) selectedComponent).getContentPane();
+        }
         if (selectedComponent instanceof KinTermSavePanel) {
             kinTermSavePanel = (KinTermSavePanel) selectedComponent;
         }
