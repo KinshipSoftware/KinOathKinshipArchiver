@@ -62,7 +62,7 @@ public class HidePane extends JPanel {
 //                separatorBar = new JSeparator(JSeparator.HORIZONTAL);
                 separatorBar.setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
                 this.add(separatorBar, BorderLayout.PAGE_END);
-                tabbedPane.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+                tabbedPane.setTabPlacement(javax.swing.JTabbedPane.TOP);
                 break;
             case bottom:
             default:
