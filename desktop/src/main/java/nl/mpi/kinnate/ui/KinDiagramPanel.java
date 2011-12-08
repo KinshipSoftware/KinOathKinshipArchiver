@@ -113,34 +113,41 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     showMetaData = true;
                     showDiagramTree = true;
                     showArchiveLinker = true;
+                    diagramMode = DiagramMode.KinTypeQuery;
                     break;
                 case CustomQuery:
                     showMetaData = true;
                     showKinTypeStrings = true;
                     showDiagramTree = true;
                     showIndexerSettings = true;
+                    diagramMode = DiagramMode.KinTypeQuery;
                     break;
                 case EntitySearch:
                     showMetaData = true;
                     showEntitySearch = true;
                     showDiagramTree = true;
+                    diagramMode = DiagramMode.KinTypeQuery;
                     break;
                 case KinTerms:
                     showKinTerms = true;
                     graphPanel.addKinTermGroup();
+                    diagramMode = DiagramMode.FreeForm;
                     break;
                 case Freeform:
 //                    showDiagramTree = true;
                     showKinTypeStrings = true;
+                    diagramMode = DiagramMode.FreeForm;
                     break;
                 case Simple:
                     showMetaData = true;
                     showDiagramTree = true;
+                    diagramMode = DiagramMode.KinTypeQuery;
                     break;
                 case Query:
                     showMetaData = true;
                     showDiagramTree = true;
                     showKinTypeStrings = true;
+                    diagramMode = DiagramMode.KinTypeQuery;
                 default:
                     break;
             }
@@ -303,19 +310,19 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
                                 progressBar.setValue(0);
                                 progressBar.setVisible(true);
-                                boolean isQuery = false;
-                                if (!graphPanel.dataStoreSvg.egoEntities.isEmpty() || !graphPanel.dataStoreSvg.requiredEntities.isEmpty()) {
-                                    isQuery = true;
-                                } else {
-                                    for (String currentLine : kinTypeStrings) {
-                                        if (currentLine.contains("[")) {
-                                            isQuery = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (isQuery) {
-                                    diagramMode = DiagramMode.KinTypeQuery;
+//                                boolean isQuery = false;
+//                                if (!graphPanel.dataStoreSvg.egoEntities.isEmpty() || !graphPanel.dataStoreSvg.requiredEntities.isEmpty()) {
+//                                    isQuery = true;
+//                                } else {
+//                                    for (String currentLine : kinTypeStrings) {
+//                                        if (currentLine.contains("[")) {
+//                                            isQuery = true;
+//                                            break;
+//                                        }
+//                                    }
+//                                }
+                                if (diagramMode == DiagramMode.KinTypeQuery) {
+//                                    diagramMode = DiagramMode.KinTypeQuery;
                                     EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
                                     progressBar.setIndeterminate(true);
                                     graphPanel.dataStoreSvg.graphData.setEntitys(graphNodes);
@@ -325,7 +332,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                     egoSelectionPanel.setTreeNodes(graphPanel);
                                     new KinTermCalculator().insertKinTerms(graphPanel.dataStoreSvg.graphData.getDataNodes(), graphPanel.getkinTermGroups());
                                 } else {
-                                    diagramMode = DiagramMode.FreeForm;
+//                                    diagramMode = DiagramMode.FreeForm;
                                     KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg);
                                     graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
                                     graphPanel.drawNodes(graphData);
