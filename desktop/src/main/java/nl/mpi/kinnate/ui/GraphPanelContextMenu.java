@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -22,7 +21,6 @@ import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindocument.EntityMerger;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.svg.GraphPanel;
-import nl.mpi.kinnate.svg.GraphPanelSize;
 import nl.mpi.kinnate.svg.SvgUpdateHandler;
 
 /**
@@ -34,7 +32,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
     private KinDiagramPanel kinDiagramPanel;
     private GraphPanel graphPanel;
-    private GraphPanelSize graphPanelSize;
     private JMenuItem addEntityMenuItem;
     private JMenuItem duplicateEntitiesMenu;
     private JMenuItem mergeEntitiesMenu;
@@ -46,26 +43,13 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private JMenuItem addAsRequiredMenuItem;
     private JMenuItem removeRequiredMenuItem;
     private JMenuItem saveFileMenuItem;
-    private JCheckBoxMenuItem snapToGridMenuItem;
-    private JCheckBoxMenuItem showBorderMenuItem;
-    private JCheckBoxMenuItem highlightRelationsMenuItem;
-    private JCheckBoxMenuItem showKinTermLinesMenuItem;
-    private JCheckBoxMenuItem showSanguineLinesMenuItem;
-    private JCheckBoxMenuItem showLabelssMenuItem;
-    private JCheckBoxMenuItem showKinTypeLabelssMenuItem;
-//    private JCheckBoxMenuItem showKinTermLabelssMenuItem;
-    private JCheckBoxMenuItem showIdLabelsMenuItem;
-    private JCheckBoxMenuItem showDateLabelsMenuItem;
-    private JCheckBoxMenuItem showArchiveLinksMenuItem;
-//    private JCheckBoxMenuItem showResourceLinksMenuItem;
     private UniqueIdentifier[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
     private float xPos;
     private float yPos;
 
-    public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, GraphPanelSize graphPanelSizeLocal) {
+    public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal) {
         kinDiagramPanel = egoSelectionPanelLocal;
         graphPanel = graphPanelLocal;
-        graphPanelSize = graphPanelSizeLocal;
         if (egoSelectionPanelLocal != null) {
             addEntityMenuItem = new JMenuItem("Add Entity");
             addEntityMenuItem.setActionCommand(EntityDocument.defaultEntityType);
@@ -225,142 +209,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         });
         this.add(resetLayoutMenuItem);
 
-        snapToGridMenuItem = new JCheckBoxMenuItem("Snap To Grid");
-        snapToGridMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                graphPanel.dataStoreSvg.snapToGrid = !graphPanel.dataStoreSvg.snapToGrid;
-            }
-        });
-        this.add(snapToGridMenuItem);
-
-        highlightRelationsMenuItem = new JCheckBoxMenuItem("Highlight Selected Relations");
-        highlightRelationsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                graphPanel.dataStoreSvg.highlightRelationLines = !graphPanel.dataStoreSvg.highlightRelationLines;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(highlightRelationsMenuItem);
-
-        showBorderMenuItem = new JCheckBoxMenuItem("Show Diagram Border");
-        showBorderMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                graphPanel.dataStoreSvg.showDiagramBorder = !graphPanel.dataStoreSvg.showDiagramBorder;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(showBorderMenuItem);
-
-        JMenu diagramSizeMenuItem = new JMenu("Diagram Size");
-        for (String currentString : graphPanelSize.getPreferredSizes()) {
-            JMenuItem currentMenuItem = new JMenuItem(currentString);
-            currentMenuItem.setActionCommand(currentString);
-            currentMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    setGraphPanelSize(evt.getActionCommand());
-                }
-            });
-            diagramSizeMenuItem.add(currentMenuItem);
-        }
-        this.add(diagramSizeMenuItem);
-        showSanguineLinesMenuItem = new JCheckBoxMenuItem("Show Sanguin Lines");
-        showSanguineLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Hide/Show Sanguin Lines on the graph
-                graphPanel.dataStoreSvg.showSanguineLines = !graphPanel.dataStoreSvg.showSanguineLines;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(showSanguineLinesMenuItem);
-        showKinTermLinesMenuItem = new JCheckBoxMenuItem("Show Kin Term Lines");
-        showKinTermLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //  Hide/Show Kin Term lines on the graph
-                graphPanel.dataStoreSvg.showKinTermLines = !graphPanel.dataStoreSvg.showKinTermLines;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(showKinTermLinesMenuItem);
-        showLabelssMenuItem = new JCheckBoxMenuItem("Show Labels");
-        showLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Hide/Show labels on the graph
-                graphPanel.dataStoreSvg.showLabels = !graphPanel.dataStoreSvg.showLabels;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(showLabelssMenuItem);
-
-        showKinTypeLabelssMenuItem = new JCheckBoxMenuItem("Show Kin Type Labels");
-        showKinTypeLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Hide/Show Kin type labels on the graph
-                graphPanel.dataStoreSvg.showKinTypeLabels = !graphPanel.dataStoreSvg.showKinTypeLabels;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(showKinTypeLabelssMenuItem);
-//        showKinTermLabelssMenuItem = new JCheckBoxMenuItem("Show Kin Term Labels");
-//        showKinTermLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
-//
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                // Hide/Show Kin Terms on the graph
-//                graphPanel.dataStoreSvg.showKinTermLabels = !graphPanel.dataStoreSvg.showKinTermLabels;
-//                graphPanel.drawNodes();
-//            }
-//        });
-//        this.add(showKinTermLabelssMenuItem);
-
-        // todo: this should not show when no ids are specified by the user
-        showIdLabelsMenuItem = new JCheckBoxMenuItem("Show Id Labels");
-        showIdLabelsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Hide/Show transient node ids on the graph
-                graphPanel.dataStoreSvg.showIdLabels = !graphPanel.dataStoreSvg.showIdLabels;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(showIdLabelsMenuItem);
-
-        showDateLabelsMenuItem = new JCheckBoxMenuItem("Show Date Labels");
-        showDateLabelsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // Hide/Show dates on the graph
-                graphPanel.dataStoreSvg.showDateLabels = !graphPanel.dataStoreSvg.showDateLabels;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(showDateLabelsMenuItem);
-
-
-        showArchiveLinksMenuItem = new JCheckBoxMenuItem("Show Archive Links");
-        showArchiveLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                graphPanel.dataStoreSvg.showArchiveLinks = !graphPanel.dataStoreSvg.showArchiveLinks;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(showArchiveLinksMenuItem);
-//        showResourceLinksMenuItem = new JCheckBoxMenuItem("Show Archive Resource Links");
-//        showResourceLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
-//
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                graphPanel.dataStoreSvg.showResourceLinks = !graphPanel.dataStoreSvg.showResourceLinks;
-//                graphPanel.drawNodes();
-//            }
-//        });
-//        this.add(showResourceLinksMenuItem);
         JMenuItem searchEntityServiceMenuItem = new JMenuItem("Search Entity Service");
         searchEntityServiceMenuItem.setToolTipText("Search the entity database for entities matching the current kin terms and populate he diagram with the results");
         searchEntityServiceMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -402,11 +250,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         return selectedUriArray;
     }
 
-    private void setGraphPanelSize(String sizeString) {
-        graphPanelSize.setSize(sizeString);
-        graphPanel.drawNodes();
-    }
-
     @Override
     public void show(Component cmpnt, int i, int i1) {
         xPos = cmpnt.getMousePosition().x;
@@ -436,18 +279,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             addAsRequiredMenuItem.setVisible(false);
             removeRequiredMenuItem.setVisible(false);
         }
-        snapToGridMenuItem.setSelected(graphPanel.dataStoreSvg.snapToGrid);
-        highlightRelationsMenuItem.setSelected(graphPanel.dataStoreSvg.highlightRelationLines);
-        showBorderMenuItem.setSelected(graphPanel.dataStoreSvg.showDiagramBorder);
-        showSanguineLinesMenuItem.setSelected(graphPanel.dataStoreSvg.showSanguineLines);
-        showKinTermLinesMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLines);
-        showLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showLabels);
-        showKinTypeLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTypeLabels);
-//        showKinTermLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLabels);
-        showIdLabelsMenuItem.setSelected(graphPanel.dataStoreSvg.showIdLabels);
-        showDateLabelsMenuItem.setSelected(graphPanel.dataStoreSvg.showDateLabels);
-        showArchiveLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showArchiveLinks);
-//        showResourceLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showResourceLinks);
         saveFileMenuItem.setEnabled(ArbilDataNodeLoader.getSingleInstance().nodesNeedSave());
 
         // enable/disable the menus based on the diagram type
