@@ -310,17 +310,19 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
                                 progressBar.setValue(0);
                                 progressBar.setVisible(true);
-//                                boolean isQuery = false;
-//                                if (!graphPanel.dataStoreSvg.egoEntities.isEmpty() || !graphPanel.dataStoreSvg.requiredEntities.isEmpty()) {
-//                                    isQuery = true;
-//                                } else {
-//                                    for (String currentLine : kinTypeStrings) {
-//                                        if (currentLine.contains("[")) {
-//                                            isQuery = true;
-//                                            break;
-//                                        }
-//                                    }
-//                                }
+                                if (diagramMode == DiagramMode.Undefined) {
+                                    diagramMode = DiagramMode.FreeForm;
+                                    if (!graphPanel.dataStoreSvg.egoEntities.isEmpty() || !graphPanel.dataStoreSvg.requiredEntities.isEmpty()) {
+                                        diagramMode = DiagramMode.KinTypeQuery;
+                                    } else {
+                                        for (String currentLine : kinTypeStrings) {
+                                            if (currentLine.contains("[")) {
+                                                diagramMode = DiagramMode.KinTypeQuery;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
                                 if (diagramMode == DiagramMode.KinTypeQuery) {
 //                                    diagramMode = DiagramMode.KinTypeQuery;
                                     EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
