@@ -19,7 +19,7 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class DiagramPanelsMenu extends JMenu implements ActionListener {
 
-    AbstractDiagramManager diagramWindowManager;
+    private AbstractDiagramManager diagramWindowManager;
 
     public DiagramPanelsMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
