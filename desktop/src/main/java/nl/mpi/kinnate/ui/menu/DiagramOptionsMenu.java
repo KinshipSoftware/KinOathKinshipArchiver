@@ -5,8 +5,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.svg.GraphPanel;
-import nl.mpi.kinnate.svg.GraphPanelSize;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -16,41 +16,21 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class DiagramOptionsMenu extends JMenu {
 
-    private AbstractDiagramManager diagramWindowManager;
-    // menu items
-//    private JCheckBoxMenuItem snapToGridMenuItem;
-//    private JCheckBoxMenuItem showBorderMenuItem;
-//    private JCheckBoxMenuItem highlightRelationsMenuItem;
-//    private JCheckBoxMenuItem showKinTermLinesMenuItem;
-//    private JCheckBoxMenuItem showSanguineLinesMenuItem;
-//    private JCheckBoxMenuItem showLabelssMenuItem;
-//    private JCheckBoxMenuItem showKinTypeLabelssMenuItem;
-////    private JCheckBoxMenuItem showKinTermLabelssMenuItem;
-//    private JCheckBoxMenuItem showIdLabelsMenuItem;
-//    private JCheckBoxMenuItem showDateLabelsMenuItem;
-//    private JCheckBoxMenuItem showArchiveLinksMenuItem;
-////    private JCheckBoxMenuItem showResourceLinksMenuItem;
-
-    public DiagramOptionsMenu(AbstractDiagramManager diagramWindowManager) {
-        this.diagramWindowManager = diagramWindowManager;
+    public DiagramOptionsMenu(final AbstractDiagramManager diagramWindowManager) {
         this.setText("Diagram Options");
 
         this.addMenuListener(new MenuListener() {
 
             public void menuSelected(MenuEvent e) {
-                setupMenuItems(null, null);
-//                snapToGridMenuItem.setEnabled(graphPanel != null);
-//                showBorderMenuItem.setEnabled(graphPanel != null);
-//                highlightRelationsMenuItem.setEnabled(graphPanel != null);
-//                showKinTermLinesMenuItem.setEnabled(graphPanel != null);
-//                showSanguineLinesMenuItem.setEnabled(graphPanel != null);
-//                showLabelssMenuItem.setEnabled(graphPanel != null);
-//                showKinTypeLabelssMenuItem.setEnabled(graphPanel != null);
-////   showKinTermLabelssMenuItem.setEnabled(graphPanel!=null);
-//                showIdLabelsMenuItem.setEnabled(graphPanel != null);
-//                showDateLabelsMenuItem.setEnabled(graphPanel != null);
-//                showArchiveLinksMenuItem.setEnabled(graphPanel != null);
-////   showResourceLinksMenuItem.setEnabled(graphPanel!=null);
+                final SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel();
+                DiagramOptionsMenu.this.removeAll();
+                if (currentSavePanel != null) {
+                    setupMenuItems(currentSavePanel.getGraphPanel());
+                } else {
+                    JMenuItem noItemsMenu = new JMenuItem("<no items available in this context>");
+                    noItemsMenu.setEnabled(false);
+                    DiagramOptionsMenu.this.add(noItemsMenu);
+                }
             }
 
             public void menuDeselected(MenuEvent e) {
@@ -61,7 +41,7 @@ public class DiagramOptionsMenu extends JMenu {
         });
     }
 
-    private void setupMenuItems(final GraphPanel graphPanel, final GraphPanelSize graphPanelSize) {
+    private void setupMenuItems(final GraphPanel graphPanel) {
         JCheckBoxMenuItem snapToGridMenuItem = new JCheckBoxMenuItem("Snap To Grid");
         snapToGridMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -92,14 +72,14 @@ public class DiagramOptionsMenu extends JMenu {
         this.add(showBorderMenuItem);
 
         JMenu diagramSizeMenuItem = new JMenu("Diagram Size");
-        for (String currentString : graphPanelSize.getPreferredSizes()) {
+        for (String currentString : graphPanel.graphPanelSize.getPreferredSizes()) {
             JMenuItem currentMenuItem = new JMenuItem(currentString);
             currentMenuItem.setActionCommand(currentString);
             currentMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     String sizeString = evt.getActionCommand();
-                    graphPanelSize.setSize(sizeString);
+                    graphPanel.graphPanelSize.setSize(sizeString);
                     graphPanel.drawNodes();
                 }
             });
