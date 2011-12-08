@@ -14,6 +14,7 @@ public class MainMenuBar extends JMenuBar {
         this.add(new FileMenu(abstractDiagramManager));
         this.add(new EditMenu(abstractDiagramManager));
         this.add(new DiagramPanelsMenu(abstractDiagramManager));
+        this.add(new DiagramOptionsMenu(abstractDiagramManager));
         this.add(new KinTermsMenu(abstractDiagramManager));
         this.add(new ArchiveMenu(abstractDiagramManager));
         this.add(new WindowMenu(abstractDiagramManager));
