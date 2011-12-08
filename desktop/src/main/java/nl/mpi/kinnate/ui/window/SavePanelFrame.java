@@ -4,6 +4,7 @@ import java.awt.HeadlessException;
 import java.io.File;
 import javax.swing.JFrame;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.MouseListenerSvg.ActionCode;
 
 /**
@@ -49,5 +50,9 @@ public class SavePanelFrame extends JFrame implements SavePanel {
 
     public void updateGraph() {
         savePanel.updateGraph();
+    }
+
+    public GraphPanel getGraphPanel() {
+        return savePanel.getGraphPanel();
     }
 }
