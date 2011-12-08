@@ -2,7 +2,6 @@ package nl.mpi.kinnate.ui.menu;
 
 import java.io.File;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.kinnate.KinTermSavePanel;
@@ -20,7 +19,9 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class FileMenu extends javax.swing.JMenu {
 
-    private javax.swing.JMenuItem ImportGedcomUrl;
+    private javax.swing.JMenuItem importGedcomUrl;
+    private javax.swing.JMenuItem importGedcomFile;
+    private javax.swing.JMenuItem importCsvFile;
     private javax.swing.JMenuItem closeTabMenuItem;
     private javax.swing.JMenuItem entityUploadMenuItem;
     private javax.swing.JMenuItem exitApplication;
@@ -44,7 +45,9 @@ public class FileMenu extends javax.swing.JMenu {
 
     public FileMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
-        ImportGedcomUrl = new javax.swing.JMenuItem();
+        importGedcomUrl = new javax.swing.JMenuItem();
+        importGedcomFile = new javax.swing.JMenuItem();
+        importCsvFile = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
         jMenu3 = new DocumentNewMenu(diagramWindowManager);
@@ -87,14 +90,33 @@ public class FileMenu extends javax.swing.JMenu {
             }
         });
 
-        ImportGedcomUrl.setText("Import Gedcom Samples (from internet)");
-        ImportGedcomUrl.addActionListener(new java.awt.event.ActionListener() {
+        importGedcomUrl.setText("Import Gedcom Samples (from internet)");
+        importGedcomUrl.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ImportGedcomUrlActionPerformed(evt);
+                importGedcomUrlActionPerformed(evt);
             }
         });
-        this.add(ImportGedcomUrl);
+        this.add(importGedcomFile);
+
+        importGedcomFile.setText("Import Gedcom File");
+        importGedcomFile.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importGedcomFileActionPerformed(evt);
+            }
+        });
+        this.add(importGedcomFile);
+
+        importCsvFile.setText("Import CSV File");
+        importCsvFile.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importCsvFileActionPerformed(evt);
+            }
+        });
+        this.add(importCsvFile);
+
         this.add(jSeparator1);
 
         newDiagramMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
@@ -332,7 +354,13 @@ public class FileMenu extends javax.swing.JMenu {
         diagramWindowManager.newDiagram();
     }
 
-    private void ImportGedcomUrlActionPerformed(java.awt.event.ActionEvent evt) {
+    private void importGedcomFileActionPerformed(java.awt.event.ActionEvent evt) {
+    }
+
+    private void importCsvFileActionPerformed(java.awt.event.ActionEvent evt) {
+    }
+
+    private void importGedcomUrlActionPerformed(java.awt.event.ActionEvent evt) {
         // todo: Ticket #1297 either remove this or change it so it does not open so many tabs / windows
         String[] importList = new String[]{"http://gedcomlibrary.com/gedcoms.html",
             "http://GedcomLibrary.com/gedcoms/gl120365.ged", //	Tammy Carter Inman
