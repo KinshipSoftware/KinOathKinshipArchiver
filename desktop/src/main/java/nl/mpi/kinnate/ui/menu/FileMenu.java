@@ -90,35 +90,6 @@ public class FileMenu extends javax.swing.JMenu {
             }
         });
 
-        importGedcomUrl.setText("Import Gedcom Samples (from internet)");
-        importGedcomUrl.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importGedcomUrlActionPerformed(evt);
-            }
-        });
-        this.add(importGedcomFile);
-
-        importGedcomFile.setText("Import Gedcom File");
-        importGedcomFile.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importGedcomFileActionPerformed(evt);
-            }
-        });
-        this.add(importGedcomFile);
-
-        importCsvFile.setText("Import CSV File");
-        importCsvFile.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importCsvFileActionPerformed(evt);
-            }
-        });
-        this.add(importCsvFile);
-
-        this.add(jSeparator1);
-
         newDiagramMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         newDiagramMenuItem.setText("New (default diagram)");
         newDiagramMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -149,8 +120,39 @@ public class FileMenu extends javax.swing.JMenu {
         jMenu1.setText("Open Sample Diagram");
         this.add(jMenu1);
 
+        this.add(jSeparator1);
+
+        importGedcomFile.setText("Import Gedcom File");
+        importGedcomFile.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importGedcomFileActionPerformed(evt);
+            }
+        });
+        this.add(importGedcomFile);
+
+        importCsvFile.setText("Import CSV File");
+        importCsvFile.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importCsvFileActionPerformed(evt);
+            }
+        });
+        this.add(importCsvFile);
+
         jMenu2.setText("Import Sample Data");
         this.add(jMenu2);
+
+        importGedcomUrl.setText("Import Gedcom Samples (from internet)");
+        importGedcomUrl.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importGedcomUrlActionPerformed(evt);
+            }
+        });
+        importGedcomUrl.setEnabled(false);
+        this.add(importGedcomUrl);
+
         this.add(jSeparator2);
 
         entityUploadMenuItem.setText("Entity Upload");
