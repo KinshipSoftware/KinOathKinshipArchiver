@@ -2,6 +2,7 @@ package nl.mpi.kinnate.ui;
 
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -44,6 +45,7 @@ public class GedcomImportPanel extends JPanel {
     private JPanel endPagePanel;
 
     public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager) {
+        this.setPreferredSize(new Dimension(500, 500));
         this.abstractDiagramManager = abstractDiagramManager;
         entityCollection = new EntityCollection();
 
