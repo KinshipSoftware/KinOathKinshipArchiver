@@ -10,6 +10,7 @@ import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
  *  Document   : HelpMenu
@@ -18,7 +19,7 @@ import nl.mpi.arbil.util.ArbilBugCatcher;
  */
 public class HelpMenu extends JMenu {
 
-    private HelpMenu() {
+    public HelpMenu(AbstractDiagramManager diagramWindowManager) {
         this.setText("Help");
         JMenuItem aboutMenuItem = new JMenuItem("About");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -46,12 +47,11 @@ public class HelpMenu extends JMenu {
         });
         this.add(helpMenuItem);
         JMenuItem arbilForumMenuItem = new JMenuItem("KinOath Forum (Website)");
-        arbilForumMenuItem.setText("Arbil Forum (Website)");
         arbilForumMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    GuiHelper.getSingleInstance().openFileInExternalApplication(new URI("http://www.lat-mpi.eu/tools/arbil/kinoath-forum/"));
+                    GuiHelper.getSingleInstance().openFileInExternalApplication(new URI("http://www.lat-mpi.eu/tools/kinoath/kinoath-forum/"));
                 } catch (Exception ex) {
                     GuiHelper.linorgBugCatcher.logError(ex);
                 }
