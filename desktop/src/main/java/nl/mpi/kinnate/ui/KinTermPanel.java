@@ -31,6 +31,7 @@ import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
+import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 
 /**
  *  Document   : KinTermPanel
@@ -92,14 +93,23 @@ public class KinTermPanel extends JPanel {
 //                savePanel.updateGraph();
 //            }
 //        });
+        if (savePanel.getGraphPanel().dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
+            kinTerms.graphShow = false;
+            kinTerms.graphGenerate = false;
+        }
         showOnGraphCheckBox = new JCheckBox("Show On Graph");
         showOnGraphCheckBox.setSelected(kinTerms.graphShow);
         showOnGraphCheckBox.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kinTerms.graphShow = showOnGraphCheckBox.isSelected();
-                savePanel.updateGraph();
-                savePanel.setRequiresSave();
+                if (savePanel.getGraphPanel().dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
+                    showOnGraphCheckBox.setSelected(false);
+                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("At this stage Kin Terms can only be shown on freeform diagrams.", "Kin Terms");
+                } else {
+                    kinTerms.graphShow = showOnGraphCheckBox.isSelected();
+                    savePanel.updateGraph();
+                    savePanel.setRequiresSave();
+                }
             }
         });
         autoGenerateCheckBox = new JCheckBox("Generate Example Entities");
@@ -107,9 +117,14 @@ public class KinTermPanel extends JPanel {
         autoGenerateCheckBox.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kinTerms.graphGenerate = autoGenerateCheckBox.isSelected();
-                savePanel.updateGraph();
-                savePanel.setRequiresSave();
+                if (savePanel.getGraphPanel().dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
+                    autoGenerateCheckBox.setSelected(false);
+                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Entities can only be generated on freeform diagrams.", "Kin Terms");
+                } else {
+                    kinTerms.graphGenerate = autoGenerateCheckBox.isSelected();
+                    savePanel.updateGraph();
+                    savePanel.setRequiresSave();
+                }
             }
         });
         this.setLayout(new BorderLayout());
