@@ -19,6 +19,7 @@ import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindocument.EntityMerger;
+import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.SvgUpdateHandler;
@@ -282,8 +283,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         saveFileMenuItem.setEnabled(ArbilDataNodeLoader.getSingleInstance().nodesNeedSave());
 
         // enable/disable the menus based on the diagram type
-        addEntityMenuItem.setEnabled(kinDiagramPanel.getDiagramMode() != KinDiagramPanel.DiagramMode.FreeForm);
-        removeRelationEntityMenu.setEnabled(kinDiagramPanel.getDiagramMode() != KinDiagramPanel.DiagramMode.FreeForm);
+        addEntityMenuItem.setEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
+        removeRelationEntityMenu.setEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
 
         super.show(cmpnt, i, i1);
     }
