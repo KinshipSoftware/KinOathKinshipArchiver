@@ -20,6 +20,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.EntityArray;
@@ -144,6 +145,7 @@ public class EntityCollection {
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             new ArbilBugCatcher().logError(baseXException);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(baseXException.getMessage(), "Add File To DB");
         }
     }
 
@@ -174,6 +176,7 @@ public class EntityCollection {
             }
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(baseXException.getMessage(), "Update Database");
         }
     }
 
@@ -190,6 +193,7 @@ public class EntityCollection {
             }
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(baseXException.getMessage(), "Update Database");
         }
     }
 
@@ -235,9 +239,11 @@ public class EntityCollection {
         } catch (QueryException exception) {
             new ArbilBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Perform Query");
         } catch (IOException exception) {
             new ArbilBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Perform Query");
         }
         searchResults.resultsPathArray = resultPaths.toArray(new String[]{});
 //        searchResults.statusMessage = searchResults.statusMessage + "\n query: " + queryString;
@@ -278,8 +284,10 @@ public class EntityCollection {
             }
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity Id ByTerm");
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity Id By Term");
         }
         return returnArray;
     }
@@ -305,8 +313,10 @@ public class EntityCollection {
             return foundEntities.getEntityDataArray();
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity By Key Word");
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity By Key Word");
         }
         return new EntityData[]{};
     }
@@ -333,8 +343,10 @@ public class EntityCollection {
             return selectedEntity;
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity With Relations");
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity With Relations");
         }
         return new EntityData[]{}; //(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
     }
@@ -354,6 +366,7 @@ public class EntityCollection {
             return queryResult;
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity Path");
         }
         return null;
     }
@@ -384,8 +397,10 @@ public class EntityCollection {
             return selectedEntity;
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity");
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity");
         }
         return new EntityData(uniqueIdentifier, new String[]{"Error loading data", "view log for details"});
     }
@@ -420,6 +435,7 @@ public class EntityCollection {
                     queryTimeLabel.setText(queryTimeString);
                 } catch (BaseXException exception) {
                     resultsText.append(exception.getMessage());
+                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Action Performed");
                 }
 //                SearchResults results = entityCollection.performQuery(queryText.getText());
 //                for (String resultLine : results.resultsPathArray) {
@@ -437,6 +453,7 @@ public class EntityCollection {
                     new EntityCollection().updateDatabase(new URI("file:/Users/petwit/.arbil/ArbilWorkingFiles/ca1641fc8828f9edb295d1e7b3d37405/_PARENTS_.kmdi"));
                 } catch (URISyntaxException exception) {
                     resultsText.append(exception.getMessage());
+                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Action Performed");
                 }
                 resultsText.setVisible(true);
             }
