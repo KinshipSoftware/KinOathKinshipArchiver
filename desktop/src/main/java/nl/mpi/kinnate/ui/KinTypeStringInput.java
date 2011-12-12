@@ -66,13 +66,16 @@ public class KinTypeStringInput extends JTextPane {
 
     private String getDefaultText() {
         StringBuilder defaultString = new StringBuilder();
-        defaultString.append("# The kin type strings entered in this text area will determine the diagram drawn below. For more information see the sample diagram \"Freeform Diagram Syntax\".\n");
-        defaultString.append("# <KinType>:<id>;<label>;<label...>;<DOB>-<DOD>:<KinType...>");
+        if (dataStore.diagramMode == DataStoreSvg.DiagramMode.FreeForm) {
+            defaultString.append("# The kin type strings entered in this text area will determine the diagram drawn below. For more information see the sample diagram \"Freeform Diagram Syntax\".\n");
+            defaultString.append("# <KinType>:<id>;<label>;<label...>;<DOB>-<DOD>:<KinType...>");
 //        defaultString.append("# The tool tip over this text will give more information and details of any syntax errors.\n");
 //        defaultString.append("# The extended format includes data between colons after they kin type (the < and > indicate a value that can be entered).\n");
 //        defaultString.append("# :<id>;<label>;<label...>;<DOB>-<DOD>:\n");
-
-
+        } else {
+            defaultString.append("# The queries here will be used to search the database. For more information see the sample diagram \"Query Diagram Syntax\".\n");
+            defaultString.append("# <KinType>[<search term>]<KinType>[<search field> = <search term>][<search field> == <search term>][<search field> > <search term>][<search field> < <search term>]<KinType...>");
+        }
 //        defaultString.append("# The available kin types are as follows:\n");
 //        for (KinType kinType : dataStore.getKinTypeDefinitions()) {
 //            defaultString.append("#           ");
