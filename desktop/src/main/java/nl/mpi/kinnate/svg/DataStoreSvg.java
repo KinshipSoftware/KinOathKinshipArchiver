@@ -74,8 +74,19 @@ public class DataStoreSvg {
     public boolean showDiagramBorder = true;
     @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
     public GraphSorter graphData;
+
+    public enum DiagramMode {
+
+        FreeForm, KinTypeQuery, /* RequiredEntities, */ Undefined
+    }
+    @XmlElement(name = "DiagramMode", namespace = "http://mpi.nl/tla/kin")
+    public DiagramMode diagramMode = DiagramMode.Undefined;
     @XmlElement(name = "DiagramPanel", namespace = "http://mpi.nl/tla/kin")
     private HashSet<VisiblePanelSetting> visiblePanels;
+//    @XmlElement(name = "WindowX", namespace = "http://mpi.nl/tla/kin")
+//    public int windowX = 800;
+//    @XmlElement(name = "WindowY", namespace = "http://mpi.nl/tla/kin")
+//    public int windowY = 600;
 
     public class GraphRelationData {
 
