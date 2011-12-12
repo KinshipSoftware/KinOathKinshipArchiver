@@ -25,6 +25,7 @@ public class EditMenu extends JMenu implements ActionListener {
     JMenuItem selectRelatedMenu = null;
     JMenuItem expandSelectionMenu = null;
     JMenuItem deselectAllMenu = null;
+    JMenuItem recalculateDiagramMenuItem = null;
     SavePanel menuSavePanel = null;
     AbstractDiagramManager diagramWindowManager;
 
@@ -62,10 +63,16 @@ public class EditMenu extends JMenu implements ActionListener {
         deselectAllMenu.setActionCommand(MouseListenerSvg.ActionCode.deselectAll.name());
         deselectAllMenu.addActionListener(EditMenu.this);
         deselectAllMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+
+        recalculateDiagramMenuItem = new JMenuItem("Recalculate the Diagram");
+        recalculateDiagramMenuItem.setActionCommand("RecalculateDiagram");
+        recalculateDiagramMenuItem.addActionListener(EditMenu.this);
+
         EditMenu.this.add(selectAllMenu);
         EditMenu.this.add(selectRelatedMenu);
         EditMenu.this.add(expandSelectionMenu);
         EditMenu.this.add(deselectAllMenu);
+        EditMenu.this.add(recalculateDiagramMenuItem);
         enableMenuKeys();
     }
 
@@ -76,6 +83,7 @@ public class EditMenu extends JMenu implements ActionListener {
         selectRelatedMenu.setEnabled(savePanelFocused);
         expandSelectionMenu.setEnabled(savePanelFocused);
         deselectAllMenu.setEnabled(savePanelFocused);
+        recalculateDiagramMenuItem.setEnabled(savePanelFocused);
     }
 
     private void enableMenuKeys() {
@@ -109,7 +117,11 @@ public class EditMenu extends JMenu implements ActionListener {
             menuSavePanel = diagramWindowManager.getCurrentSavePanel();
         }
         if (menuSavePanel != null) {
-            menuSavePanel.doActionCommand(MouseListenerSvg.ActionCode.valueOf(e.getActionCommand()));
+            if (e.getActionCommand().equals("RecalculateDiagram")) {
+                menuSavePanel.updateGraph();
+            } else {
+                menuSavePanel.doActionCommand(MouseListenerSvg.ActionCode.valueOf(e.getActionCommand()));
+            }
         }
         enableMenuKeys();
     }
