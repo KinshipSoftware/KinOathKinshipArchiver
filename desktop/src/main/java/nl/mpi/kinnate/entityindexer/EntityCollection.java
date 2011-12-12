@@ -55,6 +55,7 @@ public class EntityCollection {
     private String databaseName = "nl-mpi-kinnate";
     static Context context = new Context();
     static final Object databaseLock = new Object();
+    private String dbErrorMessage = "Could not perform the required query, not all data might be shown at this point.\nSee the log file via the help menu for more details.";
 
     public class SearchResults {
 
@@ -145,7 +146,7 @@ public class EntityCollection {
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             new ArbilBugCatcher().logError(baseXException);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(baseXException.getMessage(), "Add File To DB");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Add File To DB");
         }
     }
 
@@ -176,7 +177,7 @@ public class EntityCollection {
             }
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(baseXException.getMessage(), "Update Database");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Update Database");
         }
     }
 
@@ -193,7 +194,7 @@ public class EntityCollection {
             }
         } catch (BaseXException baseXException) {
             new ArbilBugCatcher().logError(baseXException);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(baseXException.getMessage(), "Update Database");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Update Database");
         }
     }
 
@@ -239,11 +240,11 @@ public class EntityCollection {
         } catch (QueryException exception) {
             new ArbilBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Perform Query");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Perform Query");
         } catch (IOException exception) {
             new ArbilBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Perform Query");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Perform Query");
         }
         searchResults.resultsPathArray = resultPaths.toArray(new String[]{});
 //        searchResults.statusMessage = searchResults.statusMessage + "\n query: " + queryString;
@@ -284,10 +285,10 @@ public class EntityCollection {
             }
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity Id ByTerm");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity Id ByTerm");
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity Id By Term");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity Id By Term");
         }
         return returnArray;
     }
@@ -313,10 +314,10 @@ public class EntityCollection {
             return foundEntities.getEntityDataArray();
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity By Key Word");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity By Key Word");
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity By Key Word");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity By Key Word");
         }
         return new EntityData[]{};
     }
@@ -343,10 +344,10 @@ public class EntityCollection {
             return selectedEntity;
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity With Relations");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity With Relations");
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity With Relations");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity With Relations");
         }
         return new EntityData[]{}; //(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
     }
@@ -366,7 +367,7 @@ public class EntityCollection {
             return queryResult;
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity Path");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity Path");
         }
         return null;
     }
@@ -397,10 +398,10 @@ public class EntityCollection {
             return selectedEntity;
         } catch (JAXBException exception) {
             new ArbilBugCatcher().logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity");
         } catch (BaseXException exception) {
             new ArbilBugCatcher().logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(exception.getMessage(), "Get Entity");
+            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity");
         }
         return new EntityData(uniqueIdentifier, new String[]{"Error loading data", "view log for details"});
     }
