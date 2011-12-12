@@ -13,10 +13,11 @@ public class MainMenuBar extends JMenuBar {
     public MainMenuBar(AbstractDiagramManager abstractDiagramManager) {
         this.add(new FileMenu(abstractDiagramManager));
         this.add(new EditMenu(abstractDiagramManager));
-        this.add(new DiagramPanelsMenu(abstractDiagramManager));
         this.add(new DiagramOptionsMenu(abstractDiagramManager));
         this.add(new KinTermsMenu(abstractDiagramManager));
         this.add(new ArchiveMenu(abstractDiagramManager));
+        this.add(new DiagramPanelsMenu(abstractDiagramManager));
         this.add(new WindowMenu(abstractDiagramManager));
+        this.add(new HelpMenu(abstractDiagramManager));
     }
 }
