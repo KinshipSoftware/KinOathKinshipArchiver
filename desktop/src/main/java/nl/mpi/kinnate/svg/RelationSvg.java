@@ -51,6 +51,7 @@ public class RelationSvg {
             textParentNode.appendChild(textPath);
         }
     }
+    private boolean oldFormatWarningShown = false;
 
     protected void setPolylinePointsAttribute(LineLookUpTable lineLookUpTable, String lineIdString, Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, float[] averageParent) {
         //float midY = (egoY + alterY) / 2;
@@ -81,7 +82,12 @@ public class RelationSvg {
 //                alterX = tempX;
 //                alterY = tempY;
             case descendant:
-                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("This diagram needs to be updated, select recalculate diagram from the edit menu before continuing.", "Old or erroneous format detected");
+                if (!oldFormatWarningShown) {
+                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("This diagram needs to be updated, select recalculate diagram from the edit menu before continuing.", "Old or erroneous format detected");
+                    oldFormatWarningShown = true;
+                }
+//                targetNode.getParentNode().getParentNode().getParentNode().getParentNode().removeChild(targetNode.getParentNode().getParentNode().getParentNode());
+//                throw new UnsupportedOperationException("in order to simplify section, the ancestor relations should be swapped so that ego is the parent");
                 return;
 //                throw new UnsupportedOperationException("in order to simplify section, the ancestor relations should be swapped so that ego is the parent");
 //                egoYmid = egoY + midSpacing;
