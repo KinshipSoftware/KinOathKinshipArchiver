@@ -25,7 +25,7 @@ public class DiagramOptionsMenu extends JMenu {
                 final SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel();
                 DiagramOptionsMenu.this.removeAll();
                 if (currentSavePanel != null) {
-                    setupMenuItems(currentSavePanel.getGraphPanel());
+                    setupMenuItems(currentSavePanel, currentSavePanel.getGraphPanel());
                 } else {
                     JMenuItem noItemsMenu = new JMenuItem("<no items available in this context>");
                     noItemsMenu.setEnabled(false);
@@ -41,7 +41,7 @@ public class DiagramOptionsMenu extends JMenu {
         });
     }
 
-    private void setupMenuItems(final GraphPanel graphPanel) {
+    private void setupMenuItems(final SavePanel currentSavePanel, final GraphPanel graphPanel) {
         JCheckBoxMenuItem snapToGridMenuItem = new JCheckBoxMenuItem("Snap To Grid");
         snapToGridMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -181,6 +181,14 @@ public class DiagramOptionsMenu extends JMenu {
 //        });
 //        this.add(showResourceLinksMenuItem);
 
+//        JCheckBoxMenuItem recalculateDiagramMenuItem = new JCheckBoxMenuItem("Recalculate the Diagram");
+//        recalculateDiagramMenuItem.addActionListener(new java.awt.event.ActionListener() {
+//
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                currentSavePanel.updateGraph();
+//            }
+//        });
+//        this.add(recalculateDiagramMenuItem);
 
         snapToGridMenuItem.setSelected(graphPanel.dataStoreSvg.snapToGrid);
         highlightRelationsMenuItem.setSelected(graphPanel.dataStoreSvg.highlightRelationLines);
