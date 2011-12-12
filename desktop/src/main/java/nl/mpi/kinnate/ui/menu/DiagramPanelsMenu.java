@@ -23,7 +23,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
 
     public DiagramPanelsMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
-        this.setText("View");
+        this.setText("Panels");
         this.addMenuListener(new MenuListener() {
 
             public void menuSelected(MenuEvent e) {
@@ -68,6 +68,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
             for (VisiblePanelSetting panelSetting : kinTermPanel.getVisiblePanels()) {
                 if (panelSetting.getPanelType().equals(selectedPanelType)) {
                     panelSetting.setPanelShown(!panelSetting.isPanelShown());
+                    // todo: this should set the added pannel as the active panel (note that there can be multiple added)
                 }
             }
         }
