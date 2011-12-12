@@ -264,7 +264,6 @@ public class RelationSvg {
         egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(leftEntity.getUniqueIdentifier());
         alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(rightEntity.getUniqueIdentifier());
         parentPoint = graphPanel.entitySvg.getAverageParentLocation(rightEntity);
-        directedRelation = DataTypes.RelationType.ancestor;
 
         int relationLineIndex = relationGroupNode.getChildNodes().getLength();
         Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
