@@ -14,6 +14,8 @@ import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.arbil.util.MimeHashQueue;
 import nl.mpi.arbil.util.WindowManager;
+import nl.mpi.kinnate.ui.menu.HelpMenu;
+//import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  * Takes care of injecting certain class instances into objects or classes.
@@ -34,7 +36,8 @@ public class KinnateArbilInjector extends ArbilInjector {
         injectVersionManager(versionManager);
 
         final BugCatcher bugCatcher = GuiHelper.linorgBugCatcher;
-        ArbilSessionStorage.setBugCatcher(bugCatcher);
+         ArbilSessionStorage.setBugCatcher(bugCatcher);
+//KinSessionStorage.setBugCatcher(bugCatcher);
         ArbilMimeHashQueue.setBugCatcher(bugCatcher);
         injectBugCatcher(bugCatcher);
 
@@ -51,6 +54,7 @@ public class KinnateArbilInjector extends ArbilInjector {
         injectClipboardOwner(clipboardOwner);
 
         ArbilSessionStorage.setBugCatcher(bugCatcher);
+        // Ticket #1305 Move the kinoath working directory out of the .arbil directory into a .kinoath directory.
         final SessionStorage sessionStorage = ArbilSessionStorage.getSingleInstance();
         ArbilDataNodeLoader.setSessionStorage(sessionStorage);
         ArbilMimeHashQueue.setSessionStorage(sessionStorage);
@@ -62,6 +66,8 @@ public class KinnateArbilInjector extends ArbilInjector {
         final DataNodeLoader dataNodeLoader = ArbilDataNodeLoader.getSingleInstance();
         ArbilMimeHashQueue.setDataNodeLoader(dataNodeLoader);
         injectDataNodeLoader(dataNodeLoader);
+
+        HelpMenu.setVersionManager(versionManager);
 
 //        final TreeHelper treeHelper = ArbilTreeHelper.getSingleInstance();
 //        injectTreeHelper(treeHelper);
