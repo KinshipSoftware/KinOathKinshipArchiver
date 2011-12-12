@@ -81,7 +81,9 @@ public class RelationSvg {
 //                alterX = tempX;
 //                alterY = tempY;
             case descendant:
-                throw new UnsupportedOperationException("in order to simplify section, the ancestor relations should be swapped so that ego is the parent");
+                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("This diagram needs to be updated, select recalculate diagram from the edit menu before continuing.", "Old or erroneous format detected");
+                return;
+//                throw new UnsupportedOperationException("in order to simplify section, the ancestor relations should be swapped so that ego is the parent");
 //                egoYmid = egoY + midSpacing;
 //                alterYmid = alterY - midSpacing;
 //                centerX = (egoYmid < alterYmid) ? alterX : centerX;
