@@ -34,6 +34,7 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
+import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
@@ -60,12 +61,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private HashMap<ArbilDataNode, UniqueIdentifier> registeredArbilDataNode;
     private HashMap<ArbilNode, Boolean> arbilDataNodesChangedStatus;
 //    private ArrayList<ArbilTree> treeLoadQueue = new ArrayList<ArbilTree>();
-
-    public enum DiagramMode {
-
-        FreeForm, KinTypeQuery, /* RequiredEntities, */ Undefined
-    }
-    private DiagramMode diagramMode = DiagramMode.Undefined;
 
     public KinDiagramPanel(URI existingFile, boolean savableType) {
         initKinDiagramPanel(existingFile, null, savableType);
@@ -113,41 +108,41 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     showMetaData = true;
                     showDiagramTree = true;
                     showArchiveLinker = true;
-                    diagramMode = DiagramMode.KinTypeQuery;
+                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
                     break;
                 case CustomQuery:
                     showMetaData = true;
                     showKinTypeStrings = true;
                     showDiagramTree = true;
                     showIndexerSettings = true;
-                    diagramMode = DiagramMode.KinTypeQuery;
+                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
                     break;
                 case EntitySearch:
                     showMetaData = true;
                     showEntitySearch = true;
                     showDiagramTree = true;
-                    diagramMode = DiagramMode.KinTypeQuery;
+                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
                     break;
                 case KinTerms:
                     showKinTerms = true;
                     graphPanel.addKinTermGroup();
-                    diagramMode = DiagramMode.FreeForm;
+                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.FreeForm;
                     break;
                 case Freeform:
 //                    showDiagramTree = true;
                     showKinTypeStrings = true;
-                    diagramMode = DiagramMode.FreeForm;
+                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.FreeForm;
                     break;
                 case Simple:
                     showMetaData = true;
                     showDiagramTree = true;
-                    diagramMode = DiagramMode.KinTypeQuery;
+                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
                     break;
                 case Query:
                     showMetaData = true;
                     showDiagramTree = true;
                     showKinTypeStrings = true;
-                    diagramMode = DiagramMode.KinTypeQuery;
+                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
                 default:
                     break;
             }
@@ -194,6 +189,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch);
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
+//            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel);
 //            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
         }
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
@@ -272,10 +268,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         });
     }
 
-    public DiagramMode getDiagramMode() {
-        return diagramMode;
-    }
-
     static public File getDefaultDiagramFile() {
         if (defaultDiagramTemplate == null) {
             defaultDiagramTemplate = new File(ArbilSessionStorage.getSingleInstance().getStorageDirectory(), "DefaultKinDiagram.svg");
@@ -310,20 +302,20 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
                                 progressBar.setValue(0);
                                 progressBar.setVisible(true);
-                                if (diagramMode == DiagramMode.Undefined) {
-                                    diagramMode = DiagramMode.FreeForm;
+                                if (graphPanel.dataStoreSvg.diagramMode == DiagramMode.Undefined) {
+                                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.FreeForm;
                                     if (!graphPanel.dataStoreSvg.egoEntities.isEmpty() || !graphPanel.dataStoreSvg.requiredEntities.isEmpty()) {
-                                        diagramMode = DiagramMode.KinTypeQuery;
+                                        graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
                                     } else {
                                         for (String currentLine : kinTypeStrings) {
                                             if (currentLine.contains("[")) {
-                                                diagramMode = DiagramMode.KinTypeQuery;
+                                                graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
                                                 break;
                                             }
                                         }
                                     }
                                 }
-                                if (diagramMode == DiagramMode.KinTypeQuery) {
+                                if (graphPanel.dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
 //                                    diagramMode = DiagramMode.KinTypeQuery;
                                     EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
                                     progressBar.setIndeterminate(true);
