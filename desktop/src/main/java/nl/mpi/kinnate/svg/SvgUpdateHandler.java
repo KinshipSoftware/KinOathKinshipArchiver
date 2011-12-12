@@ -847,7 +847,7 @@ public class SvgUpdateHandler {
                                 leftEntity = currentNode;
                                 rightEntity = graphLinkNode.getAlterNode();
                             }
-                            String compoundIdentifier = currentNode.getUniqueIdentifier().getQueryIdentifier() + graphLinkNode.getAlterNode().getUniqueIdentifier().getQueryIdentifier();
+                            String compoundIdentifier = leftEntity.getUniqueIdentifier().getQueryIdentifier() + rightEntity.getUniqueIdentifier().getQueryIdentifier() + directedRelation.name();
                             // make sure each equivalent relation is drawn only once
                             if (!doneRelations.contains(compoundIdentifier)) {
                                 boolean skipCurrentRelation = false;
