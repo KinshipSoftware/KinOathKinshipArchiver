@@ -337,7 +337,8 @@ public class SvgUpdateHandler {
                                     symbolNode.setAttribute("y", Float.toString(bbox.getY() - paddingDistance));
                                     symbolNode.setAttribute("width", Float.toString(bbox.getWidth() + paddingDistance * 2));
                                     symbolNode.setAttribute("height", Float.toString(bbox.getHeight() + paddingDistance * 2));
-                                    symbolNode.setAttribute("fill", "none");
+                                    symbolNode.setAttribute("fill", "#999999"); // provide a fill so that the mouse selection extends to the bounding box, but but make it transparent
+                                    symbolNode.setAttribute("fill-opacity", "0");
                                     symbolNode.setAttribute("stroke-width", "1");
                                     //if (graphPanel.selectedGroupId.indexOf(entityId) == 0) {
                                     if (isLeadSelection) {
