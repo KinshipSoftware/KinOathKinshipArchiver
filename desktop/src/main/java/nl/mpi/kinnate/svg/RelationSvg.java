@@ -256,14 +256,13 @@ public class RelationSvg {
 //
 //    }
     protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, DataTypes.RelationLineType relationLineType, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
-        // Ticket #1250 Prevent duplicate sanguine lines which connect ego-alter vs alter-ego.
         float[] egoSymbolPoint;
         float[] alterSymbolPoint;
         float[] parentPoint;
         // the ancestral relations should already be unidirectional and duplicates should have been removed
         egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(leftEntity.getUniqueIdentifier());
         alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(rightEntity.getUniqueIdentifier());
-        parentPoint = graphPanel.entitySvg.getAverageParentLocation(rightEntity);
+        parentPoint = graphPanel.entitySvg.getAverageParentLocation(leftEntity);
 
         int relationLineIndex = relationGroupNode.getChildNodes().getLength();
         Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
