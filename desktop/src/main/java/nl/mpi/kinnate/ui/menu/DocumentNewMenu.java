@@ -19,9 +19,9 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
 
         Freeform("Freeform Diagram"),
         KinTerms("Kin Terms Diagram"),
-        Query("Kin Type String Query"),
-        ArchiveLinker("Archive Data Linker"),
+        Query("Query Diagram"),
         EntitySearch("Entity Search"),
+        ArchiveLinker("Archive Data Linker"),
         CustomQuery("Custom Metadata"),
         Simple("Standard Diagram");
         private String displayName;
