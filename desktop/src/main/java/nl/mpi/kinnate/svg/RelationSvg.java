@@ -102,9 +102,9 @@ public class RelationSvg {
                 centerX = (egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
             case union:
-                float unionMid = (egoY > alterY) ? egoY : alterY;
-                egoYmid = unionMid + 30;
-                alterYmid = unionMid + 30;
+//                float unionMid = (egoY > alterY) ? egoY : alterY;
+                egoYmid = egoY + 30;
+                alterYmid = alterY + 30;
                 centerX = (egoY < alterY) ? egoX : alterX;
                 centerX = (egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
