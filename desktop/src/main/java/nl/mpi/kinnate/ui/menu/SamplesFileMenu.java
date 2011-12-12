@@ -22,6 +22,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
     public SamplesFileMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
         addSampleToMenu("Freeform Diagram Syntax", "FreeformDiagramSyntax.svg");
+        addSampleToMenu("Query Diagram Syntax", "QueryDiagramSyntax.svg");
         addSampleToMenu("Application Overview", "ApplicationOverview.svg");
         addSampleToMenu("Hawaiian Kin Terms", "HawaiianKinTerms.svg");
         addSampleToMenu("Japanese Kin Terms", "JapaneseKinTerms.svg");
