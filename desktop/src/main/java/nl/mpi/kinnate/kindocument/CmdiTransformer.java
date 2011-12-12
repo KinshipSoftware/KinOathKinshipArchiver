@@ -26,6 +26,8 @@ import nl.mpi.arbil.util.ArbilBugCatcher;
 public class CmdiTransformer {
 
     private URL component2SchemaXsl = this.getClass().getResource("/xsd/comp2schema.xsl"); // "http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema.xsl";
+    private URL component2SchemaXslHeader = this.getClass().getResource("/xsd/comp2schema-header.xsl");
+    private URL component2SchemaXslCleanup = this.getClass().getResource("/xsd/cleanup-xsd.xsl");
 
     public URI getXsdUrlString(String entityType) throws KinXsdException {
         String profileId = "clarin.eu:cr1:p_1320657629627";
@@ -52,15 +54,19 @@ public class CmdiTransformer {
 //        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema.xsl", 1));
 //        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/cleanup-xsd.xsl", 1));
 
-        generateXsd(cmdiProfileXmlUrl, outputFile);
+        // todo: it might be nicer to put these files into a specific directory or into a temp directory
+        File xlsFile = ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXsl.toExternalForm(), 1);
+        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXslHeader.toExternalForm(), 1));
+        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXslCleanup.toExternalForm(), 1));
+        generateXsd(xlsFile, cmdiProfileXmlUrl, outputFile);
         return outputFile;
     }
 
-    private void generateXsd(String cmdiProfileXmlUrl, File outputFile) {
+    private void generateXsd(File xlsFile, String cmdiProfileXmlUrl, File outputFile) {
         Templates componentToSchemaTemplates;
         try {
             System.setProperty("javax.xml.transform.TransformerFactory", net.sf.saxon.TransformerFactoryImpl.class.getName());
-            componentToSchemaTemplates = TransformerFactory.newInstance().newTemplates(new StreamSource(component2SchemaXsl.toString()));
+            componentToSchemaTemplates = TransformerFactory.newInstance().newTemplates(new StreamSource(xlsFile));
         } catch (TransformerConfigurationException e) {
             new ArbilBugCatcher().logError("Cannot create Template", e);
             return;
