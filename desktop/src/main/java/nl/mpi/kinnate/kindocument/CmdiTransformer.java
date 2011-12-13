@@ -30,6 +30,7 @@ public class CmdiTransformer {
     private URL component2SchemaXslCleanup = this.getClass().getResource("/xsd/cleanup-xsd.xsl");
 
     public URI getXsdUrlString(String entityType) throws KinXsdException {
+//        String profileId = "clarin.eu:cr1:p_1320657629627";
         String profileId = "clarin.eu:cr1:p_1320657629627";
         File xsdFile = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), entityType + "-" + profileId + ".xsd");
         try {
@@ -55,9 +56,9 @@ public class CmdiTransformer {
 //        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/cleanup-xsd.xsl", 1));
 
         // todo: it might be nicer to put these files into a specific directory or into a temp directory
-        File xlsFile = ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXsl.toExternalForm(), 1);
-        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXslHeader.toExternalForm(), 1));
-        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXslCleanup.toExternalForm(), 1));
+        File xlsFile = ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXsl.toExternalForm(), 1, false);
+        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXslHeader.toExternalForm(), 1, false));
+        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXslCleanup.toExternalForm(), 1, false));
         generateXsd(xlsFile, cmdiProfileXmlUrl, outputFile);
         return outputFile;
     }
