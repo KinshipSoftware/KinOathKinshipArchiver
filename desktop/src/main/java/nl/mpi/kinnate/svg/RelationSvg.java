@@ -53,10 +53,11 @@ public class RelationSvg {
     }
     private boolean oldFormatWarningShown = false;
 
-    protected void setPolylinePointsAttribute(LineLookUpTable lineLookUpTable, String lineIdString, Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, float[] averageParent) {
+    protected void setPolylinePointsAttribute(LineLookUpTable lineLookUpTable, String lineIdString, Element targetNode, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, float[] averageParentPassed) {
         //float midY = (egoY + alterY) / 2;
         // todo: Ticket #1064 when an entity is above one that it should be below the line should make a zigzag to indicate it        
         ArrayList<Point> initialPointsList = new ArrayList<Point>();
+        float[] averageParent = null;
         float midSpacing = vSpacing / 2;
 //        float parentSpacing = 10;
         float egoYmid;
@@ -64,9 +65,12 @@ public class RelationSvg {
         float centerX = (egoX + alterX) / 2;
         switch (relationType) {
             case ancestor:
-                if (averageParent == null) {
+                if (averageParentPassed == null) {
                     // if no parent location has been provided then just use the current parent
                     averageParent = new float[]{alterX, alterY};
+                } else {
+                    // todo: this is filtering out the parent location for non ancestor relations, but it would be more efficient to no get the parent location unless required
+                    averageParent = averageParentPassed;
                 }
                 egoYmid = egoY - midSpacing;
                 alterYmid = averageParent[1] + 30;
