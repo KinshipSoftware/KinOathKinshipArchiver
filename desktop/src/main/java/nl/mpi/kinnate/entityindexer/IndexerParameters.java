@@ -20,7 +20,8 @@ public class IndexerParameters {
     @XmlElement(name = "LabelFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam labelFields = new IndexerParam(new String[][]{{"*:Kinnate/*:Metadata/*[starts-with(local-name(), 'Name')]"},
                 {"*:Kinnate/*:Metadata/*:INDI/*:NAME/*:NAME"},
-                {"*:Kinnate/*:Metadata/*:INDI/*:NAME"}
+                {"*:Kinnate/*:Metadata/*:INDI/*:NAME"},
+                {"*:Kinnate/*:Metadata/*:Individual/*:Name"}
 //    , {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"}
 //    , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"}
 //    , {"*:Kinnate/*:Gedcom/*:Entity/*:Text"}
@@ -31,7 +32,9 @@ public class IndexerParameters {
     public IndexerParam symbolFieldsFields = new IndexerParam(new String[][]{
                 //        {"*:Kinnate/*:Gedcom/*:Entity[*:sex='male']", "triangle"},
                 {"*:Kinnate/*:Metadata[*:Gender='male']", "triangle"} //        , {"*:Kinnate/*:Gedcom/*:Entity[*:sex='female']", "circle"}
-                , {"*:Kinnate/*:Metadata[*:Gender='female']", "circle"}
+                , {"*:Kinnate/*:Metadata[*:Gender='female']", "circle"},
+                {"*:Kinnate/*:Metadata/*:Individual[*:Gender='Male']", "triangle"},
+                {"*:Kinnate/*:Metadata/*:Individual[*:Gender='Female']", "circle"}
 //        , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']", "union"}
             });
     @XmlElement(name = "DefaultSymbol", namespace = "http://mpi.nl/tla/kin")
