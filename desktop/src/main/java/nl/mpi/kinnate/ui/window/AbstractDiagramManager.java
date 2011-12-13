@@ -95,11 +95,13 @@ public abstract class AbstractDiagramManager {
         }
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false);
         createDiagramContainer("Unsaved Default Diagram", egoSelectionTestPanel);
+        egoSelectionTestPanel.loadAllTrees();
     }
 
     public void newDiagram(DocumentNewMenu.DocumentType documentType) {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType);
         createDiagramContainer("Unsaved " + documentType.getDisplayName(), egoSelectionTestPanel);
+        egoSelectionTestPanel.loadAllTrees();
     }
 
     public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu) {
@@ -110,6 +112,7 @@ public abstract class AbstractDiagramManager {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu);
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         createDiagramContainer(diagramTitle, egoSelectionTestPanel);
+        egoSelectionTestPanel.loadAllTrees();
     }
 
     abstract Component getSelectedDiagram();
