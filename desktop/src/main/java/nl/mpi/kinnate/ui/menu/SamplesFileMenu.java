@@ -31,7 +31,8 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
         addSampleToMenu("Named Transient Entities", "NamedTransientEntities.svg");
 //        addSampleToMenu("Cha'palaa Kin Terms", "ChapalaaKinTerms.svg");
 //        addSampleToMenu("Gendered Ego", "GenderedEgo.svg");
-        addSampleToMenu("Olivier Kyburz Examples", "N40.svg");
+//        addSampleToMenu("Olivier Kyburz Examples", "N40.svg");
+        addSampleToMenu("Matrimonial Ring Examples", "MatrimonialRings.svg");
 //        addSampleToMenu("Archive Link Example", "ArchiveLinks.svg");
         addSampleToMenu("Charles II of Spain", "Charles_II_of_Spain.svg");
         addSampleToMenu("Imported Data Query Example (ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/)", "QueryExample.svg");
