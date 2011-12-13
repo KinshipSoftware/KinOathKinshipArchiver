@@ -3,9 +3,8 @@ package nl.mpi.kinnate.ui;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
+import nl.mpi.kinnate.KinnateArbilInjector;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
-import nl.mpi.kinnate.ui.window.LayeredDiagramManager;
-import nl.mpi.kinnate.ui.window.TabbedDiagramManager;
 import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
 
 /*
@@ -41,7 +40,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             public void run() {
                 final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
-                nl.mpi.kinnate.KinnateArbilInjector.injectHandlers(versionManager);
+                new KinnateArbilInjector().injectHandlers(versionManager);
                 AbstractDiagramManager abstractDiagramManager;
 
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
@@ -50,7 +49,7 @@ public class MainFrame extends javax.swing.JFrame {
 
                 abstractDiagramManager.newDiagram();
                 abstractDiagramManager.createApplicationWindow();
-                
+
                 ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
 //	if (arbilMenuBar.checkNewVersionAtStartCheckBoxMenuItem.isSelected()) {
                 // todo: Ticket #1066 add the check for updates and check now menu items
