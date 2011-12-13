@@ -87,6 +87,7 @@ public class GedcomImportPanel extends JPanel {
                                 }
                             }
                             egoSelectionTestPanel.addRequiredNodes(selectedIds.toArray(new UniqueIdentifier[]{}));
+                            egoSelectionTestPanel.loadAllTrees();
                         }
                     });
                 }
@@ -97,7 +98,7 @@ public class GedcomImportPanel extends JPanel {
     }
 
     public void startImport(String importUriString) {
-        File cachedFile = ArbilSessionStorage.getSingleInstance().updateCache(importUriString, 30);
+        File cachedFile = ArbilSessionStorage.getSingleInstance().updateCache(importUriString, 30, true);
         startImport(cachedFile, null, importUriString);
     }
 
