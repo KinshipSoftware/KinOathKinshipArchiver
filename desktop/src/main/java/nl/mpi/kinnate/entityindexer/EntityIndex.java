@@ -27,6 +27,7 @@ import org.xml.sax.SAXException;
  *  Created on : Feb 2, 2011, 17:29:36 PM
  *  Author     : Peter Withers
  */
+@Deprecated
 public class EntityIndex implements EntityService {
 
 //    IndexerParameters indexParameters;
