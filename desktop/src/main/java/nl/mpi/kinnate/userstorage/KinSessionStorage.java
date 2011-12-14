@@ -3,11 +3,11 @@ package nl.mpi.kinnate.userstorage;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import javax.swing.JLabel;
 import nl.mpi.arbil.data.importexport.ShibbolethNegotiator;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.DownloadAbortFlag;
@@ -19,20 +19,21 @@ import nl.mpi.arbil.util.DownloadAbortFlag;
  */
 public class KinSessionStorage implements SessionStorage {
 
-    static private KinSessionStorage singleInstance = null;
-
-    static synchronized public KinSessionStorage getSingleInstance() {
-        if (singleInstance == null) {
-            singleInstance = new KinSessionStorage();
-//            singleInstance.checkForMultipleStorageDirectories();
-            HttpURLConnection.setFollowRedirects(false); // how sad it is that this method is static and global, sigh
-        }
-        return singleInstance;
+//    static private SessionStorage singleInstance = null;
+    static synchronized public SessionStorage getSingleInstance() {
+//        if (singleInstance == null) {
+//            singleInstance = new KinSessionStorage();
+////            singleInstance.checkForMultipleStorageDirectories();
+//            HttpURLConnection.setFollowRedirects(false); // how sad it is that this method is static and global, sigh
+//        }
+//        return singleInstance;
+        return ArbilSessionStorage.getSingleInstance();
     }
-    private static BugCatcher bugCatcher;
+//    private static BugCatcher bugCatcher;
 
     public static void setBugCatcher(BugCatcher bugCatcherInstance) {
-        bugCatcher = bugCatcherInstance;
+//        bugCatcher = bugCatcherInstance;
+        ArbilSessionStorage.setBugCatcher(bugCatcherInstance);
     }
 
     public void changeCacheDirectory(File preferedCacheDirectory, boolean moveFiles) {
@@ -48,6 +49,10 @@ public class KinSessionStorage implements SessionStorage {
     }
 
     public File getFavouritesDir() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public File getFromCache(String pathString, boolean followRedirect) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -119,7 +124,7 @@ public class KinSessionStorage implements SessionStorage {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean saveRemoteResource(URL targetUrl, File destinationFile, ShibbolethNegotiator shibbolethNegotiator, boolean expireCacheCopy, DownloadAbortFlag abortFlag, JLabel progressLabel) {
+    public boolean saveRemoteResource(URL targetUrl, File destinationFile, ShibbolethNegotiator shibbolethNegotiator, boolean expireCacheCopy, boolean followRedirect, DownloadAbortFlag abortFlag, JLabel progressLabel) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -136,22 +141,6 @@ public class KinSessionStorage implements SessionStorage {
     }
 
     public void setUseLanguageIdInColumnName(boolean useLanguageIdInColumnName) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public File updateCache(String pathString, int expireCacheDays) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public File updateCache(String pathString, ShibbolethNegotiator shibbolethNegotiator, boolean expireCacheCopy, DownloadAbortFlag abortFlag, JLabel progressLabel) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public File getFromCache(String pathString, boolean followRedirect) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean saveRemoteResource(URL targetUrl, File destinationFile, ShibbolethNegotiator shibbolethNegotiator, boolean expireCacheCopy, boolean followRedirect, DownloadAbortFlag abortFlag, JLabel progressLabel) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
