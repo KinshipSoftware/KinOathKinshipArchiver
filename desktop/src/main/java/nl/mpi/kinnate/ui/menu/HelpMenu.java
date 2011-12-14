@@ -1,16 +1,21 @@
 package nl.mpi.kinnate.ui.menu;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.kindocument.CmdiTransformer;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : HelpMenu
@@ -26,6 +31,7 @@ public class HelpMenu extends JMenu {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
+                    // todo:
 //                    aboutMenuItemActionPerformed(evt);
                 } catch (Exception ex) {
                     GuiHelper.linorgBugCatcher.logError(ex);
@@ -39,6 +45,7 @@ public class HelpMenu extends JMenu {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
+                    // todo: 
 //                    helpMenuItemActionPerformed(evt);
                 } catch (Exception ex) {
                     GuiHelper.linorgBugCatcher.logError(ex);
@@ -85,7 +92,24 @@ public class HelpMenu extends JMenu {
                 }
             }
         });
-        this.add(checkForUpdatesMenuItem);
+
+        JMenuItem updateKmdiProfileMenuItem = new JMenuItem("Check Component Registry Updates (this will be moved to a panel)");
+        updateKmdiProfileMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            // todo: move this to a panel with more options
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    String profileId = "clarin.eu:cr1:p_1320657629627";
+                    File xsdFile = new File(KinSessionStorage.getSingleInstance().getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
+                    new CmdiTransformer().transformProfileXmlToXsd(xsdFile, profileId);
+                } catch (IOException exception) {
+                    System.out.println("exception: " + exception.getMessage());
+                } catch (TransformerException exception) {
+                    System.out.println("exception: " + exception.getMessage());
+                }
+            }
+        });
+
+        this.add(updateKmdiProfileMenuItem);
         this.addMenuListener(new MenuListener() {
 
             public void menuCanceled(MenuEvent evt) {
