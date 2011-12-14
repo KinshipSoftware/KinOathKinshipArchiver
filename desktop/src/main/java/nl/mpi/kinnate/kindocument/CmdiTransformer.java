@@ -17,6 +17,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.event.SaxonOutputKeys;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : CmdiTransformer
@@ -32,7 +33,7 @@ public class CmdiTransformer {
     public URI getXsdUrlString(String entityType) throws KinXsdException {
 //        String profileId = "clarin.eu:cr1:p_1320657629627";
         String profileId = "clarin.eu:cr1:p_1320657629627";
-        File xsdFile = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), entityType + "-" + profileId + ".xsd");
+        File xsdFile = new File(KinSessionStorage.getSingleInstance().getCacheDirectory(), entityType + "-" + profileId + ".xsd");
         try {
             if (!xsdFile.exists()) {
                 transformProfileXmlToXsd(xsdFile, profileId);
@@ -51,14 +52,14 @@ public class CmdiTransformer {
         String cmdiProfileXmlUrl = "http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/" + profileId + "/xml";
         System.out.println("outputFile: " + outputFile.getAbsolutePath());
 
-//        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema-header.xsl", 1));
-//        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema.xsl", 1));
-//        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/cleanup-xsd.xsl", 1));
+//        System.out.println(KinSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema-header.xsl", 1));
+//        System.out.println(KinSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema.xsl", 1));
+//        System.out.println(KinSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/cleanup-xsd.xsl", 1));
 
         // todo: it might be nicer to put these files into a specific directory or into a temp directory
-        File xlsFile = ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXsl.toExternalForm(), 1, false);
-        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXslHeader.toExternalForm(), 1, false));
-        System.out.println(ArbilSessionStorage.getSingleInstance().updateCache(component2SchemaXslCleanup.toExternalForm(), 1, false));
+        File xlsFile = KinSessionStorage.getSingleInstance().updateCache(component2SchemaXsl.toExternalForm(), 1, false);
+        System.out.println(KinSessionStorage.getSingleInstance().updateCache(component2SchemaXslHeader.toExternalForm(), 1, false));
+        System.out.println(KinSessionStorage.getSingleInstance().updateCache(component2SchemaXslCleanup.toExternalForm(), 1, false));
         generateXsd(xlsFile, cmdiProfileXmlUrl, outputFile);
         return outputFile;
     }
@@ -90,7 +91,7 @@ public class CmdiTransformer {
     static public void main(String[] args) {
         try {
             String profileId = "clarin.eu:cr1:p_1320657629627";
-            File xsdFile = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
+            File xsdFile = new File(KinSessionStorage.getSingleInstance().getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
             new CmdiTransformer().transformProfileXmlToXsd(xsdFile, profileId);
         } catch (IOException exception) {
             System.out.println("exception: " + exception.getMessage());
