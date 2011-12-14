@@ -20,7 +20,7 @@ public class ExportPanel extends JPanel {
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(new JTextField("Export Filename"), BorderLayout.CENTER);
         topPanel.add(new JCheckBox("Update export file when diagram changes"), BorderLayout.LINE_END);
-        topPanel.add(new JLabel("Table of the exported data"), BorderLayout.PAGE_END);
+        topPanel.add(new JLabel("Table of the exported data (note that this panel is not yet functional!)"), BorderLayout.PAGE_END);
         this.add(topPanel, BorderLayout.PAGE_START);
         this.add(new JTable(), BorderLayout.CENTER);
     }
