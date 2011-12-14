@@ -22,7 +22,8 @@ public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
         //        MetaData,
         IndexerSettings,
         DiagramTree,
-        EntitySearch
+        EntitySearch,
+        ExportPanel
     }
     @XmlAttribute(name = "type", namespace = "http://mpi.nl/tla/kin")
     PanelType panelType;
