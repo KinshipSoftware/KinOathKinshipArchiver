@@ -17,7 +17,6 @@ import nl.mpi.arbil.data.ArbilDataNodeContainer;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
@@ -38,6 +37,7 @@ import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -82,6 +82,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         boolean showEntitySearch = false;
         boolean showIndexerSettings = false;
         boolean showKinTypeStrings = false;
+        boolean showExportPanel = false;
         boolean showMetaData = false;
 
         if (existingFile != null) {
@@ -189,7 +190,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch);
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
-//            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel);
 //            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
         }
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
@@ -235,6 +236,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         panelSetting.setHidePane(kinTypeHidePane, "Kin Type Strings");
                         panelSetting.addTargetPanel(new JScrollPane(kinTypeStringInput), false);
                         break;
+                    case ExportPanel:
+                        panelSetting.setHidePane(kinTypeHidePane, "Export Data");
+                        panelSetting.addTargetPanel(new ExportPanel(), false);
+                        break;
 //                case MetaData:
 //                    panelSetting.setTargetPanel(tableHidePane, tableScrollPane, "Metadata");
 //                    break;
@@ -270,7 +275,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
     static public File getDefaultDiagramFile() {
         if (defaultDiagramTemplate == null) {
-            defaultDiagramTemplate = new File(ArbilSessionStorage.getSingleInstance().getStorageDirectory(), "DefaultKinDiagram.svg");
+            defaultDiagramTemplate = new File(KinSessionStorage.getSingleInstance().getStorageDirectory(), "DefaultKinDiagram.svg");
         }
         return defaultDiagramTemplate;
     }
