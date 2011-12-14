@@ -8,8 +8,8 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.KinTermSavePanel;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : ExportToR
@@ -21,7 +21,7 @@ public class ExportToR {
     public void doExport(Component mainFrame, KinTermSavePanel savePanel) {
         // todo: modify this to use the ArbilWindowManager and update the ArbilWindowManager file select to support save file actions
         JFileChooser fc = new JFileChooser();
-        String lastSavedFileString = ArbilSessionStorage.getSingleInstance().loadString("kinoath.ExportToR");
+        String lastSavedFileString = KinSessionStorage.getSingleInstance().loadString("kinoath.ExportToR");
         if (lastSavedFileString != null) {
             fc.setSelectedFile(new File(lastSavedFileString));
         }
@@ -45,7 +45,7 @@ public class ExportToR {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             PedigreePackageExport packageExport = new PedigreePackageExport();
-            ArbilSessionStorage.getSingleInstance().saveString("kinoath.ExportToR", file.getPath());
+            KinSessionStorage.getSingleInstance().saveString("kinoath.ExportToR", file.getPath());
             try {
                 FileWriter fileWriter = new FileWriter(file, false);
                 fileWriter.write(packageExport.createCsvContents(savePanel.getGraphEntities()));
