@@ -16,6 +16,7 @@ import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.arbil.util.MimeHashQueue;
 import nl.mpi.arbil.util.WindowManager;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  * Takes care of injecting certain class instances into objects or classes.
@@ -40,7 +41,7 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
         injectVersionManager(versionManager);
         
         // Ticket #1305 Move the kinoath working directory out of the .arbil directory into a .konoath directory.
-        final SessionStorage sessionStorage = ArbilSessionStorage.getSingleInstance();
+        final SessionStorage sessionStorage = KinSessionStorage.getSingleInstance();
         ArbilBugCatcher.setSessionStorage(sessionStorage);
         ArbilDataNodeLoader.setSessionStorage(sessionStorage);
         ArbilMimeHashQueue.setSessionStorage(sessionStorage);
