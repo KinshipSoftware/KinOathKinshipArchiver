@@ -21,13 +21,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.EntityArray;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifierArray;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Add;
@@ -68,7 +68,7 @@ public class EntityCollection {
         // make sure the database exists
         try {
             synchronized (databaseLock) {
-                new Set("dbpath", new File(ArbilSessionStorage.getSingleInstance().getStorageDirectory(), "BaseXData")).execute(context);
+                new Set("dbpath", new File(KinSessionStorage.getSingleInstance().getStorageDirectory(), "BaseXData")).execute(context);
                 new Open(databaseName).execute(context);
                 //context.close();
                 new Close().execute(context);
@@ -104,7 +104,7 @@ public class EntityCollection {
             synchronized (databaseLock) {
                 new DropDB(databaseName).execute(context);
                 new Set("CREATEFILTER", "*.kmdi").execute(context);
-                new CreateDB(databaseName, ArbilSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
+                new CreateDB(databaseName, KinSessionStorage.getSingleInstance().getCacheDirectory().toString()).execute(context);
 //            System.out.println("List: " + new List().execute(context));
 //            System.out.println("Find: " + new Find(databaseName).title());
 //            System.out.println("Info: " + new Info().execute(context));
