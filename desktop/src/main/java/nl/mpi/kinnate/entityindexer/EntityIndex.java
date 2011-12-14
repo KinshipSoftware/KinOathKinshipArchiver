@@ -114,7 +114,7 @@ public class EntityIndex implements EntityService {
     }
 
     public void loadAllEntities(IndexerParameters indexParameters) {
-//        String[] treeNodesArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
+//        String[] treeNodesArray = KinSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
 //        if (treeNodesArray != null) {
 //            for (String currentNodeString : treeNodesArray) {
 //                try {
@@ -259,7 +259,7 @@ public class EntityIndex implements EntityService {
     }
 
     public static void main(String[] args) {
-//        String[] entityStringArray = ArbilSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
+//        String[] entityStringArray = KinSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
 //        URI[] entityUriArray = new URI[entityStringArray.length];
         int uriCounter = 0;
 //        for (String currentEntityString : entityStringArray) {
