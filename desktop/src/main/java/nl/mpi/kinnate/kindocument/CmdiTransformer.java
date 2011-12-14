@@ -48,7 +48,7 @@ public class CmdiTransformer {
         }
     }
 
-    private File transformProfileXmlToXsd(File outputFile, String profileId) throws IOException, TransformerException {
+    public File transformProfileXmlToXsd(File outputFile, String profileId) throws IOException, TransformerException {
         String cmdiProfileXmlUrl = "http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/" + profileId + "/xml";
         System.out.println("outputFile: " + outputFile.getAbsolutePath());
 
