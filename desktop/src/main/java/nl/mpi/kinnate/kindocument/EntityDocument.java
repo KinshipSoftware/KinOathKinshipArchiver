@@ -12,11 +12,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -115,7 +115,7 @@ public class EntityDocument {
         String idString;
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
         idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
-        File subDirectory = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), idString.substring(0, 2));
+        File subDirectory = new File(KinSessionStorage.getSingleInstance().getCacheDirectory(), idString.substring(0, 2));
         subDirectory.mkdir();
         entityFile = new File(subDirectory, idString);
     }
