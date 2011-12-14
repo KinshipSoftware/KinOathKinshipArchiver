@@ -19,7 +19,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.XsdChecker;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.CsvImporter;
@@ -27,6 +26,7 @@ import nl.mpi.kinnate.gedcomimport.GedcomImporter;
 import nl.mpi.kinnate.gedcomimport.GenericImporter;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : GedcomImportPanel
@@ -98,7 +98,7 @@ public class GedcomImportPanel extends JPanel {
     }
 
     public void startImport(String importUriString) {
-        File cachedFile = ArbilSessionStorage.getSingleInstance().updateCache(importUriString, 30, true);
+        File cachedFile = KinSessionStorage.getSingleInstance().updateCache(importUriString, 30, true);
         startImport(cachedFile, null, importUriString);
     }
 
