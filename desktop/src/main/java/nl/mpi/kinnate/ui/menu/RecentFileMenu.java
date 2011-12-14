@@ -12,8 +12,8 @@ import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.arbil.ui.GuiHelper;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : RecentFileMenu
@@ -46,7 +46,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
         ArrayList<String> tempList = new ArrayList<String>();
         String[] tempArray;
         try {
-            tempArray = ArbilSessionStorage.getSingleInstance().loadStringArray("RecentKinFiles");
+            tempArray = KinSessionStorage.getSingleInstance().loadStringArray("RecentKinFiles");
             if (tempArray != null) {
                 tempList.addAll(Arrays.asList(tempArray));
             }
@@ -62,7 +62,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             tempArray = new String[]{recentFile.toString()};
         }
         try {
-            ArbilSessionStorage.getSingleInstance().saveStringArray("RecentKinFiles", tempList.toArray(new String[]{}));
+            KinSessionStorage.getSingleInstance().saveStringArray("RecentKinFiles", tempList.toArray(new String[]{}));
         } catch (IOException exception) {
             GuiHelper.linorgBugCatcher.logError(exception);
         }
@@ -72,7 +72,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
     private void setupMenu() {
         this.removeAll();
         try {
-            String[] recentFileArray = ArbilSessionStorage.getSingleInstance().loadStringArray("RecentKinFiles");
+            String[] recentFileArray = KinSessionStorage.getSingleInstance().loadStringArray("RecentKinFiles");
             if (recentFileArray != null) {
                 for (int currentIndex = recentFileArray.length - 1; currentIndex >= 0; currentIndex--) {
                     String currentFilePath = recentFileArray[currentIndex];
@@ -97,7 +97,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if ("Clear List".equals(e.getActionCommand())) {
             try {
-                ArbilSessionStorage.getSingleInstance().saveStringArray("RecentKinFiles", new String[]{});
+                KinSessionStorage.getSingleInstance().saveStringArray("RecentKinFiles", new String[]{});
             } catch (IOException exception) {
                 GuiHelper.linorgBugCatcher.logError(exception);
             }
