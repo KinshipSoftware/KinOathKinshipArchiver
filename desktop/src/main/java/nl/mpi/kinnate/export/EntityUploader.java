@@ -18,8 +18,8 @@ import java.net.URL;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.ui.GuiHelper;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : EntityUpload
@@ -84,7 +84,7 @@ public class EntityUploader {
                 // search file system
                 ModifiedFileSearch modifiedFileSearch = new ModifiedFileSearch();
                 modifiedFileSearch.setSearchType(ModifiedFileSearch.SearchType.kmdi); // todo: change this to kmdi when implemented
-                modifiedFiles = modifiedFileSearch.getModifiedFiles(ArbilSessionStorage.getSingleInstance().getCacheDirectory()).toArray(new File[]{});
+                modifiedFiles = modifiedFileSearch.getModifiedFiles(KinSessionStorage.getSingleInstance().getCacheDirectory()).toArray(new File[]{});
                 actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
             }
         }.start();
