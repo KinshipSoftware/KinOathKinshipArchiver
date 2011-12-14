@@ -18,9 +18,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : EntityImporter
@@ -97,7 +97,7 @@ public class EntityImporter implements GenericImporter {
     }
 
     protected File getDestinationDirectory() {
-        File destinationDirectory = new File(ArbilSessionStorage.getSingleInstance().getCacheDirectory(), inputFileMd5Sum);
+        File destinationDirectory = new File(KinSessionStorage.getSingleInstance().getCacheDirectory(), inputFileMd5Sum);
         if (!destinationDirectory.exists()) {
             destinationDirectory.mkdir();
         }
