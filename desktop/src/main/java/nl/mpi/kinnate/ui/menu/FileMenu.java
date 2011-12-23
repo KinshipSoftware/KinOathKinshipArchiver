@@ -21,7 +21,7 @@ public class FileMenu extends javax.swing.JMenu {
 
     private javax.swing.JMenuItem importGedcomUrl;
     private javax.swing.JMenuItem importGedcomFile;
-    private javax.swing.JMenuItem importCsvFile;
+//    private javax.swing.JMenuItem importCsvFile;
     private javax.swing.JMenuItem closeTabMenuItem;
     private javax.swing.JMenuItem entityUploadMenuItem;
     private javax.swing.JMenuItem exitApplication;
@@ -47,7 +47,7 @@ public class FileMenu extends javax.swing.JMenu {
         this.diagramWindowManager = diagramWindowManager;
         importGedcomUrl = new javax.swing.JMenuItem();
         importGedcomFile = new javax.swing.JMenuItem();
-        importCsvFile = new javax.swing.JMenuItem();
+//        importCsvFile = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
         jMenu3 = new DocumentNewMenu(diagramWindowManager);
@@ -122,7 +122,7 @@ public class FileMenu extends javax.swing.JMenu {
 
         this.add(jSeparator1);
 
-        importGedcomFile.setText("Import Gedcom File");
+        importGedcomFile.setText("Import Gedcom / CSV File");
         importGedcomFile.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -131,14 +131,14 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(importGedcomFile);
 
-        importCsvFile.setText("Import CSV File");
-        importCsvFile.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importCsvFileActionPerformed(evt);
-            }
-        });
-        this.add(importCsvFile);
+//        importCsvFile.setText("Import CSV File");
+//        importCsvFile.addActionListener(new java.awt.event.ActionListener() {
+//
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                importCsvFileActionPerformed(evt);
+//            }
+//        });
+//        this.add(importCsvFile);
 
         jMenu2.setText("Import Sample Data");
         this.add(jMenu2);
@@ -356,10 +356,26 @@ public class FileMenu extends javax.swing.JMenu {
         diagramWindowManager.newDiagram();
     }
 
+    private File showFileSelect() {
+        final JFileChooser fc = new JFileChooser();
+        File selectedFile = null;
+        int returnVal = fc.showOpenDialog(FileMenu.this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            selectedFile = fc.getSelectedFile();
+        }
+        return selectedFile;
+    }
+
     private void importGedcomFileActionPerformed(java.awt.event.ActionEvent evt) {
+        File importFile = showFileSelect();
+        if (importFile != null) {
+            diagramWindowManager.openImportPanel(importFile);
+        }
     }
 
     private void importCsvFileActionPerformed(java.awt.event.ActionEvent evt) {
+        importGedcomFileActionPerformed(evt);
     }
 
     private void importGedcomUrlActionPerformed(java.awt.event.ActionEvent evt) {
@@ -392,6 +408,7 @@ public class FileMenu extends javax.swing.JMenu {
     private void savePdfMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         // todo: implement pdf export
+        // todo: add a file select here
         new DiagramTranscoder().saveAsPdf(diagramWindowManager.getCurrentSavePanel());
         new DiagramTranscoder().saveAsJpg(diagramWindowManager.getCurrentSavePanel());
     }
