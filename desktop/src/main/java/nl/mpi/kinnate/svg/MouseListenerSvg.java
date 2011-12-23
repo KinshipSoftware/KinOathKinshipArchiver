@@ -231,7 +231,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 shownGraphicsEditors.remove(remainingIdentifier);
             }
             graphPanel.metadataPanel.updateEditorPane();
-            graphPanel.metadataPanel.setDateEditorEntities(selectedEntities);
+//            graphPanel.metadataPanel.setDateEditorEntities(selectedEntities);
         }
     }
 
