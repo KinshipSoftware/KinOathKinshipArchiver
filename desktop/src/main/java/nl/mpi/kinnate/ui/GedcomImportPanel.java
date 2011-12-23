@@ -97,6 +97,10 @@ public class GedcomImportPanel extends JPanel {
         return createdNodesPanel;
     }
 
+    public void startImport(File importFile) {
+        startImport(importFile, null, importFile.getName());
+    }
+
     public void startImport(String importUriString) {
         File cachedFile = KinSessionStorage.getSingleInstance().updateCache(importUriString, 30, true);
         startImport(cachedFile, null, importUriString);
@@ -127,7 +131,9 @@ public class GedcomImportPanel extends JPanel {
             GedcomImportPanel.this.add(endPagePanel, BorderLayout.PAGE_END);
             progressBar.setVisible(true);
             JPanel topPanel = new JPanel();
+            // todo: any existing files are always being overwritten and the entity id also being changed so existing relations will be broken, maybe prevent overwritting all entities for an import file?
             overwriteOnImport = new JCheckBox("Overwrite Existing");
+            overwriteOnImport.setEnabled(false);
             startButton = new JButton("Start");
             topPanel.add(overwriteOnImport);
             validateImportedXml = new JCheckBox("Validate Xml");
