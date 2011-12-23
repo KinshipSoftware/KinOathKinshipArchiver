@@ -124,6 +124,10 @@ public abstract class AbstractDiagramManager {
         }
     }
 
+    public void openImportPanel(File importFile) {
+        new GedcomImportPanel(this).startImport(importFile);
+    }
+
     public void openImportPanel(String importUrlString) {
         new GedcomImportPanel(this).startImport(importUrlString);
     }
