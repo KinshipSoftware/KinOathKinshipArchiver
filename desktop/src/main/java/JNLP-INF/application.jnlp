@@ -23,8 +23,8 @@
     <update check="timeout" policy="always"/>
     <resources>
         <java max-heap-size="1073741824" version="1.5+"/>
-        <jar href="kinoath-testing-0-0-26381.jar" main="true" download="eager"/>
-        <jar href="lib/arbil-2.3-SNAPSHOT.jar" download="eager"/>
+        <jar href="kinoath-testing-0-7-28341.jar" main="true" download="eager"/>
+        <jar href="lib/arbil-2.4-SNAPSHOT.jar" download="eager"/>
         <jar href="lib/batik-css-1.7.jar" download="eager"/>
         <jar href="lib/batik-svg-dom-1.7.jar" download="eager"/>
         <jar href="lib/colt-1.2.0.jar" download="eager"/>
@@ -80,7 +80,7 @@
         <!-- these prperties are now set in the main class<property name="apple.laf.useScreenMenuBar" value="true"/>
         <property name="apple.awt.graphics.UseQuartz" value="true"/>
         <property name="sun.swing.enableImprovedDragGesture" value="true"/>-->
-        <property name="nl.mpi.kinoath.webstartUpdateUrl" value="http://www.mpi.nl/tg/j2se/jnlp/kinoath/kinoath-testing.jnlp"/>
+        <property name="nl.mpi.webstartUpdateUrl" value="http://www.mpi.nl/tg/j2se/jnlp/kinoath/kinoath-testing.jnlp"/>
     </resources>
     <application-desc main-class="nl.mpi.kinnate.ui.MainFrame">
       <!--<argument>-update_via_javaws</argument>-->

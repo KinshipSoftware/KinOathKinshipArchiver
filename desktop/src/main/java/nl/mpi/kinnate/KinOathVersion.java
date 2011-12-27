@@ -11,11 +11,11 @@ public class KinOathVersion extends ApplicationVersion {
     	applicationTitle = "KinOath (testing)";
     	applicationIconName = "/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png";
     	currentMajor = "0";
-    	currentMinor = "0";
-    	currentRevision = "26531";
-	lastCommitDate = "";
-	compileDate = "";
-	fullInfo = "";
+    	currentMinor = "7";
+    	currentRevision = "28341";
+	lastCommitDate = "Last Changed Date: 2011-12-23 16:31:25 +0100 (Fri, 23 Dec 2011)";
+	compileDate = "Fri Dec 23 16:44:20 CET 2011";
+	fullInfo = "\nPath: ../desktop/src/main/java/nl/mpi/kinnate\nURL: https://svn.mpi.nl/LAT/Kinnate/trunk/desktop/src/main/java/nl/mpi/kinnate\nRepository Root: https://svn.mpi.nl/LAT\nRepository UUID: d4234c5b-7c33-0410-a85d-91bdcf7faf44\nRevision: 28343\nNode Kind: directory\nSchedule: normal\nLast Changed Author: petwit\nLast Changed Rev: 28341\nLast Changed Date: 2011-12-23 16:31:25 +0100 (Fri, 23 Dec 2011)\n";
     	currentVersionFile = "http://www.mpi.nl/tg/j2se/jnlp/kinoath/kinoath-testing-current.txt";
     }
 }
