@@ -8,7 +8,7 @@
 <project name="KinOath" default="scp_to_lux09">
     <target name="setproperties">
         <property name="kinoath.current.major" value="0"/>
-        <property name="kinoath.current.minor" value="7"/>
+        <property name="kinoath.current.minor" value="8"/>
         <property name="kinoath.filenameidentifier" value="-testing"/>
         <property name="kinoath.application-title" value="KinOath (testing)"/>
         <property name="kinoath.icon-file-name" value="kinoath${kinoath.filenameidentifier}128x128"/>
@@ -263,7 +263,8 @@ public class KinOathVersion extends ApplicationVersion {
         <scp file="${IconsDir}${kinoath.icon-file-name}.png" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <!-- push the updated the applet html and the kinoath jnlp files to the server -->
         <scp file="${OUTPUTDIR}/distribution/kinoath.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.jnlp"/>
-        <scp file="${OUTPUTDIR}/distribution/kinoath.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}.jnlp"/>
+        <!-- the non numbered version of the jnlp will allow the user to always get the latest update of that type. Whereas the build numbered version is of no use because it will always redirect to the latest version of its type not the version of the file name -->
+<!--        <scp file="${OUTPUTDIR}/distribution/kinoath.jnlp" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}.jnlp"/>-->
 <!--        <scp file= "${BUILDDIR}/kinoath-applet.html" remoteTofile="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath-applet${kinoath.filenameidentifier}.html"/>-->
         <!-- push the deb package -->
         <scp file="${distributionDirectory}/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_all.deb" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
