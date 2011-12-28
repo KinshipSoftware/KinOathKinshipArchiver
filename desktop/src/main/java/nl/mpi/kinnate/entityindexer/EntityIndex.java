@@ -83,15 +83,15 @@ public class EntityIndex implements EntityService {
 //                    }
 //                }
             } catch (TransformerException exception) {
-                GuiHelper.linorgBugCatcher.logError(exception);
+//                GuiHelper.linorgBugCatcher.logError(exception);
             } catch (ParserConfigurationException exception) {
-                GuiHelper.linorgBugCatcher.logError(exception);
+//                GuiHelper.linorgBugCatcher.logError(exception);
             } catch (DOMException exception) {
-                GuiHelper.linorgBugCatcher.logError(exception);
+//                GuiHelper.linorgBugCatcher.logError(exception);
             } catch (IOException exception) {
-                GuiHelper.linorgBugCatcher.logError(exception);
+//                GuiHelper.linorgBugCatcher.logError(exception);
             } catch (SAXException exception) {
-                GuiHelper.linorgBugCatcher.logError(exception);
+//                GuiHelper.linorgBugCatcher.logError(exception);
             }
             return entityData;
         }
@@ -216,7 +216,7 @@ public class EntityIndex implements EntityService {
 //                    createdGraphNodes.remove(alterPath);
 //                }
             } catch (URISyntaxException urise) {
-                GuiHelper.linorgBugCatcher.logError(urise);
+//                GuiHelper.linorgBugCatcher.logError(urise);
             }
         }
     }
