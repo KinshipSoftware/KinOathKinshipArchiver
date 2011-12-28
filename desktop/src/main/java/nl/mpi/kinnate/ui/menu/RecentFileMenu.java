@@ -11,9 +11,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
-import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : RecentFileMenu
@@ -23,9 +23,13 @@ import nl.mpi.kinnate.userstorage.KinSessionStorage;
 public class RecentFileMenu extends JMenu implements ActionListener {
 
     AbstractDiagramManager diagramWindowManager;
+    private SessionStorage sessionStorage;
+    private BugCatcher bugCatcher;
 
-    public RecentFileMenu(AbstractDiagramManager diagramWindowManager) {
+    public RecentFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, BugCatcher bugCatcher) {
         this.diagramWindowManager = diagramWindowManager;
+        this.sessionStorage = sessionStorage;
+        this.bugCatcher = bugCatcher;
         this.setText("Open Recent Diagram");
         this.addMenuListener(new MenuListener() {
 
@@ -41,12 +45,12 @@ public class RecentFileMenu extends JMenu implements ActionListener {
         });
     }
 
-    static public void addRecentFile(File recentFile) {
+    static public void addRecentFile(SessionStorage sessionStorageS, BugCatcher bugCatcherS, File recentFile) {
         // store the accessed and saved files and provide a menu of recent files
         ArrayList<String> tempList = new ArrayList<String>();
         String[] tempArray;
         try {
-            tempArray = KinSessionStorage.getSingleInstance().loadStringArray("RecentKinFiles");
+            tempArray = sessionStorageS.loadStringArray("RecentKinFiles");
             if (tempArray != null) {
                 tempList.addAll(Arrays.asList(tempArray));
             }
@@ -58,13 +62,13 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             tempList.remove(recentFile.toString());
             tempList.add(recentFile.toString());
         } catch (IOException exception) {
-//            GuiHelper.linorgBugCatcher.logError(exception);
+//            bugCatcher.logError(exception);
             tempArray = new String[]{recentFile.toString()};
         }
         try {
-            KinSessionStorage.getSingleInstance().saveStringArray("RecentKinFiles", tempList.toArray(new String[]{}));
+            sessionStorageS.saveStringArray("RecentKinFiles", tempList.toArray(new String[]{}));
         } catch (IOException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            bugCatcherS.logError(exception);
         }
 //        setupMenu();
     }
@@ -72,7 +76,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
     private void setupMenu() {
         this.removeAll();
         try {
-            String[] recentFileArray = KinSessionStorage.getSingleInstance().loadStringArray("RecentKinFiles");
+            String[] recentFileArray = sessionStorage.loadStringArray("RecentKinFiles");
             if (recentFileArray != null) {
                 for (int currentIndex = recentFileArray.length - 1; currentIndex >= 0; currentIndex--) {
                     String currentFilePath = recentFileArray[currentIndex];
@@ -97,9 +101,9 @@ public class RecentFileMenu extends JMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if ("Clear List".equals(e.getActionCommand())) {
             try {
-                KinSessionStorage.getSingleInstance().saveStringArray("RecentKinFiles", new String[]{});
+                sessionStorage.saveStringArray("RecentKinFiles", new String[]{});
             } catch (IOException exception) {
-                GuiHelper.linorgBugCatcher.logError(exception);
+                bugCatcher.logError(exception);
             }
 //            setupMenu();
         } else {
@@ -111,7 +115,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             final String recentName = recentFile.getName();
             diagramWindowManager.openDiagram(recentName, recentFile.toURI(), true);
 //            } catch (URISyntaxException exception) {
-//                GuiHelper.linorgBugCatcher.logError(exception);
+//                bugCatcher.logError(exception);
 //                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
 //            }
         }
