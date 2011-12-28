@@ -23,8 +23,8 @@ public class QueryParser implements EntityService {
     EntityCollection entityCollection;
     public boolean abortProcess = false; // used to abort queries when another query is requested
 
-    public QueryParser(EntityData[] svgEntities) {
-        entityCollection = new EntityCollection();
+    public QueryParser(EntityData[] svgEntities, EntityCollection entityCollection) {
+        this.entityCollection = entityCollection;
         loadedGraphNodes = new HashMap<UniqueIdentifier, EntityData>();
         if (svgEntities != null) {
             for (EntityData svgStoredEntity : svgEntities) {
