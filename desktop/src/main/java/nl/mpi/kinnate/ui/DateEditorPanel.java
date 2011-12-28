@@ -21,8 +21,12 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.data.KinTreeNode;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -35,8 +39,18 @@ import org.w3c.dom.Node;
 public class DateEditorPanel extends JPanel {
 
     JPanel outerPanel;
+    private BugCatcher bugCatcher;
+    private IndexerParameters indexerParameters;
+    private MessageDialogHandler dialogHandler;
+    private EntityCollection entityCollection;
+    private ArbilDataNodeLoader dataNodeLoader;
 
-    public DateEditorPanel() {
+    public DateEditorPanel(IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, BugCatcher bugCatcher, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+        this.indexerParameters = indexerParameters;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+        this.entityCollection = entityCollection;
+        this.dataNodeLoader = dataNodeLoader;
         this.setLayout(new BorderLayout());
         outerPanel = new JPanel(new GridLayout(0, 1));
         JPanel sideWrapperPanel = new JPanel(new BorderLayout());
@@ -46,7 +60,7 @@ public class DateEditorPanel extends JPanel {
 
     private JPanel getDateSpinners(EntityData entityData) {
         JPanel rowPanel = new JPanel(new FlowLayout());
-        KinTreeNode kinTreeNode = new KinTreeNode(entityData, null);
+        KinTreeNode kinTreeNode = new KinTreeNode(entityData, indexerParameters, dialogHandler, bugCatcher, entityCollection, dataNodeLoader);
         rowPanel.add(new JLabel(kinTreeNode.toString(), kinTreeNode.getIcon(), JLabel.LEFT));
         SpinnerModel startDateModel;
         if (entityData.getDateOfBirth() != null) {
@@ -104,7 +118,7 @@ public class DateEditorPanel extends JPanel {
                 initialValue = Integer.decode(initialValueString);
             }
         } catch (NumberFormatException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            bugCatcher.logError(exception);
         }
         sidePanel.add(new JLabel(labelString));
         SpinnerModel spinnerModel =
@@ -127,7 +141,7 @@ public class DateEditorPanel extends JPanel {
                 initialColour = Color.decode(attributeValue);
             }
         } catch (NumberFormatException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            bugCatcher.logError(exception);
         }
         sidePanel.add(new JLabel(attributeString));
         final JPanel colourSquare = new JPanel();
