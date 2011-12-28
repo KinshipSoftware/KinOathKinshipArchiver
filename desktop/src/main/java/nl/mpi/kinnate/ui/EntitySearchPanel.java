@@ -13,7 +13,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -34,10 +37,16 @@ public class EntitySearchPanel extends JPanel {
     private JButton searchButton;
     private JPanel searchPanel;
     private GraphPanel graphPanel;
+    private MessageDialogHandler dialogHandler;
+    private BugCatcher bugCatcher;
+    private ArbilDataNodeLoader dataNodeLoader;
 
-    public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel) {
+    public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader) {
         this.entityCollection = entityCollection;
         this.graphPanel = graphPanel;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+        this.dataNodeLoader = dataNodeLoader;
         this.setLayout(new BorderLayout());
         resultsTree = new KinTree(kinDiagramPanel, graphPanel);
         resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
@@ -92,7 +101,7 @@ public class EntitySearchPanel extends JPanel {
                 resultsArea.setText("Found " + searchResults.length + " entities\n");
                 for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
-                    resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters()));
+                    resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, bugCatcher, entityCollection, dataNodeLoader));
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
 //                break;
