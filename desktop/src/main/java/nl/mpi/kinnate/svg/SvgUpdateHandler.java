@@ -4,8 +4,8 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashSet;
-import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -32,6 +32,8 @@ public class SvgUpdateHandler {
 
     private GraphPanel graphPanel;
     private KinTermSavePanel kinTermSavePanel;
+    private BugCatcher bugCatcher;
+    private MessageDialogHandler dialogHandler;
     private boolean dragUpdateRequired = false;
     private boolean threadRunning = false;
     private boolean relationThreadRunning = false;
@@ -56,9 +58,11 @@ public class SvgUpdateHandler {
 //                        * Path <path>
     }
 
-    protected SvgUpdateHandler(GraphPanel graphPanelLocal, KinTermSavePanel kinTermSavePanelLocal) {
-        graphPanel = graphPanelLocal;
-        kinTermSavePanel = kinTermSavePanelLocal;
+    public SvgUpdateHandler(GraphPanel graphPanel, KinTermSavePanel kinTermSavePanel, BugCatcher bugCatcher, MessageDialogHandler dialogHandler) {
+        this.graphPanel = graphPanel;
+        this.kinTermSavePanel = kinTermSavePanel;
+        this.bugCatcher = bugCatcher;
+        this.dialogHandler = dialogHandler;
     }
 
     public void clearHighlights() {
@@ -140,8 +144,8 @@ public class SvgUpdateHandler {
 //                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                             }
                         } catch (IdentifierException exception) {
-                            GuiHelper.linorgBugCatcher.logError(exception);
-                            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to read relation data, highlight might not be correct", "Sanguine Highlights");
+                            bugCatcher.logError(exception);
+                            dialogHandler.addMessageDialogToQueue("Failed to read relation data, highlight might not be correct", "Sanguine Highlights");
                         }
                     }
                 }
@@ -203,14 +207,14 @@ public class SvgUpdateHandler {
                     highlightBackgroundLine.setAttribute("fill", "none");
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
                     highlightBackgroundLine.setAttribute("stroke", "white");
-                    new RelationSvg().setPolylinePointsAttribute(null, dragLineElementId, highlightBackgroundLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
+                    new RelationSvg(dialogHandler).setPolylinePointsAttribute(null, dragLineElementId, highlightBackgroundLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
                     relationHighlightGroup.appendChild(highlightBackgroundLine);
                     // add a blue dotted line
                     Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
                     highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                     highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
-                    new RelationSvg().setPolylinePointsAttribute(null, dragLineElementId, highlightLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
+                    new RelationSvg(dialogHandler).setPolylinePointsAttribute(null, dragLineElementId, highlightLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
                     highlightLine.setAttribute("stroke", "blue");
                     highlightLine.setAttribute("stroke-dasharray", "3");
                     highlightLine.setAttribute("stroke-dashoffset", "0");
@@ -499,7 +503,7 @@ public class SvgUpdateHandler {
 //                    System.out.println("updateDragNodeX: " + updateDragNodeXInner);
 //                    System.out.println("updateDragNodeY: " + updateDragNodeYInner);
                     if (graphPanel.doc == null || graphPanel.dataStoreSvg.graphData == null) {
-                        GuiHelper.linorgBugCatcher.logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
+                        bugCatcher.logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
                     } else {
 //                        if (relationDragHandleType != null) {
 //                            // drag relation handles
@@ -561,7 +565,7 @@ public class SvgUpdateHandler {
 //                    } 
                         int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); // graphPanel.dataStoreSvg.graphData.gridHeight);
                         int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
-                        new RelationSvg().updateRelationLines(graphPanel, graphPanel.selectedGroupId, hSpacing, vSpacing);
+                        new RelationSvg(dialogHandler).updateRelationLines(graphPanel, graphPanel.selectedGroupId, hSpacing, vSpacing);
                         updateSanguineHighlights(entityGroup);
                         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                     }
@@ -818,7 +822,7 @@ public class SvgUpdateHandler {
                     entityGroupNode.appendChild(graphPanel.entitySvg.createEntitySymbol(graphPanel, currentNode));
                 }
             }
-            RelationSvg relationSvg = new RelationSvg();
+            RelationSvg relationSvg = new RelationSvg(dialogHandler);
             ArrayList<String> doneRelations = new ArrayList<String>();
             for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
@@ -877,7 +881,7 @@ public class SvgUpdateHandler {
 //                svgCanvas.setRenderingTransform(zoomAffineTransform);
 //            };
         } catch (DOMException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            bugCatcher.logError(exception);
         }
         // todo: this repaint might not resolve all cases of redraw issues
         graphPanel.svgCanvas.repaint(); // make sure no remnants are left over after the last redraw
