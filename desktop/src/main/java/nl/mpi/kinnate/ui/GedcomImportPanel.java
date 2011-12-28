@@ -19,6 +19,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.XsdChecker;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.CsvImporter;
@@ -26,7 +30,6 @@ import nl.mpi.kinnate.gedcomimport.GedcomImporter;
 import nl.mpi.kinnate.gedcomimport.GenericImporter;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : GedcomImportPanel
@@ -43,11 +46,21 @@ public class GedcomImportPanel extends JPanel {
     private JCheckBox validateImportedXml;
     private JButton startButton;
     private JPanel endPagePanel;
+    private SessionStorage sessionStorage;
+    private ArbilWindowManager dialogHandler;
+    private BugCatcher bugCatcher;
+    private ArbilDataNodeLoader dataNodeLoader;
+    private ArbilTreeHelper treeHelper;
 
-    public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager) {
+    public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager, EntityCollection entityCollection, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper) {
         this.setPreferredSize(new Dimension(500, 500));
         this.abstractDiagramManager = abstractDiagramManager;
-        entityCollection = new EntityCollection();
+        this.entityCollection = entityCollection;
+        this.sessionStorage = sessionStorage;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+        this.dataNodeLoader = dataNodeLoader;
+        this.treeHelper = treeHelper;
 
 //        private ImdiTree leftTree;
 ////    private GraphPanel graphPanel;
@@ -74,7 +87,7 @@ public class GedcomImportPanel extends JPanel {
             showButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple);
+                    final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
 //                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
                     abstractDiagramManager.createDiagramContainer("Imported Entities", egoSelectionTestPanel);
                     SwingUtilities.invokeLater(new Runnable() {
@@ -102,7 +115,7 @@ public class GedcomImportPanel extends JPanel {
     }
 
     public void startImport(String importUriString) {
-        File cachedFile = KinSessionStorage.getSingleInstance().updateCache(importUriString, 30, true);
+        File cachedFile = sessionStorage.updateCache(importUriString, 30, true);
         startImport(cachedFile, null, importUriString);
     }
 
@@ -132,6 +145,7 @@ public class GedcomImportPanel extends JPanel {
             progressBar.setVisible(true);
             JPanel topPanel = new JPanel();
             // todo: any existing files are always being overwritten and the entity id also being changed so existing relations will be broken, maybe prevent overwritting all entities for an import file?
+            // todo: it might be better to check for a file already exsiting and if it does load it and strip out the relations and metadata that would be replaced by the import?
             overwriteOnImport = new JCheckBox("Overwrite Existing");
             overwriteOnImport.setEnabled(false);
             startButton = new JButton("Start");
@@ -154,14 +168,14 @@ public class GedcomImportPanel extends JPanel {
                         @Override
                         public void run() {
                             boolean overwriteExisting = overwriteOnImport.isSelected();
-                            GenericImporter genericImporter = new GedcomImporter(progressBar, importTextArea, overwriteExisting);
+                            GenericImporter genericImporter = new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
                             if (importFileString != null) {
                                 if (!genericImporter.canImport(importFileString)) {
-                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting);
+                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
                                 }
                             } else {
                                 if (!genericImporter.canImport(importFile.toString())) {
-                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting);
+                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
                                 }
                             }
                             URI[] treeNodesArray;
@@ -190,7 +204,7 @@ public class GedcomImportPanel extends JPanel {
                                         XsdChecker xsdChecker = new XsdChecker();
                                         if (xsdChecker.simpleCheck(new File(currentNodeUri), currentNodeUri) != null) {
                                             abstractDiagramManager.createDiagramSubPanel("XSD Error on Import", xsdChecker);
-                                            xsdChecker.checkXML(ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, currentNodeUri));
+                                            xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentNodeUri));
                                             xsdChecker.setDividerLocation(0.5);
                                             maxXsdErrorToShow--;
                                             if (maxXsdErrorToShow <= 0) {
