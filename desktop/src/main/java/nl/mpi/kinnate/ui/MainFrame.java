@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.KinnateArbilInjector;
@@ -40,17 +39,17 @@ public class MainFrame extends javax.swing.JFrame {
 
             public void run() {
                 final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
-                new KinnateArbilInjector().injectHandlers(versionManager);
+                final KinnateArbilInjector injector = new KinnateArbilInjector();
+                injector.injectHandlers(versionManager);
                 AbstractDiagramManager abstractDiagramManager;
 
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
-                abstractDiagramManager = new WindowedDiagramManager(versionManager);
-
+                abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), injector.getSessionStorage(), injector.getBugCatcher(), injector.getDataNodeLoader(), injector.getTreeHelper(), injector.getEntityCollection());
                 abstractDiagramManager.newDiagram();
                 abstractDiagramManager.createApplicationWindow();
 
-                ArbilWindowManager.getSingleInstance().setMessagesCanBeShown(true);
+                injector.getWindowManager().setMessagesCanBeShown(true);
 //	if (arbilMenuBar.checkNewVersionAtStartCheckBoxMenuItem.isSelected()) {
                 // todo: Ticket #1066 add the check for updates and check now menu items
                 versionManager.checkForUpdate();
