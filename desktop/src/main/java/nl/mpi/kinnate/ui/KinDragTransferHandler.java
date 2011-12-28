@@ -17,7 +17,7 @@ import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilField;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTree;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
@@ -35,14 +35,18 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class KinDragTransferHandler extends TransferHandler implements Transferable {
 
-    ArbilNode[] selectedNodes;
-    DataFlavor dataFlavor = new DataFlavor(ArbilNode[].class, "ArbilObject");
-    DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor, DataFlavor.stringFlavor};
-    KinDiagramPanel kinDiagramPanel;
-    EntityData targetEntity = null;
+    private ArbilNode[] selectedNodes;
+    private DataFlavor dataFlavor = new DataFlavor(ArbilNode[].class, "ArbilObject");
+    private DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor, DataFlavor.stringFlavor};
+    private KinDiagramPanel kinDiagramPanel;
+    private EntityData targetEntity = null;
+    private SessionStorage sessionStorage;
+    private EntityCollection entityCollection;
 
-    public KinDragTransferHandler(KinDiagramPanel kinDiagramPanel) {
+    public KinDragTransferHandler(KinDiagramPanel kinDiagramPanel, SessionStorage sessionStorage, EntityCollection entityCollection) {
         this.kinDiagramPanel = kinDiagramPanel;
+        this.sessionStorage = sessionStorage;
+        this.entityCollection = entityCollection;
     }
 
     @Override
@@ -190,7 +194,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         try {
             ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
             for (ArbilNode draggedNode : selectedNodes) {
-                EntityDocument entityDocument = new EntityDocument(EntityDocument.defaultEntityType, importTranslator);
+                EntityDocument entityDocument = new EntityDocument(EntityDocument.defaultEntityType, importTranslator, sessionStorage);
                 entityDocument.insertValue("Name", draggedNode.toString());
                 if (draggedNode instanceof ArbilDataNode) {
                     for (String fieldOfInterest : new String[]{"Sex", "BirthDate"}) {
@@ -209,7 +213,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             for (EntityDocument entityDocument : entityDocumentList) {
                 entityDocument.saveDocument();
                 URI addedEntityUri = entityDocument.getFile().toURI();
-                new EntityCollection().updateDatabase(addedEntityUri);
+                entityCollection.updateDatabase(addedEntityUri);
                 kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
             }
             return true;
@@ -254,7 +258,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             attachMetadata(entityDocument.entityData);
             entityDocument.saveDocument();
             URI addedEntityUri = entityDocument.getFile().toURI();
-            new EntityCollection().updateDatabase(addedEntityUri);
+            entityCollection.updateDatabase(addedEntityUri);
             kinDiagramPanel.entityRelationsChanged(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
             return true;
         } catch (ImportException exception) {
