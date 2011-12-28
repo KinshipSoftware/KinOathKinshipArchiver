@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
@@ -23,6 +25,13 @@ public class SymbolGraphic {
 
     HashMap<String, ImageIcon> symbolMapEgo = new HashMap<String, ImageIcon>();
     HashMap<String, ImageIcon> symbolMapAlter = new HashMap<String, ImageIcon>();
+    private MessageDialogHandler dialogHandler;
+    private BugCatcher bugCatcher;
+
+    public SymbolGraphic(MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+    }
 
     class ImageIconTranscoder extends ImageTranscoder {
 
@@ -55,7 +64,7 @@ public class SymbolGraphic {
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
         SVGDocument doc = (SVGDocument) impl.createDocument(svgNS, "svg", null);
 
-        int symbolSize = new EntitySvg().insertSymbols(doc, svgNS);
+        int symbolSize = new EntitySvg(dialogHandler, bugCatcher).insertSymbols(doc, svgNS);
 
         Element symbolNode;
         symbolNode = doc.createElementNS(svgNS, "use");
