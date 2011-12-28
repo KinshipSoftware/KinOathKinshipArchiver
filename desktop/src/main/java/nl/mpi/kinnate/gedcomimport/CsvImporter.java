@@ -9,6 +9,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.DataTypes.RelationLineType;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
@@ -20,8 +21,8 @@ import nl.mpi.kinnate.kindata.DataTypes.RelationType;
  */
 public class CsvImporter extends EntityImporter implements GenericImporter {
 
-    public CsvImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal) {
-        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal);
+    public CsvImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
+        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage);
     }
 
     @Override
