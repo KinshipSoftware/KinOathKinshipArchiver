@@ -10,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import nl.mpi.arbil.data.AbstractTreeHelper;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.data.ArbilTreeHelper;
@@ -18,7 +17,7 @@ import nl.mpi.arbil.ui.ArbilNodeSearchPanel;
 import nl.mpi.arbil.ui.ArbilSplitPanel;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.svg.GraphPanel;
 
@@ -33,13 +32,19 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
     private JButton nextButton;
     private TreeType treeType;
     private VisiblePanelSetting panelSetting;
+    private ArbilTreeHelper treeHelper;
+    private ArbilDataNodeLoader dataNodeLoader;
+    private BugCatcher bugCatcher;
 
     public enum TreeType {
 
         RemoteTree, LocalTree, MpiTree
     }
 
-    public ArchiveEntityLinkerPanel(VisiblePanelSetting panelSetting, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, KinDragTransferHandler dragTransferHandler, TreeType treeType) {
+    public ArchiveEntityLinkerPanel(VisiblePanelSetting panelSetting, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, KinDragTransferHandler dragTransferHandler, TreeType treeType, ArbilTreeHelper treeHelper, ArbilDataNodeLoader dataNodeLoader, BugCatcher bugCatcher) {
+        this.treeHelper = treeHelper;
+        this.dataNodeLoader = dataNodeLoader;
+        this.bugCatcher = bugCatcher;
         this.treeType = treeType;
         this.panelSetting = panelSetting;
         archiveTree = new KinTree(kinDiagramPanel, graphPanel);
@@ -61,7 +66,6 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
     public void loadTreeNodes() {
         try {
             ArbilNode[] allEntities;
-            AbstractTreeHelper treeHelper = ArbilTreeHelper.getSingleInstance();
             switch (treeType) {
                 case LocalTree:
                     allEntities = treeHelper.getLocalCorpusNodes();
@@ -73,7 +77,7 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
                     break;
                 case MpiTree:
                 default:
-                    ArbilNode imdiCorporaNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI("http://corpus1.mpi.nl/IMDI/metadata/IMDI.imdi"));
+                    ArbilNode imdiCorporaNode = dataNodeLoader.getArbilDataNode(null, new URI("http://corpus1.mpi.nl/IMDI/metadata/IMDI.imdi"));
                     allEntities = new ArbilNode[]{imdiCorporaNode};
                     this.setName("Nijmegen Corpus");
                     break;
@@ -81,7 +85,7 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
             archiveTree.rootNodeChildren = allEntities;
             archiveTree.requestResort();
         } catch (URISyntaxException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            bugCatcher.logError(exception);
         }
     }
 
