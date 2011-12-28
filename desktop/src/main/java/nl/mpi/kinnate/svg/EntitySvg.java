@@ -9,8 +9,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
-import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
@@ -35,6 +35,13 @@ public class EntitySvg {
     private HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>> parentIdentifiers = new HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>>();
     private int symbolSize = 15;
     static protected int strokeWidth = 2;
+    private MessageDialogHandler dialogHandler;
+    private BugCatcher bugCatcher;
+
+    public EntitySvg(MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+    }
 
     public void readEntityPositions(Node entityGroup) {
         // read the entity positions from the existing dom
@@ -71,7 +78,7 @@ public class EntitySvg {
                     }
                 } catch (IdentifierException exception) {
 //                    GuiHelper.linorgBugCatcher.logError(exception);
-                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to read an entity position, layout might not be preserved", "Restore Layout");
+                    dialogHandler.addMessageDialogToQueue("Failed to read an entity position, layout might not be preserved", "Restore Layout");
                 }
             }
         }
@@ -519,7 +526,7 @@ public class EntitySvg {
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
-            GuiHelper.linorgBugCatcher.logError(new Exception("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier()));
+            bugCatcher.logError(new Exception("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier()));
             storedPosition = new float[]{0, 0};
             // todo: it looks like the stored positon can be null
 //            throw new Exception("Entity position should have been set in the graph sorter");
