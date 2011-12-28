@@ -12,11 +12,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import nl.mpi.kinnate.userstorage.KinSessionStorage;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,18 +40,20 @@ public class EntityDocument {
     public EntityData entityData = null;
     private ImportTranslator importTranslator;
     public static String defaultEntityType = "individual";
+    private SessionStorage sessionStorage;
 
-    public EntityDocument(ImportTranslator importTranslator) {
+    public EntityDocument(ImportTranslator importTranslator, SessionStorage sessionStorage) {
         this.importTranslator = importTranslator;
+        this.sessionStorage = sessionStorage;
         assignIdentiferAndFile();
     }
 
-    public EntityDocument(String entityType, ImportTranslator importTranslator) throws ImportException {
+    public EntityDocument(String entityType, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
         assignIdentiferAndFile();
         try {
             // construct the metadata file
-            URI xsdUri = new CmdiTransformer().getXsdUrlString(entityType);
+            URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString(entityType);
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
         } catch (KinXsdException exception) {
             new ArbilBugCatcher().logError(exception);
@@ -60,7 +62,7 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(EntityDocument entityDocumentToCopy, ImportTranslator importTranslator) throws ImportException {
+    public EntityDocument(EntityDocument entityDocumentToCopy, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
         assignIdentiferAndFile();
         try {
@@ -96,7 +98,7 @@ public class EntityDocument {
         }
         try {
             // construct the metadata file
-            URI xsdUri = new CmdiTransformer().getXsdUrlString(entityType);
+            URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString(entityType);
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
         } catch (KinXsdException exception) {
             new ArbilBugCatcher().logError(exception);
@@ -115,7 +117,7 @@ public class EntityDocument {
         String idString;
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
         idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
-        File subDirectory = new File(KinSessionStorage.getSingleInstance().getCacheDirectory(), idString.substring(0, 2));
+        File subDirectory = new File(sessionStorage.getCacheDirectory(), idString.substring(0, 2));
         subDirectory.mkdir();
         entityFile = new File(subDirectory, idString);
     }
@@ -177,7 +179,7 @@ public class EntityDocument {
         } else { // start skip overwrite
             try {
                 entityUri = entityFile.toURI();
-                URI xsdUri = new CmdiTransformer().getXsdUrlString("individual");
+                URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString("individual");
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 documentBuilderFactory.setNamespaceAware(true);
                 String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
