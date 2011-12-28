@@ -1,7 +1,13 @@
 package nl.mpi.kinnate.ui.window;
 
 import java.awt.Component;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
  *  Document   : DiagramWindowManager
@@ -12,8 +18,8 @@ public class TabbedDiagramManager extends AbstractDiagramManager {
 
     private javax.swing.JTabbedPane jTabbedPane1;
 
-    public TabbedDiagramManager(ApplicationVersionManager versionManager) {
-        super(versionManager);
+    public TabbedDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
+        super(versionManager, dialogHandler, sessionStorage, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
         jTabbedPane1 = new javax.swing.JTabbedPane();
     }
 
