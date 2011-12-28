@@ -6,7 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
  *  Document   : DiagramWindowManager
@@ -20,8 +26,8 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
     private ArrayList<Component> diagramArray = new ArrayList<Component>();
     private JFrame mainFrame;
 
-    public LayeredDiagramManager(ApplicationVersionManager versionManager) {
-        super(versionManager);
+    public LayeredDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
+        super(versionManager, dialogHandler, sessionStorage, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
         mainPanel = new javax.swing.JPanel(new BorderLayout());
     }
 
