@@ -6,10 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinTermSavePanel;
-import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : ExportToR
@@ -18,10 +18,20 @@ import nl.mpi.kinnate.userstorage.KinSessionStorage;
  */
 public class ExportToR {
 
+    private SessionStorage sessionStorage;
+    private MessageDialogHandler dialogHandler;
+    private BugCatcher bugCatcher;
+
+    public ExportToR(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+        this.sessionStorage = sessionStorage;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+    }
+
     public void doExport(Component mainFrame, KinTermSavePanel savePanel) {
         // todo: modify this to use the ArbilWindowManager and update the ArbilWindowManager file select to support save file actions
         JFileChooser fc = new JFileChooser();
-        String lastSavedFileString = KinSessionStorage.getSingleInstance().loadString("kinoath.ExportToR");
+        String lastSavedFileString = sessionStorage.loadString("kinoath.ExportToR");
         if (lastSavedFileString != null) {
             fc.setSelectedFile(new File(lastSavedFileString));
         }
@@ -45,15 +55,15 @@ public class ExportToR {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             PedigreePackageExport packageExport = new PedigreePackageExport();
-            KinSessionStorage.getSingleInstance().saveString("kinoath.ExportToR", file.getPath());
+            sessionStorage.saveString("kinoath.ExportToR", file.getPath());
             try {
                 FileWriter fileWriter = new FileWriter(file, false);
                 fileWriter.write(packageExport.createCsvContents(savePanel.getGraphEntities()));
                 fileWriter.close();
 //                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("File saved", "Export");
             } catch (IOException exception) {
-                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Error, could not save file", "Export");
-                GuiHelper.linorgBugCatcher.logError(exception);
+                dialogHandler.addMessageDialogToQueue("Error, could not save file", "Export");
+                bugCatcher.logError(exception);
             }
         }
     }
