@@ -16,9 +16,14 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 import javax.xml.parsers.DocumentBuilderFactory;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
@@ -56,18 +61,26 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    private URI[] egoPathsTemp = null;
     public SvgUpdateHandler svgUpdateHandler;
     public MouseListenerSvg mouseListenerSvg;
+    private BugCatcher bugCatcher;
+    private MessageDialogHandler dialogHandler;
+    private SessionStorage sessionStorage;
+//    private EntityCollection entityCollection;
 
-    public GraphPanel(KinDiagramPanel kinDiagramPanel) {
+    public GraphPanel(KinDiagramPanel kinDiagramPanel, final ArbilWindowManager arbilWindowManager, BugCatcher bugCatcher, SessionStorage sessionStorage, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+        this.bugCatcher = bugCatcher;
+        this.dialogHandler = arbilWindowManager;
+        this.sessionStorage = sessionStorage;
+//        this.entityCollection = entityCollection;
         dataStoreSvg = new DataStoreSvg();
-        entitySvg = new EntitySvg();
+        entitySvg = new EntitySvg(dialogHandler, bugCatcher);
         dataStoreSvg.setDefaults();
-        svgUpdateHandler = new SvgUpdateHandler(this, kinDiagramPanel);
+        svgUpdateHandler = new SvgUpdateHandler(this, kinDiagramPanel, bugCatcher, dialogHandler);
         selectedGroupId = new ArrayList<UniqueIdentifier>();
         graphPanelSize = new GraphPanelSize();
         this.setLayout(new BorderLayout());
         boolean eventsEnabled = true;
         boolean selectableText = false;
-        svgCanvas = new JSVGCanvas(new GraphUserAgent(this), eventsEnabled, selectableText);
+        svgCanvas = new JSVGCanvas(new GraphUserAgent(this, dialogHandler, bugCatcher, dataNodeLoader), eventsEnabled, selectableText);
 //        svgCanvas.setMySize(new Dimension(600, 400));
         svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
 //        drawNodes();
@@ -95,13 +108,13 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        svgCanvas.setEnableResetTransformInteractor(true);
 //        svgCanvas.setDoubleBufferedRendering(true); // todo: look into reducing the noticable aliasing on the canvas
 
-        mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this);
+        mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this, sessionStorage, dialogHandler, entityCollection, bugCatcher);
         svgCanvas.addMouseListener(mouseListenerSvg);
         svgCanvas.addMouseMotionListener(mouseListenerSvg);
         jSVGScrollPane = new JSVGScrollPane(svgCanvas);
 //        svgCanvas.setBackground(Color.LIGHT_GRAY);
         this.add(BorderLayout.CENTER, jSVGScrollPane);
-        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this));
+        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, entityCollection, arbilWindowManager, dataNodeLoader, sessionStorage, bugCatcher));
     }
 
 //    private void zoomDrawing() {
@@ -153,7 +166,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //                return null;
 //            }
         } catch (IOException ioe) {
-            GuiHelper.linorgBugCatcher.logError(ioe);
+            bugCatcher.logError(ioe);
         }
 //        svgCanvas.setSVGDocument(doc);
         return; // dataStoreSvg.graphData.getDataNodes();
@@ -227,7 +240,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             svgCanvas.setSVGDocument(doc);
             dataStoreSvg.graphData = new GraphSorter();
         } catch (IOException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            bugCatcher.logError(exception);
         }
     }
 
@@ -391,7 +404,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void resetLayout() {
-        entitySvg = new EntitySvg();
+        entitySvg = new EntitySvg(dialogHandler, bugCatcher);
         dataStoreSvg.graphData.setEntitys(dataStoreSvg.graphData.getDataNodes());
         dataStoreSvg.graphData.placeAllNodes(entitySvg.entityPositions);
         drawNodes();
