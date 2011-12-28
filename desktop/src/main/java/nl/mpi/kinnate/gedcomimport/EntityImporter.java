@@ -18,9 +18,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : EntityImporter
@@ -39,13 +39,15 @@ public class EntityImporter implements GenericImporter {
     protected HashMap<String, HashSet<UniqueIdentifier>> createdNodeIds;
     HashMap<String, EntityDocument> createdDocuments = new HashMap<String, EntityDocument>();
 //    private MetadataBuilder metadataBuilder;
+    private SessionStorage sessionStorage;
 
-    public EntityImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal) {
+    public EntityImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
         overwriteExisting = overwriteExistingLocal;
         importTextArea = importTextAreaLocal;
         progressBar = progressBarLocal;
 //        metadataBuilder = new MetadataBuilder();
         createdNodeIds = new HashMap<String, HashSet<UniqueIdentifier>>();
+        this.sessionStorage = sessionStorage;
     }
 
     public HashMap<String, HashSet<UniqueIdentifier>> getCreatedNodeIds() {
@@ -97,7 +99,7 @@ public class EntityImporter implements GenericImporter {
     }
 
     protected File getDestinationDirectory() {
-        File destinationDirectory = new File(KinSessionStorage.getSingleInstance().getCacheDirectory(), inputFileMd5Sum);
+        File destinationDirectory = new File(sessionStorage.getCacheDirectory(), inputFileMd5Sum);
         if (!destinationDirectory.exists()) {
             destinationDirectory.mkdir();
         }
@@ -135,6 +137,7 @@ public class EntityImporter implements GenericImporter {
         int savedCount = 0;
         for (EntityDocument currentDocument : createdDocuments.values()) {
             // todo: add progress for this
+//            if (overwriteExisting || !currentDocument.getFile().exists()) { // at this point the file has already been overwritten so there is no point holding back on saving here
             try {
                 currentDocument.saveDocument();
                 savedCount++;
@@ -143,6 +146,7 @@ public class EntityImporter implements GenericImporter {
                 new ArbilBugCatcher().logError(exception);
                 appendToTaskOutput("Error saving file: " + exception.getMessage());
             }
+//            }
 //                appendToTaskOutput(importTextArea, "saved: " + currentDocument.getFilePath());
         }
     }
