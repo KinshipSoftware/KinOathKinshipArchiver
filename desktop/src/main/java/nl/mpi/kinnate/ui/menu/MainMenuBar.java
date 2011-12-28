@@ -1,6 +1,9 @@
 package nl.mpi.kinnate.ui.menu;
 
 import javax.swing.JMenuBar;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -10,14 +13,14 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class MainMenuBar extends JMenuBar {
 
-    public MainMenuBar(AbstractDiagramManager abstractDiagramManager) {
-        this.add(new FileMenu(abstractDiagramManager));
+    public MainMenuBar(AbstractDiagramManager abstractDiagramManager, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+        this.add(new FileMenu(abstractDiagramManager, sessionStorage, dialogHandler, bugCatcher));
         this.add(new EditMenu(abstractDiagramManager));
         this.add(new DiagramOptionsMenu(abstractDiagramManager));
         this.add(new KinTermsMenu(abstractDiagramManager));
         this.add(new ArchiveMenu(abstractDiagramManager));
         this.add(new DiagramPanelsMenu(abstractDiagramManager));
         this.add(new WindowMenu(abstractDiagramManager));
-        this.add(new HelpMenu(abstractDiagramManager));
+        this.add(new HelpMenu(abstractDiagramManager, bugCatcher, dialogHandler, sessionStorage));
     }
 }
