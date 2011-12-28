@@ -17,6 +17,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.export.EntityUploader;
 
 /**
@@ -41,8 +44,8 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
     private JPanel workspacePanel;
     private JPanel passwordPanel;
 
-    public EntityUploadPanel() {
-        entityUploader = new EntityUploader();
+    public EntityUploadPanel(SessionStorage sessionStorage, BugCatcher bugCatcher, EntityCollection entityCollection) {
+        entityUploader = new EntityUploader(sessionStorage, bugCatcher, entityCollection);
 //        uploadList = new JList();
         uploadText = new JTextArea();
         searchNewButton = new JButton("Search New Entities");
