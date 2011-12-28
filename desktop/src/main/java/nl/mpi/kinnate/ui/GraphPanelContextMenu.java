@@ -10,8 +10,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindocument.RelationLinker;
 import nl.mpi.kinnate.kindocument.EntityDocument;
@@ -47,10 +48,12 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private UniqueIdentifier[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
     private float xPos;
     private float yPos;
+    private ArbilDataNodeLoader dataNodeLoader;
 
-    public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal) {
+    public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, final EntityCollection entityCollection, final ArbilWindowManager arbilWindowManager, ArbilDataNodeLoader dataNodeLoaderL, final SessionStorage sessionStorage, final BugCatcher bugCatcher) {
         kinDiagramPanel = egoSelectionPanelLocal;
         graphPanel = graphPanelLocal;
+        this.dataNodeLoader = dataNodeLoaderL;
         if (egoSelectionPanelLocal != null) {
             addEntityMenuItem = new JMenuItem("Add Entity");
             addEntityMenuItem.setActionCommand(EntityDocument.defaultEntityType);
@@ -60,14 +63,14 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                     // node type will be used to determine the schema used from the diagram options
                     String nodeType = evt.getActionCommand();
                     try {
-                        EntityDocument entityDocument = new EntityDocument(nodeType, new ImportTranslator(true));
+                        EntityDocument entityDocument = new EntityDocument(nodeType, new ImportTranslator(true), sessionStorage);
                         entityDocument.saveDocument();
                         URI addedEntityUri = entityDocument.getFile().toURI();
-                        new EntityCollection().updateDatabase(addedEntityUri);
+                        entityCollection.updateDatabase(addedEntityUri);
                         kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
                     } catch (ImportException exception) {
                         new ArbilBugCatcher().logError(exception);
-                        ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create entity: " + exception.getMessage(), "Add Entity");
+                        arbilWindowManager.addMessageDialogToQueue("Failed to create entity: " + exception.getMessage(), "Add Entity");
                     }
                 }
             });
@@ -78,11 +81,11 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     try {
-                        final UniqueIdentifier[] duplicateEntities = new EntityMerger().duplicateEntities(selectedIdentifiers);
+                        final UniqueIdentifier[] duplicateEntities = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).duplicateEntities(selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                         kinDiagramPanel.addRequiredNodes(duplicateEntities);
                     } catch (ImportException exception) {
-                        ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to duplicate: " + exception.getMessage(), duplicateEntitiesMenu.getText());
+                        arbilWindowManager.addMessageDialogToQueue("Failed to duplicate: " + exception.getMessage(), duplicateEntitiesMenu.getText());
                     }
                 }
             });
@@ -93,10 +96,10 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     try {
-                        UniqueIdentifier[] affectedIdentifiers = new EntityMerger().mergeEntities(selectedIdentifiers);
+                        UniqueIdentifier[] affectedIdentifiers = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).mergeEntities(selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
                     } catch (ImportException exception) {
-                        ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
+                        arbilWindowManager.addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
                     }
                 }
             });
@@ -111,10 +114,10 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         try {
-                            UniqueIdentifier[] affectedIdentifiers = new RelationLinker().linkEntities(selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()));
+                            UniqueIdentifier[] affectedIdentifiers = new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).linkEntities(selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()));
                             kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
                         } catch (ImportException exception) {
-                            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), addRelationEntityMenu.getText());
+                            arbilWindowManager.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), addRelationEntityMenu.getText());
                         }
                     }
                 });
@@ -131,7 +134,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             removeRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    new RelationLinker().unlinkEntities(graphPanel, selectedIdentifiers);
+                    new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).unlinkEntities(graphPanel, selectedIdentifiers);
                     kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                 }
             });
@@ -228,10 +231,10 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    ArbilWindowManager.getSingleInstance().stopEditingInCurrentWindow();
-                    ArbilDataNodeLoader.getSingleInstance().saveNodesNeedingSave(true);
+                    arbilWindowManager.stopEditingInCurrentWindow();
+                    dataNodeLoader.saveNodesNeedingSave(true);
                 } catch (Exception ex) {
-                    GuiHelper.linorgBugCatcher.logError(ex);
+                    bugCatcher.logError(ex);
                 }
             }
         });
@@ -280,7 +283,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             addAsRequiredMenuItem.setVisible(false);
             removeRequiredMenuItem.setVisible(false);
         }
-        saveFileMenuItem.setEnabled(ArbilDataNodeLoader.getSingleInstance().nodesNeedSave());
+        saveFileMenuItem.setEnabled(dataNodeLoader.nodesNeedSave());
 
         // enable/disable the menus based on the diagram type
         addEntityMenuItem.setEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
