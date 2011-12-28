@@ -6,8 +6,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -17,10 +17,14 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class SamplesFileMenu extends JMenu implements ActionListener {
 
-    AbstractDiagramManager diagramWindowManager;
+    private AbstractDiagramManager diagramWindowManager;
+    private MessageDialogHandler dialogHandler;
+    private BugCatcher bugCatcher;
 
-    public SamplesFileMenu(AbstractDiagramManager diagramWindowManager) {
+    public SamplesFileMenu(AbstractDiagramManager diagramWindowManager, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
         this.diagramWindowManager = diagramWindowManager;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
         addSampleToMenu("Freeform Diagram Syntax", "FreeformDiagramSyntax.svg");
         addSampleToMenu("Query Diagram Syntax", "QueryDiagramSyntax.svg");
         addSampleToMenu("Application Overview", "ApplicationOverview.svg");
@@ -56,8 +60,8 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
                 diagramWindowManager.openDiagram(sampleName, sampleFile, false);
             }
         } catch (URISyntaxException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
+            bugCatcher.logError(exception);
+            dialogHandler.addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
         }
     }
 //    private void addLaunchSampleToMenu(String menuText, String sampleFileString) {
