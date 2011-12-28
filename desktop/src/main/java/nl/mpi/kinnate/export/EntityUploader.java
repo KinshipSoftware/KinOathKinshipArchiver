@@ -17,9 +17,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
-import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : EntityUpload
@@ -28,10 +28,19 @@ import nl.mpi.kinnate.userstorage.KinSessionStorage;
  */
 public class EntityUploader {
 
+    private SessionStorage sessionStorage;
+    private BugCatcher bugCatcher;
     private EntityCollection.SearchResults searchResults = null;
     private File[] modifiedFiles = null;
 //    private boolean uploadComplete = false;
     URI workspaceUri = null;
+    private EntityCollection entityCollection;
+
+    public EntityUploader(SessionStorage sessionStorage, BugCatcher bugCatcher, EntityCollection entityCollection) {
+        this.sessionStorage = sessionStorage;
+        this.bugCatcher = bugCatcher;
+        this.entityCollection = entityCollection;
+    }
 
     public boolean canUpload() {
         return (searchResults != null && searchResults.resultCount > 0) || (modifiedFiles != null && modifiedFiles.length > 0);
@@ -69,7 +78,7 @@ public class EntityUploader {
             @Override
             public void run() {
                 // search the database
-                EntityCollection entityCollection = new EntityCollection();
+//                EntityCollection entityCollection = new EntityCollection(sessionStorage, dialogHandler);
                 searchResults = entityCollection.searchForLocalEntites();
                 actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
             }
@@ -84,7 +93,7 @@ public class EntityUploader {
                 // search file system
                 ModifiedFileSearch modifiedFileSearch = new ModifiedFileSearch();
                 modifiedFileSearch.setSearchType(ModifiedFileSearch.SearchType.kmdi); // todo: change this to kmdi when implemented
-                modifiedFiles = modifiedFileSearch.getModifiedFiles(KinSessionStorage.getSingleInstance().getCacheDirectory()).toArray(new File[]{});
+                modifiedFiles = modifiedFileSearch.getModifiedFiles(sessionStorage.getCacheDirectory()).toArray(new File[]{});
                 actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
             }
         }.start();
@@ -94,7 +103,7 @@ public class EntityUploader {
         try {
             return new URI("http://localhost:8080/kinoath-rest/kinoath/kinspace/" + workspaceName + "/create");
         } catch (URISyntaxException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            bugCatcher.logError(exception);
         }
         return null;
     }
@@ -122,7 +131,7 @@ public class EntityUploader {
                             try {
                                 uploadFile(serverRestUrl, outputArea, new File(new URI(resultLine)));
                             } catch (URISyntaxException exception) {
-                                GuiHelper.linorgBugCatcher.logError(exception);
+                                bugCatcher.logError(exception);
                                 outputArea.append(exception.getMessage() + "\n");
                             }
                             uploadProgress.setValue(uploadProgress.getValue() + 1);
@@ -139,15 +148,15 @@ public class EntityUploader {
                     modifiedFiles = null;
                     actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
                 } catch (MalformedURLException exception) {
-                    GuiHelper.linorgBugCatcher.logError(exception);
+                    bugCatcher.logError(exception);
                     outputArea.append(exception.getMessage() + "\n");
                     actionListener.actionPerformed(new ActionEvent(this, 0, "uploadaborted"));
                 } catch (URISyntaxException exception) {
-                    GuiHelper.linorgBugCatcher.logError(exception);
+                    bugCatcher.logError(exception);
                     outputArea.append(exception.getMessage() + "\n");
                     actionListener.actionPerformed(new ActionEvent(this, 0, "uploadaborted"));
                 } catch (ExportException exception) {
-//                    GuiHelper.linorgBugCatcher.logError(exception);
+//                    bugCatcher.logError(exception);
                     outputArea.append(exception.getMessage() + "\n");
                     actionListener.actionPerformed(new ActionEvent(this, 0, "uploadaborted"));
                 }
