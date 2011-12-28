@@ -26,9 +26,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
@@ -55,8 +55,12 @@ public class KinTermPanel extends JPanel {
 //    JTextField addPropositusKinType;
 //    JTextField addAnchorKinType;
     KinTermTableModel kinTermTableModel;
+    private MessageDialogHandler dialogHandler;
+    private BugCatcher bugCatcher;
 
-    public KinTermPanel(SavePanel savePanelLocal, KinTermGroup kinTermsLocal) {
+    public KinTermPanel(SavePanel savePanelLocal, KinTermGroup kinTermsLocal, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
         kinTerms = kinTermsLocal;
         savePanel = savePanelLocal;
 //        defaultKinType = defaultKinTypeLocal;
@@ -104,7 +108,7 @@ public class KinTermPanel extends JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (savePanel.getGraphPanel().dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
                     showOnGraphCheckBox.setSelected(false);
-                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("At this stage Kin Terms can only be shown on freeform diagrams.", "Kin Terms");
+                    KinTermPanel.this.dialogHandler.addMessageDialogToQueue("At this stage Kin Terms can only be shown on freeform diagrams.", "Kin Terms");
                 } else {
                     kinTerms.graphShow = showOnGraphCheckBox.isSelected();
                     savePanel.updateGraph();
@@ -119,7 +123,7 @@ public class KinTermPanel extends JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (savePanel.getGraphPanel().dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
                     autoGenerateCheckBox.setSelected(false);
-                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Entities can only be generated on freeform diagrams.", "Kin Terms");
+                    KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Entities can only be generated on freeform diagrams.", "Kin Terms");
                 } else {
                     kinTerms.graphGenerate = autoGenerateCheckBox.isSelected();
                     savePanel.updateGraph();
@@ -355,7 +359,7 @@ public class KinTermPanel extends JPanel {
         try {
             initialColour = Color.decode(kinTerms.graphColour);
         } catch (NumberFormatException exception) {
-            GuiHelper.linorgBugCatcher.logError(exception);
+            bugCatcher.logError(exception);
             kinTerms.graphColour = "#0000FF";
             initialColour = Color.blue;
             savePanel.setRequiresSave();
@@ -433,12 +437,12 @@ public class KinTermPanel extends JPanel {
     }
 
     public void exportKinTerms() {
-        File[] exportFile = ArbilWindowManager.getSingleInstance().showFileSelectBox("Export Kin Terms", false, false, false);
+        File[] exportFile = KinTermPanel.this.dialogHandler.showFileSelectBox("Export Kin Terms", false, false, false);
         if (exportFile.length != 1) {
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Export file not selected", "Export Kin Terms");
+            KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Export file not selected", "Export Kin Terms");
         } else {
             if (exportFile[0].exists()) {
-                if (!ArbilWindowManager.getSingleInstance().showConfirmDialogBox("Export file already exists, overwrite?", "Export Kin Terms")) {
+                if (!KinTermPanel.this.dialogHandler.showConfirmDialogBox("Export file already exists, overwrite?", "Export Kin Terms")) {
                     return;
                 }
             }
@@ -454,9 +458,9 @@ public class KinTermPanel extends JPanel {
     }
 
     public void importKinTerms() {
-        File[] importFiles = ArbilWindowManager.getSingleInstance().showFileSelectBox("Import Kin Terms", false, true, false);
+        File[] importFiles = KinTermPanel.this.dialogHandler.showFileSelectBox("Import Kin Terms", false, true, false);
         if (importFiles.length == 0) {
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("No files selected for import", "Import Kin Terms");
+            KinTermPanel.this.dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kin Terms");
         }
         for (File currentFile : importFiles) {
             int importCount = 0;
@@ -483,7 +487,7 @@ public class KinTermPanel extends JPanel {
                 new ArbilBugCatcher().logError(exception);
             }
             // todo: resolve why this dialogue does not show
-            ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
+            KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
         }
     }
 }
