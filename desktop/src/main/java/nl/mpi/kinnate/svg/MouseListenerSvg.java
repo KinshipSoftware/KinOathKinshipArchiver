@@ -12,8 +12,10 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
-import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -42,16 +44,24 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     private boolean mouseActionIsPopupTrigger = false;
     private boolean mouseActionIsDrag = false;
     private UniqueIdentifier entityToToggle = null;
-    HashMap<UniqueIdentifier, SvgElementEditor> shownGraphicsEditors;
+    private HashMap<UniqueIdentifier, SvgElementEditor> shownGraphicsEditors;
+    private MessageDialogHandler dialogHandler;
+    private BugCatcher bugCatcher;
+    private SessionStorage sessionStorage;
+    private EntityCollection entityCollection;
 
     public enum ActionCode {
 
         selectAll, selectRelated, expandSelection, deselectAll
     }
 
-    public MouseListenerSvg(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanelLocal) {
+    public MouseListenerSvg(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection, BugCatcher bugCatcher) {
         this.kinDiagramPanel = kinDiagramPanel;
-        graphPanel = graphPanelLocal;
+        this.graphPanel = graphPanel;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+        this.sessionStorage = sessionStorage;
+        this.entityCollection = entityCollection;
         shownGraphicsEditors = new HashMap<UniqueIdentifier, SvgElementEditor>();
     }
 
@@ -110,10 +120,10 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 try {
                     // if a relation has been set by this drag action then it is created here.
                     final RelationType relationType = DataTypes.getOpposingRelationType(graphPanel.svgUpdateHandler.relationDragHandle.relationType);
-                    UniqueIdentifier[] changedIdentifiers = new RelationLinker().linkEntities(graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType);
+                    UniqueIdentifier[] changedIdentifiers = new RelationLinker(sessionStorage, dialogHandler, entityCollection).linkEntities(graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType);
                     kinDiagramPanel.entityRelationsChanged(changedIdentifiers);
                 } catch (ImportException exception) {
-                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
+                    dialogHandler.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
                 }
             }
             graphPanel.svgUpdateHandler.relationDragHandle = null;
@@ -193,8 +203,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 }
                 updateSelectionDisplay();
             } catch (IdentifierException exception) {
-                GuiHelper.linorgBugCatcher.logError(exception);
-                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to read selection identifier, selection might not be correct", "Selection Highlight");
+                bugCatcher.logError(exception);
+                dialogHandler.addMessageDialogToQueue("Failed to read selection identifier, selection might not be correct", "Selection Highlight");
             }
         }
     }
@@ -212,7 +222,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 if (currentSelectedId.isGraphicsIdentifier()) {
                     if (!shownGraphicsEditors.containsKey(currentSelectedId)) {
                         Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());
-                        SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement);
+                        SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement, bugCatcher);
                         graphPanel.metadataPanel.addTab("Graphics Editor", elementEditor);
 //                            graphPanel.editorHidePane.setSelectedComponent(elementEditor);
                         shownGraphicsEditors.put(currentSelectedId, elementEditor);
