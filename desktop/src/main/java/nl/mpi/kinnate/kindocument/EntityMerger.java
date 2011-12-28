@@ -2,7 +2,10 @@ package nl.mpi.kinnate.kindocument;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -13,6 +16,10 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  *  Author     : Peter Withers
  */
 public class EntityMerger extends DocumentLoader {
+
+    public EntityMerger(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection) {
+        super(sessionStorage, dialogHandler, entityCollection);
+    }
 
     public UniqueIdentifier[] mergeEntities(UniqueIdentifier[] selectedIdentifiers) throws ImportException {
         ArrayList<EntityDocument> nonLeadEntityDocuments = new ArrayList<EntityDocument>();
@@ -46,7 +53,7 @@ public class EntityMerger extends DocumentLoader {
             getEntityDocuments(selectedIdentifiers, entityDocumentList);
             for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
                 EntityDocument masterDocument = entityMap.get(uniqueIdentifier);
-                EntityDocument duplicateEntityDocument = new EntityDocument(masterDocument, new ImportTranslator(true));
+                EntityDocument duplicateEntityDocument = new EntityDocument(masterDocument, new ImportTranslator(true), sessionStorage);
                 addedIdentifiers.add(duplicateEntityDocument.getUniqueIdentifier());
                 for (EntityRelation entityRelation : masterDocument.entityData.getDistinctRelateNodes()) {
                     EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
