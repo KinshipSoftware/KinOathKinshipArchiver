@@ -2,7 +2,10 @@ package nl.mpi.kinnate.kindocument;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -15,6 +18,10 @@ import org.w3c.dom.Document;
  *  Author     : Peter Withers
  */
 public class RelationLinker extends DocumentLoader {
+
+    public RelationLinker(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection) {
+        super(sessionStorage, dialogHandler, entityCollection);
+    }
 
     private void removeMatchingRelations(Document entityDocument, UniqueIdentifier[] selectedIdentifiers) {
         // todo: complete the relation removal code
