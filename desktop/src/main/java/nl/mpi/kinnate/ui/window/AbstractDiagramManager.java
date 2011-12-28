@@ -11,10 +11,15 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.ArbilIcons;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
 import nl.mpi.kinnate.ui.EntityUploadPanel;
 import nl.mpi.kinnate.ui.GedcomImportPanel;
@@ -31,9 +36,21 @@ public abstract class AbstractDiagramManager {
 
     private EntityUploadPanel entityUploadPanel;
     private ApplicationVersionManager versionManager;
+    private ArbilWindowManager dialogHandler;
+    private SessionStorage sessionStorage;
+    private BugCatcher bugCatcher;
+    private ArbilDataNodeLoader dataNodeLoader;
+    private ArbilTreeHelper treeHelper;
+    private EntityCollection entityCollection;
 
-    public AbstractDiagramManager(ApplicationVersionManager versionManager) {
+    public AbstractDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
         this.versionManager = versionManager;
+        this.dialogHandler = dialogHandler;
+        this.sessionStorage = sessionStorage;
+        this.bugCatcher = bugCatcher;
+        this.dataNodeLoader = dataNodeLoader;
+        this.treeHelper = treeHelper;
+        this.entityCollection = entityCollection;
     }
 
     abstract public void createApplicationWindow();
@@ -46,7 +63,7 @@ public abstract class AbstractDiagramManager {
             diagramFame = new JFrame();
         }
         setWindowTitle(diagramFame, diagramTitle);
-        diagramFame.setJMenuBar(new MainMenuBar(this));
+        diagramFame.setJMenuBar(new MainMenuBar(this, sessionStorage, dialogHandler, bugCatcher));
         if (diagramComponent != null) {
             diagramFame.setContentPane((Container) diagramComponent);
 //        } else {
@@ -90,16 +107,16 @@ public abstract class AbstractDiagramManager {
 
     public void newDiagram() {
         URI defaultDiagramUri = null;
-        if (KinDiagramPanel.getDefaultDiagramFile().exists()) {
-            defaultDiagramUri = KinDiagramPanel.getDefaultDiagramFile().toURI();
+        if (KinDiagramPanel.getDefaultDiagramFile(sessionStorage).exists()) {
+            defaultDiagramUri = KinDiagramPanel.getDefaultDiagramFile(sessionStorage).toURI();
         }
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
         createDiagramContainer("Unsaved Default Diagram", egoSelectionTestPanel);
         egoSelectionTestPanel.loadAllTrees();
     }
 
     public void newDiagram(DocumentNewMenu.DocumentType documentType) {
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
         createDiagramContainer("Unsaved " + documentType.getDisplayName(), egoSelectionTestPanel);
         egoSelectionTestPanel.loadAllTrees();
     }
@@ -107,9 +124,9 @@ public abstract class AbstractDiagramManager {
     public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu) {
         if (saveToRecentMenu) {
             // prevent files from the samples menu being added to the recent files menu
-            RecentFileMenu.addRecentFile(new File(selectedUri));
+            RecentFileMenu.addRecentFile(sessionStorage, bugCatcher, new File(selectedUri));
         }
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         createDiagramContainer(diagramTitle, egoSelectionTestPanel);
         egoSelectionTestPanel.loadAllTrees();
@@ -125,15 +142,15 @@ public abstract class AbstractDiagramManager {
     }
 
     public void openImportPanel(File importFile) {
-        new GedcomImportPanel(this).startImport(importFile);
+        new GedcomImportPanel(this, entityCollection, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper).startImport(importFile);
     }
 
     public void openImportPanel(String importUrlString) {
-        new GedcomImportPanel(this).startImport(importUrlString);
+        new GedcomImportPanel(this, entityCollection, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper).startImport(importUrlString);
     }
 
     public void openJarImportPanel(String importUrlString) {
-        new GedcomImportPanel(this).startImportJar(importUrlString);
+        new GedcomImportPanel(this, entityCollection, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper).startImportJar(importUrlString);
     }
 
     public abstract void setSelectedDiagram(Component diagramComponent);
@@ -142,7 +159,7 @@ public abstract class AbstractDiagramManager {
 
     public void openEntityUploadPanel() {
         if (entityUploadPanel == null) {
-            entityUploadPanel = new EntityUploadPanel();
+            entityUploadPanel = new EntityUploadPanel(sessionStorage, bugCatcher, entityCollection);
             createDiagramContainer("Entity Upload", entityUploadPanel);
         }
         setSelectedDiagram(entityUploadPanel);
@@ -210,7 +227,7 @@ public abstract class AbstractDiagramManager {
     public boolean offerUserToSave(SavePanel savePanel, String diagramName) {
         if (savePanel.requiresSave()) {
             // warn user to save
-            switch (ArbilWindowManager.getSingleInstance().showDialogBox("There are unsaved changes in: \"" + diagramName + "\"\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
+            switch (dialogHandler.showDialogBox("There are unsaved changes in: \"" + diagramName + "\"\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
                 case JOptionPane.YES_OPTION:
                     if (savePanel.hasSaveFileName()) {
                         savePanel.saveToFile();
@@ -255,7 +272,7 @@ public abstract class AbstractDiagramManager {
                 svgFile = new File(svgFile.getParentFile(), svgFile.getName() + ".svg");
             }
             savePanel.saveToFile(svgFile);
-            RecentFileMenu.addRecentFile(svgFile);
+            RecentFileMenu.addRecentFile(sessionStorage, bugCatcher, svgFile);
             return svgFile.getName();
         } else {
             // user canceled so there is no file selected and nothing to save
