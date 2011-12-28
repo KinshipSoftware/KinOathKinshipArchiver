@@ -3,7 +3,7 @@ package nl.mpi.kinnate.svg;
 import java.awt.Point;
 import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
-import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
@@ -19,6 +19,12 @@ import org.w3c.dom.svg.SVGDocument;
  *  Author     : Peter Withers
  */
 public class RelationSvg {
+
+    private MessageDialogHandler dialogHandler;
+
+    public RelationSvg(MessageDialogHandler dialogHandler) {
+        this.dialogHandler = dialogHandler;
+    }
 
     private void addUseNode(SVGDocument doc, String svgNameSpace, Element targetGroup, String targetDefId) {
         String useNodeId = targetDefId + "use";
@@ -87,7 +93,7 @@ public class RelationSvg {
 //                alterY = tempY;
             case descendant:
                 if (!oldFormatWarningShown) {
-                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("This diagram needs to be updated, select recalculate diagram from the edit menu before continuing.", "Old or erroneous format detected");
+                    dialogHandler.addMessageDialogToQueue("This diagram needs to be updated, select recalculate diagram from the edit menu before continuing.", "Old or erroneous format detected");
                     oldFormatWarningShown = true;
                 }
 //                targetNode.getParentNode().getParentNode().getParentNode().getParentNode().removeChild(targetNode.getParentNode().getParentNode().getParentNode());
@@ -437,7 +443,7 @@ public class RelationSvg {
                     }
                 } catch (IdentifierException exception) {
 //                    GuiHelper.linorgBugCatcher.logError(exception);
-                    ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to read related entities, sanguine lines might be incorrect", "Update Sanguine Lines");
+                    dialogHandler.addMessageDialogToQueue("Failed to read related entities, sanguine lines might be incorrect", "Update Sanguine Lines");
                 }
             }
         }
