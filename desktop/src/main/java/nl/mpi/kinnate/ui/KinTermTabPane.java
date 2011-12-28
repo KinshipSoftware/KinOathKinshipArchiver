@@ -27,7 +27,7 @@ public class KinTermTabPane extends JPanel {
 //        this.add(kintermMenuBar, BorderLayout.PAGE_START);
         this.add(kinTermTabbedPane, BorderLayout.CENTER);
         for (KinTermGroup kinTerms : kinTermsArray) {
-            kinTermTabbedPane.add(kinTerms.titleString, new KinTermPanel(savePanelLocal, kinTerms));
+//            kinTermTabbedPane.add(kinTerms.titleString, new KinTermPanel(savePanelLocal, kinTerms));
         }
     }
 
@@ -36,7 +36,7 @@ public class KinTermTabPane extends JPanel {
         int lastTabCount = kinTermTabbedPane.getTabCount();
         kinTermTabbedPane.removeAll();
         for (KinTermGroup kinTerms : kinTermsArray) {
-            kinTermTabbedPane.add(kinTerms.titleString, new KinTermPanel(savePanel, kinTerms));
+//            kinTermTabbedPane.add(kinTerms.titleString, new KinTermPanel(savePanel, kinTerms));
         }
         if (lastTabCount != kinTermTabbedPane.getTabCount()) {
             kinTermTabbedPane.setSelectedIndex(kinTermTabbedPane.getTabCount() - 1);
