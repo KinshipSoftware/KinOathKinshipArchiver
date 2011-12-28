@@ -20,7 +20,7 @@ public class DocumentLoader {
 
     protected SessionStorage sessionStorage;
     private MessageDialogHandler dialogHandler;
-    private HashMap<UniqueIdentifier, EntityDocument> entityMap = new HashMap<UniqueIdentifier, EntityDocument>();
+    protected HashMap<UniqueIdentifier, EntityDocument> entityMap = new HashMap<UniqueIdentifier, EntityDocument>();
     private EntityCollection entityCollection;
 
     public DocumentLoader(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection) {
