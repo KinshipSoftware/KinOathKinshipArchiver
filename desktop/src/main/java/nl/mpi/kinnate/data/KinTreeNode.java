@@ -7,6 +7,8 @@ import javax.swing.ImageIcon;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -25,20 +27,34 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     private IndexerParameters indexerParameters;
     DataTypes.RelationType subnodeFilter;
     ArbilNode[] childNodes = null;
-    static SymbolGraphic symbolGraphic = new SymbolGraphic();
+    static private SymbolGraphic symbolGraphic;
+    private EntityCollection entityCollection;
+    private MessageDialogHandler dialogHandler;
+    private BugCatcher bugCatcher;
+    private ArbilDataNodeLoader dataNodeLoader;
 
-    public KinTreeNode(EntityData entityData, IndexerParameters indexerParameters) {
+    public KinTreeNode(EntityData entityData, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, BugCatcher bugCatcher, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         super();
         this.indexerParameters = indexerParameters;
         this.entityData = entityData;
         this.subnodeFilter = null;
+        this.entityCollection = entityCollection;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+        this.dataNodeLoader = dataNodeLoader;
+        symbolGraphic = new SymbolGraphic(dialogHandler, bugCatcher);
     }
 
-    public KinTreeNode(EntityData entityData, DataTypes.RelationType subnodeFilter, IndexerParameters indexerParameters) {
+    public KinTreeNode(EntityData entityData, DataTypes.RelationType subnodeFilter, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, BugCatcher bugCatcher, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         super();
         this.indexerParameters = indexerParameters;
         this.entityData = entityData;
         this.subnodeFilter = subnodeFilter; // subnode filter should be null unless the child nodes are to be filtered
+        this.entityCollection = entityCollection;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+        this.dataNodeLoader = dataNodeLoader;
+        symbolGraphic = new SymbolGraphic(dialogHandler, bugCatcher);
     }
 
     @Override
@@ -83,15 +99,15 @@ public class KinTreeNode extends ArbilNode implements Comparable {
                     EntityData alterEntity = entityRelation.getAlterNode();
                     if (alterEntity == null) {
                         // todo: should these enties be cached? or will the entire tree be discarded on redraw?
-                        alterEntity = new EntityCollection().getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
+                        alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
                         entityRelation.setAlterNode(alterEntity);
                     }
-                    relationList.add(new KinTreeNode(alterEntity, entityRelation.relationType, indexerParameters));
+                    relationList.add(new KinTreeNode(alterEntity, entityRelation.relationType, indexerParameters, dialogHandler, bugCatcher, entityCollection, dataNodeLoader));
                 }
             }
             if (entityData.archiveLinkArray != null) {
                 for (URI archiveLink : entityData.archiveLinkArray) {
-                    ArbilDataNode linkedArbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, archiveLink);
+                    ArbilDataNode linkedArbilDataNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
                     relationList.add(linkedArbilDataNode);
                 }
             }
