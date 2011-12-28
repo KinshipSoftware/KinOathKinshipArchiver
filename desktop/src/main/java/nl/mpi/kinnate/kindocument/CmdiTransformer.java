@@ -1,6 +1,5 @@
 package nl.mpi.kinnate.kindocument;
 
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +15,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.event.SaxonOutputKeys;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
@@ -29,11 +29,16 @@ public class CmdiTransformer {
     private URL component2SchemaXsl = this.getClass().getResource("/xsd/comp2schema.xsl"); // "http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema.xsl";
     private URL component2SchemaXslHeader = this.getClass().getResource("/xsd/comp2schema-header.xsl");
     private URL component2SchemaXslCleanup = this.getClass().getResource("/xsd/cleanup-xsd.xsl");
+    private SessionStorage sessionStorage;
+
+    public CmdiTransformer(SessionStorage sessionStorage) {
+        this.sessionStorage = sessionStorage;
+    }
 
     public URI getXsdUrlString(String entityType) throws KinXsdException {
 //        String profileId = "clarin.eu:cr1:p_1320657629627";
         String profileId = "clarin.eu:cr1:p_1320657629627";
-        File xsdFile = new File(KinSessionStorage.getSingleInstance().getCacheDirectory(), entityType + "-" + profileId + ".xsd");
+        File xsdFile = new File(sessionStorage.getCacheDirectory(), entityType + "-" + profileId + ".xsd");
         try {
             if (!xsdFile.exists()) {
                 transformProfileXmlToXsd(xsdFile, profileId);
@@ -57,9 +62,9 @@ public class CmdiTransformer {
 //        System.out.println(KinSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/cleanup-xsd.xsl", 1));
 
         // todo: it might be nicer to put these files into a specific directory or into a temp directory
-        File xlsFile = KinSessionStorage.getSingleInstance().updateCache(component2SchemaXsl.toExternalForm(), 1, false);
-        System.out.println(KinSessionStorage.getSingleInstance().updateCache(component2SchemaXslHeader.toExternalForm(), 1, false));
-        System.out.println(KinSessionStorage.getSingleInstance().updateCache(component2SchemaXslCleanup.toExternalForm(), 1, false));
+        File xlsFile = sessionStorage.updateCache(component2SchemaXsl.toExternalForm(), 1, false);
+        System.out.println(sessionStorage.updateCache(component2SchemaXslHeader.toExternalForm(), 1, false));
+        System.out.println(sessionStorage.updateCache(component2SchemaXslCleanup.toExternalForm(), 1, false));
         generateXsd(xlsFile, cmdiProfileXmlUrl, outputFile);
         return outputFile;
     }
@@ -91,8 +96,9 @@ public class CmdiTransformer {
     static public void main(String[] args) {
         try {
             String profileId = "clarin.eu:cr1:p_1320657629627";
-            File xsdFile = new File(KinSessionStorage.getSingleInstance().getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
-            new CmdiTransformer().transformProfileXmlToXsd(xsdFile, profileId);
+            final KinSessionStorage kinSessionStorage = new KinSessionStorage();
+            File xsdFile = new File(kinSessionStorage.getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
+            new CmdiTransformer(kinSessionStorage).transformProfileXmlToXsd(xsdFile, profileId);
         } catch (IOException exception) {
             System.out.println("exception: " + exception.getMessage());
         } catch (TransformerException exception) {
