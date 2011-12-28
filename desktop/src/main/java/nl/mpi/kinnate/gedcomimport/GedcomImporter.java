@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
-import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.kindata.DataTypes.RelationLineType;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
@@ -26,8 +26,8 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class GedcomImporter extends EntityImporter implements GenericImporter {
 
-    public GedcomImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal) {
-        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal);
+    public GedcomImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
+        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage);
     }
 
     @Override
@@ -343,7 +343,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             if (gedcomLevelStrings.get(gedcomLevelStrings.size() - 1).equals("FILE")) {
                                 // todo: check if the FILE value can contain a path or just the file name and handle the path correctly if required
                                 // todo: copy the file or not according to user options
-                                if (lineParts[2].toLowerCase().startsWith("mailto:")) {                                    
+                                if (lineParts[2].toLowerCase().startsWith("mailto:")) {
                                     currentEntity.insertValue("mailto", lineParts[2]); // todo: check that this is not already inserted
                                 } else {
                                     currentEntity.entityData.addArchiveLink(inputFileUri.resolve(lineParts[2]));
@@ -506,7 +506,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //            gedcomImdiObject.loadImdiDom();
 //            gedcomImdiObject.clearChildIcons();
 //            gedcomImdiObject.clearIcon();
-            ArbilDataNodeLoader.getSingleInstance().saveNodesNeedingSave(true);
+//            dataNodeLoader.saveNodesNeedingSave(true);
         } catch (IOException exception) {
             new ArbilBugCatcher().logError(exception);
             appendToTaskOutput("Error: " + exception.getMessage());
