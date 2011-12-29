@@ -3,7 +3,9 @@ package nl.mpi.kinnate.ui.menu;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.export.ExportToR;
@@ -41,9 +43,16 @@ public class FileMenu extends javax.swing.JMenu {
     private javax.swing.JMenuItem saveDiagram;
     private javax.swing.JMenuItem saveDiagramAs;
     private javax.swing.JMenuItem savePdfMenuItem;
-    AbstractDiagramManager diagramWindowManager;
+    private AbstractDiagramManager diagramWindowManager;
+    private SessionStorage sessionStorage;
+    private MessageDialogHandler dialogHandler; //ArbilWindowManager
+    private BugCatcher bugCatcher;
 
-    public FileMenu(AbstractDiagramManager diagramWindowManager) {
+    public FileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+        this.diagramWindowManager = diagramWindowManager;
+        this.sessionStorage = sessionStorage;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
         this.diagramWindowManager = diagramWindowManager;
         importGedcomUrl = new javax.swing.JMenuItem();
         importGedcomFile = new javax.swing.JMenuItem();
@@ -52,8 +61,8 @@ public class FileMenu extends javax.swing.JMenu {
         newDiagramMenuItem = new javax.swing.JMenuItem();
         jMenu3 = new DocumentNewMenu(diagramWindowManager);
         openDiagram = new javax.swing.JMenuItem();
-        recentFileMenu = new RecentFileMenu(diagramWindowManager);
-        jMenu1 = new SamplesFileMenu(diagramWindowManager);
+        recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage, bugCatcher);
+        jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler, bugCatcher);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         entityUploadMenuItem = new javax.swing.JMenuItem();
@@ -241,7 +250,7 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {
-        final File[] selectedFilesArray = ArbilWindowManager.getSingleInstance().showFileSelectBox("Open Kin Diagram", false, true, false);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Kin Diagram", false, true, false);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 diagramWindowManager.openDiagram(selectedFile.getName(), selectedFile.toURI(), true);
@@ -286,7 +295,7 @@ public class FileMenu extends javax.swing.JMenu {
             int tabIndex = Integer.valueOf(evt.getActionCommand());
             SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
             savePanel.saveToFile(svgFile);
-            recentFileMenu.addRecentFile(svgFile);
+            RecentFileMenu.addRecentFile(sessionStorage, bugCatcher, svgFile);
             diagramWindowManager.setDiagramTitle(tabIndex, svgFile.getName());
         } else {
             // todo: warn user that no file selected and so cannot save
@@ -408,7 +417,7 @@ public class FileMenu extends javax.swing.JMenu {
     private void savePdfMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         // todo: implement pdf export
-        // todo: add a file select here
+        // todo: add a file select here...
         new DiagramTranscoder().saveAsPdf(diagramWindowManager.getCurrentSavePanel());
         new DiagramTranscoder().saveAsJpg(diagramWindowManager.getCurrentSavePanel());
     }
@@ -420,7 +429,7 @@ public class FileMenu extends javax.swing.JMenu {
 //        KinTermSavePanel kinTermSavePanel = null;
         SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel();
         if (currentSavePanel instanceof KinTermSavePanel) {
-            new ExportToR().doExport(this, (KinTermSavePanel) currentSavePanel);
+            new ExportToR(sessionStorage, dialogHandler, bugCatcher).doExport(this, (KinTermSavePanel) currentSavePanel);
         }
     }
 
@@ -431,6 +440,6 @@ public class FileMenu extends javax.swing.JMenu {
     private void saveAsDefaultMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         int tabIndex = Integer.valueOf(evt.getActionCommand());
         SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
-        savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile());
+        savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile(sessionStorage));
     }
 }
