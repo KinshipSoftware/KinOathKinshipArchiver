@@ -50,6 +50,7 @@ public class EntityDocument {
 
     public EntityDocument(String entityType, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
+        this.sessionStorage = sessionStorage;
         assignIdentiferAndFile();
         try {
             // construct the metadata file
@@ -64,6 +65,7 @@ public class EntityDocument {
 
     public EntityDocument(EntityDocument entityDocumentToCopy, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
+        this.sessionStorage = sessionStorage;
         assignIdentiferAndFile();
         try {
             // load the document that needs to be copied so that it can be saved into the new location
@@ -83,8 +85,9 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(File destinationDirectory, String nameString, String entityType, ImportTranslator importTranslator) throws ImportException {
+    public EntityDocument(File destinationDirectory, String nameString, String entityType, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
+        this.sessionStorage = sessionStorage;
         String idString;
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
         if (nameString != null) {
@@ -107,8 +110,9 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(URI entityUri, ImportTranslator importTranslator) throws ImportException {
+    public EntityDocument(URI entityUri, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
+        this.sessionStorage = sessionStorage;
         entityFile = new File(entityUri);
         setDomNodesFromExistingFile();
     }
@@ -240,7 +244,7 @@ public class EntityDocument {
             }
             currentNode = currentNode.getNextSibling();
         }
-        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ translationElement.fieldName);
+        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ translationElement.fieldName); // todo/ ulr encode / and other chars
         valueElement.setTextContent(translationElement.fieldValue);
         metadataNode.appendChild(valueElement);
     }
