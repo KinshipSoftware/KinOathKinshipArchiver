@@ -12,11 +12,15 @@ import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeContainer;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
@@ -37,7 +41,6 @@ import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
-import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -61,19 +64,35 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private HashMap<ArbilDataNode, UniqueIdentifier> registeredArbilDataNode;
     private HashMap<ArbilNode, Boolean> arbilDataNodesChangedStatus;
 //    private ArrayList<ArbilTree> treeLoadQueue = new ArrayList<ArbilTree>();
+    private SessionStorage sessionStorage;
+    private ArbilWindowManager dialogHandler;
+    private BugCatcher bugCatcher;
+    private ArbilDataNodeLoader dataNodeLoader;
+    private ArbilTreeHelper treeHelper;
 
-    public KinDiagramPanel(URI existingFile, boolean savableType) {
+    public KinDiagramPanel(URI existingFile, boolean savableType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
+        this.sessionStorage = sessionStorage;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+        this.dataNodeLoader = dataNodeLoader;
+        this.treeHelper = treeHelper;
+        this.entityCollection = entityCollection;
         initKinDiagramPanel(existingFile, null, savableType);
     }
 
-    public KinDiagramPanel(DocumentType documentType) {
+    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
+        this.sessionStorage = sessionStorage;
+        this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
+        this.dataNodeLoader = dataNodeLoader;
+        this.treeHelper = treeHelper;
+        this.entityCollection = entityCollection;
         initKinDiagramPanel(null, documentType, false);
     }
 
     private void initKinDiagramPanel(URI existingFile, DocumentType documentType, boolean savableType) {
-        entityCollection = new EntityCollection();
         progressBar = new JProgressBar();
-        graphPanel = new GraphPanel(this);
+        graphPanel = new GraphPanel(this, dialogHandler, bugCatcher, sessionStorage, entityCollection, dataNodeLoader);
         kinTypeStringInput = new KinTypeStringInput(graphPanel.dataStoreSvg);
 
         boolean showKinTerms = false;
@@ -157,7 +176,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         registeredArbilDataNode = new HashMap<ArbilDataNode, UniqueIdentifier>();
         arbilDataNodesChangedStatus = new HashMap<ArbilNode, Boolean>();
-        egoSelectionPanel = new EgoSelectionPanel(this, graphPanel);
+        egoSelectionPanel = new EgoSelectionPanel(this, graphPanel, dialogHandler, bugCatcher, entityCollection, dataNodeLoader);
 //        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
 
 //        kinTypeStringInput.setText(defaultString);
@@ -168,11 +187,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 150);
 
-        KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler(this);
+        KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler(this, sessionStorage, entityCollection);
         graphPanel.setTransferHandler(dragTransferHandler);
         egoSelectionPanel.setTransferHandler(dragTransferHandler);
 
-        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, this, graphPanel);
+        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, this, graphPanel, dialogHandler, bugCatcher, dataNodeLoader);
         entitySearchPanel.setTransferHandler(dragTransferHandler);
 
         HidePane egoSelectionHidePane = new HidePane(HidePane.HidePanePosition.left, 0);
@@ -180,7 +199,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
 
         TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
-        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, tableHidePane, tableCellDragHandler));
+        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, tableHidePane, tableCellDragHandler, dataNodeLoader, bugCatcher));
 
         if (graphPanel.dataStoreSvg.getVisiblePanels() == null) {
             // in some older files and non kinoath files these values would not be set, so we make sure that they are here
@@ -198,9 +217,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 switch (panelSetting.getPanelType()) {
                     case ArchiveLinker:
                         panelSetting.setHidePane(kinTermHidePane, "Archive Linker");
-                        archiveEntityLinkerPanelRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree);
-                        archiveEntityLinkerPanelLocal = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree);
-                        archiveEntityLinkerPanelMpiRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree);
+                        archiveEntityLinkerPanelRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree, treeHelper, dataNodeLoader, bugCatcher);
+                        archiveEntityLinkerPanelLocal = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree, treeHelper, dataNodeLoader, bugCatcher);
+                        archiveEntityLinkerPanelMpiRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree, treeHelper, dataNodeLoader, bugCatcher);
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelRemote, false);
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelLocal, false);
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelMpiRemote, false);
@@ -229,7 +248,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     case KinTerms:
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
                         for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
-                            panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms), false); //  + kinTerms.titleString
+                            panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, dialogHandler, bugCatcher), false); //  + kinTerms.titleString
                         }
                         break;
                     case KinTypeStrings:
@@ -256,7 +275,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         this.add(kinGraphPanel);
 
-        entityIndex = new QueryParser(graphPanel.dataStoreSvg.graphData.getDataNodes());
+        entityIndex = new QueryParser(graphPanel.dataStoreSvg.graphData.getDataNodes(), entityCollection);
         kinTypeStringInput.addKeyListener(new KeyListener() {
 
             public void keyTyped(KeyEvent e) {
@@ -273,9 +292,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         });
     }
 
-    static public File getDefaultDiagramFile() {
+    static public File getDefaultDiagramFile(SessionStorage sessionStorage) {
         if (defaultDiagramTemplate == null) {
-            defaultDiagramTemplate = new File(KinSessionStorage.getSingleInstance().getStorageDirectory(), "DefaultKinDiagram.svg");
+            defaultDiagramTemplate = new File(sessionStorage.getStorageDirectory(), "DefaultKinDiagram.svg");
         }
         return defaultDiagramTemplate;
     }
@@ -342,8 +361,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 kinTypeStringInput.highlightKinTypeStrings(parserHighlight, kinTypeStrings);
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
                             } catch (EntityServiceException exception) {
-                                GuiHelper.linorgBugCatcher.logError(exception);
-                                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load all entities required", "Draw Graph");
+                                bugCatcher.logError(exception);
+                                dialogHandler.addMessageDialogToQueue("Failed to load all entities required", "Draw Graph");
                             }
                         } catch (ProcessAbortException exception) {
                             // if the process has been aborted then it should be safe to let the next thread loop take over from here
@@ -400,13 +419,19 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void loadAllTrees() {
-        egoSelectionPanel.setTreeNodes(graphPanel); // init the trees in the side panel
-        archiveEntityLinkerPanelRemote.loadTreeNodes();
-        archiveEntityLinkerPanelLocal.loadTreeNodes();
-        archiveEntityLinkerPanelMpiRemote.loadTreeNodes();
+        // todo: is this invoke later really required and does it even stop the tree loading error for which it was intended?
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                egoSelectionPanel.setTreeNodes(graphPanel); // init the trees in the side panel
+                archiveEntityLinkerPanelRemote.loadTreeNodes();
+                archiveEntityLinkerPanelLocal.loadTreeNodes();
+                archiveEntityLinkerPanelMpiRemote.loadTreeNodes();
 //        while (!treeLoadQueue.isEmpty()) {
 //            treeLoadQueue.remove(0).requestResort();
 //        }
+            }
+        });
     }
 
     public boolean hasSaveFileName() {
@@ -466,7 +491,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         final KinTermGroup kinTermGroup = graphPanel.addKinTermGroup();
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
             if (panelSetting.getPanelType() == PanelType.KinTerms) {
-                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup), true);
+                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup, dialogHandler, bugCatcher), true);
             }
         }
     }
