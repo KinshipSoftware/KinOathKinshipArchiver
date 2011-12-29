@@ -244,7 +244,7 @@ public class EntityDocument {
             }
             currentNode = currentNode.getNextSibling();
         }
-        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ translationElement.fieldName); // todo/ ulr encode / and other chars
+        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ translationElement.fieldName);
         valueElement.setTextContent(translationElement.fieldValue);
         metadataNode.appendChild(valueElement);
     }
