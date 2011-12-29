@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.mpi.kinnate.kindocument;
 
 import java.util.HashMap;
@@ -22,7 +18,7 @@ public class ImportTranslator {
         String fieldValue;
 
         public TranslationElement(String fieldName, String fieldValue) {
-            this.fieldName = fieldName.replaceAll("\\s", "_");
+            this.fieldName = fieldName.replaceAll("[^a-zA-Z0-9]+", "_");
             this.fieldValue = fieldValue;
         }
 
