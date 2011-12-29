@@ -12,7 +12,7 @@ import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilTree;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
 
@@ -34,11 +34,15 @@ public class MetadataPanel extends JPanel {
     private ArrayList<ArbilDataNode> archiveRootNodes = new ArrayList<ArbilDataNode>();
     private ArrayList<SvgElementEditor> elementEditors = new ArrayList<SvgElementEditor>();
     //private DateEditorPanel dateEditorPanel;
+    private ArbilDataNodeLoader dataNodeLoader;
+    private BugCatcher bugCatcher;
 
-    public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler) {
+    public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, BugCatcher bugCatcher) {
         this.arbilTree = new ArbilTree();
         this.kinTableModel = new ArbilTableModel();
         this.archiveTableModel = new ArbilTableModel();
+        this.dataNodeLoader = dataNodeLoader;
+        this.bugCatcher = bugCatcher;
         //dateEditorPanel = new DateEditorPanel();
         ArbilTable kinTable = new ArbilTable(kinTableModel, "Selected Nodes");
         ArbilTable archiveTable = new ArbilTable(archiveTableModel, "Selected Nodes");
@@ -66,7 +70,7 @@ public class MetadataPanel extends JPanel {
         for (ArbilDataNode arbilDataNode : metadataNodes) {
             if (arbilDataNode.getParentDomNode().getNeedsSaveToDisk(false)) {
                 // reloading will first check if a save is required then save and reload
-                ArbilDataNodeLoader.getSingleInstance().requestReload((ArbilDataNode) arbilDataNode.getParentDomNode());
+                dataNodeLoader.requestReload((ArbilDataNode) arbilDataNode.getParentDomNode());
             }
         }
         metadataNodes.clear();
@@ -82,7 +86,7 @@ public class MetadataPanel extends JPanel {
         String entityPath = entityData.getEntityPath();
         if (entityPath != null && entityPath.length() > 0) {
             try {
-                ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityPath));
+                ArbilDataNode arbilDataNode = dataNodeLoader.getArbilDataNode(null, new URI(entityPath));
                 // register this node with the graph panel
                 kinDiagramPanel.registerArbilNode(entityData.getUniqueIdentifier(), arbilDataNode);
                 kinTableModel.addSingleArbilDataNode(arbilDataNode);
@@ -90,7 +94,7 @@ public class MetadataPanel extends JPanel {
                 // add the corpus links to the other table
                 if (entityData.archiveLinkArray != null) {
                     for (URI archiveLink : entityData.archiveLinkArray) {
-                        ArbilDataNode archiveLinkNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, archiveLink);
+                        ArbilDataNode archiveLinkNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
                         // todo: we do not register this node with the graph panel because it is not rendered on the graph, but if the name of the node changes then it should be updated in the tree which is not yet handled
                         archiveTableModel.addSingleArbilDataNode(archiveLinkNode);
                         archiveTreeNodes.add(archiveLinkNode);
@@ -99,7 +103,7 @@ public class MetadataPanel extends JPanel {
                     }
                 }
             } catch (URISyntaxException urise) {
-                GuiHelper.linorgBugCatcher.logError(urise);
+                bugCatcher.logError(urise);
             }
         }
     }
@@ -112,7 +116,6 @@ public class MetadataPanel extends JPanel {
 //            editorHidePane.addTab("Date Editor", dateEditorPanel);
 //        }
 //    }
-
     public void addTab(String labelString, SvgElementEditor elementEditor) {
         editorHidePane.addTab(labelString, elementEditor);
         elementEditors.add(elementEditor);
