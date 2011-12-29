@@ -66,7 +66,13 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                         int valueCount = 0;
                         for (String entityLineString : inputLine.split(",")) {
                             String cleanValue = cleanCsvString(entityLineString);
-                            String headingString = allHeadings.get(valueCount);
+                            String headingString;
+                            if (allHeadings.size() > valueCount) {
+                                headingString = allHeadings.get(valueCount);
+                            } else {
+                                headingString = "-unnamed-field-";
+                                appendToTaskOutput("Warning " + headingString + " for value: " + entityLineString);
+                            }
                             if (currentEntity == null) {
                                 currentEntity = getEntityDocument(createdNodes, "Entity", cleanValue, importTranslator);
                             } else if (cleanValue.length() > 0) {
