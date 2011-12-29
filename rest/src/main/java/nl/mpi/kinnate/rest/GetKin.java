@@ -29,7 +29,7 @@ public class GetKin {
 //    private EntityStorageBean entityStorage;
 //    @Path("/kintypes/{kintypeStrings: [a-zA-Z0-9]}")
     private EntityData[] getEntityNodes(List<String> kintypeStrings) {
-        KinTypeStringConverter graphData = new KinTypeStringConverter();
+        KinTypeStringConverter graphData = new KinTypeStringConverter(new DataStoreSvg());
         HashSet<String> kinTypeAllStrings = new HashSet<String>();
         // loop each and split any pipe chars | into lines
         for (String currentKinType : kintypeStrings) {
