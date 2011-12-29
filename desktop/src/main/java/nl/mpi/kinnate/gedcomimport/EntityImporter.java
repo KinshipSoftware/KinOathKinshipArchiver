@@ -111,7 +111,7 @@ public class EntityImporter implements GenericImporter {
         EntityDocument currentEntity = createdDocuments.get(idString);
         if (currentEntity == null) {
             // create a new entity file
-            currentEntity = new EntityDocument(getDestinationDirectory(), idString, typeString, importTranslator);
+            currentEntity = new EntityDocument(getDestinationDirectory(), idString, typeString, importTranslator, sessionStorage);
 //            appendToTaskOutput("created: " + currentEntity.getFilePath());
             createdNodes.add(currentEntity.getFile().toURI());
             createdDocuments.put(idString, currentEntity);
