@@ -254,7 +254,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     private boolean attachMetadata() {
         System.out.println("importMetadata");
         try {
-            EntityDocument entityDocument = new EntityDocument(new URI(targetEntity.getEntityPath()), new ImportTranslator(true));
+            EntityDocument entityDocument = new EntityDocument(new URI(targetEntity.getEntityPath()), new ImportTranslator(true), sessionStorage);
             attachMetadata(entityDocument.entityData);
             entityDocument.saveDocument();
             URI addedEntityUri = entityDocument.getFile().toURI();
