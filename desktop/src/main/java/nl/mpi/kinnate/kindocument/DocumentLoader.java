@@ -30,7 +30,7 @@ public class DocumentLoader {
     }
 
     protected EntityDocument getEntityDocument(UniqueIdentifier selectedIdentifier) throws ImportException, URISyntaxException {
-        EntityDocument entityDocument = new EntityDocument(new URI(new EntityCollection(sessionStorage, dialogHandler).getEntityPath(selectedIdentifier)), new ImportTranslator(true));
+        EntityDocument entityDocument = new EntityDocument(new URI(new EntityCollection(sessionStorage, dialogHandler).getEntityPath(selectedIdentifier)), new ImportTranslator(true), sessionStorage);
 //        System.out.println("Loaded 1: " + entityDocument.entityData.getUniqueIdentifier().getAttributeIdentifier());
         entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
         for (EntityRelation entityRelation : entityDocument.entityData.getDistinctRelateNodes()) {
@@ -38,7 +38,7 @@ public class DocumentLoader {
             if (relatedDocument == null) {
                 // get the path from the database
                 final URI entityUri = new URI(new EntityCollection(sessionStorage, dialogHandler).getEntityPath(entityRelation.alterUniqueIdentifier));
-                relatedDocument = new EntityDocument(entityUri, new ImportTranslator(true));
+                relatedDocument = new EntityDocument(entityUri, new ImportTranslator(true), sessionStorage);
 //                System.out.println("Loaded 2: " + entityRelation.alterUniqueIdentifier.getAttributeIdentifier());
                 entityMap.put(entityRelation.alterUniqueIdentifier, relatedDocument);
             }
