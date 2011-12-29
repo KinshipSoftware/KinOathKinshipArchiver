@@ -8,14 +8,15 @@ import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.xml.transform.TransformerException;
-import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindocument.CmdiTransformer;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
-import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
  *  Document   : HelpMenu
@@ -24,17 +25,17 @@ import nl.mpi.kinnate.userstorage.KinSessionStorage;
  */
 public class HelpMenu extends JMenu {
 
-    public HelpMenu(AbstractDiagramManager diagramWindowManager) {
+    public HelpMenu(AbstractDiagramManager diagramWindowManager, final BugCatcher bugCatcher, final MessageDialogHandler dialogHandler, final SessionStorage sessionStorage) {
         this.setText("Help");
         JMenuItem aboutMenuItem = new JMenuItem("About");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    // todo:
+                    // todo:...
 //                    aboutMenuItemActionPerformed(evt);
                 } catch (Exception ex) {
-                    GuiHelper.linorgBugCatcher.logError(ex);
+                    bugCatcher.logError(ex);
                 }
             }
         });
@@ -45,10 +46,10 @@ public class HelpMenu extends JMenu {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    // todo: 
+                    // todo: ...
 //                    helpMenuItemActionPerformed(evt);
                 } catch (Exception ex) {
-                    GuiHelper.linorgBugCatcher.logError(ex);
+                    bugCatcher.logError(ex);
                 }
             }
         });
@@ -60,7 +61,7 @@ public class HelpMenu extends JMenu {
                 try {
                     GuiHelper.getSingleInstance().openFileInExternalApplication(new URI("http://www.lat-mpi.eu/tools/kinoath/kinoath-forum/"));
                 } catch (Exception ex) {
-                    GuiHelper.linorgBugCatcher.logError(ex);
+                    bugCatcher.logError(ex);
                 }
             }
         });
@@ -72,7 +73,7 @@ public class HelpMenu extends JMenu {
                 try {
                     GuiHelper.getSingleInstance().openFileInExternalApplication(new ArbilBugCatcher().getLogFile().toURI());
                 } catch (Exception ex) {
-                    GuiHelper.linorgBugCatcher.logError(ex);
+                    bugCatcher.logError(ex);
                 }
             }
         });
@@ -85,22 +86,23 @@ public class HelpMenu extends JMenu {
                     if (!versionManager.forceUpdateCheck()) {
                         ApplicationVersion appVersion = versionManager.getApplicationVersion();
                         String versionString = appVersion.currentMajor + "." + appVersion.currentMinor + "." + appVersion.currentRevision;
-                        ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("No updates found, current version is " + versionString, "Check for Updates");
+                        dialogHandler.addMessageDialogToQueue("No updates found, current version is " + versionString, "Check for Updates");
                     }
                 } catch (Exception ex) {
-                    GuiHelper.linorgBugCatcher.logError(ex);
+                    bugCatcher.logError(ex);
                 }
             }
         });
 
         JMenuItem updateKmdiProfileMenuItem = new JMenuItem("Check Component Registry Updates (this will be moved to a panel)");
         updateKmdiProfileMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            // todo: move this to a panel with more options
+            // todo: move this to a panel with more options...
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     String profileId = "clarin.eu:cr1:p_1320657629627";
-                    File xsdFile = new File(KinSessionStorage.getSingleInstance().getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
-                    new CmdiTransformer().transformProfileXmlToXsd(xsdFile, profileId);
+                    File xsdFile = new File(sessionStorage.getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
+                    new CmdiTransformer(sessionStorage).transformProfileXmlToXsd(xsdFile, profileId);
                 } catch (IOException exception) {
                     System.out.println("exception: " + exception.getMessage());
                 } catch (TransformerException exception) {
@@ -119,7 +121,7 @@ public class HelpMenu extends JMenu {
             }
 
             public void menuSelected(MenuEvent evt) {
-                viewErrorLogMenuItem.setEnabled(new ArbilBugCatcher().getLogFile().exists());
+                viewErrorLogMenuItem.setEnabled(ArbilBugCatcher.getLogFile().exists());
             }
         });
     }
