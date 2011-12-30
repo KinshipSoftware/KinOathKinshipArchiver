@@ -366,12 +366,15 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private File showFileSelect() {
-        final JFileChooser fc = new JFileChooser();
+        final String importStorageName = "nl.mpi.kinoath.import";
+        String lastFilePath = sessionStorage.loadString(importStorageName);
+        final JFileChooser fc = new JFileChooser(lastFilePath);
         File selectedFile = null;
         int returnVal = fc.showOpenDialog(FileMenu.this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             selectedFile = fc.getSelectedFile();
+            sessionStorage.saveString(importStorageName, selectedFile.getAbsolutePath());
         }
         return selectedFile;
     }
@@ -417,7 +420,7 @@ public class FileMenu extends javax.swing.JMenu {
     private void savePdfMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         // todo: implement pdf export
-        // todo: add a file select here...
+        // todo: add a file select here.
         new DiagramTranscoder().saveAsPdf(diagramWindowManager.getCurrentSavePanel());
         new DiagramTranscoder().saveAsJpg(diagramWindowManager.getCurrentSavePanel());
     }
