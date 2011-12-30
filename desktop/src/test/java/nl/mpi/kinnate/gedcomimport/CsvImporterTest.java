@@ -26,7 +26,7 @@ public class CsvImporterTest extends TestCase {
         runFieldsForLine("one,two,three\r", new String[]{"one", "two", "three"});
         runFieldsForLine("one,\"two\",three\r", new String[]{"one", "two", "three"});
         runFieldsForLine("one,\"two\",three\r", new String[]{"one", "two", "three"});
-        runFieldsForLine("one,\"two\nextra\",three\r", new String[]{"one", "two\nextre", "three"});
+        runFieldsForLine("one,\"two\nextra\",three\r", new String[]{"one", "two\nextra", "three"});
     }
 
     private void runFieldsForLine(String csvInputString, String[] expectedResult) {
