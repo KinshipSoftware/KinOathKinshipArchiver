@@ -71,7 +71,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 //        }
 //        return fieldSeparator;
 //    }
-    private ArrayList<String> getFieldsForLine(BufferedReader bufferedReader /*, char fieldSeparator*/) throws IOException {
+    protected ArrayList<String> getFieldsForLine(BufferedReader bufferedReader /*, char fieldSeparator*/) throws IOException {
         ArrayList<String> lineFields = new ArrayList<String>();
         StringBuilder stringBuilder = new StringBuilder();
         try {
@@ -81,6 +81,9 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                     case -1:
                     case '\n':
                     case '\r':
+                        if (stringBuilder.length() > 0) {
+                            lineFields.add(stringBuilder.toString());
+                        }
                         return lineFields;
                     case '"':
                         boolean insideQuotes = true;
@@ -94,6 +97,10 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                             }
                             quotedCharsCount++;
                             insideQuotes = readQuoted != '"';
+                            if (insideQuotes) {
+                                // add the chars from within the quotes
+                                stringBuilder.append((char) readQuoted);
+                            }
                         }
                         if (quotedCharsCount < 1) {
                             // todo: test that escaped quotes pass into the output correctly
@@ -119,6 +126,9 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         } catch (IOException exception) {
             appendToTaskOutput("Failed to read lines of input file");
             throw exception;
+        }
+        if (stringBuilder.length() > 0) {
+            lineFields.add(stringBuilder.toString());
         }
         return lineFields;
     }
