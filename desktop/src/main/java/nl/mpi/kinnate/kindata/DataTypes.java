@@ -26,4 +26,10 @@ public class DataTypes {
         }
         return relationType;
     }
+
+    public RelationTypeDefinition[] getReferenceRelations() {
+        return new RelationTypeDefinition[]{
+                    new RelationTypeDefinition("Ancestor", RelationType.ancestor, DataTypes.RelationLineType.sanguineLine, "#999999", 4, "")
+                };
+    }
 }
