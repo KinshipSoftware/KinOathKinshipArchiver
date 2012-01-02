@@ -41,6 +41,7 @@ import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
+import nl.mpi.kinnate.ui.relationsettings.RelationSettingsPanel;
 
 /**
  *  Document   : KinTypeStringTestPanel
@@ -244,6 +245,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         panelSetting.addTargetPanel(symbolFieldsPanel, false);
                         panelSetting.addTargetPanel(labelFieldsPanel, false);
                         panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg), false);
+                        panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg), false);
                         break;
                     case KinTerms:
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
