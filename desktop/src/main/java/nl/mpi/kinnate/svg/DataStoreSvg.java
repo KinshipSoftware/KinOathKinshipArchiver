@@ -13,6 +13,7 @@ import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
@@ -39,6 +40,9 @@ public class DataStoreSvg {
     public HashSet<UniqueIdentifier> egoEntities = new HashSet<UniqueIdentifier>();
     @XmlElement(name = "RequiredEntities", namespace = "http://mpi.nl/tla/kin")
     public HashSet<UniqueIdentifier> requiredEntities = new HashSet<UniqueIdentifier>();
+    @XmlElementWrapper(name = "RelationTypeDefinitions")
+    @XmlElement(name = "RelationType", namespace = "http://mpi.nl/tla/kin")
+    protected RelationTypeDefinition[] relationTypeDefinitions = null;
     @XmlElementWrapper(name = "KinTypeDefinitions")
     @XmlElement(name = "KinType", namespace = "http://mpi.nl/tla/kin")
     protected KinType[] kinTypeDefinitions = null;
@@ -103,6 +107,20 @@ public class DataStoreSvg {
         // todo: it might be better not to add any kin group until the user explicitly adds one from the menu
         kinTermGroups = new KinTermGroup[]{}; //new KinTermGroup(0), new KinTermGroup(1)};
         indexParameters = new IndexerParameters();
+    }
+
+    @XmlTransient
+    public RelationTypeDefinition[] getRelationTypeDefinitions() {
+        if (relationTypeDefinitions != null) {
+            return relationTypeDefinitions;
+        } else {
+            // make sure that we do not set RelationTypeDefinition unless the user has changed the default kin types, otherwise it will be stored in the svg
+            return new DataTypes().getReferenceRelations();
+        }
+    }
+
+    public void setRelationTypeDefinitions(RelationTypeDefinition[] relationTypeDefinitions) {
+        this.relationTypeDefinitions = relationTypeDefinitions;
     }
 
     @XmlTransient
