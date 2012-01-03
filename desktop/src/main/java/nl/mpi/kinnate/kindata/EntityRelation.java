@@ -20,8 +20,6 @@ public class EntityRelation implements Comparable<EntityRelation> {
     public UniqueIdentifier alterUniqueIdentifier = null;
     @XmlAttribute(name = "Type", namespace = "http://mpi.nl/tla/kin")
     public DataTypes.RelationType relationType;
-    @XmlAttribute(name = "Line", namespace = "http://mpi.nl/tla/kin")
-    public DataTypes.RelationLineType relationLineType;
     @XmlElement(name = "Label", namespace = "http://mpi.nl/tla/kin")
     public String labelString;
     public String lineColour = null;
@@ -46,7 +44,8 @@ public class EntityRelation implements Comparable<EntityRelation> {
     public int compareTo(EntityRelation o) {
         if (o.alterUniqueIdentifier.equals(alterUniqueIdentifier)
                 //                && o.generationalDistance == generationalDistance
-                && o.relationLineType.equals(relationLineType)
+//                && o.relationLineType.equals(relationLineType)
+                // todo: also compare the dcr and description string for the relation type
                 && o.relationType.equals(relationType)
                 && ((labelString == null && labelString == null) || o.labelString.equals(labelString))
                 && ((lineColour == null && lineColour == null) || o.lineColour.equals(lineColour))) {
