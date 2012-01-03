@@ -97,7 +97,6 @@ public class DataStoreSvg {
         public UniqueIdentifier egoNodeId;
         public UniqueIdentifier alterNodeId;
         public DataTypes.RelationType relationType;
-        public DataTypes.RelationLineType relationLineType;
     }
 
     public DataStoreSvg() {
@@ -158,16 +157,14 @@ public class DataStoreSvg {
                 graphRelationData.egoNodeId = new UniqueIdentifier(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "ego").getNodeValue());
                 graphRelationData.alterNodeId = new UniqueIdentifier(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "alter").getNodeValue());
                 graphRelationData.relationType = DataTypes.RelationType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "relationType").getNodeValue());
-                graphRelationData.relationLineType = DataTypes.RelationLineType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "lineType").getNodeValue());
                 return graphRelationData;
             }
         }
         return null;
     }
 
-    public void storeRelationParameters(SVGDocument doc, Element relationGroup, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, UniqueIdentifier egoEntity, UniqueIdentifier alterEntity) {
+    public void storeRelationParameters(SVGDocument doc, Element relationGroup, DataTypes.RelationType relationType, UniqueIdentifier egoEntity, UniqueIdentifier alterEntity) {
         Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:lineType", relationLineType.name());
         dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:relationType", relationType.name());
         dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:ego", egoEntity.getAttributeIdentifier());
         dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:alter", alterEntity.getAttributeIdentifier());
