@@ -1,7 +1,6 @@
 package nl.mpi.kinnate.kindata;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import nl.mpi.kinnate.kindata.DataTypes.RelationLineType;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 
 /**
@@ -15,8 +14,8 @@ public class RelationTypeDefinition {
     private String displayName;
     @XmlAttribute(name = "type", namespace = "http://mpi.nl/tla/kin")
     private RelationType relationType;
-    @XmlAttribute(name = "line", namespace = "http://mpi.nl/tla/kin")
-    private RelationLineType relationLineType;
+    @XmlAttribute(name = "dcr", namespace = "http://mpi.nl/tla/kin")
+    private String dataCategory;
     @XmlAttribute(name = "colour", namespace = "http://mpi.nl/tla/kin")
     private String lineColour;
     @XmlAttribute(name = "width", namespace = "http://mpi.nl/tla/kin")
@@ -27,10 +26,10 @@ public class RelationTypeDefinition {
     public RelationTypeDefinition() {
     }
 
-    public RelationTypeDefinition(String displayName, RelationType relationType, RelationLineType relationLineType, String lineColour, int lineWidth, String lineStye) {
+    public RelationTypeDefinition(String displayName, String dataCategory, RelationType relationType, String lineColour, int lineWidth, String lineStye) {
         this.displayName = displayName;
         this.relationType = relationType;
-        this.relationLineType = relationLineType;
+        this.dataCategory = dataCategory;
         this.lineColour = lineColour;
         this.lineWidth = lineWidth;
         this.lineStye = lineStye;
@@ -52,8 +51,8 @@ public class RelationTypeDefinition {
         return lineWidth;
     }
 
-    public RelationLineType getRelationLineType() {
-        return relationLineType;
+    public String getDataCategory() {
+        return dataCategory;
     }
 
     public RelationType getRelationType() {
