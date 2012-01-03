@@ -9,7 +9,6 @@ import javax.swing.JProgressBar;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
-import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinType;
@@ -172,8 +171,8 @@ public class EntityIndex implements EntityService {
 //                }
 //            }
             if (egoType != null && alterType != null) {
-                egoNode.addRelatedNode(alterNode, egoType, DataTypes.RelationLineType.sanguineLine, null, null);
-                alterNode.addRelatedNode(egoNode, alterType, DataTypes.RelationLineType.sanguineLine, null, null);
+                egoNode.addRelatedNode(alterNode, egoType, null, null);
+                alterNode.addRelatedNode(egoNode, alterType, null, null);
             }
         }
     }
