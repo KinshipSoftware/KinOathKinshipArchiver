@@ -64,7 +64,7 @@ public class RelationLinker extends DocumentLoader {
             for (UniqueIdentifier uniqueIdentifier : otherIdentifiers) {
                 EntityDocument entityDocument = getEntityDocument(uniqueIdentifier);
                 // add the new relation
-                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, null, null);
             }
             saveAllDocuments();
         } catch (URISyntaxException exception) {
@@ -80,7 +80,7 @@ public class RelationLinker extends DocumentLoader {
             EntityDocument leadEntityDocument = getEntityDocuments(selectedIdentifiers, nonLeadEntityDocuments);
             for (EntityDocument entityDocument : nonLeadEntityDocuments) {
                 // add the new relation
-                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, DataTypes.RelationLineType.sanguineLine, null, null);
+                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, null, null);
             }
             saveAllDocuments();
         } catch (URISyntaxException exception) {
