@@ -29,7 +29,7 @@ public class EntityMerger extends DocumentLoader {
                 for (EntityRelation entityRelation : alterEntity.entityData.getDistinctRelateNodes()) {
                     EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
                     // add the new relation
-                    leadEntityDocument.entityData.addRelatedNode(relatedDocument.entityData, entityRelation.relationType, entityRelation.relationLineType, entityRelation.lineColour, entityRelation.labelString);
+                    leadEntityDocument.entityData.addRelatedNode(relatedDocument.entityData, entityRelation.relationType, entityRelation.lineColour, entityRelation.labelString);
                     // remove the old entity relation
                     // todo: check that the correct relations are being removed from the correct entities.
                     relatedDocument.entityData.removeRelationsWithNode(alterEntity.entityData);
@@ -58,7 +58,7 @@ public class EntityMerger extends DocumentLoader {
                 for (EntityRelation entityRelation : masterDocument.entityData.getDistinctRelateNodes()) {
                     EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
                     // copy the relations
-                    duplicateEntityDocument.entityData.addRelatedNode(relatedDocument.entityData, entityRelation.relationType, entityRelation.relationLineType, entityRelation.lineColour, entityRelation.labelString);
+                    duplicateEntityDocument.entityData.addRelatedNode(relatedDocument.entityData, entityRelation.relationType, entityRelation.lineColour, entityRelation.labelString);
                 }
                 // todo: the date and any other metadata not in the metadata node will be missed by this step, it would be best to move or modify the dates location in the file
                 entityMap.put(duplicateEntityDocument.getUniqueIdentifier(), duplicateEntityDocument);
