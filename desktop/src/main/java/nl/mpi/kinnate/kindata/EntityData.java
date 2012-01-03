@@ -220,8 +220,8 @@ public class EntityData {
             // todo: Ticket #1062  there is an issue here when you add a child node to a parent that when you add a second child node the alter node is null "getAlterNode()", maybe it is time to put all the nodes into a hash or create some kind of loader (maybe mbased on the ArbilLoader). This would also beable to service the loading branches of the tree.
             if (entityRelation.relationType.equals(DataTypes.RelationType.descendant)) {
                 if (!entityRelation.getAlterNode().equals(this)) {
-                    entityRelation.getAlterNode().addRelatedNode(this, DataTypes.RelationType.sibling, DataTypes.RelationLineType.sanguineLine, null, null);
-                    this.addRelatedNode(entityRelation.getAlterNode(), DataTypes.RelationType.sibling, DataTypes.RelationLineType.sanguineLine, null, null);
+                    entityRelation.getAlterNode().addRelatedNode(this, DataTypes.RelationType.sibling, null, null);
+                    this.addRelatedNode(entityRelation.getAlterNode(), DataTypes.RelationType.sibling, null, null);
                 }
             }
         }
@@ -240,13 +240,12 @@ public class EntityData {
         distinctRelateNodes = null;
     }
 
-    public EntityRelation addRelatedNode(EntityData alterNodeLocal, /*int generationalDistance,*/ DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, String lineColourLocal, String labelString) {
+    public EntityRelation addRelatedNode(EntityData alterNodeLocal, /*int generationalDistance,*/ DataTypes.RelationType relationType, String lineColourLocal, String labelString) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         EntityRelation nodeRelation = new EntityRelation();
         nodeRelation.setAlterNode(alterNodeLocal);
 //        nodeRelation.generationalDistance = generationalDistance;
         nodeRelation.relationType = relationType;
-        nodeRelation.relationLineType = relationLineType;
         nodeRelation.labelString = labelString;
         nodeRelation.lineColour = lineColourLocal;
         if (relatedNodes != null) {
@@ -268,7 +267,7 @@ public class EntityData {
         // add this relation to any existing relations
         if (!relationType.equals(DataTypes.RelationType.none)) {
             DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(relationType);
-            alterNodeLocal.addRelatedNode(this, opposingRelationType, relationLineType, null, null);
+            alterNodeLocal.addRelatedNode(this, opposingRelationType, null, null);
             // if a parent relation is beig added then update the sibling relations of the other children of that parent
             if (relationType.equals(DataTypes.RelationType.ancestor)) {
                 this.insertSiblingRelations(alterNodeLocal);
