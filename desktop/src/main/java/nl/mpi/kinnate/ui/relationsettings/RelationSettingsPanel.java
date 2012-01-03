@@ -25,8 +25,8 @@ public class RelationSettingsPanel extends JPanel {
         JButton deleteButton = new JButton("Delete Selected");
         JTable kinTypeTable = new JTable(new RelationTypesTableModel(savePanel, dataStoreSvg, deleteButton));
 
-        TableColumn columnRelationType = kinTypeTable.getColumnModel().getColumn(1);
-        TableColumn columnLineType = kinTypeTable.getColumnModel().getColumn(2);
+        TableColumn columnRelationType = kinTypeTable.getColumnModel().getColumn(2);
+//        TableColumn columnLineType = kinTypeTable.getColumnModel().getColumn(2);
 
         JComboBox comboBoxRelationType = new JComboBox();
         for (DataTypes.RelationType relationType : DataTypes.RelationType.values()) {
@@ -34,11 +34,12 @@ public class RelationSettingsPanel extends JPanel {
         }
         columnRelationType.setCellEditor(new DefaultCellEditor(comboBoxRelationType));
 
-        JComboBox comboBoxLineType = new JComboBox();
-        for (DataTypes.RelationLineType relationLineType : DataTypes.RelationLineType.values()) {
-            comboBoxLineType.addItem(relationLineType);
-        }
-        columnLineType.setCellEditor(new DefaultCellEditor(comboBoxLineType));
+//        JComboBox comboBoxLineType = new JComboBox();
+//        for (DataTypes.RelationLineType relationLineType : DataTypes.RelationLineType.values()) {
+//            // todo: this is redundant and can be removed
+//            comboBoxLineType.addItem(relationLineType);
+//        }
+//        columnLineType.setCellEditor(new DefaultCellEditor(comboBoxLineType));
         this.add(new JScrollPane(kinTypeTable), BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel(new BorderLayout());
         buttonPanel.add(deleteButton, BorderLayout.PAGE_START);
