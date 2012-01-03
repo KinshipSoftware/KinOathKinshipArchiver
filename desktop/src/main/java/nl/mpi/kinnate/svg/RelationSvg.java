@@ -1,10 +1,10 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.Point;
-import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -118,8 +118,8 @@ public class RelationSvg {
                 centerX = (egoY < alterY) ? egoX : alterX;
                 centerX = (egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
-            case affiliation:
-            case none:
+//            case affiliation:
+//            case none:
             default:
                 egoYmid = egoY;
                 alterYmid = alterY;
@@ -168,7 +168,7 @@ public class RelationSvg {
         targetNode.setAttribute("points", stringBuilder.toString());
     }
 
-    protected void setPathPointsAttribute(Element targetNode, DataTypes.RelationType relationType, DataTypes.RelationLineType relationLineType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    protected void setPathPointsAttribute(Element targetNode, DataTypes.RelationType relationType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float fromBezX;
         float fromBezY;
         float toBezX;
@@ -182,7 +182,7 @@ public class RelationSvg {
             egoX = tempX;
             egoY = tempY;
         }
-        if (relationLineType == DataTypes.RelationLineType.verticalCurve) {
+        if (relationType == DataTypes.RelationType.verticalCurve) {
             fromBezX = egoX;
             fromBezY = alterY;
             toBezX = alterX;
@@ -265,7 +265,7 @@ public class RelationSvg {
 //        }
 //
 //    }
-    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, DataTypes.RelationLineType relationLineType, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
+    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
         float[] egoSymbolPoint;
         float[] alterSymbolPoint;
         float[] parentPoint;
@@ -279,7 +279,7 @@ public class RelationSvg {
         groupNode.setAttribute("id", "relation" + relationLineIndex);
         Element defsNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "defs");
         String lineIdString = "relation" + relationLineIndex + "Line";
-        new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, directedRelation, relationLineType, leftEntity.getUniqueIdentifier(), rightEntity.getUniqueIdentifier());
+        new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, directedRelation, leftEntity.getUniqueIdentifier(), rightEntity.getUniqueIdentifier());
         // set the line end points
 //        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(currentNode.getUniqueIdentifier());
 //        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
@@ -293,65 +293,66 @@ public class RelationSvg {
         float toY = (alterSymbolPoint[1]); // * vSpacing + vSpacing
 
         boolean addedRelationLine = false;
-        switch (relationLineType) {
-            case kinTermLine:
+        if (!DataTypes.isSanguinLine(directedRelation)) {
+//            case kinTermLine:
             // this case uses the following case
-            case verticalCurve:
-                // todo: groupNode.setAttribute("id", );
-                //                    System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
-                //
-                ////                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
-                //                    Element linkLine = doc.createElementNS(svgNS, "line");
-                //                    linkLine.setAttribute("x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
-                //                    linkLine.setAttribute("y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
-                //
-                //                    linkLine.setAttribute("x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
-                //                    linkLine.setAttribute("y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
-                //                    linkLine.setAttribute("stroke", "black");
-                //                    linkLine.setAttribute("stroke-width", "1");
-                //                    // Attach the rectangle to the root 'svg' element.
-                //                    svgRoot.appendChild(linkLine);
-                //System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
+//            case verticalCurve:
+            // todo: groupNode.setAttribute("id", );
+            //                    System.out.println("link: " + graphLinkNode.linkedNode.xPos + ":" + graphLinkNode.linkedNode.yPos);
+            //
+            ////                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
+            //                    Element linkLine = doc.createElementNS(svgNS, "line");
+            //                    linkLine.setAttribute("x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+            //                    linkLine.setAttribute("y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+            //
+            //                    linkLine.setAttribute("x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
+            //                    linkLine.setAttribute("y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
+            //                    linkLine.setAttribute("stroke", "black");
+            //                    linkLine.setAttribute("stroke-width", "1");
+            //                    // Attach the rectangle to the root 'svg' element.
+            //                    svgRoot.appendChild(linkLine);
+            //System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
 
-                //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
-                Element linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
+            //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
+            Element linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
 
-                setPathPointsAttribute(linkLine, directedRelation, relationLineType, hSpacing, vSpacing, fromX, fromY, toX, toY);
-                //                    linkLine.setAttribute("x1", );
-                //                    linkLine.setAttribute("y1", );
-                //
-                //                    linkLine.setAttribute("x2", );
-                linkLine.setAttribute("fill", "none");
-                if (lineColour != null) {
-                    linkLine.setAttribute("stroke", lineColour);
-                } else {
-                    linkLine.setAttribute("stroke", "blue");
-                }
-                linkLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
-                linkLine.setAttribute("id", lineIdString);
-                defsNode.appendChild(linkLine);
-                addedRelationLine = true;
-                break;
-            case sanguineLine:
-                //                            Element squareLinkLine = doc.createElement("line");
-                //                            squareLinkLine.setAttribute("x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
-                //                            squareLinkLine.setAttribute("y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
-                //
-                //                            squareLinkLine.setAttribute("x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
-                //                            squareLinkLine.setAttribute("y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
-                //                            squareLinkLine.setAttribute("stroke", "grey");
-                //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
-                Element squareLinkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+            setPathPointsAttribute(linkLine, directedRelation, hSpacing, vSpacing, fromX, fromY, toX, toY);
+            //                    linkLine.setAttribute("x1", );
+            //                    linkLine.setAttribute("y1", );
+            //
+            //                    linkLine.setAttribute("x2", );
+            linkLine.setAttribute("fill", "none");
+            if (lineColour != null) {
+                linkLine.setAttribute("stroke", lineColour);
+            } else {
+                linkLine.setAttribute("stroke", "blue");
+            }
+            linkLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+            linkLine.setAttribute("id", lineIdString);
+            defsNode.appendChild(linkLine);
+            addedRelationLine = true;
+//                break;
+        } else {
+//            case sanguineLine:
+            //                            Element squareLinkLine = doc.createElement("line");
+            //                            squareLinkLine.setAttribute("x1", Integer.toString(currentNode.xPos * hSpacing + hSpacing));
+            //                            squareLinkLine.setAttribute("y1", Integer.toString(currentNode.yPos * vSpacing + vSpacing));
+            //
+            //                            squareLinkLine.setAttribute("x2", Integer.toString(graphLinkNode.linkedNode.xPos * hSpacing + hSpacing));
+            //                            squareLinkLine.setAttribute("y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
+            //                            squareLinkLine.setAttribute("stroke", "grey");
+            //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            Element squareLinkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
 
-                setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineIdString, squareLinkLine, directedRelation, vSpacing, fromX, fromY, toX, toY, parentPoint);
+            setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineIdString, squareLinkLine, directedRelation, vSpacing, fromX, fromY, toX, toY, parentPoint);
 
-                squareLinkLine.setAttribute("fill", "none");
-                squareLinkLine.setAttribute("stroke", "grey");
-                squareLinkLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
-                squareLinkLine.setAttribute("id", lineIdString);
-                defsNode.appendChild(squareLinkLine);
-                addedRelationLine = true;
-                break;
+            squareLinkLine.setAttribute("fill", "none");
+            squareLinkLine.setAttribute("stroke", "grey");
+            squareLinkLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+            squareLinkLine.setAttribute("id", lineIdString);
+            defsNode.appendChild(squareLinkLine);
+            addedRelationLine = true;
+//                break;
         }
         groupNode.appendChild(defsNode);
 
@@ -404,22 +405,23 @@ public class RelationSvg {
                         //System.out.println("needs update on: " + idAttrubite.getNodeValue());
                         String lineElementId = idAttrubite.getNodeValue() + "Line";
                         Element relationLineElement = graphPanel.doc.getElementById(lineElementId);
-                        //System.out.println("type: " + relationLineElement.getLocalName());
-                        float[] egoSymbolPoint;
-                        float[] alterSymbolPoint;
-                        float[] parentPoint;
+                        if (relationLineElement != null) {
+                            //System.out.println("type: " + relationLineElement.getLocalName());
+                            float[] egoSymbolPoint;
+                            float[] alterSymbolPoint;
+                            float[] parentPoint;
 //                        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.egoNodeId);
 //                        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.alterNodeId);
-                        DataTypes.RelationType directedRelation = graphRelationData.relationType;
-                        // the relation lines are already directed so there is no need to make then unidirectional here
-                        egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
-                        alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
-                        parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.egoNodeId);
+                            DataTypes.RelationType directedRelation = graphRelationData.relationType;
+                            // the relation lines are already directed so there is no need to make then unidirectional here
+                            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
+                            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+                            parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.egoNodeId);
 
-                        float egoX = egoSymbolPoint[0];
-                        float egoY = egoSymbolPoint[1];
-                        float alterX = alterSymbolPoint[0];
-                        float alterY = alterSymbolPoint[1];
+                            float egoX = egoSymbolPoint[0];
+                            float egoY = egoSymbolPoint[1];
+                            float alterX = alterSymbolPoint[0];
+                            float alterY = alterSymbolPoint[1];
 
 //                        SVGRect egoSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.egoNodeId);
 //                        SVGRect alterSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.alterNodeId);
@@ -429,17 +431,17 @@ public class RelationSvg {
 //                        float alterX = alterSymbolRect.getX() + alterSymbolRect.getWidth() / 2;
 //                        float alterY = alterSymbolRect.getY() + alterSymbolRect.getHeight() / 2;
 
-                        if ("polyline".equals(relationLineElement.getLocalName())) {
-                            //System.out.println("polyline to update: " + lineElementId);
-                            setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineElementId, relationLineElement, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
+                            if ("polyline".equals(relationLineElement.getLocalName())) {
+                                //System.out.println("polyline to update: " + lineElementId);
+                                setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineElementId, relationLineElement, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
+                            }
+                            if ("path".equals(relationLineElement.getLocalName())) {
+                                //System.out.println("path to update: " + relationLineElement.getLocalName());
+                                setPathPointsAttribute(relationLineElement, directedRelation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
+                            }
+                            addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
+                            updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
                         }
-                        if ("path".equals(relationLineElement.getLocalName())) {
-                            //System.out.println("path to update: " + relationLineElement.getLocalName());
-                            setPathPointsAttribute(relationLineElement, directedRelation, graphRelationData.relationLineType, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
-                        }
-                        addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
-                        updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
-//                        }
                     }
                 } catch (IdentifierException exception) {
 //                    GuiHelper.linorgBugCatcher.logError(exception);
