@@ -105,7 +105,7 @@ public class SvgUpdateHandler {
                 Node dataElement = currentRelation.getFirstChild();
                 if (dataElement != null && dataElement.hasAttributes()) {
                     NamedNodeMap dataAttributes = dataElement.getAttributes();
-                    if (dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "lineType").getNodeValue().equals("sanguineLine")) {
+                    if (DataTypes.isSanguinLine(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "relationType").getNodeValue())) {
                         Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
                         try {
                             if (graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue())) || graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue()))) {
@@ -827,8 +827,8 @@ public class SvgUpdateHandler {
             for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
-                        if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.kinTermLine)
-                                && (graphPanel.dataStoreSvg.showSanguineLines || graphLinkNode.relationLineType != DataTypes.RelationLineType.sanguineLine)) {
+                        if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.relationType != DataTypes.RelationType.kinTerm)
+                                && (graphPanel.dataStoreSvg.showSanguineLines || !DataTypes.isSanguinLine(graphLinkNode.relationType))) {
                             // make directed and exclude any lines that are already done
                             DataTypes.RelationType directedRelation = graphLinkNode.relationType;
                             EntityData leftEntity;
@@ -855,7 +855,7 @@ public class SvgUpdateHandler {
                             // make sure each equivalent relation is drawn only once
                             if (!doneRelations.contains(compoundIdentifier)) {
                                 boolean skipCurrentRelation = false;
-                                if (graphLinkNode.relationLineType == DataTypes.RelationLineType.sanguineLine) {
+                                if (DataTypes.isSanguinLine(graphLinkNode.relationType)) {
                                     if (relationSvg.hasCommonParent(leftEntity, graphLinkNode)) {
                                         // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
                                         skipCurrentRelation = true;
@@ -863,7 +863,7 @@ public class SvgUpdateHandler {
                                 }
                                 if (!skipCurrentRelation) {
                                     doneRelations.add(compoundIdentifier);
-                                    relationSvg.insertRelation(graphPanel, relationGroupNode, leftEntity, rightEntity, directedRelation, graphLinkNode.relationLineType, graphLinkNode.lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
+                                    relationSvg.insertRelation(graphPanel, relationGroupNode, leftEntity, rightEntity, directedRelation, graphLinkNode.lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
                                 }
                             }
                         }
