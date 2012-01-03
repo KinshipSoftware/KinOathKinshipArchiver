@@ -7,6 +7,7 @@ package nl.mpi.kinnate.kindata;
  */
 public class DataTypes {
 
+    @Deprecated
     public enum RelationLineType {
 
         sanguineLine, kinTermLine, verticalCurve, none
@@ -14,7 +15,8 @@ public class DataTypes {
 
     public enum RelationType {
 
-        sibling, ancestor, descendant, union, affiliation, resource, collector, metadata, none // todo: should metadata relations use the same link type as jpg files?
+        // todo: replace affiliation, resource, collector, metadata, none  for OTHER
+        sibling, ancestor, descendant, union, custom, affiliation, resource, collector, metadata, none // todo: should metadata relations use the same link type as jpg files?
     }
 
     public static RelationType getOpposingRelationType(RelationType relationType) {
@@ -29,7 +31,7 @@ public class DataTypes {
 
     public RelationTypeDefinition[] getReferenceRelations() {
         return new RelationTypeDefinition[]{
-                    new RelationTypeDefinition("Ancestor", RelationType.ancestor, DataTypes.RelationLineType.sanguineLine, "#999999", 4, "")
+                    new RelationTypeDefinition("SampeRelationType", "", RelationType.custom, "#999999", 4, "")
                 };
     }
 }
