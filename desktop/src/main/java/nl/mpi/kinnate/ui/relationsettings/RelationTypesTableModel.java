@@ -9,7 +9,6 @@ import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
-import nl.mpi.kinnate.kindata.DataTypes.RelationLineType;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.svg.DataStoreSvg;
@@ -49,9 +48,9 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             case 0:
                 return "Display Name";
             case 1:
-                return "Relation Type";
+                return "Data Category";
             case 2:
-                return "Line Type";
+                return "Relation Type";
             case 3:
                 return "Line Colour";
             case 4:
@@ -86,9 +85,9 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 case 0:
                     return kinType.getDisplayName();
                 case 1:
-                    return kinType.getRelationType();
+                    return kinType.getDataCategory();
                 case 2:
-                    return kinType.getRelationLineType();
+                    return kinType.getRelationType();
                 case 3:
                     return kinType.getLineColour();
                 case 4:
@@ -126,7 +125,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
         }
         String displayName = "undefined";
         RelationType relationType = DataTypes.RelationType.ancestor;
-        RelationLineType relationLineType = DataTypes.RelationLineType.kinTermLine;
+        String dataCategory = "";
         String lineColour = "#999999";
         int lineWidth = 2;
         String lineStye = null;
@@ -137,7 +136,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             kinType = kinTypeDefinitions[rowIndex];
             displayName = kinType.getDisplayName();
             relationType = kinType.getRelationType();
-            relationLineType = kinType.getRelationLineType();
+            dataCategory = kinType.getDataCategory();
             lineColour = kinType.getLineColour();
             lineWidth = kinType.getLineWidth();
             lineStye = kinType.getLineStye();
@@ -147,10 +146,10 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 displayName = stringValue;
                 break;
             case 1:
-                relationType = DataTypes.RelationType.valueOf(stringValue);
+                dataCategory = stringValue;
                 break;
             case 2:
-                relationLineType = DataTypes.RelationLineType.valueOf(stringValue);
+                relationType = DataTypes.RelationType.valueOf(stringValue);
                 break;
             case 3:
                 lineColour = stringValue;
@@ -174,7 +173,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 throw new UnsupportedOperationException("Too many columns");
         }
         if (rowIndex < dataStoreSvg.getRelationTypeDefinitions().length) {
-            kinTypeDefinitions[rowIndex] = new RelationTypeDefinition(displayName, relationType, relationLineType, lineColour, lineWidth, lineStye);
+            kinTypeDefinitions[rowIndex] = new RelationTypeDefinition(displayName, dataCategory, relationType, lineColour, lineWidth, lineStye);
             dataStoreSvg.setRelationTypeDefinitions(kinTypeDefinitions);
         } else {
             if ("".equals(aValue)) {
@@ -182,7 +181,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 return;
             }
             ArrayList<RelationTypeDefinition> kinTypesList = new ArrayList<RelationTypeDefinition>(Arrays.asList(kinTypeDefinitions));
-            kinTypesList.add(new RelationTypeDefinition(displayName, relationType, relationLineType, lineColour, lineWidth, lineStye));
+            kinTypesList.add(new RelationTypeDefinition(displayName, dataCategory, relationType, lineColour, lineWidth, lineStye));
             dataStoreSvg.setRelationTypeDefinitions(kinTypesList.toArray(new RelationTypeDefinition[]{}));
         }
         savePanel.updateGraph();
