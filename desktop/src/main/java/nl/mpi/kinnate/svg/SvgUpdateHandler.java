@@ -202,20 +202,29 @@ public class SvgUpdateHandler {
 
                     // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
                     // as a comprimise these highlighs can be removed when a node is dragged
+                    String svgLineType = (DataTypes.isSanguinLine(directedRelation)) ? "polyline" : "path";
                     // add a white background
-                    Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                    Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, svgLineType);
                     highlightBackgroundLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                     highlightBackgroundLine.setAttribute("fill", "none");
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
                     highlightBackgroundLine.setAttribute("stroke", "white");
-                    new RelationSvg(dialogHandler).setPolylinePointsAttribute(null, dragLineElementId, highlightBackgroundLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
+                    if (DataTypes.isSanguinLine(directedRelation)) {
+                        new RelationSvg(dialogHandler).setPolylinePointsAttribute(null, dragLineElementId, highlightBackgroundLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
+                    } else {
+                        new RelationSvg(dialogHandler).setPathPointsAttribute(highlightBackgroundLine, directedRelation, hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1]);
+                    }
                     relationHighlightGroup.appendChild(highlightBackgroundLine);
                     // add a blue dotted line
-                    Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+                    Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, svgLineType);
                     highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                     highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
-                    new RelationSvg(dialogHandler).setPolylinePointsAttribute(null, dragLineElementId, highlightLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
+                    if (DataTypes.isSanguinLine(directedRelation)) {
+                        new RelationSvg(dialogHandler).setPolylinePointsAttribute(null, dragLineElementId, highlightLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
+                    } else {
+                        new RelationSvg(dialogHandler).setPathPointsAttribute(highlightLine, directedRelation, hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1]);
+                    }
                     highlightLine.setAttribute("stroke", localRelationDragHandle.getRelationColour());
                     highlightLine.setAttribute("stroke-dasharray", "3");
                     highlightLine.setAttribute("stroke-dashoffset", "0");
