@@ -20,6 +20,7 @@ import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindocument.RelationLinker;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.SvgElementEditor;
@@ -170,9 +171,23 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                             affineTransform.getScaleX() // the drawing should be proportional so only using X is adequate here
                             );
                 } else {
+                    RelationTypeDefinition customTypeDefinition = null;
+                    DataTypes.RelationType relationType = null;
+                    if (handleTypeString.startsWith("custom:")) {
+                        int typeHashCode = Integer.parseInt(handleTypeString.substring("custom:".length()));
+                        for (RelationTypeDefinition currentDefinition : graphPanel.dataStoreSvg.relationTypeDefinitions) {
+                            if (currentDefinition.hashCode() == typeHashCode) {
+                                customTypeDefinition = currentDefinition;
+                                break;
+                            }
+                        }
+                    } else {
+                        relationType = DataTypes.RelationType.valueOf(handleTypeString);
+                    }
                     graphPanel.svgUpdateHandler.relationDragHandle =
                             new RelationDragHandle(
-                            DataTypes.RelationType.valueOf(handleTypeString),
+                            customTypeDefinition,
+                            relationType,
                             Float.valueOf(currentDraggedElement.getAttribute("cx")) + xTranslate,
                             Float.valueOf(currentDraggedElement.getAttribute("cy")) + yTranslate,
                             ((DOMMouseEvent) evt).getClientX(),
