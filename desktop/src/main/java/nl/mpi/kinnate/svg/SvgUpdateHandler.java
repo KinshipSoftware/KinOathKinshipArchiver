@@ -10,6 +10,7 @@ import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
@@ -232,7 +233,8 @@ public class SvgUpdateHandler {
 //        ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
-    protected void addRelationDragHandles(Element highlightGroupNode, SVGRect bbox, int paddingDistance) {
+    protected void addRelationDragHandles(RelationTypeDefinition[] relationTypeDefinitions, Element highlightGroupNode, SVGRect bbox, int paddingDistance) {
+        // add the standard relation types
         for (DataTypes.RelationType relationType : new DataTypes.RelationType[]{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant}) {
             Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
             symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() / 2));
@@ -247,6 +249,21 @@ public class SvgUpdateHandler {
             symbolNode.setAttribute("r", "5");
             symbolNode.setAttribute("handletype", relationType.name());
             symbolNode.setAttribute("fill", "blue");
+            symbolNode.setAttribute("stroke", "none");
+            ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
+            highlightGroupNode.appendChild(symbolNode);
+        }
+        // add the custom relation types
+        float currentCY = bbox.getY() - paddingDistance;
+        float stepCY = (bbox.getHeight() + paddingDistance) / relationTypeDefinitions.length;
+        for (RelationTypeDefinition typeDefinition : relationTypeDefinitions) {
+            Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
+            symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() + paddingDistance));
+            symbolNode.setAttribute("cy", Float.toString(currentCY));
+            currentCY += stepCY;
+            symbolNode.setAttribute("r", "5");
+            symbolNode.setAttribute("handletype", "custom:" + typeDefinition.hashCode());
+            symbolNode.setAttribute("fill", typeDefinition.getLineColour());
             symbolNode.setAttribute("stroke", "none");
             ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
             highlightGroupNode.appendChild(symbolNode);
@@ -377,7 +394,7 @@ public class SvgUpdateHandler {
                                     // make sure the rect is added before the drag handles, otherwise the rect can block the mouse actions
                                     highlightGroupNode.appendChild(symbolNode);
                                     if (((Element) selectedGroup).getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path").length() > 0) {
-                                        addRelationDragHandles(highlightGroupNode, bbox, paddingDistance);
+                                        addRelationDragHandles(graphPanel.dataStoreSvg.getRelationTypeDefinitions(), highlightGroupNode, bbox, paddingDistance);
                                     } else {
                                         if (uniqueIdentifier.isGraphicsIdentifier()) {
                                             if (!"text".equals(selectedGroup.getLocalName())) {
