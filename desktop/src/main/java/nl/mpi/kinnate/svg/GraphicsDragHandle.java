@@ -18,7 +18,7 @@ public class GraphicsDragHandle extends RelationDragHandle {
     private String yAttribute;
 
     public GraphicsDragHandle(Element graphicsElement, Element highlightElement, Element highlightRectElement, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) {
-        super(null, elementStartX, elementStartY, mouseStartX, mouseStartY, diagramScaleFactor);
+        super(null, null, elementStartX, elementStartY, mouseStartX, mouseStartY, diagramScaleFactor);
         this.graphicsElement = graphicsElement;
         this.highlightElement = highlightElement;
         this.highlightRectElement = highlightRectElement;
