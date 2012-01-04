@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.svg;
 
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -11,8 +12,8 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class RelationDragHandle {
 
-    protected DataTypes.RelationType relationType;
-    protected RelationTypeDefinition customTypeDefinition;
+    private DataTypes.RelationType relationType;
+    private RelationTypeDefinition customTypeDefinition;
     protected float elementStartX;
     protected float elementStartY;
     protected float mouseStartX;
@@ -36,5 +37,21 @@ public class RelationDragHandle {
 
     protected float getTranslatedY(float localDragNodeY) {
         return elementStartY + (localDragNodeY - mouseStartY) / diagramScaleFactor;
+    }
+
+    public RelationType getRelationType() {
+        if (customTypeDefinition != null) {
+            return customTypeDefinition.getRelationType();
+        } else {
+            return relationType;
+        }
+    }
+
+    public String getRelationColour() {
+        if (customTypeDefinition != null) {
+            return customTypeDefinition.getLineColour();
+        } else {
+            return "blue";
+        }
     }
 }
