@@ -1,7 +1,7 @@
 package nl.mpi.kinnate.svg;
 
 import nl.mpi.kinnate.kindata.DataTypes;
-import nl.mpi.kinnate.kindata.DataTypes.RelationType;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -12,6 +12,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 public class RelationDragHandle {
 
     protected DataTypes.RelationType relationType;
+    protected RelationTypeDefinition customTypeDefinition;
     protected float elementStartX;
     protected float elementStartY;
     protected float mouseStartX;
@@ -19,7 +20,8 @@ public class RelationDragHandle {
     protected float diagramScaleFactor;
     protected UniqueIdentifier targetIdentifier = null;
 
-    public RelationDragHandle(RelationType relationType, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) {
+    public RelationDragHandle(RelationTypeDefinition customTypeDefinition, DataTypes.RelationType relationType, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) {
+        this.customTypeDefinition = customTypeDefinition;
         this.relationType = relationType;
         this.elementStartX = elementStartX;
         this.elementStartY = elementStartY;
