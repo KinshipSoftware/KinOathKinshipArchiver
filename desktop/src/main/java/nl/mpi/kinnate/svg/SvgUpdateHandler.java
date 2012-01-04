@@ -183,7 +183,7 @@ public class SvgUpdateHandler {
                     float[] parentPoint; // = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
                     float[] dragPoint;
 //
-                    DataTypes.RelationType directedRelation = localRelationDragHandle.relationType;
+                    DataTypes.RelationType directedRelation = localRelationDragHandle.getRelationType();
                     if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
                         egoSymbolPoint = new float[]{dragNodeX, dragNodeY};
                         dragPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
@@ -216,7 +216,7 @@ public class SvgUpdateHandler {
                     highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
                     new RelationSvg(dialogHandler).setPolylinePointsAttribute(null, dragLineElementId, highlightLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
-                    highlightLine.setAttribute("stroke", "blue");
+                    highlightLine.setAttribute("stroke", localRelationDragHandle.getRelationColour());
                     highlightLine.setAttribute("stroke-dasharray", "3");
                     highlightLine.setAttribute("stroke-dashoffset", "0");
                     relationHighlightGroup.appendChild(highlightLine);
@@ -225,7 +225,7 @@ public class SvgUpdateHandler {
                 symbolNode.setAttribute("cx", Float.toString(dragNodeX));
                 symbolNode.setAttribute("cy", Float.toString(dragNodeY));
                 symbolNode.setAttribute("r", "5");
-                symbolNode.setAttribute("fill", "blue");
+                symbolNode.setAttribute("fill", localRelationDragHandle.getRelationColour());
                 symbolNode.setAttribute("stroke", "none");
                 relationHighlightGroup.appendChild(symbolNode);
             }
@@ -257,6 +257,7 @@ public class SvgUpdateHandler {
         float currentCY = bbox.getY() - paddingDistance;
         float stepCY = (bbox.getHeight() + paddingDistance) / relationTypeDefinitions.length;
         for (RelationTypeDefinition typeDefinition : relationTypeDefinitions) {
+            // todo: change this to use a constant spacing and to add a new column when each line is full
             Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
             symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() + paddingDistance));
             symbolNode.setAttribute("cy", Float.toString(currentCY));
