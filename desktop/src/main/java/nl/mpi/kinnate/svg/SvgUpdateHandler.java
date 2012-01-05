@@ -263,14 +263,21 @@ public class SvgUpdateHandler {
             highlightGroupNode.appendChild(symbolNode);
         }
         // add the custom relation types
-        float currentCY = bbox.getY() - paddingDistance;
-        float stepCY = (bbox.getHeight() + paddingDistance) / relationTypeDefinitions.length;
+        float currentCX = bbox.getX() + bbox.getWidth() + paddingDistance;
+        float minCY = bbox.getY() - paddingDistance;
+        float currentCY = minCY;
+        float stepC = 12; //(bbox.getHeight() + paddingDistance) / relationTypeDefinitions.length;
+        float maxCY = bbox.getHeight() + paddingDistance;
         for (RelationTypeDefinition typeDefinition : relationTypeDefinitions) {
-            // todo: change this to use a constant spacing and to add a new column when each line is full
+            // use a constant spacing between the drag handle dots and to start a new column when each line is full
             Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
-            symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() + paddingDistance));
+            symbolNode.setAttribute("cx", Float.toString(currentCX));
             symbolNode.setAttribute("cy", Float.toString(currentCY));
-            currentCY += stepCY;
+            currentCY += stepC;
+            if (currentCY >= maxCY) {
+                currentCY = minCY;
+                currentCX += stepC;
+            }
             symbolNode.setAttribute("r", "5");
             symbolNode.setAttribute("handletype", "custom:" + typeDefinition.hashCode());
             symbolNode.setAttribute("fill", typeDefinition.getLineColour());
@@ -853,7 +860,7 @@ public class SvgUpdateHandler {
             ArrayList<String> doneRelations = new ArrayList<String>();
             for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
-                    for (EntityRelation graphLinkNode : currentNode.getVisiblyRelateNodes()) {
+                    for (EntityRelation graphLinkNode : currentNode.getAllRelations()) {
                         if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.relationType != DataTypes.RelationType.kinTerm)
                                 && (graphPanel.dataStoreSvg.showSanguineLines || !DataTypes.isSanguinLine(graphLinkNode.relationType))) {
                             // make directed and exclude any lines that are already done
@@ -878,7 +885,7 @@ public class SvgUpdateHandler {
                                 leftEntity = currentNode;
                                 rightEntity = graphLinkNode.getAlterNode();
                             }
-                            String compoundIdentifier = leftEntity.getUniqueIdentifier().getQueryIdentifier() + rightEntity.getUniqueIdentifier().getQueryIdentifier() + directedRelation.name();
+                            String compoundIdentifier = leftEntity.getUniqueIdentifier().getQueryIdentifier() + rightEntity.getUniqueIdentifier().getQueryIdentifier() + directedRelation.name() + ":" + graphLinkNode.dcrType + ":" + graphLinkNode.customType;
                             // make sure each equivalent relation is drawn only once
                             if (!doneRelations.contains(compoundIdentifier)) {
                                 boolean skipCurrentRelation = false;
