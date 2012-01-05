@@ -430,7 +430,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                     targetRelation = RelationType.metadata;
                                 }
                                 // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
-                                currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData, targetRelation, null, null);
+                                currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData, targetRelation, null, null, null, lineParts[1]);
                             }
                         }
                     }
@@ -443,15 +443,15 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                         if (!innerMemberElement.memberEntity.equals(outerMemberElement.memberEntity)) {
                             if (innerMemberElement.typeString.equals("FAMC") || innerMemberElement.typeString.equals("CHIL")) {
                                 if (outerMemberElement.typeString.equals("FAMC") || outerMemberElement.typeString.equals("CHIL")) {
-                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.sibling, null, null);
+                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.sibling, null, null, null, null);
                                 } else {
-                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.ancestor, null, null);
+                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.ancestor, null, null, null, null);
                                 }
                             } else {
                                 if (outerMemberElement.typeString.equals("FAMC") || outerMemberElement.typeString.equals("CHIL")) {
-                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.descendant, null, null);
+                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.descendant, null, null, null, null);
                                 } else {
-                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.union, null, null);
+                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.union, null, null, null, null);
                                 }
                             }
 //                            appendToTaskOutput("--> adding sanguine relation");
