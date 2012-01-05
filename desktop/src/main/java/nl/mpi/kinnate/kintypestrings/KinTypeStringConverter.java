@@ -375,7 +375,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                 }
                                 if (parentDataNode != null && !currentReferenceKinType.relationType.equals(DataTypes.RelationType.none)) {
                                     // allow relations only for kin types that do not start the kin type string
-                                    EntityRelation nodeRelation = parentDataNode.addRelatedNode(currentGraphDataNode, currentReferenceKinType.relationType, null, null);
+                                    EntityRelation nodeRelation = parentDataNode.addRelatedNode(currentGraphDataNode, currentReferenceKinType.relationType, null, null, null, null);
                                     if (kinTypeModifier != null && !kinTypeModifier.isEmpty()) {
                                         if (kinTypeModifier.equals("-")) {
                                             nodeRelation.setRelationOrder(-1);
@@ -395,7 +395,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                         for (String kinTermLabel : kinTerms.getTermLabel(fullKinTypeString)) {
                                             // todo: this could be running too many times, maybe check for efficiency
                                             currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
-                                            egoDataNode.addRelatedNode(currentGraphDataNode, DataTypes.RelationType.kinTerm, kinTerms.graphColour, kinTermLabel);
+                                            egoDataNode.addRelatedNode(currentGraphDataNode, DataTypes.RelationType.kinTerm, kinTerms.graphColour, kinTermLabel, null, null);
                                         }
                                     }
                                 }
