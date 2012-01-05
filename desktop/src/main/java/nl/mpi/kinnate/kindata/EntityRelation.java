@@ -22,9 +22,25 @@ public class EntityRelation implements Comparable<EntityRelation> {
     public DataTypes.RelationType relationType;
     @XmlElement(name = "Label", namespace = "http://mpi.nl/tla/kin")
     public String labelString;
-    public String lineColour = null;
+    @XmlElement(name = "Colour", namespace = "http://mpi.nl/tla/kin")
+    public String lineColour = null; // line colour is normally only assigned in memory and will not be serialised except into the svg, so with the exception of kin terms that are automatically added to the diagram, the colour will be set by the diagram relation settings
+    @XmlAttribute(name = "dcr", namespace = "http://mpi.nl/tla/kin")
+    public String dcrType = null;
+    @XmlAttribute(name = "CustomType", namespace = "http://mpi.nl/tla/kin")
+    public String customType = null;
     @XmlTransient
     private int relationOrder = 0; // this is used to indicate for instance; first, second child and fist, second husband etc.
+
+    public EntityRelation() {
+    }
+
+    public EntityRelation(String dcrType, String customType, String lineColour, DataTypes.RelationType relationType, String labelString) {
+        this.dcrType = dcrType;
+        this.customType = customType;
+        this.lineColour = lineColour;
+        this.relationType = relationType;
+        this.labelString = labelString;
+    }
 
     public void setAlterNode(EntityData graphDataNode) {
 //        if (graphDataNode != null) { // if the nodes has been reloaded then it must always be updated here
@@ -44,9 +60,10 @@ public class EntityRelation implements Comparable<EntityRelation> {
     public int compareTo(EntityRelation o) {
         if (o.alterUniqueIdentifier.equals(alterUniqueIdentifier)
                 //                && o.generationalDistance == generationalDistance
-//                && o.relationLineType.equals(relationLineType)
-                // todo: also compare the dcr and description string for the relation type
+                //                && o.relationLineType.equals(relationLineType)
                 && o.relationType.equals(relationType)
+                && ((dcrType == null && dcrType == null) || o.dcrType.equals(dcrType))
+                && ((customType == null && customType == null) || o.customType.equals(customType))
                 && ((labelString == null && labelString == null) || o.labelString.equals(labelString))
                 && ((lineColour == null && lineColour == null) || o.lineColour.equals(lineColour))) {
             return 0;
