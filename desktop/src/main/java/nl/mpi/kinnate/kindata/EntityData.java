@@ -324,7 +324,7 @@ public class EntityData {
 
     public EntityRelation[] getRelatedNodesToBeLoaded() {
         ArrayList<EntityRelation> entityRelationsToLoad = new ArrayList<EntityRelation>();
-        for (EntityRelation relatedNode : getDistinctRelateNodes()) {
+        for (EntityRelation relatedNode : getAllRelations()) {
             if (relatedNode.getAlterNode() == null) {
                 entityRelationsToLoad.add(relatedNode);
             }
