@@ -61,9 +61,9 @@ public class EntityData {
     @XmlTransient
     public boolean metadataRequiresSave = false;
     @XmlTransient
-    private EntityRelation[] visiblyRelateNodes = null;
+    private EntityData[] visiblyRelateNodes = null;
     @XmlTransient
-    private EntityRelation[] distinctRelateNodes = null;
+    private EntityData[] distinctRelateNodes = null;
 
     private EntityData() {
     }
@@ -282,17 +282,17 @@ public class EntityData {
         distinctRelateNodes = null;
     }
 
-    public EntityRelation[] getVisiblyRelateNodes(boolean onlySanguine) {
+    public EntityData[] getVisiblyRelated() {
         if (visiblyRelateNodes == null) {
-            ArrayList<EntityRelation> visiblyRelatedNodes = new ArrayList<EntityRelation>();
-            for (EntityRelation nodeRelation : getDistinctRelateNodes(onlySanguine)) {
-                if (nodeRelation.getAlterNode() != null) {
-                    if (nodeRelation.getAlterNode().isVisible) {
-                        visiblyRelatedNodes.add(nodeRelation);
+            ArrayList<EntityData> visiblyRelatedNodes = new ArrayList<EntityData>();
+            for (EntityData entityData : getDistinctRelateNodes()) {
+                if (entityData != null) {
+                    if (entityData.isVisible) {
+                        visiblyRelatedNodes.add(entityData);
                     }
                 }
             }
-            visiblyRelateNodes = visiblyRelatedNodes.toArray(new EntityRelation[]{});
+            visiblyRelateNodes = visiblyRelatedNodes.toArray(new EntityData[]{});
         }
         return visiblyRelateNodes;
     }
@@ -305,21 +305,21 @@ public class EntityData {
         }
     }
 
-    public EntityRelation[] getDistinctRelateNodes(boolean onlySanguine) {
+    public EntityData[] getDistinctRelateNodes() {
         if (distinctRelateNodes == null) {
             ArrayList<UniqueIdentifier> processedIds = new ArrayList<UniqueIdentifier>();
-            ArrayList<EntityRelation> uniqueNodes = new ArrayList<EntityRelation>();
+            ArrayList<EntityData> uniqueNodes = new ArrayList<EntityData>();
             if (relatedNodes != null) {
                 for (EntityRelation nodeRelation : relatedNodes) {
-                    if (!onlySanguine || DataTypes.isSanguinLine(nodeRelation.relationType)) {
-                        if (!processedIds.contains(nodeRelation.alterUniqueIdentifier)) {
-                            uniqueNodes.add(nodeRelation);
-                            processedIds.add(nodeRelation.alterUniqueIdentifier);
-                        }
+//                    if (!onlySanguine || DataTypes.isSanguinLine(nodeRelation.relationType)) {
+                    if (!processedIds.contains(nodeRelation.alterUniqueIdentifier)) {
+                        uniqueNodes.add(nodeRelation.getAlterNode());
+                        processedIds.add(nodeRelation.alterUniqueIdentifier);
                     }
+//                    }
                 }
             }
-            distinctRelateNodes = uniqueNodes.toArray(new EntityRelation[]{});
+            distinctRelateNodes = uniqueNodes.toArray(new EntityData[]{});
         }
         return distinctRelateNodes;
     }
