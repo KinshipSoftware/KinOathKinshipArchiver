@@ -551,8 +551,7 @@ public class SvgUpdateHandler {
                         for (EntityData selectedEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                             if (selectedEntity.isVisible
                                     && graphPanel.selectedGroupId.contains(selectedEntity.getUniqueIdentifier())) {
-                                for (EntityRelation entityRelation : selectedEntity.getVisiblyRelateNodes(false)) {
-                                    EntityData relatedEntity = entityRelation.getAlterNode();
+                                for (EntityData relatedEntity : selectedEntity.getVisiblyRelated()) {
                                     if (relatedEntity.isVisible && !graphPanel.selectedGroupId.contains(relatedEntity.getUniqueIdentifier())) {
                                         allRealtionsSelected = false;
                                         break relationLoop;
