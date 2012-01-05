@@ -54,4 +54,20 @@ public class RelationDragHandle {
             return "blue";
         }
     }
+
+    public String getDataCategory() {
+        if (customTypeDefinition != null) {
+            return customTypeDefinition.getDataCategory();
+        } else {
+            return null;
+        }
+    }
+
+    public String getDisplayName() {
+        if (customTypeDefinition != null) {
+            return customTypeDefinition.getDisplayName();
+        } else {
+            return null;
+        }
+    }
 }
