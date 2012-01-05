@@ -282,10 +282,10 @@ public class EntityData {
         distinctRelateNodes = null;
     }
 
-    public EntityRelation[] getVisiblyRelateNodes() {
+    public EntityRelation[] getVisiblyRelateNodes(boolean onlySanguine) {
         if (visiblyRelateNodes == null) {
             ArrayList<EntityRelation> visiblyRelatedNodes = new ArrayList<EntityRelation>();
-            for (EntityRelation nodeRelation : getDistinctRelateNodes()) {
+            for (EntityRelation nodeRelation : getDistinctRelateNodes(onlySanguine)) {
                 if (nodeRelation.getAlterNode() != null) {
                     if (nodeRelation.getAlterNode().isVisible) {
                         visiblyRelatedNodes.add(nodeRelation);
@@ -305,15 +305,17 @@ public class EntityData {
         }
     }
 
-    public EntityRelation[] getDistinctRelateNodes() {
+    public EntityRelation[] getDistinctRelateNodes(boolean onlySanguine) {
         if (distinctRelateNodes == null) {
             ArrayList<UniqueIdentifier> processedIds = new ArrayList<UniqueIdentifier>();
             ArrayList<EntityRelation> uniqueNodes = new ArrayList<EntityRelation>();
             if (relatedNodes != null) {
                 for (EntityRelation nodeRelation : relatedNodes) {
-                    if (!processedIds.contains(nodeRelation.alterUniqueIdentifier)) {
-                        uniqueNodes.add(nodeRelation);
-                        processedIds.add(nodeRelation.alterUniqueIdentifier);
+                    if (!onlySanguine || DataTypes.isSanguinLine(nodeRelation.relationType)) {
+                        if (!processedIds.contains(nodeRelation.alterUniqueIdentifier)) {
+                            uniqueNodes.add(nodeRelation);
+                            processedIds.add(nodeRelation.alterUniqueIdentifier);
+                        }
                     }
                 }
             }
