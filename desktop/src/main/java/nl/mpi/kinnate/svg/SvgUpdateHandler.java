@@ -897,7 +897,18 @@ public class SvgUpdateHandler {
                                 }
                                 if (!skipCurrentRelation) {
                                     doneRelations.add(compoundIdentifier);
-                                    relationSvg.insertRelation(graphPanel, relationGroupNode, leftEntity, rightEntity, directedRelation, graphLinkNode.lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
+                                    String lineColour = graphLinkNode.lineColour;
+                                    int lineWidth = EntitySvg.strokeWidth;
+                                    if (lineColour == null) {
+                                        for (RelationTypeDefinition relationTypeDefinition : graphPanel.dataStoreSvg.relationTypeDefinitions) {
+                                            if (relationTypeDefinition.matchesType(graphLinkNode)) {
+                                                lineColour = relationTypeDefinition.getLineColour();
+                                                lineWidth = relationTypeDefinition.getLineWidth();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    relationSvg.insertRelation(graphPanel, relationGroupNode, leftEntity, rightEntity, directedRelation, lineWidth, lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
                                 }
                             }
                         }
