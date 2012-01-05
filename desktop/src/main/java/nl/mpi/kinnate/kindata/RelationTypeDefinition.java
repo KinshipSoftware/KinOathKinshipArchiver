@@ -58,4 +58,38 @@ public class RelationTypeDefinition {
     public RelationType getRelationType() {
         return relationType;
     }
+
+    public boolean matchesType(EntityRelation entityRelation) {
+        if (entityRelation == null) {
+            return false;
+        }
+        if (dataCategory == null) {
+            if (entityRelation.dcrType != null) {
+                return false;
+            }
+        } else {
+            if (!dataCategory.equals(entityRelation.dcrType)) {
+                return false;
+            }
+        }
+        if (relationType == null) {
+            if (entityRelation.relationType != null) {
+                return false;
+            }
+        } else {
+            if (!entityRelation.relationType.equals(relationType)) {
+                return false;
+            }
+        }
+        if (displayName == null) {
+            if (entityRelation.customType != null) {
+                return false;
+            }
+        } else {
+            if (!entityRelation.customType.equals(displayName)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
