@@ -175,15 +175,15 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                         } else if (entityField.length() > 0) {
                             if (headingString.matches("Spouses[\\d]*-ID")) {
                                 relatedEntity = getEntityDocument(createdNodes, "Entity", entityField, importTranslator);
-                                currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.union, null, null);
+                                currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.union, null, null, null, null);
                                 relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                             } else if (headingString.matches("Parents[\\d]*-ID")) {
                                 relatedEntity = getEntityDocument(createdNodes, "Entity", entityField, importTranslator);
-                                currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.ancestor, null, null);
+                                currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.ancestor, null, null, null, null);
                                 relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                             } else if (headingString.matches("Children[\\d]*-ID")) {
                                 relatedEntity = getEntityDocument(createdNodes, "Entity", entityField, importTranslator);
-                                currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.descendant, null, null);
+                                currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.descendant, null, null, null, null);
                                 relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                             } else if (relatedEntityPrefix != null && headingString.startsWith(relatedEntityPrefix)) {
                                 relatedEntity.insertValue(headingString.substring(relatedEntityPrefix.length()), entityField);
