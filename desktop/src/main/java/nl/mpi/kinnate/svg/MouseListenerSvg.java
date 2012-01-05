@@ -264,8 +264,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         if (maxCount <= selectedIds.size()) {
             return;
         }
-        for (EntityRelation entityRelation : currentEntity.getVisiblyRelateNodes(true)) {
-            EntityData alterNode = entityRelation.getAlterNode();
+        for (EntityData alterNode : currentEntity.getVisiblyRelated()) {
             if (alterNode.isVisible && !selectedIds.contains(alterNode.getUniqueIdentifier())) {
                 selectedIds.add(alterNode.getUniqueIdentifier());
                 if (addRecursively) {
