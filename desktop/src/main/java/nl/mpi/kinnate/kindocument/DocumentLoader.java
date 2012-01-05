@@ -33,7 +33,7 @@ public class DocumentLoader {
         EntityDocument entityDocument = new EntityDocument(new URI(new EntityCollection(sessionStorage, dialogHandler).getEntityPath(selectedIdentifier)), new ImportTranslator(true), sessionStorage);
 //        System.out.println("Loaded 1: " + entityDocument.entityData.getUniqueIdentifier().getAttributeIdentifier());
         entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
-        for (EntityRelation entityRelation : entityDocument.entityData.getDistinctRelateNodes()) {
+        for (EntityRelation entityRelation : entityDocument.entityData.getDistinctRelateNodes(false)) {
             EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
             if (relatedDocument == null) {
                 // get the path from the database
