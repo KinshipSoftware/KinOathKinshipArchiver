@@ -41,7 +41,7 @@ public class GraphSorter {
 
         public SortingEntity(EntityData entityData) {
             selfEntityId = entityData.getUniqueIdentifier();
-            visiblyRelateNodes = entityData.getVisiblyRelateNodes();
+            visiblyRelateNodes = entityData.getVisiblyRelateNodes(true);
             mustBeBelow = new ArrayList<SortingEntity>();
             mustBeAbove = new ArrayList<SortingEntity>();
             mustBeNextTo = new ArrayList<SortingEntity>();
