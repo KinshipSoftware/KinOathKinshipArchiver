@@ -226,9 +226,9 @@ public class RelationSvg {
 
     public boolean hasCommonParent(EntityData currentNode, EntityRelation graphLinkNode) {
         if (graphLinkNode.relationType == DataTypes.RelationType.sibling) {
-            for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getDistinctRelateNodes(true)) {
+            for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getAllRelations()) {
                 if (altersRelation.relationType == DataTypes.RelationType.ancestor) {
-                    for (EntityRelation egosRelation : currentNode.getDistinctRelateNodes(true)) {
+                    for (EntityRelation egosRelation : currentNode.getAllRelations()) {
                         if (egosRelation.relationType == DataTypes.RelationType.ancestor) {
                             if (altersRelation.alterUniqueIdentifier.equals(egosRelation.alterUniqueIdentifier)) {
                                 if (altersRelation.getAlterNode().isVisible) {
