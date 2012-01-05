@@ -260,7 +260,7 @@ public class QueryParser implements EntityService {
                         }
                         entityRelationToLoad.setAlterNode(relatedNode);
                     }
-                    for (EntityRelation entityRelation : kinTypeEntityData.getDistinctRelateNodes()) {
+                    for (EntityRelation entityRelation : kinTypeEntityData.getAllRelations()) { // this has been changed to check all the relations not just the sanguine nor only one relation per entitiy
                         // compare each relation to the required kin type
                         if (kinTypeElement.nextType != null) {
                             if (kinTypeElement.nextType.kinType.matchesRelation(entityRelation, null)) { // todo: this should also take into account the modifier eg -, +, -1, -3, +2 etc..
