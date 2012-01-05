@@ -114,7 +114,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         try {
-                            UniqueIdentifier[] affectedIdentifiers = new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).linkEntities(selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()));
+                            UniqueIdentifier[] affectedIdentifiers = new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).linkEntities(selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()), null, null); // todo: custom relation types could be enabled here as could dcr values
                             kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
                         } catch (ImportException exception) {
                             arbilWindowManager.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), addRelationEntityMenu.getText());
