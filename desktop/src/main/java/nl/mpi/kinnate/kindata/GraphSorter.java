@@ -36,12 +36,12 @@ public class GraphSorter {
         ArrayList<SortingEntity> mustBeAbove;
         ArrayList<SortingEntity> mustBeNextTo;
         ArrayList<SortingEntity> couldBeNextTo;
-        EntityRelation[] visiblyRelateNodes;
+        EntityRelation[] allRelateNodes;
         float[] calculatedPosition = null;
 
         public SortingEntity(EntityData entityData) {
             selfEntityId = entityData.getUniqueIdentifier();
-            visiblyRelateNodes = entityData.getVisiblyRelateNodes(true);
+            allRelateNodes = entityData.getAllRelations();
             mustBeBelow = new ArrayList<SortingEntity>();
             mustBeAbove = new ArrayList<SortingEntity>();
             mustBeNextTo = new ArrayList<SortingEntity>();
@@ -49,20 +49,22 @@ public class GraphSorter {
         }
 
         public void calculateRelations(HashMap<UniqueIdentifier, SortingEntity> knownSortingEntities) {
-            for (EntityRelation entityRelation : visiblyRelateNodes) {
-                switch (entityRelation.relationType) {
-                    case ancestor:
-                        mustBeBelow.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
-                        break;
-                    case descendant:
-                        mustBeAbove.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
-                        break;
-                    case union:
-                        mustBeNextTo.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
-                    // no break here is deliberate: those that mustBeNextTo to need also to be in couldBeNextTo
-                    case sibling:
-                        couldBeNextTo.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
-                        break;
+            for (EntityRelation entityRelation : allRelateNodes) {
+                if (entityRelation.getAlterNode().isVisible) {
+                    switch (entityRelation.relationType) {
+                        case ancestor:
+                            mustBeBelow.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
+                            break;
+                        case descendant:
+                            mustBeAbove.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
+                            break;
+                        case union:
+                            mustBeNextTo.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
+                        // no break here is deliberate: those that mustBeNextTo to need also to be in couldBeNextTo
+                        case sibling:
+                            couldBeNextTo.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
+                            break;
+                    }
                 }
             }
         }
