@@ -171,8 +171,8 @@ public class EntityIndex implements EntityService {
 //                }
 //            }
             if (egoType != null && alterType != null) {
-                egoNode.addRelatedNode(alterNode, egoType, null, null);
-                alterNode.addRelatedNode(egoNode, alterType, null, null);
+                egoNode.addRelatedNode(alterNode, egoType, null, null, null, null);
+                alterNode.addRelatedNode(egoNode, alterType, null, null, null, null);
             }
         }
     }
