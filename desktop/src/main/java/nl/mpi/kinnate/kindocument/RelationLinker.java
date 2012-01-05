@@ -58,13 +58,13 @@ public class RelationLinker extends DocumentLoader {
 //        }
     }
 
-    public UniqueIdentifier[] linkEntities(UniqueIdentifier leadIdentifier, UniqueIdentifier[] otherIdentifiers, DataTypes.RelationType relationType) throws ImportException {
+    public UniqueIdentifier[] linkEntities(UniqueIdentifier leadIdentifier, UniqueIdentifier[] otherIdentifiers, DataTypes.RelationType relationType, String dcrType, String customType) throws ImportException {
         try {
             EntityDocument leadEntityDocument = getEntityDocument(leadIdentifier);
             for (UniqueIdentifier uniqueIdentifier : otherIdentifiers) {
                 EntityDocument entityDocument = getEntityDocument(uniqueIdentifier);
                 // add the new relation
-                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, null, null);
+                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, null, null, dcrType, customType);
             }
             saveAllDocuments();
         } catch (URISyntaxException exception) {
@@ -74,13 +74,13 @@ public class RelationLinker extends DocumentLoader {
         return getAffectedIdentifiers();
     }
 
-    public UniqueIdentifier[] linkEntities(UniqueIdentifier[] selectedIdentifiers, DataTypes.RelationType relationType) throws ImportException {
+    public UniqueIdentifier[] linkEntities(UniqueIdentifier[] selectedIdentifiers, DataTypes.RelationType relationType, String dcrType, String customType) throws ImportException {
         ArrayList<EntityDocument> nonLeadEntityDocuments = new ArrayList<EntityDocument>();
         try {
             EntityDocument leadEntityDocument = getEntityDocuments(selectedIdentifiers, nonLeadEntityDocuments);
             for (EntityDocument entityDocument : nonLeadEntityDocuments) {
                 // add the new relation
-                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, null, null);
+                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, null, null, dcrType, customType);
             }
             saveAllDocuments();
         } catch (URISyntaxException exception) {
