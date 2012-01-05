@@ -226,9 +226,9 @@ public class RelationSvg {
 
     public boolean hasCommonParent(EntityData currentNode, EntityRelation graphLinkNode) {
         if (graphLinkNode.relationType == DataTypes.RelationType.sibling) {
-            for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getDistinctRelateNodes()) {
+            for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getDistinctRelateNodes(true)) {
                 if (altersRelation.relationType == DataTypes.RelationType.ancestor) {
-                    for (EntityRelation egosRelation : currentNode.getDistinctRelateNodes()) {
+                    for (EntityRelation egosRelation : currentNode.getDistinctRelateNodes(true)) {
                         if (egosRelation.relationType == DataTypes.RelationType.ancestor) {
                             if (altersRelation.alterUniqueIdentifier.equals(egosRelation.alterUniqueIdentifier)) {
                                 if (altersRelation.getAlterNode().isVisible) {
@@ -265,7 +265,7 @@ public class RelationSvg {
 //        }
 //
 //    }
-    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
+    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
         float[] egoSymbolPoint;
         float[] alterSymbolPoint;
         float[] parentPoint;
@@ -327,7 +327,7 @@ public class RelationSvg {
             } else {
                 linkLine.setAttribute("stroke", "blue");
             }
-            linkLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+            linkLine.setAttribute("stroke-width", Integer.toString(lineWidth));
             linkLine.setAttribute("id", lineIdString);
             defsNode.appendChild(linkLine);
             addedRelationLine = true;
@@ -347,8 +347,12 @@ public class RelationSvg {
             setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineIdString, squareLinkLine, directedRelation, vSpacing, fromX, fromY, toX, toY, parentPoint);
 
             squareLinkLine.setAttribute("fill", "none");
-            squareLinkLine.setAttribute("stroke", "grey");
-            squareLinkLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+            if (lineColour != null) {
+                squareLinkLine.setAttribute("stroke", lineColour);
+            } else {
+                squareLinkLine.setAttribute("stroke", "grey"); // todo: get the line colour from the settings
+            }
+            squareLinkLine.setAttribute("stroke-width", Integer.toString(lineWidth));
             squareLinkLine.setAttribute("id", lineIdString);
             defsNode.appendChild(squareLinkLine);
             addedRelationLine = true;
