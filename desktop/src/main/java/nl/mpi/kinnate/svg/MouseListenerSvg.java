@@ -260,16 +260,16 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         }
     }
 
-    private void addRelations(int maxCount, EntityData currentEntity, HashSet<UniqueIdentifier> selectedIds, boolean addRecursively) {
+    private void expandSelectionByRelations(int maxCount, EntityData currentEntity, HashSet<UniqueIdentifier> selectedIds, boolean addRecursively) {
         if (maxCount <= selectedIds.size()) {
             return;
         }
-        for (EntityRelation entityRelation : currentEntity.getVisiblyRelateNodes()) {
+        for (EntityRelation entityRelation : currentEntity.getVisiblyRelateNodes(true)) {
             EntityData alterNode = entityRelation.getAlterNode();
             if (alterNode.isVisible && !selectedIds.contains(alterNode.getUniqueIdentifier())) {
                 selectedIds.add(alterNode.getUniqueIdentifier());
                 if (addRecursively) {
-                    addRelations(maxCount, alterNode, selectedIds, addRecursively);
+                    expandSelectionByRelations(maxCount, alterNode, selectedIds, addRecursively);
                 }
             }
         }
@@ -297,7 +297,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     if (currentEntity.isVisible) {
                         // todo: continue here
                         if (graphPanel.selectedGroupId.contains(currentEntity.getUniqueIdentifier())) {
-                            addRelations(graphPanel.dataStoreSvg.graphData.getDataNodes().length, currentEntity, selectedIds, addRecursively);
+                            expandSelectionByRelations(graphPanel.dataStoreSvg.graphData.getDataNodes().length, currentEntity, selectedIds, addRecursively);
                         }
                     }
                 }
