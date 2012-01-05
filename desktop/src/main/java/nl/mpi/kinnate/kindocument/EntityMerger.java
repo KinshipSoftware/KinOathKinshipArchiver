@@ -26,7 +26,7 @@ public class EntityMerger extends DocumentLoader {
         try {
             EntityDocument leadEntityDocument = getEntityDocuments(selectedIdentifiers, nonLeadEntityDocuments);
             for (EntityDocument alterEntity : nonLeadEntityDocuments) {
-                for (EntityRelation entityRelation : alterEntity.entityData.getDistinctRelateNodes()) {
+                for (EntityRelation entityRelation : alterEntity.entityData.getAllRelations()) {
                     EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
                     // add the new relation
                     leadEntityDocument.entityData.addRelatedNode(relatedDocument.entityData, entityRelation.relationType, entityRelation.lineColour, entityRelation.labelString, entityRelation.dcrType, entityRelation.customType);
@@ -55,7 +55,7 @@ public class EntityMerger extends DocumentLoader {
                 EntityDocument masterDocument = entityMap.get(uniqueIdentifier);
                 EntityDocument duplicateEntityDocument = new EntityDocument(masterDocument, new ImportTranslator(true), sessionStorage);
                 addedIdentifiers.add(duplicateEntityDocument.getUniqueIdentifier());
-                for (EntityRelation entityRelation : masterDocument.entityData.getDistinctRelateNodes()) {
+                for (EntityRelation entityRelation : masterDocument.entityData.getAllRelations()) {
                     EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
                     // copy the relations
                     duplicateEntityDocument.entityData.addRelatedNode(relatedDocument.entityData, entityRelation.relationType, entityRelation.lineColour, entityRelation.labelString, entityRelation.dcrType, entityRelation.customType);
