@@ -156,7 +156,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 fireTableCellUpdated(rowIndex, columnIndex); // update the colour in the modified table cell
                 break;
             case 4:
-                lineWidth = Integer.parseInt(stringValue);
+                lineWidth = Integer.parseInt(stringValue.replaceAll("[^0-9]", ""));
                 break;
             case 5:
                 lineStye = stringValue;
