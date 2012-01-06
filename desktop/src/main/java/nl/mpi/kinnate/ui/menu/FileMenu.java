@@ -420,9 +420,9 @@ public class FileMenu extends javax.swing.JMenu {
     private void savePdfMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         // todo: implement pdf export
-        // todo: add a file select here.
-        new DiagramTranscoder().saveAsPdf(diagramWindowManager.getCurrentSavePanel());
-        new DiagramTranscoder().saveAsJpg(diagramWindowManager.getCurrentSavePanel());
+        // todo: add a file select here...
+        new DiagramTranscoder().saveAsPdf(diagramWindowManager.getCurrentSavePanel(), bugCatcher);
+        new DiagramTranscoder().saveAsJpg(diagramWindowManager.getCurrentSavePanel(), bugCatcher);
     }
 
     private void exportToRActionPerformed(java.awt.event.ActionEvent evt) {
