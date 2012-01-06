@@ -35,7 +35,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return true;
+        return columnIndex != 3; // prevent non colour data being entered into the colour field
     }
 
     public int getColumnCount() {
@@ -153,6 +153,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 break;
             case 3:
                 lineColour = stringValue;
+                fireTableCellUpdated(rowIndex, columnIndex); // update the colour in the modified table cell
                 break;
             case 4:
                 lineWidth = Integer.parseInt(stringValue);
