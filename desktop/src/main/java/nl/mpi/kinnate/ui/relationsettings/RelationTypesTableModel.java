@@ -39,7 +39,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
     }
 
     public int getColumnCount() {
-        return 7;
+        return 6;
     }
 
     @Override
@@ -56,8 +56,8 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             case 4:
                 return "Line Width";
             case 5:
-                return "Line Stye";
-            case 6:
+//                return "Line Stye";
+//            case 6:
                 return "";
             default:
                 throw new UnsupportedOperationException("Too many columns");
@@ -67,7 +67,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         switch (columnIndex) {
-            case 6:
+            case 5:
                 return Boolean.class;
             default:
                 return super.getColumnClass(columnIndex);
@@ -93,15 +93,15 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 case 4:
                     return kinType.getLineWidth();
                 case 5:
-                    return kinType.getLineStye();
-                case 6:
+//                    return kinType.getLineStye();
+//                case 6:
                     return checkBoxSet.contains(kinType);
                 default:
                     throw new UnsupportedOperationException("Too many columns");
             }
         } else {
             switch (columnIndex) {
-                case 6:
+                case 5:
                     return false;
                 default:
                     return ""; // add a blank row at the end
@@ -113,7 +113,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         String stringValue = aValue.toString();
         final RelationTypeDefinition[] kinTypeDefinitions = dataStoreSvg.getRelationTypeDefinitions();
-        if (rowIndex >= dataStoreSvg.getRelationTypeDefinitions().length && columnIndex == 6) {
+        if (rowIndex >= dataStoreSvg.getRelationTypeDefinitions().length && columnIndex == 5) {
             if (checkBoxSet.isEmpty()) {
                 checkBoxSet.addAll(Arrays.asList(kinTypeDefinitions));
             } else {
@@ -159,9 +159,9 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 lineWidth = Integer.parseInt(stringValue.replaceAll("[^0-9]", ""));
                 break;
             case 5:
-                lineStye = stringValue;
-                break;
-            case 6:
+//                lineStye = stringValue;
+//                break;
+//            case 6:
                 if ((Boolean) aValue) {
                     checkBoxSet.add(kinType);
                 } else {
