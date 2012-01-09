@@ -848,7 +848,7 @@ public class SvgUpdateHandler {
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
             // store the selected kin type strings and other data in the dom
-            graphPanel.dataStoreSvg.storeAllData(graphPanel.doc);
+            graphPanel.dataStoreSvg.storeAllData(graphPanel.doc, bugCatcher);
 //            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
             for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
@@ -899,7 +899,7 @@ public class SvgUpdateHandler {
                                     String lineColour = graphLinkNode.lineColour;
                                     int lineWidth = EntitySvg.strokeWidth;
                                     if (lineColour == null) {
-                                        for (RelationTypeDefinition relationTypeDefinition : graphPanel.dataStoreSvg.relationTypeDefinitions) {
+                                        for (RelationTypeDefinition relationTypeDefinition : graphPanel.dataStoreSvg.getRelationTypeDefinitions()) {
                                             if (relationTypeDefinition.matchesType(graphLinkNode)) {
                                                 lineColour = relationTypeDefinition.getLineColour();
                                                 lineWidth = relationTypeDefinition.getLineWidth();
