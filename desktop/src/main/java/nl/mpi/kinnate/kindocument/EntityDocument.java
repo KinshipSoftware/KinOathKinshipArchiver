@@ -13,7 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -41,10 +41,12 @@ public class EntityDocument {
     private ImportTranslator importTranslator;
     public static String defaultEntityType = "individual";
     private SessionStorage sessionStorage;
+    private BugCatcher bugCatcher;
 
-    public EntityDocument(ImportTranslator importTranslator, SessionStorage sessionStorage) {
+    public EntityDocument(ImportTranslator importTranslator, SessionStorage sessionStorage, BugCatcher bugCatcher) {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
+        this.bugCatcher = bugCatcher;
         assignIdentiferAndFile();
     }
 
@@ -54,10 +56,10 @@ public class EntityDocument {
         assignIdentiferAndFile();
         try {
             // construct the metadata file
-            URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString(entityType);
+            URI xsdUri = new CmdiTransformer(sessionStorage, bugCatcher).getXsdUrlString(entityType);
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
         } catch (KinXsdException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
         setDomNodesFromExistingFile();
@@ -72,13 +74,13 @@ public class EntityDocument {
             metadataDom = ArbilComponentBuilder.getDocument(entityDocumentToCopy.entityFile.toURI());
             ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
         } catch (IOException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         } catch (ParserConfigurationException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         } catch (SAXException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
         // replace the entity data in the new document
@@ -101,10 +103,10 @@ public class EntityDocument {
         }
         try {
             // construct the metadata file
-            URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString(entityType);
+            URI xsdUri = new CmdiTransformer(sessionStorage, bugCatcher).getXsdUrlString(entityType);
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
         } catch (KinXsdException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
         setDomNodesFromExistingFile();
@@ -151,16 +153,16 @@ public class EntityDocument {
                 throw new ImportException("Entity node not found");
             }
         } catch (JAXBException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         } catch (ParserConfigurationException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         } catch (SAXException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         } catch (IOException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
     }
@@ -183,7 +185,7 @@ public class EntityDocument {
         } else { // start skip overwrite
             try {
                 entityUri = entityFile.toURI();
-                URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString("individual");
+                URI xsdUri = new CmdiTransformer(sessionStorage, bugCatcher).getXsdUrlString("individual");
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 documentBuilderFactory.setNamespaceAware(true);
                 String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -205,19 +207,19 @@ public class EntityDocument {
                 currentDomNode = metadataNode;
                 kinnateNode = metadataDom.getDocumentElement();
             } catch (DOMException exception) {
-                new ArbilBugCatcher().logError(exception);
+                bugCatcher.logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
             } catch (ParserConfigurationException exception) {
-                new ArbilBugCatcher().logError(exception);
+                bugCatcher.logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
             } catch (IOException exception) {
-                new ArbilBugCatcher().logError(exception);
+                bugCatcher.logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
             } catch (SAXException exception) {
-                new ArbilBugCatcher().logError(exception);
+                bugCatcher.logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
             } catch (KinXsdException exception) {
-                new ArbilBugCatcher().logError(exception);
+                bugCatcher.logError(exception);
                 throw new ImportException("Error: " + exception.getMessage());
             }
             return entityUri;
@@ -332,7 +334,7 @@ public class EntityDocument {
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.marshal(entityData, kinnateNode);
         } catch (JAXBException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
 //        try {
