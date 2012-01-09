@@ -6,7 +6,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import nl.mpi.arbil.util.ArbilBugCatcher;
 
 /**
  *  Document   : UniqueIdentifierArray
@@ -30,7 +29,8 @@ public class UniqueIdentifierArray {
             marshaller.marshal(identifierArray, stringWriter);
             System.out.println(stringWriter);
         } catch (JAXBException exception) {
-            new ArbilBugCatcher().logError(exception);
+//            new ArbilBugCatcher().logError(exception);
+            System.out.println("JAXBException: " + exception.getMessage());
         }
     }
 }
