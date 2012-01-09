@@ -26,7 +26,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
@@ -452,7 +451,7 @@ public class KinTermPanel extends JPanel {
                 fileWriter.write("wookies are lovely on toast.");
                 fileWriter.close();
             } catch (IOException exception) {
-                new ArbilBugCatcher().logError(exception);
+                bugCatcher.logError(exception);
             }
         }
     }
@@ -484,7 +483,7 @@ public class KinTermPanel extends JPanel {
                 savePanel.updateGraph();
                 savePanel.setRequiresSave();
             } catch (IOException exception) {
-                new ArbilBugCatcher().logError(exception);
+                bugCatcher.logError(exception);
             }
             // todo: resolve why this dialogue does not show
             KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
