@@ -3,7 +3,6 @@ package nl.mpi.kinnate.svg;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
-import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
@@ -94,7 +93,7 @@ public class SymbolGraphic {
             symbolMap.put(symbolType, imageIcon);
             return imageIcon;
         } catch (TranscoderException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             return null;
         }
     }
