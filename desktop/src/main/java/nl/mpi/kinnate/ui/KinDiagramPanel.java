@@ -188,7 +188,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 150);
 
-        KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler(this, sessionStorage, entityCollection);
+        KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler(this, sessionStorage, entityCollection, bugCatcher);
         graphPanel.setTransferHandler(dragTransferHandler);
         egoSelectionPanel.setTransferHandler(dragTransferHandler);
 
