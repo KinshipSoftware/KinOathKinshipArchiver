@@ -19,7 +19,6 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
-import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindocument.RelationLinker;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
@@ -121,7 +120,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 try {
                     // if a relation has been set by this drag action then it is created here.
                     final RelationType relationType = DataTypes.getOpposingRelationType(graphPanel.svgUpdateHandler.relationDragHandle.getRelationType());
-                    UniqueIdentifier[] changedIdentifiers = new RelationLinker(sessionStorage, dialogHandler, entityCollection).linkEntities(graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType, graphPanel.svgUpdateHandler.relationDragHandle.getDataCategory(), graphPanel.svgUpdateHandler.relationDragHandle.getDisplayName());
+                    UniqueIdentifier[] changedIdentifiers = new RelationLinker(sessionStorage, dialogHandler, entityCollection, bugCatcher).linkEntities(graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType, graphPanel.svgUpdateHandler.relationDragHandle.getDataCategory(), graphPanel.svgUpdateHandler.relationDragHandle.getDisplayName());
                     kinDiagramPanel.entityRelationsChanged(changedIdentifiers);
                 } catch (ImportException exception) {
                     dialogHandler.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
@@ -175,7 +174,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     DataTypes.RelationType relationType = null;
                     if (handleTypeString.startsWith("custom:")) {
                         int typeHashCode = Integer.parseInt(handleTypeString.substring("custom:".length()));
-                        for (RelationTypeDefinition currentDefinition : graphPanel.dataStoreSvg.relationTypeDefinitions) {
+                        for (RelationTypeDefinition currentDefinition : graphPanel.dataStoreSvg.getRelationTypeDefinitions()) {
                             if (currentDefinition.hashCode() == typeHashCode) {
                                 customTypeDefinition = currentDefinition;
                                 break;
