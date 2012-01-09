@@ -345,7 +345,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 if (lineParts[2].toLowerCase().startsWith("mailto:")) {
                                     currentEntity.insertValue("mailto", lineParts[2]); // todo: check that this is not already inserted
                                 } else {
-                                    currentEntity.entityData.addArchiveLink(inputFileUri.resolve(lineParts[2]));
+                                    System.out.println("inputFileUri: " + inputFileUri.toString());
+                                    System.out.println("lineParts[2]: " + lineParts[2]);
+                                    final URI resolvedUri = inputFileUri.resolve(lineParts[2]);
+                                    System.out.println("resolvedUri: " + resolvedUri);
+                                    currentEntity.entityData.addArchiveLink(resolvedUri);
                                 }
                             }
 
