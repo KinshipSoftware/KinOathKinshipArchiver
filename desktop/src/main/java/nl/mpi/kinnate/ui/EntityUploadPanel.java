@@ -16,7 +16,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import nl.mpi.arbil.ui.GuiHelper;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
@@ -43,8 +43,10 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
     private EntityUploader entityUploader;
     private JPanel workspacePanel;
     private JPanel passwordPanel;
+    private ArbilWindowManager dialogHandler;
 
-    public EntityUploadPanel(SessionStorage sessionStorage, BugCatcher bugCatcher, EntityCollection entityCollection) {
+    public EntityUploadPanel(SessionStorage sessionStorage, BugCatcher bugCatcher, EntityCollection entityCollection, ArbilWindowManager dialogHandler) {
+        this.dialogHandler = dialogHandler;
         entityUploader = new EntityUploader(sessionStorage, bugCatcher, entityCollection);
 //        uploadList = new JList();
         uploadText = new JTextArea();
@@ -145,10 +147,10 @@ public class EntityUploadPanel extends JPanel implements ActionListener {
             uploadProgress.setIndeterminate(false);
             uploadText.append("Error on upload, does the specified workspace exist?\n");
         } else if (e.getActionCommand().equals("view")) {
-            GuiHelper.getSingleInstance().openFileInExternalApplication(entityUploader.getWorkspaceUri());
+            dialogHandler.openFileInExternalApplication(entityUploader.getWorkspaceUri());
         } else if (e.getActionCommand().equals("create")) {
             URI createUri = entityUploader.getCreateUrl(workspaceName.getText());
-            GuiHelper.getSingleInstance().openFileInExternalApplication(createUri);
+            dialogHandler.openFileInExternalApplication(createUri);
         }
 
 //        workspaceName.setEnabled(entityUploader.canUpload());
