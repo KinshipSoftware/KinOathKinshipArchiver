@@ -4,14 +4,12 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
-import java.net.URISyntaxException;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindocument.RelationLinker;
@@ -69,7 +67,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                         entityCollection.updateDatabase(addedEntityUri);
                         kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
                     } catch (ImportException exception) {
-                        new ArbilBugCatcher().logError(exception);
+                        bugCatcher.logError(exception);
                         arbilWindowManager.addMessageDialogToQueue("Failed to create entity: " + exception.getMessage(), "Add Entity");
                     }
                 }
@@ -81,7 +79,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     try {
-                        final UniqueIdentifier[] duplicateEntities = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).duplicateEntities(selectedIdentifiers);
+                        final UniqueIdentifier[] duplicateEntities = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection, bugCatcher).duplicateEntities(selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                         kinDiagramPanel.addRequiredNodes(duplicateEntities);
                     } catch (ImportException exception) {
@@ -96,7 +94,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     try {
-                        UniqueIdentifier[] affectedIdentifiers = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).mergeEntities(selectedIdentifiers);
+                        UniqueIdentifier[] affectedIdentifiers = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection, bugCatcher).mergeEntities(selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
                     } catch (ImportException exception) {
                         arbilWindowManager.addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
@@ -114,7 +112,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         try {
-                            UniqueIdentifier[] affectedIdentifiers = new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).linkEntities(selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()), null, null); // todo: custom relation types could be enabled here as could dcr values
+                            UniqueIdentifier[] affectedIdentifiers = new RelationLinker(sessionStorage, arbilWindowManager, entityCollection, bugCatcher).linkEntities(selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()), null, null); // todo: custom relation types could be enabled here as could dcr values..
                             kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
                         } catch (ImportException exception) {
                             arbilWindowManager.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), addRelationEntityMenu.getText());
@@ -134,7 +132,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             removeRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).unlinkEntities(graphPanel, selectedIdentifiers);
+                    new RelationLinker(sessionStorage, arbilWindowManager, entityCollection, bugCatcher).unlinkEntities(graphPanel, selectedIdentifiers);
                     kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                 }
             });
@@ -241,19 +239,18 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         this.add(saveFileMenuItem);
     }
 
-    private URI[] getSelectedUriArray() {
-        URI[] selectedUriArray = new URI[selectedIdentifiers.length];
-        for (int currentIndex = 0; currentIndex < selectedIdentifiers.length; currentIndex++) {
-            try {
-                selectedUriArray[currentIndex] = new URI(graphPanel.getPathForElementId(selectedIdentifiers[currentIndex]));
-            } catch (URISyntaxException ex) {
-                new ArbilBugCatcher().logError(ex);
-                // todo: warn user with a dialog
-            }
-        }
-        return selectedUriArray;
-    }
-
+//    private URI[] getSelectedUriArray() {
+//        URI[] selectedUriArray = new URI[selectedIdentifiers.length];
+//        for (int currentIndex = 0; currentIndex < selectedIdentifiers.length; currentIndex++) {
+//            try {
+//                selectedUriArray[currentIndex] = new URI(graphPanel.getPathForElementId(selectedIdentifiers[currentIndex]));
+//            } catch (URISyntaxException ex) {
+//                bugCatcher.logError(ex);
+//                // todo: warn user with a dialog
+//            }
+//        }
+//        return selectedUriArray;
+//    }
     @Override
     public void show(Component cmpnt, int i, int i1) {
         xPos = cmpnt.getMousePosition().x;
