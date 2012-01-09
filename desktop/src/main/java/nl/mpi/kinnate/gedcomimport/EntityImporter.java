@@ -19,7 +19,7 @@ import java.util.HashSet;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -40,11 +40,13 @@ public class EntityImporter implements GenericImporter {
     HashMap<String, EntityDocument> createdDocuments = new HashMap<String, EntityDocument>();
 //    private MetadataBuilder metadataBuilder;
     private SessionStorage sessionStorage;
+    protected BugCatcher bugCatcher;
 
-    public EntityImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
+    public EntityImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage, BugCatcher bugCatcher) {
         overwriteExisting = overwriteExistingLocal;
         importTextArea = importTextAreaLocal;
         progressBar = progressBarLocal;
+        this.bugCatcher = bugCatcher;
 //        metadataBuilder = new MetadataBuilder();
         createdNodeIds = new HashMap<String, HashSet<UniqueIdentifier>>();
         this.sessionStorage = sessionStorage;
@@ -77,9 +79,9 @@ public class EntityImporter implements GenericImporter {
             }
             inputFileMd5Sum = hexString.toString();
         } catch (NoSuchAlgorithmException algorithmException) {
-            new ArbilBugCatcher().logError(algorithmException);
+            bugCatcher.logError(algorithmException);
         } catch (IOException iOException) {
-            new ArbilBugCatcher().logError(iOException);
+            bugCatcher.logError(iOException);
         }
     }
 
@@ -143,7 +145,7 @@ public class EntityImporter implements GenericImporter {
                 savedCount++;
                 incrementSaveProgress(documentCount, savedCount);
             } catch (ImportException exception) {
-                new ArbilBugCatcher().logError(exception);
+                bugCatcher.logError(exception);
                 appendToTaskOutput("Error saving file: " + exception.getMessage());
             }
 //            }
@@ -171,7 +173,7 @@ public class EntityImporter implements GenericImporter {
         try {
             inputFileUri = getClass().getResource(testFileString).toURI();
         } catch (URISyntaxException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             appendToTaskOutput("Error getting the import directory attached resources might not be correctly resolved");
         }
         calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
