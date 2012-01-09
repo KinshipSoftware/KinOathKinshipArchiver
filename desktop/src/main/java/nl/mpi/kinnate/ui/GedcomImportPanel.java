@@ -168,14 +168,14 @@ public class GedcomImportPanel extends JPanel {
                         @Override
                         public void run() {
                             boolean overwriteExisting = overwriteOnImport.isSelected();
-                            GenericImporter genericImporter = new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
+                            GenericImporter genericImporter = new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, bugCatcher);
                             if (importFileString != null) {
                                 if (!genericImporter.canImport(importFileString)) {
-                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
+                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, bugCatcher);
                                 }
                             } else {
                                 if (!genericImporter.canImport(importFile.toString())) {
-                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
+                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, bugCatcher);
                                 }
                             }
                             URI[] treeNodesArray;
