@@ -1,12 +1,9 @@
 package nl.mpi.kinnate;
 
-import java.awt.datatransfer.ClipboardOwner;
 import nl.mpi.arbil.ArbilSwingInjector;
-import nl.mpi.arbil.ArbilVersion;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.ui.GuiHelper;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
@@ -22,9 +19,10 @@ import nl.mpi.kinnate.userstorage.KinSessionStorage;
  * the coupling between for example data classes and UI classes.
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
+ *
+ * @author     : Peter Withers
  * Cut down version as required for kinship
  * Created on : May 3, 2011, 12:17:34 PM
- * @author     : Peter Withers
  */
 public class KinnateArbilInjector extends ArbilSwingInjector {
 
@@ -33,11 +31,11 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
     private ArbilWindowManager windowManager;
     private ArbilBugCatcher bugCatcher;
     private ArbilDataNodeLoader dataNodeLoader;
-    private SessionStorage sessionStorage;
+    private ArbilSessionStorage sessionStorage;
     private EntityCollection entityCollection;
 
     public synchronized void injectHandlers() {
-        injectHandlers(new ApplicationVersionManager(new ArbilVersion()));
+        injectHandlers(new ApplicationVersionManager(new KinOathVersion()));
     }
 
     /**
@@ -46,47 +44,42 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
     public synchronized void injectHandlers(final ApplicationVersionManager versionManager) {
         injectVersionManager(versionManager);
 
-        // Ticket #1305 Move the kinoath working directory out of the .arbil directory into a .konoath directory.
         sessionStorage = new KinSessionStorage();
-        ArbilBugCatcher.setSessionStorage(sessionStorage);
-        ArbilDataNodeLoader.setSessionStorage(sessionStorage);
-        ArbilMimeHashQueue.setSessionStorage(sessionStorage);
-        ArbilWindowManager.setSessionStorage(sessionStorage);
         injectSessionStorage(sessionStorage);
 
-        bugCatcher = new ArbilBugCatcher();
-        ArbilWindowManager.setBugCatcher(bugCatcher);
-        ArbilSessionStorage.setBugCatcher(bugCatcher);
-        ArbilMimeHashQueue.setBugCatcher(bugCatcher);
+        bugCatcher = new ArbilBugCatcher(sessionStorage, versionManager);
+        sessionStorage.setBugCatcher(bugCatcher);
         injectBugCatcher(bugCatcher);
 
         windowManager = new ArbilWindowManager();
+        windowManager.setBugCatcher(bugCatcher);
+        windowManager.setSessionStorage(sessionStorage);
+        windowManager.setVersionManager(versionManager);
 
         final MessageDialogHandler messageDialogHandler = windowManager;
-        ArbilSessionStorage.setMessageDialogHandler(messageDialogHandler);
-        ArbilMimeHashQueue.setMessageDialogHandler(messageDialogHandler);
+        sessionStorage.setMessageDialogHandler(messageDialogHandler);
         injectDialogHandler(messageDialogHandler);
 
-        ArbilSessionStorage.setWindowManager(windowManager);
+        sessionStorage.setWindowManager(windowManager);
         injectWindowManager(windowManager);
 
-        final ClipboardOwner clipboardOwner = GuiHelper.getClipboardOwner();
-        injectClipboardOwner(clipboardOwner);
-
-        mimeHashQueue = new ArbilMimeHashQueue(windowManager);
+        mimeHashQueue = new ArbilMimeHashQueue(windowManager, sessionStorage);
+        mimeHashQueue.setBugCatcher(bugCatcher);
+        mimeHashQueue.setMessageDialogHandler(messageDialogHandler);
         injectMimeHashQueue(mimeHashQueue);
 
-        dataNodeLoader = new ArbilDataNodeLoader();
-        ArbilMimeHashQueue.setDataNodeLoader(dataNodeLoader);
-        ArbilWindowManager.setDataNodeLoader(dataNodeLoader);
+        treeHelper = new ArbilTreeHelper(sessionStorage, messageDialogHandler, bugCatcher);
+        windowManager.setTreeHelper(treeHelper);
+        sessionStorage.setTreeHelper(treeHelper);
+        injectTreeHelper(treeHelper);
+
+        dataNodeLoader = new ArbilDataNodeLoader(bugCatcher, messageDialogHandler, sessionStorage, mimeHashQueue, treeHelper);
+        treeHelper.setDataNodeLoader(dataNodeLoader);
+        mimeHashQueue.setDataNodeLoader(dataNodeLoader);
+        windowManager.setDataNodeLoader(dataNodeLoader);
         injectDataNodeLoader(dataNodeLoader);
 
-        treeHelper = new ArbilTreeHelper();
-	ArbilWindowManager.setTreeHelper(treeHelper);
-	ArbilSessionStorage.setTreeHelper(treeHelper);
-	injectTreeHelper(treeHelper);
-
-        entityCollection = new EntityCollection(sessionStorage, windowManager);
+        entityCollection = new EntityCollection(sessionStorage, windowManager, bugCatcher);
     }
 
     /**
