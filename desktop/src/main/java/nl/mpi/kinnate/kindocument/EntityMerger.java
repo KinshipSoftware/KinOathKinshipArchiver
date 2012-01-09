@@ -3,7 +3,7 @@ package nl.mpi.kinnate.kindocument;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
@@ -17,8 +17,8 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class EntityMerger extends DocumentLoader {
 
-    public EntityMerger(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection) {
-        super(sessionStorage, dialogHandler, entityCollection);
+    public EntityMerger(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection, BugCatcher bugCatcher) {
+        super(sessionStorage, dialogHandler, entityCollection, bugCatcher);
     }
 
     public UniqueIdentifier[] mergeEntities(UniqueIdentifier[] selectedIdentifiers) throws ImportException {
@@ -39,7 +39,7 @@ public class EntityMerger extends DocumentLoader {
             }
             saveAllDocuments();
         } catch (URISyntaxException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
         return getAffectedIdentifiers();
@@ -66,7 +66,7 @@ public class EntityMerger extends DocumentLoader {
             }
             return addedIdentifiers.toArray(new UniqueIdentifier[]{});
         } catch (URISyntaxException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
     }
