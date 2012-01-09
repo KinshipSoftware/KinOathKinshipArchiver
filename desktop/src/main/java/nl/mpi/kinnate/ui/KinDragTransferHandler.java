@@ -18,7 +18,7 @@ import nl.mpi.arbil.data.ArbilField;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindocument.EntityDocument;
@@ -42,11 +42,13 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     private EntityData targetEntity = null;
     private SessionStorage sessionStorage;
     private EntityCollection entityCollection;
+    private BugCatcher bugCatcher;
 
-    public KinDragTransferHandler(KinDiagramPanel kinDiagramPanel, SessionStorage sessionStorage, EntityCollection entityCollection) {
+    public KinDragTransferHandler(KinDiagramPanel kinDiagramPanel, SessionStorage sessionStorage, EntityCollection entityCollection, BugCatcher bugCatcher) {
         this.kinDiagramPanel = kinDiagramPanel;
         this.sessionStorage = sessionStorage;
         this.entityCollection = entityCollection;
+        this.bugCatcher = bugCatcher;
     }
 
     @Override
@@ -179,7 +181,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
                 }
             }
         } catch (JAXBException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
         }
         kinDiagramPanel.addRequiredNodes(slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
         return true;
@@ -219,7 +221,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             return true;
         } catch (ImportException exception) {
             // todo: warn user with a dialog
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             return false;
         }
     }
@@ -263,11 +265,11 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             return true;
         } catch (ImportException exception) {
             // todo: warn user with a dialog
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             return false;
         } catch (URISyntaxException exception) {
             // todo: warn user with a dialog
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             return false;
         }
     }
