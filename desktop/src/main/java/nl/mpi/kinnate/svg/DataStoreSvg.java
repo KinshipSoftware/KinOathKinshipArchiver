@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.GraphSorter;
@@ -42,7 +42,7 @@ public class DataStoreSvg {
     public HashSet<UniqueIdentifier> requiredEntities = new HashSet<UniqueIdentifier>();
     @XmlElementWrapper(name = "RelationTypeDefinitions")
     @XmlElement(name = "RelationType", namespace = "http://mpi.nl/tla/kin")
-    protected RelationTypeDefinition[] relationTypeDefinitions = null;
+    private RelationTypeDefinition[] relationTypeDefinitions = null;
     @XmlElementWrapper(name = "KinTypeDefinitions")
     @XmlElement(name = "KinType", namespace = "http://mpi.nl/tla/kin")
     protected KinType[] kinTypeDefinitions = null;
@@ -195,7 +195,7 @@ public class DataStoreSvg {
 //            dataStoreElement.appendChild(dataRecordNode);
 //        }
 //    }
-    protected void storeAllData(SVGDocument doc) {
+    protected void storeAllData(SVGDocument doc, BugCatcher bugCatcher) {
         // create string array to store the selected ego nodes in the dom
 //        ArrayList<String> egoStringArray = new ArrayList<String>();
 //        for (URI currentEgoUri : egoPathSet) {
@@ -210,7 +210,7 @@ public class DataStoreSvg {
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.marshal(this, doc.getRootElement());
         } catch (JAXBException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
 //        } catch (BaseXException exception) {
 //            new ArbilBugCatcher().logError(exception);
         }
@@ -269,7 +269,7 @@ public class DataStoreSvg {
 //        }
 //        return parameterList.toArray(new String[][]{});
 //    }
-    static protected DataStoreSvg loadDataFromSvg(SVGDocument doc) {
+    static protected DataStoreSvg loadDataFromSvg(SVGDocument doc, BugCatcher bugCatcher) {
         DataStoreSvg dataStoreSvg = new DataStoreSvg();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(DataStoreSvg.class);
@@ -290,7 +290,7 @@ public class DataStoreSvg {
 //                }
 //            }
         } catch (JAXBException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
         }
         return dataStoreSvg;
     }
