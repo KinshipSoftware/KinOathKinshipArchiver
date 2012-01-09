@@ -3,7 +3,7 @@ package nl.mpi.kinnate.kindocument;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
@@ -19,8 +19,8 @@ import org.w3c.dom.Document;
  */
 public class RelationLinker extends DocumentLoader {
 
-    public RelationLinker(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection) {
-        super(sessionStorage, dialogHandler, entityCollection);
+    public RelationLinker(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection, BugCatcher bugCatcher) {
+        super(sessionStorage, dialogHandler, entityCollection, bugCatcher);
     }
 
     private void removeMatchingRelations(Document entityDocument, UniqueIdentifier[] selectedIdentifiers) {
@@ -68,7 +68,7 @@ public class RelationLinker extends DocumentLoader {
             }
             saveAllDocuments();
         } catch (URISyntaxException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
         return getAffectedIdentifiers();
@@ -84,7 +84,7 @@ public class RelationLinker extends DocumentLoader {
             }
             saveAllDocuments();
         } catch (URISyntaxException exception) {
-            new ArbilBugCatcher().logError(exception);
+            bugCatcher.logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
         }
         return getAffectedIdentifiers();
