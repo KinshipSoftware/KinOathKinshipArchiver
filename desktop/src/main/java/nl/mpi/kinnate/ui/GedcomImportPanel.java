@@ -202,7 +202,7 @@ public class GedcomImportPanel extends JPanel {
 //                            tempArray.add(currentImdiObject);
 //                            JTextPane fileText = new JTextPane();
                                         XsdChecker xsdChecker = new XsdChecker();
-                                        if (xsdChecker.simpleCheck(new File(currentNodeUri), currentNodeUri) != null) {
+                                        if (xsdChecker.simpleCheck(new File(currentNodeUri)) != null) {
                                             abstractDiagramManager.createDiagramSubPanel("XSD Error on Import", xsdChecker);
                                             xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentNodeUri));
                                             xsdChecker.setDividerLocation(0.5);
