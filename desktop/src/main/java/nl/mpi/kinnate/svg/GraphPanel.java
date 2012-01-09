@@ -152,7 +152,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         try {
             doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toString());
             svgCanvas.setDocument(doc);
-            dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc);
+            dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc, bugCatcher);
             if (dataStoreSvg.indexParameters == null) {
                 dataStoreSvg.setDefaults();
             }
