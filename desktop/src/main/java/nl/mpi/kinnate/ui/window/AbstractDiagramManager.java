@@ -63,7 +63,7 @@ public abstract class AbstractDiagramManager {
             diagramFame = new JFrame();
         }
         setWindowTitle(diagramFame, diagramTitle);
-        diagramFame.setJMenuBar(new MainMenuBar(this, sessionStorage, dialogHandler, bugCatcher));
+        diagramFame.setJMenuBar(new MainMenuBar(this, sessionStorage, dialogHandler, bugCatcher, versionManager));
         if (diagramComponent != null) {
             diagramFame.setContentPane((Container) diagramComponent);
 //        } else {
@@ -159,7 +159,7 @@ public abstract class AbstractDiagramManager {
 
     public void openEntityUploadPanel() {
         if (entityUploadPanel == null) {
-            entityUploadPanel = new EntityUploadPanel(sessionStorage, bugCatcher, entityCollection);
+            entityUploadPanel = new EntityUploadPanel(sessionStorage, bugCatcher, entityCollection, dialogHandler);
             createDiagramContainer("Entity Upload", entityUploadPanel);
         }
         setSelectedDiagram(entityUploadPanel);
