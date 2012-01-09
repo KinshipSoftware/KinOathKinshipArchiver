@@ -1,9 +1,10 @@
 package nl.mpi.kinnate.ui.menu;
 
 import javax.swing.JMenuBar;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcher;
-import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -13,7 +14,7 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class MainMenuBar extends JMenuBar {
 
-    public MainMenuBar(AbstractDiagramManager abstractDiagramManager, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+    public MainMenuBar(AbstractDiagramManager abstractDiagramManager, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, BugCatcher bugCatcher, ApplicationVersionManager versionManager) {
         this.add(new FileMenu(abstractDiagramManager, sessionStorage, dialogHandler, bugCatcher));
         this.add(new EditMenu(abstractDiagramManager));
         this.add(new DiagramOptionsMenu(abstractDiagramManager));
@@ -21,6 +22,6 @@ public class MainMenuBar extends JMenuBar {
         this.add(new ArchiveMenu(abstractDiagramManager));
         this.add(new DiagramPanelsMenu(abstractDiagramManager));
         this.add(new WindowMenu(abstractDiagramManager));
-        this.add(new HelpMenu(abstractDiagramManager, bugCatcher, dialogHandler, sessionStorage));
+        this.add(new HelpMenu(abstractDiagramManager, bugCatcher, dialogHandler, sessionStorage, versionManager));
     }
 }
