@@ -16,7 +16,10 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.event.SaxonOutputKeys;
 import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
+import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
@@ -30,9 +33,11 @@ public class CmdiTransformer {
     private URL component2SchemaXslHeader = this.getClass().getResource("/xsd/comp2schema-header.xsl");
     private URL component2SchemaXslCleanup = this.getClass().getResource("/xsd/cleanup-xsd.xsl");
     private SessionStorage sessionStorage;
+    private BugCatcher bugCatcher;
 
-    public CmdiTransformer(SessionStorage sessionStorage) {
+    public CmdiTransformer(SessionStorage sessionStorage, BugCatcher bugCatcher) {
         this.sessionStorage = sessionStorage;
+        this.bugCatcher = bugCatcher;
     }
 
     public URI getXsdUrlString(String entityType) throws KinXsdException {
@@ -75,7 +80,7 @@ public class CmdiTransformer {
             System.setProperty("javax.xml.transform.TransformerFactory", net.sf.saxon.TransformerFactoryImpl.class.getName());
             componentToSchemaTemplates = TransformerFactory.newInstance().newTemplates(new StreamSource(xlsFile));
         } catch (TransformerConfigurationException e) {
-            new ArbilBugCatcher().logError("Cannot create Template", e);
+            bugCatcher.logError("Cannot create Template", e);
             return;
         }
         try {
@@ -85,11 +90,11 @@ public class CmdiTransformer {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             transformer.transform(new StreamSource(cmdiProfileXmlUrl), new StreamResult(new java.io.FileOutputStream(outputFile)));
         } catch (TransformerConfigurationException e) {
-            new ArbilBugCatcher().logError("Cannot create Transformer", e);
+            bugCatcher.logError("Cannot create Transformer", e);
         } catch (TransformerException e) {
-            new ArbilBugCatcher().logError("Cannot transform xml file: ", e);
+            bugCatcher.logError("Cannot transform xml file: ", e);
         } catch (FileNotFoundException e) {
-            new ArbilBugCatcher().logError(e);
+            bugCatcher.logError(e);
         }
     }
 
@@ -98,7 +103,7 @@ public class CmdiTransformer {
             String profileId = "clarin.eu:cr1:p_1320657629627";
             final KinSessionStorage kinSessionStorage = new KinSessionStorage();
             File xsdFile = new File(kinSessionStorage.getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
-            new CmdiTransformer(kinSessionStorage).transformProfileXmlToXsd(xsdFile, profileId);
+            new CmdiTransformer(kinSessionStorage, new ArbilBugCatcher(kinSessionStorage, new ApplicationVersionManager(new KinOathVersion()))).transformProfileXmlToXsd(xsdFile, profileId);
         } catch (IOException exception) {
             System.out.println("exception: " + exception.getMessage());
         } catch (TransformerException exception) {
