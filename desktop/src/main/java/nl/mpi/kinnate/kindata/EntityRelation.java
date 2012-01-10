@@ -58,17 +58,49 @@ public class EntityRelation implements Comparable<EntityRelation> {
     }
 
     public int compareTo(EntityRelation o) {
-        if (o.alterUniqueIdentifier.equals(alterUniqueIdentifier)
-                //                && o.generationalDistance == generationalDistance
-                //                && o.relationLineType.equals(relationLineType)
-                && o.relationType.equals(relationType)
-                && ((dcrType == null && dcrType == null) || o.dcrType.equals(dcrType))
-                && ((customType == null && customType == null) || o.customType.equals(customType))
-                && ((labelString == null && labelString == null) || o.labelString.equals(labelString))
-                && ((lineColour == null && lineColour == null) || o.lineColour.equals(lineColour))) {
-            return 0;
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
         }
-        return -1;
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final EntityRelation other = (EntityRelation) obj;
+        if (this.alterUniqueIdentifier != other.alterUniqueIdentifier && (this.alterUniqueIdentifier == null || !this.alterUniqueIdentifier.equals(other.alterUniqueIdentifier))) {
+            return false;
+        }
+        if (this.relationType != other.relationType) {
+            return false;
+        }
+        if ((this.labelString == null) ? (other.labelString != null) : !this.labelString.equals(other.labelString)) {
+            return false;
+        }
+        if ((this.lineColour == null) ? (other.lineColour != null) : !this.lineColour.equals(other.lineColour)) {
+            return false;
+        }
+        if ((this.dcrType == null) ? (other.dcrType != null) : !this.dcrType.equals(other.dcrType)) {
+            return false;
+        }
+        if ((this.customType == null) ? (other.customType != null) : !this.customType.equals(other.customType)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 71 * hash + (this.alterUniqueIdentifier != null ? this.alterUniqueIdentifier.hashCode() : 0);
+        hash = 71 * hash + (this.relationType != null ? this.relationType.hashCode() : 0);
+        hash = 71 * hash + (this.labelString != null ? this.labelString.hashCode() : 0);
+        hash = 71 * hash + (this.lineColour != null ? this.lineColour.hashCode() : 0);
+        hash = 71 * hash + (this.dcrType != null ? this.dcrType.hashCode() : 0);
+        hash = 71 * hash + (this.customType != null ? this.customType.hashCode() : 0);
+        return hash;
     }
 
     @XmlTransient
