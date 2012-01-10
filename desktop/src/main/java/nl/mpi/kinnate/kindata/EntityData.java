@@ -247,7 +247,7 @@ public class EntityData {
         if (relatedNodes != null) {
             // check for existing relations matching the one to be added and prevent duplicates
             for (EntityRelation entityRelation : relatedNodes) {
-                if (entityRelation.compareTo(nodeRelation) == 0) {
+                if (entityRelation.equals(nodeRelation)) {
                     return entityRelation;
                 }
             }
