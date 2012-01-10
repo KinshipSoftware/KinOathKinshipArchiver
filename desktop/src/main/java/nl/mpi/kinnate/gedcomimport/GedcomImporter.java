@@ -345,10 +345,13 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 if (lineParts[2].toLowerCase().startsWith("mailto:")) {
                                     currentEntity.insertValue("mailto", lineParts[2]); // todo: check that this is not already inserted
                                 } else {
-                                    System.out.println("inputFileUri: " + inputFileUri.toString());
-                                    System.out.println("lineParts[2]: " + lineParts[2]);
-                                    final URI resolvedUri = inputFileUri.resolve(lineParts[2]);
-                                    System.out.println("resolvedUri: " + resolvedUri);
+                                    URI resolvedUri;
+                                    if ("jar".equals(inputFileUri.getScheme())) { // "?jar:file:"
+                                        // when the application is running from a jar file the uri resolve fails as designed by Sun, also we do not include the media files in the jar, so for sample files we must replace the uri with the documentation uri example.net
+                                        resolvedUri = URI.create("http://example.net/example/files/not/included/demo").resolve(lineParts[2]);
+                                    } else {
+                                        resolvedUri = inputFileUri.resolve(lineParts[2]);
+                                    }
                                     currentEntity.entityData.addArchiveLink(resolvedUri);
                                 }
                             }
