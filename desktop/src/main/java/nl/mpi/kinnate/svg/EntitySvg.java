@@ -382,8 +382,10 @@ public class EntitySvg {
     public float[] getAverageParentLocation(EntityData entityData) {
         HashSet<UniqueIdentifier> identifierSet = new HashSet<UniqueIdentifier>();
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
-            if (entityRelation.relationType == RelationType.ancestor) {
-                identifierSet.add(entityRelation.alterUniqueIdentifier);
+            if (entityRelation.getAlterNode().isVisible) {
+                if (entityRelation.relationType == RelationType.ancestor) {
+                    identifierSet.add(entityRelation.alterUniqueIdentifier);
+                }
             }
         }
         parentIdentifiers.put(entityData.getUniqueIdentifier(), identifierSet);
