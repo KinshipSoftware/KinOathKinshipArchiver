@@ -29,7 +29,7 @@ public class PedigreePackageExport {
 
     private UniqueIdentifier getFirstMatchingParent(EntityData entityData, EntityData.SymbolType symbolType) {
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
-            if (entityRelation.relationType.equals(DataTypes.RelationType.ancestor)) {
+            if (entityRelation.getRelationType().equals(DataTypes.RelationType.ancestor)) {
                 if (entityRelation.getAlterNode().getSymbolType().equals(symbolType.name())) {
                     return entityRelation.getAlterNode().getUniqueIdentifier();
                 }
