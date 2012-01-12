@@ -58,7 +58,7 @@ public class KinType {
         if (entityRelation.getAlterNode().isEgo != this.isEgoType()) {
             return false;
         }
-        if (relationType != null && !relationType.equals(entityRelation.relationType)) {
+        if (relationType != null && !relationType.equals(entityRelation.getRelationType())) {
             return false;
         }
         if (symbolType != null && symbolType != EntityData.SymbolType.square) {
