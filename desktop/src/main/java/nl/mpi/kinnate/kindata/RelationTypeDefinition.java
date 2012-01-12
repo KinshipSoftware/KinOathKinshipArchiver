@@ -10,6 +10,10 @@ import nl.mpi.kinnate.kindata.DataTypes.RelationType;
  */
 public class RelationTypeDefinition {
 
+    public enum CurveLineOrientation {
+
+        horizontal, vertical
+    }
     @XmlAttribute(name = "name", namespace = "http://mpi.nl/tla/kin")
     private String displayName;
     @XmlAttribute(name = "type", namespace = "http://mpi.nl/tla/kin")
@@ -20,8 +24,10 @@ public class RelationTypeDefinition {
     private String lineColour;
     @XmlAttribute(name = "width", namespace = "http://mpi.nl/tla/kin")
     private int lineWidth;
-    @XmlAttribute(name = "stype", namespace = "http://mpi.nl/tla/kin")
+    @XmlAttribute(name = "style", namespace = "http://mpi.nl/tla/kin")
     private String lineStye;
+    @XmlAttribute(name = "orientation", namespace = "http://mpi.nl/tla/kin")
+    private CurveLineOrientation curveLineOrientation = CurveLineOrientation.horizontal; // used to define the line orientation of curve lines only
 
     public RelationTypeDefinition() {
     }
@@ -57,6 +63,10 @@ public class RelationTypeDefinition {
 
     public RelationType getRelationType() {
         return relationType;
+    }
+
+    public CurveLineOrientation getCurveLineOrientation() {
+        return curveLineOrientation;
     }
 
     public boolean matchesType(EntityRelation entityRelation) {
