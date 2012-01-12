@@ -3,6 +3,7 @@ package nl.mpi.kinnate.svg;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -66,6 +67,14 @@ public class RelationDragHandle {
     public String getDisplayName() {
         if (customTypeDefinition != null) {
             return customTypeDefinition.getDisplayName();
+        } else {
+            return null;
+        }
+    }
+
+    public CurveLineOrientation getCurveLineOrientation() {
+        if (customTypeDefinition != null) {
+            return customTypeDefinition.getCurveLineOrientation();
         } else {
             return null;
         }
