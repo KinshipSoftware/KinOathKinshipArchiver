@@ -51,7 +51,7 @@ public class GraphSorter {
         public void calculateRelations(HashMap<UniqueIdentifier, SortingEntity> knownSortingEntities) {
             for (EntityRelation entityRelation : allRelateNodes) {
                 if (entityRelation.getAlterNode().isVisible) {
-                    switch (entityRelation.relationType) {
+                    switch (entityRelation.getRelationType()) {
                         case ancestor:
                             mustBeBelow.add(knownSortingEntities.get(entityRelation.alterUniqueIdentifier));
                             break;
