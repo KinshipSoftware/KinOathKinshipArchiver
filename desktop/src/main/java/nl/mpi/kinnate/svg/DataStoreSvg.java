@@ -14,6 +14,7 @@ import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
@@ -97,6 +98,7 @@ public class DataStoreSvg {
         public UniqueIdentifier egoNodeId;
         public UniqueIdentifier alterNodeId;
         public DataTypes.RelationType relationType;
+        public CurveLineOrientation curveLineOrientation;
     }
 
     public DataStoreSvg() {
@@ -157,17 +159,19 @@ public class DataStoreSvg {
                 graphRelationData.egoNodeId = new UniqueIdentifier(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "ego").getNodeValue());
                 graphRelationData.alterNodeId = new UniqueIdentifier(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "alter").getNodeValue());
                 graphRelationData.relationType = DataTypes.RelationType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "relationType").getNodeValue());
+                graphRelationData.curveLineOrientation = CurveLineOrientation.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "curveLineOrientation").getNodeValue());
                 return graphRelationData;
             }
         }
         return null;
     }
 
-    public void storeRelationParameters(SVGDocument doc, Element relationGroup, DataTypes.RelationType relationType, UniqueIdentifier egoEntity, UniqueIdentifier alterEntity) {
+    public void storeRelationParameters(SVGDocument doc, Element relationGroup, DataTypes.RelationType relationType, CurveLineOrientation curveLineOrientation, UniqueIdentifier egoEntity, UniqueIdentifier alterEntity) {
         Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
         dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:relationType", relationType.name());
         dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:ego", egoEntity.getAttributeIdentifier());
         dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:alter", alterEntity.getAttributeIdentifier());
+        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:curveLineOrientation", curveLineOrientation.name());
         relationGroup.appendChild(dataRecordNode);
     }
 
