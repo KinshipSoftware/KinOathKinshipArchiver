@@ -11,6 +11,7 @@ import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
@@ -212,7 +213,7 @@ public class SvgUpdateHandler {
                     if (DataTypes.isSanguinLine(directedRelation)) {
                         new RelationSvg(dialogHandler).setPolylinePointsAttribute(null, dragLineElementId, highlightBackgroundLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
                     } else {
-                        new RelationSvg(dialogHandler).setPathPointsAttribute(highlightBackgroundLine, directedRelation, hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1]);
+                        new RelationSvg(dialogHandler).setPathPointsAttribute(highlightBackgroundLine, localRelationDragHandle.getCurveLineOrientation(), hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1]);
                     }
                     relationHighlightGroup.appendChild(highlightBackgroundLine);
                     // add a blue dotted line
@@ -223,7 +224,7 @@ public class SvgUpdateHandler {
                     if (DataTypes.isSanguinLine(directedRelation)) {
                         new RelationSvg(dialogHandler).setPolylinePointsAttribute(null, dragLineElementId, highlightLine, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
                     } else {
-                        new RelationSvg(dialogHandler).setPathPointsAttribute(highlightLine, directedRelation, hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1]);
+                        new RelationSvg(dialogHandler).setPathPointsAttribute(highlightLine, localRelationDragHandle.getCurveLineOrientation(), hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1]);
                     }
                     highlightLine.setAttribute("stroke", localRelationDragHandle.getRelationColour());
                     highlightLine.setAttribute("stroke-dasharray", "3");
@@ -860,19 +861,19 @@ public class SvgUpdateHandler {
             for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getAllRelations()) {
-                        if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.relationType != DataTypes.RelationType.kinTerm)
-                                && (graphPanel.dataStoreSvg.showSanguineLines || !DataTypes.isSanguinLine(graphLinkNode.relationType))
+                        if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.getRelationType() != DataTypes.RelationType.kinterm)
+                                && (graphPanel.dataStoreSvg.showSanguineLines || !DataTypes.isSanguinLine(graphLinkNode.getRelationType()))
                                 && graphLinkNode.getAlterNode().isVisible) {
                             // make directed and exclude any lines that are already done
-                            DataTypes.RelationType directedRelation = graphLinkNode.relationType;
+                            DataTypes.RelationType directedRelation = graphLinkNode.getRelationType();
                             EntityData leftEntity;
                             EntityData rightEntity;
-                            if (graphLinkNode.relationType == DataTypes.RelationType.descendant) {
+                            if (graphLinkNode.getRelationType() == DataTypes.RelationType.descendant) {
                                 // make sure the ancestral relations are unidirectional
                                 directedRelation = DataTypes.RelationType.ancestor;
                                 leftEntity = graphLinkNode.getAlterNode();
                                 rightEntity = currentNode;
-                            } else if (graphLinkNode.relationType == DataTypes.RelationType.ancestor) {
+                            } else if (graphLinkNode.getRelationType() == DataTypes.RelationType.ancestor) {
                                 // make sure the ancestral relations are unidirectional
                                 leftEntity = currentNode;
                                 rightEntity = graphLinkNode.getAlterNode();
@@ -889,7 +890,7 @@ public class SvgUpdateHandler {
                             // make sure each equivalent relation is drawn only once
                             if (!doneRelations.contains(compoundIdentifier)) {
                                 boolean skipCurrentRelation = false;
-                                if (DataTypes.isSanguinLine(graphLinkNode.relationType)) {
+                                if (DataTypes.isSanguinLine(graphLinkNode.getRelationType())) {
                                     if (relationSvg.hasCommonParent(leftEntity, graphLinkNode)) {
                                         // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
                                         skipCurrentRelation = true;
@@ -898,17 +899,19 @@ public class SvgUpdateHandler {
                                 if (!skipCurrentRelation) {
                                     doneRelations.add(compoundIdentifier);
                                     String lineColour = graphLinkNode.lineColour;
+                                    CurveLineOrientation curveLineOrientation = CurveLineOrientation.horizontal;
                                     int lineWidth = EntitySvg.strokeWidth;
                                     if (lineColour == null) {
                                         for (RelationTypeDefinition relationTypeDefinition : graphPanel.dataStoreSvg.getRelationTypeDefinitions()) {
                                             if (relationTypeDefinition.matchesType(graphLinkNode)) {
                                                 lineColour = relationTypeDefinition.getLineColour();
                                                 lineWidth = relationTypeDefinition.getLineWidth();
+                                                curveLineOrientation = relationTypeDefinition.getCurveLineOrientation();
                                                 break;
                                             }
                                         }
                                     }
-                                    relationSvg.insertRelation(graphPanel, relationGroupNode, leftEntity, rightEntity, directedRelation, lineWidth, lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
+                                    relationSvg.insertRelation(graphPanel, relationGroupNode, leftEntity, rightEntity, directedRelation, lineWidth, curveLineOrientation, lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
                                 }
                             }
                         }
