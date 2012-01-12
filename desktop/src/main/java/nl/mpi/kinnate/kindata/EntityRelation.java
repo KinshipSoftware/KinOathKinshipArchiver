@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.kindata;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -19,7 +20,7 @@ public class EntityRelation implements Comparable<EntityRelation> {
     @XmlElement(name = "Identifier", namespace = "http://mpi.nl/tla/kin")
     public UniqueIdentifier alterUniqueIdentifier = null;
     @XmlAttribute(name = "Type", namespace = "http://mpi.nl/tla/kin")
-    public DataTypes.RelationType relationType;
+    private DataTypes.RelationType relationType;
     @XmlElement(name = "Label", namespace = "http://mpi.nl/tla/kin")
     public String labelString;
     @XmlElement(name = "Colour", namespace = "http://mpi.nl/tla/kin")
@@ -40,6 +41,13 @@ public class EntityRelation implements Comparable<EntityRelation> {
         this.lineColour = lineColour;
         this.relationType = relationType;
         this.labelString = labelString;
+    }
+
+    public RelationType getRelationType() {
+        if (relationType == null) {
+            relationType = DataTypes.RelationType.other; //  update any old format types (that failed to deserialise) to other
+        }
+        return relationType;
     }
 
     public void setAlterNode(EntityData graphDataNode) {
