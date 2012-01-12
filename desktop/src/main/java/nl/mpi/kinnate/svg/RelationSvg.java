@@ -6,6 +6,7 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
@@ -168,7 +169,7 @@ public class RelationSvg {
         targetNode.setAttribute("points", stringBuilder.toString());
     }
 
-    protected void setPathPointsAttribute(Element targetNode, DataTypes.RelationType relationType, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+    protected void setPathPointsAttribute(Element targetNode, CurveLineOrientation curveLineOrientation, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float fromBezX;
         float fromBezY;
         float toBezX;
@@ -182,7 +183,7 @@ public class RelationSvg {
             egoX = tempX;
             egoY = tempY;
         }
-        if (relationType == DataTypes.RelationType.verticalCurve) {
+        if (curveLineOrientation == CurveLineOrientation.vertical) {
             fromBezX = egoX;
             fromBezY = alterY;
             toBezX = alterX;
@@ -225,11 +226,11 @@ public class RelationSvg {
     }
 
     public boolean hasCommonParent(EntityData currentNode, EntityRelation graphLinkNode) {
-        if (graphLinkNode.relationType == DataTypes.RelationType.sibling) {
+        if (graphLinkNode.getRelationType() == DataTypes.RelationType.sibling) {
             for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getAllRelations()) {
-                if (altersRelation.relationType == DataTypes.RelationType.ancestor) {
+                if (altersRelation.getRelationType() == DataTypes.RelationType.ancestor) {
                     for (EntityRelation egosRelation : currentNode.getAllRelations()) {
-                        if (egosRelation.relationType == DataTypes.RelationType.ancestor) {
+                        if (egosRelation.getRelationType() == DataTypes.RelationType.ancestor) {
                             if (altersRelation.alterUniqueIdentifier.equals(egosRelation.alterUniqueIdentifier)) {
                                 if (altersRelation.getAlterNode().isVisible) {
                                     return true;
@@ -265,7 +266,7 @@ public class RelationSvg {
 //        }
 //
 //    }
-    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
+    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
         float[] egoSymbolPoint;
         float[] alterSymbolPoint;
         float[] parentPoint;
@@ -279,7 +280,7 @@ public class RelationSvg {
         groupNode.setAttribute("id", "relation" + relationLineIndex);
         Element defsNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "defs");
         String lineIdString = "relation" + relationLineIndex + "Line";
-        new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, directedRelation, leftEntity.getUniqueIdentifier(), rightEntity.getUniqueIdentifier());
+        new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, directedRelation, curveLineOrientation, leftEntity.getUniqueIdentifier(), rightEntity.getUniqueIdentifier());
         // set the line end points
 //        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(currentNode.getUniqueIdentifier());
 //        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
@@ -316,7 +317,7 @@ public class RelationSvg {
             //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
             Element linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
 
-            setPathPointsAttribute(linkLine, directedRelation, hSpacing, vSpacing, fromX, fromY, toX, toY);
+            setPathPointsAttribute(linkLine, curveLineOrientation, hSpacing, vSpacing, fromX, fromY, toX, toY);
             //                    linkLine.setAttribute("x1", );
             //                    linkLine.setAttribute("y1", );
             //
@@ -441,7 +442,7 @@ public class RelationSvg {
                             }
                             if ("path".equals(relationLineElement.getLocalName())) {
                                 //System.out.println("path to update: " + relationLineElement.getLocalName());
-                                setPathPointsAttribute(relationLineElement, directedRelation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
+                                setPathPointsAttribute(relationLineElement, graphRelationData.curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
                             }
                             addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
                             updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
