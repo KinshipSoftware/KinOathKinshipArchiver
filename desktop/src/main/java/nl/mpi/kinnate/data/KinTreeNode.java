@@ -95,14 +95,14 @@ public class KinTreeNode extends ArbilNode implements Comparable {
             // todo: add metanodes and ui option to hide show relation types
             for (EntityRelation entityRelation : entityData.getAllRelations()) {
                 final boolean showFiltered = subnodeFilter == DataTypes.RelationType.ancestor || subnodeFilter == DataTypes.RelationType.descendant;
-                if (subnodeFilter == null || (subnodeFilter == entityRelation.relationType && showFiltered)) {
+                if (subnodeFilter == null || (subnodeFilter == entityRelation.getRelationType() && showFiltered)) {
                     EntityData alterEntity = entityRelation.getAlterNode();
                     if (alterEntity == null) {
                         // todo: should these enties be cached? or will the entire tree be discarded on redraw?
                         alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
                         entityRelation.setAlterNode(alterEntity);
                     }
-                    relationList.add(new KinTreeNode(alterEntity, entityRelation.relationType, indexerParameters, dialogHandler, bugCatcher, entityCollection, dataNodeLoader));
+                    relationList.add(new KinTreeNode(alterEntity, entityRelation.getRelationType(), indexerParameters, dialogHandler, bugCatcher, entityCollection, dataNodeLoader));
                 }
             }
             if (entityData.archiveLinkArray != null) {
