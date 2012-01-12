@@ -83,11 +83,11 @@ public class RelationTypeDefinition {
             }
         }
         if (relationType == null) {
-            if (entityRelation.relationType != null) {
+            if (entityRelation.getRelationType() != null) {
                 return false;
             }
         } else {
-            if (!entityRelation.relationType.equals(relationType)) {
+            if (!entityRelation.getRelationType().equals(relationType)) {
                 return false;
             }
         }
