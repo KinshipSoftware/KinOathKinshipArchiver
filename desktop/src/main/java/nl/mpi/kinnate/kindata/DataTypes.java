@@ -7,15 +7,18 @@ package nl.mpi.kinnate.kindata;
  */
 public class DataTypes {
 
-//    @Deprecated
-//    public enum LineType {
-// determins if and when the line will be rendered
-//        sanguineLine, verticalCurve
-//    }
     public enum RelationType {
 
-        // todo: replace affiliation, resource, collector, metadata, none  for OTHER
-        sibling, ancestor, descendant, union, kinTerm, verticalCurve, horizontalCurve, custom, affiliation, resource, collector, metadata, none // todo: should metadata relations use the same link type as jpg files?
+        // todo: replace affiliation, resource, collector, metadata, none  for OTHER..
+        // maybe keep the: kinterm, curve1, curve2, none
+        // sibling, ancestor, descendant, union, kin_term, custom_type1, custom_type2, none
+        sibling, ancestor, descendant, union, kinterm, other //, horizontalCurve, gedcom,/* probably remove the items after this */ custom, affiliation, resource, collector, metadata, none // todo: should metadata relations use the same link type as jpg files?
+
+
+// modify the kin type definitions to allow multi select for symbols and relation types eg P could be squ or cir and tri
+                // and add additional option after divider with <all> that toggles all selections 
+                // if other then enable extra column with line type of h or v
+                // modify relation type in kintype definitions to ude the custom relation types not the enum
     }
 
     public static boolean isSanguinLine(String stringRelation) {
@@ -41,7 +44,7 @@ public class DataTypes {
 
     public RelationTypeDefinition[] getReferenceRelations() {
         return new RelationTypeDefinition[]{
-                    new RelationTypeDefinition("SampeRelationType", "", RelationType.custom, "#999999", 4, "")
+//                    new RelationTypeDefinition("SampeRelationType", "", RelationType.custom, "#999999", 4, "")
                 };
     }
 }
