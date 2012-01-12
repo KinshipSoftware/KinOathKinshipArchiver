@@ -383,7 +383,7 @@ public class EntitySvg {
         HashSet<UniqueIdentifier> identifierSet = new HashSet<UniqueIdentifier>();
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
             if (entityRelation.getAlterNode().isVisible) {
-                if (entityRelation.relationType == RelationType.ancestor) {
+                if (entityRelation.getRelationType() == RelationType.ancestor) {
                     identifierSet.add(entityRelation.alterUniqueIdentifier);
                 }
             }
