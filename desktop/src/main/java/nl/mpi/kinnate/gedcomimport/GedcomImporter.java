@@ -391,7 +391,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             // create the link node when required
                             if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
 //                                appendToTaskOutput("--> adding social relation");
-                                RelationType targetRelation = RelationType.none;
+                                RelationType targetRelation = RelationType.other;
                                 // here the following five relation types are mapped to the correct relation types after this the association is cretaed and later the indigiduals are linked with sanguine relations
                                 if (lineParts[1].equals("FAMS") || lineParts[1].equals("FAMC") || lineParts[1].equals("HUSB") || lineParts[1].equals("WIFE") || lineParts[1].equals("CHIL")) {
                                     UniqueIdentifier socialGroupIdentifier;
@@ -407,34 +407,34 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                         socialGroupRoleMap.put(socialGroupIdentifier, new ArrayList<SocialMemberElement>());
                                     }
                                     socialGroupRoleMap.get(socialGroupIdentifier).add(new SocialMemberElement(lineParts[1], socialGroupMember));
-                                    targetRelation = RelationType.affiliation;
-                                } else if (lineParts[1].equals("SUBM")) {
-                                    targetRelation = RelationType.collector;
-                                } else if (lineParts[1].equals("SUBN")) {
-                                    targetRelation = RelationType.metadata;
-                                } else if (lineParts[1].equals("NOTE")) {
-                                    targetRelation = RelationType.metadata;
-                                } else if (lineParts[1].equals("ALIA")) {
-                                    targetRelation = RelationType.metadata;
-                                } else if (lineParts[1].equals("ASSO")) {
-                                    targetRelation = RelationType.affiliation;
-                                } else if (lineParts[1].equals("ANCI")) {
-                                    targetRelation = RelationType.collector;
-                                } else if (lineParts[1].equals("DESI")) {
-                                    targetRelation = RelationType.collector;
-                                } else if (lineParts[1].equals("REPO")) {
-                                    targetRelation = RelationType.metadata;
-                                } else if (lineParts[1].equals("OBJE")) {
-                                    targetRelation = RelationType.resource;
-                                } else if (lineParts[1].equals("SOUR")) {
-                                    targetRelation = RelationType.metadata;
-                                } else if (lineParts[1].equals("_HME")) {
-                                    targetRelation = RelationType.none;
-                                    // todo: the gedcom test file uses the custom _HME tag: "In uses one custom tag ("_HME") to see what the software will say about custom tags."
-                                    // for the case of custom tags we could ask the user what relation type is relevant
-                                } else {
-                                    appendToTaskOutput("Unknown relation type: " + lineParts[2]);
-                                    targetRelation = RelationType.metadata;
+//                                    targetRelation = RelationType.affiliation;
+//                                } else if (lineParts[1].equals("SUBM")) {
+//                                    targetRelation = RelationType.collector;
+//                                } else if (lineParts[1].equals("SUBN")) {
+//                                    targetRelation = RelationType.metadata;
+//                                } else if (lineParts[1].equals("NOTE")) {
+//                                    targetRelation = RelationType.metadata;
+//                                } else if (lineParts[1].equals("ALIA")) {
+//                                    targetRelation = RelationType.metadata;
+//                                } else if (lineParts[1].equals("ASSO")) {
+//                                    targetRelation = RelationType.affiliation;
+//                                } else if (lineParts[1].equals("ANCI")) {
+//                                    targetRelation = RelationType.collector;
+//                                } else if (lineParts[1].equals("DESI")) {
+//                                    targetRelation = RelationType.collector;
+//                                } else if (lineParts[1].equals("REPO")) {
+//                                    targetRelation = RelationType.metadata;
+//                                } else if (lineParts[1].equals("OBJE")) {
+//                                    targetRelation = RelationType.resource;
+//                                } else if (lineParts[1].equals("SOUR")) {
+//                                    targetRelation = RelationType.metadata;
+//                                } else if (lineParts[1].equals("_HME")) {
+//                                    targetRelation = RelationType.none;
+//                                    // todo: the gedcom test file uses the custom _HME tag: "In uses one custom tag ("_HME") to see what the software will say about custom tags."
+//                                    // for the case of custom tags we could ask the user what relation type is relevant
+//                                } else {
+//                                    appendToTaskOutput("Unknown relation type: " + lineParts[2]);
+//                                    targetRelation = RelationType.metadata;
                                 }
                                 // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
                                 currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData, targetRelation, null, null, null, lineParts[1]);
