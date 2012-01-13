@@ -22,8 +22,8 @@ public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRende
     private KinTypeTableModel kinTypeTableModel;
     private JComboBox comboBoxRelationType;
     private ArrayList<String> selectedItems;
-    private int checkBoxRow;
-    private int checkBoxColumn;
+    private int row;
+    private int column;
 
     public CheckBoxRenderer(KinTypeTableModel kinTypeTableModel, JComboBox comboBoxRelationType) {
         super(comboBoxRelationType);
@@ -34,6 +34,8 @@ public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRende
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         selectedItems = (ArrayList<String>) value;
+        this.row = row;
+        this.column = column;
         return comboBoxRelationType;
     }
 
@@ -44,7 +46,13 @@ public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRende
     }
 
     public void actionPerformed(ActionEvent e) {
-        System.out.println(((JCheckBox) e.getSource()).isSelected());
-        System.out.println(((JCheckBox) e.getSource()).getText());
+        String selectedItem = comboBoxRelationType.getSelectedItem().toString();
+//        System.out.println("selectedItem: " + selectedItem);
+        if (selectedItems.contains(selectedItem)) {
+            selectedItems.remove(selectedItem);
+        } else {
+            selectedItems.add(selectedItem);
+        }
+        kinTypeTableModel.setValueAt(selectedItems, row, column);
     }
 }
