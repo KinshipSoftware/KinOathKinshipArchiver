@@ -1,7 +1,6 @@
 package nl.mpi.kinnate.ui.kintypeeditor;
 
 import java.awt.BorderLayout;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -9,8 +8,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.kindata.DataTypes;
-import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 
 /**
@@ -24,23 +21,25 @@ public class KinTypeDefinitions extends JPanel {
         this.setName(panelName);
         this.setLayout(new BorderLayout());
         JButton deleteButton = new JButton("Delete Selected");
-        JTable kinTypeTable = new JTable(new KinTypeTableModel(savePanel, dataStoreSvg, deleteButton));
+//        JButton insertDefaultTypesButton = new JButton("Insert Defaults");
+//        JButton insertOtherTypesButton = new JButton("Insert Other");
+        final KinTypeTableModel kinTypeTableModel = new KinTypeTableModel(savePanel, dataStoreSvg, deleteButton);
+        JTable kinTypeTable = new JTable(kinTypeTableModel);
 
         TableColumn columnRelationType = kinTypeTable.getColumnModel().getColumn(1);
+        final JComboBox relationTypeComboBox = new JComboBox(kinTypeTableModel.getValueRangeAt(1).toArray());
+        final CheckBoxRenderer relationTypeCheckBoxRenderer = new CheckBoxRenderer(kinTypeTableModel, relationTypeComboBox);
+        relationTypeComboBox.setRenderer(relationTypeCheckBoxRenderer);
+        columnRelationType.setCellEditor(relationTypeCheckBoxRenderer);
+        columnRelationType.setCellRenderer(new ListCellRenderer());
+
         TableColumn columnSymbolType = kinTypeTable.getColumnModel().getColumn(2);
+        final JComboBox symbolTypeComboBox = new JComboBox(kinTypeTableModel.getValueRangeAt(2).toArray());
+        final CheckBoxRenderer symbolTypeCheckBoxRenderer = new CheckBoxRenderer(kinTypeTableModel, symbolTypeComboBox);
+        symbolTypeComboBox.setRenderer(symbolTypeCheckBoxRenderer);
+        columnSymbolType.setCellEditor(symbolTypeCheckBoxRenderer);
+        columnSymbolType.setCellRenderer(new ListCellRenderer());
 
-        JComboBox comboBoxRelationType = new JComboBox();
-        for (DataTypes.RelationType relationType : DataTypes.RelationType.values()) {
-            comboBoxRelationType.addItem(relationType);
-        }
-        columnRelationType.setCellEditor(new DefaultCellEditor(comboBoxRelationType));
-
-        JComboBox comboBoxSymbolType = new JComboBox();
-        for (EntityData.SymbolType symbolType : EntityData.SymbolType.values()) {
-            // todo: this should be the diagram symbols not the enum
-            comboBoxSymbolType.addItem(symbolType);
-        }
-        columnSymbolType.setCellEditor(new DefaultCellEditor(comboBoxSymbolType));
         this.add(new JScrollPane(kinTypeTable), BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel(new BorderLayout());
         buttonPanel.add(deleteButton, BorderLayout.PAGE_START);
