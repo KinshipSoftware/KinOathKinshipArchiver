@@ -1,6 +1,8 @@
 package nl.mpi.kinnate.ui.kintypeeditor;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
@@ -15,11 +17,13 @@ import javax.swing.table.TableCellEditor;
  *  Created on : Jan 12, 2012, 4:01:07 PM
  *  Author     : Peter Withers
  */
-public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRenderer, TableCellEditor {
+public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRenderer, TableCellEditor, ActionListener {
 
-    KinTypeTableModel kinTypeTableModel;
-    JComboBox comboBoxRelationType;
-    ArrayList<String> selectedItems;
+    private KinTypeTableModel kinTypeTableModel;
+    private JComboBox comboBoxRelationType;
+    private ArrayList<String> selectedItems;
+    private int checkBoxRow;
+    private int checkBoxColumn;
 
     public CheckBoxRenderer(KinTypeTableModel kinTypeTableModel, JComboBox comboBoxRelationType) {
         super(comboBoxRelationType);
@@ -34,6 +38,13 @@ public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRende
     }
 
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        return new JCheckBox(value.toString(), selectedItems.contains(value.toString()));
+        final JCheckBox editorCheckBox = new JCheckBox(value.toString(), selectedItems.contains(value.toString()));
+        editorCheckBox.addActionListener(this);
+        return editorCheckBox;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(((JCheckBox) e.getSource()).isSelected());
+        System.out.println(((JCheckBox) e.getSource()).getText());
     }
 }
