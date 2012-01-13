@@ -22,7 +22,7 @@ public class ArrayListCellRenderer implements TableCellRenderer {
         } else {
             for (String stringValue : (ArrayList<String>) value) {
                 stringBuilder.append(stringValue);
-                stringBuilder.append(" ");
+                stringBuilder.append(", ");
             }
             return new JLabel(stringBuilder.toString());
         }
