@@ -29,6 +29,7 @@ public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRende
         super(comboBoxRelationType);
         this.kinTypeTableModel = kinTypeTableModel;
         this.comboBoxRelationType = comboBoxRelationType;
+        comboBoxRelationType.addItem(ArrayListCellRenderer.anyOptionDisplayString);
     }
 
     @Override
@@ -40,19 +41,35 @@ public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRende
     }
 
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        final JCheckBox editorCheckBox = new JCheckBox(value.toString(), selectedItems.contains(value.toString()));
+        boolean checkBoxSelected;
+        if (selectedItems == null) {
+            checkBoxSelected = ArrayListCellRenderer.anyOptionDisplayString.equals(value.toString());
+        } else {
+            checkBoxSelected = selectedItems.contains(value.toString());
+        }
+        final JCheckBox editorCheckBox = new JCheckBox(value.toString(), checkBoxSelected);
         editorCheckBox.addActionListener(this);
         return editorCheckBox;
     }
 
     public void actionPerformed(ActionEvent e) {
         String selectedItem = comboBoxRelationType.getSelectedItem().toString();
-//        System.out.println("selectedItem: " + selectedItem);
-        if (selectedItems.contains(selectedItem)) {
-            selectedItems.remove(selectedItem);
+        if (ArrayListCellRenderer.anyOptionDisplayString.equals(selectedItem)) {
+            if (selectedItems == null) {
+                kinTypeTableModel.setListValueAt(new ArrayList<String>(), row, column);
+            } else {
+                kinTypeTableModel.setValueAt(null, row, column);
+            }
         } else {
-            selectedItems.add(selectedItem);
+            if (selectedItems == null) {
+                selectedItems = new ArrayList<String>();
+            }
+            if (selectedItems.contains(selectedItem)) {
+                selectedItems.remove(selectedItem);
+            } else {
+                selectedItems.add(selectedItem);
+            }
+            kinTypeTableModel.setListValueAt(selectedItems, row, column);
         }
-        kinTypeTableModel.setValueAt(selectedItems, row, column);
     }
 }

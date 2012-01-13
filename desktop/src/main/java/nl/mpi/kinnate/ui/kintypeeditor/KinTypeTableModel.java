@@ -104,14 +104,22 @@ public class KinTypeTableModel extends AbstractTableModel implements ActionListe
                 case 0:
                     return kinType.getCodeString();
                 case 1:
+                    final RelationType[] relationTypes = kinType.getRelationTypes();
+                    if (relationTypes == null) {
+                        return null;
+                    }
                     ArrayList<String> valuesList = new ArrayList<String>();
-                    for (DataTypes.RelationType relationType : kinType.getRelationTypes()) {
+                    for (DataTypes.RelationType relationType : relationTypes) {
                         valuesList.add(relationType.name());
                     }
                     return valuesList;
                 case 2:
+                    final SymbolType[] symbolTypes = kinType.getSymbolTypes();
+                    if (symbolTypes == null) {
+                        return null;
+                    }
                     ArrayList<String> valuesList1 = new ArrayList<String>();
-                    for (EntityData.SymbolType symbolType : kinType.getSymbolTypes()) {
+                    for (EntityData.SymbolType symbolType : symbolTypes) {
                         valuesList1.add(symbolType.name());
                     }
                     return valuesList1;
@@ -136,7 +144,7 @@ public class KinTypeTableModel extends AbstractTableModel implements ActionListe
         }
     }
 
-    public void setValueAt(ArrayList<String> valuesList, int rowIndex, int columnIndex) {
+    public void setListValueAt(ArrayList<String> valuesList, int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
                 throw new UnsupportedOperationException("Not a list type");
@@ -161,7 +169,6 @@ public class KinTypeTableModel extends AbstractTableModel implements ActionListe
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        String stringValue = aValue.toString();
         final KinType[] kinTypeDefinitions = dataStoreSvg.getKinTypeDefinitions();
         if (rowIndex >= dataStoreSvg.getKinTypeDefinitions().length && columnIndex == 4) {
             if (checkBoxSet.isEmpty()) {
@@ -187,22 +194,26 @@ public class KinTypeTableModel extends AbstractTableModel implements ActionListe
         }
         switch (columnIndex) {
             case 0:
-                codeString = stringValue;
+                codeString = aValue.toString();
                 break;
             case 1:
                 // this will only be set by setValueAt(ArrayList<String>)
                 if (aValue instanceof DataTypes.RelationType[]) {
                     relationType = (DataTypes.RelationType[]) aValue;
+                } else if (aValue == null) {
+                    relationType = null;
                 }
                 break;
             case 2:
                 // this will only be set by setValueAt(ArrayList<String>)
                 if (aValue instanceof EntityData.SymbolType[]) {
                     symbolType = (EntityData.SymbolType[]) aValue;
+                } else if (aValue == null) {
+                    symbolType = null;
                 }
                 break;
             case 3:
-                displayString = stringValue;
+                displayString = aValue.toString();
                 break;
             case 4:
                 if ((Boolean) aValue) {
