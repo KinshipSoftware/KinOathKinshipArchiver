@@ -29,6 +29,7 @@ public class KinTypeDefinitions extends JPanel {
         TableColumn columnRelationType = kinTypeTable.getColumnModel().getColumn(1);
         final JComboBox relationTypeComboBox = new JComboBox(kinTypeTableModel.getValueRangeAt(1).toArray());
         final CheckBoxRenderer relationTypeCheckBoxRenderer = new CheckBoxRenderer(kinTypeTableModel, relationTypeComboBox);
+        relationTypeComboBox.addActionListener(relationTypeCheckBoxRenderer);
         relationTypeComboBox.setRenderer(relationTypeCheckBoxRenderer);
         columnRelationType.setCellEditor(relationTypeCheckBoxRenderer);
         columnRelationType.setCellRenderer(new ListCellRenderer());
@@ -36,6 +37,7 @@ public class KinTypeDefinitions extends JPanel {
         TableColumn columnSymbolType = kinTypeTable.getColumnModel().getColumn(2);
         final JComboBox symbolTypeComboBox = new JComboBox(kinTypeTableModel.getValueRangeAt(2).toArray());
         final CheckBoxRenderer symbolTypeCheckBoxRenderer = new CheckBoxRenderer(kinTypeTableModel, symbolTypeComboBox);
+        symbolTypeComboBox.addActionListener(symbolTypeCheckBoxRenderer);
         symbolTypeComboBox.setRenderer(symbolTypeCheckBoxRenderer);
         columnSymbolType.setCellEditor(symbolTypeCheckBoxRenderer);
         columnSymbolType.setCellRenderer(new ListCellRenderer());
