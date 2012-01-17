@@ -3,6 +3,10 @@ package nl.mpi.kinnate.ui.relationsettings;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -18,6 +22,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 
 /**
@@ -25,19 +32,25 @@ import nl.mpi.kinnate.svg.DataStoreSvg;
  *  Created on : Jan 2, 2012, 1:30:21 PM
  *  Author     : Peter Withers
  */
-public class RelationSettingsPanel extends JPanel {
+public class RelationSettingsPanel extends JPanel implements ActionListener {
 
     private AbstractColorChooserPanel colourPickerPanel;
+    private DataStoreSvg dataStoreSvg;
+    private RelationTypesTableModel relationTypesTableModel;
 
     public RelationSettingsPanel(String panelName, SavePanel savePanel, DataStoreSvg dataStoreSvg) {
+        this.dataStoreSvg = dataStoreSvg;
         this.setName(panelName);
         this.setLayout(new BorderLayout());
         final JButton deleteButton = new JButton("Delete Selected");
-        final JButton scanButton = new JButton("Scan For Relation Types");
+        final JButton scanButton = new JButton("Scan For Types");
         final JColorChooser colourChooser = new JColorChooser();
         colourPickerPanel = colourChooser.getChooserPanels()[0];
-        scanButton.setEnabled(false);
-        final JTable kinTypeTable = new JTable(new RelationTypesTableModel(savePanel, dataStoreSvg, deleteButton)) {
+        scanButton.setEnabled(true);
+        scanButton.setActionCommand("scan");
+        scanButton.addActionListener(this);
+        relationTypesTableModel = new RelationTypesTableModel(savePanel, dataStoreSvg, deleteButton);
+        final JTable kinTypeTable = new JTable(relationTypesTableModel) {
 
             @Override
             public TableCellRenderer getCellRenderer(int row, int column) {
@@ -101,5 +114,30 @@ public class RelationSettingsPanel extends JPanel {
         buttonPanel.add(scanButton, BorderLayout.PAGE_END);
         buttonPanel.add(new JScrollPane(colourPickerPanel), BorderLayout.CENTER);
         this.add(buttonPanel, BorderLayout.LINE_END);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if ("scan".equals(e.getActionCommand())) {
+            ArrayList<RelationTypeDefinition> kinTypesList = new ArrayList<RelationTypeDefinition>(Arrays.asList(dataStoreSvg.getRelationTypeDefinitions()));
+            boolean changesMade = false;
+            for (EntityData entityData : dataStoreSvg.graphData.getDataNodes()) {
+                for (EntityRelation entityRelation : entityData.getAllRelations()) {
+                    boolean foundType = false;
+                    for (RelationTypeDefinition typeDefinition : kinTypesList) {
+                        if (typeDefinition.matchesType(entityRelation)) {
+                            foundType = true;
+                        }
+                    }
+                    if (!foundType) {
+                        changesMade = true;
+                        kinTypesList.add(new RelationTypeDefinition(entityRelation.customType, entityRelation.dcrType, entityRelation.getRelationType(), "#999999", 2, null));
+                    }
+                }
+            }
+            if (changesMade) {
+                dataStoreSvg.setRelationTypeDefinitions(kinTypesList.toArray(new RelationTypeDefinition[]{}));
+                relationTypesTableModel.fireTableDataChanged();
+            }
+        }
     }
 }
