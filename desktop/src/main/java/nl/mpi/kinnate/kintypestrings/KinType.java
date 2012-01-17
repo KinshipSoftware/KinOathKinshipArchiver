@@ -40,13 +40,19 @@ public class KinType {
         return displayString;
     }
 
-//    public RelationType[] getRelationTypes() {
-//        return relationTypes;
-//    }
-//
-//    public SymbolType[] getSymbolTypes() {
-//        return symbolTypes;
-//    }
+    public RelationType[] getRelationTypes() {
+        return relationTypes;
+    }
+
+    public boolean hasNoRelationTypes() {
+        // null means any relation type so this must not be null but a length of zero to indicate no relations
+        return relationTypes != null && relationTypes.length == 0;
+    }
+
+    public SymbolType[] getSymbolTypes() {
+        return symbolTypes;
+    }
+
     public boolean isEgoType() {
         // todo: this could be better handled by adding a boolean: isego to each KinType
         return codeString.contains("E");
