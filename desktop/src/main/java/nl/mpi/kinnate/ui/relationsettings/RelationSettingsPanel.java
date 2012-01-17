@@ -95,12 +95,22 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
 //            }
         };
         TableColumn columnRelationType = kinTypeTable.getColumnModel().getColumn(2);
-
         JComboBox comboBoxRelationType = new JComboBox();
         for (DataTypes.RelationType relationType : DataTypes.RelationType.values()) {
             comboBoxRelationType.addItem(relationType);
         }
         columnRelationType.setCellEditor(new DefaultCellEditor(comboBoxRelationType));
+
+        kinTypeTable.getColumnModel().getColumn(4).setCellEditor(new NumberSpinnerEditor(relationTypesTableModel));
+        kinTypeTable.getColumnModel().getColumn(5).setCellEditor(new NumberSpinnerEditor(relationTypesTableModel));
+
+        TableColumn columnCurveLineOrientation = kinTypeTable.getColumnModel().getColumn(6);
+        JComboBox comboBoxCurveLineOrientation = new JComboBox();
+        for (RelationTypeDefinition.CurveLineOrientation curveLineOrientation : RelationTypeDefinition.CurveLineOrientation.values()) {
+            comboBoxCurveLineOrientation.addItem(curveLineOrientation.name());
+        }
+        columnCurveLineOrientation.setCellEditor(new DefaultCellEditor(comboBoxCurveLineOrientation));
+
         colourChooser.setPreviewPanel(new JPanel());
         colourChooser.getSelectionModel().addChangeListener(new ChangeListener() {
 

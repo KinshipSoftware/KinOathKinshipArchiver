@@ -11,6 +11,7 @@ import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 
 /**
@@ -39,7 +40,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
     }
 
     public int getColumnCount() {
-        return 6;
+        return 8;
     }
 
     @Override
@@ -56,10 +57,10 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             case 4:
                 return "Line Width";
             case 5:
-//                return "Line Style";
-//            case 6: // todo: add this to the relation definitions table
-//                return "Other Line Style";
-//            case 7:
+                return "Line/Dash";
+            case 6: // todo: add this to the relation definitions table
+                return "Line Orientation";
+            case 7:
                 return "";
             default:
                 throw new UnsupportedOperationException("Too many columns");
@@ -69,7 +70,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         switch (columnIndex) {
-            case 5:
+            case 7:
                 return Boolean.class;
             default:
                 return super.getColumnClass(columnIndex);
@@ -95,15 +96,17 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 case 4:
                     return kinType.getLineWidth();
                 case 5:
-//                    return kinType.getLineStye();
-//                case 6:
+                    return kinType.getLineStye();
+                case 6:
+                    return kinType.getCurveLineOrientation();
+                case 7:
                     return checkBoxSet.contains(kinType);
                 default:
                     throw new UnsupportedOperationException("Too many columns");
             }
         } else {
             switch (columnIndex) {
-                case 5:
+                case 7:
                     return false;
                 default:
                     return ""; // add a blank row at the end
@@ -114,7 +117,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         final RelationTypeDefinition[] kinTypeDefinitions = dataStoreSvg.getRelationTypeDefinitions();
-        if (rowIndex >= dataStoreSvg.getRelationTypeDefinitions().length && columnIndex == 5) {
+        if (rowIndex >= dataStoreSvg.getRelationTypeDefinitions().length && columnIndex == 7) {
             if (checkBoxSet.isEmpty()) {
                 checkBoxSet.addAll(Arrays.asList(kinTypeDefinitions));
             } else {
@@ -130,7 +133,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
         String lineColour = "#999999";
         int lineWidth = 2;
         String lineStye = null;
-
+        CurveLineOrientation curveLineOrientation = RelationTypeDefinition.CurveLineOrientation.horizontal;
 
         RelationTypeDefinition kinType = null;
         if (rowIndex < dataStoreSvg.getRelationTypeDefinitions().length) {
@@ -141,6 +144,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             lineColour = kinType.getLineColour();
             lineWidth = kinType.getLineWidth();
             lineStye = kinType.getLineStye();
+            curveLineOrientation = kinType.getCurveLineOrientation();
         }
         String stringValue = aValue.toString();
         switch (columnIndex) {
@@ -161,9 +165,12 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 lineWidth = Integer.parseInt(stringValue.replaceAll("[^0-9]", ""));
                 break;
             case 5:
-//                lineStye = stringValue;
-//                break;
-//            case 6:
+                lineStye = stringValue;
+                break;
+            case 6:
+                curveLineOrientation = RelationTypeDefinition.CurveLineOrientation.valueOf(stringValue);
+                break;
+            case 7:
                 if ((Boolean) aValue) {
                     checkBoxSet.add(kinType);
                 } else {
