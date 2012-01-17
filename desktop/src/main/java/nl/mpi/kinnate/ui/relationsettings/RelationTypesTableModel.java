@@ -56,8 +56,10 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             case 4:
                 return "Line Width";
             case 5:
-//                return "Line Stye";
-//            case 6:
+//                return "Line Style";
+//            case 6: // todo: add this to the relation definitions table
+//                return "Other Line Style";
+//            case 7:
                 return "";
             default:
                 throw new UnsupportedOperationException("Too many columns");
@@ -111,7 +113,6 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        String stringValue = aValue.toString();
         final RelationTypeDefinition[] kinTypeDefinitions = dataStoreSvg.getRelationTypeDefinitions();
         if (rowIndex >= dataStoreSvg.getRelationTypeDefinitions().length && columnIndex == 5) {
             if (checkBoxSet.isEmpty()) {
@@ -141,6 +142,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             lineWidth = kinType.getLineWidth();
             lineStye = kinType.getLineStye();
         }
+        String stringValue = aValue.toString();
         switch (columnIndex) {
             case 0:
                 displayName = stringValue;
