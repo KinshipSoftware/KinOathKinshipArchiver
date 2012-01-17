@@ -17,18 +17,18 @@ public class KinType {
     private KinType() {
     }
 
-    public KinType(String codeStringLocal, DataTypes.RelationType relationTypeLocal, EntityData.SymbolType symbolTypeLocal, String displayStringLocal) {
+    public KinType(String codeStringLocal, DataTypes.RelationType[] relationTypes, EntityData.SymbolType[] symbolTypes, String displayStringLocal) {
         codeString = codeStringLocal;
-        relationType = relationTypeLocal;
-        symbolType = symbolTypeLocal;
+        this.relationTypes = relationTypes;
+        this.symbolTypes = symbolTypes;
         displayString = displayStringLocal;
     }
     @XmlAttribute(name = "code", namespace = "http://mpi.nl/tla/kin")
     protected String codeString = null;
     @XmlAttribute(name = "type", namespace = "http://mpi.nl/tla/kin")
-    protected DataTypes.RelationType relationType = null;
+    protected DataTypes.RelationType[] relationTypes = null;
     @XmlAttribute(name = "symbol", namespace = "http://mpi.nl/tla/kin")
-    protected EntityData.SymbolType symbolType = null;
+    protected EntityData.SymbolType[] symbolTypes = null;
     @XmlAttribute(name = "name", namespace = "http://mpi.nl/tla/kin")
     protected String displayString = null;
 
@@ -40,12 +40,12 @@ public class KinType {
         return displayString;
     }
 
-    public RelationType getRelationType() {
-        return relationType;
+    public RelationType[] getRelationTypes() {
+        return relationTypes;
     }
 
-    public SymbolType getSymbolType() {
-        return symbolType;
+    public SymbolType[] getSymbolTypes() {
+        return symbolTypes;
     }
 
     public boolean isEgoType() {
@@ -58,16 +58,26 @@ public class KinType {
         if (entityRelation.getAlterNode().isEgo != this.isEgoType()) {
             return false;
         }
-        if (relationType != null && !relationType.equals(entityRelation.getRelationType())) {
-            return false;
+        if (relationTypes == null) {
+            return true; // null will match all relation types
         }
-        if (symbolType != null && symbolType != EntityData.SymbolType.square) {
-            // if the symbol is square or null then skip this and compare the birth order
-            // otherwise compare the symbol types before comparing the birth order
-            if (!symbolType.name().equals(entityRelation.getAlterNode().getSymbolType())) {
-                return false;
+        boolean relationMatchFound = false;
+        for (DataTypes.RelationType relationType : relationTypes) {
+            if (relationType.equals(entityRelation.getRelationType())) {
+                relationMatchFound = true;
             }
         }
+        boolean symbolMatchFound = false;
+        for (EntityData.SymbolType symbolType : symbolTypes) {
+            // square used to be the wildcard symbol but now a null symbol array is used and since it is not null we compare all symbols in the array
+            if (!symbolType.name().equals(entityRelation.getAlterNode().getSymbolType())) {
+                symbolMatchFound = true;
+            }
+        }
+        if (!relationMatchFound || !symbolMatchFound) {
+            return false;
+        }
+        // compare the birth order
         if (kinTypeModifier != null && !kinTypeModifier.isEmpty()) {
             int relationOrder = entityRelation.getRelationOrder();
             if (kinTypeModifier.equals("-")) {
@@ -86,25 +96,21 @@ public class KinType {
         return true;
     }
 
-    public boolean matchesEgoEntity(EntityData entityData, String kinTypeModifier) {
-        // todo make use of the kin type modifier or remove it if it proves irelevant
+    public boolean matchesEgonessAndSymbol(EntityData entityData, String kinTypeModifier) {
+        // todo: make use of the kin type modifier or remove it if it proves irelevant
         if (!entityData.isEgo || !this.isEgoType()) {
             return false;
         }
-        if (symbolType == EntityData.SymbolType.square) {
-            return true; // it is better to return all the relations regardless of symbol in this case
-            // if the symbol is square then either circle or triangle are matches (square is matched later)
-//            if (EntityData.SymbolType.circle.name().equals(entityData.getSymbolType())) {
-//                return true;
-//            }
-//            if (EntityData.SymbolType.triangle.name().equals(entityData.getSymbolType())) {
-//                return true;
-//            }
+        if (symbolTypes == null) {
+            return true; // null will match all symbols
         }
-        if (!symbolType.name().equals(entityData.getSymbolType())) {
-            return false;
+        // square used to be the wildcard symbol but now a null symbol array is used and since we know it is not null we compare all symbols in the array
+        for (EntityData.SymbolType symbolType : symbolTypes) {
+            if (!symbolType.name().equals(entityData.getSymbolType())) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     public static KinType[] getReferenceKinTypes() {
@@ -113,39 +119,39 @@ public class KinType {
     private static KinType[] referenceKinTypes = new KinType[]{
         // other types
         // todo: the gendered ego kin types Em and Ef are probably not correct and should be verified
-        new KinType("Ef", DataTypes.RelationType.none, EntityData.SymbolType.circle, "Ego Female"),
-        new KinType("Em", DataTypes.RelationType.none, EntityData.SymbolType.triangle, "Ego Male"),
+        new KinType("Ef", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Ego Female"),
+        new KinType("Em", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Ego Male"),
         // type 1
-        new KinType("Fa", DataTypes.RelationType.ancestor, EntityData.SymbolType.triangle, "Father"),
-        new KinType("Mo", DataTypes.RelationType.ancestor, EntityData.SymbolType.circle, "Mother"),
-        new KinType("Br", DataTypes.RelationType.sibling, EntityData.SymbolType.triangle, "Brother"),
-        new KinType("Si", DataTypes.RelationType.sibling, EntityData.SymbolType.circle, "Sister"),
-        new KinType("So", DataTypes.RelationType.descendant, EntityData.SymbolType.triangle, "Son"),
-        new KinType("Da", DataTypes.RelationType.descendant, EntityData.SymbolType.circle, "Daughter"),
-        new KinType("Hu", DataTypes.RelationType.union, EntityData.SymbolType.triangle, "Husband"),
-        new KinType("Wi", DataTypes.RelationType.union, EntityData.SymbolType.circle, "Wife"),
-        new KinType("Pa", DataTypes.RelationType.ancestor, EntityData.SymbolType.square, "Parent"),
-        new KinType("Sb", DataTypes.RelationType.sibling, EntityData.SymbolType.square, "Sibling"), //todo: are Sp and Sb correct?
-        new KinType("Sp", DataTypes.RelationType.union, EntityData.SymbolType.square, "Spouse"),
-        new KinType("Ch", DataTypes.RelationType.descendant, EntityData.SymbolType.square, "Child"),
+        new KinType("Fa", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Father"),
+        new KinType("Mo", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Mother"),
+        new KinType("Br", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Brother"),
+        new KinType("Si", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Sister"),
+        new KinType("So", new DataTypes.RelationType[]{DataTypes.RelationType.descendant}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Son"),
+        new KinType("Da", new DataTypes.RelationType[]{DataTypes.RelationType.descendant}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Daughter"),
+        new KinType("Hu", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Husband"),
+        new KinType("Wi", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Wife"),
+        new KinType("Pa", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Parent"),
+        new KinType("Sb", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Sibling"), //todo: are Sp and Sb correct?
+        new KinType("Sp", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Spouse"),
+        new KinType("Ch", new DataTypes.RelationType[]{DataTypes.RelationType.descendant,}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Child"),
         // type 2
-        new KinType("F", DataTypes.RelationType.ancestor, EntityData.SymbolType.triangle, "Father"),
-        new KinType("M", DataTypes.RelationType.ancestor, EntityData.SymbolType.circle, "Mother"),
-        new KinType("B", DataTypes.RelationType.sibling, EntityData.SymbolType.triangle, "Brother"),
-        new KinType("Z", DataTypes.RelationType.sibling, EntityData.SymbolType.circle, "Sister"),
-        new KinType("S", DataTypes.RelationType.descendant, EntityData.SymbolType.triangle, "Son"),
-        new KinType("D", DataTypes.RelationType.descendant, EntityData.SymbolType.circle, "Daughter"),
-        new KinType("H", DataTypes.RelationType.union, EntityData.SymbolType.triangle, "Husband"),
-        new KinType("W", DataTypes.RelationType.union, EntityData.SymbolType.circle, "Wife"),
-        new KinType("P", DataTypes.RelationType.ancestor, EntityData.SymbolType.square, "Parent"),
-        new KinType("G", DataTypes.RelationType.sibling, EntityData.SymbolType.square, "Sibling"),
-        new KinType("E", DataTypes.RelationType.none, EntityData.SymbolType.square, "Ego"),
-        new KinType("C", DataTypes.RelationType.descendant, EntityData.SymbolType.square, "Child"),
+        new KinType("F", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Father"),
+        new KinType("M", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Mother"),
+        new KinType("B", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Brother"),
+        new KinType("Z", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Sister"),
+        new KinType("S", new DataTypes.RelationType[]{DataTypes.RelationType.descendant}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Son"),
+        new KinType("D", new DataTypes.RelationType[]{DataTypes.RelationType.descendant}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Daughter"),
+        new KinType("H", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Husband"),
+        new KinType("W", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Wife"),
+        new KinType("P", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Parent"),
+        new KinType("G", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Sibling"),
+        new KinType("E", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Ego"),
+        new KinType("C", new DataTypes.RelationType[]{DataTypes.RelationType.descendant}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Child"),
         //        new KinType("X", DataTypes.RelationType.none, EntityData.SymbolType.none) // X is intended to indicate unknown or no type, for instance this is used after import to add all nodes to the graph
 
         // non ego types to be used to start a kin type string but cannot be used except at the beginning
-        new KinType("m", DataTypes.RelationType.none, EntityData.SymbolType.triangle, "Male"),
-        new KinType("f", DataTypes.RelationType.none, EntityData.SymbolType.circle, "Female"),
-        new KinType("x", DataTypes.RelationType.none, EntityData.SymbolType.square, "Undefined"),
+        new KinType("m", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Male"),
+        new KinType("f", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Female"),
+        new KinType("x", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Undefined"),
         new KinType("*", null, null, "Any Relation"),};
 }
