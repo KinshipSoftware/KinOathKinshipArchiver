@@ -20,6 +20,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -37,13 +38,16 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
     private AbstractColorChooserPanel colourPickerPanel;
     private DataStoreSvg dataStoreSvg;
     private RelationTypesTableModel relationTypesTableModel;
+    private ArbilWindowManager dialogHandler;
+    private final String Scan_For_Types = "Scan For Types";
 
-    public RelationSettingsPanel(String panelName, SavePanel savePanel, DataStoreSvg dataStoreSvg) {
+    public RelationSettingsPanel(String panelName, SavePanel savePanel, DataStoreSvg dataStoreSvg, ArbilWindowManager dialogHandler) {
         this.dataStoreSvg = dataStoreSvg;
+        this.dialogHandler = dialogHandler;
         this.setName(panelName);
         this.setLayout(new BorderLayout());
         final JButton deleteButton = new JButton("Delete Selected");
-        final JButton scanButton = new JButton("Scan For Types");
+        final JButton scanButton = new JButton(Scan_For_Types);
         final JColorChooser colourChooser = new JColorChooser();
         colourPickerPanel = colourChooser.getChooserPanels()[0];
         scanButton.setEnabled(true);
@@ -120,6 +124,7 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
         if ("scan".equals(e.getActionCommand())) {
             ArrayList<RelationTypeDefinition> kinTypesList = new ArrayList<RelationTypeDefinition>(Arrays.asList(dataStoreSvg.getRelationTypeDefinitions()));
             boolean changesMade = false;
+            int foundTypesCount = 0;
             for (EntityData entityData : dataStoreSvg.graphData.getDataNodes()) {
                 for (EntityRelation entityRelation : entityData.getAllRelations()) {
                     boolean foundType = false;
@@ -129,6 +134,7 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
                         }
                     }
                     if (!foundType) {
+                        foundTypesCount++;
                         changesMade = true;
                         kinTypesList.add(new RelationTypeDefinition(entityRelation.customType, entityRelation.dcrType, entityRelation.getRelationType(), "#999999", 2, null));
                     }
@@ -137,6 +143,9 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
             if (changesMade) {
                 dataStoreSvg.setRelationTypeDefinitions(kinTypesList.toArray(new RelationTypeDefinition[]{}));
                 relationTypesTableModel.fireTableDataChanged();
+                dialogHandler.addMessageDialogToQueue("Added " + foundTypesCount + " new types from the diagram", Scan_For_Types);
+            } else {
+                dialogHandler.addMessageDialogToQueue("No new types found on the diagram", Scan_For_Types);
             }
         }
     }
