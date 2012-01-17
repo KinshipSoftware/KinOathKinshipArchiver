@@ -232,7 +232,7 @@ public class QueryParser implements EntityService {
                         }
                         egoNode.isEgo = true;
                         egoNode.isVisible = true;
-                        if (firstKinType.kinType.matchesEgoEntity(egoNode, null)) {
+                        if (firstKinType.kinType.matchesEgonessAndSymbol(egoNode, null)) {
                             firstKinType.entityData.add(egoNode);
                         }
                     }
