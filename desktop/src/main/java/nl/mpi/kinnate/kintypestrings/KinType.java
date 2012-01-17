@@ -40,14 +40,13 @@ public class KinType {
         return displayString;
     }
 
-    public RelationType[] getRelationTypes() {
-        return relationTypes;
-    }
-
-    public SymbolType[] getSymbolTypes() {
-        return symbolTypes;
-    }
-
+//    public RelationType[] getRelationTypes() {
+//        return relationTypes;
+//    }
+//
+//    public SymbolType[] getSymbolTypes() {
+//        return symbolTypes;
+//    }
     public boolean isEgoType() {
         // todo: this could be better handled by adding a boolean: isego to each KinType
         return codeString.contains("E");
@@ -130,7 +129,7 @@ public class KinType {
         new KinType("Da", new DataTypes.RelationType[]{DataTypes.RelationType.descendant}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Daughter"),
         new KinType("Hu", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Husband"),
         new KinType("Wi", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Wife"),
-        new KinType("Pa", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Parent"),
+        new KinType("Pa", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle, EntityData.SymbolType.circle}, "Parent"),
         new KinType("Sb", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Sibling"), //todo: are Sp and Sb correct?
         new KinType("Sp", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Spouse"),
         new KinType("Ch", new DataTypes.RelationType[]{DataTypes.RelationType.descendant,}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Child"),
@@ -143,7 +142,7 @@ public class KinType {
         new KinType("D", new DataTypes.RelationType[]{DataTypes.RelationType.descendant}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Daughter"),
         new KinType("H", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Husband"),
         new KinType("W", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Wife"),
-        new KinType("P", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Parent"),
+        new KinType("P", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle, EntityData.SymbolType.circle}, "Parent"),
         new KinType("G", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Sibling"),
         new KinType("E", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Ego"),
         new KinType("C", new DataTypes.RelationType[]{DataTypes.RelationType.descendant}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Child"),
