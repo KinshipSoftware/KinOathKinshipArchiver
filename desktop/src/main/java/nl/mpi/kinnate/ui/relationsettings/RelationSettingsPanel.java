@@ -27,12 +27,16 @@ import nl.mpi.kinnate.svg.DataStoreSvg;
  */
 public class RelationSettingsPanel extends JPanel {
 
+    private AbstractColorChooserPanel colourPickerPanel;
+
     public RelationSettingsPanel(String panelName, SavePanel savePanel, DataStoreSvg dataStoreSvg) {
         this.setName(panelName);
         this.setLayout(new BorderLayout());
         final JButton deleteButton = new JButton("Delete Selected");
+        final JButton scanButton = new JButton("Scan For Relation Types");
         final JColorChooser colourChooser = new JColorChooser();
-        final AbstractColorChooserPanel colourPickerPanel = colourChooser.getChooserPanels()[0];
+        colourPickerPanel = colourChooser.getChooserPanels()[0];
+        scanButton.setEnabled(false);
         final JTable kinTypeTable = new JTable(new RelationTypesTableModel(savePanel, dataStoreSvg, deleteButton)) {
 
             @Override
@@ -55,6 +59,23 @@ public class RelationSettingsPanel extends JPanel {
                 final TableCellRenderer standardCellRenderer = super.getCellRenderer(row, column);
                 return standardCellRenderer;
             }
+            // todo: resolve issue with the jcombobox consuming the mouse clicks before the colour picker gets them, might be better to get rid of the jcombobox
+//            @Override
+//            public TableCellEditor getCellEditor(int row, int column) {
+//                if (column == 3 && row < this.getRowCount() - 1) {
+//                    final JComboBox comboBox = new JComboBox(new String[]{""});
+//                    comboBox.addActionListener(RelationSettingsPanel.this); // requires ActionListener to be implemented in RelationSettingsPanel
+//                    comboBox.setRenderer(new ListCellRenderer() {
+//
+//                        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//                            return colourPickerPanel;
+//                        }
+//                    });
+//                    return new DefaultCellEditor(comboBox);
+//                } else {
+//                    return super.getCellEditor(row, column);
+//                }
+//            }
         };
         TableColumn columnRelationType = kinTypeTable.getColumnModel().getColumn(2);
 
@@ -77,7 +98,8 @@ public class RelationSettingsPanel extends JPanel {
         this.add(new JScrollPane(kinTypeTable), BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel(new BorderLayout());
         buttonPanel.add(deleteButton, BorderLayout.PAGE_START);
-        buttonPanel.add(colourPickerPanel, BorderLayout.CENTER);
+        buttonPanel.add(scanButton, BorderLayout.PAGE_END);
+        buttonPanel.add(new JScrollPane(colourPickerPanel), BorderLayout.CENTER);
         this.add(buttonPanel, BorderLayout.LINE_END);
     }
 }
