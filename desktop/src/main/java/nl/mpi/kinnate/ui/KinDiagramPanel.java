@@ -245,7 +245,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         panelSetting.addTargetPanel(symbolFieldsPanel, false);
                         panelSetting.addTargetPanel(labelFieldsPanel, false);
                         panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg), false);
-                        panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg), false);
+                        panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg, dialogHandler), false);
                         break;
                     case KinTerms:
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
