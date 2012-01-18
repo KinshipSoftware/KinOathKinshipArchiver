@@ -17,13 +17,13 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
 
     public enum DocumentType {
 
+        Simple("Standard Diagram"),
         Freeform("Freeform Diagram"),
         KinTerms("Kin Terms Diagram"),
         Query("Query Diagram"),
         EntitySearch("Entity Search"),
         ArchiveLinker("Archive Data Linker"),
-        CustomQuery("Custom Metadata"),
-        Simple("Standard Diagram");
+        CustomQuery("Custom Metadata");
         private String displayName;
 
         private DocumentType(String displayName) {
