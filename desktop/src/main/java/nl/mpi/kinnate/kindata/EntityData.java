@@ -85,9 +85,9 @@ public class EntityData {
 //        labelStringArray = labelStringLocal;
 //        isEgo = isEgoLocal;
 //    }
-    public EntityData(LabelStringsParser labelStringsParser, String kinTypeStringLocal, SymbolType symbolIndex, boolean isEgoLocal) {
+    public EntityData(LabelStringsParser labelStringsParser, EntityData parentEntity, String kinTypeStringLocal, SymbolType symbolIndex, boolean isEgoLocal) {
         // this is used to enable transient entities to have the same identifier on each redraw and on loading a saved document, otherwise the entity positions on the graph get lost
-        uniqueIdentifier = labelStringsParser.uniqueIdentifier;
+        uniqueIdentifier = labelStringsParser.getUniqueIdentifier(parentEntity, kinTypeStringLocal, symbolIndex);
         entityPath = null;
         kinTypeArray = new String[]{kinTypeStringLocal};
         symbolTypeString = symbolIndex.name();
