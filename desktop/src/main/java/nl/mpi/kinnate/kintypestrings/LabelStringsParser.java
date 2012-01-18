@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -27,7 +28,7 @@ public class LabelStringsParser {
     public Date dateOfDeath = null; // todo: read in the dates and if found set the in the entities
     protected String remainingInputString;
 
-    protected LabelStringsParser(String inputString, EntityData parentData, String currentKinTypeString) {
+    protected LabelStringsParser(String inputString, HashSet<EntityData> parentDataNodes, String currentKinTypeString) {
         if (inputString.startsWith(":")) {
             String[] inputStringParts = inputString.split(":", 3);
             if (inputStringParts.length > 2) {
@@ -88,9 +89,13 @@ public class LabelStringsParser {
             }
         }
         if (uniqueIdentifier == null) {
-            if (parentData != null) {
+            if (!parentDataNodes.isEmpty()) {
                 // the parent id is used here to differentiate for instance M in the following two cases EmM EmFM, where if only M were used these two strings would get the same entity and be incorrect
-                uniqueIdentifier = new UniqueIdentifier(parentData.getUniqueIdentifier().getAttributeIdentifier() + currentKinTypeString, UniqueIdentifier.IdentifierType.tid);
+                StringBuilder builder = new StringBuilder();
+                for (EntityData parentDataNode : parentDataNodes) {
+                    builder.append(parentDataNode.getUniqueIdentifier().getAttributeIdentifier());
+                }
+                uniqueIdentifier = new UniqueIdentifier(builder.toString() + currentKinTypeString, UniqueIdentifier.IdentifierType.tid);
             } else {
                 uniqueIdentifier = new UniqueIdentifier("label:" + "kintype:" + currentKinTypeString, UniqueIdentifier.IdentifierType.tid);
             }
