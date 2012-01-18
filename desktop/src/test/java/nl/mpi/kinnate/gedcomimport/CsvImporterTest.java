@@ -39,9 +39,10 @@ public class CsvImporterTest extends TestCase {
     private void runFieldsForLine(String csvInputString, String[] expectedResult) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new StringReader(csvInputString));
-            final KinSessionStorage kinSessionStorage = new KinSessionStorage();
+            final ApplicationVersionManager applicationVersionManager = new ApplicationVersionManager(new KinOathVersion());
+            final KinSessionStorage kinSessionStorage = new KinSessionStorage(applicationVersionManager);
             final ArbilBugCatcher bugCatcher = new ArbilBugCatcher(kinSessionStorage, new ApplicationVersionManager(new KinOathVersion()));
-            ArrayList<String> arrayList = new CsvImporter(new JProgressBar(), new JTextArea(), true, new KinSessionStorage(), bugCatcher).getFieldsForLine(bufferedReader);
+            ArrayList<String> arrayList = new CsvImporter(new JProgressBar(), new JTextArea(), true, new KinSessionStorage(applicationVersionManager), bugCatcher).getFieldsForLine(bufferedReader);
 
             assertTrue("Incorrect number of fields found", expectedResult.length == arrayList.size());
             for (int arrayCounter = 0; arrayCounter < expectedResult.length; arrayCounter++) {
