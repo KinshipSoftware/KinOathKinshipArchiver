@@ -4,8 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityData.SymbolType;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -16,7 +16,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 public class LabelStringsParser {
 
     protected boolean userDefinedIdentifierFound = false;
-    public UniqueIdentifier uniqueIdentifier;
+    private UniqueIdentifier uniqueIdentifier;
     public boolean dateError = false;
     public int dateLocation = -1;
     public int dateEndLocation = -1;
@@ -28,7 +28,7 @@ public class LabelStringsParser {
     public Date dateOfDeath = null; // todo: read in the dates and if found set the in the entities
     protected String remainingInputString;
 
-    protected LabelStringsParser(String inputString, HashSet<EntityData> parentDataNodes, String currentKinTypeString) {
+    protected LabelStringsParser(String inputString, String currentKinTypeString) {
         if (inputString.startsWith(":")) {
             String[] inputStringParts = inputString.split(":", 3);
             if (inputStringParts.length > 2) {
@@ -88,17 +88,19 @@ public class LabelStringsParser {
                 }
             }
         }
+    }
+
+    public UniqueIdentifier getUniqueIdentifier(EntityData parentData, String kinTypeString, SymbolType symbolType) {
+
         if (uniqueIdentifier == null) {
-            if (!parentDataNodes.isEmpty()) {
+            if (parentData != null) {
                 // the parent id is used here to differentiate for instance M in the following two cases EmM EmFM, where if only M were used these two strings would get the same entity and be incorrect
-                StringBuilder builder = new StringBuilder();
-                for (EntityData parentDataNode : parentDataNodes) {
-                    builder.append(parentDataNode.getUniqueIdentifier().getAttributeIdentifier());
-                }
-                uniqueIdentifier = new UniqueIdentifier(builder.toString() + currentKinTypeString, UniqueIdentifier.IdentifierType.tid);
+                // the kinTypeString is used to make sure the id stays constant to the users expectations, if it chagnes then the entity will be given a new location on the diagram
+                return new UniqueIdentifier(parentData.getUniqueIdentifier().getAttributeIdentifier() + "-" + kinTypeString + "-" + symbolType.name(), UniqueIdentifier.IdentifierType.tid);
             } else {
-                uniqueIdentifier = new UniqueIdentifier("label:" + "kintype:" + currentKinTypeString, UniqueIdentifier.IdentifierType.tid);
+                return new UniqueIdentifier("label:" + "kintype:" + kinTypeString, UniqueIdentifier.IdentifierType.tid);
             }
         }
+        return uniqueIdentifier;
     }
 }
