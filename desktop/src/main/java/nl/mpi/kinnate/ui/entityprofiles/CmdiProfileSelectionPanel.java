@@ -23,11 +23,13 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
     private JProgressBar profileReloadProgressBar;
     private JLabel statusLabel;
     private JButton reloadButton;
+    private ProfileTableModel profileTableModel;
 
     public CmdiProfileSelectionPanel(String panelName) {
         this.setName(panelName);
         this.setLayout(new BorderLayout());
-        profileTable = new JTable();
+        profileTableModel = new ProfileTableModel();
+        profileTable = new JTable(profileTableModel);
         topPanel = new JPanel(new BorderLayout());
         profileReloadProgressBar = new JProgressBar();
         statusLabel = new JLabel();
@@ -38,9 +40,6 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
         this.add(topPanel, BorderLayout.PAGE_START);
         this.add(profileReloadProgressBar, BorderLayout.PAGE_END);
         this.add(profileTable, BorderLayout.CENTER);
-    }
-
-    private void updateTable() {
     }
 
     private void loadProfiles(final boolean forceUpdate) {
@@ -56,7 +55,7 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
                 CmdiProfileReader cmdiProfileReader = CmdiProfileReader.getSingleInstance();
                 cmdiProfileReader.refreshProfiles(profileReloadProgressBar, forceUpdate);
                 profileReloadProgressBar.setVisible(false);
-                updateTable();
+                profileTableModel.setCmdiProfileReader(cmdiProfileReader);
                 statusLabel.setText("");
                 reloadButton.setEnabled(true);
             }
