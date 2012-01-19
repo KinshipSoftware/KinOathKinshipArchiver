@@ -44,7 +44,7 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
     public synchronized void injectHandlers(final ApplicationVersionManager versionManager) {
         injectVersionManager(versionManager);
 
-        sessionStorage = new KinSessionStorage();
+        sessionStorage = new KinSessionStorage(versionManager);
         injectSessionStorage(sessionStorage);
 
         bugCatcher = new ArbilBugCatcher(sessionStorage, versionManager);
