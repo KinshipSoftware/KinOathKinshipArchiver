@@ -101,7 +101,7 @@ public class CmdiTransformer {
     static public void main(String[] args) {
         try {
             String profileId = "clarin.eu:cr1:p_1320657629627";
-            final KinSessionStorage kinSessionStorage = new KinSessionStorage();
+            final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
             File xsdFile = new File(kinSessionStorage.getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
             new CmdiTransformer(kinSessionStorage, new ArbilBugCatcher(kinSessionStorage, new ApplicationVersionManager(new KinOathVersion()))).transformProfileXmlToXsd(xsdFile, profileId);
         } catch (IOException exception) {
