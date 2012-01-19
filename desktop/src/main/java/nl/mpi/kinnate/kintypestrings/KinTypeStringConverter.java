@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.EntityData.SymbolType;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight.ParserHighlightType;
 import nl.mpi.kinnate.svg.DataStoreSvg;
@@ -279,8 +280,8 @@ public class KinTypeStringConverter extends GraphSorter {
 //                    }
                     int initialLength = inputString.length();
                     String consumableString = inputString;
-                    EntityData parentDataNode = null;
-                    EntityData egoDataNode = null; // todo: replace this with the egoDataNodeList, currently waiting on the kin type strings update below
+                    HashSet<EntityData> parentDataNodes = new HashSet<EntityData>();
+//                    HashSet<EntityData> egoDataNodes = new HashSet<EntityData>(); // todo: replace this with the egoDataNodeList, currently waiting on the kin type strings update below
                     String fullKinTypeString = "";
                     while (consumableString.length() > 0) {
                         int parserHighlightPosition = initialLength - consumableString.length();
@@ -294,7 +295,7 @@ public class KinTypeStringConverter extends GraphSorter {
 //                                if (currentReferenceKinType.isEgoType()) {
 //                                    fullKinTypeString = "";
 //                                }
-                                if (currentReferenceKinType.hasNoRelationTypes() && parentDataNode != null) {
+                                if (currentReferenceKinType.hasNoRelationTypes() && !parentDataNodes.isEmpty()) {
                                     // todo: Ticket #1106 this could provide better feedback or even allow refrences back to ego here
                                     // prevent multiple egos on one line
                                     // going from one kin type to a second ego cannot specify the relation to the second ego and hence such syntax is not workable
@@ -312,15 +313,15 @@ public class KinTypeStringConverter extends GraphSorter {
 //                                System.out.println("kinTypeFound: " + currentReferenceKinType.codeString);
 //                                System.out.println("consumableString: " + consumableString);
 //                                System.out.println("fullKinTypeString: " + fullKinTypeString);
-                                EntityData currentGraphDataNode = null;
+                                HashSet<EntityData> currentGraphDataNodeSet = new HashSet<EntityData>();
                                 fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
-                                LabelStringsParser labelStringsParser = new LabelStringsParser(consumableString, parentDataNode, currentKinTypeString);
+                                LabelStringsParser labelStringsParser = new LabelStringsParser(consumableString, currentKinTypeString);
                                 if (labelStringsParser.userDefinedIdentifierFound) {
                                     // add a highlight for the label section
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length(), "Label text");
                                     consumableString = labelStringsParser.remainingInputString;
                                     // get any previously created entity with the same user defined identifier if it exists
-                                    currentGraphDataNode = namedEntitiesMap.get(labelStringsParser.uniqueIdentifier);
+                                    currentGraphDataNodeSet.add(namedEntitiesMap.get(labelStringsParser.getUniqueIdentifier())); // the unique identifier has already been constructed from the user identifier
                                     // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
                                 }
                                 if (labelStringsParser.uidStartLocation > -1) {
@@ -339,73 +340,36 @@ public class KinTypeStringConverter extends GraphSorter {
                                             + " Valid formats are yyyy, yyyy/mm, yyyy/mm/dd with the birth date followed by death date eg yyyy/mm/dd-yyyy/mm/dd");
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation, "Label text");
                                 }
-                                if (currentGraphDataNode == null) {
-                                    if (parentDataNode != null && !labelStringsParser.userDefinedIdentifierFound /* if a user defined identifier has been specified then skip this and always create or reuse that named entity */) {
-                                        // look for any existing relaitons that match the required kin type
-                                        for (EntityRelation entityRelation : parentDataNode.getAllRelations()) {
-                                            if (currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier)) {
-                                                currentGraphDataNode = entityRelation.getAlterNode();
-                                                currentGraphDataNode.addKinTypeString(fullKinTypeString);
-                                                break;
-                                            }
-                                        }
-                                    } else if (parentDataNode == null && !labelStringsParser.userDefinedIdentifierFound) { /* also skip this if a user defined identifier has been given */
-                                        // look through all the known egos to find a match (must be an ego to match), use case could be: Em:Richard:|Em which should re use the existing ego
-                                        for (EntityData egoEntity : egoDataNodeList) {
-                                            if (currentReferenceKinType.matchesEgonessAndSymbol(egoEntity, kinTypeModifier)) {
-                                                currentGraphDataNode = egoEntity;
-                                                currentGraphDataNode.addKinTypeString(fullKinTypeString);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    if (currentGraphDataNode == null) {
-                                        currentGraphDataNode = new EntityData(labelStringsParser, fullKinTypeString, currentReferenceKinType.symbolType, currentReferenceKinType.isEgoType());
-                                        if (currentGraphDataNode.isEgo) {
-                                            egoDataNodeList.add(currentGraphDataNode);
-                                        }
-                                        if (labelStringsParser.userDefinedIdentifierFound) {
-                                            namedEntitiesMap.put(labelStringsParser.uniqueIdentifier, currentGraphDataNode);
-                                        }
-                                        allEntitiesSet.add(currentGraphDataNode);
+                                if (parentDataNodes.isEmpty()) {
+                                    generateNeededEntities(null, labelStringsParser, parentDataNodes, currentReferenceKinType, currentGraphDataNodeSet, kinTypeModifier, fullKinTypeString, egoDataNodeList, namedEntitiesMap, allEntitiesSet);
+                                } else {
+                                    for (EntityData currentParentNode : parentDataNodes.toArray(new EntityData[]{})) { // todo: this is probably incorrect since there may be more relation/symbol types to create
+                                        generateNeededEntities(currentParentNode, labelStringsParser, parentDataNodes, currentReferenceKinType, currentGraphDataNodeSet, kinTypeModifier, fullKinTypeString, egoDataNodeList, namedEntitiesMap, allEntitiesSet);
                                     }
                                 }
-                                if (currentGraphDataNode.isEgo) {
-                                    egoDataNode = currentGraphDataNode;
+//                                if (currentGraphDataNode.isEgo) {
+//                                    egoDataNode = currentGraphDataNode;
+//                                }
+                                for (EntityData currentGraphDataNode : currentGraphDataNodeSet) {
+                                    currentGraphDataNode.isVisible = true;
                                 }
-                                if (parentDataNode != null && !currentReferenceKinType.hasNoRelationTypes()) {
-                                    // allow relations only for kin types that do not start the kin type string
-                                    // create one entity for each relation type
-                                    // todo: should this be creating on entity of each symbol type for each relation type?
-                                    for (DataTypes.RelationType relationType : currentReferenceKinType.getRelationTypes()) {
-                                        EntityRelation nodeRelation = parentDataNode.addRelatedNode(currentGraphDataNode, relationType, null, null, null, null);
-                                        if (kinTypeModifier != null && !kinTypeModifier.isEmpty()) {
-                                            if (kinTypeModifier.equals("-")) {
-                                                nodeRelation.setRelationOrder(-1);
-                                            } else if (kinTypeModifier.equals("+")) {
-                                                nodeRelation.setRelationOrder(1);
-                                            } else {
-                                                nodeRelation.setRelationOrder(Integer.parseInt(kinTypeModifier.replaceFirst("^\\+", "")));
-                                            }
-                                        }
-                                    }
-                                }
-                                currentGraphDataNode.isVisible = true;
                                 // add any child nodes?
                                 // todo: move this into the kin term parser
                                 for (KinTermGroup kinTerms : kinTermsArray) {
-                                    if (kinTerms.graphShow && egoDataNode != null) {
+                                    if (kinTerms.graphShow) {
                                         // todo: replace this with a loop over egoDataNodeList and then calculate the actual kin type strings for each one rather than the user entered ones used here
                                         // todo: this should probably be done after all nodes have been created so that subsequent relations are taken into account when calculating the kin terms
-                                        for (String kinTermLabel : kinTerms.getTermLabel(fullKinTypeString)) {
-                                            // todo: this could be running too many times, maybe check for efficiency
-                                            currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
-                                            egoDataNode.addRelatedNode(currentGraphDataNode, DataTypes.RelationType.kinterm, kinTerms.graphColour, kinTermLabel, null, null);
+                                        for (EntityData currentGraphDataNode : currentGraphDataNodeSet) {
+                                            for (String kinTermLabel : kinTerms.getTermLabel(fullKinTypeString)) {
+                                                // todo: this could be running too many times, maybe check for efficiency
+                                                currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
+                                                //egoDataNode.addRelatedNode(currentGraphDataNode, DataTypes.RelationType.kinterm, kinTerms.graphColour, kinTermLabel, null, null);
+                                            }
                                         }
                                     }
                                 }
                                 // end: move this into the kin term parser
-                                parentDataNode = currentGraphDataNode;
+                                parentDataNodes = currentGraphDataNodeSet;
                                 kinTypeFound = true;
                                 break;
                             }
@@ -431,5 +395,61 @@ public class KinTypeStringConverter extends GraphSorter {
         }
         // make sure that no duplicates are returned, these duplicates may exist from strings like EmMS|EmB which map to the same individual but there are two kin type strings for it and hence two entries
         super.setEntitys(allEntitiesSet.toArray(new EntityData[]{}));
+    }
+
+    private void generateNeededEntities(EntityData currentParentNode, LabelStringsParser labelStringsParser, HashSet<EntityData> parentDataNodes, KinType currentReferenceKinType, HashSet<EntityData> currentGraphDataNodeSet, String kinTypeModifier, String fullKinTypeString, ArrayList<EntityData> egoDataNodeList, HashMap<UniqueIdentifier, EntityData> namedEntitiesMap, HashSet<EntityData> allEntitiesSet) {
+        if (!parentDataNodes.isEmpty() && !labelStringsParser.userDefinedIdentifierFound /* if a user defined identifier has been specified then skip this and always create or reuse that named entity */) {
+            // look for any existing relaitons that match the required kin type
+            for (EntityData parentDataNode : parentDataNodes) {
+                for (EntityRelation entityRelation : parentDataNode.getAllRelations()) {
+                    if (currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier)) {
+                        final EntityData alterNode = entityRelation.getAlterNode();
+                        currentGraphDataNodeSet.add(alterNode);
+                        alterNode.addKinTypeString(fullKinTypeString);
+//                                                break;
+                    }
+                }
+            }
+        } else if (parentDataNodes.isEmpty() && !labelStringsParser.userDefinedIdentifierFound) { /* also skip this if a user defined identifier has been given */
+            // look through all the known egos to find a match (must be an ego to match), use case could be: Em:Richard:|Em which should re use the existing ego
+            for (EntityData egoEntity : egoDataNodeList) {
+                if (currentReferenceKinType.matchesEgonessAndSymbol(egoEntity, kinTypeModifier)) {
+                    currentGraphDataNodeSet.add(egoEntity);
+                    egoEntity.addKinTypeString(fullKinTypeString);
+                }
+            }
+        }
+//                                    if (currentGraphDataNodeSet.isEmpty()) {
+        for (SymbolType symbolType : currentReferenceKinType.getSymbolTypes()) {
+            EntityData currentGraphDataNode = new EntityData(labelStringsParser, currentParentNode, fullKinTypeString, symbolType, currentReferenceKinType.isEgoType());
+            if (currentGraphDataNode.isEgo) {
+                egoDataNodeList.add(currentGraphDataNode);
+            }
+            if (labelStringsParser.userDefinedIdentifierFound) {
+                namedEntitiesMap.put(currentGraphDataNode.getUniqueIdentifier(), currentGraphDataNode);
+            }
+            currentGraphDataNodeSet.add(currentGraphDataNode);
+            allEntitiesSet.add(currentGraphDataNode);
+            if (!parentDataNodes.isEmpty() && !currentReferenceKinType.hasNoRelationTypes()) {
+                // allow relations only for kin types that do not start the kin type string
+                // create one entity for each relation type
+                // todo: should this be creating on entity of each symbol type for each relation type?
+                for (EntityData parentDataNode : parentDataNodes) {
+                    for (DataTypes.RelationType relationType : currentReferenceKinType.getRelationTypes()) {
+                        EntityRelation nodeRelation = parentDataNode.addRelatedNode(currentGraphDataNode, relationType, null, null, null, null);
+                        if (kinTypeModifier != null && !kinTypeModifier.isEmpty()) {
+                            if (kinTypeModifier.equals("-")) {
+                                nodeRelation.setRelationOrder(-1);
+                            } else if (kinTypeModifier.equals("+")) {
+                                nodeRelation.setRelationOrder(1);
+                            } else {
+                                nodeRelation.setRelationOrder(Integer.parseInt(kinTypeModifier.replaceFirst("^\\+", "")));
+                            }
+                        }
+                    }
+                }
+            }
+//                                        }
+        }
     }
 }
