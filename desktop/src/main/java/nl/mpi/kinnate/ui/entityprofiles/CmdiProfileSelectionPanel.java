@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.ProfileSelection;
@@ -39,7 +40,8 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
         topPanel.add(reloadButton, BorderLayout.LINE_END);
         this.add(topPanel, BorderLayout.PAGE_START);
         this.add(profileReloadProgressBar, BorderLayout.PAGE_END);
-        this.add(profileTable, BorderLayout.CENTER);
+        this.add(new JScrollPane(profileTable), BorderLayout.CENTER);
+        loadProfiles(false); // care should be taken here because this could run when an unsuspecting user opens the application for the first time and if the profile loading slowness is not resolved it could create a bad first experience
     }
 
     private void loadProfiles(final boolean forceUpdate) {
