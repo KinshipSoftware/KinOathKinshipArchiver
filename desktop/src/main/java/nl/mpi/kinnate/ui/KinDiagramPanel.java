@@ -277,7 +277,14 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         this.add(kinGraphPanel);
 
-        entityIndex = new QueryParser(graphPanel.dataStoreSvg.graphData.getDataNodes(), entityCollection);
+        EntityData[] svgDataNodes;
+        if (graphPanel.dataStoreSvg.graphData != null) {
+            svgDataNodes = graphPanel.dataStoreSvg.graphData.getDataNodes();
+        } else {
+            // if the data has not been loaded from the svg then we do not need to pre load it so we cah just use an empty array
+            svgDataNodes = new EntityData[]{};
+        }
+        entityIndex = new QueryParser(svgDataNodes, entityCollection);
         kinTypeStringInput.addKeyListener(new KeyListener() {
 
             public void keyTyped(KeyEvent e) {
