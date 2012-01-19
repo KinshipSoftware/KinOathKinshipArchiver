@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
@@ -118,7 +120,7 @@ public class PluginLoader {
 
     public static void main(String[] args) {
         try {
-            new PluginLoader(new KinSessionStorage()).loadPluginFromJar(new File("/Users/petwit/Downloads/kinoath-testing 4.app/Contents/MacOS/kinoath-testing-0-7-28196.jar"));
+            new PluginLoader(new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()))).loadPluginFromJar(new File("/Users/petwit/Downloads/kinoath-testing 4.app/Contents/MacOS/kinoath-testing-0-7-28196.jar"));
         } catch (IOException exception) {
             exception.printStackTrace();
         }
