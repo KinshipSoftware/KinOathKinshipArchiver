@@ -90,6 +90,13 @@ public class LabelStringsParser {
         }
     }
 
+    public UniqueIdentifier getUniqueIdentifier() {
+        if (uniqueIdentifier == null) {
+            throw new UnsupportedOperationException("uniqueIdentifier has not been set, this should not occur");
+        }
+        return uniqueIdentifier;
+    }
+
     public UniqueIdentifier getUniqueIdentifier(EntityData parentData, String kinTypeString, SymbolType symbolType) {
 
         if (uniqueIdentifier == null) {
