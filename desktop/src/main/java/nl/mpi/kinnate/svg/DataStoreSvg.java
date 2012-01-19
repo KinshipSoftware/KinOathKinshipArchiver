@@ -1,5 +1,7 @@
 package nl.mpi.kinnate.svg;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -126,12 +128,15 @@ public class DataStoreSvg {
 
     @XmlTransient
     public KinType[] getKinTypeDefinitions() {
+        KinType[] returnArray;
         if (kinTypeDefinitions != null) {
-            return kinTypeDefinitions;
+            returnArray = kinTypeDefinitions;
         } else {
             // make sure that we do not set kinTypeDefinitions unless the user has changed the default kin types, otherwise it will be stored in the svg
-            return KinType.getReferenceKinTypes();
+            returnArray = KinType.getReferenceKinTypes();
         }
+        Collections.sort(Arrays.asList(returnArray));
+        return returnArray;
     }
 
     public void setKinTypeDefinitions(KinType[] kinTypeDefinitions) {
