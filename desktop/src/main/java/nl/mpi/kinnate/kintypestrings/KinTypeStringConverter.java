@@ -320,9 +320,6 @@ public class KinTypeStringConverter extends GraphSorter {
                                     // add a highlight for the label section
                                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length(), "Label text");
                                     consumableString = labelStringsParser.remainingInputString;
-                                    // get any previously created entity with the same user defined identifier if it exists
-                                    currentGraphDataNodeSet.add(namedEntitiesMap.get(labelStringsParser.getUniqueIdentifier())); // the unique identifier has already been constructed from the user identifier
-                                    // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
                                 }
                                 if (labelStringsParser.uidStartLocation > -1) {
                                     // add a highlight for the user id section
@@ -421,7 +418,15 @@ public class KinTypeStringConverter extends GraphSorter {
         }
 //                                    if (currentGraphDataNodeSet.isEmpty()) {
         for (SymbolType symbolType : currentReferenceKinType.getSymbolTypes()) {
-            EntityData currentGraphDataNode = new EntityData(labelStringsParser, currentParentNode, fullKinTypeString, symbolType, currentReferenceKinType.isEgoType());
+            EntityData currentGraphDataNode = null;
+            if (labelStringsParser.userDefinedIdentifierFound) {
+                // get any previously created entity with the same user defined identifier if it exists
+                currentGraphDataNode = namedEntitiesMap.get(labelStringsParser.getUniqueIdentifier()); // the unique identifier has already been constructed since the user identifier was supplied
+                // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
+            }
+            if (currentGraphDataNode == null) {
+                currentGraphDataNode = new EntityData(labelStringsParser, currentParentNode, fullKinTypeString, symbolType, currentReferenceKinType.isEgoType());
+            }
             if (currentGraphDataNode.isEgo) {
                 egoDataNodeList.add(currentGraphDataNode);
             }
