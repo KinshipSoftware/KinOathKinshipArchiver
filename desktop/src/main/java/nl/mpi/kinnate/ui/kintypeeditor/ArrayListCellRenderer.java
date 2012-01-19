@@ -18,7 +18,9 @@ public class ArrayListCellRenderer implements TableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         JLabel labelRenderer;
         StringBuilder stringBuilder = new StringBuilder();
-        if (value == null) {
+        if (row == table.getRowCount() - 1) {
+            labelRenderer = new JLabel();
+        } else if (value == null) {
             labelRenderer = new JLabel(anyOptionDisplayString);
         } else {
             for (String stringValue : (ArrayList<String>) value) {
