@@ -434,9 +434,9 @@ public class KinTypeStringConverter extends GraphSorter {
                 // allow relations only for kin types that do not start the kin type string
                 // create one entity for each relation type
                 // todo: should this be creating on entity of each symbol type for each relation type?
-                for (EntityData parentDataNode : parentDataNodes) {
+                if (currentParentNode != null) {
                     for (DataTypes.RelationType relationType : currentReferenceKinType.getRelationTypes()) {
-                        EntityRelation nodeRelation = parentDataNode.addRelatedNode(currentGraphDataNode, relationType, null, null, null, null);
+                        EntityRelation nodeRelation = currentParentNode.addRelatedNode(currentGraphDataNode, relationType, null, null, null, null);
                         if (kinTypeModifier != null && !kinTypeModifier.isEmpty()) {
                             if (kinTypeModifier.equals("-")) {
                                 nodeRelation.setRelationOrder(-1);
