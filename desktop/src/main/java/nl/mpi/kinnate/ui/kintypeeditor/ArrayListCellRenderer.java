@@ -16,15 +16,25 @@ public class ArrayListCellRenderer implements TableCellRenderer {
     static protected String anyOptionDisplayString = "<any>";
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        JLabel labelRenderer;
         StringBuilder stringBuilder = new StringBuilder();
         if (value == null) {
-            return new JLabel(anyOptionDisplayString);
+            labelRenderer = new JLabel(anyOptionDisplayString);
         } else {
             for (String stringValue : (ArrayList<String>) value) {
                 stringBuilder.append(stringValue);
                 stringBuilder.append(", ");
             }
-            return new JLabel(stringBuilder.toString());
+            labelRenderer = new JLabel(stringBuilder.toString());
         }
+        labelRenderer.setOpaque(true);
+        if (isSelected) {
+            labelRenderer.setBackground(table.getSelectionBackground());
+            labelRenderer.setForeground(table.getSelectionForeground());
+        } else {
+            labelRenderer.setBackground(table.getBackground());
+            labelRenderer.setForeground(table.getForeground());
+        }
+        return labelRenderer;
     }
 }
