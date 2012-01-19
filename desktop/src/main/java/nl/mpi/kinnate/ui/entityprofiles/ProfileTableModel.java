@@ -13,7 +13,8 @@ import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile;
 public class ProfileTableModel extends AbstractTableModel {
 
     private ArrayList<CmdiProfile> cmdiProfileArray = null;
-    private String[] columnNames = new String[]{"Name", "Description", "Registration Date", "Creator Name", "ID", "href"};
+    private String[] columnNames = new String[]{"Name", "Description", "Registration Date", "Creator Name", "Use Entity Type"}; //, "ID", "href"};
+    private ArrayList<String> selectedProfiles = new ArrayList<String>();
 
     public void setCmdiProfileReader(CmdiProfileReader cmdiProfileReader) {
         cmdiProfileArray = cmdiProfileReader.cmdiProfileArray;
@@ -37,6 +38,32 @@ public class ProfileTableModel extends AbstractTableModel {
         }
     }
 
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return (columnIndex == 4);
+    }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        switch (columnIndex) {
+            case 4:
+                return Boolean.class;
+            default:
+                return super.getColumnClass(columnIndex);
+        }
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        if (columnIndex == 4) {
+            if (aValue.equals(true)) {
+                selectedProfiles.add(cmdiProfileArray.get(rowIndex).id);
+            } else {
+                selectedProfiles.remove(cmdiProfileArray.get(rowIndex).id);
+            }
+        }
+    }
+
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
@@ -44,13 +71,15 @@ public class ProfileTableModel extends AbstractTableModel {
             case 1:
                 return cmdiProfileArray.get(rowIndex).description;
             case 2:
-                return cmdiProfileArray.get(rowIndex).registrationDate;
+                return cmdiProfileArray.get(rowIndex).registrationDate.substring(0, 10);
             case 3:
                 return cmdiProfileArray.get(rowIndex).creatorName;
             case 4:
-                return cmdiProfileArray.get(rowIndex).id;
-            case 5:
-                return cmdiProfileArray.get(rowIndex).href;
+                return selectedProfiles.contains(cmdiProfileArray.get(rowIndex).id);
+//            case 4:
+//                return cmdiProfileArray.get(rowIndex).id;
+//            case 5:
+//                return cmdiProfileArray.get(rowIndex).href;
             default:
                 return "";
         }
