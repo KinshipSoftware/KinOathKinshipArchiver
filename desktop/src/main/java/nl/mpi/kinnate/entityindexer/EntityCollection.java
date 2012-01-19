@@ -423,7 +423,7 @@ public class EntityCollection {
         final JTextArea queryText = new JTextArea();
         final JLabel queryTimeLabel = new JLabel();
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
-        final KinSessionStorage kinSessionStorage = new KinSessionStorage();
+        final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
         final EntityCollection entityCollection = new EntityCollection(kinSessionStorage, arbilWindowManager, new ArbilBugCatcher(kinSessionStorage, new ApplicationVersionManager(new KinOathVersion())));
         //queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
