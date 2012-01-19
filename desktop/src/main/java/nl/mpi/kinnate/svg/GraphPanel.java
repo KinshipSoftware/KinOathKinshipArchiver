@@ -248,7 +248,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgFile = svgFilePath;
         selectedGroupId.clear();
         svgUpdateHandler.clearHighlights();
-        // todo: make sure that any data changes such as the title/description in the kin term groups get updated into the file on save
+        // make sure that any data changes such as the title/description in the kin term groups get updated into the file on save
+        dataStoreSvg.storeAllData(doc, bugCatcher);
         ArbilComponentBuilder.savePrettyFormatting(doc, svgFile);
         requiresSave = false;
     }
