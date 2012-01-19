@@ -12,7 +12,7 @@ import nl.mpi.kinnate.kindata.EntityRelation;
  *  Created on : Jun 28, 2011, 11:31:35 AM
  *  Author     : Peter Withers
  */
-public class KinType {
+public class KinType implements Comparable<KinType> {
 
     private KinType() {
     }
@@ -26,9 +26,9 @@ public class KinType {
     @XmlAttribute(name = "code", namespace = "http://mpi.nl/tla/kin")
     protected String codeString = null;
     @XmlAttribute(name = "type", namespace = "http://mpi.nl/tla/kin")
-    protected DataTypes.RelationType[] relationTypes = null;
+    private DataTypes.RelationType[] relationTypes = null;
     @XmlAttribute(name = "symbol", namespace = "http://mpi.nl/tla/kin")
-    protected EntityData.SymbolType[] symbolTypes = null;
+    private EntityData.SymbolType[] symbolTypes = null;
     @XmlAttribute(name = "name", namespace = "http://mpi.nl/tla/kin")
     protected String displayString = null;
 
@@ -116,6 +116,16 @@ public class KinType {
             }
         }
         return false;
+    }
+
+    public int compareTo(KinType o) {
+        if (o == null) {
+            return -1;
+        }
+        if (codeString.length() > o.codeString.length()) {
+            return -1;
+        }
+        return codeString.compareToIgnoreCase(o.codeString);
     }
 
     public static KinType[] getReferenceKinTypes() {
