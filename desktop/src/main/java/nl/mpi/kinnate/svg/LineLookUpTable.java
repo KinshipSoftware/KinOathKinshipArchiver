@@ -30,6 +30,38 @@ public class LineLookUpTable {
             // todo: in RelationSVG on first load the lineLookUpTable is null and loops will not be drawn
         }
 
+        private void insertLoop(int linePart) {
+            // todo: this is test needs to be extended to place the loops in the correct locations and to produce pretty curved loops
+            Point startPoint = this.pointsList.get(linePart);
+            Point endPoint = this.pointsList.get(linePart + 1);
+            int centerX = (startPoint.x + endPoint.x) / 2;
+            int centerY = (startPoint.y + endPoint.y) / 2;
+            int startOffset = -5;
+            int endOffset = +5;
+            int loopHeight = -10;
+            if (startPoint.x == endPoint.x) {
+                // horizontal lines
+                if (startPoint.y < endPoint.y) {
+                    startOffset = +5;
+                    endOffset = -5;
+                }
+                this.pointsList.add(linePart + 1, new Point(centerX, centerY + startOffset));
+                this.pointsList.add(linePart + 1, new Point(centerX + loopHeight, centerY + startOffset));
+                this.pointsList.add(linePart + 1, new Point(centerX + loopHeight, centerY + endOffset));
+                this.pointsList.add(linePart + 1, new Point(centerX, centerY + endOffset));
+            } else {
+                // vertical lines
+                if (startPoint.x < endPoint.x) {
+                    startOffset = +5;
+                    endOffset = -5;
+                }
+                this.pointsList.add(linePart + 1, new Point(centerX + startOffset, centerY));
+                this.pointsList.add(linePart + 1, new Point(centerX + startOffset, centerY + loopHeight));
+                this.pointsList.add(linePart + 1, new Point(centerX + endOffset, centerY + loopHeight));
+                this.pointsList.add(linePart + 1, new Point(centerX + endOffset, centerY));
+            }
+        }
+
         @Override
         public boolean equals(Object obj) {
             if (obj == null) {
@@ -59,7 +91,7 @@ public class LineLookUpTable {
     public void getOverlapsOtherLine() {
     }
 
-    public Point[] getIntersections(LineRecord localLineRecord) {
+    private Point[] getIntersections(LineRecord localLineRecord) {
         HashSet<Point> intersectionPoints = new HashSet<Point>();
         for (LineRecord lineRecord : lineRecords) {
             Point intersectionPoint = localLineRecord.getIntersection(lineRecord);
@@ -73,7 +105,7 @@ public class LineLookUpTable {
     public Point[] adjustLineToObstructions(String lineIdString, ArrayList<Point> pointsList) {
         LineRecord localLineRecord = new LineRecord(lineIdString, pointsList);
         getIntersections(localLineRecord);
-        //localLineRecord.pointsList.set(3, new Point(0, 0));
+        //localLineRecord.insertLoop(3);
         lineRecords.add(localLineRecord);
         return localLineRecord.pointsList.toArray(new Point[]{});
     }
