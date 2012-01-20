@@ -39,6 +39,7 @@ import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
+import nl.mpi.kinnate.ui.entityprofiles.CmdiProfileSelectionPanel;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
 import nl.mpi.kinnate.ui.relationsettings.RelationSettingsPanel;
@@ -246,6 +247,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         panelSetting.addTargetPanel(labelFieldsPanel, false);
                         panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg), false);
                         panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg, dialogHandler), false);
+                        panelSetting.addTargetPanel(new CmdiProfileSelectionPanel("Entity Profiles"), false);
                         break;
                     case KinTerms:
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
