@@ -101,9 +101,9 @@ public abstract class AbstractDiagramManager {
         }
     }
 
-    abstract public void createDiagramContainer(String diagramTitle, Component diagramComponent);
+    abstract public Component createDiagramContainer(Component diagramComponent);
 
-    abstract public void createDiagramSubPanel(String diagramTitle, Component diagramComponent);
+    abstract public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel);
 
     public void newDiagram() {
         URI defaultDiagramUri = null;
@@ -111,13 +111,15 @@ public abstract class AbstractDiagramManager {
             defaultDiagramUri = KinDiagramPanel.getDefaultDiagramFile(sessionStorage).toURI();
         }
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
-        createDiagramContainer("Unsaved Default Diagram", egoSelectionTestPanel);
+        egoSelectionTestPanel.setName("Unsaved Default Diagram");
+        createDiagramContainer(egoSelectionTestPanel);
         egoSelectionTestPanel.loadAllTrees();
     }
 
     public void newDiagram(DocumentNewMenu.DocumentType documentType) {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
-        createDiagramContainer("Unsaved " + documentType.getDisplayName(), egoSelectionTestPanel);
+        egoSelectionTestPanel.setName("Unsaved " + documentType.getDisplayName());
+        createDiagramContainer(egoSelectionTestPanel);
         egoSelectionTestPanel.loadAllTrees();
     }
 
@@ -128,7 +130,8 @@ public abstract class AbstractDiagramManager {
         }
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
-        createDiagramContainer(diagramTitle, egoSelectionTestPanel);
+        egoSelectionTestPanel.setName(diagramTitle);
+        createDiagramContainer(egoSelectionTestPanel);
         egoSelectionTestPanel.loadAllTrees();
     }
 
@@ -160,7 +163,8 @@ public abstract class AbstractDiagramManager {
     public void openEntityUploadPanel() {
         if (entityUploadPanel == null) {
             entityUploadPanel = new EntityUploadPanel(sessionStorage, bugCatcher, entityCollection, dialogHandler);
-            createDiagramContainer("Entity Upload", entityUploadPanel);
+            entityUploadPanel.setName("Entity Upload");
+            createDiagramContainer(entityUploadPanel);
         }
         setSelectedDiagram(entityUploadPanel);
 //        JDialog uploadDialog = new JDialog(this, "Entity Upload", true);
