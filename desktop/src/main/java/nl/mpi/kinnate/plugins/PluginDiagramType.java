@@ -7,6 +7,10 @@ package nl.mpi.kinnate.plugins;
  */
 public interface PluginDiagramType {
 
+    public int versionMajor = 0;
+    public int versionMinor = 0;
+    public int versionRevision = 1;
+//
     public boolean showKinTerms = false;
     public boolean showArchiveLinker = false;
     public boolean showDiagramTree = false;
