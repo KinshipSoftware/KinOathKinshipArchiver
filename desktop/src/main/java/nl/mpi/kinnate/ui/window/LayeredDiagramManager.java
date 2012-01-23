@@ -37,14 +37,17 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
     }
 
     @Override
-    public void createDiagramContainer(String diagramTitle, Component diagramComponent) {
+    public Component createDiagramContainer(Component diagramComponent) {
+        String diagramTitle = diagramComponent.getName();
         titleMap.put(diagramComponent, diagramTitle);
         diagramArray.add(diagramComponent);
         setSelectedDiagram(diagramComponent);
+        return diagramComponent;
     }
 
     @Override
-    public void createDiagramSubPanel(String diagramTitle, Component diagramComponent) {
+    public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel) {
+        // todo: this should use the parentPanel not getSavePanelIndex
         int currentDiagramIndex = getSavePanelIndex();
         Component currentComponent = getDiagramAt(currentDiagramIndex);
         JTabbedPane tabbedPane;
