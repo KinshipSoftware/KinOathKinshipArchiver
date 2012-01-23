@@ -22,6 +22,7 @@ public class PluginSample implements KinOathPlugin, PluginSettings {
     }
 
     public String getVersionNumber() {
+        // this is the version of the plugin itself and is separate from the version numbers of the interfaces
         return "0.0.1";
     }
 
