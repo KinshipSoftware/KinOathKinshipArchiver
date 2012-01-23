@@ -29,14 +29,17 @@ public class TabbedDiagramManager extends AbstractDiagramManager {
     }
 
     @Override
-    public void createDiagramContainer(String diagramTitle, Component diagramComponent) {
+    public Component createDiagramContainer(Component diagramComponent) {
+        String diagramTitle = diagramComponent.getName();
         jTabbedPane1.add(diagramTitle, diagramComponent);
         jTabbedPane1.setSelectedComponent(diagramComponent);
+        return diagramComponent;
     }
 
     @Override
-    public void createDiagramSubPanel(String diagramTitle, Component diagramComponent) {
-        createDiagramContainer(diagramTitle, diagramComponent);
+    public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel) {
+        diagramComponent.setName(diagramTitle);
+        createDiagramContainer(diagramComponent);
     }
 
     @Override
