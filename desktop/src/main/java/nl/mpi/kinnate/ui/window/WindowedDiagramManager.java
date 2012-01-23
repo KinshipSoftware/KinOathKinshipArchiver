@@ -54,21 +54,23 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
     }
 
     @Override
-    public void createDiagramContainer(String diagramTitle, Component diagramComponent) {
+    public Component createDiagramContainer(Component diagramComponent) {
+        String diagramTitle = diagramComponent.getName();
         JFrame diagramWindow = super.createDiagramWindow(diagramTitle, diagramComponent);
         titleMap.put(diagramWindow, diagramTitle);
         diagramArray.add(diagramWindow);
+        return diagramWindow;
     }
 
     @Override
-    public void createDiagramSubPanel(String diagramTitle, Component diagramComponent) {
-        int currentDiagramIndex = getSavePanelIndex();
-        JFrame diagramFame = (JFrame) getDiagramAt(currentDiagramIndex);
+    public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel) {
+//        int currentDiagramIndex = getSavePanelIndex();
+        JFrame diagramFame = (JFrame) parentPanel; // getDiagramAt(currentDiagramIndex);
         Component currentComponent = diagramFame.getContentPane();
         JTabbedPane tabbedPane;
         if (!(currentComponent instanceof JTabbedPane)) {
             tabbedPane = new JTabbedPane();
-            final String savePanelTitle = getSavePanelTitle(currentDiagramIndex);
+            final String savePanelTitle = diagramFame.getName(); //getSavePanelTitle(currentDiagramIndex);
             tabbedPane.addTab(savePanelTitle, currentComponent);
             diagramFame.setContentPane(tabbedPane);
         } else {
@@ -79,6 +81,7 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
 
     @Override
     Component getSelectedDiagram() {
+        // todo: this could cause issues if the application does not have focus
         return KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
     }
 
@@ -96,7 +99,7 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
         }
     }
 
-    public int getSavePanelIndex() {
+    public int getSavePanelIndex() { // Component parentSavePanel
         return diagramArray.indexOf(getSelectedDiagram());
     }
 
