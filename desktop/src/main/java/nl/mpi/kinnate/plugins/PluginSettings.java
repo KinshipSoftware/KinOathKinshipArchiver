@@ -8,4 +8,8 @@ import javax.swing.table.TableModel;
  *  Author     : Peter Withers
  */
 public interface PluginSettings extends TableModel {
+
+    public int versionMajor = 0;
+    public int versionMinor = 0;
+    public int versionRevision = 1;
 }
