@@ -2,6 +2,7 @@ package nl.mpi.kinnate.ui;
 
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,6 +52,7 @@ public class GedcomImportPanel extends JPanel {
     private BugCatcher bugCatcher;
     private ArbilDataNodeLoader dataNodeLoader;
     private ArbilTreeHelper treeHelper;
+    private Component parentPanel;
 
     public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager, EntityCollection entityCollection, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper) {
         this.setPreferredSize(new Dimension(500, 500));
@@ -89,7 +91,8 @@ public class GedcomImportPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
 //                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
-                    abstractDiagramManager.createDiagramContainer("Imported Entities", egoSelectionTestPanel);
+                    egoSelectionTestPanel.setName("Imported Entities");
+                    abstractDiagramManager.createDiagramContainer(egoSelectionTestPanel);
                     SwingUtilities.invokeLater(new Runnable() {
 
                         public void run() {
@@ -137,7 +140,8 @@ public class GedcomImportPanel extends JPanel {
             } else {
                 titleString = "Import: " + importFileString.substring(importFileString.lastIndexOf("/") + 1);
             }
-            abstractDiagramManager.createDiagramContainer(titleString, GedcomImportPanel.this);
+            setName(titleString);
+            parentPanel = abstractDiagramManager.createDiagramContainer(GedcomImportPanel.this);
             progressBar = new JProgressBar(0, 100);
             endPagePanel = new JPanel(new BorderLayout());
             endPagePanel.add(progressBar, BorderLayout.PAGE_START);
@@ -203,7 +207,7 @@ public class GedcomImportPanel extends JPanel {
 //                            JTextPane fileText = new JTextPane();
                                         XsdChecker xsdChecker = new XsdChecker();
                                         if (xsdChecker.simpleCheck(new File(currentNodeUri)) != null) {
-                                            abstractDiagramManager.createDiagramSubPanel("XSD Error on Import", xsdChecker);
+                                            abstractDiagramManager.createDiagramSubPanel("XSD Error on Import", xsdChecker, parentPanel);
                                             xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentNodeUri));
                                             xsdChecker.setDividerLocation(0.5);
                                             maxXsdErrorToShow--;
