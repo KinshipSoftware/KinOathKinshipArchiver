@@ -7,6 +7,10 @@ package nl.mpi.kinnate.plugins;
  */
 public interface KinOathPlugin {
 
+    public int versionMajor = 0;
+    public int versionMinor = 0;
+    public int versionRevision = 1;
+
     public String getName();
 
     public String getVersionNumber();
