@@ -151,9 +151,9 @@ public class KinType implements Comparable<KinType> {
         new KinType("Hu", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Husband"),
         new KinType("Wi", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Wife"),
         new KinType("Pa", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle, EntityData.SymbolType.circle}, "Parent"),
-        new KinType("Sb", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Sibling"), //todo: are Sp and Sb correct?
-        new KinType("Sp", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Spouse"),
-        new KinType("Ch", new DataTypes.RelationType[]{DataTypes.RelationType.descendant,}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Child"),
+        new KinType("Sb", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle, EntityData.SymbolType.circle}, "Sibling"), //todo: are Sp and Sb correct?
+        new KinType("Sp", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle, EntityData.SymbolType.circle}, "Spouse"),
+        new KinType("Ch", new DataTypes.RelationType[]{DataTypes.RelationType.descendant,}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle, EntityData.SymbolType.circle}, "Child"),
         // type 2
         new KinType("F", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Father"),
         new KinType("M", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Mother"),
@@ -164,9 +164,9 @@ public class KinType implements Comparable<KinType> {
         new KinType("H", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Husband"),
         new KinType("W", new DataTypes.RelationType[]{DataTypes.RelationType.union}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Wife"),
         new KinType("P", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle, EntityData.SymbolType.circle}, "Parent"),
-        new KinType("G", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Sibling"),
+        new KinType("G", new DataTypes.RelationType[]{DataTypes.RelationType.sibling}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle, EntityData.SymbolType.circle}, "Sibling"),
         new KinType("E", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Ego"),
-        new KinType("C", new DataTypes.RelationType[]{DataTypes.RelationType.descendant}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Child"),
+        new KinType("C", new DataTypes.RelationType[]{DataTypes.RelationType.descendant}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle, EntityData.SymbolType.circle}, "Child"),
         //        new KinType("X", DataTypes.RelationType.none, EntityData.SymbolType.none) // X is intended to indicate unknown or no type, for instance this is used after import to add all nodes to the graph
 
         // non ego types to be used to start a kin type string but cannot be used except at the beginning
