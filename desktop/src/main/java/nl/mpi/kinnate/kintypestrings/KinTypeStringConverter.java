@@ -425,8 +425,7 @@ public class KinTypeStringConverter extends GraphSorter {
                 // get any previously created entity with the same user defined identifier if it exists
                 currentGraphDataNode = namedEntitiesMap.get(labelStringsParser.getUniqueIdentifier()); // the unique identifier has already been constructed since the user identifier was supplied
                 // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
-            }
-            if (currentParentNode != null) {
+            } else if (currentParentNode != null) {
                 // check for existing relations of the current parents that match
                 for (EntityRelation entityRelation : currentParentNode.getAllRelations()) {
                     if (symbolType.toString().equals(entityRelation.getAlterNode().getSymbolType())) {
