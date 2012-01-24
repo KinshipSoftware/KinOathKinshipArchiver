@@ -46,12 +46,16 @@ public class UniqueIdentifier {
     public UniqueIdentifier(String attributeIdentifier) throws IdentifierException {
         // reconstruct the identifier from an attribte string originally obtained by getAttributeIdentifier
         String[] attributeIdentifierParts = attributeIdentifier.split("\\_");
-        if (attributeIdentifierParts.length != 2) {
+        if (attributeIdentifierParts.length == 2) {
+            identifierType = IdentifierType.valueOf(attributeIdentifierParts[0]);
+            identifierString = attributeIdentifierParts[1];
+        } else if (attributeIdentifierParts.length == 3) {
+            identifierType = IdentifierType.valueOf(attributeIdentifierParts[1]);
+            identifierString = attributeIdentifierParts[2];
+        } else {
             // this allows invalid files to prevent the application from starting
             throw new IdentifierException("Incorrect identifier format: " + attributeIdentifier);
         }
-        identifierType = IdentifierType.valueOf(attributeIdentifierParts[0]);
-        identifierString = attributeIdentifierParts[1];
     }
 
     public UniqueIdentifier(String userDefinedIdentifier, IdentifierType identifierTypeLocal) {
