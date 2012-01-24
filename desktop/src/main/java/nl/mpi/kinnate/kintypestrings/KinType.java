@@ -173,5 +173,5 @@ public class KinType implements Comparable<KinType> {
         new KinType("m", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.triangle}, "Male"),
         new KinType("f", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.circle}, "Female"),
         new KinType("x", new DataTypes.RelationType[]{}, new EntityData.SymbolType[]{EntityData.SymbolType.square}, "Undefined"),
-        new KinType("*", null, null, "Any Relation"),};
+        new KinType("*", new DataTypes.RelationType[]{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant, DataTypes.RelationType.union, DataTypes.RelationType.sibling}, null, "Any Relation"),};
 }
