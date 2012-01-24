@@ -369,6 +369,7 @@ public class SvgUpdateHandler {
 //                                        System.out.println("bbox W: " + bbox.getWidth());
 //                                        System.out.println("bbox H: " + bbox.getHeight());
                                     Element highlightGroupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+                                    ((EventTarget) highlightGroupNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
                                     highlightGroupNode.setAttribute("id", "highlight_" + uniqueIdentifier.getAttributeIdentifier());
                                     Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
                                     int paddingDistance = 20;
