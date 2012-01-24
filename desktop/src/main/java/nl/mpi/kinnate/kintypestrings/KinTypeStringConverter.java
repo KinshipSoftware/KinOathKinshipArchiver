@@ -426,6 +426,25 @@ public class KinTypeStringConverter extends GraphSorter {
                 currentGraphDataNode = namedEntitiesMap.get(labelStringsParser.getUniqueIdentifier()); // the unique identifier has already been constructed since the user identifier was supplied
                 // todo: check the gender or any other testable attrubute and give syntax highlight error if found...
             }
+            if (currentParentNode != null) {
+                // check for existing relations of the current parents that match
+                for (EntityRelation entityRelation : currentParentNode.getAllRelations()) {
+                    if (symbolType.toString().equals(entityRelation.getAlterNode().getSymbolType())) {
+                        if (currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier)) {
+                            currentGraphDataNode = entityRelation.getAlterNode();
+                            currentGraphDataNodeSet.add(currentGraphDataNode);
+                            currentGraphDataNode.addKinTypeString(fullKinTypeString);
+                        }
+                    }
+                }
+            } else {
+                // there are no parents so check for existing entities in the current set that match
+                for (EntityData existingEntity : currentGraphDataNodeSet) {
+                    if (currentReferenceKinType.matchesEgonessAndSymbol(existingEntity, kinTypeModifier)) {
+                        currentGraphDataNode = existingEntity;
+                    }
+                }
+            }
             if (currentGraphDataNode == null) {
                 currentGraphDataNode = new EntityData(labelStringsParser, currentParentNode, fullKinTypeString, symbolType, currentReferenceKinType.isEgoType());
             }
