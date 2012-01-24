@@ -403,7 +403,9 @@ public class KinTypeStringConverter extends GraphSorter {
                         final EntityData alterNode = entityRelation.getAlterNode();
                         currentGraphDataNodeSet.add(alterNode);
                         alterNode.addKinTypeString(fullKinTypeString);
-//                                                break;
+//                        System.out.println("fullKinTypeString:" + fullKinTypeString);
+//                        System.out.println(alterNode.getSymbolType());
+//                        currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier);
                     }
                 }
             }
