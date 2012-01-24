@@ -63,20 +63,25 @@ public class KinType implements Comparable<KinType> {
         if (entityRelation.getAlterNode().isEgo != this.isEgoType()) {
             return false;
         }
-        if (relationTypes == null) {
-            return true; // null will match all relation types
-        }
         boolean relationMatchFound = false;
-        for (DataTypes.RelationType relationType : relationTypes) {
-            if (relationType.equals(entityRelation.getRelationType())) {
-                relationMatchFound = true;
+        if (relationTypes == null) {
+            relationMatchFound = true; // null will match all relation types
+        } else {
+            for (DataTypes.RelationType relationType : relationTypes) {
+                if (relationType.equals(entityRelation.getRelationType())) {
+                    relationMatchFound = true;
+                }
             }
         }
         boolean symbolMatchFound = false;
-        for (EntityData.SymbolType symbolType : symbolTypes) {
-            // square used to be the wildcard symbol but now a null symbol array is used and since it is not null we compare all symbols in the array
-            if (!symbolType.name().equals(entityRelation.getAlterNode().getSymbolType())) {
-                symbolMatchFound = true;
+        if (symbolTypes == null) {
+            symbolMatchFound = true; // null will match all symbol types
+        } else {
+            for (EntityData.SymbolType symbolType : symbolTypes) {
+                // square was the wildcard symbol but now a null symbol array is used and since it is not null we compare all symbols in the array
+                if (symbolType.name().equals(entityRelation.getAlterNode().getSymbolType())) {
+                    symbolMatchFound = true;
+                }
             }
         }
         if (!relationMatchFound || !symbolMatchFound) {
