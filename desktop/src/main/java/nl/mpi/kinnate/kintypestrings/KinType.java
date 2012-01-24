@@ -116,7 +116,7 @@ public class KinType implements Comparable<KinType> {
         }
         // square used to be the wildcard symbol but now a null symbol array is used and since we know it is not null we compare all symbols in the array
         for (EntityData.SymbolType symbolType : symbolTypes) {
-            if (!symbolType.name().equals(entityData.getSymbolType())) {
+            if (symbolType.name().equals(entityData.getSymbolType())) {
                 return true;
             }
         }
