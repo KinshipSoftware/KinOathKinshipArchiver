@@ -70,7 +70,7 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
         JTabbedPane tabbedPane;
         if (!(currentComponent instanceof JTabbedPane)) {
             tabbedPane = new JTabbedPane();
-            final String savePanelTitle = diagramFame.getName(); //getSavePanelTitle(currentDiagramIndex);
+            final String savePanelTitle = currentComponent.getName(); //getSavePanelTitle(currentDiagramIndex);
             tabbedPane.addTab(savePanelTitle, currentComponent);
             diagramFame.setContentPane(tabbedPane);
         } else {
