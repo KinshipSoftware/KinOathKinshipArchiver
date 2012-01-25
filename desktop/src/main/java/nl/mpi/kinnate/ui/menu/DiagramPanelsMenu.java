@@ -46,12 +46,14 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
             VisiblePanelSetting[] visiblePanelsArray = kinTermPanel.getVisiblePanels();
             Arrays.sort(visiblePanelsArray);
             for (VisiblePanelSetting panelSetting : visiblePanelsArray) {
-                menuItemsAdded = true;
-                JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(panelSetting.getDisplayName());
-                menuItem.setSelected(panelSetting.isPanelShown());
-                menuItem.setActionCommand(panelSetting.getPanelType().name());
-                menuItem.addActionListener(this);
-                this.add(menuItem);
+                if (panelSetting.getPanelType() != null) {
+                    menuItemsAdded = true;
+                    JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(panelSetting.getDisplayName());
+                    menuItem.setSelected(panelSetting.isPanelShown());
+                    menuItem.setActionCommand(panelSetting.getPanelType().name());
+                    menuItem.addActionListener(this);
+                    this.add(menuItem);
+                }
             }
         }
         if (menuItemsAdded == false) {
@@ -66,7 +68,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
         KinTermSavePanel kinTermPanel = diagramWindowManager.getKinTermPanel();
         if (kinTermPanel != null) {
             for (VisiblePanelSetting panelSetting : kinTermPanel.getVisiblePanels()) {
-                if (panelSetting.getPanelType().equals(selectedPanelType)) {
+                if (selectedPanelType.equals(panelSetting.getPanelType())) {
                     panelSetting.setPanelShown(!panelSetting.isPanelShown());
                     // todo: this should set the added pannel as the active panel (note that there can be multiple added)
                 }
