@@ -26,13 +26,13 @@ public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
         ExportPanel
     }
     @XmlAttribute(name = "type", namespace = "http://mpi.nl/tla/kin")
-    PanelType panelType;
+    PanelType panelType = null;
     @XmlAttribute(name = "show", namespace = "http://mpi.nl/tla/kin")
     boolean panelShown;
     @XmlAttribute(name = "width", namespace = "http://mpi.nl/tla/kin")
     int panelWidth;
     @XmlTransient
-    private String displayName;
+    private String displayName = "";
     @XmlTransient
     private HidePane hidePane;
     @XmlTransient
@@ -134,6 +134,16 @@ public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
     }
 
     public int compareTo(VisiblePanelSetting o) {
-        return getDisplayName().compareToIgnoreCase(o.getDisplayName());
+        if (getDisplayName() == null) {
+            if (o.getDisplayName() == null) {
+                return 0;
+            } else {
+                return -1;
+            }
+        } else if (o.getDisplayName() == null) {
+            return -1;
+        } else {
+            return getDisplayName().compareToIgnoreCase(o.getDisplayName());
+        }
     }
 }
