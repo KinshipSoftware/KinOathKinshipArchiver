@@ -12894,10 +12894,9 @@
     <kin:DiagramMode>FreeForm</kin:DiagramMode>
     <kin:DiagramPanel kin:type="DiagramTree" kin:show="false" kin:width="150"/>
     <kin:DiagramPanel kin:type="EntitySearch" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150"/>
     <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="KinTerms" kin:show="true" kin:width="313"/>
+    <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150"/>
+    <kin:DiagramPanel kin:type="KinTerms" kin:show="true" kin:width="367"/>
     <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="false" kin:width="150"/>
   </kin:KinDiagramData>
 </svg>
