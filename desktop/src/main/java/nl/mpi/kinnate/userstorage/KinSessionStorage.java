@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.kinnate.KinOathVersion;
 
 /**
  *  Document   : KinSessionStorage
@@ -27,8 +28,10 @@ public class KinSessionStorage extends ArbilSessionStorage {
     // require the use of the old version of the application and this could be achieved by creating a jnlp for the
     // old jars and an export dialog instead of the main application.
     @Override
+    // #1305 Refactoring now needs to be done to accomodate the latest changes from Arbil trunk.
     public String[] getLocationOptions() {
-        String directoryName = ".kinoath-" + versionManager.getApplicationVersion().currentMajor + "-" + versionManager.getApplicationVersion().currentMinor;
+        // todo: the use of new KinOathVersion() must be removed once the refactoring is complete
+        String directoryName = ".kinoath-" + new KinOathVersion().currentMajor + "-" + new KinOathVersion().currentMinor;
         String[] locationOptions = new String[]{
             System.getProperty("user.home") + File.separatorChar + "Local Settings" + File.separatorChar + "Application Data" + File.separatorChar + directoryName + File.separatorChar,
             System.getenv("APPDATA") + File.separatorChar + directoryName + File.separatorChar,
