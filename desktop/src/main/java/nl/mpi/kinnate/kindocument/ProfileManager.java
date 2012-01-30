@@ -57,7 +57,7 @@ public class ProfileManager {
                 cmdiProfileSelectionPanel.setCmdiProfileReader(cmdiProfileReader);
                 if (!problemProfiles.isEmpty()) {
                     // todo: show a message dialogue
-                    cmdiProfileSelectionPanel.setStatus(true, "There were " + problemProfiles.size() + " profiles that could not be retrieved", true);
+                    cmdiProfileSelectionPanel.setStatus(true, "There were " + problemProfiles.size() + " selected profiles that could not be retrieved", true);
                 } else {
                     cmdiProfileSelectionPanel.setStatus(true, "", false);
                 }
