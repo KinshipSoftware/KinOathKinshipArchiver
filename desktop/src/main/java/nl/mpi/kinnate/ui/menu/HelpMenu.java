@@ -93,24 +93,24 @@ public class HelpMenu extends JMenu {
             }
         });
 
-        JMenuItem updateKmdiProfileMenuItem = new JMenuItem("Check Component Registry Updates (this will be moved to a panel)");
-        updateKmdiProfileMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            // todo: move this to a panel with more options
+//        JMenuItem updateKmdiProfileMenuItem = new JMenuItem("Check Component Registry Updates (this will be moved to a panel)");
+//        updateKmdiProfileMenuItem.addActionListener(new java.awt.event.ActionListener() {
+//            // todo: move this to a panel with more options.
+//
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                try {
+//                    String profileId = "clarin.eu:cr1:p_1320657629627";
+//                    File xsdFile = new File(sessionStorage.getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
+//                    new CmdiTransformer(sessionStorage, bugCatcher).transformProfileXmlToXsd(xsdFile, profileId);
+//                } catch (IOException exception) {
+//                    System.out.println("exception: " + exception.getMessage());
+//                } catch (TransformerException exception) {
+//                    System.out.println("exception: " + exception.getMessage());
+//                }
+//            }
+//        });
 
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    String profileId = "clarin.eu:cr1:p_1320657629627";
-                    File xsdFile = new File(sessionStorage.getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
-                    new CmdiTransformer(sessionStorage, bugCatcher).transformProfileXmlToXsd(xsdFile, profileId);
-                } catch (IOException exception) {
-                    System.out.println("exception: " + exception.getMessage());
-                } catch (TransformerException exception) {
-                    System.out.println("exception: " + exception.getMessage());
-                }
-            }
-        });
-
-        this.add(updateKmdiProfileMenuItem);
+//        this.add(updateKmdiProfileMenuItem);
         this.addMenuListener(new MenuListener() {
 
             public void menuCanceled(MenuEvent evt) {
