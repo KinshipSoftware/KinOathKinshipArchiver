@@ -32,6 +32,7 @@ import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.ProcessAbortException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindocument.ProfileManager;
 import nl.mpi.kinnate.kintypestrings.KinTermCalculator;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -214,8 +215,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel);
 //            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
         }
-        final CmdiProfileSelectionPanel cmdiProfileSelectionPanel = new CmdiProfileSelectionPanel("Entity Profiles", sessionStorage, bugCatcher);
-        cmdiProfileSelectionPanel.loadProfiles(false);
+        final ProfileManager profileManager = new ProfileManager(sessionStorage, bugCatcher);
+        final CmdiProfileSelectionPanel cmdiProfileSelectionPanel = new CmdiProfileSelectionPanel("Entity Profiles", profileManager);
+        profileManager.loadProfiles(false, cmdiProfileSelectionPanel);
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
             if (panelSetting.getPanelType() != null) {
                 switch (panelSetting.getPanelType()) {
@@ -445,6 +447,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //        }
             }
         });
+    }
+
+    public void showProgressBar() {
+        progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
     }
 
     public boolean hasSaveFileName() {
