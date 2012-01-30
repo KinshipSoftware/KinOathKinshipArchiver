@@ -57,19 +57,26 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             addEntityMenuItem.setActionCommand(EntityDocument.defaultEntityType);
             addEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    // node type will be used to determine the schema used from the diagram options
-                    String nodeType = evt.getActionCommand();
-                    try {
-                        EntityDocument entityDocument = new EntityDocument(nodeType, new ImportTranslator(true), sessionStorage);
-                        entityDocument.saveDocument();
-                        URI addedEntityUri = entityDocument.getFile().toURI();
-                        entityCollection.updateDatabase(addedEntityUri);
-                        kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
-                    } catch (ImportException exception) {
-                        bugCatcher.logError(exception);
-                        arbilWindowManager.addMessageDialogToQueue("Failed to create entity: " + exception.getMessage(), "Add Entity");
-                    }
+                public void actionPerformed(final java.awt.event.ActionEvent evt) {
+                    new Thread() {
+
+                        @Override
+                        public void run() {
+                            // node type will be used to determine the schema used from the diagram options
+                            kinDiagramPanel.showProgressBar();
+                            String nodeType = evt.getActionCommand();
+                            try {
+                                EntityDocument entityDocument = new EntityDocument(nodeType, new ImportTranslator(true), sessionStorage);
+                                entityDocument.saveDocument();
+                                URI addedEntityUri = entityDocument.getFile().toURI();
+                                entityCollection.updateDatabase(addedEntityUri);
+                                kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
+                            } catch (ImportException exception) {
+                                bugCatcher.logError(exception);
+                                arbilWindowManager.addMessageDialogToQueue("Failed to create entity: " + exception.getMessage(), "Add Entity");
+                            }
+                        }
+                    }.start();
                 }
             });
             this.add(addEntityMenuItem);
