@@ -864,7 +864,7 @@ public class SvgUpdateHandler {
                     for (EntityRelation graphLinkNode : currentNode.getAllRelations()) {
                         if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.getRelationType() != DataTypes.RelationType.kinterm)
                                 && (graphPanel.dataStoreSvg.showSanguineLines || !DataTypes.isSanguinLine(graphLinkNode.getRelationType()))
-                                && graphLinkNode.getAlterNode().isVisible) {
+                                && (graphLinkNode.getAlterNode() != null && graphLinkNode.getAlterNode().isVisible)) {
                             // make directed and exclude any lines that are already done
                             DataTypes.RelationType directedRelation = graphLinkNode.getRelationType();
                             EntityData leftEntity;
