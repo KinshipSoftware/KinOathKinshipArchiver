@@ -51,8 +51,9 @@ public class HelpMenu extends JMenu {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    // todo:
-//                    helpMenuItemActionPerformed(evt);
+                    // todo: update this when the manual is written
+                    dialogHandler.addMessageDialogToQueue("Because this application is in beta, no manual is available as yet.\n"
+                            + "In the mean time please refer to the sample diagrams, via the file menu.", "Interim Help");
                 } catch (Exception ex) {
                     bugCatcher.logError(ex);
                 }
