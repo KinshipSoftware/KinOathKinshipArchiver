@@ -1,20 +1,17 @@
 package nl.mpi.kinnate.ui.menu;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
-import javax.xml.transform.TransformerException;
+import nl.mpi.arbil.ArbilVersion;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.arbil.util.BugCatcher;
-import nl.mpi.kinnate.kindocument.CmdiTransformer;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -30,12 +27,21 @@ public class HelpMenu extends JMenu {
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    // todo:
-//                    aboutMenuItemActionPerformed(evt);
-                } catch (Exception ex) {
-                    bugCatcher.logError(ex);
-                }
+                // todo: move this into the window manager
+                ApplicationVersion appVersion = versionManager.getApplicationVersion();
+                String messageString = "KinOath is an application for  Kinship and Archiving.\n"
+                        + "Designed to be flexible and culturally nonspecific, such that\n"
+                        + "culturally different social structures can equally be represented.\n\n"
+                        + "By linking archived data to kinship individuals, queries can be\n"
+                        + "performed to retrieve the archive data based on kinship relations.\n\n"
+                        + "Max Planck Institute for Psycholinguistics Nijmegen\n"
+                        + "Application design and programming by Peter Withers\n"
+                        + "KinOath also uses components of Arbil\n\n"
+                        + "KinOath Version: " + appVersion.currentMajor + "." + appVersion.currentMinor + "." + appVersion.currentRevision + "\n"
+                        + appVersion.lastCommitDate + "\n" + "Compile Date: " + appVersion.compileDate + "\n"
+                        + "Arbil Version: " + new ArbilVersion().currentMajor + "." + new ArbilVersion().currentMinor + "." + new ArbilVersion().currentRevision + "\n"
+                        + "Java version: " + System.getProperty("java.version") + " by " + System.getProperty("java.vendor");
+                dialogHandler.addMessageDialogToQueue(messageString, "About " + versionManager.getApplicationVersion().applicationTitle);
             }
         });
         this.add(aboutMenuItem);
