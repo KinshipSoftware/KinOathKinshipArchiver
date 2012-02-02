@@ -381,6 +381,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                             }
                         } catch (ProcessAbortException exception) {
                             // if the process has been aborted then it should be safe to let the next thread loop take over from here
+                            System.out.println("draw graph process has been aborted, it should be safe to let the next thread loop take over from here");
                         }
                     }
                     progressBar.setVisible(false);
