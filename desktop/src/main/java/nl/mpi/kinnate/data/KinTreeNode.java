@@ -45,6 +45,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
         symbolGraphic = new SymbolGraphic(dialogHandler, bugCatcher);
     }
 
+    // todo: create new constructor that takes a unique identifer and loads from the database
     public KinTreeNode(EntityData entityData, DataTypes.RelationType subnodeFilter, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, BugCatcher bugCatcher, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         super();
         this.indexerParameters = indexerParameters;
@@ -88,34 +89,35 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public ArbilNode[] getChildArray() {
-        if (childNodes != null) {
-            return childNodes;
-        } else if (entityData != null) {
-            ArrayList<ArbilNode> relationList = new ArrayList<ArbilNode>();
-            // todo: add metanodes and ui option to hide show relation types
-            for (EntityRelation entityRelation : entityData.getAllRelations()) {
-                final boolean showFiltered = subnodeFilter == DataTypes.RelationType.ancestor || subnodeFilter == DataTypes.RelationType.descendant;
-                if (subnodeFilter == null || (subnodeFilter == entityRelation.getRelationType() && showFiltered)) {
-                    EntityData alterEntity = entityRelation.getAlterNode();
-                    if (alterEntity == null) {
-                        // todo: should these enties be cached? or will the entire tree be discarded on redraw?
-                        alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
-                        entityRelation.setAlterNode(alterEntity);
-                    }
-                    relationList.add(new KinTreeNode(alterEntity, entityRelation.getRelationType(), indexerParameters, dialogHandler, bugCatcher, entityCollection, dataNodeLoader));
+//        if (childNodes != null) {
+//            return childNodes;
+//        } else if (entityData != null) {
+        ArrayList<ArbilNode> relationList = new ArrayList<ArbilNode>();
+        // todo: add metanodes and ui option to hide show relation types
+        for (EntityRelation entityRelation : entityData.getAllRelations()) {
+            final boolean showFiltered = subnodeFilter == DataTypes.RelationType.ancestor || subnodeFilter == DataTypes.RelationType.descendant;
+            // todo: remove limitation of sanguine relations "isSanguinLine" and find the caues of the error when non sanguine relations are shown
+            if (DataTypes.isSanguinLine(entityRelation.getRelationType()) && (subnodeFilter == null || (subnodeFilter == entityRelation.getRelationType() && showFiltered))) {
+                EntityData alterEntity = entityRelation.getAlterNode();
+                if (alterEntity == null) {
+                    // todo: should these enties be cached? or will the entire tree be discarded on redraw?
+                    alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
+                    entityRelation.setAlterNode(alterEntity);
                 }
+                relationList.add(new KinTreeNode(alterEntity, entityRelation.getRelationType(), indexerParameters, dialogHandler, bugCatcher, entityCollection, dataNodeLoader));
             }
-            if (entityData.archiveLinkArray != null) {
-                for (URI archiveLink : entityData.archiveLinkArray) {
-                    ArbilDataNode linkedArbilDataNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
-                    relationList.add(linkedArbilDataNode);
-                }
-            }
-            childNodes = relationList.toArray(new ArbilNode[]{});
-            return childNodes;
-        } else {
-            return new ArbilNode[]{};
         }
+        if (entityData.archiveLinkArray != null) {
+            for (URI archiveLink : entityData.archiveLinkArray) {
+                ArbilDataNode linkedArbilDataNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
+                relationList.add(linkedArbilDataNode);
+            }
+        }
+        childNodes = relationList.toArray(new ArbilNode[]{});
+        return childNodes;
+//        } else {
+//            return new ArbilNode[]{};
+//        }
 
         // todo: inthe case of metadata nodes load them via the arbil data loader
 //                try {
