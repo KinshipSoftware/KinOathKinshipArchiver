@@ -4,7 +4,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
@@ -46,13 +46,11 @@ public class FileMenu extends javax.swing.JMenu {
     private AbstractDiagramManager diagramWindowManager;
     private SessionStorage sessionStorage;
     private MessageDialogHandler dialogHandler; //ArbilWindowManager
-    private BugCatcher bugCatcher;
 
-    public FileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+    public FileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
         this.diagramWindowManager = diagramWindowManager;
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
         this.diagramWindowManager = diagramWindowManager;
         importGedcomUrl = new javax.swing.JMenuItem();
         importGedcomFile = new javax.swing.JMenuItem();
@@ -61,8 +59,8 @@ public class FileMenu extends javax.swing.JMenu {
         newDiagramMenuItem = new javax.swing.JMenuItem();
         jMenu3 = new DocumentNewMenu(diagramWindowManager);
         openDiagram = new javax.swing.JMenuItem();
-        recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage, bugCatcher);
-        jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler, bugCatcher);
+        recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage);
+        jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         entityUploadMenuItem = new javax.swing.JMenuItem();
@@ -295,7 +293,7 @@ public class FileMenu extends javax.swing.JMenu {
             int tabIndex = Integer.valueOf(evt.getActionCommand());
             SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
             savePanel.saveToFile(svgFile);
-            RecentFileMenu.addRecentFile(sessionStorage, bugCatcher, svgFile);
+            RecentFileMenu.addRecentFile(sessionStorage, svgFile);
             diagramWindowManager.setDiagramTitle(tabIndex, svgFile.getName());
         } else {
             // todo: warn user that no file selected and so cannot save
@@ -421,8 +419,8 @@ public class FileMenu extends javax.swing.JMenu {
         // TODO add your handling code here:
         // todo: implement pdf export
         // todo: add a file select here...
-        new DiagramTranscoder().saveAsPdf(diagramWindowManager.getCurrentSavePanel(), bugCatcher);
-        new DiagramTranscoder().saveAsJpg(diagramWindowManager.getCurrentSavePanel(), bugCatcher);
+        new DiagramTranscoder().saveAsPdf(diagramWindowManager.getCurrentSavePanel());
+        new DiagramTranscoder().saveAsJpg(diagramWindowManager.getCurrentSavePanel());
     }
 
     private void exportToRActionPerformed(java.awt.event.ActionEvent evt) {
@@ -432,7 +430,7 @@ public class FileMenu extends javax.swing.JMenu {
 //        KinTermSavePanel kinTermSavePanel = null;
         SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel();
         if (currentSavePanel instanceof KinTermSavePanel) {
-            new ExportToR(sessionStorage, dialogHandler, bugCatcher).doExport(this, (KinTermSavePanel) currentSavePanel);
+            new ExportToR(sessionStorage, dialogHandler, BugCatcherManager.getBugCatcher()).doExport(this, (KinTermSavePanel) currentSavePanel);
         }
     }
 
