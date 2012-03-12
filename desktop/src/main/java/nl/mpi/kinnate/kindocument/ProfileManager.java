@@ -7,7 +7,7 @@ import javax.xml.transform.TransformerException;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.ProfileSelection;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.ui.entityprofiles.CmdiProfileSelectionPanel;
 
 /**
@@ -18,11 +18,9 @@ import nl.mpi.kinnate.ui.entityprofiles.CmdiProfileSelectionPanel;
 public class ProfileManager {
 
     private SessionStorage sessionStorage;
-    private BugCatcher bugCatcher;
 
-    public ProfileManager(SessionStorage sessionStorage, BugCatcher bugCatcher) {
+    public ProfileManager(SessionStorage sessionStorage) {
         this.sessionStorage = sessionStorage;
-        this.bugCatcher = bugCatcher;
     }
 
     public void loadProfiles(final boolean forceUpdate, final CmdiProfileSelectionPanel cmdiProfileSelectionPanel) {
@@ -39,20 +37,20 @@ public class ProfileManager {
                         cmdiProfileSelectionPanel.setStatus(false, "Loading: " + profileId + ", please wait...", false);
                         File xsdFile = new File(sessionStorage.getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
                         if (!xsdFile.exists() || forceUpdate) {
-                            new CmdiTransformer(sessionStorage, bugCatcher).transformProfileXmlToXsd(xsdFile, profileId);
+                            new CmdiTransformer(sessionStorage).transformProfileXmlToXsd(xsdFile, profileId);
                         }
                     } catch (IOException exception) {
                         problemProfiles.add(profileId);
-                        bugCatcher.logError(exception);
+                        BugCatcherManager.getBugCatcher().logError(exception);
                     } catch (TransformerException exception) {
                         problemProfiles.add(profileId);
-                        bugCatcher.logError(exception);
+                        BugCatcherManager.getBugCatcher().logError(exception);
                     }
                 }
                 // load the profile list from the clarin server
                 cmdiProfileSelectionPanel.setStatus(false, "Loading the profile list from the server, please wait...", false);
                 CmdiProfileReader cmdiProfileReader = CmdiProfileReader.getSingleInstance();
-                cmdiProfileReader.refreshProfiles(cmdiProfileSelectionPanel.getProfileReloadProgressBar(), forceUpdate);
+                cmdiProfileReader.refreshProfilesAndUpdateCache(cmdiProfileSelectionPanel.getProfileReloadProgressBar(), forceUpdate);
 
                 cmdiProfileSelectionPanel.setCmdiProfileReader(cmdiProfileReader);
                 if (!problemProfiles.isEmpty()) {
