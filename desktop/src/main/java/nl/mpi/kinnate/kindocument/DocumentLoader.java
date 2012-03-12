@@ -23,24 +23,22 @@ public class DocumentLoader {
     private MessageDialogHandler dialogHandler;
     protected HashMap<UniqueIdentifier, EntityDocument> entityMap = new HashMap<UniqueIdentifier, EntityDocument>();
     private EntityCollection entityCollection;
-    protected BugCatcher bugCatcher;
 
-    public DocumentLoader(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection, BugCatcher bugCatcher) {
+    public DocumentLoader(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.entityCollection = entityCollection;
-        this.bugCatcher = bugCatcher;
     }
 
     protected EntityDocument getEntityDocument(UniqueIdentifier selectedIdentifier) throws ImportException, URISyntaxException {
-        EntityDocument entityDocument = new EntityDocument(new URI(new EntityCollection(sessionStorage, dialogHandler, bugCatcher).getEntityPath(selectedIdentifier)), new ImportTranslator(true), sessionStorage);
+        EntityDocument entityDocument = new EntityDocument(new URI(new EntityCollection(sessionStorage, dialogHandler).getEntityPath(selectedIdentifier)), new ImportTranslator(true), sessionStorage);
 //        System.out.println("Loaded 1: " + entityDocument.entityData.getUniqueIdentifier().getAttributeIdentifier());
         entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
         for (EntityRelation entityRelation : entityDocument.entityData.getAllRelations()) {
             EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
             if (relatedDocument == null) {
                 // get the path from the database
-                final URI entityUri = new URI(new EntityCollection(sessionStorage, dialogHandler, bugCatcher).getEntityPath(entityRelation.alterUniqueIdentifier));
+                final URI entityUri = new URI(new EntityCollection(sessionStorage, dialogHandler).getEntityPath(entityRelation.alterUniqueIdentifier));
                 relatedDocument = new EntityDocument(entityUri, new ImportTranslator(true), sessionStorage);
 //                System.out.println("Loaded 2: " + entityRelation.alterUniqueIdentifier.getAttributeIdentifier());
                 entityMap.put(entityRelation.alterUniqueIdentifier, relatedDocument);
