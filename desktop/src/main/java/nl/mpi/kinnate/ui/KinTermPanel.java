@@ -26,7 +26,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
@@ -55,11 +55,9 @@ public class KinTermPanel extends JPanel {
 //    JTextField addAnchorKinType;
     KinTermTableModel kinTermTableModel;
     private MessageDialogHandler dialogHandler;
-    private BugCatcher bugCatcher;
 
-    public KinTermPanel(SavePanel savePanelLocal, KinTermGroup kinTermsLocal, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+    public KinTermPanel(SavePanel savePanelLocal, KinTermGroup kinTermsLocal, MessageDialogHandler dialogHandler) {
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
         kinTerms = kinTermsLocal;
         savePanel = savePanelLocal;
 //        defaultKinType = defaultKinTypeLocal;
@@ -358,7 +356,7 @@ public class KinTermPanel extends JPanel {
         try {
             initialColour = Color.decode(kinTerms.graphColour);
         } catch (NumberFormatException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             kinTerms.graphColour = "#0000FF";
             initialColour = Color.blue;
             savePanel.setRequiresSave();
@@ -451,7 +449,7 @@ public class KinTermPanel extends JPanel {
                 fileWriter.write("wookies are lovely on toast.");
                 fileWriter.close();
             } catch (IOException exception) {
-                bugCatcher.logError(exception);
+                BugCatcherManager.getBugCatcher().logError(exception);
             }
         }
     }
@@ -483,7 +481,7 @@ public class KinTermPanel extends JPanel {
                 savePanel.updateGraph();
                 savePanel.setRequiresSave();
             } catch (IOException exception) {
-                bugCatcher.logError(exception);
+                BugCatcherManager.getBugCatcher().logError(exception);
             }
             // todo: resolve why this dialogue does not show
             KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
