@@ -19,7 +19,7 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,11 +32,9 @@ import org.w3c.dom.Node;
 public class SvgElementEditor extends JPanel {
 
     UpdateManager updateManager;
-    private BugCatcher bugCatcher;
 
-    public SvgElementEditor(final UpdateManager updateManager, final Element svgElement, BugCatcher bugCatcher) {
+    public SvgElementEditor(final UpdateManager updateManager, final Element svgElement) {
         this.updateManager = updateManager;
-        this.bugCatcher = bugCatcher;
         this.setLayout(new BorderLayout());
         JPanel outerPanel = new JPanel(new BorderLayout());
         JPanel pickerPanel = new JPanel(new BorderLayout());
@@ -109,7 +107,7 @@ public class SvgElementEditor extends JPanel {
                 initialValue = Integer.decode(initialValueString);
             }
         } catch (NumberFormatException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         }
         sidePanel.add(new JLabel(labelString));
         SpinnerModel spinnerModel =
@@ -132,7 +130,7 @@ public class SvgElementEditor extends JPanel {
                 initialColour = Color.decode(attributeValue);
             }
         } catch (NumberFormatException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         }
         sidePanel.add(new JLabel(attributeString));
         final JPanel colourSquare = new JPanel();
