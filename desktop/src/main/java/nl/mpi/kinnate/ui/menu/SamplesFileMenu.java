@@ -6,7 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
@@ -19,12 +19,10 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
 
     private AbstractDiagramManager diagramWindowManager;
     private MessageDialogHandler dialogHandler;
-    private BugCatcher bugCatcher;
 
-    public SamplesFileMenu(AbstractDiagramManager diagramWindowManager, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+    public SamplesFileMenu(AbstractDiagramManager diagramWindowManager, MessageDialogHandler dialogHandler) {
         this.diagramWindowManager = diagramWindowManager;
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
         addSampleToMenu("Freeform Diagram Syntax", "FreeformDiagramSyntax.svg");
         addSampleToMenu("Query Diagram Syntax", "QueryDiagramSyntax.svg");
         addSampleToMenu("Application Overview", "ApplicationOverview.svg");
@@ -61,7 +59,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
                 diagramWindowManager.openDiagram(sampleName, sampleFile, false);
             }
         } catch (URISyntaxException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
         }
     }
