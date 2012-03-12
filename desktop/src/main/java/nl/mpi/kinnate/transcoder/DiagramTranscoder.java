@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.SavePanel;
 import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderException;
@@ -22,7 +22,7 @@ import org.apache.fop.svg.PDFTranscoder;
  */
 public class DiagramTranscoder {
 
-    public void saveAsJpg(SavePanel savePanel, BugCatcher bugCatcher) {
+    public void saveAsJpg(SavePanel savePanel) {
         // todo: offer user to select an export file name
         if (savePanel.hasSaveFileName()) {
             // todo: tell user to save as
@@ -55,21 +55,21 @@ public class DiagramTranscoder {
                 outputStream.close();
             }
         } catch (TranscoderException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         } catch (IOException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException exception) {
-                    bugCatcher.logError(exception);
+                    BugCatcherManager.getBugCatcher().logError(exception);
                 }
             }
         }
     }
 
-    public void saveAsPdf(SavePanel savePanel, BugCatcher bugCatcher) {
+    public void saveAsPdf(SavePanel savePanel) {
         // todo: offer user to select an export file name
         if (savePanel.hasSaveFileName()) {
             // todo: tell user to save as
@@ -108,15 +108,15 @@ public class DiagramTranscoder {
                 outputStream.close();
             }
         } catch (TranscoderException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         } catch (IOException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException exception) {
-                    bugCatcher.logError(exception);
+                    BugCatcherManager.getBugCatcher().logError(exception);
                 }
             }
         }
