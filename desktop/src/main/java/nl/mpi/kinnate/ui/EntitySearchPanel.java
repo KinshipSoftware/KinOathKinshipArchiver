@@ -15,7 +15,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
-import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
@@ -38,14 +37,12 @@ public class EntitySearchPanel extends JPanel {
     private JPanel searchPanel;
     private GraphPanel graphPanel;
     private MessageDialogHandler dialogHandler;
-    private BugCatcher bugCatcher;
     private ArbilDataNodeLoader dataNodeLoader;
 
-    public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader) {
+    public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader) {
         this.entityCollection = entityCollection;
         this.graphPanel = graphPanel;
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
         this.dataNodeLoader = dataNodeLoader;
         this.setLayout(new BorderLayout());
         resultsTree = new KinTree(kinDiagramPanel, graphPanel);
@@ -101,7 +98,7 @@ public class EntitySearchPanel extends JPanel {
                 resultsArea.setText("Found " + searchResults.length + " entities\n");
                 for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
-                    resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, bugCatcher, entityCollection, dataNodeLoader));
+                    resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
 //                break;
