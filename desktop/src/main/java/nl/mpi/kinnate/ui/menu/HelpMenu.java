@@ -11,7 +11,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -21,7 +21,7 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class HelpMenu extends JMenu {
 
-    public HelpMenu(AbstractDiagramManager diagramWindowManager, final BugCatcher bugCatcher, final ArbilWindowManager dialogHandler, final SessionStorage sessionStorage, final ApplicationVersionManager versionManager) {
+    public HelpMenu(AbstractDiagramManager diagramWindowManager, final ArbilWindowManager dialogHandler, final SessionStorage sessionStorage, final ApplicationVersionManager versionManager) {
         this.setText("Help");
         JMenuItem aboutMenuItem = new JMenuItem("About");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -55,7 +55,7 @@ public class HelpMenu extends JMenu {
                     dialogHandler.addMessageDialogToQueue("Because this application is in beta, no manual is available as yet.\n"
                             + "In the mean time please refer to the sample diagrams, via the file menu.", "Interim Help");
                 } catch (Exception ex) {
-                    bugCatcher.logError(ex);
+                    BugCatcherManager.getBugCatcher().logError(ex);
                 }
             }
         });
@@ -67,7 +67,7 @@ public class HelpMenu extends JMenu {
                 try {
                     dialogHandler.openFileInExternalApplication(new URI("http://www.lat-mpi.eu/tools/kinoath/kinoath-forum/"));
                 } catch (Exception ex) {
-                    bugCatcher.logError(ex);
+                    BugCatcherManager.getBugCatcher().logError(ex);
                 }
             }
         });
@@ -79,7 +79,7 @@ public class HelpMenu extends JMenu {
                 try {
                     dialogHandler.openFileInExternalApplication(ArbilBugCatcher.getLogFile(sessionStorage, versionManager.getApplicationVersion()).toURI());
                 } catch (Exception ex) {
-                    bugCatcher.logError(ex);
+                    BugCatcherManager.getBugCatcher().logError(ex);
                 }
             }
         });
@@ -95,7 +95,7 @@ public class HelpMenu extends JMenu {
                         dialogHandler.addMessageDialogToQueue("No updates found, current version is " + versionString, "Check for Updates");
                     }
                 } catch (Exception ex) {
-                    bugCatcher.logError(ex);
+                    BugCatcherManager.getBugCatcher().logError(ex);
                 }
             }
         });
