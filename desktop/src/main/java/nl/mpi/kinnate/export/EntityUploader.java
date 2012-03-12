@@ -18,7 +18,7 @@ import java.net.URL;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
@@ -29,16 +29,14 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 public class EntityUploader {
 
     private SessionStorage sessionStorage;
-    private BugCatcher bugCatcher;
     private EntityCollection.SearchResults searchResults = null;
     private File[] modifiedFiles = null;
 //    private boolean uploadComplete = false;
     URI workspaceUri = null;
     private EntityCollection entityCollection;
 
-    public EntityUploader(SessionStorage sessionStorage, BugCatcher bugCatcher, EntityCollection entityCollection) {
+    public EntityUploader(SessionStorage sessionStorage, EntityCollection entityCollection) {
         this.sessionStorage = sessionStorage;
-        this.bugCatcher = bugCatcher;
         this.entityCollection = entityCollection;
     }
 
@@ -103,7 +101,7 @@ public class EntityUploader {
         try {
             return new URI("http://localhost:8080/kinoath-rest/kinoath/kinspace/" + workspaceName + "/create");
         } catch (URISyntaxException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         }
         return null;
     }
@@ -131,7 +129,7 @@ public class EntityUploader {
                             try {
                                 uploadFile(serverRestUrl, outputArea, new File(new URI(resultLine)));
                             } catch (URISyntaxException exception) {
-                                bugCatcher.logError(exception);
+                                BugCatcherManager.getBugCatcher().logError(exception);
                                 outputArea.append(exception.getMessage() + "\n");
                             }
                             uploadProgress.setValue(uploadProgress.getValue() + 1);
@@ -148,15 +146,15 @@ public class EntityUploader {
                     modifiedFiles = null;
                     actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
                 } catch (MalformedURLException exception) {
-                    bugCatcher.logError(exception);
+                    BugCatcherManager.getBugCatcher().logError(exception);
                     outputArea.append(exception.getMessage() + "\n");
                     actionListener.actionPerformed(new ActionEvent(this, 0, "uploadaborted"));
                 } catch (URISyntaxException exception) {
-                    bugCatcher.logError(exception);
+                    BugCatcherManager.getBugCatcher().logError(exception);
                     outputArea.append(exception.getMessage() + "\n");
                     actionListener.actionPerformed(new ActionEvent(this, 0, "uploadaborted"));
                 } catch (ExportException exception) {
-//                    bugCatcher.logError(exception);
+//                    BugCatcherManager.getBugCatcher().logError(exception);
                     outputArea.append(exception.getMessage() + "\n");
                     actionListener.actionPerformed(new ActionEvent(this, 0, "uploadaborted"));
                 }
