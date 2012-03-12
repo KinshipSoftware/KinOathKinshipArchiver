@@ -19,7 +19,7 @@ import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
@@ -61,26 +61,24 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    private URI[] egoPathsTemp = null;
     public SvgUpdateHandler svgUpdateHandler;
     public MouseListenerSvg mouseListenerSvg;
-    private BugCatcher bugCatcher;
     private MessageDialogHandler dialogHandler;
     private SessionStorage sessionStorage;
 //    private EntityCollection entityCollection;
 
-    public GraphPanel(KinDiagramPanel kinDiagramPanel, final ArbilWindowManager arbilWindowManager, BugCatcher bugCatcher, SessionStorage sessionStorage, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
-        this.bugCatcher = bugCatcher;
+    public GraphPanel(KinDiagramPanel kinDiagramPanel, final ArbilWindowManager arbilWindowManager, SessionStorage sessionStorage, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         this.dialogHandler = arbilWindowManager;
         this.sessionStorage = sessionStorage;
 //        this.entityCollection = entityCollection;
         dataStoreSvg = new DataStoreSvg();
-        entitySvg = new EntitySvg(dialogHandler, bugCatcher);
+        entitySvg = new EntitySvg(dialogHandler);
         dataStoreSvg.setDefaults();
-        svgUpdateHandler = new SvgUpdateHandler(this, kinDiagramPanel, bugCatcher, dialogHandler);
+        svgUpdateHandler = new SvgUpdateHandler(this, kinDiagramPanel, dialogHandler);
         selectedGroupId = new ArrayList<UniqueIdentifier>();
         graphPanelSize = new GraphPanelSize();
         this.setLayout(new BorderLayout());
         boolean eventsEnabled = true;
         boolean selectableText = false;
-        svgCanvas = new JSVGCanvas(new GraphUserAgent(this, dialogHandler, bugCatcher, dataNodeLoader), eventsEnabled, selectableText);
+        svgCanvas = new JSVGCanvas(new GraphUserAgent(this, dialogHandler, dataNodeLoader), eventsEnabled, selectableText);
 //        svgCanvas.setMySize(new Dimension(600, 400));
         svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
 //        drawNodes();
@@ -108,13 +106,13 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        svgCanvas.setEnableResetTransformInteractor(true);
 //        svgCanvas.setDoubleBufferedRendering(true); // todo: look into reducing the noticable aliasing on the canvas
 
-        mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this, sessionStorage, dialogHandler, entityCollection, bugCatcher);
+        mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this, sessionStorage, dialogHandler, entityCollection);
         svgCanvas.addMouseListener(mouseListenerSvg);
         svgCanvas.addMouseMotionListener(mouseListenerSvg);
         jSVGScrollPane = new JSVGScrollPane(svgCanvas);
 //        svgCanvas.setBackground(Color.LIGHT_GRAY);
         this.add(BorderLayout.CENTER, jSVGScrollPane);
-        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, entityCollection, arbilWindowManager, dataNodeLoader, sessionStorage, bugCatcher));
+        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, entityCollection, arbilWindowManager, dataNodeLoader, sessionStorage));
     }
 
 //    private void zoomDrawing() {
@@ -152,7 +150,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         try {
             doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toString());
             svgCanvas.setDocument(doc);
-            dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc, bugCatcher);
+            dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc);
             if (dataStoreSvg.indexParameters == null) {
                 dataStoreSvg.setDefaults();
             }
@@ -166,7 +164,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //                return null;
 //            }
         } catch (IOException ioe) {
-            bugCatcher.logError(ioe);
+            BugCatcherManager.getBugCatcher().logError(ioe);
         }
 //        svgCanvas.setSVGDocument(doc);
         return; // dataStoreSvg.graphData.getDataNodes();
@@ -240,7 +238,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             svgCanvas.setSVGDocument(doc);
             dataStoreSvg.graphData = new GraphSorter();
         } catch (IOException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         }
     }
 
@@ -249,7 +247,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         selectedGroupId.clear();
         svgUpdateHandler.clearHighlights();
         // make sure that any data changes such as the title/description in the kin term groups get updated into the file on save
-        dataStoreSvg.storeAllData(doc, bugCatcher);
+        dataStoreSvg.storeAllData(doc);
         ArbilComponentBuilder.savePrettyFormatting(doc, svgFile);
         requiresSave = false;
     }
@@ -405,7 +403,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void resetLayout() {
-        entitySvg = new EntitySvg(dialogHandler, bugCatcher);
+        entitySvg = new EntitySvg(dialogHandler);
         dataStoreSvg.graphData.setEntitys(dataStoreSvg.graphData.getDataNodes());
         dataStoreSvg.graphData.placeAllNodes(entitySvg.entityPositions);
         drawNodes();
