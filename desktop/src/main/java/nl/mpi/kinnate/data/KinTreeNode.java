@@ -7,7 +7,6 @@ import javax.swing.ImageIcon;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
-import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
@@ -30,32 +29,29 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     static private SymbolGraphic symbolGraphic;
     private EntityCollection entityCollection;
     private MessageDialogHandler dialogHandler;
-    private BugCatcher bugCatcher;
     private ArbilDataNodeLoader dataNodeLoader;
 
-    public KinTreeNode(EntityData entityData, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, BugCatcher bugCatcher, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+    public KinTreeNode(EntityData entityData, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         super();
         this.indexerParameters = indexerParameters;
         this.entityData = entityData;
         this.subnodeFilter = null;
         this.entityCollection = entityCollection;
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
         this.dataNodeLoader = dataNodeLoader;
-        symbolGraphic = new SymbolGraphic(dialogHandler, bugCatcher);
+        symbolGraphic = new SymbolGraphic(dialogHandler);
     }
 
-    // todo: create new constructor that takes a unique identifer and loads from the database
-    public KinTreeNode(EntityData entityData, DataTypes.RelationType subnodeFilter, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, BugCatcher bugCatcher, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+    // todo:. create new constructor that takes a unique identifer and loads from the database.
+    public KinTreeNode(EntityData entityData, DataTypes.RelationType subnodeFilter, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         super();
         this.indexerParameters = indexerParameters;
         this.entityData = entityData;
         this.subnodeFilter = subnodeFilter; // subnode filter should be null unless the child nodes are to be filtered
         this.entityCollection = entityCollection;
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
         this.dataNodeLoader = dataNodeLoader;
-        symbolGraphic = new SymbolGraphic(dialogHandler, bugCatcher);
+        symbolGraphic = new SymbolGraphic(dialogHandler);
     }
 
     @Override
@@ -96,7 +92,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
         // todo: add metanodes and ui option to hide show relation types
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
             final boolean showFiltered = subnodeFilter == DataTypes.RelationType.ancestor || subnodeFilter == DataTypes.RelationType.descendant;
-            // todo: remove limitation of sanguine relations "isSanguinLine" and find the caues of the error when non sanguine relations are shown
+            // todo:. remove limitation of sanguine relations "isSanguinLine" and find the caues of the error when non sanguine relations are shown.
             if (DataTypes.isSanguinLine(entityRelation.getRelationType()) && (subnodeFilter == null || (subnodeFilter == entityRelation.getRelationType() && showFiltered))) {
                 EntityData alterEntity = entityRelation.getAlterNode();
                 if (alterEntity == null) {
@@ -104,7 +100,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
                     alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
                     entityRelation.setAlterNode(alterEntity);
                 }
-                relationList.add(new KinTreeNode(alterEntity, entityRelation.getRelationType(), indexerParameters, dialogHandler, bugCatcher, entityCollection, dataNodeLoader));
+                relationList.add(new KinTreeNode(alterEntity, entityRelation.getRelationType(), indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
             }
         }
         if (entityData.archiveLinkArray != null) {
