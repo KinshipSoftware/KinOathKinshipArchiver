@@ -11,7 +11,6 @@ import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
-import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 
@@ -25,8 +24,8 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
     private HashMap<JFrame, String> titleMap = new HashMap<JFrame, String>();
     private ArrayList<JFrame> diagramArray = new ArrayList<JFrame>();
 
-    public WindowedDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
-        super(versionManager, dialogHandler, sessionStorage, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
+    public WindowedDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
+        super(versionManager, dialogHandler, sessionStorage, dataNodeLoader, treeHelper, entityCollection);
     }
 
     @Override
