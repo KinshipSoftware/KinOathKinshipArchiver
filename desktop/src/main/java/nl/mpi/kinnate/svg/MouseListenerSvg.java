@@ -13,7 +13,7 @@ import org.w3c.dom.events.EventListener;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
@@ -46,7 +46,6 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     private UniqueIdentifier entityToToggle = null;
     private HashMap<UniqueIdentifier, SvgElementEditor> shownGraphicsEditors;
     private MessageDialogHandler dialogHandler;
-    private BugCatcher bugCatcher;
     private SessionStorage sessionStorage;
     private EntityCollection entityCollection;
 
@@ -55,11 +54,10 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         selectAll, selectRelated, expandSelection, deselectAll
     }
 
-    public MouseListenerSvg(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection, BugCatcher bugCatcher) {
+    public MouseListenerSvg(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection) {
         this.kinDiagramPanel = kinDiagramPanel;
         this.graphPanel = graphPanel;
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
         this.sessionStorage = sessionStorage;
         this.entityCollection = entityCollection;
         shownGraphicsEditors = new HashMap<UniqueIdentifier, SvgElementEditor>();
@@ -120,7 +118,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 try {
                     // if a relation has been set by this drag action then it is created here.
                     final RelationType relationType = DataTypes.getOpposingRelationType(graphPanel.svgUpdateHandler.relationDragHandle.getRelationType());
-                    UniqueIdentifier[] changedIdentifiers = new RelationLinker(sessionStorage, dialogHandler, entityCollection, bugCatcher).linkEntities(graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType, graphPanel.svgUpdateHandler.relationDragHandle.getDataCategory(), graphPanel.svgUpdateHandler.relationDragHandle.getDisplayName());
+                    UniqueIdentifier[] changedIdentifiers = new RelationLinker(sessionStorage, dialogHandler, entityCollection).linkEntities(graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType, graphPanel.svgUpdateHandler.relationDragHandle.getDataCategory(), graphPanel.svgUpdateHandler.relationDragHandle.getDisplayName());
                     kinDiagramPanel.entityRelationsChanged(changedIdentifiers);
                 } catch (ImportException exception) {
                     dialogHandler.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
@@ -217,7 +215,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 }
                 updateSelectionDisplay();
             } catch (IdentifierException exception) {
-                bugCatcher.logError(exception);
+                BugCatcherManager.getBugCatcher().logError(exception);
                 dialogHandler.addMessageDialogToQueue("Failed to read selection identifier, selection might not be correct", "Selection Highlight");
             }
         }
@@ -236,7 +234,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 if (currentSelectedId.isGraphicsIdentifier()) {
                     if (!shownGraphicsEditors.containsKey(currentSelectedId)) {
                         Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());
-                        SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement, bugCatcher);
+                        SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement);
                         graphPanel.metadataPanel.addTab("Graphics Editor", elementEditor);
 //                            graphPanel.editorHidePane.setSelectedComponent(elementEditor);
                         shownGraphicsEditors.put(currentSelectedId, elementEditor);
