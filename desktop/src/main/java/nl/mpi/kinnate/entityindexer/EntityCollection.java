@@ -23,8 +23,7 @@ import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
-import nl.mpi.arbil.util.ArbilBugCatcher;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.kindata.EntityArray;
@@ -63,7 +62,6 @@ public class EntityCollection {
     static Context context = new Context();
     static final Object databaseLock = new Object();
     private String dbErrorMessage = "Could not perform the required query, not all data might be shown at this point.\nSee the log file via the help menu for more details.";
-    private BugCatcher bugCatcher;
 
     public class SearchResults {
 
@@ -72,10 +70,9 @@ public class EntityCollection {
         public int resultCount = 0;
     }
 
-    public EntityCollection(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+    public EntityCollection(SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
         // make sure the database exists
         try {
             synchronized (databaseLock) {
@@ -91,7 +88,7 @@ public class EntityCollection {
 //                new Open(databaseName).execute(context);
                 }
             } catch (BaseXException baseXException2) {
-                bugCatcher.logError(baseXException2);
+                BugCatcherManager.getBugCatcher().logError(baseXException2);
             }
         }
         // todo: should we explicitly close the DB? putting it in the distructor would not be reliable
@@ -128,7 +125,7 @@ public class EntityCollection {
 //            context.close();
             }
         } catch (BaseXException baseXException) {
-            bugCatcher.logError(baseXException);
+            BugCatcherManager.getBugCatcher().logError(baseXException);
         }
     }
 
@@ -139,7 +136,7 @@ public class EntityCollection {
                 System.out.println("List: " + new List().execute(context));
             }
         } catch (BaseXException baseXException) {
-            bugCatcher.logError(baseXException);
+            BugCatcherManager.getBugCatcher().logError(baseXException);
         }
     }
 
@@ -156,7 +153,7 @@ public class EntityCollection {
             }
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
-            bugCatcher.logError(baseXException);
+            BugCatcherManager.getBugCatcher().logError(baseXException);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Add File To DB");
         }
     }
@@ -187,7 +184,7 @@ public class EntityCollection {
                 new Close().execute(context);
             }
         } catch (BaseXException baseXException) {
-            bugCatcher.logError(baseXException);
+            BugCatcherManager.getBugCatcher().logError(baseXException);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Update Database");
         }
     }
@@ -204,7 +201,7 @@ public class EntityCollection {
                 new Close().execute(context);
             }
         } catch (BaseXException baseXException) {
-            bugCatcher.logError(baseXException);
+            BugCatcherManager.getBugCatcher().logError(baseXException);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Update Database");
         }
     }
@@ -249,11 +246,11 @@ public class EntityCollection {
             }
             searchResults.statusMessage = "found " + searchResults.resultCount + " records";
         } catch (QueryException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Perform Query");
         } catch (IOException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Perform Query");
         }
@@ -295,10 +292,10 @@ public class EntityCollection {
                 System.out.println(queryTimeString);
             }
         } catch (JAXBException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity Id ByTerm");
         } catch (BaseXException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity Id By Term");
         }
         return returnArray;
@@ -324,10 +321,10 @@ public class EntityCollection {
 //            selectedEntity.appendTempLabel(queryTimeString);
             return foundEntities.getEntityDataArray();
         } catch (JAXBException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity By Key Word");
         } catch (BaseXException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity By Key Word");
         }
         return new EntityData[]{};
@@ -354,10 +351,10 @@ public class EntityCollection {
 //            selectedEntity.appendTempLabel(queryTimeString);
             return selectedEntity;
         } catch (JAXBException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity With Relations");
         } catch (BaseXException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity With Relations");
         }
         return new EntityData[]{}; //(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
@@ -377,7 +374,7 @@ public class EntityCollection {
             System.out.println("Query time: " + queryMils + "ms");
             return queryResult;
         } catch (BaseXException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity Path");
         }
         return null;
@@ -408,10 +405,10 @@ public class EntityCollection {
 //            selectedEntity.appendTempLabel(queryTimeString);
             return selectedEntity;
         } catch (JAXBException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity");
         } catch (BaseXException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity");
         }
         return new EntityData(uniqueIdentifier, new String[]{"Error loading data", "view log for details"});
@@ -424,7 +421,7 @@ public class EntityCollection {
         final JLabel queryTimeLabel = new JLabel();
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
         final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
-        final EntityCollection entityCollection = new EntityCollection(kinSessionStorage, arbilWindowManager, new ArbilBugCatcher(kinSessionStorage, new ApplicationVersionManager(new KinOathVersion())));
+        final EntityCollection entityCollection = new EntityCollection(kinSessionStorage, arbilWindowManager);
         //queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
