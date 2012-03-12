@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashSet;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -34,7 +34,6 @@ public class SvgUpdateHandler {
 
     private GraphPanel graphPanel;
     private KinTermSavePanel kinTermSavePanel;
-    private BugCatcher bugCatcher;
     private MessageDialogHandler dialogHandler;
     private boolean dragUpdateRequired = false;
     private boolean threadRunning = false;
@@ -60,10 +59,9 @@ public class SvgUpdateHandler {
 //                        * Path <path>
     }
 
-    public SvgUpdateHandler(GraphPanel graphPanel, KinTermSavePanel kinTermSavePanel, BugCatcher bugCatcher, MessageDialogHandler dialogHandler) {
+    public SvgUpdateHandler(GraphPanel graphPanel, KinTermSavePanel kinTermSavePanel, MessageDialogHandler dialogHandler) {
         this.graphPanel = graphPanel;
         this.kinTermSavePanel = kinTermSavePanel;
-        this.bugCatcher = bugCatcher;
         this.dialogHandler = dialogHandler;
     }
 
@@ -146,7 +144,7 @@ public class SvgUpdateHandler {
 //                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                             }
                         } catch (IdentifierException exception) {
-                            bugCatcher.logError(exception);
+                            BugCatcherManager.getBugCatcher().logError(exception);
                             dialogHandler.addMessageDialogToQueue("Failed to read relation data, highlight might not be correct", "Sanguine Highlights");
                         }
                     }
@@ -539,7 +537,7 @@ public class SvgUpdateHandler {
 //                    System.out.println("updateDragNodeX: " + updateDragNodeXInner);
 //                    System.out.println("updateDragNodeY: " + updateDragNodeYInner);
                     if (graphPanel.doc == null || graphPanel.dataStoreSvg.graphData == null) {
-                        bugCatcher.logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
+                        BugCatcherManager.getBugCatcher().logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
                     } else {
 //                        if (relationDragHandleType != null) {
 //                            // drag relation handles
@@ -850,7 +848,7 @@ public class SvgUpdateHandler {
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
             // store the selected kin type strings and other data in the dom
-            graphPanel.dataStoreSvg.storeAllData(graphPanel.doc, bugCatcher);
+            graphPanel.dataStoreSvg.storeAllData(graphPanel.doc);
 //            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
             for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
@@ -930,7 +928,7 @@ public class SvgUpdateHandler {
 //                svgCanvas.setRenderingTransform(zoomAffineTransform);
 //            };
         } catch (DOMException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         }
         // todo: this repaint might not resolve all cases of redraw issues
         graphPanel.svgCanvas.repaint(); // make sure no remnants are left over after the last redraw
