@@ -12,7 +12,7 @@ import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -24,12 +24,10 @@ public class RecentFileMenu extends JMenu implements ActionListener {
 
     AbstractDiagramManager diagramWindowManager;
     private SessionStorage sessionStorage;
-    private BugCatcher bugCatcher;
 
-    public RecentFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, BugCatcher bugCatcher) {
+    public RecentFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage) {
         this.diagramWindowManager = diagramWindowManager;
         this.sessionStorage = sessionStorage;
-        this.bugCatcher = bugCatcher;
         this.setText("Open Recent Diagram");
         this.addMenuListener(new MenuListener() {
 
@@ -45,7 +43,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
         });
     }
 
-    static public void addRecentFile(SessionStorage sessionStorageS, BugCatcher bugCatcherS, File recentFile) {
+    static public void addRecentFile(SessionStorage sessionStorageS, File recentFile) {
         // store the accessed and saved files and provide a menu of recent files
         ArrayList<String> tempList = new ArrayList<String>();
         String[] tempArray;
@@ -62,13 +60,13 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             tempList.remove(recentFile.toString());
             tempList.add(recentFile.toString());
         } catch (IOException exception) {
-//            bugCatcher.logError(exception);
+//            BugCatcherManager.getBugCatcher().logError(exception);
             tempArray = new String[]{recentFile.toString()};
         }
         try {
             sessionStorageS.saveStringArray("RecentKinFiles", tempList.toArray(new String[]{}));
         } catch (IOException exception) {
-            bugCatcherS.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         }
 //        setupMenu();
     }
@@ -103,7 +101,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             try {
                 sessionStorage.saveStringArray("RecentKinFiles", new String[]{});
             } catch (IOException exception) {
-                bugCatcher.logError(exception);
+                BugCatcherManager.getBugCatcher().logError(exception);
             }
 //            setupMenu();
         } else {
