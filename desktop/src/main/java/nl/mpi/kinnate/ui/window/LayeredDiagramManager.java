@@ -11,7 +11,6 @@ import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
-import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
@@ -26,8 +25,8 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
     private ArrayList<Component> diagramArray = new ArrayList<Component>();
     private JFrame mainFrame;
 
-    public LayeredDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
-        super(versionManager, dialogHandler, sessionStorage, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
+    public LayeredDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
+        super(versionManager, dialogHandler, sessionStorage, dataNodeLoader, treeHelper, entityCollection);
         mainPanel = new javax.swing.JPanel(new BorderLayout());
     }
 
@@ -47,7 +46,7 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
 
     @Override
     public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel) {
-        // todo: this should use the parentPanel not getSavePanelIndex
+        // todo: this should use the parentPanel not getSavePanelIndex.
         int currentDiagramIndex = getSavePanelIndex();
         Component currentComponent = getDiagramAt(currentDiagramIndex);
         JTabbedPane tabbedPane;
@@ -57,7 +56,7 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
             tabbedPane.addTab(savePanelTitle, currentComponent);
             titleMap.remove(currentComponent);
             titleMap.put(tabbedPane, savePanelTitle);
-            diagramArray.set(currentDiagramIndex, tabbedPane);
+            diagramArray.set(currentDiagramIndex, tabbedPane);// todo: this could be incorrect, but is not used at the moment
             setSelectedDiagram(currentDiagramIndex);
         } else {
             tabbedPane = (JTabbedPane) currentComponent;
