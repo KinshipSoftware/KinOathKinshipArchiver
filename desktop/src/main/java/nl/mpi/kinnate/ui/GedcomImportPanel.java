@@ -23,7 +23,6 @@ import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.XsdChecker;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.CsvImporter;
@@ -49,18 +48,16 @@ public class GedcomImportPanel extends JPanel {
     private JPanel endPagePanel;
     private SessionStorage sessionStorage;
     private ArbilWindowManager dialogHandler;
-    private BugCatcher bugCatcher;
     private ArbilDataNodeLoader dataNodeLoader;
     private ArbilTreeHelper treeHelper;
     private Component parentPanel;
 
-    public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager, EntityCollection entityCollection, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper) {
+    public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager, EntityCollection entityCollection, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper) {
         this.setPreferredSize(new Dimension(500, 500));
         this.abstractDiagramManager = abstractDiagramManager;
         this.entityCollection = entityCollection;
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
 
@@ -79,6 +76,7 @@ public class GedcomImportPanel extends JPanel {
             createdNodesPanel.add(new JLabel("No data was imported, nothing to show in the graph."));
         } else {
             final ArrayList<JCheckBox> checkBoxArray = new ArrayList<JCheckBox>();
+            // todo: offer to only show the top most parents (any entity that does not have a parent) in the tree so that the user can browse and drag onto the diagram
             for (String typeString : gedcomImporter.getCreatedNodeIds().keySet()) {
                 JCheckBox currentCheckBox = new JCheckBox(typeString + " ( x " + gedcomImporter.getCreatedNodeIds().get(typeString).size() + ")");
                 currentCheckBox.setActionCommand(typeString);
@@ -89,7 +87,7 @@ public class GedcomImportPanel extends JPanel {
             showButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, bugCatcher, dataNodeLoader, treeHelper, entityCollection);
+                    final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection);
 //                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
                     egoSelectionTestPanel.setName("Imported Entities");
                     abstractDiagramManager.createDiagramContainer(egoSelectionTestPanel);
@@ -172,14 +170,14 @@ public class GedcomImportPanel extends JPanel {
                         @Override
                         public void run() {
                             boolean overwriteExisting = overwriteOnImport.isSelected();
-                            GenericImporter genericImporter = new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, bugCatcher);
+                            GenericImporter genericImporter = new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
                             if (importFileString != null) {
                                 if (!genericImporter.canImport(importFileString)) {
-                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, bugCatcher);
+                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
                                 }
                             } else {
                                 if (!genericImporter.canImport(importFile.toString())) {
-                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, bugCatcher);
+                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
                                 }
                             }
                             URI[] treeNodesArray;
