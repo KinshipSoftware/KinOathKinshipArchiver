@@ -17,7 +17,7 @@ import nl.mpi.arbil.ui.ArbilNodeSearchPanel;
 import nl.mpi.arbil.ui.ArbilSplitPanel;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.svg.GraphPanel;
 
@@ -34,17 +34,15 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
     private VisiblePanelSetting panelSetting;
     private ArbilTreeHelper treeHelper;
     private ArbilDataNodeLoader dataNodeLoader;
-    private BugCatcher bugCatcher;
 
     public enum TreeType {
 
         RemoteTree, LocalTree, MpiTree
     }
 
-    public ArchiveEntityLinkerPanel(VisiblePanelSetting panelSetting, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, KinDragTransferHandler dragTransferHandler, TreeType treeType, ArbilTreeHelper treeHelper, ArbilDataNodeLoader dataNodeLoader, BugCatcher bugCatcher) {
+    public ArchiveEntityLinkerPanel(VisiblePanelSetting panelSetting, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, KinDragTransferHandler dragTransferHandler, TreeType treeType, ArbilTreeHelper treeHelper, ArbilDataNodeLoader dataNodeLoader) {
         this.treeHelper = treeHelper;
         this.dataNodeLoader = dataNodeLoader;
-        this.bugCatcher = bugCatcher;
         this.treeType = treeType;
         this.panelSetting = panelSetting;
         archiveTree = new KinTree(kinDiagramPanel, graphPanel);
@@ -85,7 +83,7 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
             archiveTree.rootNodeChildren = allEntities;
             archiveTree.requestResort();
         } catch (URISyntaxException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         }
     }
 
