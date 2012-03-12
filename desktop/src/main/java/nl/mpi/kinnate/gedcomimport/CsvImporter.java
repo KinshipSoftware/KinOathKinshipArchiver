@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 
 /**
@@ -20,8 +20,8 @@ import nl.mpi.kinnate.kindata.DataTypes.RelationType;
  */
 public class CsvImporter extends EntityImporter implements GenericImporter {
 
-    public CsvImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage, BugCatcher bugCatcher) {
-        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage, bugCatcher);
+    public CsvImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
+        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage);
     }
 
     @Override
@@ -207,7 +207,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
             }
             saveAllDocuments();
         } catch (IOException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             appendToTaskOutput("Error: " + exception.getMessage());
         }
         return createdNodes.toArray(new URI[]{});
