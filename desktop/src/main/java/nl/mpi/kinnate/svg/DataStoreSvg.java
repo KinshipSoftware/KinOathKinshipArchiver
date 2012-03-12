@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.GraphSorter;
@@ -204,7 +204,7 @@ public class DataStoreSvg {
 //            dataStoreElement.appendChild(dataRecordNode);
 //        }
 //    }
-    protected void storeAllData(SVGDocument doc, BugCatcher bugCatcher) {
+    protected void storeAllData(SVGDocument doc) {
         // create string array to store the selected ego nodes in the dom
 //        ArrayList<String> egoStringArray = new ArrayList<String>();
 //        for (URI currentEgoUri : egoPathSet) {
@@ -219,7 +219,7 @@ public class DataStoreSvg {
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.marshal(this, doc.getRootElement());
         } catch (JAXBException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
 //        } catch (BaseXException exception) {
 //            new ArbilBugCatcher().logError(exception);
         }
@@ -278,7 +278,7 @@ public class DataStoreSvg {
 //        }
 //        return parameterList.toArray(new String[][]{});
 //    }
-    static protected DataStoreSvg loadDataFromSvg(SVGDocument doc, BugCatcher bugCatcher) {
+    static protected DataStoreSvg loadDataFromSvg(SVGDocument doc) {
         DataStoreSvg dataStoreSvg = new DataStoreSvg();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(DataStoreSvg.class);
@@ -299,7 +299,7 @@ public class DataStoreSvg {
 //                }
 //            }
         } catch (JAXBException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         }
         return dataStoreSvg;
     }
