@@ -12,7 +12,7 @@ import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilTree;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
 
@@ -35,14 +35,12 @@ public class MetadataPanel extends JPanel {
     private ArrayList<SvgElementEditor> elementEditors = new ArrayList<SvgElementEditor>();
     //private DateEditorPanel dateEditorPanel;
     private ArbilDataNodeLoader dataNodeLoader;
-    private BugCatcher bugCatcher;
 
-    public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, BugCatcher bugCatcher) {
+    public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader) {
         this.arbilTree = new ArbilTree();
         this.kinTableModel = new ArbilTableModel();
         this.archiveTableModel = new ArbilTableModel();
         this.dataNodeLoader = dataNodeLoader;
-        this.bugCatcher = bugCatcher;
         //dateEditorPanel = new DateEditorPanel();
         ArbilTable kinTable = new ArbilTable(kinTableModel, "Selected Nodes");
         ArbilTable archiveTable = new ArbilTable(archiveTableModel, "Selected Nodes");
@@ -103,7 +101,7 @@ public class MetadataPanel extends JPanel {
                     }
                 }
             } catch (URISyntaxException urise) {
-                bugCatcher.logError(urise);
+                BugCatcherManager.getBugCatcher().logError(urise);
             }
         }
     }
