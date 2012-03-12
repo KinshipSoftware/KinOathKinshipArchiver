@@ -13,7 +13,7 @@ import java.util.HashMap;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -25,8 +25,8 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class GedcomImporter extends EntityImporter implements GenericImporter {
 
-    public GedcomImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage, BugCatcher bugCatcher) {
-        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage, bugCatcher);
+    public GedcomImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
+        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage);
     }
 
     @Override
@@ -514,7 +514,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //            gedcomImdiObject.clearIcon();
 //            dataNodeLoader.saveNodesNeedingSave(true);
         } catch (IOException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             appendToTaskOutput("Error: " + exception.getMessage());
 //        } catch (ParserConfigurationExceptionparserConfigurationException) {
 //            new ArbilBugCatcher().logError(parserConfigurationException);
@@ -527,7 +527,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //            appendToTaskOutput("Error: " + sAXException.getMessage());
 //        }
         } catch (ImportException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             appendToTaskOutput("Error: " + exception.getMessage());
         }
 //        LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
