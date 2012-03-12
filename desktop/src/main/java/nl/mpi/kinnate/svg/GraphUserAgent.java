@@ -4,7 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.swing.svg.SVGUserAgentGUIAdapter;
@@ -18,14 +18,12 @@ public class GraphUserAgent extends SVGUserAgentGUIAdapter {
 
     private GraphPanel graphPanel;
     private MessageDialogHandler dialogHandler;
-    private BugCatcher bugCatcher;
     private ArbilDataNodeLoader dataNodeLoader;
 
-    public GraphUserAgent(GraphPanel parentComponent, MessageDialogHandler dialogHandler, BugCatcher bugCatcher, ArbilDataNodeLoader dataNodeLoader) {
+    public GraphUserAgent(GraphPanel parentComponent, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader) {
         super(parentComponent);
         graphPanel = parentComponent;
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
         this.dataNodeLoader = dataNodeLoader;
     }
 
@@ -36,7 +34,7 @@ public class GraphUserAgent extends SVGUserAgentGUIAdapter {
 
     @Override
     public void displayError(Exception exception) {
-        bugCatcher.logError(exception);
+        BugCatcherManager.getBugCatcher().logError(exception);
     }
 
     @Override
@@ -57,7 +55,7 @@ public class GraphUserAgent extends SVGUserAgentGUIAdapter {
             final ArbilDataNode arbilDataNode = dataNodeLoader.getArbilDataNode(null, new URI(targetUri));
             graphPanel.metadataPanel.addArbilDataNode(arbilDataNode);
         } catch (URISyntaxException urise) {
-            bugCatcher.logError(urise);
+            BugCatcherManager.getBugCatcher().logError(urise);
         }
         // set the graph selection
         graphPanel.setSelectedIds(new UniqueIdentifier[]{});
