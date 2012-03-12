@@ -18,7 +18,7 @@ import nl.mpi.arbil.data.ArbilField;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindocument.EntityDocument;
@@ -42,13 +42,11 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     private EntityData targetEntity = null;
     private SessionStorage sessionStorage;
     private EntityCollection entityCollection;
-    private BugCatcher bugCatcher;
 
-    public KinDragTransferHandler(KinDiagramPanel kinDiagramPanel, SessionStorage sessionStorage, EntityCollection entityCollection, BugCatcher bugCatcher) {
+    public KinDragTransferHandler(KinDiagramPanel kinDiagramPanel, SessionStorage sessionStorage, EntityCollection entityCollection) {
         this.kinDiagramPanel = kinDiagramPanel;
         this.sessionStorage = sessionStorage;
         this.entityCollection = entityCollection;
-        this.bugCatcher = bugCatcher;
     }
 
     @Override
@@ -181,7 +179,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
                 }
             }
         } catch (JAXBException exception) {
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
         }
         kinDiagramPanel.addRequiredNodes(slectedIdentifiers.toArray(new UniqueIdentifier[]{}));
         return true;
@@ -221,7 +219,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             return true;
         } catch (ImportException exception) {
             // todo: warn user with a dialog
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             return false;
         }
     }
@@ -265,11 +263,11 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             return true;
         } catch (ImportException exception) {
             // todo: warn user with a dialog
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             return false;
         } catch (URISyntaxException exception) {
             // todo: warn user with a dialog
-            bugCatcher.logError(exception);
+            BugCatcherManager.getBugCatcher().logError(exception);
             return false;
         }
     }
