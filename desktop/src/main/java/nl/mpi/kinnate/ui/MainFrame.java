@@ -45,7 +45,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
-                abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), injector.getSessionStorage(), injector.getBugCatcher(), injector.getDataNodeLoader(), injector.getTreeHelper(), injector.getEntityCollection());
+                abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), injector.getSessionStorage(), injector.getDataNodeLoader(), injector.getTreeHelper(), injector.getEntityCollection());
                 abstractDiagramManager.newDiagram();
                 abstractDiagramManager.createApplicationWindow();
 
