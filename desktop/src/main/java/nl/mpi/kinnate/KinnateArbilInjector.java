@@ -9,6 +9,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.arbil.util.ArbilMimeHashQueue;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
@@ -29,7 +30,6 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
     private ArbilTreeHelper treeHelper;
     private ArbilMimeHashQueue mimeHashQueue;
     private ArbilWindowManager windowManager;
-    private ArbilBugCatcher bugCatcher;
     private ArbilDataNodeLoader dataNodeLoader;
     private ArbilSessionStorage sessionStorage;
     private EntityCollection entityCollection;
@@ -47,12 +47,9 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
         sessionStorage = new KinSessionStorage(versionManager);
         injectSessionStorage(sessionStorage);
 
-        bugCatcher = new ArbilBugCatcher(sessionStorage, versionManager);
-        sessionStorage.setBugCatcher(bugCatcher);
-        injectBugCatcher(bugCatcher);
+        BugCatcherManager.setBugCatcher(new ArbilBugCatcher(sessionStorage, versionManager));
 
         windowManager = new ArbilWindowManager();
-        windowManager.setBugCatcher(bugCatcher);
         windowManager.setSessionStorage(sessionStorage);
         windowManager.setVersionManager(versionManager);
 
@@ -64,22 +61,21 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
         injectWindowManager(windowManager);
 
         mimeHashQueue = new ArbilMimeHashQueue(windowManager, sessionStorage);
-        mimeHashQueue.setBugCatcher(bugCatcher);
         mimeHashQueue.setMessageDialogHandler(messageDialogHandler);
         injectMimeHashQueue(mimeHashQueue);
 
-        treeHelper = new ArbilTreeHelper(sessionStorage, messageDialogHandler, bugCatcher);
+        treeHelper = new ArbilTreeHelper(sessionStorage, messageDialogHandler); // here we need to use the arbil tree locations for the archive linker
         windowManager.setTreeHelper(treeHelper);
         sessionStorage.setTreeHelper(treeHelper);
         injectTreeHelper(treeHelper);
 
-        dataNodeLoader = new ArbilDataNodeLoader(bugCatcher, messageDialogHandler, sessionStorage, mimeHashQueue, treeHelper);
+        dataNodeLoader = new ArbilDataNodeLoader(messageDialogHandler, sessionStorage, mimeHashQueue, treeHelper);
         treeHelper.setDataNodeLoader(dataNodeLoader);
         mimeHashQueue.setDataNodeLoader(dataNodeLoader);
         windowManager.setDataNodeLoader(dataNodeLoader);
         injectDataNodeLoader(dataNodeLoader);
 
-        entityCollection = new EntityCollection(sessionStorage, windowManager, bugCatcher);
+        entityCollection = new EntityCollection(sessionStorage, windowManager);
     }
 
     /**
@@ -104,14 +100,6 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
      */
     public ArbilWindowManager getWindowManager() {
         return windowManager;
-    }
-
-    /**
-     * Should not be called before injectHandlers()!!
-     * @return the treeHelper
-     */
-    public ArbilBugCatcher getBugCatcher() {
-        return bugCatcher;
     }
 
     /**
