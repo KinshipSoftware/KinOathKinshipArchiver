@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -36,11 +36,9 @@ public class EntitySvg {
     private int symbolSize = 15;
     static protected int strokeWidth = 2;
     private MessageDialogHandler dialogHandler;
-    private BugCatcher bugCatcher;
 
-    public EntitySvg(MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+    public EntitySvg(MessageDialogHandler dialogHandler) {
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
     }
 
     public void readEntityPositions(Node entityGroup) {
@@ -528,7 +526,7 @@ public class EntitySvg {
         symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
-            bugCatcher.logError(new Exception("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier()));
+            BugCatcherManager.getBugCatcher().logError(new Exception("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier()));
             storedPosition = new float[]{0, 0};
             // todo: it looks like the stored positon can be null
 //            throw new Exception("Entity position should have been set in the graph sorter");
