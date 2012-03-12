@@ -10,7 +10,7 @@ import javax.swing.JPopupMenu;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindocument.RelationLinker;
 import nl.mpi.kinnate.kindocument.EntityDocument;
@@ -48,7 +48,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private float yPos;
     private ArbilDataNodeLoader dataNodeLoader;
 
-    public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, final EntityCollection entityCollection, final ArbilWindowManager arbilWindowManager, ArbilDataNodeLoader dataNodeLoaderL, final SessionStorage sessionStorage, final BugCatcher bugCatcher) {
+    public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, final EntityCollection entityCollection, final ArbilWindowManager arbilWindowManager, ArbilDataNodeLoader dataNodeLoaderL, final SessionStorage sessionStorage) {
         kinDiagramPanel = egoSelectionPanelLocal;
         graphPanel = graphPanelLocal;
         this.dataNodeLoader = dataNodeLoaderL;
@@ -72,7 +72,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                                 entityCollection.updateDatabase(addedEntityUri);
                                 kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
                             } catch (ImportException exception) {
-                                bugCatcher.logError(exception);
+                                BugCatcherManager.getBugCatcher().logError(exception);
                                 arbilWindowManager.addMessageDialogToQueue("Failed to create entity: " + exception.getMessage(), "Add Entity");
                             }
                         }
@@ -86,7 +86,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     try {
-                        final UniqueIdentifier[] duplicateEntities = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection, bugCatcher).duplicateEntities(selectedIdentifiers);
+                        final UniqueIdentifier[] duplicateEntities = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).duplicateEntities(selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                         kinDiagramPanel.addRequiredNodes(duplicateEntities);
                     } catch (ImportException exception) {
@@ -101,7 +101,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     try {
-                        UniqueIdentifier[] affectedIdentifiers = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection, bugCatcher).mergeEntities(selectedIdentifiers);
+                        UniqueIdentifier[] affectedIdentifiers = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).mergeEntities(selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
                     } catch (ImportException exception) {
                         arbilWindowManager.addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
@@ -119,7 +119,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         try {
-                            UniqueIdentifier[] affectedIdentifiers = new RelationLinker(sessionStorage, arbilWindowManager, entityCollection, bugCatcher).linkEntities(selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()), null, null); // todo: custom relation types could be enabled here as could dcr values..
+                            UniqueIdentifier[] affectedIdentifiers = new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).linkEntities(selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()), null, null); // todo: custom relation types could be enabled here as could dcr values..
                             kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
                         } catch (ImportException exception) {
                             arbilWindowManager.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), addRelationEntityMenu.getText());
@@ -139,7 +139,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             removeRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    new RelationLinker(sessionStorage, arbilWindowManager, entityCollection, bugCatcher).unlinkEntities(graphPanel, selectedIdentifiers);
+                    new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).unlinkEntities(graphPanel, selectedIdentifiers);
                     kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                 }
             });
@@ -239,7 +239,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                     arbilWindowManager.stopEditingInCurrentWindow();
                     dataNodeLoader.saveNodesNeedingSave(true);
                 } catch (Exception ex) {
-                    bugCatcher.logError(ex);
+                    BugCatcherManager.getBugCatcher().logError(ex);
                 }
             }
         });
