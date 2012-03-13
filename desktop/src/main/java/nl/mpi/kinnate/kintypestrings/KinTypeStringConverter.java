@@ -428,7 +428,15 @@ public class KinTypeStringConverter extends GraphSorter {
             } else if (currentParentNode != null) {
                 // check for existing relations of the current parents that match
                 for (EntityRelation entityRelation : currentParentNode.getAllRelations()) {
-                    if (symbolType.toString().equals(entityRelation.getAlterNode().getFirstSymbolName())) { // todo: note that this is only considering the first symbol of what might be a list of many overlaid symbols, but it should probably consider all symbols for each entity
+                    boolean symbolMatchFound = false;
+                    for (String symbolName : entityRelation.getAlterNode().getSymbolNames()) {
+                        // rather than only considering the first symbol, the full list overlay symbols for the entity are considered
+                        if (symbolType.toString().equals(symbolName)) {
+                            symbolMatchFound = true;
+                            break;
+                        }
+                    }
+                    if (symbolMatchFound) {
                         if (currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier)) {
                             currentGraphDataNode = entityRelation.getAlterNode();
                             currentGraphDataNodeSet.add(currentGraphDataNode);
