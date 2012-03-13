@@ -22,8 +22,8 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class SymbolGraphic {
 
-    HashMap<String, ImageIcon> symbolMapEgo = new HashMap<String, ImageIcon>();
-    HashMap<String, ImageIcon> symbolMapAlter = new HashMap<String, ImageIcon>();
+    HashMap<String[], ImageIcon> symbolMapEgo = new HashMap<String[], ImageIcon>();
+    HashMap<String[], ImageIcon> symbolMapAlter = new HashMap<String[], ImageIcon>();
     private MessageDialogHandler dialogHandler;
 
     public SymbolGraphic(MessageDialogHandler dialogHandler) {
@@ -47,36 +47,36 @@ public class SymbolGraphic {
         }
     }
 
-    public ImageIcon getSymbolGraphic(String symbolType, boolean isEgo) {
-        HashMap<String, ImageIcon> symbolMap;
+    public ImageIcon getSymbolGraphic(String[] symbolNames, boolean isEgo) {
+        HashMap<String[], ImageIcon> symbolMap;
         if (isEgo) {
             symbolMap = symbolMapEgo;
         } else {
             symbolMap = symbolMapAlter;
         }
-        if (symbolMap.containsKey(symbolType)) {
-            return symbolMap.get(symbolType);
+        if (symbolMap.containsKey(symbolNames)) {
+            return symbolMap.get(symbolNames);
         }
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
         SVGDocument doc = (SVGDocument) impl.createDocument(svgNS, "svg", null);
 
         int symbolSize = new EntitySvg(dialogHandler).insertSymbols(doc, svgNS);
+        for (String currentSymbol : symbolNames) {
+            Element symbolNode;
+            symbolNode = doc.createElementNS(svgNS, "use");
+            symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + currentSymbol); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
+            if (isEgo) {
+                symbolNode.setAttribute("fill", "black");
+            } else {
+                symbolNode.setAttribute("fill", "none");
+            }
+            symbolNode.setAttribute("stroke", "black");
+            symbolNode.setAttribute("stroke-width", "2");
 
-        Element symbolNode;
-        symbolNode = doc.createElementNS(svgNS, "use");
-        symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
-        if (isEgo) {
-            symbolNode.setAttribute("fill", "black");
-        } else {
-            symbolNode.setAttribute("fill", "none");
+            Element svgRoot = doc.getDocumentElement();
+            svgRoot.appendChild(symbolNode);
         }
-        symbolNode.setAttribute("stroke", "black");
-        symbolNode.setAttribute("stroke-width", "2");
-
-        Element svgRoot = doc.getDocumentElement();
-        svgRoot.appendChild(symbolNode);
-
         ImageIconTranscoder transcoder = new ImageIconTranscoder();
         TranscodingHints hints = new TranscodingHints();
         hints.put(ImageTranscoder.KEY_WIDTH, (float) symbolSize);
@@ -88,7 +88,7 @@ public class SymbolGraphic {
             transcoder.transcode(new TranscoderInput(doc), null);
             BufferedImage bufferedImage = transcoder.getImage();
             ImageIcon imageIcon = new ImageIcon(bufferedImage);
-            symbolMap.put(symbolType, imageIcon);
+            symbolMap.put(symbolNames, imageIcon);
             return imageIcon;
         } catch (TranscoderException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
