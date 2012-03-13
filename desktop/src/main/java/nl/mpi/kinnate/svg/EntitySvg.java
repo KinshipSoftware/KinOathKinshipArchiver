@@ -290,6 +290,21 @@ public class EntitySvg {
         noneGroup.appendChild(noneNode);
         defsNode.appendChild(noneGroup);
         svgRoot.appendChild(defsNode);
+
+        // add the marker symbols
+        for (String markerColour : new String[]{"red", "green", "blue"}) {
+            Element markerGroup = doc.createElementNS(svgNameSpace, "g");
+            markerGroup.setAttribute("id", markerColour + "marker");
+            Element markerNode = doc.createElementNS(svgNameSpace, "circle");
+            markerNode.setAttribute("cx", Integer.toString(symbolSize));
+            markerNode.setAttribute("cy", "0");
+            markerNode.setAttribute("r", Integer.toString((symbolSize) / 4));
+//        circleNode.setAttribute("height", Integer.toString(symbolSize - (strokeWidth * 3)));
+            markerNode.setAttribute("stroke", "none");
+            markerNode.setAttribute("fill", markerColour);
+            markerGroup.appendChild(markerNode);
+            defsNode.appendChild(markerGroup);
+        }
         return symbolSize;
     }
 
@@ -514,16 +529,12 @@ public class EntitySvg {
         // the kin type strings are stored here so that on selection in the graph the add kin term panel can be pre populatedwith the kin type strings of the selection
         groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
 //        counterTest++;
-        Element symbolNode;
-        String symbolType = currentNode.getSymbolType();
-        if (symbolType == null || symbolType.length() == 0) {
-            symbolType = "error";
+        String[] symbolNames = currentNode.getSymbolNames();
+        if (symbolNames == null || symbolNames.length == 0) {
+            symbolNames = new String[]{"error"};
         }
         // todo: check that if an entity is already placed in which case do not recreate
         // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
-        symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
-        symbolNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier() + ":symbol");
-        symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + symbolType); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
             BugCatcherManager.getBugCatcher().logError(new Exception("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier()));
@@ -553,18 +564,23 @@ public class EntitySvg {
 ////            // prevent the y position being changed
 //            storedPosition[1] = currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f;
         }
-        // todo: resolve the null pointer on first run with transient nodes (last test on this did not get a null pointer so maybe it is resolved)
-        groupNode.setAttribute("transform", "translate(" + Float.toString(storedPosition[0]) + ", " + Float.toString(storedPosition[1]) + ")");
-        if (currentNode.isEgo) {
-            symbolNode.setAttribute("fill", "black");
-        } else {
-            symbolNode.setAttribute("fill", "white");
+        for (String currentSymbol : symbolNames) {
+            Element symbolNode;
+            symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
+//            symbolNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier() + ":symbol:" + currentSymbol);
+            symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + currentSymbol); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
+
+            // todo: resolve the null pointer on first run with transient nodes (last test on this did not get a null pointer so maybe it is resolved)
+            groupNode.setAttribute("transform", "translate(" + Float.toString(storedPosition[0]) + ", " + Float.toString(storedPosition[1]) + ")");
+            if (currentNode.isEgo) {
+                symbolNode.setAttribute("fill", "black");
+            } else {
+                symbolNode.setAttribute("fill", "white");
+            }
+            symbolNode.setAttribute("stroke", "black");
+            symbolNode.setAttribute("stroke-width", "2");
+            groupNode.appendChild(symbolNode);
         }
-
-        symbolNode.setAttribute("stroke", "black");
-        symbolNode.setAttribute("stroke-width", "2");
-        groupNode.appendChild(symbolNode);
-
 ////////////////////////////// tspan method appears to fail in batik rendering process unless saved and reloaded ////////////////////////////////////////////////
 //            Element labelText = doc.createElementNS(svgNS, "text");
 ////            labelText.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
