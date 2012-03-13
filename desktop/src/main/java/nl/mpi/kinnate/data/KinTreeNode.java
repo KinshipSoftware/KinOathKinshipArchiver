@@ -42,7 +42,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
         symbolGraphic = new SymbolGraphic(dialogHandler);
     }
 
-    // todo:. create new constructor that takes a unique identifer and loads from the database.
+    // todo:.. create new constructor that takes a unique identifer and loads from the database.
     public KinTreeNode(EntityData entityData, DataTypes.RelationType subnodeFilter, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         super();
         this.indexerParameters = indexerParameters;
@@ -92,7 +92,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
         // todo: add metanodes and ui option to hide show relation types
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
             final boolean showFiltered = subnodeFilter == DataTypes.RelationType.ancestor || subnodeFilter == DataTypes.RelationType.descendant;
-            // todo:. remove limitation of sanguine relations "isSanguinLine" and find the caues of the error when non sanguine relations are shown.
+            // todo:.. remove limitation of sanguine relations "isSanguinLine" and find the caues of the error when non sanguine relations are shown.
             if (DataTypes.isSanguinLine(entityRelation.getRelationType()) && (subnodeFilter == null || (subnodeFilter == entityRelation.getRelationType() && showFiltered))) {
                 EntityData alterEntity = entityRelation.getAlterNode();
                 if (alterEntity == null) {
@@ -142,7 +142,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     @Override
     public ImageIcon getIcon() {
         if (entityData != null) {
-            return symbolGraphic.getSymbolGraphic(entityData.getSymbolType(), entityData.isEgo);
+            return symbolGraphic.getSymbolGraphic(entityData.getSymbolNames(), entityData.isEgo);
         }
         return null;
     }
