@@ -33,12 +33,14 @@ public class IndexerParameters {
                 //        {"*:Kinnate/*:Gedcom/*:Entity[*:sex='male']", "triangle"},
                 {"*:Kinnate/*:Metadata[*:Gender='male']", "triangle"} //        , {"*:Kinnate/*:Gedcom/*:Entity[*:sex='female']", "circle"}
                 , {"*:Kinnate/*:Metadata[*:Gender='female']", "circle"},
+                {"*:Kinnate/*:Metadata[*:Gender='']", "square"},
+                {"*:Kinnate/*:Metadata/*:Individual[*:Gender='']", "square"},
                 {"*:Kinnate/*:Metadata/*:Individual[*:Gender='Male']", "triangle"},
                 {"*:Kinnate/*:Metadata/*:Individual[*:Gender='Female']", "circle"}
 //        , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']", "union"}
             });
-    @XmlElement(name = "DefaultSymbol", namespace = "http://mpi.nl/tla/kin")
-    public String defaultSymbol = "square";
+//    @XmlElement(name = "DefaultSymbol", namespace = "http://mpi.nl/tla/kin")
+//    public String defaultSymbol = "square";
 //    @XmlElement(name = "AncestorFields", namespace = "http://mpi.nl/tla/kin")
 //    public IndexerParam ancestorFields = new IndexerParam(new String[][]{{"Kinnate.Gedcom.Entity.FAMC"}, {"Kinnate.Gedcom.Entity.BIRT.FAMC"}, {"Kinnate.Gedcom.Entity.CHR.FAMC"}, {"Kinnate.Gedcom.Entity.ADOP.FAMC"}, {"Kinnate.Gedcom.Entity.SLGC.FAMC"}, {"Kinnate.Gedcom.Entity.HUSB"}, {"Kinnate.Gedcom.Entity.WIFE"}, {"ancestor"}});
 //    public IndexerParam siblingFields = new IndexerParam(new String[]{{"Kinnate.Gedcom.Entity.CHIL"}, {"Kinnate.Gedcom.Entity.FAMS"}});
