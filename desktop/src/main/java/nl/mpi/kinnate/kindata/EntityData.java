@@ -35,7 +35,7 @@ public class EntityData {
     @XmlElement(name = "KinTerm", namespace = "http://mpi.nl/tla/kin")
     private GraphLabel[] kinTermArray = new GraphLabel[]{};
     @XmlElement(name = "Symbol", namespace = "http://mpi.nl/tla/kin")
-    private String symbolTypeString;
+    private String[] symbolNames = new String[]{};
     @XmlElement(name = "DateOfBirth", namespace = "http://mpi.nl/tla/kin")
     private Date dateOfBirth; // todo: use this in the graph sort and offer to show on the graph
     @XmlElement(name = "DateOfDeath", namespace = "http://mpi.nl/tla/kin")
@@ -90,7 +90,7 @@ public class EntityData {
         uniqueIdentifier = labelStringsParser.getUniqueIdentifier(parentEntity, kinTypeStringLocal, symbolIndex);
         entityPath = null;
         kinTypeArray = new String[]{kinTypeStringLocal};
-        symbolTypeString = symbolIndex.name();
+        symbolNames = new String[]{symbolIndex.name()};
         labelStringArray = labelStringsParser.labelsStrings;
         isEgo = isEgoLocal;
         dateOfBirth = labelStringsParser.dateOfBirth;
@@ -102,7 +102,7 @@ public class EntityData {
         // this is used only to return error messages from a query that fails to get an entity and to prevent that query being hit again
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = null;
-        symbolTypeString = SymbolType.error.name();
+        symbolNames = new String[]{SymbolType.error.name()};
         labelStringArray = errorMessage;
         isEgo = false;
     }
@@ -111,7 +111,7 @@ public class EntityData {
     public EntityData(UniqueIdentifier uniqueIdentifierLocal) {
         uniqueIdentifier = uniqueIdentifierLocal;
         entityPath = null;
-        symbolTypeString = null;
+        symbolNames = new String[]{};
         labelStringArray = null;
         isEgo = false;
     }
@@ -136,8 +136,17 @@ public class EntityData {
         archiveLinkArray = linksList.toArray(new URI[]{});
     }
 
-    public String getSymbolType() {
-        return symbolTypeString;
+    public String[] getSymbolNames() {
+        return symbolNames;
+    }
+
+    public String getFirstSymbolName() {
+        String firstSymbolName = null;
+        if (symbolNames != null && symbolNames.length > 0) {
+            // get the first symbol only
+            firstSymbolName = symbolNames[0];
+        }
+        return firstSymbolName;
     }
 
     @XmlTransient
