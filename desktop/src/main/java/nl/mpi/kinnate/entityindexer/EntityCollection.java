@@ -403,6 +403,7 @@ public class EntityCollection {
             long queryTotalMils = System.currentTimeMillis() - startTime;
             System.out.println("Total Query time: " + queryTotalMils + "ms");
 //            selectedEntity.appendTempLabel(queryTimeString);
+//            System.out.println("Query Result: " + queryResult);
             return selectedEntity;
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
