@@ -30,8 +30,10 @@ public class PedigreePackageExport {
     private UniqueIdentifier getFirstMatchingParent(EntityData entityData, EntityData.SymbolType symbolType) {
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
             if (entityRelation.getRelationType().equals(DataTypes.RelationType.ancestor)) {
-                if (entityRelation.getAlterNode().getSymbolType().equals(symbolType.name())) {
-                    return entityRelation.getAlterNode().getUniqueIdentifier();
+                for (String symbolName : entityRelation.getAlterNode().getSymbolNames()) {
+                    if (symbolName.equals(symbolType.name())) {
+                        return entityRelation.getAlterNode().getUniqueIdentifier();
+                    }
                 }
             }
         }
@@ -40,12 +42,13 @@ public class PedigreePackageExport {
 
     private int getIntegerGender(EntityData entityData) {
         // Gender of individual noted in `id'. Character("male","female","unknown", "terminated") or numeric (1="male", 2="female", 3="unknown", 4="terminated") allowed.
-        String symbolName = entityData.getSymbolType();
-        if (symbolName.equals(EntityData.SymbolType.triangle.name())) {
-            return 1;
-        }
-        if (symbolName.equals(EntityData.SymbolType.circle.name())) {
-            return 2;
+        for (String symbolName : entityData.getSymbolNames()) {
+            if (symbolName.equals(EntityData.SymbolType.triangle.name())) {
+                return 1;
+            }
+            if (symbolName.equals(EntityData.SymbolType.circle.name())) {
+                return 2;
+            }
         }
         return 3;
     }
