@@ -42,6 +42,9 @@ public class QueryBuilder {
         stringBuilder.append(")");
         return stringBuilder.toString();
     }
+//.    excape quotes from symbol queries
+//. when getting the icon clause and the symbol the string input must be encoded for ' " &
+//.        http://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html#d38243e274
 
     public String getLabelsClause(IndexerParameters indexParameters, String docRootVar) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -57,19 +60,17 @@ public class QueryBuilder {
 
     public String getSymbolClause(IndexerParameters indexParameters, String docRootVar) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("\ninsert node <kin:Symbol xmlns:kin=\"http://mpi.nl/tla/kin\">{\n");
         for (ParameterElement currentEntry : indexParameters.symbolFieldsFields.getValues()) {
             String trimmedXpath = currentEntry.getXpathString().substring("*:Kinnate".length());
             stringBuilder.append("if (exists(");
             stringBuilder.append(docRootVar);
             stringBuilder.append(trimmedXpath);
-            stringBuilder.append(")) then \"");
+            stringBuilder.append(")) then ");
+            stringBuilder.append("insert node <kin:Symbol xmlns:kin=\"http://mpi.nl/tla/kin\">");
             stringBuilder.append(currentEntry.getSelectedValue());
-            stringBuilder.append("\"\n else ");
+            stringBuilder.append("</kin:Symbol> after $copyNode/*:Identifier "); // into $copyNode
+            stringBuilder.append("else (),\n");
         }
-        stringBuilder.append("(\"");
-        stringBuilder.append(indexParameters.defaultSymbol);
-        stringBuilder.append("\")\n}</kin:Symbol> after $copyNode/*:Identifier,\n"); // into $copyNode
         return stringBuilder.toString();
     }
 
@@ -211,6 +212,8 @@ public class QueryBuilder {
             } else {
 //                stringBuilder.append("(");
             }
+            // todo:. add sample diagram that demonstrates this syntax
+            // todo:. update the samples from =[ to [ format
             stringBuilder.append("$entityNode//*/");
             stringBuilder.append(queryTerm.fieldXPath);
             stringBuilder.append("[text() ");
