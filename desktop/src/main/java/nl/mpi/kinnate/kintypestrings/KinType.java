@@ -79,8 +79,10 @@ public class KinType implements Comparable<KinType> {
         } else {
             for (EntityData.SymbolType symbolType : symbolTypes) {
                 // square was the wildcard symbol but now a null symbol array is used and since it is not null we compare all symbols in the array
-                if (symbolType.name().equals(entityRelation.getAlterNode().getSymbolType())) {
-                    symbolMatchFound = true;
+                for (String symbolName : entityRelation.getAlterNode().getSymbolNames()) {
+                    if (symbolType.name().equals(symbolName)) { // entityRelation.getAlterNode().getFirstSymbolName()
+                        symbolMatchFound = true;
+                    }
                 }
             }
         }
@@ -116,8 +118,10 @@ public class KinType implements Comparable<KinType> {
         }
         // square used to be the wildcard symbol but now a null symbol array is used and since we know it is not null we compare all symbols in the array
         for (EntityData.SymbolType symbolType : symbolTypes) {
-            if (symbolType.name().equals(entityData.getSymbolType())) {
-                return true;
+            for (String symbolName : entityData.getSymbolNames()) {
+                if (symbolType.name().equals(symbolName)) { // entityData.getFirstSymbolName()
+                    return true;
+                }
             }
         }
         return false;
