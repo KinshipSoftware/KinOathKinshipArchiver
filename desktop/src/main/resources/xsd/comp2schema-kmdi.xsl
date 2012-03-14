@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-    $Rev: 1772 $
-    $Date: 2012-02-24 15:42:25 +0100 (Fri, 24 Feb 2012) $
+<!-- 
+    $Rev: 484 $ 
+    $Date: 2011-10-21 12:01:58 +0200 (Fri, 21 Oct 2011) $ 
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcr="http://www.isocat.org/ns/dcr"
     xmlns:ann="http://www.clarin.eu">
-
+    
     <xsl:variable name="CMDVersion" select="'1.1'"/>
 
     <xsl:strip-space elements="*"/>
     <xsl:include href="comp2schema-header.xsl"/>
-    <xsl:include href="cleanup-xsd.xsl"/>
     <!-- note: the automatic chaining with clean-xsd.xsl only works with the Saxon XSLT processor, otherwise you'll have to do this manually (or use e.g the Xalan pipeDocument tag) -->
-    <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no" />
+    <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" saxon:indent-spaces="1"
+        saxon:next-in-chain="cleanup-xsd.xsl" xmlns:saxon="http://saxon.sf.net/"/>
 
     <!-- Start includes -->
 
@@ -50,17 +50,14 @@
             <xsl:apply-templates mode="include"/>
         </xsl:variable>
         <!-- Process the complete tree -->
-        <xsl:variable name="schema">
-            <xsl:apply-templates select="$tree/*"/>
-        </xsl:variable>
-        <xsl:apply-templates select="$schema" mode="clean" />
+        <xsl:apply-templates select="$tree/*"/>
     </xsl:template>
 
     <!-- generate XSD -->
     <xsl:template match="/CMD_ComponentSpec">
 
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcr="http://www.isocat.org/ns/dcr" xmlns:cmd="http://www.clarin.eu/cmd/" targetNamespace="http://www.clarin.eu/cmd/" elementFormDefault="qualified">
-
+                                                                                        <!--xmlns:kin="http://mpi.nl/tla/kin" -->
             <!-- import this for the use of the xml:lang attribute -->
             <xs:import namespace="http://www.w3.org/XML/1998/namespace"
                 schemaLocation="http://www.w3.org/2001/xml.xsd"/>
@@ -73,16 +70,16 @@
             <xsl:call-template name="PrintHeaderType"/>
 
 
-            <xs:element name="CMD">
+            <xs:element name="Kinnate">
                 <xs:complexType>
-
+                    
                     <xs:sequence>
 
                         <!-- Produce (fixed) header elements (description and resources)-->
                         <xsl:call-template name="PrintHeader"/>
 
                         <!-- Then generate the components -->
-                        <xs:element name="Components">
+                        <xs:element name="Metadata">
 
                             <xs:complexType>
                                 <xs:sequence>
@@ -94,10 +91,10 @@
 
                         <!-- Generate the footer -->
                     </xs:sequence>
-
+                    
                     <!-- CMD version -->
-                    <xs:attribute name="CMDVersion" fixed="{$CMDVersion}" use="required"/>
-
+                    <xs:attribute name="KmdiVersion" fixed="{$CMDVersion}" use="required"/>
+                    
                 </xs:complexType>
             </xs:element>
         </xs:schema>
@@ -263,8 +260,8 @@
                     <xs:extension base="{concat('xs:',@ValueScheme)}">
                         <xsl:apply-templates select="./AttributeList/Attribute"/>
                         <!-- temporarily disabled -->
-                        <xsl:if test="./@Multilingual='true'">
-                            <xs:attribute ref="xml:lang" />
+                        <xsl:if test="./@Multilingual">
+                            <xs:attribute ref="xml:lang"/>
                         </xsl:if>
                     </xs:extension>
                 </xs:simpleContent>
@@ -335,8 +332,8 @@
 
         </xs:attribute>
     </xsl:template>
-
-
+    
+    
     <!-- Convert patterns -->
     <xsl:template match="pattern">
         <xs:pattern value="{self::node()}"/>

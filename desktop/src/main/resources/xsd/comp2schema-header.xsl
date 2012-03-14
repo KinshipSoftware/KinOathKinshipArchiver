@@ -1,62 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-    This file is based on:
-    http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema-header.xsl
     $Rev: 484 $
     $Date: 2011-05-13 17:08:40 +0200 (Fri, 13 May 2011) $
-
-    By Peter Wither for use in KinOath 2011/11/17
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
+
     <xsl:template name="PrintHeaderType">
-        <xs:simpleType name="simpletype-UniqueIdentifier">
+        <xs:simpleType name="Resourcetype_simple">
             <xs:restriction base="xs:string">
-                <xs:pattern value="[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{9}-[0-9A-F]{12}"/>
+                <xs:enumeration value="Metadata">
+                    <xs:annotation>
+                        <xs:documentation>The ResourceProxy
+                            refers to another component
+                            metadata instance (e.g. for
+                            grouping metadata descriptions
+                            into
+                            collections)</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Resource">
+                    <xs:annotation>
+                        <xs:documentation>The ResourceProxy
+                            refers to a file that is not a
+                            metadata instance (e.g. a text
+                            document)</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
             </xs:restriction>
         </xs:simpleType>
-        <xs:complexType name="complextype-UniqueIdentifier">
-            <xs:simpleContent>
-                <xs:extension base="cmd:simpletype-UniqueIdentifier">
-                    <xs:attribute name="type" use="required">
-                        <xs:simpleType>
-                            <xs:restriction base="xs:string">
-                                <xs:pattern value="[a-z]{3}"/>
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:attribute>
-                </xs:extension>
-            </xs:simpleContent>
-        </xs:complexType>
     </xsl:template>
+
+
     <xsl:template name="PrintHeader">
-        <xs:element name="Entity">
+
+        <xs:element name="Header">
             <xs:complexType>
                 <xs:sequence>
-                    <xs:element name="Identifier" type="cmd:complextype-UniqueIdentifier" minOccurs="1" maxOccurs="1" />
-                    <xs:element maxOccurs="1" minOccurs="0" type="xs:date" name="DateOfBirth"/>
-                    <xs:element maxOccurs="1" minOccurs="0" type="xs:date" name="DateOfDeath"/>
-                    <xs:element maxOccurs="1" minOccurs="0" type="xs:boolean" name="Ego"/>
-                    <xs:element maxOccurs="1" minOccurs="0" type="xs:boolean" name="Visible"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" type="xs:string" name="Label"/>
-                    <xs:element name="Relations">
+                    <xs:element name="MdCreator" type="xs:string" minOccurs="0"/>
+                    <xs:element name="MdCreationDate" type="xs:date" minOccurs="0"/>
+                    <xs:element name="MdSelfLink" type="xs:anyURI" minOccurs="0"/>
+                    <xs:element name="MdProfile" type="xs:anyURI" minOccurs="0"/>
+                    <xs:element name="MdCollectionDisplayName" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="Resources">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="ResourceProxyList">
                         <xs:complexType>
                             <xs:sequence>
-                                <xs:element name="Relation" maxOccurs="unbounded" minOccurs="0">
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="ResourceProxy">
                                     <xs:complexType>
                                         <xs:sequence>
-                                            <xs:element name="Identifier" type="cmd:complextype-UniqueIdentifier" minOccurs="1" maxOccurs="1" />
+                                            <xs:element maxOccurs="1" minOccurs="1"
+                                                name="ResourceType">
+                                                <xs:complexType>
+                                                    <xs:simpleContent>
+                                                        <xs:extension base="cmd:Resourcetype_simple">
+                                                            <xs:attribute name="mimetype" type="xs:string"/>
+                                                        </xs:extension>
+                                                    </xs:simpleContent>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element maxOccurs="1" minOccurs="1"
+                                                name="ResourceRef" type="xs:anyURI"/>
                                         </xs:sequence>
-                                        <xs:attribute name="Line" type="xs:string" use="required" />
-                                        <xs:attribute name="Type" type="xs:string" use="required" />
+                                        <xs:attribute name="id" type="xs:ID" use="required"/>
                                     </xs:complexType>
                                 </xs:element>
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" type="xs:anyURI" name="ArchiveLink"/>
+                    <xs:element name="JournalFileProxyList">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0"
+                                    name="JournalFileProxy">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element maxOccurs="1" minOccurs="1"
+                                                name="JournalFileRef" type="xs:anyURI"/>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="ResourceRelationList">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0"
+                                    name="ResourceRelation">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element maxOccurs="1" minOccurs="1"
+                                                name="RelationType"/>
+                                            <xs:element maxOccurs="1" minOccurs="1" name="Res1">
+                                                <xs:complexType>
+                                                  <xs:attribute name="ref" type="xs:IDREF"/>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element maxOccurs="1" minOccurs="1" name="Res2">
+                                                <xs:complexType>
+                                                  <xs:attribute name="ref" type="xs:IDREF"/>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+
+                    <xs:element minOccurs="0" name="IsPartOfList">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0"
+                                    name="IsPartOf" type="xs:anyURI"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+
                 </xs:sequence>
             </xs:complexType>
         </xs:element>

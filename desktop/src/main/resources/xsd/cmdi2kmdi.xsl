@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Author: Peter Wither for use in KinOath 2012/03/14 -->
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -21,10 +22,7 @@
                     <xs:element name="Entity">
                         <xs:complexType>
                             <xs:sequence>
-                                <xs:element name="Identifier" type="cmd:complextype-UniqueIdentifier" minOccurs="1"
-                  maxOccurs="1"/>
-                                <xs:element maxOccurs="1" minOccurs="0" type="xs:date" name="DateOfBirth"/>
-                                <xs:element maxOccurs="1" minOccurs="0" type="xs:date" name="DateOfDeath"/>
+                                <xs:element name="Identifier" type="cmd:complextype-UniqueIdentifier" minOccurs="1" maxOccurs="1"/>
                                 <xs:element maxOccurs="1" minOccurs="0" type="xs:boolean" name="Ego"/>
                                 <xs:element maxOccurs="1" minOccurs="0" type="xs:boolean" name="Visible"/>
                                 <xs:element maxOccurs="unbounded" minOccurs="0" type="xs:string" name="Label"/>
@@ -34,8 +32,7 @@
                                             <xs:element name="Relation" maxOccurs="unbounded" minOccurs="0">
                                                 <xs:complexType>
                                                     <xs:sequence>
-                                                        <xs:element name="Identifier" type="cmd:complextype-UniqueIdentifier" minOccurs="1"
-                              maxOccurs="1"/>
+                                                        <xs:element name="Identifier" type="cmd:complextype-UniqueIdentifier" minOccurs="1" maxOccurs="1"/>
                                                     </xs:sequence>
                                                     <xs:attribute name="Line" type="xs:string" use="required"/>
                                                     <xs:attribute name="Type" type="xs:string" use="required"/>
@@ -111,5 +108,5 @@
             </xs:simpleContent>
         </xs:complexType>
     </xsl:template>
-
+    
 </xsl:stylesheet>
