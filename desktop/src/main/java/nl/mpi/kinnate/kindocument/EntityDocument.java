@@ -132,7 +132,7 @@ public class EntityDocument {
             metadataDom = ArbilComponentBuilder.getDocument(entityFile.toURI());
             kinnateNode = metadataDom.getDocumentElement();
             // final NodeList metadataNodeList = ((Element) kinnateNode).getElementsByTagNameNS("http://mpi.nl/tla/kin", "Metadata");
-            final NodeList metadataNodeList = ((Element) kinnateNode).getElementsByTagName("Data");
+            final NodeList metadataNodeList = ((Element) kinnateNode).getElementsByTagName("CustomData");
             if (metadataNodeList.getLength() < 1) {
                 throw new ImportException("Data node not found");
             }
@@ -202,7 +202,7 @@ public class EntityDocument {
                 System.out.println("templateXml: " + templateXml);
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                 metadataDom = documentBuilder.parse(new InputSource(new StringReader(templateXml)));
-                metadataNode = metadataDom.createElementNS("http://www.clarin.eu/cmd/", "Data");
+                metadataNode = metadataDom.createElementNS("http://www.clarin.eu/cmd/", "CustomData");
                 currentDomNode = metadataNode;
                 kinnateNode = metadataDom.getDocumentElement();
             } catch (DOMException exception) {
