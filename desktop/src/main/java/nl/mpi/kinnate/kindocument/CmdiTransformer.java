@@ -14,7 +14,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-//import net.sf.saxon.event.SaxonOutputKeys;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
