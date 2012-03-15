@@ -71,7 +71,7 @@ public class TableCellDragHandler extends TransferHandler implements Transferabl
     }
 
     private String convertToKinTypeStringQuery(String fieldName, String fieldValue) {
-        fieldName = fieldName.replace(".Kinnate.Data.", "");
+        fieldName = fieldName.replace(".Kinnate.CustomData.", "");
         String queryString = "[" + fieldName + "=" + fieldValue + "]";
         return queryString;
     }
