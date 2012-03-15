@@ -17,13 +17,13 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
 
     public enum DocumentType {
 
-        Simple("Standard Diagram"),
+        Simple("Standard Diagram (database driven)"), // todo: should this be database diagram, data driven
         Freeform("Freeform Diagram"),
         KinTerms("Kin Terms Diagram"),
         Query("Query Diagram"),
         EntitySearch("Entity Search"),
         ArchiveLinker("Archive Data Linker"),
-        CustomQuery("Custom Metadata");
+        CustomQuery("Custom Data Formats");
         private String displayName;
 
         private DocumentType(String displayName) {
