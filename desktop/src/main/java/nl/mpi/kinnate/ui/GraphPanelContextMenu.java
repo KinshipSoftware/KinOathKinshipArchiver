@@ -230,7 +230,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         this.add(searchEntityServiceMenuItem);
 
         saveFileMenuItem = new JMenuItem();
-        saveFileMenuItem.setText("Save All Metadata Changes");
+        saveFileMenuItem.setText("Save All Data Changes");
         saveFileMenuItem.setEnabled(false);
         saveFileMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
