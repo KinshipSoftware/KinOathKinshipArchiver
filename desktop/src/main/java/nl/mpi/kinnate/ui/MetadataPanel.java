@@ -132,7 +132,7 @@ public class MetadataPanel extends JPanel {
             removeTab(this);
         }
         if (kinTableModel.getArbilDataNodeCount() > 0) {
-            editorHidePane.addTab("Kinship Metadata", kinTableScrollPane);
+            editorHidePane.addTab("Kinship Data", kinTableScrollPane);
             editorHidePane.setSelectedComponent(kinTableScrollPane);
         } else {
             removeTab(kinTableScrollPane);
