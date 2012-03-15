@@ -132,9 +132,9 @@ public class EntityDocument {
             metadataDom = ArbilComponentBuilder.getDocument(entityFile.toURI());
             kinnateNode = metadataDom.getDocumentElement();
             // final NodeList metadataNodeList = ((Element) kinnateNode).getElementsByTagNameNS("http://mpi.nl/tla/kin", "Metadata");
-            final NodeList metadataNodeList = ((Element) kinnateNode).getElementsByTagName("Metadata");
+            final NodeList metadataNodeList = ((Element) kinnateNode).getElementsByTagName("Data");
             if (metadataNodeList.getLength() < 1) {
-                throw new ImportException("Metadata node not found");
+                throw new ImportException("Data node not found");
             }
             metadataNode = (Element) metadataNodeList.item(0);
             // remove any old entity data which will be replaced on save with the existingEntity data provided
@@ -202,7 +202,7 @@ public class EntityDocument {
                 System.out.println("templateXml: " + templateXml);
                 DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                 metadataDom = documentBuilder.parse(new InputSource(new StringReader(templateXml)));
-                metadataNode = metadataDom.createElementNS("http://www.clarin.eu/cmd/", "Metadata");
+                metadataNode = metadataDom.createElementNS("http://www.clarin.eu/cmd/", "Data");
                 currentDomNode = metadataNode;
                 kinnateNode = metadataDom.getDocumentElement();
             } catch (DOMException exception) {
