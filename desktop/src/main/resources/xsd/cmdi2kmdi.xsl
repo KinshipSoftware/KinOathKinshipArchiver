@@ -5,7 +5,7 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <xsl:strip-space elements="*"/>
-    <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" saxon:indent-spaces="1" xmlns:saxon="http://saxon.sf.net/"/>
+    <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
 
     <xsl:template match="@*|node()">
     <!-- by default copy all nodes and attributes -->
@@ -45,7 +45,7 @@
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
-                    <xs:element name="Data">
+                    <xs:element name="CustomData">
                         <!-- insert the components subelements -->
                         <xsl:for-each select="*/*/xs:element[@name='Components']/*/*/*">
                             <xsl:apply-templates select="node()" />
