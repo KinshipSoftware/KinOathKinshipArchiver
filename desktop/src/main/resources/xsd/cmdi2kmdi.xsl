@@ -45,47 +45,19 @@
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
-                    <xs:element name="EntityData">
-          <!-- insert the components subelements -->
-                        <xsl:apply-templates select="node()" />
+                    <xs:element name="Data">
+                        <!-- insert the components subelements -->
+                        <xsl:for-each select="*/*/xs:element[@name='Components']/*/*/*">
+                            <xsl:apply-templates select="node()" />
+                        </xsl:for-each>
                     </xs:element>
                 </xs:sequence>
-
-        <!-- insert the kimdi version attribute -->
+                <!-- insert the kimdi version attribute -->
                 <xs:attribute name="KMDIVersion" fixed="1.1" use="required"/>
-        <!-- <xsl:apply-templates select="xs:attribute[@name='CMDVersion']"/> -->
-
+                <!-- <xsl:apply-templates select="xs:attribute[@name='CMDVersion']"/> -->
             </xs:complexType>
         </xs:element>
     </xsl:template>
-
-  <!-- begin remove elements preceding the component elements -->
-    <xsl:template match="xs:element[@name='CMD']/*">
-        <xsl:apply-templates select="node()" />
-    </xsl:template>
-
-    <xsl:template match="xs:element[@name='CMD']/*/*">
-        <xsl:apply-templates select="node()" />
-    </xsl:template>
-
-    <xsl:template match="xs:element[@name='CMD']/*/*/*"/>
-
-    <xsl:template match="xs:element[@name='CMD']/*/*/xs:element[@name='Components']">
-        <xsl:apply-templates select="node()" />
-    </xsl:template>
-
-    <xsl:template match="xs:element[@name='CMD']/*/*/xs:element[@name='Components']/*">
-        <xsl:apply-templates select="node()" />
-    </xsl:template>
-
-    <xsl:template match="xs:element[@name='CMD']/*/*/xs:element[@name='Components']/*/*">
-        <xsl:apply-templates select="node()" />
-    </xsl:template>
-
-    <xsl:template match="xs:element[@name='CMD']/*/*/xs:element[@name='Components']/*/*/*">
-        <xsl:apply-templates select="node()" />
-    </xsl:template>
-  <!-- end remove elements preceding the component elements -->
 
     <xsl:template match="xs:simpleType[@name='Resourcetype_simple']">
     <!-- remove the unused types and insert the unique identifier type -->
