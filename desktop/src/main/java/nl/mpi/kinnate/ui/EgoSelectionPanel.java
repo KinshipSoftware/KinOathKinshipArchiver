@@ -46,7 +46,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         transientNodePanel = new JPanel(new BorderLayout());
         transientNodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Transient Entities"));
 
-        JButton convertTransientButton = new JButton("Convert to Metadata Diagram");
+        JButton convertTransientButton = new JButton("Convert to Database Diagram");
         convertTransientButton.setActionCommand("convert");
         convertTransientButton.addActionListener(this);
         convertTransientButton.setEnabled(false);
