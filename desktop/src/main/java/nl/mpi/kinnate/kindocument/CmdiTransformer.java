@@ -31,6 +31,7 @@ public class CmdiTransformer {
     private URL component2SchemaXsl = this.getClass().getResource("/xsd/comp2schema.xsl"); // "http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema.xsl";
     private URL component2SchemaXslHeader = this.getClass().getResource("/xsd/comp2schema-header.xsl");
     private URL component2SchemaXslCleanup = this.getClass().getResource("/xsd/cleanup-xsd.xsl");
+    private URL cmdi2kmdiXsl = this.getClass().getResource("/xsd/cmdi2kmdi.xsl");
     private SessionStorage sessionStorage;
 
     public CmdiTransformer(SessionStorage sessionStorage) {
@@ -67,7 +68,12 @@ public class CmdiTransformer {
         File xlsFile = sessionStorage.updateCache(component2SchemaXsl.toExternalForm(), 1, false);
         System.out.println(sessionStorage.updateCache(component2SchemaXslHeader.toExternalForm(), 1, false));
         System.out.println(sessionStorage.updateCache(component2SchemaXslCleanup.toExternalForm(), 1, false));
-        generateXsd(xlsFile, cmdiProfileXmlUrl, outputFile);
+        File intermediateFile = new File(outputFile.getParentFile(), profileId + "-cmdi.xsd");
+        System.out.println(intermediateFile);
+        System.out.println(outputFile);
+        generateXsd(xlsFile, cmdiProfileXmlUrl, intermediateFile);
+        File cmdi2kmdiFile = sessionStorage.updateCache(cmdi2kmdiXsl.toExternalForm(), 1, false);
+        generateXsd(cmdi2kmdiFile, intermediateFile.toURI().toString(), outputFile);
         return outputFile;
     }
 
