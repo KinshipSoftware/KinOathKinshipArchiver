@@ -12,13 +12,15 @@ public class EntityDate {
 
     @XmlValue
     private String fullDateString;
+    @XmlTransient
+    boolean dateIsValid = false;
 
     public EntityDate() {
     }
 
     public EntityDate(String fullDateString) {
-        // todo: validate this date format
         this.fullDateString = fullDateString;
+        checkDateString();
     }
 
     public EntityDate(String yearString, String monthString, String dayString, String qualifierString) throws EntityDateException {
@@ -47,16 +49,19 @@ public class EntityDate {
             }
             this.fullDateString = this.fullDateString + " " + qualifierString;
         }
+        checkDateString();
+    }
+
+    private void checkDateString() {
+        dateIsValid = fullDateString.matches("([0-9]{4}(/[0-9]{2}){0,2}(\\sabt|\\sbef|\\saft){0,1}(-[0-9]{4}(/[0-9]{2}){0,2})?(\\sabt|\\sbef|\\saft){0,1}$){0,1}");
     }
 
     @XmlTransient
     public String getDateString() {
-        // todo: validate this date format
         return fullDateString;
     }
 
     public boolean dateIsValid() {
-        // todo: validate the date string
-        return false;
+        return dateIsValid;
     }
 }
