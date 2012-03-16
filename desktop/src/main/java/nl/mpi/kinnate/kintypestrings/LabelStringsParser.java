@@ -54,9 +54,9 @@ public class LabelStringsParser {
 //                        dateOfBirth = formatter.parse(dateStringArray[0]);
                     dateOfBirth = new EntityDate(dateStringArray[0]);
                     if (dateStringArray.length > 1) {
-                        while (dateStringArray[1].length() < "yyyy/MM/dd".length()) {
-                            dateStringArray[1] = dateStringArray[1] + "/01";
-                        }
+//                        while (dateStringArray[1].length() < "yyyy/MM/dd".length()) {
+//                            dateStringArray[1] = dateStringArray[1] + "/01";
+//                        }
 //                            dateOfDeath = formatter.parse(dateStringArray[1]);
                         dateOfDeath = new EntityDate(dateStringArray[1]);
                     }
