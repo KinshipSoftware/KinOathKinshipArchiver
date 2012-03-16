@@ -531,7 +531,7 @@ public class EntitySvg {
 //        counterTest++;
         String[] symbolNames = currentNode.getSymbolNames();
         if (symbolNames == null || symbolNames.length == 0) {
-            symbolNames = new String[]{"error"}; //.. todo: do we really need to be putting this error symbol on the diagram?
+            symbolNames = new String[]{"error"}; // todo:. do we really need to be putting this error symbol on the diagram?
         }
         // todo: check that if an entity is already placed in which case do not recreate
         // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
@@ -637,24 +637,31 @@ public class EntitySvg {
             textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable.getLabelString(), currentTextLable.getColourString(), textSpanCounter);
         }
         if (graphPanel.dataStoreSvg.showDateLabels) {
-            try {
-                // add the date of birth/death string
-                String dateString = "";
-                EntityDate dob = currentNode.getDateOfBirth();
-                EntityDate dod = currentNode.getDateOfDeath();
-                if (dob != null) {
-                    // todo: the date format should probably be user defined rather than assuming that the system prefs are correct
-                    dateString += dob.getDateString();
+//            try {
+            String dateColur = "blue"; // todo: allow this colour to be set by the user
+            // add the date of birth/death string
+            String dateString = "";
+            EntityDate dob = currentNode.getDateOfBirth();
+            EntityDate dod = currentNode.getDateOfDeath();
+            if (dob != null && !dob.getDateString().isEmpty()) {
+                // todo: the date format should probably be user defined rather than assuming that the system prefs are correct
+                dateString += dob.getDateString();
+                if (!dob.dateIsValid()) {
+                    dateColur = "red";
                 }
-                if (dod != null) {
-                    dateString += " - " + dod.getDateString();
-                }
-                if (dateString.length() > 0) {
-                    textSpanCounter = addTextLabel(graphPanel, groupNode, dateString, "black", textSpanCounter);
-                }
-            } catch (EntityDateException dateException) {
-                textSpanCounter = addTextLabel(graphPanel, groupNode, dateException.getMessage(), "red", textSpanCounter);
             }
+            if (dod != null && !dod.getDateString().isEmpty()) {
+                dateString += " - " + dod.getDateString();
+                if (!dod.dateIsValid()) {
+                    dateColur = "red";
+                }
+            }
+            if (dateString.length() > 0) {
+                textSpanCounter = addTextLabel(graphPanel, groupNode, dateString, dateColur, textSpanCounter);
+            }
+//            } catch (EntityDateException dateException) {
+//                textSpanCounter = addTextLabel(graphPanel, groupNode, dateException.getMessage(), "red", textSpanCounter);
+//            }
             // end date of birth/death label
         }
         int linkCounter = 0;
