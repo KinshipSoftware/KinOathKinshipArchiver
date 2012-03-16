@@ -1,11 +1,9 @@
 package nl.mpi.kinnate.kintypestrings;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityData.SymbolType;
+import nl.mpi.kinnate.kindata.EntityDate;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -24,8 +22,8 @@ public class LabelStringsParser {
     public int uidEndLocation = -1;
     public String uidString = null;
     public String labelsStrings[] = new String[]{};
-    public Date dateOfBirth = null; // todo: read in the dates and if found set the in the entities
-    public Date dateOfDeath = null; // todo: read in the dates and if found set the in the entities
+    public EntityDate dateOfBirth = null; // todo: read in the dates and if found set the in the entities
+    public EntityDate dateOfDeath = null; // todo: read in the dates and if found set the in the entities
     protected String remainingInputString;
 
     protected LabelStringsParser(String inputString, String currentKinTypeString) {
@@ -42,29 +40,37 @@ public class LabelStringsParser {
                 // allow date of birth followed by date of death eg "yyyy/mm/dd-yyyy/mm/dd" or "yyyy-yyyy" etc.
                 // todo: it would be good to detect and show errors for more potential date format errors, currently they are just read as labels with no warning
                 String remainingString = inputStringParts[1].replaceFirst(";[0-9]{4}(/[0-9]{2}){0,2}(-[0-9]{4}(/[0-9]{2}){0,2})?$", "");//(-[0-9]{4}(/[0-9]{2}){0,2}){1,2})?{1,2}
-                if (remainingString.length() != inputStringParts[1].length()) {
+                if (remainingString.length() != inputStringParts[1].length()) { // ( abt| bef| aft){0,1}
                     String dateString = inputStringParts[1].substring(remainingString.length());
                     dateString = dateString.replaceFirst("^;", "");
                     dateLocation = dateString.length() + remainingInputString.length() + 1;
                     dateEndLocation = remainingInputString.length() + 1;
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+//                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
                     String[] dateStringArray = dateString.split("-");
-                    try {
-                        while (dateStringArray[0].length() < "yyyy/MM/dd".length()) {
-                            dateStringArray[0] = dateStringArray[0] + "/01";
+//                    try {
+//                        while (dateStringArray[0].length() < "yyyy/MM/dd".length()) {
+//                            dateStringArray[0] = dateStringArray[0] + "/01";
+//                        }
+//                        dateOfBirth = formatter.parse(dateStringArray[0]);
+                    dateOfBirth = new EntityDate(dateStringArray[0]);
+                    if (dateStringArray.length > 1) {
+                        while (dateStringArray[1].length() < "yyyy/MM/dd".length()) {
+                            dateStringArray[1] = dateStringArray[1] + "/01";
                         }
-                        dateOfBirth = formatter.parse(dateStringArray[0]);
-                        if (dateStringArray.length > 1) {
-                            while (dateStringArray[1].length() < "yyyy/MM/dd".length()) {
-                                dateStringArray[1] = dateStringArray[1] + "/01";
-                            }
-                            dateOfDeath = formatter.parse(dateStringArray[1]);
-                        }
-                        inputStringParts[1] = remainingString;
-                    } catch (ParseException exception) {
-                        // not much to do here because we just ignore the date and leave the input as is
-                        // todo: highlight the text to indicate the error
-                        System.out.println(exception.getMessage());
+//                            dateOfDeath = formatter.parse(dateStringArray[1]);
+                        dateOfDeath = new EntityDate(dateStringArray[1]);
+                    }
+                    inputStringParts[1] = remainingString;
+//                    } catch (EntityDateException exception) {
+                    // not much to do here because we just ignore the date and leave the input as is
+                    // todo: highlight the text to indicate the error
+//                        System.out.println(exception.getMessage());
+//                        dateError = true;
+//                    }
+                    if (dateOfBirth != null && !dateOfBirth.dateIsValid()) {
+                        dateError = true;
+                    }
+                    if (dateOfDeath != null && !dateOfDeath.dateIsValid()) {
                         dateError = true;
                     }
                 }
