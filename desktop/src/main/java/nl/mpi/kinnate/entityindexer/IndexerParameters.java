@@ -17,11 +17,15 @@ public class IndexerParameters {
 //    public IndexerParam relevantEntityData = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/NoteText"}, {"Kinnate/Gedcom/Entity/SEX"}, {"Kinnate/Gedcom/Entity/GedcomType"}, {"Kinnate/Gedcom/Entity/NAME/NAME"}, {"Kinnate/Gedcom/Entity/NAME/NPFX"}}); // todo: the relevantData array comes from the user via the svg
     @XmlTransient
     public IndexerParam relevantLinkData = new IndexerParam(new String[][]{{"Type"}});
+    @XmlElement(name = "DateOfBirthFields", namespace = "http://mpi.nl/tla/kin")
+    public IndexerParam dateOfBirthField = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*:DateOfBirth"}});
+    @XmlElement(name = "DateOfDeathFields", namespace = "http://mpi.nl/tla/kin")
+    public IndexerParam dateOfDeathField = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*:DateOfDeath"}});
     @XmlElement(name = "LabelFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam labelFields = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"},
                 {"*:Kinnate/*:CustomData/*:INDI/*:NAME/*:NAME"},
-                {"*:Kinnate/*:CustomData/*:INDI/*:NAME"},
-                {"*:Kinnate/*:CustomData/*:Individual/*:Name"}
+                {"*:Kinnate/*:CustomData/*:INDI/*:NAME"}
+//                , {"*:Kinnate/*:CustomData/*:Name"}
 //    , {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"}
 //    , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"}
 //    , {"*:Kinnate/*:Gedcom/*:Entity/*:Text"}
@@ -31,12 +35,12 @@ public class IndexerParameters {
     @XmlElement(name = "SymbolFieldsFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam symbolFieldsFields = new IndexerParam(new String[][]{
                 //        {"*:Kinnate/*:Gedcom/*:Entity[*:sex='male']", "triangle"},
-                {"*:Kinnate/*:CustomData[*:Gender='male']", "triangle"} //        , {"*:Kinnate/*:Gedcom/*:Entity[*:sex='female']", "circle"}
-                , {"*:Kinnate/*:CustomData[*:Gender='female']", "circle"},
-                {"*:Kinnate/*:CustomData[*:Gender='']", "square"},
-                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='']", "square"},
-                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Male']", "triangle"},
-                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Female']", "circle"}
+                {"*:Kinnate/*:CustomData[*:Gender='Male']", "triangle"} //        , {"*:Kinnate/*:Gedcom/*:Entity[*:sex='female']", "circle"}
+                , {"*:Kinnate/*:CustomData[*:Gender='Female']", "circle"},
+                {"*:Kinnate/*:CustomData[*:Gender='']", "square"}
+//                , {"*:Kinnate/*:CustomData/*:Individual[*:Gender='']", "square"},
+//                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Male']", "triangle"},
+//                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Female']", "circle"}
 //        , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']", "union"}
             });
 //    @XmlElement(name = "DefaultSymbol", namespace = "http://mpi.nl/tla/kin")
