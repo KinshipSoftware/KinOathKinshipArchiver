@@ -12,7 +12,6 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityDate;
-import nl.mpi.kinnate.kindata.EntityDateException;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.GraphLabel;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
@@ -90,8 +89,8 @@ public class EntitySvg {
         Element circleGroup = doc.createElementNS(svgNameSpace, "g");
         circleGroup.setAttribute("id", "circle");
         Element circleNode = doc.createElementNS(svgNameSpace, "circle");
-        circleNode.setAttribute("cx", Integer.toString(symbolSize / 2));
-        circleNode.setAttribute("cy", Integer.toString(symbolSize / 2));
+        circleNode.setAttribute("cx", Float.toString(symbolSize / 2 + strokeWidth / 4f));
+        circleNode.setAttribute("cy", Float.toString(symbolSize / 2 + strokeWidth / 4f));
         circleNode.setAttribute("r", Integer.toString((symbolSize - strokeWidth) / 2));
 //        circleNode.setAttribute("height", Integer.toString(symbolSize - (strokeWidth * 3)));
         circleNode.setAttribute("stroke", "black");
@@ -291,8 +290,8 @@ public class EntitySvg {
         defsNode.appendChild(noneGroup);
         svgRoot.appendChild(defsNode);
 
-        // add the marker symbols
-        for (String markerColour : new String[]{"red", "green", "blue"}) {// todo:. add a few more colours
+        for (String markerColour : new String[]{"black", "orange", "cyan", "purple", "red", "green", "blue"}) {// todo: add a few more colours
+            // add the marker symbols
             Element markerGroup = doc.createElementNS(svgNameSpace, "g");
             markerGroup.setAttribute("id", markerColour + "marker");
             Element markerNode = doc.createElementNS(svgNameSpace, "circle");
@@ -304,6 +303,17 @@ public class EntitySvg {
             markerNode.setAttribute("fill", markerColour);
             markerGroup.appendChild(markerNode);
             defsNode.appendChild(markerGroup);
+
+            // add the strike through symbol
+            Element lineGroup = doc.createElementNS(svgNameSpace, "g");
+            lineGroup.setAttribute("id", markerColour + "strikethrough");
+            Element lineNode = doc.createElementNS(svgNameSpace, "polyline");
+            lineNode.setAttribute("points", "0," + (symbolSize) + " " + (symbolSize) + ",0");
+            lineNode.setAttribute("fill", "none");
+            lineNode.setAttribute("stroke", markerColour);
+            lineNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            lineGroup.appendChild(lineNode);
+            defsNode.appendChild(lineGroup);
         }
         return symbolSize;
     }
