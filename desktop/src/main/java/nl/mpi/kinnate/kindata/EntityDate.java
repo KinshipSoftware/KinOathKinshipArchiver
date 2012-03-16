@@ -13,14 +13,13 @@ public class EntityDate {
     @XmlValue
     private String fullDateString;
     @XmlTransient
-    boolean dateIsValid = false;
+    Boolean dateIsValid = null;
 
     public EntityDate() {
     }
 
     public EntityDate(String fullDateString) {
         this.fullDateString = fullDateString;
-        checkDateString();
     }
 
     public EntityDate(String yearString, String monthString, String dayString, String qualifierString) throws EntityDateException {
@@ -49,7 +48,6 @@ public class EntityDate {
             }
             this.fullDateString = this.fullDateString + " " + qualifierString;
         }
-        checkDateString();
     }
 
     private void checkDateString() {
@@ -62,6 +60,9 @@ public class EntityDate {
     }
 
     public boolean dateIsValid() {
+        if (dateIsValid == null) {
+            checkDateString();
+        }
         return dateIsValid;
     }
 }
