@@ -2,10 +2,8 @@ package nl.mpi.kinnate.svg;
 
 import java.awt.geom.AffineTransform;
 import java.net.URI;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -13,6 +11,8 @@ import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityDate;
+import nl.mpi.kinnate.kindata.EntityDateException;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.GraphLabel;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
@@ -292,7 +292,7 @@ public class EntitySvg {
         svgRoot.appendChild(defsNode);
 
         // add the marker symbols
-        for (String markerColour : new String[]{"red", "green", "blue"}) {
+        for (String markerColour : new String[]{"red", "green", "blue"}) {// todo:. add a few more colours
             Element markerGroup = doc.createElementNS(svgNameSpace, "g");
             markerGroup.setAttribute("id", markerColour + "marker");
             Element markerNode = doc.createElementNS(svgNameSpace, "circle");
@@ -531,7 +531,7 @@ public class EntitySvg {
 //        counterTest++;
         String[] symbolNames = currentNode.getSymbolNames();
         if (symbolNames == null || symbolNames.length == 0) {
-            symbolNames = new String[]{"error"};
+            symbolNames = new String[]{"error"}; //.. todo: do we really need to be putting this error symbol on the diagram?
         }
         // todo: check that if an entity is already placed in which case do not recreate
         // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
@@ -637,19 +637,23 @@ public class EntitySvg {
             textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable.getLabelString(), currentTextLable.getColourString(), textSpanCounter);
         }
         if (graphPanel.dataStoreSvg.showDateLabels) {
-            // add the date of birth/death string
-            String dateString = "";
-            Date dob = currentNode.getDateOfBirth();
-            Date dod = currentNode.getDateOfDeath();
-            if (dob != null) {
-                // todo: the date format should probably be user defined rather than assuming that the system prefs are correct
-                dateString += DateFormat.getDateInstance().format(dob);
-            }
-            if (dod != null) {
-                dateString += " - " + DateFormat.getDateInstance().format(dod);
-            }
-            if (dateString.length() > 0) {
-                textSpanCounter = addTextLabel(graphPanel, groupNode, dateString, "black", textSpanCounter);
+            try {
+                // add the date of birth/death string
+                String dateString = "";
+                EntityDate dob = currentNode.getDateOfBirth();
+                EntityDate dod = currentNode.getDateOfDeath();
+                if (dob != null) {
+                    // todo: the date format should probably be user defined rather than assuming that the system prefs are correct
+                    dateString += dob.getDateString();
+                }
+                if (dod != null) {
+                    dateString += " - " + dod.getDateString();
+                }
+                if (dateString.length() > 0) {
+                    textSpanCounter = addTextLabel(graphPanel, groupNode, dateString, "black", textSpanCounter);
+                }
+            } catch (EntityDateException dateException) {
+                textSpanCounter = addTextLabel(graphPanel, groupNode, dateException.getMessage(), "red", textSpanCounter);
             }
             // end date of birth/death label
         }
