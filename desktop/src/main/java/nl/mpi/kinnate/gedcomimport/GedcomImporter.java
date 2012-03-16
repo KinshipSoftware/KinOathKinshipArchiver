@@ -9,6 +9,7 @@ import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
@@ -16,6 +17,8 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityDate;
+import nl.mpi.kinnate.kindata.EntityDateException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -295,33 +298,50 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 if (gedcomLevelStrings.get(2).equals("DATE")) {
                                     if (gedcomLevelStrings.get(1).equals("BIRT") || gedcomLevelStrings.get(1).equals("DEAT")) {
                                         String dateText = lineParts[2].trim();
+                                        String qualifierString = null;
+                                        String yearString = null;
+                                        String monthString = null;
+                                        String dayString = null;
                                         for (String prefixString : new String[]{"ABT", "BEF", "AFT"}) {
                                             if (dateText.startsWith(prefixString)) {
-                                                appendToTaskOutput("Unsupported Date Type: " + dateText);
+                                                qualifierString = prefixString.toLowerCase();
+//                                                appendToTaskOutput("Unsupported Date Type: " + dateText);
                                                 dateText = dateText.substring(prefixString.length()).trim();
                                             }
                                         }
                                         SimpleDateFormat formatter;
-                                        if (dateText.matches("[0-9]{1,4}")) {
-                                            while (dateText.length() < 4) {
-                                                // make sure that 812 has four digits like 0812
-                                                dateText = "0" + dateText;
-                                            }
-                                            formatter = new SimpleDateFormat("yyyy");
-                                        } else if (dateText.matches("[a-zA-Z]{3} [0-9]{4}")) {
-                                            formatter = new SimpleDateFormat("MMM yyyy");
-                                        } else {
-                                            formatter = new SimpleDateFormat("dd MMM yyyy");
-                                        }
                                         try {
-                                            if (gedcomLevelStrings.get(1).equals("BIRT")) {
-                                                currentEntity.entityData.setDateOfBirth(formatter.parse(dateText));
+                                            if (dateText.matches("[0-9]{1,4}")) {
+                                                while (dateText.length() < 4) {
+                                                    // make sure that 812 has four digits like 0812
+                                                    dateText = "0" + dateText;
+                                                }
+                                                yearString = dateText;
+//                                            formatter = new SimpleDateFormat("yyyy");
+                                            } else if (dateText.matches("[a-zA-Z]{3} [0-9]{4}")) {
+                                                formatter = new SimpleDateFormat("MMM yyyy");
+                                                Date parsedDate = formatter.parse(dateText);
+                                                monthString = new SimpleDateFormat("MM").format(parsedDate);
+                                                yearString = new SimpleDateFormat("yyyy").format(parsedDate);
                                             } else {
-                                                currentEntity.entityData.setDateOfDeath(formatter.parse(dateText));
+                                                formatter = new SimpleDateFormat("dd MMM yyyy");
+                                                Date parsedDate = formatter.parse(dateText);
+                                                dayString = new SimpleDateFormat("dd").format(parsedDate);
+                                                monthString = new SimpleDateFormat("MM").format(parsedDate);
+                                                yearString = new SimpleDateFormat("yyyy").format(parsedDate);
+                                            }
+                                            EntityDate entityDate = new EntityDate(yearString, monthString, dayString, qualifierString);
+                                            if (gedcomLevelStrings.get(1).equals("BIRT")) {
+                                                currentEntity.insertValue("DateOfBirth", entityDate.getDateString());
+                                            } else {
+                                                currentEntity.insertValue("DateOfDeath", entityDate.getDateString());
                                             }
                                         } catch (ParseException exception) {
                                             System.out.println(exception.getMessage());
-                                            appendToTaskOutput("Failed to parse date of birth: " + strLine);
+                                            appendToTaskOutput("Failed to parse date: " + strLine);
+                                        } catch (EntityDateException exception) {
+                                            System.out.println(exception.getMessage());
+                                            appendToTaskOutput("Failed to parse date: " + strLine + " " + exception.getMessage());
                                         }
                                     }
                                 }
@@ -330,9 +350,9 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 if (gedcomLevelStrings.get(1).equals("SEX")) {
                                     String genderString = lineParts[2];
                                     if ("F".equals(genderString)) {
-                                        genderString = "female";
+                                        genderString = "Female";
                                     } else if ("M".equals(genderString)) {
-                                        genderString = "male";
+                                        genderString = "Male";
                                     } else {
                                         appendToTaskOutput("Unknown gender type: " + genderString);
                                     }
