@@ -61,11 +61,11 @@ public class DateEditorPanel extends JPanel {
         KinTreeNode kinTreeNode = new KinTreeNode(entityData, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
         rowPanel.add(new JLabel(kinTreeNode.toString(), kinTreeNode.getIcon(), JLabel.LEFT));
         SpinnerModel startDateModel;
-        if (entityData.getDateOfBirth() != null) {
-            startDateModel = new SpinnerDateModel(entityData.getDateOfBirth(), null, entityData.getDateOfDeath(), Calendar.YEAR);
-        } else {
+//        if (entityData.getDateOfBirth() != null) {
+//            startDateModel = new SpinnerDateModel(entityData.getDateOfBirth(), null, entityData.getDateOfDeath(), Calendar.YEAR);
+//        } else {
             startDateModel = new SpinnerDateModel();
-        }
+//        }
         JSpinner startSpinner = new JSpinner(startDateModel);
         startSpinner.setEditor(new JSpinner.DateEditor(startSpinner, "yyyy/MM/dd"));
         rowPanel.add(startSpinner);
