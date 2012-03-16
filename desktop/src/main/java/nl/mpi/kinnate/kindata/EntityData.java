@@ -37,9 +37,9 @@ public class EntityData {
     @XmlElement(name = "Symbol", namespace = "http://mpi.nl/tla/kin")
     private String[] symbolNames = new String[]{};
     @XmlElement(name = "DateOfBirth", namespace = "http://mpi.nl/tla/kin")
-    private Date dateOfBirth; // todo: use this in the graph sort and offer to show on the graph
+    private EntityDate dateOfBirth = null; // todo: use this in the graph sort
     @XmlElement(name = "DateOfDeath", namespace = "http://mpi.nl/tla/kin")
-    private Date dateOfDeath; // todo: use this in the graph to draw a line through or similar
+    private EntityDate dateOfDeath = null;
     @XmlElement(name = "Ego", namespace = "http://mpi.nl/tla/kin") // required for populating the tree when first loading a saved svg
     public boolean isEgo = false;
     @XmlElement(name = "Visible", namespace = "http://mpi.nl/tla/kin") // required for populating the tree when first loading a saved svg
@@ -116,14 +116,13 @@ public class EntityData {
         isEgo = false;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public void setDateOfDeath(Date dateOfDeath) {
-        this.dateOfDeath = dateOfDeath;
-    }
-
+//    public void setDateOfBirth(String dateOfBirth) throws EntityDateException {
+//        this.dateOfBirth = new EntityDate(dateOfBirth);
+//    }
+//
+//    public void setDateOfDeath(String dateOfDeath) throws EntityDateException {
+//        this.dateOfDeath = new EntityDate(dateOfDeath);
+//    }
     // end code used for importing gedcom and other file types
     public void addArchiveLink(URI resourceUri) {
         ArrayList<URI> linksList;
@@ -150,12 +149,12 @@ public class EntityData {
     }
 
     @XmlTransient
-    public Date getDateOfBirth() {
+    public EntityDate getDateOfBirth() {
         return dateOfBirth;
     }
 
     @XmlTransient
-    public Date getDateOfDeath() {
+    public EntityDate getDateOfDeath() {
         return dateOfDeath;
     }
 
