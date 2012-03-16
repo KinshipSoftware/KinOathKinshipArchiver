@@ -17,7 +17,7 @@ public class IndexerParameters {
 //    public IndexerParam relevantEntityData = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/NoteText"}, {"Kinnate/Gedcom/Entity/SEX"}, {"Kinnate/Gedcom/Entity/GedcomType"}, {"Kinnate/Gedcom/Entity/NAME/NAME"}, {"Kinnate/Gedcom/Entity/NAME/NPFX"}}); // todo: the relevantData array comes from the user via the svg
     @XmlTransient
     public IndexerParam relevantLinkData = new IndexerParam(new String[][]{{"Type"}});
-    @XmlElement(name = "DateOfBirthFields", namespace = "http://mpi.nl/tla/kin")
+    @XmlElement(name = "DateOfBirthFields", namespace = "http://mpi.nl/tla/kin") // todo:. allow the user to edit the date of birth and date of death fields
     public IndexerParam dateOfBirthField = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*:DateOfBirth"}});
     @XmlElement(name = "DateOfDeathFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam dateOfDeathField = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*:DateOfDeath"}});
@@ -37,11 +37,12 @@ public class IndexerParameters {
                 //        {"*:Kinnate/*:Gedcom/*:Entity[*:sex='male']", "triangle"},
                 {"*:Kinnate/*:CustomData[*:Gender='Male']", "triangle"} //        , {"*:Kinnate/*:Gedcom/*:Entity[*:sex='female']", "circle"}
                 , {"*:Kinnate/*:CustomData[*:Gender='Female']", "circle"},
-                {"*:Kinnate/*:CustomData[*:Gender='']", "square"}
-//                , {"*:Kinnate/*:CustomData/*:Individual[*:Gender='']", "square"},
-//                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Male']", "triangle"},
-//                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Female']", "circle"}
-//        , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']", "union"}
+                {"*:Kinnate/*:CustomData[*:Gender='']", "square"},
+                {"*:Kinnate/*:CustomData[*:DateOfDeath!='']", "blackstrikethrough"} // the use of != is correct because if there is any node value in the DateOfBirth node or nodes then the symbol should be used
+            //                , {"*:Kinnate/*:CustomData/*:Individual[*:Gender='']", "square"},
+            //                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Male']", "triangle"},
+            //                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Female']", "circle"}
+            //        , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']", "union"}
             });
 //    @XmlElement(name = "DefaultSymbol", namespace = "http://mpi.nl/tla/kin")
 //    public String defaultSymbol = "square";
