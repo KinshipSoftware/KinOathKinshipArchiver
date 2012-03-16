@@ -37,7 +37,7 @@ public class EntityDate {
         }
         if (qualifierString != null) {
             boolean foundValidQualifier = false;
-            for (String prefixString : new String[]{"ABT", "BEF", "AFT"}) {
+            for (String prefixString : new String[]{"abt", "bef", "aft"}) {
                 if (qualifierString.startsWith(prefixString)) {
                     foundValidQualifier = true;
                 }
