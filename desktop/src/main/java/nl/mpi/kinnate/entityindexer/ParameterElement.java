@@ -1,7 +1,6 @@
 package nl.mpi.kinnate.entityindexer;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 
 /**
  *  Document   : ParameterElement
