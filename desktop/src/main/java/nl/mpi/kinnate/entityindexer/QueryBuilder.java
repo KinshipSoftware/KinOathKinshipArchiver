@@ -58,6 +58,25 @@ public class QueryBuilder {
         return stringBuilder.toString();
     }
 
+    public String getDatesClause(IndexerParameters indexParameters, String docRootVar) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (ParameterElement currentEntry : indexParameters.dateOfBirthField.getValues()) {
+//            String trimmedXpath = currentEntry.getXpathString(); //.substring("*:Kinnate/*:Entity".length()); // todo: remove this and update the indexParameters entries
+            stringBuilder.append("for $dateOfBirthNode in ");
+            stringBuilder.append(docRootVar);
+            stringBuilder.append(currentEntry.getXpathString());
+            stringBuilder.append("\nreturn\ninsert node <kin:DateOfBirth xmlns:kin=\"http://mpi.nl/tla/kin\">{$dateOfBirthNode/text()}</kin:DateOfBirth> after $copyNode/*:Identifier,\n"); // into $copyNode
+        }
+        for (ParameterElement currentEntry : indexParameters.dateOfDeathField.getValues()) {
+//            String trimmedXpath = currentEntry.getXpathString(); //.substring("*:Kinnate/*:Entity".length()); // todo: remove this and update the indexParameters entries
+            stringBuilder.append("for $dateOfDeathNode in ");
+            stringBuilder.append(docRootVar);
+            stringBuilder.append(currentEntry.getXpathString());
+            stringBuilder.append("\nreturn\ninsert node <kin:DateOfDeath xmlns:kin=\"http://mpi.nl/tla/kin\">{$dateOfDeathNode/text()}</kin:DateOfDeath> after $copyNode/*:Identifier,\n"); // into $copyNode
+        }
+        return stringBuilder.toString();
+    }
+
     public String getSymbolClause(IndexerParameters indexParameters, String docRootVar) {
         StringBuilder stringBuilder = new StringBuilder();
         for (ParameterElement currentEntry : indexParameters.symbolFieldsFields.getValues()) {
@@ -134,6 +153,7 @@ public class QueryBuilder {
                 + "modify (\n"
                 // loop the label fields and add a node for any that exist
                 + this.getLabelsClause(indexParameters, "root($entityNode)/")
+                + this.getDatesClause(indexParameters, "root($entityNode)/")
                 + this.getSymbolClause(indexParameters, "root($entityNode)/")
                 + "insert nodes <kin:Path xmlns:kin=\"http://mpi.nl/tla/kin\">{base-uri($entityNode)}</kin:Path> after $copyNode/*:Identifier\n" // when using a basex version younger than 6.62 the "after" fails re attributes: after $copyNode/*:Identifier" maybe copy is failing to keep the namespace, for earlier version the following can be used "into $copyNode"
                 // todo: test if "insert after" take longer than "insert into"
