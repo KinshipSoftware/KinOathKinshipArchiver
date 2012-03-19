@@ -56,7 +56,10 @@ public class EntityDocument {
         try {
             // construct the metadata file
             System.out.println("constructing the metadata file");
+            long start1Time = System.currentTimeMillis();
             URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString(entityType);
+            long query1Mils = System.currentTimeMillis() - start1Time;
+            System.out.println("Constructing the metadata file took: " + query1Mils + "ms");
             System.out.println("Creating the component file");
             long startTime = System.currentTimeMillis();
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
