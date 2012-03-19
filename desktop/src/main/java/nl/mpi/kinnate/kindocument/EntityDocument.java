@@ -55,8 +55,14 @@ public class EntityDocument {
         assignIdentiferAndFile();
         try {
             // construct the metadata file
+            System.out.println("constructing the metadata file");
             URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString(entityType);
+            System.out.println("Creating the component file");
+            long startTime = System.currentTimeMillis();
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
+            long queryMils = System.currentTimeMillis() - startTime;
+            String queryTimeString = "ArbilComponentBuilder().createComponentFile took: " + queryMils + "ms for " + addedNodeUri.toString();
+            System.out.println(queryTimeString);
         } catch (KinXsdException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
