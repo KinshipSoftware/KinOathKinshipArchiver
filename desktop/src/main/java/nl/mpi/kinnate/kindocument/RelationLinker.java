@@ -94,10 +94,13 @@ public class RelationLinker extends DocumentLoader {
         ArrayList<EntityDocument> nonLeadEntityDocuments = new ArrayList<EntityDocument>();
         try {
             EntityDocument leadEntityDocument = getEntityDocuments(selectedIdentifiers, nonLeadEntityDocuments);
-            for (EntityDocument entityDocument : nonLeadEntityDocuments) {
-                // remove the relation
-                leadEntityDocument.entityData.removeRelationsWithNode(entityDocument.entityData);
-                entityDocument.entityData.removeRelationsWithNode(leadEntityDocument.entityData);
+            while (!nonLeadEntityDocuments.isEmpty()) {
+                for (EntityDocument entityDocument : nonLeadEntityDocuments) {
+                    // remove the relation
+                    leadEntityDocument.entityData.removeRelationsWithNode(entityDocument.entityData);
+                    entityDocument.entityData.removeRelationsWithNode(leadEntityDocument.entityData);
+                }
+                leadEntityDocument = nonLeadEntityDocuments.remove(0);
             }
             saveAllDocuments();
         } catch (URISyntaxException exception) {
