@@ -192,7 +192,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                 currentElement.queryTerms.add(new QueryTerm("*", QueryType.Contains, queryText));
                                 highlightMessage += "Any field containing '" + queryText + "'";
                             } else {
-                                if (queryTerm[0].length() > 2 && queryTerm[1].length() > 2) {
+                                if (queryTerm[0].length() > 0 && queryTerm[1].length() > 0) {
                                     // namespace wild cards *:* are inserted here so that the user does not need to specify the namespace
                                     currentElement.queryTerms.add(new QueryTerm("*:" + queryTerm[0].replaceAll("\\.", "/*:"), currentQueryType, queryTerm[1]));
                                     highlightMessage += "Only the field '" + queryTerm[0] + "' containing '" + queryTerm[1] + "'";
