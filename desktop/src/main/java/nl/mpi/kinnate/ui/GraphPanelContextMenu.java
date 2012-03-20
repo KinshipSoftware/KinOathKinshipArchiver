@@ -12,16 +12,16 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
-import nl.mpi.kinnate.kindocument.RelationLinker;
-import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.gedcomimport.ImportException;
-import nl.mpi.kinnate.kindocument.ImportTranslator;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
+import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.kindocument.EntityMerger;
+import nl.mpi.kinnate.kindocument.ImportTranslator;
+import nl.mpi.kinnate.kindocument.RelationLinker;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.SvgUpdateHandler;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : GraphPanelContextMenu
@@ -63,7 +63,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                         @Override
                         public void run() {
                             // node type will be used to determine the schema used from the diagram options
-                            kinDiagramPanel.showProgressBar();
+                            kinDiagramPanel.showProgressBar(); //... if the metadata fails this progress bar does not get hidden after the error is shown
                             String nodeType = evt.getActionCommand();
                             try {
                                 EntityDocument entityDocument = new EntityDocument(nodeType, new ImportTranslator(true), sessionStorage);
@@ -72,6 +72,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                                 entityCollection.updateDatabase(addedEntityUri);
                                 kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
                             } catch (ImportException exception) {
+                                // todo:... this should also clear the progress bar
                                 BugCatcherManager.getBugCatcher().logError(exception);
                                 arbilWindowManager.addMessageDialogToQueue("Failed to create entity: " + exception.getMessage(), "Add Entity");
                             }
@@ -133,14 +134,18 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             this.add(removeRelationEntityMenu);
 //            for (RelationType relationType : RelationType.values()) {
 //            relationType.name()
-            String actionString = "Remove Relations to Lead Selection";
+            String actionString = "Remove relations between selected";
             JMenuItem removeRelationEntityMenuItem = new JMenuItem(actionString);
             removeRelationEntityMenuItem.setActionCommand(actionString);
             removeRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).unlinkEntities(graphPanel, selectedIdentifiers);
-                    kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
+                    try {
+                        new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).unlinkEntities(graphPanel, selectedIdentifiers);
+                        kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
+                    } catch (ImportException exception) {
+                        arbilWindowManager.addMessageDialogToQueue("Failed to remove relations: " + exception.getMessage(), removeRelationEntityMenu.getText());
+                    }
                 }
             });
             removeRelationEntityMenu.add(removeRelationEntityMenuItem);
@@ -168,7 +173,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(setAsEgoMenuItem);
-        addAsEgoMenuItem = new JMenuItem("Add as Ego");
+        addAsEgoMenuItem = new JMenuItem("Add to ego list");
         addAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -176,7 +181,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(addAsEgoMenuItem);
-        removeEgoMenuItem = new JMenuItem("Remove Ego");
+        removeEgoMenuItem = new JMenuItem("Remove from ego list");
         removeEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -184,7 +189,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(removeEgoMenuItem);
-        addAsRequiredMenuItem = new JMenuItem("Set as required");
+        addAsRequiredMenuItem = new JMenuItem("Keep on diagram");
         addAsRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,7 +197,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(addAsRequiredMenuItem);
-        removeRequiredMenuItem = new JMenuItem("Remove requirement");
+        removeRequiredMenuItem = new JMenuItem("Release from diagram");
         removeRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
