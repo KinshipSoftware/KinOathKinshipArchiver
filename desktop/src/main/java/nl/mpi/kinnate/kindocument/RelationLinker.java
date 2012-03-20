@@ -8,8 +8,8 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Document;
 
 /**
@@ -90,38 +90,20 @@ public class RelationLinker extends DocumentLoader {
         return getAffectedIdentifiers();
     }
 
-    public void unlinkEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers) {
-//        HashMap<UniqueIdentifier, EntityData> selectedEntityMap = graphPanel.getEntitiesById(selectedIdentifiers);
-//        EntityData leadSelectionEntity = selectedEntityMap.get(selectedIdentifiers[0]);
-//        for (EntityData selectedEntity : selectedEntityMap.values()) {
-//            String targetPath = selectedEntity.getEntityPath();
-//            try {
-//                URI targetUri = new URI(targetPath);
-//                Document metadataDom = ArbilComponentBuilder.getDocument(targetUri);
-//                if (selectedEntity.equals(leadSelectionEntity)) {
-//                    // remove all relations in the list (the lead selection is also in this list but there would not be any links to itself anyway)
-//                    removeMatchingRelations(metadataDom, selectedIdentifiers);
-//                } else {
-//                    // only remove the lead selection from the other entities
-//                    removeMatchingRelations(metadataDom, new UniqueIdentifier[]{leadSelectionEntity.getUniqueIdentifier()});
-//                }
-//                // save the xml file
-//                ArbilComponentBuilder.savePrettyFormatting(metadataDom, new File(targetUri));
-//                // update the database
-//                saveAllDocuments();
-//            } catch (URISyntaxException exception) {
-//                // todo: inform the user if there is an error
-//                new ArbilBugCatcher().logError(exception);
-//            } catch (DOMException exception) {
-//                new ArbilBugCatcher().logError(exception);
-//            } catch (IOException exception) {
-//                new ArbilBugCatcher().logError(exception);
-//            } catch (ParserConfigurationException exception) {
-//                new ArbilBugCatcher().logError(exception);
-//            } catch (SAXException exception) {
-//                new ArbilBugCatcher().logError(exception);
-//            }
-//        }
-        throw new UnsupportedOperationException("todo...");
+    public UniqueIdentifier[] unlinkEntities(GraphPanel graphPanel, UniqueIdentifier[] selectedIdentifiers) throws ImportException {
+        ArrayList<EntityDocument> nonLeadEntityDocuments = new ArrayList<EntityDocument>();
+        try {
+            EntityDocument leadEntityDocument = getEntityDocuments(selectedIdentifiers, nonLeadEntityDocuments);
+            for (EntityDocument entityDocument : nonLeadEntityDocuments) {
+                // remove the relation
+                leadEntityDocument.entityData.removeRelationsWithNode(entityDocument.entityData);
+                entityDocument.entityData.removeRelationsWithNode(leadEntityDocument.entityData);
+            }
+            saveAllDocuments();
+        } catch (URISyntaxException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        }
+        return getAffectedIdentifiers();
     }
 }
