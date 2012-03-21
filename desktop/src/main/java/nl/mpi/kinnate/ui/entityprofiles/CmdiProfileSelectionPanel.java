@@ -55,11 +55,12 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
         statusLabel.setText(statusText);
         reloadButton.setEnabled(reloadEnable);
         profileReloadProgressBar.setVisible(!reloadEnable);
+        profileReloadProgressBar.setIndeterminate(true);
 //        this.doLayout(); // seems not to be required
     }
 
-    public void setCmdiProfileReader(CmdiProfileReader cmdiProfileReader) {
-        profileTableModel.setCmdiProfileReader(cmdiProfileReader);
+    public void setCmdiProfileReader(CmdiProfileReader cmdiProfileReader, ProfileManager profileManager) {
+        profileTableModel.setCmdiProfileReader(cmdiProfileReader, profileManager);
     }
 
     public JProgressBar getProfileReloadProgressBar() {
