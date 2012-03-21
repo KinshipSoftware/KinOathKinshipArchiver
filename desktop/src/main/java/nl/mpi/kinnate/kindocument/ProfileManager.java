@@ -6,7 +6,9 @@ import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.ProfileSelection;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.ui.entityprofiles.CmdiProfileSelectionPanel;
+import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
 
 /**
  *  Document   : ProfileManager
@@ -18,14 +20,14 @@ public class ProfileManager {
     private SessionStorage sessionStorage;
     private MessageDialogHandler dialogHandler;
     private CmdiProfileSelectionPanel cmdiProfileSelectionPanel;
-    private ArrayList<String> selectedProfiles = new ArrayList<String>();
+    private ArrayList<ProfileRecord> selectedProfiles = new ArrayList<ProfileRecord>();
 
     public ProfileManager(SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
     }
 
-    public void loadProfiles(final boolean forceUpdate, final CmdiProfileSelectionPanel cmdiProfileSelectionPanel) {
+    public void loadProfiles(final boolean forceUpdate, final CmdiProfileSelectionPanel cmdiProfileSelectionPanel, DataStoreSvg dataStoreSvg) {
         this.cmdiProfileSelectionPanel = cmdiProfileSelectionPanel;
         CmdiProfileReader.getSingleInstance().setSelection(ProfileSelection.ALL);
         cmdiProfileSelectionPanel.setStatus(false, "Loading, please wait...", false);
@@ -35,12 +37,12 @@ public class ProfileManager {
             public void run() {
                 ArrayList<String> problemProfiles = new ArrayList<String>();
                 // load the profiles selected for use on this diagram
-                for (String profileId : new String[]{"clarin.eu:cr1:p_1320657629627"}) { // todo: this array should come from the list of selected profiles in the diagram
-                    cmdiProfileSelectionPanel.setStatus(false, "Loading: " + profileId + ", please wait...", false);
+                for (ProfileRecord profileRecord : selectedProfiles) { // todo: this array should come from the list of selected profiles in the diagram
+                    cmdiProfileSelectionPanel.setStatus(false, "Loading: " + profileRecord.profileName + ", please wait...", false);
                     try {
-                        preloadProfile(profileId, forceUpdate);
+                        preloadProfile(profileRecord.profileId, forceUpdate);
                     } catch (KinXsdException exception) {
-                        problemProfiles.add(profileId);
+                        problemProfiles.add(profileRecord.profileId);
                         BugCatcherManager.getBugCatcher().logError(exception);
                     }
                 }
@@ -67,7 +69,7 @@ public class ProfileManager {
 //        }
     }
 
-    public void addProfileSelection(final String profileId, final String displayName) {
+    public void addProfileSelection(final String profileId, final String profileName) {
         new Thread("addProfileSelection") {
 
             @Override
@@ -75,11 +77,11 @@ public class ProfileManager {
                 try {
                     cmdiProfileSelectionPanel.setStatus(false, "Loading, please wait...", false);
                     preloadProfile(profileId, false);
-                    selectedProfiles.add(profileId);
+                    selectedProfiles.add(new ProfileRecord(profileName, profileId));
 //            return true;
                 } catch (KinXsdException exception) {
                     BugCatcherManager.getBugCatcher().logError(exception);
-                    dialogHandler.addMessageDialogToQueue("The selected profile (" + displayName + ") could not be loaded.", "Profile Selection Error");
+                    dialogHandler.addMessageDialogToQueue("The selected profile (" + profileName + ") could not be loaded.", "Profile Selection Error");
 //            return false;
                 }
                 cmdiProfileSelectionPanel.setStatus(true, "", false);
@@ -89,10 +91,19 @@ public class ProfileManager {
     }
 
     public void removeProfileSelection(String profileId) {
-        selectedProfiles.remove(profileId);
+        for (ProfileRecord profileRecord : selectedProfiles) {
+            if (profileRecord.profileId.equals(profileId)) {
+                selectedProfiles.remove(profileRecord);
+            }
+        }
     }
 
     public boolean profileIsSelected(String profileId) {
-        return selectedProfiles.contains(profileId);
+        for (ProfileRecord profileRecord : selectedProfiles) {
+            if (profileRecord.profileId.equals(profileId)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
