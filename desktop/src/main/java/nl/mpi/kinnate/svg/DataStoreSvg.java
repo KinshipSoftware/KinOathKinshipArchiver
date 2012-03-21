@@ -58,7 +58,8 @@ public class DataStoreSvg {
     protected KinTermGroup[] kinTermGroups = new KinTermGroup[]{};
     @XmlElementWrapper(name = "SelectedProfiles")
     @XmlElement(name = "Profile", namespace = "http://mpi.nl/tla/kin")
-    public ProfileRecord selectedProfiles[] = new ProfileRecord[]{};
+    // these profiles are set here so that old format diagrams have something in the add menu
+    public ProfileRecord selectedProfiles[] = new ProfileRecord[]{new ProfileRecord("individual", "clarin.eu:cr1:p_1320657629627"), new ProfileRecord("kinship-individual", "clarin.eu:cr1:p_1320657629666")};
     @XmlElement(name = "ShowLabels", namespace = "http://mpi.nl/tla/kin")
     public boolean showLabels = true;
     @XmlElement(name = "ShowKinTypeLabels", namespace = "http://mpi.nl/tla/kin")
@@ -114,7 +115,6 @@ public class DataStoreSvg {
         // todo: it might be better not to add any kin group until the user explicitly adds one from the menu
         kinTermGroups = new KinTermGroup[]{}; //new KinTermGroup(0), new KinTermGroup(1)};
         indexParameters = new IndexerParameters();
-        //todo: set the default profiles here
     }
 
     @XmlTransient
