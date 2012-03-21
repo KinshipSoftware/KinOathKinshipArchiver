@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile;
+import nl.mpi.kinnate.kindocument.ProfileManager;
 
 /**
  *  Document   : ProfileTableModel
@@ -14,10 +15,11 @@ public class ProfileTableModel extends AbstractTableModel {
 
     private ArrayList<CmdiProfile> cmdiProfileArray = null;
     private String[] columnNames = new String[]{"Name", "Description", "Registration Date", "Creator Name", "Use Entity Type"}; //, "ID", "href"};
-    private ArrayList<String> selectedProfiles = new ArrayList<String>();
+    private ProfileManager profileManager;
 
-    public void setCmdiProfileReader(CmdiProfileReader cmdiProfileReader) {
+    public void setCmdiProfileReader(CmdiProfileReader cmdiProfileReader, ProfileManager profileManager) {
         cmdiProfileArray = cmdiProfileReader.cmdiProfileArray;
+        this.profileManager = profileManager;
         fireTableDataChanged();
     }
 
@@ -57,9 +59,9 @@ public class ProfileTableModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if (columnIndex == 4) {
             if (aValue.equals(true)) {
-                selectedProfiles.add(cmdiProfileArray.get(rowIndex).id);
+                profileManager.addProfileSelection(cmdiProfileArray.get(rowIndex).id, cmdiProfileArray.get(rowIndex).name);
             } else {
-                selectedProfiles.remove(cmdiProfileArray.get(rowIndex).id);
+                profileManager.removeProfileSelection(cmdiProfileArray.get(rowIndex).id);
             }
         }
     }
@@ -75,7 +77,7 @@ public class ProfileTableModel extends AbstractTableModel {
             case 3:
                 return cmdiProfileArray.get(rowIndex).creatorName;
             case 4:
-                return selectedProfiles.contains(cmdiProfileArray.get(rowIndex).id);
+                return profileManager.profileIsSelected(cmdiProfileArray.get(rowIndex).id);
 //            case 4:
 //                return cmdiProfileArray.get(rowIndex).id;
 //            case 5:
