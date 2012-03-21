@@ -837,11 +837,6 @@ public class SvgUpdateHandler {
             if (entityGroupNodeOld != null) {
                 entityGroupNodeOld.getParentNode().removeChild(entityGroupNodeOld);
             }
-            // remove old kin diagram data
-            NodeList dataNodes = graphPanel.doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
-            for (int nodeCounter = 0; nodeCounter < dataNodes.getLength(); nodeCounter++) {
-                dataNodes.item(nodeCounter).getParentNode().removeChild(dataNodes.item(nodeCounter));
-            }
             graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel.entitySvg.entityPositions);
             resizeCanvas(svgRoot, diagramGroupNode);
 
