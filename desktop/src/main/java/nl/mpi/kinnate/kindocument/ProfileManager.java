@@ -6,7 +6,7 @@ import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.ProfileSelection;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
-import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.ui.entityprofiles.CmdiProfileSelectionPanel;
 import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
 
@@ -19,7 +19,7 @@ public class ProfileManager {
 
     private SessionStorage sessionStorage;
     private MessageDialogHandler dialogHandler;
-    private DataStoreSvg dataStoreSvg;
+    private GraphPanel graphPanel;
     private CmdiProfileSelectionPanel cmdiProfileSelectionPanel;
     private ArrayList<ProfileRecord> selectedProfiles = new ArrayList<ProfileRecord>();
 
@@ -28,9 +28,9 @@ public class ProfileManager {
         this.dialogHandler = dialogHandler;
     }
 
-    public void loadProfiles(final boolean forceUpdate, final CmdiProfileSelectionPanel cmdiProfileSelectionPanel, DataStoreSvg dataStoreSvg) {
+    public void loadProfiles(final boolean forceUpdate, final CmdiProfileSelectionPanel cmdiProfileSelectionPanel, GraphPanel graphPanel) {
         this.cmdiProfileSelectionPanel = cmdiProfileSelectionPanel;
-        this.dataStoreSvg = dataStoreSvg;
+        this.graphPanel = graphPanel;
         CmdiProfileReader.getSingleInstance().setSelection(ProfileSelection.ALL);
         cmdiProfileSelectionPanel.setStatus(false, "Loading, please wait...", false);
         new Thread("loadProfiles") {
@@ -80,7 +80,8 @@ public class ProfileManager {
                     cmdiProfileSelectionPanel.setStatus(false, "Loading, please wait...", false);
                     preloadProfile(profileId, false);
                     selectedProfiles.add(new ProfileRecord(profileName, profileId));
-                    dataStoreSvg.selectedProfiles = selectedProfiles.toArray(new ProfileRecord[]{});
+                    graphPanel.dataStoreSvg.selectedProfiles = selectedProfiles.toArray(new ProfileRecord[]{});
+                    graphPanel.setRequiresSave();
                 } catch (KinXsdException exception) {
                     BugCatcherManager.getBugCatcher().logError(exception);
                     dialogHandler.addMessageDialogToQueue("The selected profile (" + profileName + ") could not be loaded.", "Profile Selection Error");
@@ -97,7 +98,8 @@ public class ProfileManager {
                 selectedProfiles.remove(profileRecord);
             }
         }
-        dataStoreSvg.selectedProfiles = selectedProfiles.toArray(new ProfileRecord[]{});
+        graphPanel.dataStoreSvg.selectedProfiles = selectedProfiles.toArray(new ProfileRecord[]{});
+        graphPanel.setRequiresSave();
     }
 
     public boolean profileIsSelected(String profileId) {
