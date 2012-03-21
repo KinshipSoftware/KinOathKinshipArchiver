@@ -19,6 +19,7 @@ public class ProfileManager {
 
     private SessionStorage sessionStorage;
     private MessageDialogHandler dialogHandler;
+    private DataStoreSvg dataStoreSvg;
     private CmdiProfileSelectionPanel cmdiProfileSelectionPanel;
     private ArrayList<ProfileRecord> selectedProfiles = new ArrayList<ProfileRecord>();
 
@@ -29,6 +30,7 @@ public class ProfileManager {
 
     public void loadProfiles(final boolean forceUpdate, final CmdiProfileSelectionPanel cmdiProfileSelectionPanel, DataStoreSvg dataStoreSvg) {
         this.cmdiProfileSelectionPanel = cmdiProfileSelectionPanel;
+        this.dataStoreSvg = dataStoreSvg;
         CmdiProfileReader.getSingleInstance().setSelection(ProfileSelection.ALL);
         cmdiProfileSelectionPanel.setStatus(false, "Loading, please wait...", false);
         new Thread("loadProfiles") {
@@ -78,11 +80,10 @@ public class ProfileManager {
                     cmdiProfileSelectionPanel.setStatus(false, "Loading, please wait...", false);
                     preloadProfile(profileId, false);
                     selectedProfiles.add(new ProfileRecord(profileName, profileId));
-//            return true;
+                    dataStoreSvg.selectedProfiles = selectedProfiles.toArray(new ProfileRecord[]{});
                 } catch (KinXsdException exception) {
                     BugCatcherManager.getBugCatcher().logError(exception);
                     dialogHandler.addMessageDialogToQueue("The selected profile (" + profileName + ") could not be loaded.", "Profile Selection Error");
-//            return false;
                 }
                 cmdiProfileSelectionPanel.setStatus(true, "", false);
             }
@@ -96,6 +97,7 @@ public class ProfileManager {
                 selectedProfiles.remove(profileRecord);
             }
         }
+        dataStoreSvg.selectedProfiles = selectedProfiles.toArray(new ProfileRecord[]{});
     }
 
     public boolean profileIsSelected(String profileId) {
