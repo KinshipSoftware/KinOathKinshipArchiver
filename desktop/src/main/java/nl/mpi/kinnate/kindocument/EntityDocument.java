@@ -57,7 +57,7 @@ public class EntityDocument {
             // construct the metadata file
             System.out.println("constructing the xsl file");
             long start1Time = System.currentTimeMillis();
-            URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString(entityType);
+            URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(entityType, false);
             long query1Mils = System.currentTimeMillis() - start1Time;
             System.out.println("Constructing the xsl file took: " + query1Mils + "ms");
             System.out.println("Creating the component file");
@@ -68,7 +68,7 @@ public class EntityDocument {
             System.out.println(queryTimeString);
         } catch (KinXsdException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            throw new ImportException("Error: " + exception.getMessage());
+            throw new ImportException(exception.getMessage());
         }
         setDomNodesFromExistingFile();
     }
@@ -111,7 +111,7 @@ public class EntityDocument {
         }
         try {
             // construct the metadata file
-            URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString(entityType);
+            URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(entityType, false);
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
         } catch (KinXsdException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
@@ -193,7 +193,7 @@ public class EntityDocument {
         } else { // start skip overwrite
             try {
                 entityUri = entityFile.toURI();
-                URI xsdUri = new CmdiTransformer(sessionStorage).getXsdUrlString("individual");
+                URI xsdUri = new CmdiTransformer(sessionStorage).getXsd("individual", false);
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 documentBuilderFactory.setNamespaceAware(true);
                 String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -353,6 +353,7 @@ public class EntityDocument {
 //            new ArbilBugCatcher().logError(exception);
 //            throw new ImportException("Error: " + exception.getMessage());
 //        }
+        // todo:... we should be bumping the history file here
         ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
         System.out.println("saved: " + entityFile.toURI().toString());
     }
