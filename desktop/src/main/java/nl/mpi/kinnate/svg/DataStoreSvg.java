@@ -211,7 +211,7 @@ public class DataStoreSvg {
 //    }
     protected void storeAllData(SVGDocument doc) {
         // remove old kin diagram data
-        System.out.println("Removing old KinDiagramData nodes from the SVG before saving");
+        System.out.println("Removing old KinDiagramData nodes from the SVG before updating");
         NodeList dataNodes = doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
         while (dataNodes.getLength() > 0) {
             dataNodes.item(0).getParentNode().removeChild(dataNodes.item(0));
