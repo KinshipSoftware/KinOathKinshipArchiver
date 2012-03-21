@@ -213,8 +213,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
         }
         final ProfileManager profileManager = new ProfileManager(sessionStorage, dialogHandler);
-        final CmdiProfileSelectionPanel cmdiProfileSelectionPanel = new CmdiProfileSelectionPanel("Entity Profiles", profileManager);
-        profileManager.loadProfiles(false, cmdiProfileSelectionPanel);
+        final CmdiProfileSelectionPanel cmdiProfileSelectionPanel = new CmdiProfileSelectionPanel("Entity Profiles", profileManager, graphPanel);
+        profileManager.loadProfiles(false, cmdiProfileSelectionPanel, graphPanel);
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
             if (panelSetting.getPanelType() != null) {
                 switch (panelSetting.getPanelType()) {
