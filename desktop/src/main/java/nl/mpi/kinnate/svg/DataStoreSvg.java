@@ -58,7 +58,7 @@ public class DataStoreSvg {
     protected KinTermGroup[] kinTermGroups = new KinTermGroup[]{};
     @XmlElementWrapper(name = "SelectedProfiles")
     @XmlElement(name = "Profile", namespace = "http://mpi.nl/tla/kin")
-    public ProfileRecord selectedProfiles[] = new ProfileRecord[]{};    
+    public ProfileRecord selectedProfiles[] = new ProfileRecord[]{};
     @XmlElement(name = "ShowLabels", namespace = "http://mpi.nl/tla/kin")
     public boolean showLabels = true;
     @XmlElement(name = "ShowKinTypeLabels", namespace = "http://mpi.nl/tla/kin")
@@ -114,6 +114,7 @@ public class DataStoreSvg {
         // todo: it might be better not to add any kin group until the user explicitly adds one from the menu
         kinTermGroups = new KinTermGroup[]{}; //new KinTermGroup(0), new KinTermGroup(1)};
         indexParameters = new IndexerParameters();
+        //todo: set the default profiles here
     }
 
     @XmlTransient
@@ -209,6 +210,12 @@ public class DataStoreSvg {
 //        }
 //    }
     protected void storeAllData(SVGDocument doc) {
+        // remove old kin diagram data
+        System.out.println("Removing old KinDiagramData nodes from the SVG before saving");
+        NodeList dataNodes = doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");
+        while (dataNodes.getLength() > 0) {
+            dataNodes.item(0).getParentNode().removeChild(dataNodes.item(0));
+        }
         // create string array to store the selected ego nodes in the dom
 //        ArrayList<String> egoStringArray = new ArrayList<String>();
 //        for (URI currentEgoUri : egoPathSet) {
