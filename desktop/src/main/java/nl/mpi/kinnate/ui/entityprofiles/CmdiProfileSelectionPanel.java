@@ -59,6 +59,7 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
         reloadButton.setEnabled(reloadEnable);
         profileReloadProgressBar.setVisible(!reloadEnable);
         profileReloadProgressBar.setIndeterminate(true);
+        profileTableModel.fireTableDataChanged(); //todo: this might not be required in some cases, but when a profile fails to load then the table needs to refresh so that the faild profile shows as unchecked 
 //        this.doLayout(); // seems not to be required
     }
 
