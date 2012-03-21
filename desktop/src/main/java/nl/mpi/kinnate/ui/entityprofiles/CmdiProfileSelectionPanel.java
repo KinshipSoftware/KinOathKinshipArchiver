@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader;
 import nl.mpi.kinnate.kindocument.ProfileManager;
+import nl.mpi.kinnate.svg.DataStoreSvg;
 
 /**
  *  Document   : CmdiProfileSelectionPanel
@@ -27,9 +28,11 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
     private JButton reloadButton;
     private ProfileTableModel profileTableModel;
     private ProfileManager profileManager;
+    private DataStoreSvg dataStoreSvg;
 
-    public CmdiProfileSelectionPanel(String panelName, ProfileManager profileManager) {
+    public CmdiProfileSelectionPanel(String panelName, ProfileManager profileManager, DataStoreSvg dataStoreSvg) {
         this.profileManager = profileManager;
+        this.dataStoreSvg = dataStoreSvg;
         this.setName(panelName);
         this.setLayout(new BorderLayout());
         profileTableModel = new ProfileTableModel();
@@ -68,6 +71,6 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
     }
 
     public void actionPerformed(ActionEvent e) {
-        profileManager.loadProfiles(true, CmdiProfileSelectionPanel.this);
+        profileManager.loadProfiles(true, CmdiProfileSelectionPanel.this, dataStoreSvg);
     }
 }
