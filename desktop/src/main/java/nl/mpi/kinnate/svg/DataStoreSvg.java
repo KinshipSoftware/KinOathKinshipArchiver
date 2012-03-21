@@ -21,6 +21,7 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinType;
+import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,6 +56,9 @@ public class DataStoreSvg {
     protected IndexerParameters indexParameters;
     @XmlElement(name = "KinTermGroup", namespace = "http://mpi.nl/tla/kin")
     protected KinTermGroup[] kinTermGroups = new KinTermGroup[]{};
+    @XmlElementWrapper(name = "SelectedProfiles")
+    @XmlElement(name = "Profile", namespace = "http://mpi.nl/tla/kin")
+    public ProfileRecord selectedProfiles[] = new ProfileRecord[]{};    
     @XmlElement(name = "ShowLabels", namespace = "http://mpi.nl/tla/kin")
     public boolean showLabels = true;
     @XmlElement(name = "ShowKinTypeLabels", namespace = "http://mpi.nl/tla/kin")
