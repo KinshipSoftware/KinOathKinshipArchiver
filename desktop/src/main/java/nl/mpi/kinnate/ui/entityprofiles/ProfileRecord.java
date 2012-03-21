@@ -13,4 +13,9 @@ public class ProfileRecord {
     public String profileName;
     @XmlAttribute(name = "ProfileId", namespace = "http://mpi.nl/tla/kin")
     public String profileId;
+
+    public ProfileRecord(String profileName, String profileId) {
+        this.profileName = profileName;
+        this.profileId = profileId;
+    }
 }
