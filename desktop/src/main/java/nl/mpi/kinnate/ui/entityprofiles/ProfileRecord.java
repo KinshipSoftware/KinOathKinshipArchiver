@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * Document   : ProfileRecord 
- * Created on : Mar 21, 2012, 2:45:30 PM 
+ * Created on : Mar 21, 2012, 2:45:30 PM
  * Author     : Peter Withers
  */
 public class ProfileRecord {
@@ -13,6 +13,9 @@ public class ProfileRecord {
     public String profileName;
     @XmlAttribute(name = "ProfileId", namespace = "http://mpi.nl/tla/kin")
     public String profileId;
+
+    private ProfileRecord() {
+    }
 
     public ProfileRecord(String profileName, String profileId) {
         this.profileName = profileName;
