@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.kindocument;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.ProfileSelection;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -31,6 +32,7 @@ public class ProfileManager {
     public void loadProfiles(final boolean forceUpdate, final CmdiProfileSelectionPanel cmdiProfileSelectionPanel, GraphPanel graphPanel) {
         this.cmdiProfileSelectionPanel = cmdiProfileSelectionPanel;
         this.graphPanel = graphPanel;
+        selectedProfiles = new ArrayList<ProfileRecord>(Arrays.asList(graphPanel.dataStoreSvg.selectedProfiles));
         CmdiProfileReader.getSingleInstance().setSelection(ProfileSelection.ALL);
         cmdiProfileSelectionPanel.setStatus(false, "Loading, please wait...", false);
         new Thread("loadProfiles") {
@@ -89,7 +91,6 @@ public class ProfileManager {
                 cmdiProfileSelectionPanel.setStatus(true, "", false);
             }
         }.start();
-
     }
 
     public void removeProfileSelection(String profileId) {
