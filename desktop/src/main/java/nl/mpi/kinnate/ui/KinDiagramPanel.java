@@ -212,7 +212,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel);
 //            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
         }
-        final ProfileManager profileManager = new ProfileManager(sessionStorage);
+        final ProfileManager profileManager = new ProfileManager(sessionStorage, dialogHandler);
         final CmdiProfileSelectionPanel cmdiProfileSelectionPanel = new CmdiProfileSelectionPanel("Entity Profiles", profileManager);
         profileManager.loadProfiles(false, cmdiProfileSelectionPanel);
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
@@ -450,6 +450,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     public void showProgressBar() {
         progressBar.setIndeterminate(true);
         progressBar.setVisible(true);
+    }
+
+    public void clearProgressBar() {
+        progressBar.setIndeterminate(false);
+        progressBar.setVisible(false);
     }
 
     public boolean hasSaveFileName() {
