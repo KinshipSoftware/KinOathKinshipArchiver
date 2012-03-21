@@ -6,4 +6,8 @@ package nl.mpi.kinnate.kindocument;
  *  Author     : Peter Withers
  */
 public class KinXsdException extends Exception {
+
+    public KinXsdException(String message) {
+        super(message);
+    }
 }
