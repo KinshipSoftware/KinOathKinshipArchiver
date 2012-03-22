@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.gedcomimport;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +18,7 @@ public interface GenericImporter {
 
     public HashMap<String, HashSet<UniqueIdentifier>> getCreatedNodeIds();
 
-    public URI[] importFile(File inputFile);
+    public URI[] importFile(File inputFile, String profileId) throws IOException, ImportException;
 
-    public URI[] importFile(String inputFileString);
+    public URI[] importFile(String inputFileString, String profileId) throws IOException, ImportException;
 }
