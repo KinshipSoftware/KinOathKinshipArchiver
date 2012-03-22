@@ -10,14 +10,13 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import nl.mpi.arbil.clarin.profiles.CmdiProfileReader;
 import nl.mpi.kinnate.kindocument.ProfileManager;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
- *  Document   : CmdiProfileSelectionPanel
- *  Created on : Jan 19, 2012, 3:57:26 PM
- *  Author     : Peter Withers
+ * Document : CmdiProfileSelectionPanel
+ * Created on : Jan 19, 2012, 3:57:26 PM
+ * Author : Peter Withers
  */
 public class CmdiProfileSelectionPanel extends JPanel implements ActionListener {
 
@@ -63,8 +62,8 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
 //        this.doLayout(); // seems not to be required
     }
 
-    public void setCmdiProfileReader(CmdiProfileReader cmdiProfileReader, ProfileManager profileManager) {
-        profileTableModel.setCmdiProfileReader(cmdiProfileReader, profileManager);
+    public void setProfileManager(ProfileManager profileManager) {
+        profileTableModel.setProfileManager(profileManager);
     }
 
     public JProgressBar getProfileReloadProgressBar() {
