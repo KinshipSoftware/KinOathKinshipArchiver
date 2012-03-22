@@ -1,18 +1,19 @@
 package nl.mpi.kinnate.ui;
 
-import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -28,13 +29,17 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.CsvImporter;
 import nl.mpi.kinnate.gedcomimport.GedcomImporter;
 import nl.mpi.kinnate.gedcomimport.GenericImporter;
+import nl.mpi.kinnate.gedcomimport.ImportException;
+import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
+import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : GedcomImportPanel
- *  Created on : Mar 14, 2011, 8:38:36 AM
- *  Author     : Peter Withers
+ * Document : GedcomImportPanel
+ * Created on : Mar 14, 2011, 8:38:36 AM
+ * Author : Peter Withers
  */
 public class GedcomImportPanel extends JPanel {
 
@@ -148,6 +153,8 @@ public class GedcomImportPanel extends JPanel {
             JPanel topPanel = new JPanel();
             // todo: any existing files are always being overwritten and the entity id also being changed so existing relations will be broken, maybe prevent overwritting all entities for an import file?
             // todo: it might be better to check for a file already exsiting and if it does load it and strip out the relations and metadata that would be replaced by the import?
+            final JComboBox profileSelectBox = new JComboBox(new DataStoreSvg().selectedProfiles);
+            topPanel.add(profileSelectBox);
             overwriteOnImport = new JCheckBox("Overwrite Existing");
             overwriteOnImport.setEnabled(false);
             startButton = new JButton("Start");
@@ -165,54 +172,56 @@ public class GedcomImportPanel extends JPanel {
                     startButton.setEnabled(false);
                     overwriteOnImport.setEnabled(false);
                     validateImportedXml.setEnabled(false);
+                    final String profileId = ((ProfileRecord) profileSelectBox.getSelectedItem()).profileId;
                     new Thread() {
 
                         @Override
                         public void run() {
-                            boolean overwriteExisting = overwriteOnImport.isSelected();
-                            GenericImporter genericImporter = new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
-                            if (importFileString != null) {
-                                if (!genericImporter.canImport(importFileString)) {
-                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
+                            try {
+                                boolean overwriteExisting = overwriteOnImport.isSelected();
+                                GenericImporter genericImporter = new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
+                                if (importFileString != null) {
+                                    if (!genericImporter.canImport(importFileString)) {
+                                        genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
+                                    }
+                                } else {
+                                    if (!genericImporter.canImport(importFile.toString())) {
+                                        genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
+                                    }
                                 }
-                            } else {
-                                if (!genericImporter.canImport(importFile.toString())) {
-                                    genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
-                                }
-                            }
-                            URI[] treeNodesArray;
-                            importTextArea.append("Importing the kinship data (step 1/4)\n");
-                            importTextArea.setCaretPosition(importTextArea.getText().length());
-                            if (importFileString != null) {
-                                treeNodesArray = genericImporter.importFile(importFileString);
-                            } else {
-                                treeNodesArray = genericImporter.importFile(importFile);
-                            }
-                            boolean checkFilesAfterImport = validateImportedXml.isSelected();
-                            if (treeNodesArray != null && checkFilesAfterImport) {
-//                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();                    
-                                int maxXsdErrorToShow = 3;
-                                importTextArea.append("Checking XML of imported data  (step 3/4)\n");
+                                URI[] treeNodesArray;
+                                importTextArea.append("Importing the kinship data (step 1/4)\n");
                                 importTextArea.setCaretPosition(importTextArea.getText().length());
-                                progressBar.setValue(0);
-                                progressBar.setMaximum(treeNodesArray.length + 1);
-                                for (URI currentNodeUri : treeNodesArray) {
-                                    progressBar.setValue(progressBar.getValue() + 1);
-                                    if (maxXsdErrorToShow > 0) {
+                                if (importFileString != null) {
+                                    treeNodesArray = genericImporter.importFile(importFileString, profileId);
+                                } else {
+                                    treeNodesArray = genericImporter.importFile(importFile, profileId);
+                                }
+                                boolean checkFilesAfterImport = validateImportedXml.isSelected();
+                                if (treeNodesArray != null && checkFilesAfterImport) {
+//                    ArrayList<ImdiTreeObject> tempArray = new ArrayList<ImdiTreeObject>();                    
+                                    int maxXsdErrorToShow = 3;
+                                    importTextArea.append("Checking XML of imported data  (step 3/4)\n");
+                                    importTextArea.setCaretPosition(importTextArea.getText().length());
+                                    progressBar.setValue(0);
+                                    progressBar.setMaximum(treeNodesArray.length + 1);
+                                    for (URI currentNodeUri : treeNodesArray) {
+                                        progressBar.setValue(progressBar.getValue() + 1);
+                                        if (maxXsdErrorToShow > 0) {
 //                        try {
 //                            ImdiTreeObject currentImdiObject = ImdiLoader.getSingleInstance().getImdiObject(null, new URI(currentNodeString));
 //                            tempArray.add(currentImdiObject);
 //                            JTextPane fileText = new JTextPane();
-                                        XsdChecker xsdChecker = new XsdChecker();
-                                        if (xsdChecker.simpleCheck(new File(currentNodeUri)) != null) {
-                                            abstractDiagramManager.createDiagramSubPanel("XSD Error on Import", xsdChecker, parentPanel);
-                                            xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentNodeUri));
-                                            xsdChecker.setDividerLocation(0.5);
-                                            maxXsdErrorToShow--;
-                                            if (maxXsdErrorToShow <= 0) {
-                                                importTextArea.append("maximum xsd errors shown, no more files will be tested" + "\n");
+                                            XsdChecker xsdChecker = new XsdChecker();
+                                            if (xsdChecker.simpleCheck(new File(currentNodeUri)) != null) {
+                                                abstractDiagramManager.createDiagramSubPanel("XSD Error on Import", xsdChecker, parentPanel);
+                                                xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentNodeUri));
+                                                xsdChecker.setDividerLocation(0.5);
+                                                maxXsdErrorToShow--;
+                                                if (maxXsdErrorToShow <= 0) {
+                                                    importTextArea.append("maximum xsd errors shown, no more files will be tested" + "\n");
+                                                }
                                             }
-                                        }
 //                            currentImdiObject.reloadNode();
 //                            try {
 //                                fileText.setPage(currentNodeString);
@@ -223,31 +232,36 @@ public class GedcomImportPanel extends JPanel {
 //                        } catch (URISyntaxException exception) {
 //                            GuiHelper.linorgBugCatcher.logError(exception);
 //                        }
-                                        // todo: possibly create a new diagram with a sample of the imported entities for the user
+                                            // todo: possibly create a new diagram with a sample of the imported entities for the user
+                                        }
                                     }
-                                }
 //                    leftTree.rootNodeChildren = tempArray.toArray(new ImdiTreeObject[]{});
 //                    imdiTableModel.removeAllImdiRows();
 //                    imdiTableModel.addImdiObjects(leftTree.rootNodeChildren);
-                            } else {
-                                importTextArea.append("Skipping check XML of imported data  (step 3/4)\n");
-                            }
-                            progressBar.setIndeterminate(true);
-                            // todo: it might be more efficient to only update the new files
-                            importTextArea.append("Starting update of entity database (step 4/4)\n");
-                            importTextArea.setCaretPosition(importTextArea.getText().length());
-                            entityCollection.updateDatabase(treeNodesArray, progressBar);
-                            importTextArea.append("Import complete" + "\n");
-                            importTextArea.setCaretPosition(importTextArea.getText().length());
+                                } else {
+                                    importTextArea.append("Skipping check XML of imported data  (step 3/4)\n");
+                                }
+                                progressBar.setIndeterminate(true);
+                                // todo: it might be more efficient to only update the new files
+                                importTextArea.append("Starting update of entity database (step 4/4)\n");
+                                importTextArea.setCaretPosition(importTextArea.getText().length());
+                                entityCollection.updateDatabase(treeNodesArray, progressBar);
+                                importTextArea.append("Import complete" + "\n");
+                                importTextArea.setCaretPosition(importTextArea.getText().length());
 //                            System.out.println("added the imported files to the database");
-                            progressBar.setIndeterminate(false);
-                            progressBar.setVisible(false);
+                                progressBar.setIndeterminate(false);
+                                progressBar.setVisible(false);
 //                leftTree.requestResort();
 //                GraphData graphData = new GraphData();
 //                graphData.readData();
 //                graphPanel.drawNodes(graphData);
-                            GedcomImportPanel.this.endPagePanel.add(GedcomImportPanel.this.getCreatedNodesPane(genericImporter), BorderLayout.CENTER);
-                            GedcomImportPanel.this.revalidate();
+                                GedcomImportPanel.this.endPagePanel.add(GedcomImportPanel.this.getCreatedNodesPane(genericImporter), BorderLayout.CENTER);
+                                GedcomImportPanel.this.revalidate();
+                            } catch (IOException exception) {
+                                importTextArea.append("Import Failed: " + exception.getMessage() + "\n");
+                            } catch (ImportException exception) {
+                                importTextArea.append("Import Failed:" + exception.getMessage() + "\n");
+                            }
                         }
                     }.start();
                 }
