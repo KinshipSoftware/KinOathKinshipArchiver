@@ -7,6 +7,8 @@ import java.net.URI;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -21,18 +23,19 @@ import nl.mpi.kinnate.kindocument.RelationLinker;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.SvgUpdateHandler;
+import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : GraphPanelContextMenu
- *  Created on : Feb 18, 2011, 11:51:00 AM
- *  Author     : Peter Withers
+ * Document : GraphPanelContextMenu
+ * Created on : Feb 18, 2011, 11:51:00 AM
+ * Author : Peter Withers
  */
 public class GraphPanelContextMenu extends JPopupMenu implements ActionListener {
 
     private KinDiagramPanel kinDiagramPanel;
     private GraphPanel graphPanel;
-    private JMenuItem addEntityMenuItem;
+    private JMenu addEntityMenu;
     private JMenuItem duplicateEntitiesMenu;
     private JMenuItem mergeEntitiesMenu;
     private JMenuItem addRelationEntityMenu;
@@ -48,14 +51,12 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private float yPos;
     private ArbilDataNodeLoader dataNodeLoader;
 
-    public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, GraphPanel graphPanelLocal, final EntityCollection entityCollection, final ArbilWindowManager arbilWindowManager, ArbilDataNodeLoader dataNodeLoaderL, final SessionStorage sessionStorage) {
+    public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, final GraphPanel graphPanelLocal, final EntityCollection entityCollection, final ArbilWindowManager arbilWindowManager, ArbilDataNodeLoader dataNodeLoaderL, final SessionStorage sessionStorage) {
         kinDiagramPanel = egoSelectionPanelLocal;
         graphPanel = graphPanelLocal;
         this.dataNodeLoader = dataNodeLoaderL;
         if (egoSelectionPanelLocal != null) {
-            addEntityMenuItem = new JMenuItem("Add Entity");
-            addEntityMenuItem.setActionCommand(EntityDocument.defaultEntityType);
-            addEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            final ActionListener addMenuActionListener = new java.awt.event.ActionListener() {
 
                 public void actionPerformed(final java.awt.event.ActionEvent evt) {
                     new Thread() {
@@ -63,7 +64,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                         @Override
                         public void run() {
                             // node type will be used to determine the schema used from the diagram options
-                            kinDiagramPanel.showProgressBar(); //... if the metadata fails this progress bar does not get hidden after the error is shown
+                            kinDiagramPanel.showProgressBar();
                             String nodeType = evt.getActionCommand();
                             try {
                                 EntityDocument entityDocument = new EntityDocument(nodeType, new ImportTranslator(true), sessionStorage);
@@ -72,15 +73,37 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                                 entityCollection.updateDatabase(addedEntityUri);
                                 kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
                             } catch (ImportException exception) {
-                                // todo:... this should also clear the progress bar
+                                kinDiagramPanel.clearProgressBar();
                                 BugCatcherManager.getBugCatcher().logError(exception);
                                 arbilWindowManager.addMessageDialogToQueue("Failed to create entity: " + exception.getMessage(), "Add Entity");
                             }
                         }
                     }.start();
                 }
+            };
+
+            addEntityMenu = new JMenu("Add");
+            addEntityMenu.addMenuListener(new MenuListener() {
+
+                public void menuSelected(MenuEvent e) {
+                    addEntityMenu.removeAll();
+                    for (ProfileRecord profileRecord : graphPanelLocal.dataStoreSvg.selectedProfiles) {
+                        JMenuItem addMenuItem = new JMenuItem(profileRecord.profileName);
+                        addMenuItem.setActionCommand(profileRecord.profileId);
+                        addMenuItem.addActionListener(addMenuActionListener);
+                        addEntityMenu.add(addMenuItem);
+                    }
+                }
+
+                public void menuDeselected(MenuEvent e) {
+                }
+
+                public void menuCanceled(MenuEvent e) {
+                }
             });
-            this.add(addEntityMenuItem);
+            this.add(addEntityMenu);
+
+            // todo:. add a delete entity menu item, with appropriate warnings (maybe also can use the arbil resurector when it is written)
 
             duplicateEntitiesMenu = new JMenuItem("Duplicate Selected Entities");
             duplicateEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -134,6 +157,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             this.add(removeRelationEntityMenu);
 //            for (RelationType relationType : RelationType.values()) {
 //            relationType.name()
+            //todo:. add a remove all relations to selection (including unselected and not shown entities)
+
             String actionString = "Remove relations between selected";
             JMenuItem removeRelationEntityMenuItem = new JMenuItem(actionString);
             removeRelationEntityMenuItem.setActionCommand(actionString);
@@ -295,7 +320,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         saveFileMenuItem.setEnabled(dataNodeLoader.nodesNeedSave());
 
         // enable/disable the menus based on the diagram type
-        addEntityMenuItem.setEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
+        addEntityMenu.setEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
         removeRelationEntityMenu.setEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
 
         super.show(cmpnt, i, i1);
