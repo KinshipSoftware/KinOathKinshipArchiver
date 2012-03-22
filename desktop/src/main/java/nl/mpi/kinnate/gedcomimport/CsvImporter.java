@@ -133,13 +133,13 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
     }
 
     @Override
-    public URI[] importFile(InputStreamReader inputStreamReader) {
+    public URI[] importFile(InputStreamReader inputStreamReader, String profileId) {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
         try {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 //            char fieldSeparator = detectFieldDelimiter(bufferedReader);
             // restart at the begining of the file
-            bufferedReader = new BufferedReader(inputStreamReader);
+//            bufferedReader = new BufferedReader(inputStreamReader);
             // create the import translator
             ImportTranslator importTranslator = new ImportTranslator(true);
             importTranslator.addTranslationEntry("Gender", "0", "Gender", "female");
@@ -171,18 +171,18 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                             appendToTaskOutput("Warning " + headingString + " for value: " + entityField);
                         }
                         if (currentEntity == null) {
-                            currentEntity = getEntityDocument(createdNodes, "Entity", entityField, importTranslator);
+                            currentEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
                         } else if (entityField.length() > 0) {
                             if (headingString.matches("Spouses[\\d]*-ID")) {
-                                relatedEntity = getEntityDocument(createdNodes, "Entity", entityField, importTranslator);
+                                relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
                                 currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.union, null, null, null, null);
                                 relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                             } else if (headingString.matches("Parents[\\d]*-ID")) {
-                                relatedEntity = getEntityDocument(createdNodes, "Entity", entityField, importTranslator);
+                                relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
                                 currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.ancestor, null, null, null, null);
                                 relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                             } else if (headingString.matches("Children[\\d]*-ID")) {
-                                relatedEntity = getEntityDocument(createdNodes, "Entity", entityField, importTranslator);
+                                relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
                                 currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.descendant, null, null, null, null);
                                 relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
                             } else if (relatedEntityPrefix != null && headingString.startsWith(relatedEntityPrefix)) {
