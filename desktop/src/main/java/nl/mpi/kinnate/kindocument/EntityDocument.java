@@ -26,9 +26,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- *  Document   : EntityBuilder
- *  Created on : May 30, 2011, 1:25:05 PM
- *  Author     : Peter Withers
+ * Document : EntityBuilder
+ * Created on : May 30, 2011, 1:25:05 PM
+ * Author : Peter Withers
  */
 public class EntityDocument {
 
@@ -39,7 +39,9 @@ public class EntityDocument {
     Node currentDomNode = null;
     public EntityData entityData = null;
     private ImportTranslator importTranslator;
-    public static String defaultEntityType = "individual"; // todo:. add some xsd files to the jar file so that the user can work off line from the start and to make sure that the user does not need to wait for ages on the first entity added
+    public static String defaultDragType = "clarin.eu:cr1:p_1320657629627"; //todo:... make this user definable
+    public static String defaultGedcomType = "clarin.eu:cr1:p_1332345811039"; //todo: make this user definable
+    // todo: add some xsd files to the jar file so that the user can work off line from the start and to make sure that the user does not need to wait for ages on the first entity added
     // todo:. when the menu requests a new node it should show the progress bar before making the request
     private SessionStorage sessionStorage;
 
@@ -49,7 +51,7 @@ public class EntityDocument {
         assignIdentiferAndFile();
     }
 
-    public EntityDocument(String entityType, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
+    public EntityDocument(String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
         assignIdentiferAndFile();
@@ -57,7 +59,7 @@ public class EntityDocument {
             // construct the metadata file
             System.out.println("constructing the xsl file");
             long start1Time = System.currentTimeMillis();
-            URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(entityType, false);
+            URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false);
             long query1Mils = System.currentTimeMillis() - start1Time;
             System.out.println("Constructing the xsl file took: " + query1Mils + "ms");
             System.out.println("Creating the component file");
@@ -95,7 +97,7 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(File destinationDirectory, String nameString, String entityType, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
+    public EntityDocument(File destinationDirectory, String nameString, String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
         String idString;
@@ -111,7 +113,7 @@ public class EntityDocument {
         }
         try {
             // construct the metadata file
-            URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(entityType, false);
+            URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false);
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
         } catch (KinXsdException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
@@ -183,7 +185,7 @@ public class EntityDocument {
         return entityData.getUniqueIdentifier();
     }
 
-    public URI createBlankDocument(boolean overwriteExisting) throws ImportException {
+    public URI createBlankDocument(boolean overwriteExisting, String profileId) throws ImportException {
         if (metadataDom != null) {
             throw new ImportException("The document already exists");
         }
@@ -193,7 +195,7 @@ public class EntityDocument {
         } else { // start skip overwrite
             try {
                 entityUri = entityFile.toURI();
-                URI xsdUri = new CmdiTransformer(sessionStorage).getXsd("individual", false);
+                URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false); // todo: change this to a real profile
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 documentBuilderFactory.setNamespaceAware(true);
                 String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -254,7 +256,7 @@ public class EntityDocument {
             }
             currentNode = currentNode.getNextSibling();
         }
-        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ translationElement.fieldName);
+        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /* "cmd:" + */ translationElement.fieldName);
         valueElement.setTextContent(translationElement.fieldValue);
         metadataNode.appendChild(valueElement);
     }
@@ -272,7 +274,7 @@ public class EntityDocument {
     public Node insertNode(String nodeName, String valueString) {
         ImportTranslator.TranslationElement translationElement = importTranslator.translate(nodeName, valueString);
         System.out.println("nodeName: " + translationElement.fieldName + " : " + translationElement.fieldValue);
-        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ translationElement.fieldName);
+        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /* "cmd:" + */ translationElement.fieldName);
         valueElement.setTextContent(translationElement.fieldValue);
         currentDomNode.appendChild(valueElement);
         return valueElement;
@@ -306,7 +308,7 @@ public class EntityDocument {
         if (childNodes.getLength() == 1 && childNodes.item(0).getNodeType() == Node.TEXT_NODE) { // getTextContent returns the text value of all sub nodes so make sure there is only one node which would be the text node
             String currentValue = currentDomNode.getTextContent();
             if (currentValue != null && currentValue.trim().length() > 0) {
-                Node spacerElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /*"cmd:" +*/ currentDomNode.getLocalName());
+                Node spacerElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /* "cmd:" + */ currentDomNode.getLocalName());
                 Node parentNode = currentDomNode.getParentNode();
                 parentNode.removeChild(currentDomNode);
                 spacerElement.appendChild(currentDomNode);
