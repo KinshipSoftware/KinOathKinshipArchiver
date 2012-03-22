@@ -22,17 +22,15 @@ public class ProfileManager {
     private MessageDialogHandler dialogHandler;
     private GraphPanel graphPanel;
     private CmdiProfileSelectionPanel cmdiProfileSelectionPanel;
-    private ArrayList<ProfileRecord> selectedProfiles = new ArrayList<ProfileRecord>();
 
     public ProfileManager(SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
     }
 
-    public void loadProfiles(final boolean forceUpdate, final CmdiProfileSelectionPanel cmdiProfileSelectionPanel, GraphPanel graphPanel) {
+    public void loadProfiles(final boolean forceUpdate, final CmdiProfileSelectionPanel cmdiProfileSelectionPanel, final GraphPanel graphPanel) {
         this.cmdiProfileSelectionPanel = cmdiProfileSelectionPanel;
         this.graphPanel = graphPanel;
-        selectedProfiles = new ArrayList<ProfileRecord>(Arrays.asList(graphPanel.dataStoreSvg.selectedProfiles));
         CmdiProfileReader.getSingleInstance().setSelection(ProfileSelection.ALL);
         cmdiProfileSelectionPanel.setStatus(false, "Loading, please wait...", false);
         new Thread("loadProfiles") {
@@ -41,7 +39,7 @@ public class ProfileManager {
             public void run() {
                 ArrayList<String> problemProfiles = new ArrayList<String>();
                 // load the profiles selected for use on this diagram
-                for (ProfileRecord profileRecord : selectedProfiles) { // todo: this array should come from the list of selected profiles in the diagram
+                for (ProfileRecord profileRecord : graphPanel.dataStoreSvg.selectedProfiles) {
                     cmdiProfileSelectionPanel.setStatus(false, "Loading: " + profileRecord.profileName + ", please wait...", false);
                     try {
                         preloadProfile(profileRecord.profileId, forceUpdate);
@@ -81,6 +79,7 @@ public class ProfileManager {
                 try {
                     cmdiProfileSelectionPanel.setStatus(false, "Loading, please wait...", false);
                     preloadProfile(profileId, false);
+                    ArrayList<ProfileRecord> selectedProfiles = new ArrayList<ProfileRecord>(Arrays.asList(graphPanel.dataStoreSvg.selectedProfiles));
                     selectedProfiles.add(new ProfileRecord(profileName, profileId));
                     graphPanel.dataStoreSvg.selectedProfiles = selectedProfiles.toArray(new ProfileRecord[]{});
                     graphPanel.setRequiresSave();
@@ -94,9 +93,10 @@ public class ProfileManager {
     }
 
     public void removeProfileSelection(String profileId) {
-        for (ProfileRecord profileRecord : selectedProfiles) {
-            if (profileRecord.profileId.equals(profileId)) {
-                selectedProfiles.remove(profileRecord);
+        ArrayList<ProfileRecord> selectedProfiles = new ArrayList<ProfileRecord>();
+        for (ProfileRecord profileRecord : graphPanel.dataStoreSvg.selectedProfiles) {
+            if (!profileRecord.profileId.equals(profileId)) {
+                selectedProfiles.add(profileRecord);
             }
         }
         graphPanel.dataStoreSvg.selectedProfiles = selectedProfiles.toArray(new ProfileRecord[]{});
@@ -104,7 +104,7 @@ public class ProfileManager {
     }
 
     public boolean profileIsSelected(String profileId) {
-        for (ProfileRecord profileRecord : selectedProfiles) {
+        for (ProfileRecord profileRecord : graphPanel.dataStoreSvg.selectedProfiles) {
             if (profileRecord.profileId.equals(profileId)) {
                 return true;
             }
