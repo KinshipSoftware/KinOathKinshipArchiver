@@ -3,6 +3,7 @@ package nl.mpi.kinnate.kindocument;
 import java.util.ArrayList;
 import java.util.Arrays;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader;
+import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.ProfileSelection;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
@@ -12,9 +13,9 @@ import nl.mpi.kinnate.ui.entityprofiles.CmdiProfileSelectionPanel;
 import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
 
 /**
- *  Document   : ProfileManager
- *  Created on : Jan 30, 2012, 12:03:11 PM
- *  Author     : Peter Withers
+ * Document : ProfileManager
+ * Created on : Jan 30, 2012, 12:03:11 PM
+ * Author : Peter Withers
  */
 public class ProfileManager {
 
@@ -22,6 +23,7 @@ public class ProfileManager {
     private MessageDialogHandler dialogHandler;
     private GraphPanel graphPanel;
     private CmdiProfileSelectionPanel cmdiProfileSelectionPanel;
+    private ArrayList<CmdiProfileReader.CmdiProfile> cmdiProfileArray = new ArrayList<CmdiProfileReader.CmdiProfile>();
 
     public ProfileManager(SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
         this.sessionStorage = sessionStorage;
@@ -53,7 +55,30 @@ public class ProfileManager {
                 CmdiProfileReader cmdiProfileReader = CmdiProfileReader.getSingleInstance();
                 cmdiProfileReader.refreshProfiles(forceUpdate);
 
-                cmdiProfileSelectionPanel.setCmdiProfileReader(cmdiProfileReader, ProfileManager.this);
+                // find any selected profiles that are not in the list of profiles from the server
+                ArrayList<ProfileRecord> selectedProfiles = new ArrayList<ProfileRecord>(Arrays.asList(graphPanel.dataStoreSvg.selectedProfiles));
+                for (CmdiProfileReader.CmdiProfile currentProfile : cmdiProfileReader.cmdiProfileArray) {
+                    for (ProfileRecord profileRecord : selectedProfiles) {
+                        if (profileRecord.profileId.equals(currentProfile.id)) {
+                            selectedProfiles.remove(profileRecord);
+                        }
+                    }
+                }
+                cmdiProfileArray.addAll(cmdiProfileReader.cmdiProfileArray);
+                // add any profiles into the list that are in use but are not published
+                for (ProfileRecord profileRecord : selectedProfiles) {
+                    final CmdiProfile cmdiProfile = new CmdiProfileReader.CmdiProfile();
+                    cmdiProfile.id = profileRecord.profileId;
+                    cmdiProfile.name = profileRecord.profileName;
+                    final String unpublished_Profile = "Unpublished Profile";
+                    cmdiProfile.description = unpublished_Profile;
+                    cmdiProfile.creatorName = unpublished_Profile;
+                    cmdiProfile.href = unpublished_Profile;
+                    cmdiProfile.registrationDate = "------------";
+
+                    cmdiProfileArray.add(0, cmdiProfile);
+                }
+                cmdiProfileSelectionPanel.setProfileManager(ProfileManager.this);
                 if (!problemProfiles.isEmpty()) {
                     // todo: show a message dialogue
                     cmdiProfileSelectionPanel.setStatus(true, "There were " + problemProfiles.size() + " selected profiles that could not be retrieved", true);
@@ -110,5 +135,13 @@ public class ProfileManager {
             }
         }
         return false;
+    }
+
+    public int getProfileCount() {
+        return cmdiProfileArray.size();
+    }
+
+    public CmdiProfileReader.CmdiProfile getProfileAt(int index) {
+        return cmdiProfileArray.get(index);
     }
 }
