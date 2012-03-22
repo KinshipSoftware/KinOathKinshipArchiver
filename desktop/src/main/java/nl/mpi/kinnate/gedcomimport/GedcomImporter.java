@@ -48,7 +48,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
     }
 
     @Override
-    public URI[] importFile(InputStreamReader inputStreamReader) {
+    public URI[] importFile(InputStreamReader inputStreamReader, String profileId) throws IOException, ImportException {
         ArrayList<URI> createdNodes = new ArrayList<URI>();
         HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>> socialGroupRoleMap = new HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>>(); // GroupID: @XX@, RoleType: WIFE HUSB CHIL, EntityData
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -56,71 +56,71 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         ImportTranslator importTranslator = new ImportTranslator(true);
         // todo: add the translator values if required
 
-        try {
-            String strLine;
-            int gedcomLevel = 0;
-            ArrayList<String> gedcomLevelStrings = new ArrayList<String>();
-            EntityDocument currentEntity = null;
-            boolean skipFileEntity = false;
-            while ((strLine = bufferedReader.readLine()) != null) {
-                if (skipFileEntity) {
-                    skipFileEntity = false;
-                    while ((strLine = bufferedReader.readLine()) != null) {
-                        if (strLine.startsWith("0")) {
-                            break;
-                        }
+//        try {
+        String strLine;
+        int gedcomLevel = 0;
+        ArrayList<String> gedcomLevelStrings = new ArrayList<String>();
+        EntityDocument currentEntity = null;
+        boolean skipFileEntity = false;
+        while ((strLine = bufferedReader.readLine()) != null) {
+            if (skipFileEntity) {
+                skipFileEntity = false;
+                while ((strLine = bufferedReader.readLine()) != null) {
+                    if (strLine.startsWith("0")) {
+                        break;
                     }
                 }
-                String[] lineParts = strLine.split(" ", 3);
-                gedcomLevel = Integer.parseInt(lineParts[0]);
-                while (gedcomLevelStrings.size() > gedcomLevel) {
-                    gedcomLevelStrings.remove(gedcomLevelStrings.size() - 1);
-                }
-                gedcomLevelStrings.add(lineParts[1]);
-                System.out.println(strLine);
+            }
+            String[] lineParts = strLine.split(" ", 3);
+            gedcomLevel = Integer.parseInt(lineParts[0]);
+            while (gedcomLevelStrings.size() > gedcomLevel) {
+                gedcomLevelStrings.remove(gedcomLevelStrings.size() - 1);
+            }
+            gedcomLevelStrings.add(lineParts[1]);
+            System.out.println(strLine);
 //                System.out.println("gedcomLevelString: " + gedcomLevelStrings);
 //                appendToTaskOutput(importTextArea, strLine);
-                boolean lastFieldContinued = false;
-                if (lineParts[1].equals("CONT")) {
-                    // todo: if the previous field is null this should be caught and handled as an error in the source file
-                    String lineContents = "";
-                    if (lineParts.length > 2) {
-                        lineContents = lineParts[2];
-                    }
-                    currentEntity.appendValueToLast("\n" + lineContents);
-                    lastFieldContinued = true;
-                } else if (lineParts[1].equals("CONC")) {
-                    // todo: if the previous field is null this should be caught and handled as an error in the source file
-                    String lineContents = "";
-                    if (lineParts.length > 2) {
-                        lineContents = lineParts[2];
-                    }
-                    currentEntity.appendValueToLast(lineContents);
-                    lastFieldContinued = true;
+            boolean lastFieldContinued = false;
+            if (lineParts[1].equals("CONT")) {
+                // todo: if the previous field is null this should be caught and handled as an error in the source file
+                String lineContents = "";
+                if (lineParts.length > 2) {
+                    lineContents = lineParts[2];
                 }
-                if (lastFieldContinued == false) {
-                    if (gedcomLevel == 0) {
-                        if (lineParts[1].equals("TRLR")) {
-                            appendToTaskOutput("End of file found");
-                        } else {
+                currentEntity.appendValueToLast("\n" + lineContents);
+                lastFieldContinued = true;
+            } else if (lineParts[1].equals("CONC")) {
+                // todo: if the previous field is null this should be caught and handled as an error in the source file
+                String lineContents = "";
+                if (lineParts.length > 2) {
+                    lineContents = lineParts[2];
+                }
+                currentEntity.appendValueToLast(lineContents);
+                lastFieldContinued = true;
+            }
+            if (lastFieldContinued == false) {
+                if (gedcomLevel == 0) {
+                    if (lineParts[1].equals("TRLR")) {
+                        appendToTaskOutput("End of file found");
+                    } else {
 //                        String gedcomXsdLocation = "/xsd/gedcom-import.xsd";
 //                            String gedcomXsdLocation = "/xsd/gedcom-autogenerated.xsd";
-                            String typeString;
+                        String typeString;
+                        if (lineParts.length > 2) {
+                            typeString = profileId; //   lineParts[2];
+                        } else {
+                            typeString = profileId; //   lineParts[1];
+                        }
+                        // todo: the type string needs to determine if this is an entity or a metadata file
+                        currentEntity = getEntityDocument(createdNodes, typeString, lineParts[1], importTranslator);
+                        if (lineParts[1].equals("HEAD")) {
+                            // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
+                            appendToTaskOutput("Reading Gedcom Header");
+                            currentEntity.appendValue(lineParts[1], null, gedcomLevel);
+                        } else {
+                            // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes                                
                             if (lineParts.length > 2) {
-                                typeString = lineParts[2];
-                            } else {
-                                typeString = lineParts[1];
-                            }
-                            // todo: the type string needs to determine if this is an entity or a metadata file
-                            currentEntity = getEntityDocument(createdNodes, typeString, lineParts[1], importTranslator);
-                            if (lineParts[1].equals("HEAD")) {
-                                // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
-                                appendToTaskOutput("Reading Gedcom Header");
-                                currentEntity.appendValue(lineParts[1], null, gedcomLevel);
-                            } else {
-                                // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes                                
-                                if (lineParts.length > 2) {
-                                    currentEntity.appendValue(lineParts[2], lineParts[1], gedcomLevel);
+                                currentEntity.appendValue(lineParts[2], lineParts[1], gedcomLevel);
 //                                    appendToTaskOutput(lineParts[2]);
 //                                    currentEntity.insertValue("gedcom-type", lineParts[2]);
 //                                    if (lineParts[2].equals("NOTE")) {
@@ -130,15 +130,15 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                                        previousField = addedNoteElement;
 //                                    }
 //                                }
-                                } else {
-                                    currentEntity.appendValue("gedcom-id", lineParts[1], gedcomLevel);
-                                }
-//                                System.out.println("currentDomElement: " + currentDomNode + " value: " + currentDomNode.getTextContent());
+                            } else {
+                                currentEntity.appendValue("gedcom-id", lineParts[1], gedcomLevel);
                             }
-                        } // end skip overwrite
-                    } else {
+//                                System.out.println("currentDomElement: " + currentDomNode + " value: " + currentDomNode.getTextContent());
+                        }
+                    } // end skip overwrite
+                } else {
 //                        if (lineParts.length > 2) {
-                        // todo: move this into an array to be processed after all the fields have been insterted
+                    // todo: move this into an array to be processed after all the fields have been insterted
 
 
 ////                            gedcomImdiObject.saveChangesToCache(true);
@@ -180,7 +180,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                            }
 //                        }
 //                        }
-                        // trim the nodes to the current gedcom level
+                    // trim the nodes to the current gedcom level
 //                        int parentNodeCount = 0;
 //                        for (Node countingDomNode = currentDomNode; countingDomNode != null; countingDomNode = countingDomNode.getParentNode()) {
 //                            parentNodeCount++;
@@ -209,10 +209,10 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 ////                            currentDomNode.appendChild(addedElement);
 ////                            currentDomNode = addedElement;
 //                        }
-                        // if the current line has a value then enter it into the node
-                        if (lineParts.length == 2) {
-                            currentEntity.appendValue(lineParts[1], null, gedcomLevel);
-                        } else if (lineParts.length > 2) {
+                    // if the current line has a value then enter it into the node
+                    if (lineParts.length == 2) {
+                        currentEntity.appendValue(lineParts[1], null, gedcomLevel);
+                    } else if (lineParts.length > 2) {
 //                        if (lineParts[1].equals("NAME")) {
 //                            ImdiField[] currentField = gedcomImdiObject.getFields().get("Gedcom.Name");
 //                            if (currentField != null && currentField.length > 0) {
@@ -233,8 +233,8 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                            }
 //                            for (String levelString : gedcomLevelStrings) {
 //                                if (levelString.startsWith("@")) {
-                            // this could be handled better
-                            // this occurs at level 0 where the element type is named eg "0 @I9@ INDI"
+                        // this could be handled better
+                        // this occurs at level 0 where the element type is named eg "0 @I9@ INDI"
 //                                    levelString = "Entity";
 //                                }
 //                                gedcomPath = gedcomPath + "." + levelString;
@@ -291,90 +291,90 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                            }
 
 
-                            // todo: filter the links found and handled below from being added here as metadata
-                            currentEntity.appendValue(lineParts[1], lineParts[2], gedcomLevel);
+                        // todo: filter the links found and handled below from being added here as metadata
+                        currentEntity.appendValue(lineParts[1], lineParts[2], gedcomLevel);
 
-                            if (gedcomLevelStrings.size() == 3) {
-                                if (gedcomLevelStrings.get(2).equals("DATE")) {
-                                    if (gedcomLevelStrings.get(1).equals("BIRT") || gedcomLevelStrings.get(1).equals("DEAT")) {
-                                        String dateText = lineParts[2].trim();
-                                        String qualifierString = null;
-                                        String yearString = null;
-                                        String monthString = null;
-                                        String dayString = null;
-                                        for (String prefixString : new String[]{"ABT", "BEF", "AFT"}) {
-                                            if (dateText.startsWith(prefixString)) {
-                                                qualifierString = prefixString.toLowerCase();
+                        if (gedcomLevelStrings.size() == 3) {
+                            if (gedcomLevelStrings.get(2).equals("DATE")) {
+                                if (gedcomLevelStrings.get(1).equals("BIRT") || gedcomLevelStrings.get(1).equals("DEAT")) {
+                                    String dateText = lineParts[2].trim();
+                                    String qualifierString = null;
+                                    String yearString = null;
+                                    String monthString = null;
+                                    String dayString = null;
+                                    for (String prefixString : new String[]{"ABT", "BEF", "AFT"}) {
+                                        if (dateText.startsWith(prefixString)) {
+                                            qualifierString = prefixString.toLowerCase();
 //                                                appendToTaskOutput("Unsupported Date Type: " + dateText);
-                                                dateText = dateText.substring(prefixString.length()).trim();
-                                            }
+                                            dateText = dateText.substring(prefixString.length()).trim();
                                         }
-                                        SimpleDateFormat formatter;
-                                        try {
-                                            if (dateText.matches("[0-9]{1,4}")) {
-                                                while (dateText.length() < 4) {
-                                                    // make sure that 812 has four digits like 0812
-                                                    dateText = "0" + dateText;
-                                                }
-                                                yearString = dateText;
+                                    }
+                                    SimpleDateFormat formatter;
+                                    try {
+                                        if (dateText.matches("[0-9]{1,4}")) {
+                                            while (dateText.length() < 4) {
+                                                // make sure that 812 has four digits like 0812
+                                                dateText = "0" + dateText;
+                                            }
+                                            yearString = dateText;
 //                                            formatter = new SimpleDateFormat("yyyy");
-                                            } else if (dateText.matches("[a-zA-Z]{3} [0-9]{4}")) {
-                                                formatter = new SimpleDateFormat("MMM yyyy");
-                                                Date parsedDate = formatter.parse(dateText);
-                                                monthString = new SimpleDateFormat("MM").format(parsedDate);
-                                                yearString = new SimpleDateFormat("yyyy").format(parsedDate);
-                                            } else {
-                                                formatter = new SimpleDateFormat("dd MMM yyyy");
-                                                Date parsedDate = formatter.parse(dateText);
-                                                dayString = new SimpleDateFormat("dd").format(parsedDate);
-                                                monthString = new SimpleDateFormat("MM").format(parsedDate);
-                                                yearString = new SimpleDateFormat("yyyy").format(parsedDate);
-                                            }
-                                            EntityDate entityDate = new EntityDate(yearString, monthString, dayString, qualifierString);
-                                            if (gedcomLevelStrings.get(1).equals("BIRT")) {
-                                                currentEntity.insertValue("DateOfBirth", entityDate.getDateString());
-                                            } else {
-                                                currentEntity.insertValue("DateOfDeath", entityDate.getDateString());
-                                            }
-                                        } catch (ParseException exception) {
-                                            System.out.println(exception.getMessage());
-                                            appendToTaskOutput("Failed to parse date: " + strLine);
-                                        } catch (EntityDateException exception) {
-                                            System.out.println(exception.getMessage());
-                                            appendToTaskOutput("Failed to parse date: " + strLine + " " + exception.getMessage());
+                                        } else if (dateText.matches("[a-zA-Z]{3} [0-9]{4}")) {
+                                            formatter = new SimpleDateFormat("MMM yyyy");
+                                            Date parsedDate = formatter.parse(dateText);
+                                            monthString = new SimpleDateFormat("MM").format(parsedDate);
+                                            yearString = new SimpleDateFormat("yyyy").format(parsedDate);
+                                        } else {
+                                            formatter = new SimpleDateFormat("dd MMM yyyy");
+                                            Date parsedDate = formatter.parse(dateText);
+                                            dayString = new SimpleDateFormat("dd").format(parsedDate);
+                                            monthString = new SimpleDateFormat("MM").format(parsedDate);
+                                            yearString = new SimpleDateFormat("yyyy").format(parsedDate);
                                         }
+                                        EntityDate entityDate = new EntityDate(yearString, monthString, dayString, qualifierString);
+                                        if (gedcomLevelStrings.get(1).equals("BIRT")) {
+                                            currentEntity.insertValue("DateOfBirth", entityDate.getDateString());
+                                        } else {
+                                            currentEntity.insertValue("DateOfDeath", entityDate.getDateString());
+                                        }
+                                    } catch (ParseException exception) {
+                                        System.out.println(exception.getMessage());
+                                        appendToTaskOutput("Failed to parse date: " + strLine);
+                                    } catch (EntityDateException exception) {
+                                        System.out.println(exception.getMessage());
+                                        appendToTaskOutput("Failed to parse date: " + strLine + " " + exception.getMessage());
                                     }
                                 }
                             }
-                            if (gedcomLevelStrings.size() == 2) {
-                                if (gedcomLevelStrings.get(1).equals("SEX")) {
-                                    String genderString = lineParts[2];
-                                    if ("F".equals(genderString)) {
-                                        genderString = "Female";
-                                    } else if ("M".equals(genderString)) {
-                                        genderString = "Male";
-                                    } else {
-                                        appendToTaskOutput("Unknown gender type: " + genderString);
-                                    }
-                                    currentEntity.insertValue("Gender", genderString);
-                                }
-                            }
-                            if (gedcomLevelStrings.get(gedcomLevelStrings.size() - 1).equals("FILE")) {
-                                // todo: check if the FILE value can contain a path or just the file name and handle the path correctly if required
-                                // todo: copy the file or not according to user options
-                                if (lineParts[2].toLowerCase().startsWith("mailto:")) {
-                                    currentEntity.insertValue("mailto", lineParts[2]); // todo: check that this is not already inserted
+                        }
+                        if (gedcomLevelStrings.size() == 2) {
+                            if (gedcomLevelStrings.get(1).equals("SEX")) {
+                                String genderString = lineParts[2];
+                                if ("F".equals(genderString)) {
+                                    genderString = "Female";
+                                } else if ("M".equals(genderString)) {
+                                    genderString = "Male";
                                 } else {
-                                    URI resolvedUri;
-                                    if ("jar".equals(inputFileUri.getScheme())) { // "jar:file:"
-                                        // when the application is running from a jar file the uri resolve fails as designed by Sun, also we do not include the media files in the jar, so for sample files we must replace the uri with the documentation uri example.net
-                                        resolvedUri = URI.create("http://example.net/example/files/not/included/demo").resolve(lineParts[2]);
-                                    } else {
-                                        resolvedUri = inputFileUri.resolve(lineParts[2]);
-                                    }
-                                    currentEntity.entityData.addArchiveLink(resolvedUri);
+                                    appendToTaskOutput("Unknown gender type: " + genderString);
                                 }
+                                currentEntity.insertValue("Gender", genderString);
                             }
+                        }
+                        if (gedcomLevelStrings.get(gedcomLevelStrings.size() - 1).equals("FILE")) {
+                            // todo: check if the FILE value can contain a path or just the file name and handle the path correctly if required
+                            // todo: copy the file or not according to user options
+                            if (lineParts[2].toLowerCase().startsWith("mailto:")) {
+                                currentEntity.insertValue("mailto", lineParts[2]); // todo: check that this is not already inserted
+                            } else {
+                                URI resolvedUri;
+                                if ("jar".equals(inputFileUri.getScheme())) { // "jar:file:"
+                                    // when the application is running from a jar file the uri resolve fails as designed by Sun, also we do not include the media files in the jar, so for sample files we must replace the uri with the documentation uri example.net
+                                    resolvedUri = URI.create("http://example.net/example/files/not/included/demo").resolve(lineParts[2]);
+                                } else {
+                                    resolvedUri = inputFileUri.resolve(lineParts[2]);
+                                }
+                                currentEntity.entityData.addArchiveLink(resolvedUri);
+                            }
+                        }
 
 //                            currentDomNode.setTextContent(/*gedcomPath + " : " +*/lineParts[2]);
 //                            if (addedExtraElement != null) {
@@ -408,25 +408,25 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                                xsdString += "   <xs:element name=\"" + xsdElementString + "\" />\n";// + gedcomPath + "\n" + strLine + "\n";
 //                                xsdTagsDone.add(gedcomPath);
 //                            }
-                            // create the link node when required
-                            if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
+                        // create the link node when required
+                        if (lineParts[2].startsWith("@") && lineParts[2].endsWith("@")) {
 //                                appendToTaskOutput("--> adding social relation");
-                                RelationType targetRelation = RelationType.other;
-                                // here the following five relation types are mapped to the correct relation types after this the association is cretaed and later the indigiduals are linked with sanguine relations
-                                if (lineParts[1].equals("FAMS") || lineParts[1].equals("FAMC") || lineParts[1].equals("HUSB") || lineParts[1].equals("WIFE") || lineParts[1].equals("CHIL")) {
-                                    UniqueIdentifier socialGroupIdentifier;
-                                    EntityData socialGroupMember;
-                                    if (lineParts[1].equals("FAMS") || lineParts[1].equals("FAMC")) {
-                                        socialGroupIdentifier = getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData.getUniqueIdentifier();
-                                        socialGroupMember = currentEntity.entityData;
-                                    } else {
-                                        socialGroupIdentifier = currentEntity.entityData.getUniqueIdentifier();
-                                        socialGroupMember = getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData;
-                                    }
-                                    if (!socialGroupRoleMap.containsKey(socialGroupIdentifier)) {
-                                        socialGroupRoleMap.put(socialGroupIdentifier, new ArrayList<SocialMemberElement>());
-                                    }
-                                    socialGroupRoleMap.get(socialGroupIdentifier).add(new SocialMemberElement(lineParts[1], socialGroupMember));
+                            RelationType targetRelation = RelationType.other;
+                            // here the following five relation types are mapped to the correct relation types after this the association is cretaed and later the indigiduals are linked with sanguine relations
+                            if (lineParts[1].equals("FAMS") || lineParts[1].equals("FAMC") || lineParts[1].equals("HUSB") || lineParts[1].equals("WIFE") || lineParts[1].equals("CHIL")) {
+                                UniqueIdentifier socialGroupIdentifier;
+                                EntityData socialGroupMember;
+                                if (lineParts[1].equals("FAMS") || lineParts[1].equals("FAMC")) {
+                                    socialGroupIdentifier = getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData.getUniqueIdentifier();
+                                    socialGroupMember = currentEntity.entityData;
+                                } else {
+                                    socialGroupIdentifier = currentEntity.entityData.getUniqueIdentifier();
+                                    socialGroupMember = getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData;
+                                }
+                                if (!socialGroupRoleMap.containsKey(socialGroupIdentifier)) {
+                                    socialGroupRoleMap.put(socialGroupIdentifier, new ArrayList<SocialMemberElement>());
+                                }
+                                socialGroupRoleMap.get(socialGroupIdentifier).add(new SocialMemberElement(lineParts[1], socialGroupMember));
 //                                    targetRelation = RelationType.affiliation;
 //                                } else if (lineParts[1].equals("SUBM")) {
 //                                    targetRelation = RelationType.collector;
@@ -455,37 +455,37 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                                } else {
 //                                    appendToTaskOutput("Unknown relation type: " + lineParts[2]);
 //                                    targetRelation = RelationType.metadata;
-                                }
-                                // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
-                                currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData, targetRelation, null, null, null, lineParts[1]);
                             }
+                            // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
+                            currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData, targetRelation, null, null, null, lineParts[1]);
                         }
                     }
                 }
-                super.incrementLineProgress();
             }
-            for (ArrayList<SocialMemberElement> currentSocialGroup : socialGroupRoleMap.values()) {
-                for (SocialMemberElement outerMemberElement : currentSocialGroup) {
-                    for (SocialMemberElement innerMemberElement : currentSocialGroup) {
-                        if (!innerMemberElement.memberEntity.equals(outerMemberElement.memberEntity)) {
-                            if (innerMemberElement.typeString.equals("FAMC") || innerMemberElement.typeString.equals("CHIL")) {
-                                if (outerMemberElement.typeString.equals("FAMC") || outerMemberElement.typeString.equals("CHIL")) {
-                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.sibling, null, null, null, null);
-                                } else {
-                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.ancestor, null, null, null, null);
-                                }
+            super.incrementLineProgress();
+        }
+        for (ArrayList<SocialMemberElement> currentSocialGroup : socialGroupRoleMap.values()) {
+            for (SocialMemberElement outerMemberElement : currentSocialGroup) {
+                for (SocialMemberElement innerMemberElement : currentSocialGroup) {
+                    if (!innerMemberElement.memberEntity.equals(outerMemberElement.memberEntity)) {
+                        if (innerMemberElement.typeString.equals("FAMC") || innerMemberElement.typeString.equals("CHIL")) {
+                            if (outerMemberElement.typeString.equals("FAMC") || outerMemberElement.typeString.equals("CHIL")) {
+                                innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.sibling, null, null, null, null);
                             } else {
-                                if (outerMemberElement.typeString.equals("FAMC") || outerMemberElement.typeString.equals("CHIL")) {
-                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.descendant, null, null, null, null);
-                                } else {
-                                    innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.union, null, null, null, null);
-                                }
+                                innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.ancestor, null, null, null, null);
                             }
-//                            appendToTaskOutput("--> adding sanguine relation");
+                        } else {
+                            if (outerMemberElement.typeString.equals("FAMC") || outerMemberElement.typeString.equals("CHIL")) {
+                                innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.descendant, null, null, null, null);
+                            } else {
+                                innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.union, null, null, null, null);
+                            }
                         }
+//                            appendToTaskOutput("--> adding sanguine relation");
                     }
                 }
             }
+        }
 
 //            if (metadataDom != null) {
 //                ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
@@ -493,7 +493,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //            }
 //            ImdiLoader.getSingleInstance().saveNodesNeedingSave(true);
 //            appendToTaskOutput(importTextArea, "--> link count: " + linkFields.size());
-            // update all the links now we have the urls for each internal name
+        // update all the links now we have the urls for each internal name
 
 //            appendToTaskOutput(importTextArea, "xsdString:\n" + xsdString);
 
@@ -525,7 +525,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                    progressBar.setValue((int) ((double) linkNodesUpdated / (double) createdNodes.size() * 100 / 2 + 50));
 //                }
 //            }
-            saveAllDocuments();
+        saveAllDocuments();
 //            appendToTaskOutput("Import finished with a node count of: " + createdNodes.size());
 
 //            gedcomImdiObject.saveChangesToCache(true);
@@ -533,9 +533,9 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //            gedcomImdiObject.clearChildIcons();
 //            gedcomImdiObject.clearIcon();
 //            dataNodeLoader.saveNodesNeedingSave(true);
-        } catch (IOException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-            appendToTaskOutput("Error: " + exception.getMessage());
+//        } catch (IOException exception) {
+//            BugCatcherManager.getBugCatcher().logError(exception);
+//            appendToTaskOutput("Error: " + exception.getMessage());
 //        } catch (ParserConfigurationExceptionparserConfigurationException) {
 //            new ArbilBugCatcher().logError(parserConfigurationException);
 //            appendToTaskOutput("Error: " + parserConfigurationException.getMessage());
@@ -546,10 +546,10 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //            new ArbilBugCatcher().logError(sAXException);
 //            appendToTaskOutput("Error: " + sAXException.getMessage());
 //        }
-        } catch (ImportException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-            appendToTaskOutput("Error: " + exception.getMessage());
-        }
+//        } catch (ImportException exception) {
+//            BugCatcherManager.getBugCatcher().logError(exception);
+//            appendToTaskOutput("Error: " + exception.getMessage());
+//        }
 //        LinorgSessionStorage.getSingleInstance().loadStringArray("KinGraphTree");
 //        String[] createdNodePaths = new String[createdNodes.size()];
 //        int createdNodeCounter = 0;
