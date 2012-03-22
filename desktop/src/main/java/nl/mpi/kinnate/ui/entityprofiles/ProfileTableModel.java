@@ -1,24 +1,20 @@
 package nl.mpi.kinnate.ui.entityprofiles;
 
-import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
-import nl.mpi.arbil.clarin.profiles.CmdiProfileReader;
 import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile;
 import nl.mpi.kinnate.kindocument.ProfileManager;
 
 /**
- *  Document   : ProfileTableModel
- *  Created on : Jan 19, 2012, 4:57:20 PM
- *  Author     : Peter Withers
+ * Document : ProfileTableModel
+ * Created on : Jan 19, 2012, 4:57:20 PM
+ * Author : Peter Withers
  */
 public class ProfileTableModel extends AbstractTableModel {
 
-    private ArrayList<CmdiProfile> cmdiProfileArray = null;
     private String[] columnNames = new String[]{"Name", "Description", "Registration Date", "Creator Name", "Use Entity Type"}; //, "ID", "href"};
     private ProfileManager profileManager;
 
-    public void setCmdiProfileReader(CmdiProfileReader cmdiProfileReader, ProfileManager profileManager) {
-        cmdiProfileArray = cmdiProfileReader.cmdiProfileArray;
+    public void setProfileManager(ProfileManager profileManager) {
         this.profileManager = profileManager;
         fireTableDataChanged();
     }
@@ -33,11 +29,7 @@ public class ProfileTableModel extends AbstractTableModel {
     }
 
     public int getRowCount() {
-        if (cmdiProfileArray == null) {
-            return 0;
-        } else {
-            return cmdiProfileArray.size();
-        }
+        return profileManager.getProfileCount();
     }
 
     @Override
@@ -58,26 +50,28 @@ public class ProfileTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if (columnIndex == 4) {
+            final CmdiProfile selectedProfile = profileManager.getProfileAt(rowIndex);
             if (aValue.equals(true)) {
-                profileManager.addProfileSelection(cmdiProfileArray.get(rowIndex).id, cmdiProfileArray.get(rowIndex).name);
+                profileManager.addProfileSelection(selectedProfile.id, selectedProfile.name);
             } else {
-                profileManager.removeProfileSelection(cmdiProfileArray.get(rowIndex).id);
+                profileManager.removeProfileSelection(selectedProfile.id);
             }
         }
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
+        final CmdiProfile selectedProfile = profileManager.getProfileAt(rowIndex);
         switch (columnIndex) {
             case 0:
-                return cmdiProfileArray.get(rowIndex).name;
+                return selectedProfile.name;
             case 1:
-                return cmdiProfileArray.get(rowIndex).description;
+                return selectedProfile.description;
             case 2:
-                return cmdiProfileArray.get(rowIndex).registrationDate.substring(0, 10);
+                return selectedProfile.registrationDate.substring(0, 10);
             case 3:
-                return cmdiProfileArray.get(rowIndex).creatorName;
+                return selectedProfile.creatorName;
             case 4:
-                return profileManager.profileIsSelected(cmdiProfileArray.get(rowIndex).id);
+                return profileManager.profileIsSelected(selectedProfile.id);
 //            case 4:
 //                return cmdiProfileArray.get(rowIndex).id;
 //            case 5:
