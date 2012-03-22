@@ -1,12 +1,9 @@
 package nl.mpi.kinnate.gedcomimport;
 
-import nl.mpi.kinnate.kindocument.EntityDocument;
-import nl.mpi.kinnate.kindocument.ImportTranslator;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -20,6 +17,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.kinnate.kindocument.EntityDocument;
+import nl.mpi.kinnate.kindocument.ImportTranslator;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -156,18 +155,13 @@ public class EntityImporter implements GenericImporter {
         return fileName.replaceAll("[^A-z0-9]", "_");
     }
 
-    public URI[] importFile(File testFile) {
-        try {
-            inputFileUri = testFile.toURI();
-            calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
-            return importFile(new InputStreamReader(new DataInputStream(new FileInputStream(testFile))));
-        } catch (FileNotFoundException exception) {
-            // todo: handle this
-            return null;
-        }
+    public URI[] importFile(File testFile, String profileId) throws IOException, ImportException {
+        inputFileUri = testFile.toURI();
+        calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
+        return importFile(new InputStreamReader(new DataInputStream(new FileInputStream(testFile))), profileId);
     }
 
-    public URI[] importFile(String testFileString) {
+    public URI[] importFile(String testFileString, String profileId) throws IOException, ImportException {
         try {
             inputFileUri = getClass().getResource(testFileString).toURI();
         } catch (URISyntaxException exception) {
@@ -175,10 +169,10 @@ public class EntityImporter implements GenericImporter {
             appendToTaskOutput("Error getting the import directory attached resources might not be correctly resolved");
         }
         calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
-        return importFile(new InputStreamReader(getClass().getResourceAsStream(testFileString)));
+        return importFile(new InputStreamReader(getClass().getResourceAsStream(testFileString)), profileId);
     }
 
-    public URI[] importFile(InputStreamReader inputStreamReader) {
+    public URI[] importFile(InputStreamReader inputStreamReader, String profileId) throws IOException, ImportException {
         throw new UnsupportedOperationException("Not supported");
     }
 
