@@ -21,4 +21,9 @@ public class ProfileRecord {
         this.profileName = profileName;
         this.profileId = profileId;
     }
+
+    @Override
+    public String toString() {
+        return profileName;
+    }
 }
