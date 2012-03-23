@@ -39,8 +39,8 @@ public class IndexerParameters {
                 , {"*:Kinnate/*:CustomData[*:Gender='Female']", "circle"},
                 {"*:Kinnate/*:CustomData[*:Gender='']", "square"},
                 {"*:Kinnate/*:CustomData[*:DateOfDeath!='']", "blackstrikethrough"}, // the use of != is correct because if there is any node value in the DateOfBirth node or nodes then the symbol should be used
-                {"*:Kinnate/*:CustomData[*:Chromosome=='Xx']", "redstrikethrough"},
-                {"*:Kinnate/*:CustomData[*:Chromosome=='xY']", "redstrikethrough"}
+                {"*:Kinnate/*:CustomData[*:Chromosome='Xx']", "redstrikethrough"},
+                {"*:Kinnate/*:CustomData[*:Chromosome='xY']", "redstrikethrough"}
             //                , {"*:Kinnate/*:CustomData/*:Individual[*:Gender='']", "square"},
             //                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Male']", "triangle"},
             //                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Female']", "circle"}
