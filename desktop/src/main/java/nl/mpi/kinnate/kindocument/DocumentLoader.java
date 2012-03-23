@@ -1,11 +1,12 @@
 package nl.mpi.kinnate.kindocument;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import nl.mpi.arbil.data.ArbilDataNodeService;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
@@ -87,5 +88,11 @@ public class DocumentLoader {
             entityDocument.saveDocument();
             entityCollection.updateDatabase(entityDocument.getFile().toURI());
         }
+    }
+
+    protected void deleteFromDataBase(EntityDocument entityDocument) throws IOException {
+        ArbilDataNodeService arbilDataNodeService = new ArbilDataNodeService(null, null, null, null, null);
+        arbilDataNodeService.bumpHistory(entityDocument.getFile());
+        entityCollection.deleteFromDatabase(entityDocument.getFile().toURI());
     }
 }
