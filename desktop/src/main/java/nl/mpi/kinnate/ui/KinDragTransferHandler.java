@@ -188,12 +188,13 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     private boolean importMetadata() {
         System.out.println("importMetadata");
         final ImportTranslator importTranslator = new ImportTranslator(true);
-        importTranslator.addTranslationEntry("Sex", "Male", "Gender", "male");
-        importTranslator.addTranslationEntry("Sex", "Female", "Gender", "female");
+        importTranslator.addTranslationEntry("Sex", "Male", "Gender", "Male");
+        importTranslator.addTranslationEntry("Sex", "Female", "Gender", "Female");
         importTranslator.addTranslationEntry("BirthDate", null, "DateOfBirth", null);
         try {
             ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
             for (ArbilNode draggedNode : selectedNodes) {
+                // todo:... allow the user to set EntityDocument.defaultDragType some where
                 EntityDocument entityDocument = new EntityDocument(EntityDocument.defaultDragType, importTranslator, sessionStorage);
                 entityDocument.insertValue("Name", draggedNode.toString());
                 if (draggedNode instanceof ArbilDataNode) {
