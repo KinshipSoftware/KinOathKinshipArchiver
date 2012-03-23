@@ -69,6 +69,11 @@ public class ImportTranslator {
     public TranslationElement translate(String fieldName, String fieldValue) {
         TranslationElement translatedInput = new TranslationElement(fieldName, fieldValue);
         TranslationElement translatedResult = translateTable.get(translatedInput);
+        if (translatedResult == null) {
+            // look for translation entries that act only on the field name
+            translatedInput = new TranslationElement(fieldName, null);
+            translatedResult = translateTable.get(translatedInput);
+        }
         if (translatedResult != null) {
             if (translatedResult.fieldValue == null) {
                 // if no field value has been set then just pass the input value back but change the field name as specified
@@ -77,7 +82,7 @@ public class ImportTranslator {
                 return translatedResult;
             }
         } else {
-            return translatedInput;
+            return new TranslationElement(fieldName, fieldValue);
         }
     }
 }
