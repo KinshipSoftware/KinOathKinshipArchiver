@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
+import nl.mpi.arbil.data.ArbilDataNodeService;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.gedcomimport.ImportException;
@@ -340,12 +341,16 @@ public class EntityDocument {
 
     public void saveDocument() throws ImportException {
         try {
+            ArbilDataNodeService arbilDataNodeService = new ArbilDataNodeService(null, null, null, null, null);
+            arbilDataNodeService.bumpHistory(this.getFile());
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.marshal(entityData, kinnateNode);
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
+        } catch (IOException exception) {
+            throw new ImportException(exception.getMessage());
         }
 //        try {
 //            Node entityNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity");
@@ -355,7 +360,6 @@ public class EntityDocument {
 //            new ArbilBugCatcher().logError(exception);
 //            throw new ImportException("Error: " + exception.getMessage());
 //        }
-        // todo:... we should be bumping the history file here
         ArbilComponentBuilder.savePrettyFormatting(metadataDom, entityFile);
         System.out.println("saved: " + entityFile.toURI().toString());
     }
