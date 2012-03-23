@@ -158,6 +158,23 @@ public class EntityCollection {
         }
     }
 
+    public void deleteFromDatabase(URI updatedDataUrl) {
+        String urlString = updatedDataUrl.toASCIIString();
+        try {
+            synchronized (databaseLock) {
+                new Open(databaseName).execute(context);
+                // delete appears to be fine with a uri string, providing that the document was added as below and not added as a collection, sigh
+                new Delete(urlString).execute(context);
+                new Optimize().execute(context);
+                new Close().execute(context);
+            }
+        } catch (BaseXException baseXException) {
+            // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
+            BugCatcherManager.getBugCatcher().logError(baseXException);
+            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Add File To DB");
+        }
+    }
+
     public void updateDatabase(URI[] updatedFileArray, JProgressBar progressBar) {
         try {
             if (progressBar != null) {
