@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
+import java.util.ArrayList;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -139,15 +140,25 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                         doDelete = true;
                     }
                     if (doDelete) {
+                        ArrayList<UniqueIdentifier> affectedIdentifiers = new ArrayList<UniqueIdentifier>();
                         for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
                             if (uniqueIdentifier.isGraphicsIdentifier()) {
                                 graphPanel.svgUpdateHandler.deleteGraphics(uniqueIdentifier);
                             } else if (uniqueIdentifier.isTransientIdentifier()) {
-                                throw new UnsupportedOperationException("");
+                                throw new UnsupportedOperationException("Cannot delete transient entities.");
                             } else {
-                                // todo: add a delete entity menu item, with appropriate warnings (maybe also can use the arbil resurector when it is written)            
+                                affectedIdentifiers.add(uniqueIdentifier);
                             }
                         }
+                        final UniqueIdentifier[] affectedIdentifiersArray = affectedIdentifiers.toArray(new UniqueIdentifier[]{});
+                        try {
+                            final RelationLinker relationLinker = new RelationLinker(sessionStorage, arbilWindowManager, entityCollection);
+                            relationLinker.deleteEntity(affectedIdentifiersArray);
+                        } catch (ImportException exception) {
+                            arbilWindowManager.addMessageDialogToQueue("Failed to delete: " + exception.getMessage(), mergeEntitiesMenu.getText());
+                        }
+                        kinDiagramPanel.removeRequiredNodes(affectedIdentifiersArray);
+                        kinDiagramPanel.removeEgoNodes(affectedIdentifiersArray);
                     }
                 }
             });
@@ -228,10 +239,10 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         setAsEgoMenuItem = new JMenuItem("Set as Ego (replacing list)");
         setAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        kinDiagramPanel.setEgoNodes(selectedIdentifiers); // getSelectedUriArray(),
-                    }
-                });
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kinDiagramPanel.setEgoNodes(selectedIdentifiers); // getSelectedUriArray(),
+            }
+        });
         this.add(setAsEgoMenuItem);
         addAsEgoMenuItem = new JMenuItem("Add to ego list");
         addAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
