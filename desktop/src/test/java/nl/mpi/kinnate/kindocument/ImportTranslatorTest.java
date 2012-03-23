@@ -58,5 +58,9 @@ public class ImportTranslatorTest extends TestCase {
         instance.addTranslationEntry("%%%Field&&&Name@@@", "%%%A&&&Value@@@", "FieldName5", "A_Value5");
         assertEquals(instance.translate("%%%Field&&&Name@@@", "%%%A&&&Value@@@").fieldName, "FieldName5");
         assertEquals(instance.translate("%%%Field&&&Name@@@", "%%%A&&&Value@@@").fieldValue, "A_Value5");
+
+        instance.addTranslationEntry("Date_of_Birth", null, "DateOfBirth", null);
+        assertEquals(instance.translate("Date_of_Birth", "A_Value").fieldName, "DateOfBirth");
+        assertEquals(instance.translate("Date_of_Birth", "A_Value").fieldValue, "A_Value");
     }
 }
