@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.net.URI;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
@@ -47,7 +48,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private JMenuItem addAsRequiredMenuItem;
     private JMenuItem removeRequiredMenuItem;
     private JMenuItem saveFileMenuItem;
-    private JMenu deleteMenu;
+    private JMenuItem deleteMenu;
     final JSeparator jSeparator2 = new JSeparator();
     final JSeparator jSeparator3 = new JSeparator();
     private UniqueIdentifier[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
@@ -121,11 +122,36 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
             this.add(shapeSubMenu);
 
-            // todo: add a delete entity menu item, with appropriate warnings (maybe also can use the arbil resurector when it is written)
-            deleteMenu = new JMenu("Delete");
-            deleteMenu.setEnabled(false);
-            this.add(deleteMenu);
+            deleteMenu = new JMenuItem("Delete");
+            deleteMenu.addActionListener(new java.awt.event.ActionListener() {
 
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    int entityCount = 0;
+                    for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
+                        if (!uniqueIdentifier.isGraphicsIdentifier() && !uniqueIdentifier.isTransientIdentifier()) {
+                            entityCount++;
+                        }
+                    }
+                    boolean doDelete = false;
+                    if (entityCount == 0) {
+                        doDelete = true;
+                    } else if (JOptionPane.OK_OPTION == arbilWindowManager.showDialogBox(entityCount + " entities will be deleted from the database", "Delete Entity", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE)) {
+                        doDelete = true;
+                    }
+                    if (doDelete) {
+                        for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
+                            if (uniqueIdentifier.isGraphicsIdentifier()) {
+                                graphPanel.svgUpdateHandler.deleteGraphics(uniqueIdentifier);
+                            } else if (uniqueIdentifier.isTransientIdentifier()) {
+                                throw new UnsupportedOperationException("");
+                            } else {
+                                // todo: add a delete entity menu item, with appropriate warnings (maybe also can use the arbil resurector when it is written)            
+                            }
+                        }
+                    }
+                }
+            });
+            this.add(deleteMenu);
 
             mergeEntitiesMenu = new JMenuItem("Merge Selected Entities");
             mergeEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -202,10 +228,10 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         setAsEgoMenuItem = new JMenuItem("Set as Ego (replacing list)");
         setAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kinDiagramPanel.setEgoNodes(selectedIdentifiers); // getSelectedUriArray(),
-            }
-        });
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        kinDiagramPanel.setEgoNodes(selectedIdentifiers); // getSelectedUriArray(),
+                    }
+                });
         this.add(setAsEgoMenuItem);
         addAsEgoMenuItem = new JMenuItem("Add to ego list");
         addAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
