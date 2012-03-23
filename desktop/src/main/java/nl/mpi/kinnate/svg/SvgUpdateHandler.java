@@ -19,7 +19,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGLocatable;
@@ -687,6 +686,21 @@ public class SvgUpdateHandler {
                         Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
                         resizeCanvas(svgRoot, diagramGroupNode);
                     }
+                }
+            });
+        }
+    }
+
+    public void deleteGraphics(UniqueIdentifier uniqueIdentifier) {
+        final Element graphicsElement = graphPanel.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
+        final Node parentElement = graphicsElement.getParentNode();
+        UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+
+                public void run() {
+                    parentElement.removeChild(graphicsElement);
+                    graphPanel.setRequiresSave();
                 }
             });
         }
