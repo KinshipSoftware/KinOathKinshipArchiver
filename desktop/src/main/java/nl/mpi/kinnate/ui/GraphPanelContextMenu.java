@@ -307,15 +307,20 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         yPos = cmpnt.getMousePosition().y;
         selectedIdentifiers = graphPanel.getSelectedIds();
         int nonTransientNodeCount = 0;
+        int transientNodeCount = 0;
+        int graphicsIdentifierCount = 0;
         for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
             // check to see if these selectedIdentifiers are transent nodes and if they are then do not allow the following menu items
-            if (!uniqueIdentifier.isTransientIdentifier() && !uniqueIdentifier.isGraphicsIdentifier()) {
+            if (uniqueIdentifier.isGraphicsIdentifier()) {
+                graphicsIdentifierCount++;
+            } else if (uniqueIdentifier.isTransientIdentifier()) {
+                transientNodeCount++;
+            } else {
                 nonTransientNodeCount++;
             }
         }
         boolean showNonTransientMenus;
         if (graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm) {
-            // todo: consider using disable rather than visible
             duplicateEntitiesMenu.setEnabled(nonTransientNodeCount > 0);
             removeRelationEntityMenu.setEnabled(nonTransientNodeCount > 1);
             mergeEntitiesMenu.setEnabled(nonTransientNodeCount > 1);
@@ -325,7 +330,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             removeEgoMenuItem.setEnabled(nonTransientNodeCount > 0); // todo: set these items based on the state of the selected entities, //graphPanel.selectionContainsEgo());
             addAsRequiredMenuItem.setEnabled(nonTransientNodeCount > 0);
             removeRequiredMenuItem.setEnabled(nonTransientNodeCount > 0);
-            deleteMenu.setEnabled(nonTransientNodeCount > 0);
             showNonTransientMenus = true;
         } else {
             showNonTransientMenus = false;
@@ -344,6 +348,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         jSeparator2.setVisible(showNonTransientMenus);
         jSeparator3.setVisible(showNonTransientMenus);
 
+        deleteMenu.setEnabled(nonTransientNodeCount + graphicsIdentifierCount > 0 && transientNodeCount == 0);
         saveFileMenuItem.setEnabled(dataNodeLoader.nodesNeedSave());
 
         super.show(cmpnt, i, i1);
