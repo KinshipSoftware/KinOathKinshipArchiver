@@ -417,11 +417,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 UniqueIdentifier socialGroupIdentifier;
                                 EntityData socialGroupMember;
                                 if (lineParts[1].equals("FAMS") || lineParts[1].equals("FAMC")) {
-                                    socialGroupIdentifier = getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData.getUniqueIdentifier();
+                                    socialGroupIdentifier = getEntityDocument(createdNodes, profileId, lineParts[2], importTranslator).entityData.getUniqueIdentifier();
                                     socialGroupMember = currentEntity.entityData;
                                 } else {
                                     socialGroupIdentifier = currentEntity.entityData.getUniqueIdentifier();
-                                    socialGroupMember = getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData;
+                                    socialGroupMember = getEntityDocument(createdNodes, profileId, lineParts[2], importTranslator).entityData;
                                 }
                                 if (!socialGroupRoleMap.containsKey(socialGroupIdentifier)) {
                                     socialGroupRoleMap.put(socialGroupIdentifier, new ArrayList<SocialMemberElement>());
@@ -457,7 +457,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                                    targetRelation = RelationType.metadata;
                             }
                             // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
-                            currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, null, lineParts[2], importTranslator).entityData, targetRelation, null, null, null, lineParts[1]);
+                            currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, lineParts[2], importTranslator).entityData, targetRelation, null, null, null, lineParts[1]);
                         }
                     }
                 }
