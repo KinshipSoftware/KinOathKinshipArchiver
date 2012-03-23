@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.kindocument;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -8,6 +9,7 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Document;
@@ -108,5 +110,36 @@ public class RelationLinker extends DocumentLoader {
             throw new ImportException("Error: " + exception.getMessage());
         }
         return getAffectedIdentifiers();
+    }
+
+    public void deleteEntity(UniqueIdentifier[] selectedIdentifiers) throws ImportException {
+        ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
+        try {
+            getEntityDocuments(selectedIdentifiers, entityDocumentList);
+            for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
+                EntityDocument currentDocument = entityMap.get(uniqueIdentifier);
+                for (EntityRelation entityRelation : currentDocument.entityData.getAllRelations()) {
+                    EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
+//                    if (relatedDocument == null) {
+                    // remove the relation
+                    currentDocument.entityData.removeRelationsWithNode(relatedDocument.entityData);
+                    relatedDocument.entityData.removeRelationsWithNode(currentDocument.entityData);
+//                    }
+                }
+            }
+            saveAllDocuments();
+            for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
+                EntityDocument currentDocument = entityMap.get(uniqueIdentifier);
+                try {
+                    deleteFromDataBase(currentDocument);
+                } catch (IOException exception) {
+                    BugCatcherManager.getBugCatcher().logError(exception);
+                    throw new ImportException("Error: " + exception.getMessage());
+                }
+            }
+        } catch (URISyntaxException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+            throw new ImportException("Error: " + exception.getMessage());
+        }
     }
 }
