@@ -7,6 +7,7 @@ import java.net.URI;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
@@ -46,6 +47,9 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     private JMenuItem addAsRequiredMenuItem;
     private JMenuItem removeRequiredMenuItem;
     private JMenuItem saveFileMenuItem;
+    private JMenu deleteMenu;
+    final JSeparator jSeparator2 = new JSeparator();
+    final JSeparator jSeparator3 = new JSeparator();
     private UniqueIdentifier[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
     private float xPos;
     private float yPos;
@@ -103,7 +107,39 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             });
             this.add(addEntityMenu);
 
-            // todo:. add a delete entity menu item, with appropriate warnings (maybe also can use the arbil resurector when it is written)
+            JMenu shapeSubMenu = new JMenu("Add Geometry");
+            for (SvgUpdateHandler.GraphicsTypes graphicsType : SvgUpdateHandler.GraphicsTypes.values()) {
+                JMenuItem addLabel = new JMenuItem("Add " + graphicsType.name());
+                addLabel.setActionCommand(graphicsType.name());
+                shapeSubMenu.add(addLabel);
+                if (SvgUpdateHandler.GraphicsTypes.Polyline.equals(graphicsType)) {
+                    addLabel.setEnabled(false);
+                }
+                addLabel.addActionListener(GraphPanelContextMenu.this);
+                // todo: addthese into a layer behind the entities, athought lables could be above
+                // todo: when geometry is selected construct an arbildatanode to allow the geometries attributes to be edited
+            }
+            this.add(shapeSubMenu);
+
+            // todo: add a delete entity menu item, with appropriate warnings (maybe also can use the arbil resurector when it is written)
+            deleteMenu = new JMenu("Delete");
+            deleteMenu.setEnabled(false);
+            this.add(deleteMenu);
+
+
+            mergeEntitiesMenu = new JMenuItem("Merge Selected Entities");
+            mergeEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
+
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    try {
+                        UniqueIdentifier[] affectedIdentifiers = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).mergeEntities(selectedIdentifiers);
+                        kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
+                    } catch (ImportException exception) {
+                        arbilWindowManager.addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
+                    }
+                }
+            });
+            this.add(mergeEntitiesMenu);
 
             duplicateEntitiesMenu = new JMenuItem("Duplicate Selected Entities");
             duplicateEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -119,20 +155,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 }
             });
             this.add(duplicateEntitiesMenu);
-
-            mergeEntitiesMenu = new JMenuItem("Merge Selected Entities");
-            mergeEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
-
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    try {
-                        UniqueIdentifier[] affectedIdentifiers = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).mergeEntities(selectedIdentifiers);
-                        kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
-                    } catch (ImportException exception) {
-                        arbilWindowManager.addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
-                    }
-                }
-            });
-            this.add(mergeEntitiesMenu);
 
             addRelationEntityMenu = new JMenu("Add Relation");
             this.add(addRelationEntityMenu);
@@ -157,7 +179,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             this.add(removeRelationEntityMenu);
 //            for (RelationType relationType : RelationType.values()) {
 //            relationType.name()
-            //todo:. add a remove all relations to selection (including unselected and not shown entities)
+            //todo: add a remove all relations to selection (including unselected and not shown entities)
 
             String actionString = "Remove relations between selected";
             JMenuItem removeRelationEntityMenuItem = new JMenuItem(actionString);
@@ -175,22 +197,9 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             });
             removeRelationEntityMenu.add(removeRelationEntityMenuItem);
 //            }
-
-            JMenu shapeSubMenu = new JMenu("Add Geometry");
-            for (SvgUpdateHandler.GraphicsTypes graphicsType : SvgUpdateHandler.GraphicsTypes.values()) {
-                JMenuItem addLabel = new JMenuItem("Add " + graphicsType.name());
-                addLabel.setActionCommand(graphicsType.name());
-                shapeSubMenu.add(addLabel);
-                if (SvgUpdateHandler.GraphicsTypes.Polyline.equals(graphicsType)) {
-                    addLabel.setEnabled(false);
-                }
-                addLabel.addActionListener(GraphPanelContextMenu.this);
-                // todo: addthese into a layer behind the entities, athought lables could be above
-                // todo: when geometry is selected construct an arbildatanode to allow the geometries attributes to be edited
-            }
-            this.add(shapeSubMenu);
+            this.add(new JSeparator());
         }
-        setAsEgoMenuItem = new JMenuItem("Set as Ego (relacing existing)");
+        setAsEgoMenuItem = new JMenuItem("Set as Ego (replacing list)");
         setAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -214,6 +223,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(removeEgoMenuItem);
+        this.add(jSeparator2);
+
         addAsRequiredMenuItem = new JMenuItem("Keep on diagram");
         addAsRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -230,6 +241,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
         });
         this.add(removeRequiredMenuItem);
+        this.add(jSeparator3);
+
         JMenuItem resetZoomMenuItem = new JMenuItem("Reset Zoom");
         resetZoomMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -300,28 +313,38 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 nonTransientNodeCount++;
             }
         }
-        if (addRelationEntityMenu != null) {
+        boolean showNonTransientMenus;
+        if (graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm) {
             // todo: consider using disable rather than visible
-            duplicateEntitiesMenu.setVisible(nonTransientNodeCount > 0);
-            mergeEntitiesMenu.setVisible(nonTransientNodeCount > 1);
-            addRelationEntityMenu.setVisible(nonTransientNodeCount > 1);
-            setAsEgoMenuItem.setVisible(nonTransientNodeCount > 0);
-            addAsEgoMenuItem.setVisible(nonTransientNodeCount > 0);
-            removeEgoMenuItem.setVisible(nonTransientNodeCount > 0); // todo: set these items based on the state of the selected entities, //graphPanel.selectionContainsEgo());
-            addAsRequiredMenuItem.setVisible(nonTransientNodeCount > 0);
-            removeRequiredMenuItem.setVisible(nonTransientNodeCount > 0);
+            duplicateEntitiesMenu.setEnabled(nonTransientNodeCount > 0);
+            removeRelationEntityMenu.setEnabled(nonTransientNodeCount > 1);
+            mergeEntitiesMenu.setEnabled(nonTransientNodeCount > 1);
+            addRelationEntityMenu.setEnabled(nonTransientNodeCount > 1);
+            setAsEgoMenuItem.setEnabled(nonTransientNodeCount > 0);
+            addAsEgoMenuItem.setEnabled(nonTransientNodeCount > 0);
+            removeEgoMenuItem.setEnabled(nonTransientNodeCount > 0); // todo: set these items based on the state of the selected entities, //graphPanel.selectionContainsEgo());
+            addAsRequiredMenuItem.setEnabled(nonTransientNodeCount > 0);
+            removeRequiredMenuItem.setEnabled(nonTransientNodeCount > 0);
+            deleteMenu.setEnabled(nonTransientNodeCount > 0);
+            showNonTransientMenus = true;
         } else {
-            setAsEgoMenuItem.setVisible(false);
-            addAsEgoMenuItem.setVisible(false);
-            removeEgoMenuItem.setVisible(false);
-            addAsRequiredMenuItem.setVisible(false);
-            removeRequiredMenuItem.setVisible(false);
+            showNonTransientMenus = false;
         }
-        saveFileMenuItem.setEnabled(dataNodeLoader.nodesNeedSave());
+        // hide/show the menus based on the diagram type
+        removeRelationEntityMenu.setVisible(showNonTransientMenus);
+        mergeEntitiesMenu.setVisible(showNonTransientMenus);
+        duplicateEntitiesMenu.setVisible(showNonTransientMenus);
+        addRelationEntityMenu.setVisible(showNonTransientMenus);
+        setAsEgoMenuItem.setVisible(showNonTransientMenus);
+        addAsEgoMenuItem.setVisible(showNonTransientMenus);
+        removeEgoMenuItem.setVisible(showNonTransientMenus);
+        addAsRequiredMenuItem.setVisible(showNonTransientMenus);
+        removeRequiredMenuItem.setVisible(showNonTransientMenus);
+        addEntityMenu.setVisible(showNonTransientMenus);
+        jSeparator2.setVisible(showNonTransientMenus);
+        jSeparator3.setVisible(showNonTransientMenus);
 
-        // enable/disable the menus based on the diagram type
-        addEntityMenu.setEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
-        removeRelationEntityMenu.setEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
+        saveFileMenuItem.setEnabled(dataNodeLoader.nodesNeedSave());
 
         super.show(cmpnt, i, i1);
     }
