@@ -24,6 +24,7 @@ import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  * Document : EntitySearchPanel
@@ -46,7 +47,15 @@ public class EntitySearchPanel extends JPanel {
     private MessageDialogHandler dialogHandler;
     private ArbilDataNodeLoader dataNodeLoader;
 
+    public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader, String nodeSetTitle, UniqueIdentifier[] entityIdentifiers) {
+        InitPanel(entityCollection, kinDiagramPanel, graphPanel, dialogHandler, dataNodeLoader, nodeSetTitle, entityIdentifiers);
+    }
+
     public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader) {
+        InitPanel(entityCollection, kinDiagramPanel, graphPanel, dialogHandler, dataNodeLoader, "Search Entity Names", null);
+    }
+
+    private void InitPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader, String nodeSetTitle, UniqueIdentifier[] entityIdentifiers) {
         this.entityCollection = entityCollection;
         this.graphPanel = graphPanel;
         this.dialogHandler = dialogHandler;
@@ -56,7 +65,7 @@ public class EntitySearchPanel extends JPanel {
         resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
         resultsTree.setRootVisible(false);
         // resultsTree.requestResort();// this resort is unrequred
-        JLabel searchLabel = new JLabel("Search Entity Names");
+        JLabel searchLabel = new JLabel(nodeSetTitle);
         searchField = new JTextField();
         searchField.addKeyListener(new KeyAdapter() {
 
@@ -82,7 +91,9 @@ public class EntitySearchPanel extends JPanel {
         final JPanel optionsPanel = new JPanel();
         optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
         searchPanel.add(optionsPanel, BorderLayout.CENTER);
-        optionsPanel.add(searchField);
+        if (entityIdentifiers == null) {
+            optionsPanel.add(searchField);
+        }
         graphSelectionCheckBox = new JCheckBox("Graph selection", true);
         optionsPanel.add(graphSelectionCheckBox);
         expandByKinTypeCheckBox = new JCheckBox("Expand selection by kin type string", true);
@@ -103,10 +114,16 @@ public class EntitySearchPanel extends JPanel {
                 kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected());
             }
         });
-        searchPanel.add(searchButton, BorderLayout.PAGE_END);
+        optionsPanel.add(new JCheckBox("Link to graph selection", false));
+        if (entityIdentifiers == null) {
+            searchPanel.add(searchButton, BorderLayout.PAGE_END);
+        }
         this.add(searchPanel, BorderLayout.PAGE_START);
         this.add(new JScrollPane(resultsTree), BorderLayout.CENTER);
         this.add(resultsArea, BorderLayout.PAGE_END);
+        if (entityIdentifiers != null) {
+            loadCollection(entityIdentifiers);
+        }
     }
 
     public void setTransferHandler(KinDragTransferHandler dragTransferHandler) {
@@ -138,6 +155,31 @@ public class EntitySearchPanel extends JPanel {
                 resultsTree.requestResort();
                 searchPanel.remove(progressBar);
                 searchPanel.add(searchButton, BorderLayout.PAGE_END);
+                searchPanel.revalidate();
+            }
+        }.start();
+    }
+
+    protected void loadCollection(final UniqueIdentifier[] entityIdentifiers) {
+        progressBar.setIndeterminate(false);
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(entityIdentifiers.length);
+        progressBar.setValue(0);
+        searchPanel.add(progressBar, BorderLayout.PAGE_END);
+        searchPanel.revalidate();
+        new Thread() {
+
+            @Override
+            public void run() {
+                ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
+                resultsArea.setText("Loading " + entityIdentifiers.length + " entities\n");
+                for (UniqueIdentifier entityId : entityIdentifiers) {
+                    EntityData entityData = entityCollection.getEntity(entityId, graphPanel.getIndexParameters());
+                    resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                    resultsTree.rootNodeChildren = resultsArray.toArray(new KinTreeNode[]{});
+                    resultsTree.requestResort();
+                }
+                searchPanel.remove(progressBar);
                 searchPanel.revalidate();
             }
         }.start();
