@@ -71,6 +71,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private ArbilWindowManager dialogHandler;
     private ArbilDataNodeLoader dataNodeLoader;
     private ArbilTreeHelper treeHelper;
+    private KinDragTransferHandler dragTransferHandler;
 
     public KinDiagramPanel(URI existingFile, boolean savableType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
         this.sessionStorage = sessionStorage;
@@ -187,7 +188,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         HidePane tableHidePane = new HidePane(HidePane.HidePanePosition.bottom, 150);
 
-        KinDragTransferHandler dragTransferHandler = new KinDragTransferHandler(this, sessionStorage, entityCollection);
+        dragTransferHandler = new KinDragTransferHandler(this, sessionStorage, entityCollection);
         graphPanel.setTransferHandler(dragTransferHandler);
         egoSelectionPanel.setTransferHandler(dragTransferHandler);
 
@@ -423,8 +424,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
     public void addNodeCollection(UniqueIdentifier[] entityIdentifiers, String nodeSetTitle) {
         EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, this, graphPanel, dialogHandler, dataNodeLoader, nodeSetTitle, entityIdentifiers);
-        entitySearchPanel.setTransferHandler(graphPanel.getTransferHandler());
+        entitySearchPanel.setTransferHandler(dragTransferHandler);
         kinTermHidePane.addTab(nodeSetTitle, entitySearchPanel);
+        kinTermHidePane.setHiddeState();
     }
 
     public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray) {
