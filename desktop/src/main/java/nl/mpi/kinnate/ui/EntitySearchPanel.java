@@ -114,7 +114,7 @@ public class EntitySearchPanel extends JPanel {
                 kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected());
             }
         });
-        optionsPanel.add(new JCheckBox("Link to graph selection", false));
+        optionsPanel.add(new JCheckBox("Link to graph selection to this tree", false));
         if (entityIdentifiers == null) {
             searchPanel.add(searchButton, BorderLayout.PAGE_END);
         }
@@ -173,12 +173,18 @@ public class EntitySearchPanel extends JPanel {
             public void run() {
                 ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
                 resultsArea.setText("Loading " + entityIdentifiers.length + " entities\n");
+                int loadedCount = 0;
                 for (UniqueIdentifier entityId : entityIdentifiers) {
                     EntityData entityData = entityCollection.getEntity(entityId, graphPanel.getIndexParameters());
                     resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
                     resultsTree.rootNodeChildren = resultsArray.toArray(new KinTreeNode[]{});
                     resultsTree.requestResort();
+                    loadedCount++;
+                    resultsArea.setText("Loaded " + loadedCount + " of " + entityIdentifiers.length + " entities\n");
+                    progressBar.setValue(loadedCount);
                 }
+                resultsArea.setText("");
+                resultsArea.setVisible(false);
                 searchPanel.remove(progressBar);
                 searchPanel.revalidate();
             }
