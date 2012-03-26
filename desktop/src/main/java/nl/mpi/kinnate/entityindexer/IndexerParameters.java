@@ -24,7 +24,8 @@ public class IndexerParameters {
     @XmlElement(name = "LabelFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam labelFields = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"},
                 {"*:Kinnate/*:CustomData/*:INDI/*:NAME/*:NAME"},
-                {"*:Kinnate/*:CustomData/*:INDI/*:NAME"}
+                {"*:Kinnate/*:CustomData/*:INDI/*:NAME"},
+                {"*:Kinnate/*:CustomData/*:Type"}
 //                , {"*:Kinnate/*:CustomData/*:Name"}
 //    , {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"}
 //    , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"}
