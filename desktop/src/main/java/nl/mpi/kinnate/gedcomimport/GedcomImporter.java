@@ -22,9 +22,9 @@ import nl.mpi.kinnate.kindata.EntityDateException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : GedcomImporter
- *  Created on : Aug 24, 2010, 2:40:21 PM
- *  Author     : Peter Withers
+ * Document : GedcomImporter
+ * Created on : Aug 24, 2010, 2:40:21 PM
+ * Author : Peter Withers
  */
 public class GedcomImporter extends EntityImporter implements GenericImporter {
 
@@ -116,11 +116,37 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                         if (lineParts[1].equals("HEAD")) {
                             // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
                             appendToTaskOutput("Reading Gedcom Header");
+                            currentEntity.insertValue("Type", "Gedcom Header");
                             currentEntity.appendValue(lineParts[1], null, gedcomLevel);
                         } else {
+                            currentEntity.appendValue("GEDCOM-ID", lineParts[1], gedcomLevel);
+                            if (lineParts[2].equals("NOTE")) {
+                                currentEntity.insertValue("Type", "Gedcom Note");
+                            } else if (lineParts[2].equals("FAM")) {
+                                currentEntity.insertValue("Type", "Gedcom Family Group");
+                            } else if (lineParts[2].equals("INDI")) {
+                                // do not insert name elements for individuals
+                            } else if (lineParts[2].equals("OBJE")) {
+                                currentEntity.insertValue("Type", "Resource File");
+                            } else if (lineParts[2].equals("REPO")) {
+                                currentEntity.insertValue("Type", "Repository");
+                            } else if (lineParts[2].equals("SUBN")) {
+                                currentEntity.insertValue("Type", "Submission");
+                            } else if (lineParts[2].equals("SOUR")) {
+                                currentEntity.insertValue("Type", "Source");
+                            } else if (lineParts[2].equals("SUBM")) {
+                                currentEntity.insertValue("Type", "Submitter");
+//                            } else if (lineParts[2].equals("NOTE")) {
+//                                currentEntity.insertValue("Type", "Gedcom Note");
+//                            } else if (lineParts[2].equals("NOTE")) {
+//                                currentEntity.insertValue("Type", "Gedcom Note");
+                            } else {
+                                currentEntity.insertValue("Type", lineParts[2]);
+                            }
+                            currentEntity.appendValue(lineParts[2], null, gedcomLevel);
                             // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes                                
-                            if (lineParts.length > 2) {
-                                currentEntity.appendValue(lineParts[2], lineParts[1], gedcomLevel);
+//                            if (lineParts.length > 2) {
+//                                currentEntity.appendValue("gedcom-id", lineParts[1], gedcomLevel);
 //                                    appendToTaskOutput(lineParts[2]);
 //                                    currentEntity.insertValue("gedcom-type", lineParts[2]);
 //                                    if (lineParts[2].equals("NOTE")) {
@@ -130,9 +156,8 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                                        previousField = addedNoteElement;
 //                                    }
 //                                }
-                            } else {
-                                currentEntity.appendValue("gedcom-id", lineParts[1], gedcomLevel);
-                            }
+//                            } else {
+//                            }
 //                                System.out.println("currentDomElement: " + currentDomNode + " value: " + currentDomNode.getTextContent());
                         }
                     } // end skip overwrite
