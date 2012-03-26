@@ -1,10 +1,14 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -22,15 +26,18 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
- *  Document   : EntitySearchPanel
- *  Created on : Mar 14, 2011, 4:01:11 PM
- *  Author     : Peter Withers
+ * Document : EntitySearchPanel
+ * Created on : Mar 14, 2011, 4:01:11 PM
+ * Author : Peter Withers
  */
 public class EntitySearchPanel extends JPanel {
 
     private EntityCollection entityCollection;
     private KinTree resultsTree;
     private JTextArea resultsArea = new JTextArea();
+    private JCheckBox graphSelectionCheckBox;
+    private JCheckBox expandByKinTypeCheckBox;
+    private JTextField kinTypeStringTextArea;
     private JTextField searchField;
     private JProgressBar progressBar;
     private JButton searchButton;
@@ -72,7 +79,30 @@ public class EntitySearchPanel extends JPanel {
         searchPanel = new JPanel();
         searchPanel.setLayout(new BorderLayout());
         searchPanel.add(searchLabel, BorderLayout.PAGE_START);
-        searchPanel.add(searchField, BorderLayout.CENTER);
+        final JPanel optionsPanel = new JPanel();
+        optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
+        searchPanel.add(optionsPanel, BorderLayout.CENTER);
+        optionsPanel.add(searchField);
+        graphSelectionCheckBox = new JCheckBox("Graph selection", true);
+        optionsPanel.add(graphSelectionCheckBox);
+        expandByKinTypeCheckBox = new JCheckBox("Expand selection by kin type string", true);
+        optionsPanel.add(expandByKinTypeCheckBox);
+        kinTypeStringTextArea = new JTextField();
+        optionsPanel.add(kinTypeStringTextArea);
+        graphSelectionCheckBox.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                expandByKinTypeCheckBox.setEnabled(graphSelectionCheckBox.isSelected());
+                kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected() && graphSelectionCheckBox.isSelected());
+
+            }
+        });
+        expandByKinTypeCheckBox.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected());
+            }
+        });
         searchPanel.add(searchButton, BorderLayout.PAGE_END);
         this.add(searchPanel, BorderLayout.PAGE_START);
         this.add(new JScrollPane(resultsTree), BorderLayout.CENTER);
