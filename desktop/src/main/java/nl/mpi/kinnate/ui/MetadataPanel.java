@@ -127,7 +127,7 @@ public class MetadataPanel extends JPanel {
         // todo: add only imdi nodes to the tree and the root node of them
         // todo: maybe have a table for entities and one for achive metdata
         if (archiveTableModel.getArbilDataNodeCount() > 0) {
-            editorHidePane.addTab("Archive Metadata", this);
+            editorHidePane.addTab("External Links", this);
         } else {
             removeTab(this);
         }
