@@ -81,9 +81,8 @@ public class GedcomImportPanel extends JPanel {
             createdNodesPanel.add(new JLabel("No data was imported, nothing to show in the graph."));
         } else {
             final ArrayList<JCheckBox> checkBoxArray = new ArrayList<JCheckBox>();
-            // todo: offer to only show the top most parents (any entity that does not have a parent) in the tree so that the user can browse and drag onto the diagram
             for (String typeString : gedcomImporter.getCreatedNodeIds().keySet()) {
-                JCheckBox currentCheckBox = new JCheckBox(typeString + " ( x " + gedcomImporter.getCreatedNodeIds().get(typeString).size() + ")");
+                JCheckBox currentCheckBox = new JCheckBox(typeString + " ( x " + gedcomImporter.getCreatedNodeIds().get(typeString).size() + ")", true);
                 currentCheckBox.setActionCommand(typeString);
                 checkBoxArray.add(currentCheckBox);
                 createdNodesPanel.add(currentCheckBox);
@@ -105,7 +104,7 @@ public class GedcomImportPanel extends JPanel {
                                     selectedIds.addAll((gedcomImporter.getCreatedNodeIds().get(currentCheckBox.getActionCommand())));
                                 }
                             }
-                            egoSelectionTestPanel.addRequiredNodes(selectedIds.toArray(new UniqueIdentifier[]{}));
+                            egoSelectionTestPanel.addNodeCollection(selectedIds.toArray(new UniqueIdentifier[]{}), "Imported Entities");
                             egoSelectionTestPanel.loadAllTrees();
                         }
                     });
