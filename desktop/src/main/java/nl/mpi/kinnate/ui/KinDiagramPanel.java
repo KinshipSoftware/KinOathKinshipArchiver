@@ -46,9 +46,9 @@ import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
 import nl.mpi.kinnate.ui.relationsettings.RelationSettingsPanel;
 
 /**
- *  Document   : KinTypeStringTestPanel
- *  Created on : Sep 29, 2010, 12:52:01 PM
- *  Author     : Peter Withers
+ * Document : KinTypeStringTestPanel
+ * Created on : Sep 29, 2010, 12:52:01 PM
+ * Author : Peter Withers
  */
 public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePanel, ArbilDataNodeContainer {
 
@@ -419,6 +419,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         // todo: this does not update the ego highlight on the graph and the trees.
         graphPanel.dataStoreSvg.egoEntities.removeAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
+    }
+
+    public void addNodeCollection(UniqueIdentifier[] entityIdentifiers, String nodeSetTitle) {
+        EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, this, graphPanel, dialogHandler, dataNodeLoader, nodeSetTitle, entityIdentifiers);
+        entitySearchPanel.setTransferHandler(graphPanel.getTransferHandler());
+        kinTermHidePane.addTab(nodeSetTitle, entitySearchPanel);
     }
 
     public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray) {
