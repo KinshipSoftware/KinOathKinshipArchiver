@@ -1,15 +1,17 @@
 package nl.mpi.kinnate.kintypestrings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import nl.mpi.kinnate.ui.KinTypeStringProvider;
 
 /**
- *  Document   : KinTerms
- *  Created on : Mar 8, 2011, 2:13:30 PM
- *  Author     : Peter Withers
+ * Document : KinTerms
+ * Created on : Mar 8, 2011, 2:13:30 PM
+ * Author : Peter Withers
  */
-public class KinTermGroup {
+public class KinTermGroup implements KinTypeStringProvider {
 
     @XmlAttribute(name = "GroupName", namespace = "http://mpi.nl/tla/kin")
     public String titleString = "Kin Term Group (unnamed)";
@@ -71,5 +73,35 @@ public class KinTermGroup {
             }
         }
         return foundKinTerms.toArray(new String[]{});
+    }
+
+    public String[] getCurrentStrings() {
+        ArrayList<String> kinTypeStringList = new ArrayList<String>();
+        if (graphGenerate) {
+            for (KinTerm kinTerm : this.getKinTerms()) {
+                // todo: if these do not state E then maybe they should continue on from the Alter kin type string, iow the propositus could be specified from alter rather than ego
+                String[] alterKinTypeStrings = kinTerm.alterKinTypeStrings.split("\\|"); // todo: change this to ','
+                kinTypeStringList.addAll(Arrays.asList(alterKinTypeStrings));
+                if (kinTerm.propositusKinTypeStrings != null) {
+                    String[] propositusKinTypeStrings = kinTerm.propositusKinTypeStrings.split("\\|"); // todo: change this to ','
+                    kinTypeStringList.addAll(Arrays.asList(propositusKinTypeStrings));
+                }
+            }
+        }
+        return kinTypeStringList.toArray(new String[]{});
+    }
+
+    public int getTotalLength() {
+        int totalLength = 0;
+        if (graphGenerate) {
+            for (KinTerm kinTerm : this.getKinTerms()) {
+                totalLength = totalLength + kinTerm.alterKinTypeStrings.split("\\|").length;
+            }
+        }
+        return totalLength;
+    }
+
+    public void highlightKinTypeStrings(ParserHighlight[] parserHighlight, String[] kinTypeStrings) {
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
