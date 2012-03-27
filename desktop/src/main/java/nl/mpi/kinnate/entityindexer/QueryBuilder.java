@@ -1,13 +1,13 @@
 package nl.mpi.kinnate.entityindexer;
 
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.QueryTerm;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : QueryBuilder
- *  Created on : Mar 23, 2011, 3:32:23 PM
- *  Author     : Peter Withers
+ * Document : QueryBuilder
+ * Created on : Mar 23, 2011, 3:32:23 PM
+ * Author : Peter Withers
  */
 public class QueryBuilder {
 
@@ -49,7 +49,6 @@ public class QueryBuilder {
     public String getLabelsClause(IndexerParameters indexParameters, String docRootVar) {
         StringBuilder stringBuilder = new StringBuilder();
         for (ParameterElement currentEntry : indexParameters.labelFields.getValues()) {
-//            String trimmedXpath = currentEntry.getXpathString(); //.substring("*:Kinnate/*:Entity".length()); // todo: remove this and update the indexParameters entries
             stringBuilder.append("for $labelNode in ");
             stringBuilder.append(docRootVar);
             stringBuilder.append(currentEntry.getXpathString());
@@ -61,14 +60,12 @@ public class QueryBuilder {
     public String getDatesClause(IndexerParameters indexParameters, String docRootVar) {
         StringBuilder stringBuilder = new StringBuilder();
         for (ParameterElement currentEntry : indexParameters.dateOfBirthField.getValues()) {
-//            String trimmedXpath = currentEntry.getXpathString(); //.substring("*:Kinnate/*:Entity".length()); // todo: remove this and update the indexParameters entries
             stringBuilder.append("for $dateOfBirthNode in ");
             stringBuilder.append(docRootVar);
             stringBuilder.append(currentEntry.getXpathString());
             stringBuilder.append("\nreturn\ninsert node <kin:DateOfBirth xmlns:kin=\"http://mpi.nl/tla/kin\">{$dateOfBirthNode/text()}</kin:DateOfBirth> after $copyNode/*:Identifier,\n"); // into $copyNode
         }
         for (ParameterElement currentEntry : indexParameters.dateOfDeathField.getValues()) {
-//            String trimmedXpath = currentEntry.getXpathString(); //.substring("*:Kinnate/*:Entity".length()); // todo: remove this and update the indexParameters entries
             stringBuilder.append("for $dateOfDeathNode in ");
             stringBuilder.append(docRootVar);
             stringBuilder.append(currentEntry.getXpathString());
@@ -257,10 +254,10 @@ public class QueryBuilder {
         }
 //        stringBuilder.append(")");
         return "<IdentifierArray xmlns=\"http://mpi.nl/tla/kin\">{"
-                + "for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate\n"
+                + "for $entityNode in collection('nl-mpi-kinnate')\n"
                 + "where " + stringBuilder.toString() + "\n"
                 + "return\n"
-                + "$entityNode/*:Entity/*:Identifier\n"
+                + "$entityNode/*:Kinnate/*:Entity/*:Identifier\n"
                 + "}</IdentifierArray>";
     }
 //    public static void main(String args[]){
