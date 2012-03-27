@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,9 +23,6 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.KinTermSavePanel;
-import nl.mpi.kinnate.kindata.VisiblePanelSetting;
-import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
-import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityService;
@@ -32,18 +30,20 @@ import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.ProcessAbortException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.VisiblePanelSetting;
+import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
 import nl.mpi.kinnate.kindocument.ProfileManager;
 import nl.mpi.kinnate.kintypestrings.KinTermCalculator;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
-import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
+import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
 import nl.mpi.kinnate.ui.entityprofiles.CmdiProfileSelectionPanel;
-import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
+import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.relationsettings.RelationSettingsPanel;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  * Document : KinTypeStringTestPanel
@@ -54,6 +54,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
     private EntityCollection entityCollection;
     private KinTypeStringInput kinTypeStringInput;
+    private ArrayList<KinTypeStringProvider> kinTypeStringProviders;
     private GraphPanel graphPanel;
     private EgoSelectionPanel egoSelectionPanel;
     private ArchiveEntityLinkerPanel archiveEntityLinkerPanelRemote;
@@ -303,6 +304,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 }
             }
         });
+        kinTypeStringProviders = new ArrayList<KinTypeStringProvider>();
+        kinTypeStringProviders.add(kinTypeStringInput);
+        kinTypeStringProviders.add(entitySearchPanel);
+        kinTypeStringProviders.addAll(Arrays.asList(graphPanel.getkinTermGroups()));
     }
 
     static public File getDefaultDiagramFile(SessionStorage sessionStorage) {
@@ -336,7 +341,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                             entityIndex.clearAbortRequest();
                             try {
                                 String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
-                                ParserHighlight[] parserHighlight = new ParserHighlight[kinTypeStrings.length];
                                 progressBar.setValue(0);
                                 progressBar.setVisible(true);
                                 if (graphPanel.dataStoreSvg.diagramMode == DiagramMode.Undefined) {
@@ -354,7 +358,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 }
                                 if (graphPanel.dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
 //                                    diagramMode = DiagramMode.KinTypeQuery;
-                                    EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, kinTypeStrings, parserHighlight, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
+                                    EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, kinTypeStringProviders, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
                                     progressBar.setIndeterminate(true);
                                     graphPanel.dataStoreSvg.graphData.setEntitys(graphNodes);
                                     // register interest Arbil updates and update the graph when data is edited in the table
@@ -365,13 +369,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 } else {
 //                                    diagramMode = DiagramMode.FreeForm;
                                     KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg);
-                                    graphData.readKinTypes(kinTypeStrings, graphPanel.getkinTermGroups(), graphPanel.dataStoreSvg, parserHighlight);
+                                    graphData.readKinTypes(kinTypeStringProviders, graphPanel.dataStoreSvg);
                                     graphPanel.drawNodes(graphData);
                                     egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
 //                KinDiagramPanel.this.doLayout();
                                     new KinTermCalculator().insertKinTerms(graphData.getDataNodes(), graphPanel.getkinTermGroups());
                                 }
-                                kinTypeStringInput.highlightKinTypeStrings(parserHighlight, kinTypeStrings);
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
                             } catch (EntityServiceException exception) {
                                 BugCatcherManager.getBugCatcher().logError(exception);
@@ -427,6 +430,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         entitySearchPanel.setTransferHandler(dragTransferHandler);
         kinTermHidePane.addTab(nodeSetTitle, entitySearchPanel);
         kinTermHidePane.setHiddeState();
+        kinTypeStringProviders.add(entitySearchPanel);
     }
 
     public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray) {
@@ -525,6 +529,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup, dialogHandler), true);
             }
         }
+        kinTypeStringProviders.add(kinTermGroup);
     }
 
     public int getKinTermGroupCount() {
