@@ -1,22 +1,22 @@
 package nl.mpi.kinnate.kintypestrings;
 
-import nl.mpi.kinnate.kindata.GraphSorter;
-import nl.mpi.kinnate.kindata.EntityData;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityData.SymbolType;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight.ParserHighlightType;
 import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.ui.KinTypeStringProvider;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : KinTypeStringConverter
- *  Created on : Sep 29, 2010, 12:52:33 PM
- *  Author     : Peter Withers
+ * Document : KinTypeStringConverter
+ * Created on : Sep 29, 2010, 12:52:33 PM
+ * Author : Peter Withers
  */
 public class KinTypeStringConverter extends GraphSorter {
 
@@ -234,41 +234,29 @@ public class KinTypeStringConverter extends GraphSorter {
         return kinTypeList;
     }
 
-    public void readKinTypes(String[] inputStringArray, KinTermGroup[] kinTermsArray, DataStoreSvg dataStoreSvg, ParserHighlight[] parserHighlightArray) {
+    public void readKinTypes(ArrayList<KinTypeStringProvider> kinTypeStringProviders, DataStoreSvg dataStoreSvg) {
         HashMap<UniqueIdentifier, EntityData> namedEntitiesMap = new HashMap<UniqueIdentifier, EntityData>();
         HashSet<EntityData> allEntitiesSet = new HashSet<EntityData>();
 //        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{}, true);
 //        graphDataNodeList.put("E", egoDataNode);
 //        egoDataNode.isVisible = true;
-        ArrayList<String> inputStringList = new ArrayList<String>();
-        inputStringList.addAll(Arrays.asList(inputStringArray));
-        for (KinTermGroup kinTerms : kinTermsArray) {
-            if (kinTerms.graphGenerate) {
-                for (KinTerm kinTerm : kinTerms.getKinTerms()) {
-                    // todo: if these do not state E then maybe they should continue on from the Alter kin type string, iow the propositus could be specified from alter rather than ego
-                    String[] alterKinTypeStrings = kinTerm.alterKinTypeStrings.split("\\|");
-                    inputStringList.addAll(Arrays.asList(alterKinTypeStrings));
-                    if (kinTerm.propositusKinTypeStrings != null) {
-                        String[] propositusKinTypeStrings = kinTerm.propositusKinTypeStrings.split("\\|");
-                        inputStringList.addAll(Arrays.asList(propositusKinTypeStrings));
-                    }
-                }
-            }
-        }
         ArrayList<EntityData> egoDataNodeList = new ArrayList<EntityData>();
         int lineCounter = -1;
-        for (String inputString : inputStringList) {
-            lineCounter++;
+        for (KinTypeStringProvider kinTypeStringProvider : kinTypeStringProviders) {
+            final String[] kinTypeStrings = kinTypeStringProvider.getCurrentStrings();
+            ParserHighlight[] parserHighlightArray = new ParserHighlight[kinTypeStrings.length];
+            for (String inputString : kinTypeStrings) {
+                lineCounter++;
 //            System.out.println("inputString: " + inputString);
-            ParserHighlight parserHighlight = new ParserHighlight();
-            if (parserHighlightArray.length > lineCounter) {
-                // if kin type strings have been added from the kin terms then there will be no space in the array
-                parserHighlightArray[lineCounter] = parserHighlight;
-            }
-            if (inputString != null && inputString.length() > 0) {
-                if (inputString.startsWith("#")) {
-                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, 0, null);
-                } else {
+                ParserHighlight parserHighlight = new ParserHighlight();
+                if (parserHighlightArray.length > lineCounter) {
+                    // if kin type strings have been added from the kin terms then there will be no space in the array
+                    parserHighlightArray[lineCounter] = parserHighlight;
+                }
+                if (inputString != null && inputString.length() > 0) {
+                    if (inputString.startsWith("#")) {
+                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, 0, null);
+                    } else {
 //                    while (inputString.matches("^[\\s]")) {
 //                        inputString = inputString.substring(1);
 //                        insertedEgoOffset--;
@@ -278,117 +266,123 @@ public class KinTypeStringConverter extends GraphSorter {
 //                        inputString = "E" + inputString;
 //                        insertedEgoOffset++;
 //                    }
-                    int initialLength = inputString.length();
-                    String consumableString = inputString;
-                    HashSet<EntityData> parentDataNodes = new HashSet<EntityData>();
+                        int initialLength = inputString.length();
+                        String consumableString = inputString;
+                        HashSet<EntityData> parentDataNodes = new HashSet<EntityData>();
 //                    HashSet<EntityData> egoDataNodes = new HashSet<EntityData>(); // todo: replace this with the egoDataNodeList, currently waiting on the kin type strings update below
-                    String fullKinTypeString = "";
-                    while (consumableString.length() > 0) {
-                        int parserHighlightPosition = initialLength - consumableString.length();
-                        boolean kinTypeFound = false;
-                        for (KinType currentReferenceKinType : dataStoreSvg.getKinTypeDefinitions()) {
-                            if (consumableString.startsWith(currentReferenceKinType.codeString)
-                                    && currentReferenceKinType.getRelationTypes() != null && currentReferenceKinType.getSymbolTypes() != null // not allowing wild cards here
-                                    // todo: Ticket #1106 this could provide better feedback and show a message in the tool tip about wild cards not available in this context
-                                    ) {
-                                String previousConsumableString = consumableString;
+                        String fullKinTypeString = "";
+                        while (consumableString.length() > 0) {
+                            int parserHighlightPosition = initialLength - consumableString.length();
+                            boolean kinTypeFound = false;
+                            for (KinType currentReferenceKinType : dataStoreSvg.getKinTypeDefinitions()) {
+                                if (consumableString.startsWith(currentReferenceKinType.codeString)
+                                        && currentReferenceKinType.getRelationTypes() != null && currentReferenceKinType.getSymbolTypes() != null // not allowing wild cards here
+                                        // todo: Ticket #1106 this could provide better feedback and show a message in the tool tip about wild cards not available in this context
+                                        ) {
+                                    String previousConsumableString = consumableString;
 //                                if (currentReferenceKinType.isEgoType()) {
 //                                    fullKinTypeString = "";
 //                                }
-                                if (currentReferenceKinType.hasNoRelationTypes() && !parentDataNodes.isEmpty()) {
-                                    // todo: Ticket #1106 this could provide better feedback or even allow refrences back to ego here
-                                    // prevent multiple egos on one line
-                                    // going from one kin type to a second ego cannot specify the relation to the second ego and hence such syntax is not workable
+                                    if (currentReferenceKinType.hasNoRelationTypes() && !parentDataNodes.isEmpty()) {
+                                        // todo: Ticket #1106 this could provide better feedback or even allow refrences back to ego here
+                                        // prevent multiple egos on one line
+                                        // going from one kin type to a second ego cannot specify the relation to the second ego and hence such syntax is not workable
 //                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, parserHighlightPosition);
-                                    // because kinTypeFound is not set then the error highlight will be added
-                                    break;
-                                } else {
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, parserHighlightPosition, currentReferenceKinType.displayString);
-                                }
-                                String currentKinTypeString = consumableString;
-                                consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
-                                consumableString = consumableString.replaceAll("^[-\\+\\d]*", "");
-                                currentKinTypeString = currentKinTypeString.substring(0, currentKinTypeString.length() - consumableString.length());
-                                String kinTypeModifier = currentKinTypeString.substring(currentReferenceKinType.codeString.length());
+                                        // because kinTypeFound is not set then the error highlight will be added
+                                        break;
+                                    } else {
+                                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, parserHighlightPosition, currentReferenceKinType.displayString);
+                                    }
+                                    String currentKinTypeString = consumableString;
+                                    consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
+                                    consumableString = consumableString.replaceAll("^[-\\+\\d]*", "");
+                                    currentKinTypeString = currentKinTypeString.substring(0, currentKinTypeString.length() - consumableString.length());
+                                    String kinTypeModifier = currentKinTypeString.substring(currentReferenceKinType.codeString.length());
 //                                System.out.println("kinTypeFound: " + currentReferenceKinType.codeString);
 //                                System.out.println("consumableString: " + consumableString);
 //                                System.out.println("fullKinTypeString: " + fullKinTypeString);
-                                HashSet<EntityData> currentGraphDataNodeSet = new HashSet<EntityData>();
-                                fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
-                                LabelStringsParser labelStringsParser = new LabelStringsParser(consumableString, currentKinTypeString);
-                                if (labelStringsParser.userDefinedIdentifierFound) {
-                                    // add a highlight for the label section
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length(), "Label text");
-                                    consumableString = labelStringsParser.remainingInputString;
-                                }
-                                if (labelStringsParser.uidStartLocation > -1) {
-                                    // add a highlight for the user id section
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Parameter, initialLength - labelStringsParser.uidStartLocation, "User defined identifier");
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.uidEndLocation, "Label text");
-                                }
-                                if (labelStringsParser.dateLocation > -1) {
-                                    // add a highlight for the date section
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Parameter, initialLength - labelStringsParser.dateLocation, "Date of birth/death");
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation, "Label text");
-                                }
-                                if (labelStringsParser.dateError) {
-                                    // add a highlight for the date error section
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - labelStringsParser.dateLocation, "Incorrect date format:"
-                                            + " Valid formats are yyyy, yyyy/mm, yyyy/mm/dd with the birth date followed by death date eg yyyy/mm/dd-yyyy/mm/dd");
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation, "Label text");
-                                }
-                                if (parentDataNodes.isEmpty()) {
-                                    generateNeededEntities(null, labelStringsParser, parentDataNodes, currentReferenceKinType, currentGraphDataNodeSet, kinTypeModifier, fullKinTypeString, egoDataNodeList, namedEntitiesMap, allEntitiesSet);
-                                } else {
-                                    for (EntityData currentParentNode : parentDataNodes.toArray(new EntityData[]{})) { // todo: this is probably incorrect since there may be more relation/symbol types to create
-                                        generateNeededEntities(currentParentNode, labelStringsParser, parentDataNodes, currentReferenceKinType, currentGraphDataNodeSet, kinTypeModifier, fullKinTypeString, egoDataNodeList, namedEntitiesMap, allEntitiesSet);
+                                    HashSet<EntityData> currentGraphDataNodeSet = new HashSet<EntityData>();
+                                    fullKinTypeString = fullKinTypeString + previousConsumableString.substring(0, previousConsumableString.length() - consumableString.length());
+                                    LabelStringsParser labelStringsParser = new LabelStringsParser(consumableString, currentKinTypeString);
+                                    if (labelStringsParser.userDefinedIdentifierFound) {
+                                        // add a highlight for the label section
+                                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - consumableString.length(), "Label text");
+                                        consumableString = labelStringsParser.remainingInputString;
                                     }
-                                }
+                                    if (labelStringsParser.uidStartLocation > -1) {
+                                        // add a highlight for the user id section
+                                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Parameter, initialLength - labelStringsParser.uidStartLocation, "User defined identifier");
+                                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.uidEndLocation, "Label text");
+                                    }
+                                    if (labelStringsParser.dateLocation > -1) {
+                                        // add a highlight for the date section
+                                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Parameter, initialLength - labelStringsParser.dateLocation, "Date of birth/death");
+                                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation, "Label text");
+                                    }
+                                    if (labelStringsParser.dateError) {
+                                        // add a highlight for the date error section
+                                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - labelStringsParser.dateLocation, "Incorrect date format:"
+                                                + " Valid formats are yyyy, yyyy/mm, yyyy/mm/dd with the birth date followed by death date eg yyyy/mm/dd-yyyy/mm/dd");
+                                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation, "Label text");
+                                    }
+                                    if (parentDataNodes.isEmpty()) {
+                                        generateNeededEntities(null, labelStringsParser, parentDataNodes, currentReferenceKinType, currentGraphDataNodeSet, kinTypeModifier, fullKinTypeString, egoDataNodeList, namedEntitiesMap, allEntitiesSet);
+                                    } else {
+                                        for (EntityData currentParentNode : parentDataNodes.toArray(new EntityData[]{})) { // todo: this is probably incorrect since there may be more relation/symbol types to create
+                                            generateNeededEntities(currentParentNode, labelStringsParser, parentDataNodes, currentReferenceKinType, currentGraphDataNodeSet, kinTypeModifier, fullKinTypeString, egoDataNodeList, namedEntitiesMap, allEntitiesSet);
+                                        }
+                                    }
 //                                if (currentGraphDataNode.isEgo) {
 //                                    egoDataNode = currentGraphDataNode;
 //                                }
-                                for (EntityData currentGraphDataNode : currentGraphDataNodeSet) {
-                                    currentGraphDataNode.isVisible = true;
-                                }
-                                // add any child nodes?
-                                // todo: move this into the kin term parser
-                                for (KinTermGroup kinTerms : kinTermsArray) {
-                                    if (kinTerms.graphShow) {
-                                        // todo: replace this with a loop over egoDataNodeList and then calculate the actual kin type strings for each one rather than the user entered ones used here
-                                        // todo: this should probably be done after all nodes have been created so that subsequent relations are taken into account when calculating the kin terms
-                                        for (EntityData currentGraphDataNode : currentGraphDataNodeSet) {
-                                            for (String kinTermLabel : kinTerms.getTermLabel(fullKinTypeString)) {
-                                                // todo: this could be running too many times, maybe check for efficiency
-                                                currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
-                                                //egoDataNode.addRelatedNode(currentGraphDataNode, DataTypes.RelationType.kinterm, kinTerms.graphColour, kinTermLabel, null, null);
+                                    for (EntityData currentGraphDataNode : currentGraphDataNodeSet) {
+                                        currentGraphDataNode.isVisible = true;
+                                    }
+                                    // add any child nodes?
+                                    // todo: move this into the kin term parser
+                                    // for (KinTermGroup kinTerms : kinTermsArray) {
+                                    for (KinTypeStringProvider kinTypeStringProviderKinGroup : kinTypeStringProviders) {
+                                        if (kinTypeStringProviderKinGroup instanceof KinTermGroup) {
+                                            KinTermGroup kinTerms = (KinTermGroup) kinTypeStringProviderKinGroup;
+                                            if (kinTerms.graphShow) {
+                                                // todo: replace this with a loop over egoDataNodeList and then calculate the actual kin type strings for each one rather than the user entered ones used here
+                                                // todo: this should probably be done after all nodes have been created so that subsequent relations are taken into account when calculating the kin terms
+                                                for (EntityData currentGraphDataNode : currentGraphDataNodeSet) {
+                                                    for (String kinTermLabel : kinTerms.getTermLabel(fullKinTypeString)) {
+                                                        // todo: this could be running too many times, maybe check for efficiency
+                                                        currentGraphDataNode.addKinTermString(kinTermLabel, kinTerms.graphColour);
+                                                        //egoDataNode.addRelatedNode(currentGraphDataNode, DataTypes.RelationType.kinterm, kinTerms.graphColour, kinTermLabel, null, null);
+                                                    }
+                                                }
                                             }
                                         }
                                     }
+                                    // end: move this into the kin term parser
+                                    parentDataNodes = currentGraphDataNodeSet;
+                                    kinTypeFound = true;
+                                    break;
                                 }
-                                // end: move this into the kin term parser
-                                parentDataNodes = currentGraphDataNodeSet;
-                                kinTypeFound = true;
+                            }
+                            if (kinTypeFound == false) {
+                                consumableString = consumableString.replaceAll("^[\\s]*", "");
+                                if (consumableString.startsWith("#")) {
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length(), null);
+                                } else {
+                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - consumableString.length(), "Incorrect syntax");
+                                    int commentPosition = consumableString.indexOf("#");
+                                    if (commentPosition > 0) {
+                                        // allow comments after this point
+                                        consumableString = consumableString.substring(commentPosition);
+                                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length(), null);
+                                    }
+                                }
                                 break;
                             }
-                        }
-                        if (kinTypeFound == false) {
-                            consumableString = consumableString.replaceAll("^[\\s]*", "");
-                            if (consumableString.startsWith("#")) {
-                                parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length(), null);
-                            } else {
-                                parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Error, initialLength - consumableString.length(), "Incorrect syntax");
-                                int commentPosition = consumableString.indexOf("#");
-                                if (commentPosition > 0) {
-                                    // allow comments after this point
-                                    consumableString = consumableString.substring(commentPosition);
-                                    parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Comment, initialLength - consumableString.length(), null);
-                                }
-                            }
-                            break;
                         }
                     }
                 }
             }
+            kinTypeStringProvider.highlightKinTypeStrings(parserHighlightArray, kinTypeStrings);
         }
         // make sure that no duplicates are returned, these duplicates may exist from strings like EmMS|EmB which map to the same individual but there are two kin type strings for it and hence two entries
         super.setEntitys(allEntitiesSet.toArray(new EntityData[]{}));
