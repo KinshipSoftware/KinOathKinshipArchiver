@@ -9,14 +9,15 @@ import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : KinTree
- *  Created on : Aug 25, 2011, 11:44:11 AM
- *  Author     : Peter Withers
+ * Document : KinTree
+ * Created on : Aug 25, 2011, 11:44:11 AM
+ * Author : Peter Withers
  */
 public class KinTree extends ArbilTree {
 
-    KinDiagramPanel kinDiagramPanel;
-    GraphPanel graphPanel;
+    private KinDiagramPanel kinDiagramPanel;
+    private GraphPanel graphPanel;
+    private ArbilNode[] selectedNodeArray = new ArbilNode[]{};
 
     public KinTree(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel) {
         this.kinDiagramPanel = kinDiagramPanel;
@@ -26,12 +27,12 @@ public class KinTree extends ArbilTree {
     @Override
     protected void putSelectionIntoPreviewTable() {
         // todo: in arbil the preview table only shows the lead selection, however in the kinship tree it might best to show the entire selection
-        ArbilNode[] arbilNodeArray = getAllSelectedNodes(); //LeadSelectionNode();
+        selectedNodeArray = getAllSelectedNodes(); //LeadSelectionNode();
         ArrayList<UniqueIdentifier> identifierList = new ArrayList<UniqueIdentifier>();
 //        ArrayList<URI> uriList = new ArrayList<URI>();
         graphPanel.metadataPanel.removeAllArbilDataNodeRows();
         graphPanel.metadataPanel.removeAllEditors();
-        for (ArbilNode arbilNode : arbilNodeArray) {
+        for (ArbilNode arbilNode : selectedNodeArray) {
             if (arbilNode instanceof ArbilDataNode) {
 //                uriList.add(((ArbilDataNode) arbilNode).getURI());
                 graphPanel.metadataPanel.addArbilDataNode((ArbilDataNode) arbilNode);
@@ -47,5 +48,10 @@ public class KinTree extends ArbilTree {
         // set the graph selection
         graphPanel.setSelectedIds(identifierList.toArray(new UniqueIdentifier[]{}));
         graphPanel.metadataPanel.updateEditorPane();
+        kinDiagramPanel.drawGraph(); //redrawIfKinTermsChanged(); // todo: is this syncronous or done in a thread?
+    }
+
+    public ArbilNode[] getSelectedNodeArray() {
+        return selectedNodeArray;
     }
 }
