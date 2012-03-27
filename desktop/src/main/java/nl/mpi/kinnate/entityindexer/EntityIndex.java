@@ -229,7 +229,7 @@ public class EntityIndex implements EntityService {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public EntityData[] processKinTypeStrings(URI[] egoNodes, ArrayList<KinTypeStringProvider> kinTypeStringProviders, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException, ProcessAbortException {
+    public EntityData[] processKinTypeStrings(ArrayList<KinTypeStringProvider> kinTypeStringProviders, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException, ProcessAbortException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
