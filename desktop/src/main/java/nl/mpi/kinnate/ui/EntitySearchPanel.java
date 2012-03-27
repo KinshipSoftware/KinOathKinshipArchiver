@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -23,6 +24,7 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -31,7 +33,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  * Created on : Mar 14, 2011, 4:01:11 PM
  * Author : Peter Withers
  */
-public class EntitySearchPanel extends JPanel {
+public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
 
     private EntityCollection entityCollection;
     private KinTree resultsTree;
@@ -46,6 +48,7 @@ public class EntitySearchPanel extends JPanel {
     private GraphPanel graphPanel;
     private MessageDialogHandler dialogHandler;
     private ArbilDataNodeLoader dataNodeLoader;
+    private String kinTypeString = "*";
 
     public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader, String nodeSetTitle, UniqueIdentifier[] entityIdentifiers) {
         InitPanel(entityCollection, kinDiagramPanel, graphPanel, dialogHandler, dataNodeLoader, nodeSetTitle, entityIdentifiers);
@@ -55,7 +58,7 @@ public class EntitySearchPanel extends JPanel {
         InitPanel(entityCollection, kinDiagramPanel, graphPanel, dialogHandler, dataNodeLoader, "Search Entity Names", null);
     }
 
-    private void InitPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader, String nodeSetTitle, UniqueIdentifier[] entityIdentifiers) {
+    private void InitPanel(EntityCollection entityCollection, final KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader, String nodeSetTitle, UniqueIdentifier[] entityIdentifiers) {
         this.entityCollection = entityCollection;
         this.graphPanel = graphPanel;
         this.dialogHandler = dialogHandler;
@@ -63,7 +66,7 @@ public class EntitySearchPanel extends JPanel {
         this.setLayout(new BorderLayout());
         resultsTree = new KinTree(kinDiagramPanel, graphPanel);
         resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
-        resultsTree.setRootVisible(false);
+//        resultsTree.setRootVisible(false);
         // resultsTree.requestResort();// this resort is unrequred
         JLabel searchLabel = new JLabel(nodeSetTitle);
         searchField = new JTextField();
@@ -95,26 +98,51 @@ public class EntitySearchPanel extends JPanel {
             optionsPanel.add(searchField);
         }
         graphSelectionCheckBox = new JCheckBox("Graph selection", true);
+        // graph the selection when checked
         optionsPanel.add(graphSelectionCheckBox);
         expandByKinTypeCheckBox = new JCheckBox("Expand selection by kin type string", true);
+        // expand the selection when checked
         optionsPanel.add(expandByKinTypeCheckBox);
-        kinTypeStringTextArea = new JTextField();
+        kinTypeStringTextArea = new JTextField(kinTypeString);
+        kinTypeStringTextArea.addKeyListener(new KeyListener() {
+
+            public void keyTyped(KeyEvent e) {
+            }
+
+            public void keyPressed(KeyEvent e) {
+            }
+
+            public void keyReleased(KeyEvent e) {
+                synchronized (e) {
+                    if (!kinTypeStringTextArea.getText().equals(kinTypeString)) {
+                        kinTypeString = kinTypeStringTextArea.getText();
+                        if (expandByKinTypeCheckBox.isSelected() && graphSelectionCheckBox.isSelected()) {
+                            // update if text changed and selected
+                            kinDiagramPanel.drawGraph();
+                        }
+                    }
+
+                }
+            }
+        });
         optionsPanel.add(kinTypeStringTextArea);
         graphSelectionCheckBox.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 expandByKinTypeCheckBox.setEnabled(graphSelectionCheckBox.isSelected());
                 kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected() && graphSelectionCheckBox.isSelected());
-
+                kinDiagramPanel.drawGraph();
             }
         });
         expandByKinTypeCheckBox.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected());
+                kinDiagramPanel.drawGraph();
             }
         });
-        optionsPanel.add(new JCheckBox("Link to graph selection to this tree", false));
+//        optionsPanel.add(new JCheckBox("Link to graph selection to this tree", false));
+        // todo: link this selection when checked
         if (entityIdentifiers == null) {
             searchPanel.add(searchButton, BorderLayout.PAGE_END);
         }
@@ -189,5 +217,33 @@ public class EntitySearchPanel extends JPanel {
                 searchPanel.revalidate();
             }
         }.start();
+    }
+
+    public String[] getCurrentStrings() {
+        ArrayList<String> currentStrings = new ArrayList<String>();
+        if (graphSelectionCheckBox.isSelected()) {
+            String kinTypeStringExtention = "";
+            if (expandByKinTypeCheckBox.isSelected()) {
+                kinTypeStringExtention = kinTypeString;
+            }
+            for (ArbilNode arbilNode : resultsTree.getSelectedNodeArray()) { // return getSelectedNodesOfType(ArbilNode.class).toArray(new ArbilNode[]{});
+                if (arbilNode instanceof KinTreeNode) {
+                    currentStrings.add("x[Entity.Identifier=" + ((KinTreeNode) arbilNode).entityData.getUniqueIdentifier().getQueryIdentifier() + "]" + kinTypeStringExtention);
+                }
+            }
+        }
+        return currentStrings.toArray(new String[]{});
+    }
+
+    public int getTotalLength() {
+        if (graphSelectionCheckBox.isSelected()) {
+            return resultsTree.getSelectedNodeArray().length;
+        } else {
+            return 0;
+        }
+    }
+
+    public void highlightKinTypeStrings(ParserHighlight[] parserHighlight, String[] kinTypeStrings) {
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
