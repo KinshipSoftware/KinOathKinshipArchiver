@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
-import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.ui.KinTypeStringProvider;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : PedigreePackageExport
- *  Created on : Jun 27, 2011, 12:06:30 PM
- *  Author     : Peter Withers
+ * Document : PedigreePackageExport
+ * Created on : Jun 27, 2011, 12:06:30 PM
+ * Author : Peter Withers
  */
 public class PedigreePackageExport {
 
@@ -97,10 +97,24 @@ public class PedigreePackageExport {
     static public void main(String[] argsArray) {
         KinTypeStringConverter graphData = new KinTypeStringConverter(new DataStoreSvg());
         // // todo: an addition to KinTypeStringConverter: EmB does not have any parents but it could however just take the parnents of Em: String kinTypes = "EmB|EmZ|EmM|EmF|EmS|EmD";
-        //String kinTypes = "EmM|EmF|EmS|EmD";
-        String kinTypes = "EmB|EmZ|EmM|EmF|EmS|EmD";
-        String[] kinTypeStrings = kinTypes.split("\\|");
-        graphData.readKinTypes(kinTypeStrings, /*graphPanel.getkinTermGroups()*/ new KinTermGroup[]{}, new DataStoreSvg(), new ParserHighlight[kinTypeStrings.length]);
+        //String kinTypes = "EmM|EmF|EmS|EmD";        
+        KinTypeStringProvider kinTypeStringProvider = new KinTypeStringProvider() {
+
+            public String[] getCurrentStrings() {
+                return "EmB,EmZ,EmM,EmF,EmS,EmD".split(",");
+            }
+
+            public int getTotalLength() {
+                return getCurrentStrings().length;
+            }
+
+            public void highlightKinTypeStrings(ParserHighlight[] parserHighlight, String[] kinTypeStrings) {
+//                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
+        ArrayList<KinTypeStringProvider> kinTypeStringProviders = new ArrayList<KinTypeStringProvider>();
+        kinTypeStringProviders.add(kinTypeStringProvider);
+        graphData.readKinTypes(kinTypeStringProviders, new DataStoreSvg());
         System.out.println(new PedigreePackageExport().createCsvContents(graphData.getDataNodes()));
     }
 }
