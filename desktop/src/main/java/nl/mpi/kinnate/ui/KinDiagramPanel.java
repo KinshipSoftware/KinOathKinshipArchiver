@@ -327,6 +327,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     boolean graphUpdateRequired = false;
 
     public synchronized void drawGraph() {
+        drawGraph(null);
+    }
+
+    public synchronized void drawGraph(final UniqueIdentifier[] uniqueIdentifiers) {
         graphUpdateRequired = true;
         entityIndex.requestAbortProcess();
         if (!graphThreadRunning) {
@@ -387,6 +391,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     }
                     progressBar.setVisible(false);
                     graphThreadRunning = false;
+                    if (uniqueIdentifiers != null) {
+                        graphPanel.setSelectedIds(uniqueIdentifiers);
+                    }
                 }
             }.start();
         }
@@ -426,6 +433,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void addNodeCollection(UniqueIdentifier[] entityIdentifiers, String nodeSetTitle) {
+        // todo:. consider if this should be added to the panels menu also as us done for addKinTermGroup
         EntitySearchPanel entitySearchPanel = new EntitySearchPanel(entityCollection, this, graphPanel, dialogHandler, dataNodeLoader, nodeSetTitle, entityIdentifiers);
         entitySearchPanel.setTransferHandler(dragTransferHandler);
         kinTermHidePane.addTab(nodeSetTitle, entitySearchPanel);
