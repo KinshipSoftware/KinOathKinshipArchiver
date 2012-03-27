@@ -358,7 +358,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 }
                                 if (graphPanel.dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
 //                                    diagramMode = DiagramMode.KinTypeQuery;
-                                    EntityData[] graphNodes = entityIndex.processKinTypeStrings(null, kinTypeStringProviders, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
+                                    EntityData[] graphNodes = entityIndex.processKinTypeStrings(kinTypeStringProviders, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
                                     progressBar.setIndeterminate(true);
                                     graphPanel.dataStoreSvg.graphData.setEntitys(graphNodes);
                                     // register interest Arbil updates and update the graph when data is edited in the table
@@ -431,6 +431,16 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTermHidePane.addTab(nodeSetTitle, entitySearchPanel);
         kinTermHidePane.setHiddeState();
         kinTypeStringProviders.add(entitySearchPanel);
+    }
+
+    public void addKinTermGroup() {
+        final KinTermGroup kinTermGroup = graphPanel.addKinTermGroup();
+        for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
+            if (panelSetting.getPanelType() == PanelType.KinTerms) {
+                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup, dialogHandler), true);
+            }
+        }
+        kinTypeStringProviders.add(kinTermGroup);
     }
 
     public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray) {
@@ -520,16 +530,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         if (tabComponent instanceof KinTermPanel) {
             ((KinTermPanel) tabComponent).importKinTerms();
         }
-    }
-
-    public void addKinTermGroup() {
-        final KinTermGroup kinTermGroup = graphPanel.addKinTermGroup();
-        for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
-            if (panelSetting.getPanelType() == PanelType.KinTerms) {
-                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup, dialogHandler), true);
-            }
-        }
-        kinTypeStringProviders.add(kinTermGroup);
     }
 
     public int getKinTermGroupCount() {
