@@ -98,6 +98,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
             optionsPanel.add(searchField);
         }
         graphSelectionCheckBox = new JCheckBox("Graph selection", true);
+        resultsTree.setUpdateGraphOnSelectionChange(true);
         // graph the selection when checked
         optionsPanel.add(graphSelectionCheckBox);
         expandByKinTypeCheckBox = new JCheckBox("Expand selection by kin type string", true);
@@ -132,6 +133,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 expandByKinTypeCheckBox.setEnabled(graphSelectionCheckBox.isSelected());
                 kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected() && graphSelectionCheckBox.isSelected());
                 kinDiagramPanel.drawGraph();
+                resultsTree.setUpdateGraphOnSelectionChange(graphSelectionCheckBox.isSelected());
             }
         });
         expandByKinTypeCheckBox.addActionListener(new ActionListener() {
@@ -141,8 +143,8 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 kinDiagramPanel.drawGraph();
             }
         });
-//        optionsPanel.add(new JCheckBox("Link to graph selection to this tree", false));
         // todo: link this selection when checked
+        // optionsPanel.add(new JCheckBox("Link to graph selection to this tree", false));
         if (entityIdentifiers == null) {
             searchPanel.add(searchButton, BorderLayout.PAGE_END);
         }
