@@ -15,6 +15,7 @@ import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.ui.KinTypeStringProvider;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -225,6 +226,10 @@ public class EntityIndex implements EntityService {
     }
 
     public void requestAbortProcess() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public EntityData[] processKinTypeStrings(URI[] egoNodes, ArrayList<KinTypeStringProvider> kinTypeStringProviders, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException, ProcessAbortException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
