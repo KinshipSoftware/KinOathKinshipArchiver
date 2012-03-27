@@ -18,6 +18,7 @@ public class KinTree extends ArbilTree {
     private KinDiagramPanel kinDiagramPanel;
     private GraphPanel graphPanel;
     private ArbilNode[] selectedNodeArray = new ArbilNode[]{};
+    private boolean updateGraphOnSelectionChange = false;
 
     public KinTree(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel) {
         this.kinDiagramPanel = kinDiagramPanel;
@@ -46,9 +47,16 @@ public class KinTree extends ArbilTree {
             }
         }
         // set the graph selection
-        graphPanel.setSelectedIds(identifierList.toArray(new UniqueIdentifier[]{}));
         graphPanel.metadataPanel.updateEditorPane();
-        kinDiagramPanel.drawGraph(); //redrawIfKinTermsChanged(); // todo: is this syncronous or done in a thread?
+        if (updateGraphOnSelectionChange) {
+            kinDiagramPanel.drawGraph(identifierList.toArray(new UniqueIdentifier[]{}));
+        } else {
+            graphPanel.setSelectedIds(identifierList.toArray(new UniqueIdentifier[]{}));
+        }
+    }
+
+    public void setUpdateGraphOnSelectionChange(boolean updateGraphOnSelectionChange) {
+        this.updateGraphOnSelectionChange = updateGraphOnSelectionChange;
     }
 
     public ArbilNode[] getSelectedNodeArray() {
