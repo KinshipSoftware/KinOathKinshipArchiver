@@ -13,11 +13,11 @@ import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 
 /**
- *  Document   : KinTypeStringInput
- *  Created on : Sep 7, 2011, 3:52:06 PM
- *  Author     : Peter Withers
+ * Document : KinTypeStringInput
+ * Created on : Sep 7, 2011, 3:52:06 PM
+ * Author : Peter Withers
  */
-public class KinTypeStringInput extends JTextPane {
+public class KinTypeStringInput extends JTextPane implements KinTypeStringProvider {
 
     private String previousKinTypeStrings = null;
     private String lastDefaultString;
@@ -117,7 +117,7 @@ public class KinTypeStringInput extends JTextPane {
         return (previousKinTypeStrings == null || !previousKinTypeStrings.equals(this.getText()));
     }
 
-    protected void highlightKinTypeStrings(ParserHighlight[] parserHighlight, String[] kinTypeStrings) {
+    public void highlightKinTypeStrings(ParserHighlight[] parserHighlight, String[] kinTypeStrings) {
         this.parserHighlight = parserHighlight;
         StyledDocument styledDocument = this.getStyledDocument();
         int lineStart = 0;
@@ -162,5 +162,9 @@ public class KinTypeStringInput extends JTextPane {
             this.setToolTipText(null);
         }
         return super.getToolTipLocation(event);
+    }
+
+    public int getTotalLength() {
+        return this.getText().split("\n").length;
     }
 }
