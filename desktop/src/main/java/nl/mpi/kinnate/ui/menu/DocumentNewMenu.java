@@ -17,8 +17,8 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
 
     public enum DocumentType {
 
-        Simple("Standard Diagram (database driven)"), // todo: should this be database diagram, data driven
-        Freeform("Freeform Diagram"),
+        Simple("Standard Diagram (database driven)"),
+        Freeform("Freeform Diagram (transient)"),
         KinTerms("Kin Terms Diagram"),
         Query("Query Diagram"),
         EntitySearch("Entity Search"),
