@@ -34,6 +34,7 @@ public class ProfileManager {
         this.cmdiProfileSelectionPanel = cmdiProfileSelectionPanel;
         this.graphPanel = graphPanel;
         CmdiProfileReader.getSingleInstance().setSelection(ProfileSelection.ALL);
+        cmdiProfileSelectionPanel.setProfileManager(ProfileManager.this);
         cmdiProfileSelectionPanel.setStatus(false, "Loading, please wait...", false);
         new Thread("loadProfiles") {
 
@@ -78,7 +79,6 @@ public class ProfileManager {
 
                     cmdiProfileArray.add(0, cmdiProfile);
                 }
-                cmdiProfileSelectionPanel.setProfileManager(ProfileManager.this);
                 if (!problemProfiles.isEmpty()) {
                     // todo: show a message dialogue
                     cmdiProfileSelectionPanel.setStatus(true, "There were " + problemProfiles.size() + " selected profiles that could not be retrieved", true);
