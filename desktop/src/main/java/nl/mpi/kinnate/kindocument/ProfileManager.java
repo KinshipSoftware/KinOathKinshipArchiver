@@ -79,6 +79,7 @@ public class ProfileManager {
 
                     cmdiProfileArray.add(0, cmdiProfile);
                 }
+                cmdiProfileSelectionPanel.setProfileManager(ProfileManager.this);
                 if (!problemProfiles.isEmpty()) {
                     // todo: show a message dialogue
                     cmdiProfileSelectionPanel.setStatus(true, "There were " + problemProfiles.size() + " selected profiles that could not be retrieved", true);
