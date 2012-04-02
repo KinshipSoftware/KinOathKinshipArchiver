@@ -18,9 +18,9 @@ import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
- *  Document   : CmdiTransformer
- *  Created on : Nov 17, 2011, 3:23:27 PM
- *  Author     : Peter Withers
+ * Document : CmdiTransformer
+ * Created on : Nov 17, 2011, 3:23:27 PM
+ * Author : Peter Withers
  */
 public class CmdiTransformer {
 
@@ -35,14 +35,20 @@ public class CmdiTransformer {
     }
 
     public URI getXsd(String profileId, boolean forceUpdate) throws KinXsdException {
-        File xsdFile = new File(sessionStorage.getCacheDirectory(), profileId + "-kmdi.xsd");
+        String profileFileName = profileId.replace(":", "_");
+        final File profilesDirectory = new File(sessionStorage.getStorageDirectory(), "KmdiProfiles");
+        if (!profilesDirectory.exists()) {
+            profilesDirectory.mkdir();
+        }
+        File xsdFile = new File(profilesDirectory, profileFileName + "-kmdi.xsd");
+        File intermediateFile = new File(profilesDirectory, profileFileName + "-cmdi.xsd");
         if (forceUpdate || !xsdFile.exists()) {
-            transformProfileXmlToXsd(xsdFile, profileId);
+            transformProfileXmlToXsd(xsdFile, intermediateFile, profileId);
         }
         return xsdFile.toURI();
     }
 
-    private File transformProfileXmlToXsd(File outputFile, String profileId) throws KinXsdException {
+    private File transformProfileXmlToXsd(File outputFile, File intermediateFile, String profileId) throws KinXsdException {
         String cmdiProfileXmlUrl = "http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/" + profileId + "/xml";
         System.out.println("outputFile: " + outputFile.getAbsolutePath());
 
@@ -52,9 +58,8 @@ public class CmdiTransformer {
 
         // todo: it might be nicer to put these files into a specific directory or into a temp directory
         File xlsFile = sessionStorage.updateCache(component2SchemaXsl.toExternalForm(), 1, false);
-        System.out.println(sessionStorage.updateCache(component2SchemaXslHeader.toExternalForm(), 1, false));
-        System.out.println(sessionStorage.updateCache(component2SchemaXslCleanup.toExternalForm(), 1, false));
-        File intermediateFile = new File(outputFile.getParentFile(), profileId + "-cmdi.xsd");
+        File xslHeader = sessionStorage.updateCache(component2SchemaXslHeader.toExternalForm(), 1, false);
+        File cleanUpXsl = sessionStorage.updateCache(component2SchemaXslCleanup.toExternalForm(), 1, false);
         System.out.println(intermediateFile);
         System.out.println(outputFile);
         try {
@@ -65,11 +70,15 @@ public class CmdiTransformer {
         } catch (IOException exception) {
             System.out.println("exception: " + exception.getMessage());
             intermediateFile.delete();
+            xslHeader.delete();
+            cleanUpXsl.delete();
             xlsFile.delete();
             throw new KinXsdException("Could not read the selected profile");
         } catch (TransformerException exception) {
             System.out.println("exception: " + exception.getMessage());
             intermediateFile.delete();
+            xslHeader.delete();
+            cleanUpXsl.delete();
             xlsFile.delete();
             throw new KinXsdException("Could not read the selected profile");
         }
@@ -90,8 +99,7 @@ public class CmdiTransformer {
         try {
             String profileId = "clarin.eu:cr1:p_1320657629627";
             final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
-            File xsdFile = new File(kinSessionStorage.getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
-            new CmdiTransformer(kinSessionStorage).transformProfileXmlToXsd(xsdFile, profileId);
+            new CmdiTransformer(kinSessionStorage).getXsd(profileId, true);
         } catch (KinXsdException exception) {
             System.out.println("exception: " + exception.getMessage());
         }
