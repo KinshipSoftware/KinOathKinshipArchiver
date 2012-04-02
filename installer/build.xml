@@ -99,6 +99,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <updateSingleFile fileName="Info.plist"/>
         <updateSingleFile fileName="start"/>
         <copy file="${OUTPUTDIR}/distribution/kinoath.jnlp" tofile="${SRCDIR}/JNLP-INF/application.jnlp"/>
+        <copy file="${OUTPUTDIR}/distribution/kinoath.jnlp" tofile="${OUTPUTDIR}/distribution/${JarPrefix}.jnlp"/>        
     </target>
     <target name="buildWindowsInstaller" depends="signkinoath">
         <!--check that the icon exists and fail if not-->
