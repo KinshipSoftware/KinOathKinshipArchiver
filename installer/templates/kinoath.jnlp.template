@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jnlp spec="1.5+" codebase="http://www.mpi.nl/tg/j2se/jnlp/@DistName@/" href="@DistName@@FilenameIdentifier@.jnlp">
+<jnlp spec="1.5+" codebase="http://www.mpi.nl/tg/j2se/jnlp/@DistName@/" href="@JarPrefix@.jnlp">
     <information>
         <title>@ApplicationTitle@</title>
         <icon href="http://www.mpi.nl/tg/j2se/jnlp/@DistName@/@InstalledIcon@.png" kind="default" />
