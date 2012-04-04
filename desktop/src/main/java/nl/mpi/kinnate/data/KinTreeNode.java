@@ -2,6 +2,9 @@ package nl.mpi.kinnate.data;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Vector;
 import javax.swing.ImageIcon;
 import nl.mpi.arbil.data.ArbilDataNode;
@@ -16,38 +19,24 @@ import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.svg.SymbolGraphic;
 
 /**
- *  Document   : KinTreeNode
- *  Created on : Aug 22, 2011, 5:14:05 PM
- *  Author     : Peter Withers
+ * Document : KinTreeNode
+ * Created on : Aug 22, 2011, 5:14:05 PM
+ * Author : Peter Withers
  */
 public class KinTreeNode extends ArbilNode implements Comparable {
 
     public EntityData entityData;
-    private IndexerParameters indexerParameters;
-    DataTypes.RelationType subnodeFilter;
-    ArbilNode[] childNodes = null;
-    static private SymbolGraphic symbolGraphic;
-    private EntityCollection entityCollection;
-    private MessageDialogHandler dialogHandler;
-    private ArbilDataNodeLoader dataNodeLoader;
+    protected IndexerParameters indexerParameters;
+    protected ArbilNode[] childNodes = null;
+    static protected SymbolGraphic symbolGraphic;
+    protected EntityCollection entityCollection;
+    protected MessageDialogHandler dialogHandler;
+    protected ArbilDataNodeLoader dataNodeLoader;
 
     public KinTreeNode(EntityData entityData, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         super();
         this.indexerParameters = indexerParameters;
         this.entityData = entityData;
-        this.subnodeFilter = null;
-        this.entityCollection = entityCollection;
-        this.dialogHandler = dialogHandler;
-        this.dataNodeLoader = dataNodeLoader;
-        symbolGraphic = new SymbolGraphic(dialogHandler);
-    }
-
-    // todo:.. create new constructor that takes a unique identifer and loads from the database.
-    public KinTreeNode(EntityData entityData, DataTypes.RelationType subnodeFilter, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
-        super();
-        this.indexerParameters = indexerParameters;
-        this.entityData = entityData;
-        this.subnodeFilter = subnodeFilter; // subnode filter should be null unless the child nodes are to be filtered
         this.entityCollection = entityCollection;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
@@ -85,53 +74,39 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public ArbilNode[] getChildArray() {
-//        if (childNodes != null) {
-//            return childNodes;
-//        } else if (entityData != null) {
-        ArrayList<ArbilNode> relationList = new ArrayList<ArbilNode>();
-        // todo: add metanodes and ui option to hide show relation types
+        // add the related entities grouped into metanodes and provide a relation type filter for each
+        HashMap<DataTypes.RelationType, HashSet<KinTreeFilteredNode>> metaNodeMap = new HashMap<DataTypes.RelationType, HashSet<KinTreeFilteredNode>>();
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
-            final boolean showFiltered = subnodeFilter == DataTypes.RelationType.ancestor || subnodeFilter == DataTypes.RelationType.descendant;
-            // todo:.. remove limitation of sanguine relations "isSanguinLine" and find the caues of the error when non sanguine relations are shown.
-            if (DataTypes.isSanguinLine(entityRelation.getRelationType()) && (subnodeFilter == null || (subnodeFilter == entityRelation.getRelationType() && showFiltered))) {
-                EntityData alterEntity = entityRelation.getAlterNode();
-                if (alterEntity == null) {
-                    // todo: should these enties be cached? or will the entire tree be discarded on redraw?
-                    alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
-                    entityRelation.setAlterNode(alterEntity);
-                }
-                relationList.add(new KinTreeNode(alterEntity, entityRelation.getRelationType(), indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
+            if (!metaNodeMap.containsKey(entityRelation.getRelationType())) {
+                metaNodeMap.put(entityRelation.getRelationType(), new HashSet<KinTreeFilteredNode>());
             }
+            EntityData alterEntity = entityRelation.getAlterNode();
+            if (alterEntity == null) {
+                // todo: should these enties be cached? or will the entire tree be discarded on redraw?
+                // todo change this to return a node imediately and the node can then load itself and then request a tree resort
+                alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
+                entityRelation.setAlterNode(alterEntity);
+            }
+            metaNodeMap.get(entityRelation.getRelationType()).add(new KinTreeFilteredNode(alterEntity, this.hashCode(), entityRelation.getRelationType(), indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
         }
+        HashSet<ArbilNode> kinTreeMetaNodes = new HashSet<ArbilNode>();
+        for (Map.Entry<DataTypes.RelationType, HashSet<KinTreeFilteredNode>> filteredNodeEntry : metaNodeMap.entrySet()) {//values().toArray(new KinTreeFilteredNode[]{})
+            kinTreeMetaNodes.add(new KinTreeMetaNode(filteredNodeEntry.getValue().toArray(new KinTreeFilteredNode[]{}), filteredNodeEntry.getKey().name(), this.hashCode(), symbolGraphic));
+        }
+        getLinksMetaNode(kinTreeMetaNodes);
+        childNodes = kinTreeMetaNodes.toArray(new ArbilNode[]{});
+        return childNodes;
+    }
+
+    protected void getLinksMetaNode(HashSet<ArbilNode> kinTreeMetaNodes) {
         if (entityData.archiveLinkArray != null) {
+            ArrayList<ArbilDataNode> relationList = new ArrayList<ArbilDataNode>();
             for (URI archiveLink : entityData.archiveLinkArray) {
                 ArbilDataNode linkedArbilDataNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
                 relationList.add(linkedArbilDataNode);
             }
+            kinTreeMetaNodes.add(new KinTreeMetaNode(relationList.toArray(new ArbilDataNode[]{}), "External Links", this.hashCode(), symbolGraphic));
         }
-        childNodes = relationList.toArray(new ArbilNode[]{});
-        return childNodes;
-//        } else {
-//            return new ArbilNode[]{};
-//        }
-
-        // todo: inthe case of metadata nodes load them via the arbil data loader
-//                try {
-//                    String entityPath = entityData.getEntityPath();
-//                    if (entityPath != null) {
-////                        ArbilDataNode arbilDataNode = ArbilDataNodeLoader.getSingleInstance().getArbilDataNode(null, new URI(entityPath));
-//                        if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
-//                            egoNodeArray.add(arbilDataNode);
-//                        } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
-//                            requiredNodeArray.add(arbilDataNode);
-//                        } else {
-//                            remainingNodeArray.add(arbilDataNode);
-//                        }
-//                    }
-//                } catch (URISyntaxException exception) {
-//                    System.err.println(exception.getMessage());
-//                }
-
     }
 
     @Override
@@ -265,19 +240,20 @@ public class KinTreeNode extends ArbilNode implements Comparable {
             return false;
         }
         final KinTreeNode other = (KinTreeNode) obj;
-        if (entityData == null || other.entityData == null) {
-            // todo: it would be good for this to never be null, or at least to aways have the UniqueIdentifier to compare
-            return false;
-        }
-        if (this.entityData.getUniqueIdentifier() != other.entityData.getUniqueIdentifier() && (this.entityData.getUniqueIdentifier() == null || !this.entityData.getUniqueIdentifier().equals(other.entityData.getUniqueIdentifier()))) {
-            return false;
-        }
-        return true;
+        return this.hashCode() == other.hashCode();
+//        if (entityData == null || other.entityData == null) {
+//            // todo: it would be good for this to never be null, or at least to aways have the UniqueIdentifier to compare
+//            return false;
+//        }
+//        if (this.entityData.getUniqueIdentifier() != other.entityData.getUniqueIdentifier() && (this.entityData.getUniqueIdentifier() == null || !this.entityData.getUniqueIdentifier().equals(other.entityData.getUniqueIdentifier()))) {
+//            return false;
+//        }
+//        return true;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
+        int hash = 0;
         hash = 37 * hash + (this.entityData.getUniqueIdentifier() != null ? this.entityData.getUniqueIdentifier().hashCode() : 0);
         return hash;
     }
