@@ -695,7 +695,7 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_b81a01d6336557e9c95534b0fe14a330:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">mDD</text>
       </g>
-      <g id="tid_5017e7c533032ed4118850c9daa9737a" kin:kintype="FSBSSW|FSBSSWMD" transform="translate(3450.0, 100.0)" kin:path="">
+      <g id="tid_5017e7c533032ed4118850c9daa9737a" kin:kintype="FSBSSW,FSBSSWMD" transform="translate(3450.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_5017e7c533032ed4118850c9daa9737a:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSBSSW</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">FSBSSWMD</text>
@@ -730,7 +730,7 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_add056bf67e3049c51dd3495ba357b7f:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">fDD</text>
       </g>
-      <g id="tid_205474303abbdc926821dab7ed3e9fe8" kin:kintype="FSBS|FSBSSWMDHF" transform="translate(3250.0, 0.0)" kin:path="">
+      <g id="tid_205474303abbdc926821dab7ed3e9fe8" kin:kintype="FSBS,FSBSSWMDHF" transform="translate(3250.0, 0.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_205474303abbdc926821dab7ed3e9fe8:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSBS</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">FSBSSWMDHF</text>
@@ -805,7 +805,7 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_9d63bacf630f273480886be004fdc12d:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">fDDHF</text>
       </g>
-      <g id="tid_36b62511d9eb6e40db1739c334e50fca" kin:kintype="FSBSS|FSBSSWMDH" transform="translate(3250.0, 100.0)" kin:path="">
+      <g id="tid_36b62511d9eb6e40db1739c334e50fca" kin:kintype="FSBSS,FSBSSWMDH" transform="translate(3250.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_36b62511d9eb6e40db1739c334e50fca:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">FSBSS</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">FSBSSWMDH</text>
@@ -822,7 +822,7 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_30ca9c64865ca099fd208a211f6fb1f7:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">mF</text>
       </g>
-      <g id="tid_a541d524a0630a1a7ea3f931149fd980" kin:kintype="mFF|mFFFS" transform="translate(2300.0, -100.0)" kin:path="">
+      <g id="tid_a541d524a0630a1a7ea3f931149fd980" kin:kintype="mFF,mFFFS" transform="translate(2300.0, -100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_a541d524a0630a1a7ea3f931149fd980:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">mFF</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">mFFFS</text>
@@ -857,7 +857,7 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_23d39eff34c5f0fc5fbb75de82b0e0cb:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">fDDHFFSSDH</text>
       </g>
-      <g id="tid_e3e5118ed957623f7f8098860c8c16a8" kin:kintype="mFFFSBSSW|mFFFSBSSWMD" transform="translate(2650.0, 100.0)" kin:path="">
+      <g id="tid_e3e5118ed957623f7f8098860c8c16a8" kin:kintype="mFFFSBSSW,mFFFSBSSWMD" transform="translate(2650.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_e3e5118ed957623f7f8098860c8c16a8:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">mFFFSBSSW</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">mFFFSBSSWMD</text>
