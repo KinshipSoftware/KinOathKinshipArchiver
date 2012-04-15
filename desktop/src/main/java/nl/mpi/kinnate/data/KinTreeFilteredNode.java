@@ -19,7 +19,7 @@ public class KinTreeFilteredNode extends KinTreeNode {
 
     DataTypes.RelationType subnodeFilter;
 
-    public KinTreeFilteredNode(EntityData entityData, DataTypes.RelationType subnodeFilter, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+    public KinTreeFilteredNode(EntityData entityData, int notused, DataTypes.RelationType subnodeFilter, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         super(entityData, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
         this.subnodeFilter = subnodeFilter; // subnode filter will be used to filter the child nodes
     }
