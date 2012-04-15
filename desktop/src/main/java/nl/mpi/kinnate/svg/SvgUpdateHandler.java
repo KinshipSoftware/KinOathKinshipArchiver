@@ -12,6 +12,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
+import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
@@ -302,7 +303,7 @@ public class SvgUpdateHandler {
             String kinTypeStrings = "";
             for (UniqueIdentifier entityID : graphPanel.selectedGroupId) {
                 if (kinTypeStrings.length() != 0) {
-                    kinTypeStrings = kinTypeStrings + "|";
+                    kinTypeStrings = kinTypeStrings + KinType.separator;
                 }
                 kinTypeStrings = kinTypeStrings + graphPanel.getKinTypeForElementId(entityID);
             }
