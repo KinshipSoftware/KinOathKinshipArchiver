@@ -1,313 +1,340 @@
 <?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="text/ecmascript" width="1500" zoomAndPan="magnify" contentStyleType="text/css" height="900" preserveAspectRatio="xMidYMid meet" version="1.0">
-    <defs id="KinSymbols">
-        <g id="circle">
-            <circle r="7" stroke-width="2" height="15" cx="7" cy="7" stroke="black"/>
-        </g>
-        <g id="square">
-            <rect x="0" width="15" y="0" height="15" stroke-width="2" stroke="black"/>
-        </g>
-        <g id="square45">
-            <rect x="0" y="0" transform="rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
-        </g>
-        <g id="rhombus">
-            <rect x="0" y="0" transform="scale(1,2), rotate(-45 7 7)" width="15" height="15" stroke="black" stroke-width="2"/>
-        </g>
-        <g id="union">
-            <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
-            <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
-            <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
-        </g>
-        <g id="triangle">
-            <polygon points="7,0 0,12 15,12" stroke-width="2" stroke="black"/>
-        </g>
-        <g id="equals">
-            <polyline fill="white" stroke-width="2" points="21,14 -7,14 -7,0 21,0" stroke="black"/>
-        </g>
-        <g id="cross">
-            <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
-        </g>
-    </defs>  
-<g id="DiagramGroup" transform="translate(50, 700)">
+  <defs id="KinSymbols">
+    <g id="circle">
+      <circle r="6" stroke-width="2" cx="7.5" cy="7.5" stroke="black"/>
+    </g>
+    <g id="square">
+      <rect x="2" width="11" y="2" height="11" stroke-width="2" stroke="black"/>
+    </g>
+    <g id="square-45">
+      <rect x="2" y="2" transform="rotate(-45 7 7)" width="11" height="11" stroke="black" stroke-width="2"/>
+    </g>
+    <g id="rhombus">
+      <rect x="2" y="2" transform="scale(1,0.5), rotate(-45 7 7)" width="11" height="11" stroke="black" stroke-width="2"/>
+    </g>
+    <g id="union">
+      <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
+      <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
+      <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
+    </g>
+    <g id="triangle">
+      <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+    </g>
+    <g id="triangle-270">
+      <polygon stroke-width="2" points="7,1 1,12 14,12" transform="rotate(-90 7 7)" stroke="black"/>
+    </g>
+    <g id="triangle-180" transform="rotate(180 7 7)">
+      <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+    </g>
+    <g id="triangle-90" transform="rotate(90 7 7)">
+      <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+    </g>
+    <g id="cross">
+      <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
+    </g>
+    <g id="error">
+      <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="red"/>
+    </g>
+    <g id="blackmarker">
+      <circle fill="black" r="3" cx="15" cy="0" stroke="none"/>
+    </g>
+    <g id="blackstrikethrough">
+      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="black"/>
+    </g>
+    <g id="orangemarker">
+      <circle fill="orange" r="3" cx="15" cy="0" stroke="none"/>
+    </g>
+    <g id="orangestrikethrough">
+      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="orange"/>
+    </g>
+    <g id="cyanmarker">
+      <circle fill="cyan" r="3" cx="15" cy="0" stroke="none"/>
+    </g>
+    <g id="cyanstrikethrough">
+      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="cyan"/>
+    </g>
+    <g id="purplemarker">
+      <circle fill="purple" r="3" cx="15" cy="0" stroke="none"/>
+    </g>
+    <g id="purplestrikethrough">
+      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="purple"/>
+    </g>
+    <g id="redmarker">
+      <circle fill="red" r="3" cx="15" cy="0" stroke="none"/>
+    </g>
+    <g id="redstrikethrough">
+      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="red"/>
+    </g>
+    <g id="greenmarker">
+      <circle fill="green" r="3" cx="15" cy="0" stroke="none"/>
+    </g>
+    <g id="greenstrikethrough">
+      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="green"/>
+    </g>
+    <g id="bluemarker">
+      <circle fill="blue" r="3" cx="15" cy="0" stroke="none"/>
+    </g>
+    <g id="bluestrikethrough">
+      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="blue"/>
+    </g>
+  </defs>
+  <g id="DiagramGroup" transform="translate(50, 700)">
+    
+    
+    
+    
     <rect x="-48.0" y="-698.0" fill="none" width="1496.0" id="PageBorder" height="896.0" stroke="grey" stroke-width="2"/>
-  
-    
-    
-    
-  
-    
-    
-    
-  
-    
-    
-    
-  
-    
-    
-    
-  
-    
-    
-    
-  
-    
-    
-    
-  
-    
-    
-    
   <g id="GraphicsGroup"/>
     <g id="RelationGroup">
       <g id="relation0">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_019bc4e1cdd68323f6852d6a95fcb03b" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_4dce7380eee94bde2d7fc1da6a9e80ad"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_983965a09e505dd11e61b18a339d50db" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_85b3f2d14a4b3fc67d34d9aa5ddad683"/>
         <defs>
-          <polyline fill="none" id="relation0Line" stroke-width="2" points="1107,-393 1107,-443 1107,-443 1107,-463 1207,-463 1207,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation0Line" stroke-width="2" points="607,107 607,57 682,57 682,37 807,37 807,7 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
       </g>
       <g id="relation1">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_fc548ac1290f8cb050ea3805c1bae39c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_00ecc76a0bbf9807138e474b1c529c20"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_85b3f2d14a4b3fc67d34d9aa5ddad683" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_cc2a6b87ce97e1af286ab2fbc4d64475"/>
         <defs>
-          <polyline fill="none" id="relation1Line" stroke-width="2" points="1007,-193 1007,-243 1032,-243 1032,-263 1107,-263 1107,-293 " stroke="grey"/>
+          <polyline fill="none" id="relation1Line" stroke-width="2" points="807,7 807,-43 807,-43 807,-63 707,-63 707,-93 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
       </g>
       <g id="relation2">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_00ecc76a0bbf9807138e474b1c529c20" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0400f8e9988e6c5b8512e4ac249ab18a"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_85b3f2d14a4b3fc67d34d9aa5ddad683" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_4f5a915fa62f35ce4ee70656841db49c"/>
         <defs>
-          <polyline fill="none" id="relation2Line" stroke-width="2" points="1107,-293 1107,-343 1182,-343 1182,-363 1257,-363 1257,-393 " stroke="grey"/>
+          <polyline fill="none" id="relation2Line" stroke-width="2" points="807,7 807,-43 807,-43 807,-63 907,-63 907,-93 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
       </g>
       <g id="relation3">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_00ecc76a0bbf9807138e474b1c529c20" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_019bc4e1cdd68323f6852d6a95fcb03b"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_1cb27c371569b59df87bb7fb3e806509" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a"/>
         <defs>
-          <polyline fill="none" id="relation3Line" stroke-width="2" points="1107,-293 1107,-343 1182,-343 1182,-363 1107,-363 1107,-393 " stroke="grey"/>
+          <polyline fill="none" id="relation3Line" stroke-width="2" points="557,-93 557,-143 507,-143 507,-163 407,-163 407,-193 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
       </g>
       <g id="relation4">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_83705cf2d8fcb4c62da2eff31724ef42" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_89db977746a7dad5345e8c841a3974ab"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc2a6b87ce97e1af286ab2fbc4d64475" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a"/>
         <defs>
-          <polyline fill="none" id="relation4Line" stroke-width="2" points="307,-493 307,-543 407,-543 407,-563 507,-563 507,-593 " stroke="grey"/>
+          <polyline fill="none" id="relation4Line" stroke-width="2" points="707,-93 707,-143 507,-143 507,-163 407,-163 407,-193 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
       </g>
       <g id="relation5">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ab0bedfa27bbf99937d7cf57756cf602" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_89db977746a7dad5345e8c841a3974ab"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_b44c4239c8160b834f5f4c93473ed881"/>
         <defs>
-          <polyline fill="none" id="relation5Line" stroke-width="2" points="557,-493 557,-543 407,-543 407,-563 507,-563 507,-593 " stroke="grey"/>
+          <polyline fill="none" id="relation5Line" stroke-width="2" points="407,-193 407,-243 257,-243 257,-263 157,-263 157,-393 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
       </g>
       <g id="relation6">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_1f28e4e75477e04cff15519de551f278" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_89db977746a7dad5345e8c841a3974ab"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_d2d01c73adabd459c19dab779e79fc7e"/>
         <defs>
-          <polyline fill="none" id="relation6Line" stroke-width="2" points="1007,-493 1007,-543 407,-543 407,-563 507,-563 507,-593 " stroke="grey"/>
+          <polyline fill="none" id="relation6Line" stroke-width="2" points="407,-193 407,-243 257,-243 257,-263 357,-263 357,-293 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
       </g>
       <g id="relation7">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_1cb27c371569b59df87bb7fb3e806509" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_8df34081dacc62a27192de73df463a54"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_983965a09e505dd11e61b18a339d50db" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_1cb27c371569b59df87bb7fb3e806509"/>
         <defs>
-          <polyline fill="none" id="relation7Line" stroke-width="2" points="557,-93 557,-143 507,-143 507,-163 607,-163 607,-193 " stroke="grey"/>
+          <polyline fill="none" id="relation7Line" stroke-width="2" points="607,107 607,57 682,57 682,37 557,37 557,-93 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
       </g>
       <g id="relation8">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc2a6b87ce97e1af286ab2fbc4d64475" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_8df34081dacc62a27192de73df463a54"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_1cb27c371569b59df87bb7fb3e806509" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_8df34081dacc62a27192de73df463a54"/>
         <defs>
-          <polyline fill="none" id="relation8Line" stroke-width="2" points="707,-93 707,-143 507,-143 507,-163 607,-163 607,-193 " stroke="grey"/>
+          <polyline fill="none" id="relation8Line" stroke-width="2" points="557,-93 557,-143 507,-143 507,-163 607,-163 607,-193 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
       </g>
       <g id="relation9">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0a4d9016e604f25a413dffbe215f820c"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b252355f10d60aca78d3f29b056a5eba" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_ab0bedfa27bbf99937d7cf57756cf602"/>
         <defs>
-          <polyline fill="none" id="relation9Line" stroke-width="2" points="607,-193 607,-243 732,-243 732,-263 657,-263 657,-393 " stroke="grey"/>
+          <polyline fill="none" id="relation9Line" stroke-width="2" points="457,-393 457,-443 682,-443 682,-463 557,-463 557,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
       </g>
       <g id="relation10">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_cc6f9e885378173306e24efbddd25fe7"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_0a4d9016e604f25a413dffbe215f820c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_ab0bedfa27bbf99937d7cf57756cf602"/>
         <defs>
-          <polyline fill="none" id="relation10Line" stroke-width="2" points="607,-193 607,-243 732,-243 732,-263 807,-263 807,-293 " stroke="grey"/>
+          <polyline fill="none" id="relation10Line" stroke-width="2" points="657,-393 657,-443 682,-443 682,-463 557,-463 557,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
       </g>
       <g id="relation11">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_85b3f2d14a4b3fc67d34d9aa5ddad683" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_4f5a915fa62f35ce4ee70656841db49c"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b3a7f890d0a3b637c0a6b319190df9f3" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_ab0bedfa27bbf99937d7cf57756cf602"/>
         <defs>
-          <polyline fill="none" id="relation11Line" stroke-width="2" points="807,7 807,-43 807,-43 807,-63 907,-63 907,-93 " stroke="grey"/>
+          <polyline fill="none" id="relation11Line" stroke-width="2" points="807,-393 807,-443 682,-443 682,-463 557,-463 557,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
       </g>
       <g id="relation12">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_4f5a915fa62f35ce4ee70656841db49c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_294490a69c32d1e2ef86ae7e7a1a949f"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ab0bedfa27bbf99937d7cf57756cf602" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0134c228e98cb9d7d3aa705a7307fe53"/>
         <defs>
-          <polyline fill="none" id="relation12Line" stroke-width="2" points="907,-93 907,-143 907,-143 907,-163 807,-163 807,-193 " stroke="grey"/>
+          <polyline fill="none" id="relation12Line" stroke-width="2" points="557,-493 557,-543 407,-543 407,-563 307,-563 307,-593 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
       </g>
       <g id="relation13">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_4f5a915fa62f35ce4ee70656841db49c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_fc548ac1290f8cb050ea3805c1bae39c"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ab0bedfa27bbf99937d7cf57756cf602" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_89db977746a7dad5345e8c841a3974ab"/>
         <defs>
-          <polyline fill="none" id="relation13Line" stroke-width="2" points="907,-93 907,-143 907,-143 907,-163 1007,-163 1007,-193 " stroke="grey"/>
+          <polyline fill="none" id="relation13Line" stroke-width="2" points="557,-493 557,-543 407,-543 407,-563 507,-563 507,-593 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
       </g>
       <g id="relation14">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_b44c4239c8160b834f5f4c93473ed881"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_4f5a915fa62f35ce4ee70656841db49c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_294490a69c32d1e2ef86ae7e7a1a949f"/>
         <defs>
-          <polyline fill="none" id="relation14Line" stroke-width="2" points="407,-193 407,-243 257,-243 257,-263 157,-263 157,-393 " stroke="grey"/>
+          <polyline fill="none" id="relation14Line" stroke-width="2" points="907,-93 907,-143 907,-143 907,-163 807,-163 807,-193 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
       </g>
       <g id="relation15">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b44c4239c8160b834f5f4c93473ed881" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_83705cf2d8fcb4c62da2eff31724ef42"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_294490a69c32d1e2ef86ae7e7a1a949f" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_cc6f9e885378173306e24efbddd25fe7"/>
         <defs>
-          <polyline fill="none" id="relation15Line" stroke-width="2" points="157,-393 157,-443 232,-443 232,-463 307,-463 307,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation15Line" stroke-width="2" points="807,-193 807,-243 732,-243 732,-263 807,-263 807,-293 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
       </g>
       <g id="relation16">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b44c4239c8160b834f5f4c93473ed881" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_279812d41c5fb1fd33306ecb0ca5807a"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_294490a69c32d1e2ef86ae7e7a1a949f" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0a4d9016e604f25a413dffbe215f820c"/>
         <defs>
-          <polyline fill="none" id="relation16Line" stroke-width="2" points="157,-393 157,-443 232,-443 232,-463 157,-463 157,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation16Line" stroke-width="2" points="807,-193 807,-243 732,-243 732,-263 657,-263 657,-393 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
       </g>
       <g id="relation17">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_f6a82a216c59374c2749247700ab4399" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_83705cf2d8fcb4c62da2eff31724ef42"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_00ecc76a0bbf9807138e474b1c529c20" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_019bc4e1cdd68323f6852d6a95fcb03b"/>
         <defs>
-          <polyline fill="none" id="relation17Line" stroke-width="2" points="307,-393 307,-443 232,-443 232,-463 307,-463 307,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation17Line" stroke-width="2" points="1107,-293 1107,-343 1182,-343 1182,-363 1107,-363 1107,-393 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
       </g>
       <g id="relation18">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_83705cf2d8fcb4c62da2eff31724ef42" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0134c228e98cb9d7d3aa705a7307fe53"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_019bc4e1cdd68323f6852d6a95fcb03b" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_4dce7380eee94bde2d7fc1da6a9e80ad"/>
         <defs>
-          <polyline fill="none" id="relation18Line" stroke-width="2" points="307,-493 307,-543 407,-543 407,-563 307,-563 307,-593 " stroke="grey"/>
+          <polyline fill="none" id="relation18Line" stroke-width="2" points="1107,-393 1107,-443 1107,-443 1107,-463 1207,-463 1207,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
       </g>
       <g id="relation19">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_621000c0bf35c0ecf9d2947679f7984a" kin:curveLineOrientation="horizontal" kin:relationType="union" kin:alter="tid_983965a09e505dd11e61b18a339d50db"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_019bc4e1cdd68323f6852d6a95fcb03b" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_1f28e4e75477e04cff15519de551f278"/>
         <defs>
-          <polyline fill="none" id="relation19Line" stroke-width="2" points="757,107 757,137 607,137 607,137 607,137 607,107 " stroke="grey"/>
+          <polyline fill="none" id="relation19Line" stroke-width="2" points="1107,-393 1107,-443 1107,-443 1107,-463 1007,-463 1007,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation19Line"/>
       </g>
       <g id="relation20">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_279bc9e71c71dde19e058150e03e79f2" kin:curveLineOrientation="horizontal" kin:relationType="union" kin:alter="tid_983965a09e505dd11e61b18a339d50db"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc2a6b87ce97e1af286ab2fbc4d64475" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_8df34081dacc62a27192de73df463a54"/>
         <defs>
-          <polyline fill="none" id="relation20Line" stroke-width="2" points="957,107 957,137 607,137 607,137 607,137 607,107 " stroke="grey"/>
+          <polyline fill="none" id="relation20Line" stroke-width="2" points="707,-93 707,-143 507,-143 507,-163 607,-163 607,-193 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation20Line"/>
       </g>
       <g id="relation21">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_983965a09e505dd11e61b18a339d50db" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_1cb27c371569b59df87bb7fb3e806509"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0a4d9016e604f25a413dffbe215f820c"/>
         <defs>
-          <polyline fill="none" id="relation21Line" stroke-width="2" points="607,107 607,57 682,57 682,37 557,37 557,-93 " stroke="grey"/>
+          <polyline fill="none" id="relation21Line" stroke-width="2" points="607,-193 607,-243 732,-243 732,-263 657,-263 657,-393 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation21Line"/>
       </g>
       <g id="relation22">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_983965a09e505dd11e61b18a339d50db" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_85b3f2d14a4b3fc67d34d9aa5ddad683"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_8df34081dacc62a27192de73df463a54" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_cc6f9e885378173306e24efbddd25fe7"/>
         <defs>
-          <polyline fill="none" id="relation22Line" stroke-width="2" points="607,107 607,57 682,57 682,37 807,37 807,7 " stroke="grey"/>
+          <polyline fill="none" id="relation22Line" stroke-width="2" points="607,-193 607,-243 732,-243 732,-263 807,-263 807,-293 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation22Line"/>
       </g>
       <g id="relation23">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b252355f10d60aca78d3f29b056a5eba" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_ab0bedfa27bbf99937d7cf57756cf602"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_83705cf2d8fcb4c62da2eff31724ef42" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0134c228e98cb9d7d3aa705a7307fe53"/>
         <defs>
-          <polyline fill="none" id="relation23Line" stroke-width="2" points="457,-393 457,-443 682,-443 682,-463 557,-463 557,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation23Line" stroke-width="2" points="307,-493 307,-543 407,-543 407,-563 307,-563 307,-593 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation23Line"/>
       </g>
       <g id="relation24">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_0a4d9016e604f25a413dffbe215f820c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_ab0bedfa27bbf99937d7cf57756cf602"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_1f28e4e75477e04cff15519de551f278" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0134c228e98cb9d7d3aa705a7307fe53"/>
         <defs>
-          <polyline fill="none" id="relation24Line" stroke-width="2" points="657,-393 657,-443 682,-443 682,-463 557,-463 557,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation24Line" stroke-width="2" points="1007,-493 1007,-543 407,-543 407,-563 307,-563 307,-593 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation24Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation24Line"/>
       </g>
       <g id="relation25">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b3a7f890d0a3b637c0a6b319190df9f3" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_ab0bedfa27bbf99937d7cf57756cf602"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b3a7f890d0a3b637c0a6b319190df9f3" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_1909e102416b5b2976c15da5ae3055fd"/>
         <defs>
-          <polyline fill="none" id="relation25Line" stroke-width="2" points="807,-393 807,-443 682,-443 682,-463 557,-463 557,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation25Line" stroke-width="2" points="807,-393 807,-443 682,-443 682,-463 807,-463 807,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation25Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation25Line"/>
       </g>
       <g id="relation26">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ab0bedfa27bbf99937d7cf57756cf602" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0134c228e98cb9d7d3aa705a7307fe53"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_0a4d9016e604f25a413dffbe215f820c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_1909e102416b5b2976c15da5ae3055fd"/>
         <defs>
-          <polyline fill="none" id="relation26Line" stroke-width="2" points="557,-493 557,-543 407,-543 407,-563 307,-563 307,-593 " stroke="grey"/>
+          <polyline fill="none" id="relation26Line" stroke-width="2" points="657,-393 657,-443 682,-443 682,-463 807,-463 807,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation26Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation26Line"/>
       </g>
       <g id="relation27">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_d2d01c73adabd459c19dab779e79fc7e"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b252355f10d60aca78d3f29b056a5eba" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_1909e102416b5b2976c15da5ae3055fd"/>
         <defs>
-          <polyline fill="none" id="relation27Line" stroke-width="2" points="407,-193 407,-243 257,-243 257,-263 357,-263 357,-293 " stroke="grey"/>
+          <polyline fill="none" id="relation27Line" stroke-width="2" points="457,-393 457,-443 682,-443 682,-463 807,-463 807,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation27Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation27Line"/>
       </g>
       <g id="relation28">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_d2d01c73adabd459c19dab779e79fc7e" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_f6a82a216c59374c2749247700ab4399"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_00ecc76a0bbf9807138e474b1c529c20" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0400f8e9988e6c5b8512e4ac249ab18a"/>
         <defs>
-          <polyline fill="none" id="relation28Line" stroke-width="2" points="357,-293 357,-343 382,-343 382,-363 307,-363 307,-393 " stroke="grey"/>
+          <polyline fill="none" id="relation28Line" stroke-width="2" points="1107,-293 1107,-343 1182,-343 1182,-363 1257,-363 1257,-393 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation28Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation28Line"/>
       </g>
       <g id="relation29">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_d2d01c73adabd459c19dab779e79fc7e" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_b252355f10d60aca78d3f29b056a5eba"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b44c4239c8160b834f5f4c93473ed881" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_83705cf2d8fcb4c62da2eff31724ef42"/>
         <defs>
-          <polyline fill="none" id="relation29Line" stroke-width="2" points="357,-293 357,-343 382,-343 382,-363 457,-363 457,-393 " stroke="grey"/>
+          <polyline fill="none" id="relation29Line" stroke-width="2" points="157,-393 157,-443 232,-443 232,-463 307,-463 307,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation29Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation29Line"/>
       </g>
       <g id="relation30">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_fc548ac1290f8cb050ea3805c1bae39c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_ae016a23b386c6ec029922a44d2065a0"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_f6a82a216c59374c2749247700ab4399" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_83705cf2d8fcb4c62da2eff31724ef42"/>
         <defs>
-          <polyline fill="none" id="relation30Line" stroke-width="2" points="1007,-193 1007,-243 1032,-243 1032,-263 957,-263 957,-293 " stroke="grey"/>
+          <polyline fill="none" id="relation30Line" stroke-width="2" points="307,-393 307,-443 232,-443 232,-463 307,-463 307,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation30Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation30Line"/>
       </g>
       <g id="relation31">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ae016a23b386c6ec029922a44d2065a0" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_807bf537641ed3ac274a3b64124d6922"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_83705cf2d8fcb4c62da2eff31724ef42" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_89db977746a7dad5345e8c841a3974ab"/>
         <defs>
-          <polyline fill="none" id="relation31Line" stroke-width="2" points="957,-293 957,-343 882,-343 882,-363 957,-363 957,-393 " stroke="grey"/>
+          <polyline fill="none" id="relation31Line" stroke-width="2" points="307,-493 307,-543 407,-543 407,-563 507,-563 507,-593 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation31Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation31Line"/>
       </g>
       <g id="relation32">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ae016a23b386c6ec029922a44d2065a0" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_b3a7f890d0a3b637c0a6b319190df9f3"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_279bc9e71c71dde19e058150e03e79f2" kin:curveLineOrientation="horizontal" kin:relationType="union" kin:alter="tid_983965a09e505dd11e61b18a339d50db"/>
         <defs>
-          <polyline fill="none" id="relation32Line" stroke-width="2" points="957,-293 957,-343 882,-343 882,-363 807,-363 807,-393 " stroke="grey"/>
+          <polyline fill="none" id="relation32Line" stroke-width="2" points="957,107 957,137 607,137 607,137 607,137 607,107 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation32Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation32Line"/>
       </g>
       <g id="relation33">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_f6a82a216c59374c2749247700ab4399" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_279812d41c5fb1fd33306ecb0ca5807a"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_d2d01c73adabd459c19dab779e79fc7e" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_f6a82a216c59374c2749247700ab4399"/>
         <defs>
-          <polyline fill="none" id="relation33Line" stroke-width="2" points="307,-393 307,-443 232,-443 232,-463 157,-463 157,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation33Line" stroke-width="2" points="357,-293 357,-343 382,-343 382,-363 307,-363 307,-393 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation33Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation33Line"/>
       </g>
       <g id="relation34">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_1f28e4e75477e04cff15519de551f278" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0134c228e98cb9d7d3aa705a7307fe53"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_d2d01c73adabd459c19dab779e79fc7e" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_b252355f10d60aca78d3f29b056a5eba"/>
         <defs>
-          <polyline fill="none" id="relation34Line" stroke-width="2" points="1007,-493 1007,-543 407,-543 407,-563 307,-563 307,-593 " stroke="grey"/>
+          <polyline fill="none" id="relation34Line" stroke-width="2" points="357,-293 357,-343 382,-343 382,-363 457,-363 457,-393 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation34Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation34Line"/>
       </g>
       <g id="relation35">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b3a7f890d0a3b637c0a6b319190df9f3" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_1909e102416b5b2976c15da5ae3055fd"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ae016a23b386c6ec029922a44d2065a0" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_b3a7f890d0a3b637c0a6b319190df9f3"/>
         <defs>
-          <polyline fill="none" id="relation35Line" stroke-width="2" points="807,-393 807,-443 682,-443 682,-463 807,-463 807,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation35Line" stroke-width="2" points="957,-293 957,-343 882,-343 882,-363 807,-363 807,-393 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation35Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation35Line"/>
       </g>
@@ -319,233 +346,226 @@
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation36Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation36Line"/>
       </g>
       <g id="relation37">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_1cb27c371569b59df87bb7fb3e806509" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_fc548ac1290f8cb050ea3805c1bae39c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_ae016a23b386c6ec029922a44d2065a0"/>
         <defs>
-          <polyline fill="none" id="relation37Line" stroke-width="2" points="557,-93 557,-143 507,-143 507,-163 407,-163 407,-193 " stroke="grey"/>
+          <polyline fill="none" id="relation37Line" stroke-width="2" points="1007,-193 1007,-243 1032,-243 1032,-263 957,-263 957,-293 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation37Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation37Line"/>
       </g>
       <g id="relation38">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_019bc4e1cdd68323f6852d6a95fcb03b" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_1f28e4e75477e04cff15519de551f278"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_ae016a23b386c6ec029922a44d2065a0" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_807bf537641ed3ac274a3b64124d6922"/>
         <defs>
-          <polyline fill="none" id="relation38Line" stroke-width="2" points="1107,-393 1107,-443 1107,-443 1107,-463 1007,-463 1007,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation38Line" stroke-width="2" points="957,-293 957,-343 882,-343 882,-363 957,-363 957,-393 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation38Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation38Line"/>
       </g>
       <g id="relation39">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_0a4d9016e604f25a413dffbe215f820c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_1909e102416b5b2976c15da5ae3055fd"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_621000c0bf35c0ecf9d2947679f7984a" kin:curveLineOrientation="horizontal" kin:relationType="union" kin:alter="tid_983965a09e505dd11e61b18a339d50db"/>
         <defs>
-          <polyline fill="none" id="relation39Line" stroke-width="2" points="657,-393 657,-443 682,-443 682,-463 807,-463 807,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation39Line" stroke-width="2" points="757,107 757,137 607,137 607,137 607,137 607,107 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation39Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation39Line"/>
       </g>
       <g id="relation40">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b252355f10d60aca78d3f29b056a5eba" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_1909e102416b5b2976c15da5ae3055fd"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_4f5a915fa62f35ce4ee70656841db49c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_fc548ac1290f8cb050ea3805c1bae39c"/>
         <defs>
-          <polyline fill="none" id="relation40Line" stroke-width="2" points="457,-393 457,-443 682,-443 682,-463 807,-463 807,-493 " stroke="grey"/>
+          <polyline fill="none" id="relation40Line" stroke-width="2" points="907,-93 907,-143 907,-143 907,-163 1007,-163 1007,-193 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation40Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation40Line"/>
       </g>
       <g id="relation41">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_294490a69c32d1e2ef86ae7e7a1a949f" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_0a4d9016e604f25a413dffbe215f820c"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_fc548ac1290f8cb050ea3805c1bae39c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_00ecc76a0bbf9807138e474b1c529c20"/>
         <defs>
-          <polyline fill="none" id="relation41Line" stroke-width="2" points="807,-193 807,-243 732,-243 732,-263 657,-263 657,-393 " stroke="grey"/>
+          <polyline fill="none" id="relation41Line" stroke-width="2" points="1007,-193 1007,-243 1032,-243 1032,-263 1107,-263 1107,-293 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation41Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation41Line"/>
       </g>
       <g id="relation42">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_294490a69c32d1e2ef86ae7e7a1a949f" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_cc6f9e885378173306e24efbddd25fe7"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc6f9e885378173306e24efbddd25fe7" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_807bf537641ed3ac274a3b64124d6922"/>
         <defs>
-          <polyline fill="none" id="relation42Line" stroke-width="2" points="807,-193 807,-243 732,-243 732,-263 807,-263 807,-293 " stroke="grey"/>
+          <polyline fill="none" id="relation42Line" stroke-width="2" points="807,-293 807,-343 882,-343 882,-363 957,-363 957,-393 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation42Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation42Line"/>
       </g>
       <g id="relation43">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc6f9e885378173306e24efbddd25fe7" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_807bf537641ed3ac274a3b64124d6922"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_1f28e4e75477e04cff15519de551f278" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_89db977746a7dad5345e8c841a3974ab"/>
         <defs>
-          <polyline fill="none" id="relation43Line" stroke-width="2" points="807,-293 807,-343 882,-343 882,-363 957,-363 957,-393 " stroke="grey"/>
+          <polyline fill="none" id="relation43Line" stroke-width="2" points="1007,-493 1007,-543 407,-543 407,-563 507,-563 507,-593 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation43Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation43Line"/>
       </g>
       <g id="relation44">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_85b3f2d14a4b3fc67d34d9aa5ddad683" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_cc2a6b87ce97e1af286ab2fbc4d64475"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_b44c4239c8160b834f5f4c93473ed881" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_279812d41c5fb1fd33306ecb0ca5807a"/>
         <defs>
-          <polyline fill="none" id="relation44Line" stroke-width="2" points="807,7 807,-43 807,-43 807,-63 707,-63 707,-93 " stroke="grey"/>
+          <polyline fill="none" id="relation44Line" stroke-width="2" points="157,-393 157,-443 232,-443 232,-463 157,-463 157,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation44Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation44Line"/>
       </g>
       <g id="relation45">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_cc2a6b87ce97e1af286ab2fbc4d64475" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_9a6b2064ee3e986aee5f9c356e18f27a"/>
+        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_f6a82a216c59374c2749247700ab4399" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_279812d41c5fb1fd33306ecb0ca5807a"/>
         <defs>
-          <polyline fill="none" id="relation45Line" stroke-width="2" points="707,-93 707,-143 507,-143 507,-163 407,-163 407,-193 " stroke="grey"/>
+          <polyline fill="none" id="relation45Line" stroke-width="2" points="307,-393 307,-443 232,-443 232,-463 157,-463 157,-493 " stroke="grey"/>
         </defs>
         <use xlink:actuate="onLoad" xlink:type="simple" id="relation45Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation45Line"/>
       </g>
     </g>
     <g id="EntityGroup">
-      <g id="tid_4dce7380eee94bde2d7fc1da6a9e80ad" kin:kintype="EmMFMMMF" transform="translate(1200.0, -500.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_4dce7380eee94bde2d7fc1da6a9e80ad:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Christian II </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Denmark</text>
-      </g>
-      <g id="tid_00ecc76a0bbf9807138e474b1c529c20" kin:kintype="EmMFMM" transform="translate(1100.0, -300.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_00ecc76a0bbf9807138e474b1c529c20:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Renata </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Lorraine</text>
-      </g>
-      <g id="tid_89db977746a7dad5345e8c841a3974ab" kin:kintype="EmMMFFFM" transform="translate(500.0, -600.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_89db977746a7dad5345e8c841a3974ab:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Joanna of Castile</text>
-      </g>
-      <g id="tid_8df34081dacc62a27192de73df463a54" kin:kintype="EmFM|EmMMM" transform="translate(600.0, -200.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_8df34081dacc62a27192de73df463a54:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Margaret </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Austria</text>
-      </g>
-      <g id="tid_4f5a915fa62f35ce4ee70656841db49c" kin:kintype="EmMF" transform="translate(900.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_4f5a915fa62f35ce4ee70656841db49c:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ferdinand III</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15"> Holy Roman Emperor</text>
-      </g>
-      <g id="tid_0400f8e9988e6c5b8512e4ac249ab18a" kin:kintype="EmMFMMF" transform="translate(1250.0, -400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_0400f8e9988e6c5b8512e4ac249ab18a:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Francis I, </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Duke of Lorraine</text>
-      </g>
-      <g id="tid_b44c4239c8160b834f5f4c93473ed881" kin:kintype="EmMMFF" transform="translate(150.0, -400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_b44c4239c8160b834f5f4c93473ed881:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip II </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Spain</text>
-      </g>
-      <g id="tid_83705cf2d8fcb4c62da2eff31724ef42" kin:kintype="EmMMFFF" transform="translate(300.0, -500.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_83705cf2d8fcb4c62da2eff31724ef42:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles V, </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Holy Roman Emperor</text>
-      </g>
-      <g id="tid_983965a09e505dd11e61b18a339d50db" kin:kintype="Em" transform="translate(600.0, 100.0)" kin:path="">
-        <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_983965a09e505dd11e61b18a339d50db:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles II </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Spain</text>
-      </g>
-      <g id="tid_ab0bedfa27bbf99937d7cf57756cf602" kin:kintype="EmMMFMFF" transform="translate(550.0, -500.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_ab0bedfa27bbf99937d7cf57756cf602:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ferdinand I, </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Holy Roman Emperor</text>
-      </g>
-      <g id="tid_d2d01c73adabd459c19dab779e79fc7e" kin:kintype="EmMMFM" transform="translate(350.0, -300.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_d2d01c73adabd459c19dab779e79fc7e:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Anna </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Austria</text>
-      </g>
-      <g id="tid_ae016a23b386c6ec029922a44d2065a0" kin:kintype="EmMFMF" transform="translate(950.0, -300.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_ae016a23b386c6ec029922a44d2065a0:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">William V, </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Duke of Bavaria</text>
-      </g>
-      <g id="tid_279812d41c5fb1fd33306ecb0ca5807a" kin:kintype="EmMMFFM" transform="translate(150.0, -500.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_279812d41c5fb1fd33306ecb0ca5807a:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Isabella </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Portugal</text>
-      </g>
-      <g id="tid_0134c228e98cb9d7d3aa705a7307fe53" kin:kintype="EmMMFFFF" transform="translate(300.0, -600.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_0134c228e98cb9d7d3aa705a7307fe53:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip I </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Castile</text>
-      </g>
-      <g id="tid_b3a7f890d0a3b637c0a6b319190df9f3" kin:kintype="EmMFMFM" transform="translate(800.0, -400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_b3a7f890d0a3b637c0a6b319190df9f3:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Anne </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Habsburg</text>
-      </g>
-      <g id="tid_1cb27c371569b59df87bb7fb3e806509" kin:kintype="EmF" transform="translate(550.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_1cb27c371569b59df87bb7fb3e806509:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip IV </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Spain</text>
-      </g>
-      <g id="tid_1f28e4e75477e04cff15519de551f278" kin:kintype="EmMFMMMM" transform="translate(1000.0, -500.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_1f28e4e75477e04cff15519de551f278:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Isabella </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Burgundy</text>
-      </g>
-      <g id="tid_1909e102416b5b2976c15da5ae3055fd" kin:kintype="EmMFMFMM" transform="translate(800.0, -500.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_1909e102416b5b2976c15da5ae3055fd:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Anne of Bohemia</text>
-      </g>
-      <g id="tid_0a4d9016e604f25a413dffbe215f820c" kin:kintype="EmMMMF" transform="translate(650.0, -400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_0a4d9016e604f25a413dffbe215f820c:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles II </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Austria</text>
-      </g>
-      <g id="tid_621000c0bf35c0ecf9d2947679f7984a" kin:kintype="EmW" transform="translate(750.0, 100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_621000c0bf35c0ecf9d2947679f7984a:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of the Palatinate-Neuburg</text>
-      </g>
-      <g id="tid_b252355f10d60aca78d3f29b056a5eba" kin:kintype="EmMMFMF" transform="translate(450.0, -400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_b252355f10d60aca78d3f29b056a5eba:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maximilian II, </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Holy Roman Emperor</text>
-      </g>
-      <g id="tid_fc548ac1290f8cb050ea3805c1bae39c" kin:kintype="EmMFM" transform="translate(1000.0, -200.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_fc548ac1290f8cb050ea3805c1bae39c:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Bavaria</text>
-      </g>
-      <g id="tid_cc6f9e885378173306e24efbddd25fe7" kin:kintype="EmMFFM" transform="translate(800.0, -300.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_cc6f9e885378173306e24efbddd25fe7:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Bavaria</text>
-      </g>
-      <g id="tid_019bc4e1cdd68323f6852d6a95fcb03b" kin:kintype="EmMFMMM" transform="translate(1100.0, -400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_019bc4e1cdd68323f6852d6a95fcb03b:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Christina </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Denmark</text>
-      </g>
       <g id="tid_85b3f2d14a4b3fc67d34d9aa5ddad683" kin:kintype="EmM" transform="translate(800.0, 0.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_85b3f2d14a4b3fc67d34d9aa5ddad683:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Mariana </text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Austria</text>
       </g>
-      <g id="tid_294490a69c32d1e2ef86ae7e7a1a949f" kin:kintype="EmMFF" transform="translate(800.0, -200.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_294490a69c32d1e2ef86ae7e7a1a949f:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ferdinand II</text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15"> Holy Roman Emperor</text>
-      </g>
       <g id="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:kintype="EmFF|EmMMF" transform="translate(400.0, -200.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_9a6b2064ee3e986aee5f9c356e18f27a:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip III </text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Spain</text>
       </g>
+      <g id="tid_1cb27c371569b59df87bb7fb3e806509" kin:kintype="EmF" transform="translate(550.0, -100.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip IV </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Spain</text>
+      </g>
+      <g id="tid_ab0bedfa27bbf99937d7cf57756cf602" kin:kintype="EmMMFMFF" transform="translate(550.0, -500.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ferdinand I, </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Holy Roman Emperor</text>
+      </g>
+      <g id="tid_294490a69c32d1e2ef86ae7e7a1a949f" kin:kintype="EmMFF" transform="translate(800.0, -200.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ferdinand II</text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15"> Holy Roman Emperor</text>
+      </g>
+      <g id="tid_019bc4e1cdd68323f6852d6a95fcb03b" kin:kintype="EmMFMMM" transform="translate(1100.0, -400.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Christina </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Denmark</text>
+      </g>
+      <g id="tid_8df34081dacc62a27192de73df463a54" kin:kintype="EmFM|EmMMM" transform="translate(600.0, -200.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Margaret </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Austria</text>
+      </g>
+      <g id="tid_0134c228e98cb9d7d3aa705a7307fe53" kin:kintype="EmMMFFFF" transform="translate(300.0, -600.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip I </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Castile</text>
+      </g>
+      <g id="tid_1909e102416b5b2976c15da5ae3055fd" kin:kintype="EmMFMFMM" transform="translate(800.0, -500.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Anne of Bohemia</text>
+      </g>
+      <g id="tid_0400f8e9988e6c5b8512e4ac249ab18a" kin:kintype="EmMFMMF" transform="translate(1250.0, -400.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Francis I, </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Duke of Lorraine</text>
+      </g>
+      <g id="tid_83705cf2d8fcb4c62da2eff31724ef42" kin:kintype="EmMMFFF" transform="translate(300.0, -500.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles V, </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Holy Roman Emperor</text>
+      </g>
       <g id="tid_279bc9e71c71dde19e058150e03e79f2" kin:kintype="EmW" transform="translate(950.0, 100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_279bc9e71c71dde19e058150e03e79f2:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Marie Louise d'Orléans</text>
       </g>
-      <g id="tid_f6a82a216c59374c2749247700ab4399" kin:kintype="EmMMFMM" transform="translate(300.0, -400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_f6a82a216c59374c2749247700ab4399:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria </text>
+      <g id="tid_d2d01c73adabd459c19dab779e79fc7e" kin:kintype="EmMMFM" transform="translate(350.0, -300.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Anna </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Austria</text>
+      </g>
+      <g id="tid_b3a7f890d0a3b637c0a6b319190df9f3" kin:kintype="EmMFMFM" transform="translate(800.0, -400.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Anne </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Habsburg</text>
+      </g>
+      <g id="tid_ae016a23b386c6ec029922a44d2065a0" kin:kintype="EmMFMF" transform="translate(950.0, -300.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">William V, </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Duke of Bavaria</text>
+      </g>
+      <g id="tid_983965a09e505dd11e61b18a339d50db" kin:kintype="Em" transform="translate(600.0, 100.0)" kin:path="">
+        <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles II </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Spain</text>
+      </g>
+      <g id="tid_fc548ac1290f8cb050ea3805c1bae39c" kin:kintype="EmMFM" transform="translate(1000.0, -200.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Bavaria</text>
+      </g>
+      <g id="tid_807bf537641ed3ac274a3b64124d6922" kin:kintype="EmMFMFF" transform="translate(950.0, -400.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Albert V, </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Duke of Bavaria</text>
+      </g>
+      <g id="tid_b252355f10d60aca78d3f29b056a5eba" kin:kintype="EmMMFMF" transform="translate(450.0, -400.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maximilian II, </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Holy Roman Emperor</text>
+      </g>
+      <g id="tid_00ecc76a0bbf9807138e474b1c529c20" kin:kintype="EmMFMM" transform="translate(1100.0, -300.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Renata </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Lorraine</text>
+      </g>
+      <g id="tid_1f28e4e75477e04cff15519de551f278" kin:kintype="EmMFMMMM" transform="translate(1000.0, -500.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Isabella </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Burgundy</text>
+      </g>
+      <g id="tid_279812d41c5fb1fd33306ecb0ca5807a" kin:kintype="EmMMFFM" transform="translate(150.0, -500.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Isabella </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Portugal</text>
+      </g>
+      <g id="tid_621000c0bf35c0ecf9d2947679f7984a" kin:kintype="EmW" transform="translate(750.0, 100.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of the Palatinate-Neuburg</text>
+      </g>
+      <g id="tid_cc6f9e885378173306e24efbddd25fe7" kin:kintype="EmMFFM" transform="translate(800.0, -300.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Bavaria</text>
+      </g>
+      <g id="tid_b44c4239c8160b834f5f4c93473ed881" kin:kintype="EmMMFF" transform="translate(150.0, -400.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip II </text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Spain</text>
       </g>
       <g id="tid_cc2a6b87ce97e1af286ab2fbc4d64475" kin:kintype="EmMM" transform="translate(700.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" id="tid_cc2a6b87ce97e1af286ab2fbc4d64475:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Anna </text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Spain</text>
       </g>
-      <g id="tid_807bf537641ed3ac274a3b64124d6922" kin:kintype="EmMFMFF" transform="translate(950.0, -400.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" id="tid_807bf537641ed3ac274a3b64124d6922:symbol" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Albert V, </text>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Duke of Bavaria</text>
+      <g id="tid_89db977746a7dad5345e8c841a3974ab" kin:kintype="EmMMFFFM" transform="translate(500.0, -600.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Joanna of Castile</text>
+      </g>
+      <g id="tid_4f5a915fa62f35ce4ee70656841db49c" kin:kintype="EmMF" transform="translate(900.0, -100.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ferdinand III</text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15"> Holy Roman Emperor</text>
+      </g>
+      <g id="tid_0a4d9016e604f25a413dffbe215f820c" kin:kintype="EmMMMF" transform="translate(650.0, -400.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles II </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Austria</text>
+      </g>
+      <g id="tid_4dce7380eee94bde2d7fc1da6a9e80ad" kin:kintype="EmMFMMMF" transform="translate(1200.0, -500.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Christian II </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Denmark</text>
+      </g>
+      <g id="tid_f6a82a216c59374c2749247700ab4399" kin:kintype="EmMMFMM" transform="translate(300.0, -400.0)" kin:path="">
+        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria </text>
+        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Spain</text>
       </g>
     </g>
     <g id="LabelsGroup"/>
   </g>
   
-
-
-
-
-
-
-
 <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
     <kin:KinTypeString>Em:Charles II ;of Spain;1661-1700:</kin:KinTypeString>
     <kin:KinTypeString>EmW:Maria Anna ;of the Palatinate-Neuburg;1689-1700:</kin:KinTypeString>
@@ -589,39 +609,32 @@
     <kin:KinTypeString>x:#3:F:#15:</kin:KinTypeString>
     <kin:KinTypeString>x:#3:D:#1</kin:KinTypeString>
     <kin:IndexParameters>
+      <kin:DateOfBirthFields>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfBirth"/>
+      </kin:DateOfBirthFields>
+      <kin:DateOfDeathFields>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfDeath"/>
+      </kin:DateOfDeathFields>
       <kin:LabelFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*[starts-with(local-name(), 'Name')]"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:Text"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NoteText"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:INDI/*:NAME/*:NAME"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:INDI/*:NAME"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Type"/>
       </kin:LabelFields>
       <kin:SymbolFieldsFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:sex='male']" kin:Value="triangle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity[*:Gender='male']" kin:Value="triangle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:sex='female']" kin:Value="circle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity[*:Gender='female']" kin:Value="circle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']" kin:Value="union"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Male']" kin:Value="triangle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Female']" kin:Value="circle"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='']" kin:Value="square"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:DateOfDeath!='']" kin:Value="blackstrikethrough"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='Xx']" kin:Value="redstrikethrough"/>
+        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='xY']" kin:Value="redstrikethrough"/>
       </kin:SymbolFieldsFields>
-      <kin:DefaultSymbol>square</kin:DefaultSymbol>
     </kin:IndexParameters>
-    <kin:KinTermGroup kin:Show="true" kin:GroupColour="#0000FF" kin:GroupName="English terms" kin:Generate="false">
-      <kin:KinTerm kin:Term="Grand Mother" kin:Referent="MM"/>
-      <kin:KinTerm kin:Term="Aunt" kin:Referent="MZ|FZ"/>
-      <kin:KinTerm kin:Term="Uncle" kin:Referent="MB|FB"/>
-      <kin:KinTerm kin:Term="Grand Father" kin:Referent="FF"/>
-    </kin:KinTermGroup>
-    <kin:KinTermGroup kin:Show="true" kin:GroupColour="#0000FF" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="false">
-      <kin:KinTerm kin:Term="Makuakane" kin:Referent="F|FB|MB" kin:Description="Father, Uncle"/>
-      <kin:KinTerm kin:Term="Makuahini" kin:Referent="M|MZ|FZ" kin:Description="Mother, Aunt"/>
-      <kin:KinTerm kin:Term="Kaikua'ana" kin:Referent="E(male)B|E(male)FBS|E(male)FZS|E(male)MBS|E(male)MZS" kin:Description=""/>
-      <kin:KinTerm kin:Term="Kaikua'ana" kin:Referent="E(female)Z|E(female)FBD|E(female)FZD|E(female)MBD|E(female)MZD" kin:Description="Brother/Sister, Cousin"/>
-      <kin:KinTerm kin:Term="Kaikuane" kin:Referent="E(female)B|E(female)FBS|E(female)FZS|E(female)MBS|E(female)MZS" kin:Description="Brother, Cousin"/>
-      <kin:KinTerm kin:Term="Kaikuane" kin:Referent="E(male)Z|E(male)FBD|E(male)FZD|E(male)MBD|E(male)MZD" kin:Description="Sister, Cousin"/>
-      <kin:KinTerm kin:Term="Keikikane" kin:Referent="S|BS|ZS" kin:Description="Son, Nephew"/>
-      <kin:KinTerm kin:Term="Keikamahini" kin:Referent="D|BD|ZD" kin:Description="Daughter, Niece"/>
-    </kin:KinTermGroup>
+    <SelectedProfiles>
+      <kin:Profile kin:ProfileName="Individual" kin:ProfileId="clarin.eu:cr1:p_1320657629627"/>
+      <kin:Profile kin:ProfileName="Chromosome_Example" kin:ProfileId="clarin.eu:cr1:p_1332345811038"/>
+      <kin:Profile kin:ProfileName="Gedcom_Entity" kin:ProfileId="clarin.eu:cr1:p_1332345811039"/>
+    </SelectedProfiles>
     <kin:ShowLabels>true</kin:ShowLabels>
     <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
     <kin:ShowIdLabels>false</kin:ShowIdLabels>
@@ -634,69 +647,39 @@
     <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
     <kin:EntityData>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">4dce7380eee94bde2d7fc1da6a9e80ad</kin:Identifier>
-        <kin:KinType>EmMFMMMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Christian II </kin:Label>
-        <kin:Label>of Denmark</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">019bc4e1cdd68323f6852d6a95fcb03b</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">00ecc76a0bbf9807138e474b1c529c20</kin:Identifier>
-        <kin:KinType>EmMFMM</kin:KinType>
+        <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
+        <kin:KinType>EmM</kin:KinType>
         <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth>1634</kin:DateOfBirth>
+        <kin:DateOfDeath>1696</kin:DateOfDeath>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
-        <kin:Label>Renata </kin:Label>
-        <kin:Label>of Lorraine</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">0400f8e9988e6c5b8512e4ac249ab18a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">019bc4e1cdd68323f6852d6a95fcb03b</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">89db977746a7dad5345e8c841a3974ab</kin:Identifier>
-        <kin:CustomIdentifier>#12</kin:CustomIdentifier>
-        <kin:KinType>EmMMFFFM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Joanna of Castile</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-        <kin:CustomIdentifier>#1</kin:CustomIdentifier>
-        <kin:KinType>EmFM</kin:KinType>
-        <kin:KinType>EmMMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Margaret </kin:Label>
+        <kin:Label>Mariana </kin:Label>
         <kin:Label>of Austria</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">4f5a915fa62f35ce4ee70656841db49c</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+        <kin:CustomIdentifier>#2</kin:CustomIdentifier>
+        <kin:KinType>EmFF</kin:KinType>
+        <kin:KinType>EmMMF</kin:KinType>
+        <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth>1578</kin:DateOfBirth>
+        <kin:DateOfDeath>1621</kin:DateOfDeath>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Philip III </kin:Label>
+        <kin:Label>of Spain</kin:Label>
         <kin:Relations>
           <kin:Relation kin:Type="descendant">
             <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
@@ -705,125 +688,35 @@
             <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
           </kin:Relation>
           <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">294490a69c32d1e2ef86ae7e7a1a949f</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">4f5a915fa62f35ce4ee70656841db49c</kin:Identifier>
-        <kin:KinType>EmMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Ferdinand III</kin:Label>
-        <kin:Label> Holy Roman Emperor</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">294490a69c32d1e2ef86ae7e7a1a949f</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">0400f8e9988e6c5b8512e4ac249ab18a</kin:Identifier>
-        <kin:KinType>EmMFMMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Francis I, </kin:Label>
-        <kin:Label>Duke of Lorraine</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">00ecc76a0bbf9807138e474b1c529c20</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">b44c4239c8160b834f5f4c93473ed881</kin:Identifier>
-        <kin:KinType>EmMMFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Philip II </kin:Label>
-        <kin:Label>of Spain</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">279812d41c5fb1fd33306ecb0ca5807a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">f6a82a216c59374c2749247700ab4399</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
-        <kin:CustomIdentifier>#11</kin:CustomIdentifier>
-        <kin:KinType>EmMMFFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Charles V, </kin:Label>
-        <kin:Label>Holy Roman Emperor</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
             <kin:Identifier kin:type="tid">b44c4239c8160b834f5f4c93473ed881</kin:Identifier>
           </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">f6a82a216c59374c2749247700ab4399</kin:Identifier>
-          </kin:Relation>
           <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">0134c228e98cb9d7d3aa705a7307fe53</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">89db977746a7dad5345e8c841a3974ab</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
+            <kin:Identifier kin:type="tid">d2d01c73adabd459c19dab779e79fc7e</kin:Identifier>
           </kin:Relation>
         </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
-        <kin:KinType>Em</kin:KinType>
+        <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
+        <kin:KinType>EmF</kin:KinType>
         <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth>1661-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1700-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>true</kin:Ego>
+        <kin:DateOfBirth>1605</kin:DateOfBirth>
+        <kin:DateOfDeath>1665</kin:DateOfDeath>
+        <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
-        <kin:Label>Charles II </kin:Label>
+        <kin:Label>Philip IV </kin:Label>
         <kin:Label>of Spain</kin:Label>
         <kin:Relations>
-          <kin:Relation kin:Type="union">
-            <kin:Identifier kin:type="tid">621000c0bf35c0ecf9d2947679f7984a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="union">
-            <kin:Identifier kin:type="tid">279bc9e71c71dde19e058150e03e79f2</kin:Identifier>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
           </kin:Relation>
           <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
+            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
           </kin:Relation>
           <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
+            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="sibling">
+            <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
           </kin:Relation>
         </kin:Relations>
       </kin:Entity>
@@ -832,6 +725,8 @@
         <kin:CustomIdentifier>#9</kin:CustomIdentifier>
         <kin:KinType>EmMMFMFF</kin:KinType>
         <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
         <kin:Label>Ferdinand I, </kin:Label>
@@ -861,357 +756,12 @@
         </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">d2d01c73adabd459c19dab779e79fc7e</kin:Identifier>
-        <kin:KinType>EmMMFM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Anna </kin:Label>
-        <kin:Label>of Austria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">f6a82a216c59374c2749247700ab4399</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">b252355f10d60aca78d3f29b056a5eba</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
-        <kin:KinType>EmMFMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>William V, </kin:Label>
-        <kin:Label>Duke of Bavaria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">807bf537641ed3ac274a3b64124d6922</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">279812d41c5fb1fd33306ecb0ca5807a</kin:Identifier>
-        <kin:KinType>EmMMFFM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Isabella </kin:Label>
-        <kin:Label>of Portugal</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">b44c4239c8160b834f5f4c93473ed881</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">f6a82a216c59374c2749247700ab4399</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">0134c228e98cb9d7d3aa705a7307fe53</kin:Identifier>
-        <kin:CustomIdentifier>#13</kin:CustomIdentifier>
-        <kin:KinType>EmMMFFFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Philip I </kin:Label>
-        <kin:Label>of Castile</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
-        <kin:CustomIdentifier>#8</kin:CustomIdentifier>
-        <kin:KinType>EmMFMFM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Anne </kin:Label>
-        <kin:Label>of Habsburg</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">1909e102416b5b2976c15da5ae3055fd</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">b252355f10d60aca78d3f29b056a5eba</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
-        <kin:KinType>EmF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth>1605-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1665-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Philip IV </kin:Label>
-        <kin:Label>of Spain</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
-        <kin:CustomIdentifier>#14</kin:CustomIdentifier>
-        <kin:KinType>EmMFMMMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Isabella </kin:Label>
-        <kin:Label>of Burgundy</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">019bc4e1cdd68323f6852d6a95fcb03b</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">0134c228e98cb9d7d3aa705a7307fe53</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">89db977746a7dad5345e8c841a3974ab</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">1909e102416b5b2976c15da5ae3055fd</kin:Identifier>
-        <kin:CustomIdentifier>#6</kin:CustomIdentifier>
-        <kin:KinType>EmMFMFMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Anne of Bohemia</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">b252355f10d60aca78d3f29b056a5eba</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
-        <kin:CustomIdentifier>#4</kin:CustomIdentifier>
-        <kin:KinType>EmMMMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Charles II </kin:Label>
-        <kin:Label>of Austria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">294490a69c32d1e2ef86ae7e7a1a949f</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">1909e102416b5b2976c15da5ae3055fd</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">b252355f10d60aca78d3f29b056a5eba</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">621000c0bf35c0ecf9d2947679f7984a</kin:Identifier>
-        <kin:KinType>EmW</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1689-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1700-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Maria Anna </kin:Label>
-        <kin:Label>of the Palatinate-Neuburg</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="union">
-            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">b252355f10d60aca78d3f29b056a5eba</kin:Identifier>
-        <kin:CustomIdentifier>#7</kin:CustomIdentifier>
-        <kin:KinType>EmMMFMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Maximilian II, </kin:Label>
-        <kin:Label>Holy Roman Emperor</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">d2d01c73adabd459c19dab779e79fc7e</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">1909e102416b5b2976c15da5ae3055fd</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
-        <kin:KinType>EmMFM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1574-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1616-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Maria Anna </kin:Label>
-        <kin:Label>of Bavaria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">4f5a915fa62f35ce4ee70656841db49c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">00ecc76a0bbf9807138e474b1c529c20</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-        <kin:CustomIdentifier>#3</kin:CustomIdentifier>
-        <kin:KinType>EmMFFM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Maria Anna </kin:Label>
-        <kin:Label>of Bavaria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">294490a69c32d1e2ef86ae7e7a1a949f</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">807bf537641ed3ac274a3b64124d6922</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">019bc4e1cdd68323f6852d6a95fcb03b</kin:Identifier>
-        <kin:KinType>EmMFMMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Christina </kin:Label>
-        <kin:Label>of Denmark</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">00ecc76a0bbf9807138e474b1c529c20</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">4dce7380eee94bde2d7fc1da6a9e80ad</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
-        <kin:KinType>EmM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1634-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1696-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Mariana </kin:Label>
-        <kin:Label>of Austria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">4f5a915fa62f35ce4ee70656841db49c</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
         <kin:Identifier kin:type="tid">294490a69c32d1e2ef86ae7e7a1a949f</kin:Identifier>
         <kin:CustomIdentifier>#5</kin:CustomIdentifier>
         <kin:KinType>EmMFF</kin:KinType>
         <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
         <kin:Label>Ferdinand II</kin:Label>
@@ -1232,260 +782,23 @@
         </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-        <kin:CustomIdentifier>#2</kin:CustomIdentifier>
-        <kin:KinType>EmFF</kin:KinType>
-        <kin:KinType>EmMMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth>1578-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1621-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Philip III </kin:Label>
-        <kin:Label>of Spain</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">b44c4239c8160b834f5f4c93473ed881</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">d2d01c73adabd459c19dab779e79fc7e</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">279bc9e71c71dde19e058150e03e79f2</kin:Identifier>
-        <kin:KinType>EmW</kin:KinType>
+        <kin:Identifier kin:type="tid">019bc4e1cdd68323f6852d6a95fcb03b</kin:Identifier>
+        <kin:KinType>EmMFMMM</kin:KinType>
         <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1679-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1689-01-01T00:00:00+01:00</kin:DateOfDeath>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
-        <kin:Label>Marie Louise d'Orléans</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="union">
-            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">f6a82a216c59374c2749247700ab4399</kin:Identifier>
-        <kin:CustomIdentifier>#10</kin:CustomIdentifier>
-        <kin:KinType>EmMMFMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Maria </kin:Label>
-        <kin:Label>of Spain</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">d2d01c73adabd459c19dab779e79fc7e</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">279812d41c5fb1fd33306ecb0ca5807a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">b44c4239c8160b834f5f4c93473ed881</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
-        <kin:KinType>EmMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1606-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1646-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Maria Anna </kin:Label>
-        <kin:Label>of Spain</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">807bf537641ed3ac274a3b64124d6922</kin:Identifier>
-        <kin:CustomIdentifier>#15</kin:CustomIdentifier>
-        <kin:KinType>EmMFMFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Albert V, </kin:Label>
-        <kin:Label>Duke of Bavaria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-    </kin:EntityData>
-    <kin:DiagramMode>FreeForm</kin:DiagramMode>
-    <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="KinTerms" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="DiagramTree" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="true" kin:width="360"/>
-    <kin:DiagramPanel kin:type="EntitySearch" kin:show="false" kin:width="150"/>
-  </kin:KinDiagramData>
-  <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
-    <kin:KinTypeString>Em:Charles II ;of Spain;1661-1700:</kin:KinTypeString>
-    <kin:KinTypeString>EmW:Maria Anna ;of the Palatinate-Neuburg;1689-1700:</kin:KinTypeString>
-    <kin:KinTypeString>EmW:Marie Louise d'Orléans;1679-1689:</kin:KinTypeString>
-    <kin:KinTypeString>EmF:Philip IV ;of Spain;1605-1665:</kin:KinTypeString>
-    <kin:KinTypeString>EmM:Mariana ;of Austria;1634-1696:</kin:KinTypeString>
-    <kin:KinTypeString>EmMM:Maria Anna ;of Spain;1606-1646:</kin:KinTypeString>
-    <kin:KinTypeString>EmFM:#1;Margaret ;of Austria;</kin:KinTypeString>
-    <kin:KinTypeString>EmFF:#2;Philip III ;of Spain;1578-1621:</kin:KinTypeString>
-    <kin:KinTypeString>EmMF:Ferdinand III; Holy Roman Emperor</kin:KinTypeString>
-    <kin:KinTypeString>EmMFF:#5;Ferdinand II; Holy Roman Emperor:M:#3;Maria Anna ;of Bavaria:</kin:KinTypeString>
-    <kin:KinTypeString>EmMMM:#1:</kin:KinTypeString>
-    <kin:KinTypeString>EmMMF:#2:</kin:KinTypeString>
-    <kin:KinTypeString>EmMFM:Maria Anna ;of Bavaria;1574-1616:</kin:KinTypeString>
-    <kin:KinTypeString>EmMFMM:Renata ;of Lorraine</kin:KinTypeString>
-    <kin:KinTypeString>EmMFMF:William V, ;Duke of Bavaria</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFF:Philip II ;of Spain</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFM:Anna ;of Austria</kin:KinTypeString>
-    <kin:KinTypeString>EmMMMF:#4;Charles II ;of Austria:S:#5:</kin:KinTypeString>
-    <kin:KinTypeString>EmMFMMF:Francis I, ;Duke of Lorraine</kin:KinTypeString>
-    <kin:KinTypeString>EmMFMMM:Christina ;of Denmark</kin:KinTypeString>
-    <kin:KinTypeString>EmMFMFF:#15;Albert V, ;Duke of Bavaria</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFMM:#10;Maria ;of Spain</kin:KinTypeString>
-    <kin:KinTypeString>EmMFMMMF:Christian II ;of Denmark</kin:KinTypeString>
-    <kin:KinTypeString>EmMFMMMM:#14;Isabella ;of Burgundy</kin:KinTypeString>
-    <kin:KinTypeString>EmMFMFM:#8;Anne ;of Habsburg:</kin:KinTypeString>
-    <kin:KinTypeString>EmMFMFMM:#6;Anne of Bohemia:S:#4</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFMF:#7;Maximilian II, ;Holy Roman Emperor:M:#6</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFMFF:#9;Ferdinand I, ;Holy Roman Emperor:S:#4</kin:KinTypeString>
-    <kin:KinTypeString>x:#9:D:#8</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFFF:#11;Charles V, ;Holy Roman Emperor:</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFFM:Isabella ;of Portugal:D:#10</kin:KinTypeString>
-    <kin:KinTypeString>x:#10:F:#11</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFFFF:#13;Philip I ;of Castile</kin:KinTypeString>
-    <kin:KinTypeString>EmMMFFFM:#12;Joanna of Castile</kin:KinTypeString>
-    <kin:KinTypeString>x:#9:F:#13</kin:KinTypeString>
-    <kin:KinTypeString>x:#9:M:#12</kin:KinTypeString>
-    <kin:KinTypeString>x:#14:F:#13</kin:KinTypeString>
-    <kin:KinTypeString>x:#14:M:#12</kin:KinTypeString>
-    <kin:KinTypeString>x:#3:M:#8:</kin:KinTypeString>
-    <kin:KinTypeString>x:#3:F:#15:</kin:KinTypeString>
-    <kin:KinTypeString>x:#3:D:#1</kin:KinTypeString>
-    <kin:IndexParameters>
-      <kin:LabelFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity/*[starts-with(local-name(), 'Name')]"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:Text"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity/*:NoteText"/>
-      </kin:LabelFields>
-      <kin:SymbolFieldsFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:sex='male']" kin:Value="triangle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity[*:Gender='male']" kin:Value="triangle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:sex='female']" kin:Value="circle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Entity[*:Gender='female']" kin:Value="circle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']" kin:Value="union"/>
-      </kin:SymbolFieldsFields>
-      <kin:DefaultSymbol>square</kin:DefaultSymbol>
-    </kin:IndexParameters>
-    <kin:KinTermGroup kin:Show="true" kin:GroupColour="#0000FF" kin:GroupName="English terms" kin:Generate="false">
-      <kin:KinTerm kin:Term="Grand Mother" kin:Referent="MM"/>
-      <kin:KinTerm kin:Term="Aunt" kin:Referent="MZ|FZ"/>
-      <kin:KinTerm kin:Term="Uncle" kin:Referent="MB|FB"/>
-      <kin:KinTerm kin:Term="Grand Father" kin:Referent="FF"/>
-    </kin:KinTermGroup>
-    <kin:KinTermGroup kin:Show="true" kin:GroupColour="#0000FF" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="false">
-      <kin:KinTerm kin:Term="Makuakane" kin:Referent="F|FB|MB" kin:Description="Father, Uncle"/>
-      <kin:KinTerm kin:Term="Makuahini" kin:Referent="M|MZ|FZ" kin:Description="Mother, Aunt"/>
-      <kin:KinTerm kin:Term="Kaikua'ana" kin:Referent="E(male)B|E(male)FBS|E(male)FZS|E(male)MBS|E(male)MZS" kin:Description=""/>
-      <kin:KinTerm kin:Term="Kaikua'ana" kin:Referent="E(female)Z|E(female)FBD|E(female)FZD|E(female)MBD|E(female)MZD" kin:Description="Brother/Sister, Cousin"/>
-      <kin:KinTerm kin:Term="Kaikuane" kin:Referent="E(female)B|E(female)FBS|E(female)FZS|E(female)MBS|E(female)MZS" kin:Description="Brother, Cousin"/>
-      <kin:KinTerm kin:Term="Kaikuane" kin:Referent="E(male)Z|E(male)FBD|E(male)FZD|E(male)MBD|E(male)MZD" kin:Description="Sister, Cousin"/>
-      <kin:KinTerm kin:Term="Keikikane" kin:Referent="S|BS|ZS" kin:Description="Son, Nephew"/>
-      <kin:KinTerm kin:Term="Keikamahini" kin:Referent="D|BD|ZD" kin:Description="Daughter, Niece"/>
-    </kin:KinTermGroup>
-    <kin:ShowLabels>true</kin:ShowLabels>
-    <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
-    <kin:ShowIdLabels>false</kin:ShowIdLabels>
-    <kin:ShowDateLabels>false</kin:ShowDateLabels>
-    <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
-    <kin:SnapToGrid>true</kin:SnapToGrid>
-    <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
-    <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
-    <kin:HighlightRelationLines>true</kin:HighlightRelationLines>
-    <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
-    <kin:EntityData>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">4dce7380eee94bde2d7fc1da6a9e80ad</kin:Identifier>
-        <kin:KinType>EmMFMMMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Christian II </kin:Label>
+        <kin:Label>Christina </kin:Label>
         <kin:Label>of Denmark</kin:Label>
         <kin:Relations>
           <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">019bc4e1cdd68323f6852d6a95fcb03b</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">00ecc76a0bbf9807138e474b1c529c20</kin:Identifier>
-        <kin:KinType>EmMFMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Renata </kin:Label>
-        <kin:Label>of Lorraine</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
+            <kin:Identifier kin:type="tid">00ecc76a0bbf9807138e474b1c529c20</kin:Identifier>
           </kin:Relation>
           <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">0400f8e9988e6c5b8512e4ac249ab18a</kin:Identifier>
+            <kin:Identifier kin:type="tid">4dce7380eee94bde2d7fc1da6a9e80ad</kin:Identifier>
           </kin:Relation>
           <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">019bc4e1cdd68323f6852d6a95fcb03b</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">89db977746a7dad5345e8c841a3974ab</kin:Identifier>
-        <kin:CustomIdentifier>#12</kin:CustomIdentifier>
-        <kin:KinType>EmMMFFFM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Joanna of Castile</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
             <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
           </kin:Relation>
         </kin:Relations>
@@ -1496,6 +809,8 @@
         <kin:KinType>EmFM</kin:KinType>
         <kin:KinType>EmMMM</kin:KinType>
         <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
         <kin:Label>Margaret </kin:Label>
@@ -1519,22 +834,47 @@
         </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">4f5a915fa62f35ce4ee70656841db49c</kin:Identifier>
-        <kin:KinType>EmMF</kin:KinType>
+        <kin:Identifier kin:type="tid">0134c228e98cb9d7d3aa705a7307fe53</kin:Identifier>
+        <kin:CustomIdentifier>#13</kin:CustomIdentifier>
+        <kin:KinType>EmMMFFFF</kin:KinType>
         <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
-        <kin:Label>Ferdinand III</kin:Label>
-        <kin:Label> Holy Roman Emperor</kin:Label>
+        <kin:Label>Philip I </kin:Label>
+        <kin:Label>of Castile</kin:Label>
         <kin:Relations>
           <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
+            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
           </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">294490a69c32d1e2ef86ae7e7a1a949f</kin:Identifier>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
           </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">1909e102416b5b2976c15da5ae3055fd</kin:Identifier>
+        <kin:CustomIdentifier>#6</kin:CustomIdentifier>
+        <kin:KinType>EmMFMFMM</kin:KinType>
+        <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Anne of Bohemia</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">b252355f10d60aca78d3f29b056a5eba</kin:Identifier>
           </kin:Relation>
         </kin:Relations>
       </kin:Entity>
@@ -1542,6 +882,8 @@
         <kin:Identifier kin:type="tid">0400f8e9988e6c5b8512e4ac249ab18a</kin:Identifier>
         <kin:KinType>EmMFMMF</kin:KinType>
         <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
         <kin:Label>Francis I, </kin:Label>
@@ -1553,33 +895,12 @@
         </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">b44c4239c8160b834f5f4c93473ed881</kin:Identifier>
-        <kin:KinType>EmMMFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Philip II </kin:Label>
-        <kin:Label>of Spain</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">279812d41c5fb1fd33306ecb0ca5807a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">f6a82a216c59374c2749247700ab4399</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
         <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
         <kin:CustomIdentifier>#11</kin:CustomIdentifier>
         <kin:KinType>EmMMFFF</kin:KinType>
         <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
         <kin:Label>Charles V, </kin:Label>
@@ -1606,60 +927,17 @@
         </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
-        <kin:KinType>Em</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth>1661-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1700-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>true</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Charles II </kin:Label>
-        <kin:Label>of Spain</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="union">
-            <kin:Identifier kin:type="tid">621000c0bf35c0ecf9d2947679f7984a</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="union">
-            <kin:Identifier kin:type="tid">279bc9e71c71dde19e058150e03e79f2</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-        <kin:CustomIdentifier>#9</kin:CustomIdentifier>
-        <kin:KinType>EmMMFMFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
+        <kin:Identifier kin:type="tid">279bc9e71c71dde19e058150e03e79f2</kin:Identifier>
+        <kin:KinType>EmW</kin:KinType>
+        <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth>1679</kin:DateOfBirth>
+        <kin:DateOfDeath>1689</kin:DateOfDeath>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
-        <kin:Label>Ferdinand I, </kin:Label>
-        <kin:Label>Holy Roman Emperor</kin:Label>
+        <kin:Label>Marie Louise d'Orléans</kin:Label>
         <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">b252355f10d60aca78d3f29b056a5eba</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">0134c228e98cb9d7d3aa705a7307fe53</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">89db977746a7dad5345e8c841a3974ab</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
+          <kin:Relation kin:Type="union">
+            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
           </kin:Relation>
         </kin:Relations>
       </kin:Entity>
@@ -1667,6 +945,8 @@
         <kin:Identifier kin:type="tid">d2d01c73adabd459c19dab779e79fc7e</kin:Identifier>
         <kin:KinType>EmMMFM</kin:KinType>
         <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
         <kin:Label>Anna </kin:Label>
@@ -1684,71 +964,12 @@
         </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
-        <kin:KinType>EmMFMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>William V, </kin:Label>
-        <kin:Label>Duke of Bavaria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">807bf537641ed3ac274a3b64124d6922</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">279812d41c5fb1fd33306ecb0ca5807a</kin:Identifier>
-        <kin:KinType>EmMMFFM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Isabella </kin:Label>
-        <kin:Label>of Portugal</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">b44c4239c8160b834f5f4c93473ed881</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">f6a82a216c59374c2749247700ab4399</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">0134c228e98cb9d7d3aa705a7307fe53</kin:Identifier>
-        <kin:CustomIdentifier>#13</kin:CustomIdentifier>
-        <kin:KinType>EmMMFFFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Philip I </kin:Label>
-        <kin:Label>of Castile</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
         <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
         <kin:CustomIdentifier>#8</kin:CustomIdentifier>
         <kin:KinType>EmMFMFM</kin:KinType>
         <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
         <kin:Label>Anne </kin:Label>
@@ -1775,27 +996,145 @@
         </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
-        <kin:KinType>EmF</kin:KinType>
+        <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
+        <kin:KinType>EmMFMF</kin:KinType>
         <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth>1605-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1665-01-01T00:00:00+01:00</kin:DateOfDeath>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
-        <kin:Label>Philip IV </kin:Label>
-        <kin:Label>of Spain</kin:Label>
+        <kin:Label>William V, </kin:Label>
+        <kin:Label>Duke of Bavaria</kin:Label>
         <kin:Relations>
           <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
+            <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
           </kin:Relation>
           <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
+            <kin:Identifier kin:type="tid">807bf537641ed3ac274a3b64124d6922</kin:Identifier>
           </kin:Relation>
           <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
           </kin:Relation>
           <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
+            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
+        <kin:KinType>Em</kin:KinType>
+        <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth>1661</kin:DateOfBirth>
+        <kin:DateOfDeath>1700</kin:DateOfDeath>
+        <kin:Ego>true</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Charles II </kin:Label>
+        <kin:Label>of Spain</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="union">
+            <kin:Identifier kin:type="tid">621000c0bf35c0ecf9d2947679f7984a</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="union">
+            <kin:Identifier kin:type="tid">279bc9e71c71dde19e058150e03e79f2</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
+        <kin:KinType>EmMFM</kin:KinType>
+        <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth>1574</kin:DateOfBirth>
+        <kin:DateOfDeath>1616</kin:DateOfDeath>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Maria Anna </kin:Label>
+        <kin:Label>of Bavaria</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">4f5a915fa62f35ce4ee70656841db49c</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">00ecc76a0bbf9807138e474b1c529c20</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">807bf537641ed3ac274a3b64124d6922</kin:Identifier>
+        <kin:CustomIdentifier>#15</kin:CustomIdentifier>
+        <kin:KinType>EmMFMFF</kin:KinType>
+        <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Albert V, </kin:Label>
+        <kin:Label>Duke of Bavaria</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">b252355f10d60aca78d3f29b056a5eba</kin:Identifier>
+        <kin:CustomIdentifier>#7</kin:CustomIdentifier>
+        <kin:KinType>EmMMFMF</kin:KinType>
+        <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Maximilian II, </kin:Label>
+        <kin:Label>Holy Roman Emperor</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">d2d01c73adabd459c19dab779e79fc7e</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">1909e102416b5b2976c15da5ae3055fd</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="sibling">
+            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="sibling">
+            <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">00ecc76a0bbf9807138e474b1c529c20</kin:Identifier>
+        <kin:KinType>EmMFMM</kin:KinType>
+        <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Renata </kin:Label>
+        <kin:Label>of Lorraine</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">0400f8e9988e6c5b8512e4ac249ab18a</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">019bc4e1cdd68323f6852d6a95fcb03b</kin:Identifier>
           </kin:Relation>
         </kin:Relations>
       </kin:Entity>
@@ -1804,6 +1143,8 @@
         <kin:CustomIdentifier>#14</kin:CustomIdentifier>
         <kin:KinType>EmMFMMMM</kin:KinType>
         <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
         <kin:Label>Isabella </kin:Label>
@@ -1827,22 +1168,160 @@
         </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">1909e102416b5b2976c15da5ae3055fd</kin:Identifier>
-        <kin:CustomIdentifier>#6</kin:CustomIdentifier>
-        <kin:KinType>EmMFMFMM</kin:KinType>
+        <kin:Identifier kin:type="tid">279812d41c5fb1fd33306ecb0ca5807a</kin:Identifier>
+        <kin:KinType>EmMMFFM</kin:KinType>
         <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
-        <kin:Label>Anne of Bohemia</kin:Label>
+        <kin:Label>Isabella </kin:Label>
+        <kin:Label>of Portugal</kin:Label>
         <kin:Relations>
           <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">b44c4239c8160b834f5f4c93473ed881</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">f6a82a216c59374c2749247700ab4399</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">621000c0bf35c0ecf9d2947679f7984a</kin:Identifier>
+        <kin:KinType>EmW</kin:KinType>
+        <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth>1689</kin:DateOfBirth>
+        <kin:DateOfDeath>1700</kin:DateOfDeath>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Maria Anna </kin:Label>
+        <kin:Label>of the Palatinate-Neuburg</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="union">
+            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
+        <kin:CustomIdentifier>#3</kin:CustomIdentifier>
+        <kin:KinType>EmMFFM</kin:KinType>
+        <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Maria Anna </kin:Label>
+        <kin:Label>of Bavaria</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">294490a69c32d1e2ef86ae7e7a1a949f</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
             <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
           </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
+          <kin:Relation kin:Type="sibling">
+            <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">807bf537641ed3ac274a3b64124d6922</kin:Identifier>
           </kin:Relation>
           <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">b252355f10d60aca78d3f29b056a5eba</kin:Identifier>
+            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">b44c4239c8160b834f5f4c93473ed881</kin:Identifier>
+        <kin:KinType>EmMMFF</kin:KinType>
+        <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Philip II </kin:Label>
+        <kin:Label>of Spain</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">279812d41c5fb1fd33306ecb0ca5807a</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="sibling">
+            <kin:Identifier kin:type="tid">f6a82a216c59374c2749247700ab4399</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
+        <kin:KinType>EmMM</kin:KinType>
+        <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth>1606</kin:DateOfBirth>
+        <kin:DateOfDeath>1646</kin:DateOfDeath>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Maria Anna </kin:Label>
+        <kin:Label>of Spain</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="sibling">
+            <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">89db977746a7dad5345e8c841a3974ab</kin:Identifier>
+        <kin:CustomIdentifier>#12</kin:CustomIdentifier>
+        <kin:KinType>EmMMFFFM</kin:KinType>
+        <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Joanna of Castile</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">83705cf2d8fcb4c62da2eff31724ef42</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
+          </kin:Relation>
+        </kin:Relations>
+      </kin:Entity>
+      <kin:Entity>
+        <kin:Identifier kin:type="tid">4f5a915fa62f35ce4ee70656841db49c</kin:Identifier>
+        <kin:KinType>EmMF</kin:KinType>
+        <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
+        <kin:Ego>false</kin:Ego>
+        <kin:Visible>true</kin:Visible>
+        <kin:Label>Ferdinand III</kin:Label>
+        <kin:Label> Holy Roman Emperor</kin:Label>
+        <kin:Relations>
+          <kin:Relation kin:Type="descendant">
+            <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">294490a69c32d1e2ef86ae7e7a1a949f</kin:Identifier>
+          </kin:Relation>
+          <kin:Relation kin:Type="ancestor">
+            <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
           </kin:Relation>
         </kin:Relations>
       </kin:Entity>
@@ -1851,6 +1330,8 @@
         <kin:CustomIdentifier>#4</kin:CustomIdentifier>
         <kin:KinType>EmMMMF</kin:KinType>
         <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
         <kin:Label>Charles II </kin:Label>
@@ -1877,202 +1358,18 @@
         </kin:Relations>
       </kin:Entity>
       <kin:Entity>
-        <kin:Identifier kin:type="tid">621000c0bf35c0ecf9d2947679f7984a</kin:Identifier>
-        <kin:KinType>EmW</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1689-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1700-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Maria Anna </kin:Label>
-        <kin:Label>of the Palatinate-Neuburg</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="union">
-            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">b252355f10d60aca78d3f29b056a5eba</kin:Identifier>
-        <kin:CustomIdentifier>#7</kin:CustomIdentifier>
-        <kin:KinType>EmMMFMF</kin:KinType>
+        <kin:Identifier kin:type="tid">4dce7380eee94bde2d7fc1da6a9e80ad</kin:Identifier>
+        <kin:KinType>EmMFMMMF</kin:KinType>
         <kin:Symbol>triangle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
-        <kin:Label>Maximilian II, </kin:Label>
-        <kin:Label>Holy Roman Emperor</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">d2d01c73adabd459c19dab779e79fc7e</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">1909e102416b5b2976c15da5ae3055fd</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">ab0bedfa27bbf99937d7cf57756cf602</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">fc548ac1290f8cb050ea3805c1bae39c</kin:Identifier>
-        <kin:KinType>EmMFM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1574-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1616-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Maria Anna </kin:Label>
-        <kin:Label>of Bavaria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">4f5a915fa62f35ce4ee70656841db49c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">00ecc76a0bbf9807138e474b1c529c20</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-        <kin:CustomIdentifier>#3</kin:CustomIdentifier>
-        <kin:KinType>EmMFFM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Maria Anna </kin:Label>
-        <kin:Label>of Bavaria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">294490a69c32d1e2ef86ae7e7a1a949f</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">b3a7f890d0a3b637c0a6b319190df9f3</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">807bf537641ed3ac274a3b64124d6922</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">019bc4e1cdd68323f6852d6a95fcb03b</kin:Identifier>
-        <kin:KinType>EmMFMMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Christina </kin:Label>
+        <kin:Label>Christian II </kin:Label>
         <kin:Label>of Denmark</kin:Label>
         <kin:Relations>
           <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">00ecc76a0bbf9807138e474b1c529c20</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">4dce7380eee94bde2d7fc1da6a9e80ad</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">1f28e4e75477e04cff15519de551f278</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
-        <kin:KinType>EmM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1634-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1696-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Mariana </kin:Label>
-        <kin:Label>of Austria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">4f5a915fa62f35ce4ee70656841db49c</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">294490a69c32d1e2ef86ae7e7a1a949f</kin:Identifier>
-        <kin:CustomIdentifier>#5</kin:CustomIdentifier>
-        <kin:KinType>EmMFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Ferdinand II</kin:Label>
-        <kin:Label> Holy Roman Emperor</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">4f5a915fa62f35ce4ee70656841db49c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">0a4d9016e604f25a413dffbe215f820c</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-        <kin:CustomIdentifier>#2</kin:CustomIdentifier>
-        <kin:KinType>EmFF</kin:KinType>
-        <kin:KinType>EmMMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth>1578-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1621-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Philip III </kin:Label>
-        <kin:Label>of Spain</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">b44c4239c8160b834f5f4c93473ed881</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">d2d01c73adabd459c19dab779e79fc7e</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">279bc9e71c71dde19e058150e03e79f2</kin:Identifier>
-        <kin:KinType>EmW</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1679-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1689-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Marie Louise d'Orléans</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="union">
-            <kin:Identifier kin:type="tid">983965a09e505dd11e61b18a339d50db</kin:Identifier>
+            <kin:Identifier kin:type="tid">019bc4e1cdd68323f6852d6a95fcb03b</kin:Identifier>
           </kin:Relation>
         </kin:Relations>
       </kin:Entity>
@@ -2081,6 +1378,8 @@
         <kin:CustomIdentifier>#10</kin:CustomIdentifier>
         <kin:KinType>EmMMFMM</kin:KinType>
         <kin:Symbol>circle</kin:Symbol>
+        <kin:DateOfBirth/>
+        <kin:DateOfDeath/>
         <kin:Ego>false</kin:Ego>
         <kin:Visible>true</kin:Visible>
         <kin:Label>Maria </kin:Label>
@@ -2100,56 +1399,14 @@
           </kin:Relation>
         </kin:Relations>
       </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">cc2a6b87ce97e1af286ab2fbc4d64475</kin:Identifier>
-        <kin:KinType>EmMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth>1606-01-01T00:00:00+01:00</kin:DateOfBirth>
-        <kin:DateOfDeath>1646-01-01T00:00:00+01:00</kin:DateOfDeath>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Maria Anna </kin:Label>
-        <kin:Label>of Spain</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">85b3f2d14a4b3fc67d34d9aa5ddad683</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">8df34081dacc62a27192de73df463a54</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="sibling">
-            <kin:Identifier kin:type="tid">1cb27c371569b59df87bb7fb3e806509</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">9a6b2064ee3e986aee5f9c356e18f27a</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">807bf537641ed3ac274a3b64124d6922</kin:Identifier>
-        <kin:CustomIdentifier>#15</kin:CustomIdentifier>
-        <kin:KinType>EmMFMFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Albert V, </kin:Label>
-        <kin:Label>Duke of Bavaria</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">ae016a23b386c6ec029922a44d2065a0</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">cc6f9e885378173306e24efbddd25fe7</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
     </kin:EntityData>
     <kin:DiagramMode>FreeForm</kin:DiagramMode>
-    <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150"/>
+    <kin:DiagramPanel kin:type="DiagramTree" kin:show="false" kin:width="150"/>
+    <kin:DiagramPanel kin:type="ExportPanel" kin:show="false" kin:width="150"/>
     <kin:DiagramPanel kin:type="KinTerms" kin:show="false" kin:width="150"/>
     <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="DiagramTree" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="true" kin:width="360"/>
     <kin:DiagramPanel kin:type="EntitySearch" kin:show="false" kin:width="150"/>
+    <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="true" kin:width="150"/>
+    <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150"/>
   </kin:KinDiagramData>
 </svg>
