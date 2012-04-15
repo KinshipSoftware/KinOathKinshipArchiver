@@ -13,8 +13,9 @@ import nl.mpi.kinnate.kindata.EntityRelation;
  *  Author     : Peter Withers
  */
 public class KinType implements Comparable<KinType> {
-    static final String separator = ","; // this is the separator used to put multiple kin type strings onto one line eg EMFS,EFMS
-    
+
+    public static final String separator = ","; // this is the separator used to put multiple kin type strings onto one line eg EMFS,EFMS
+
     private KinType() {
     }
 
