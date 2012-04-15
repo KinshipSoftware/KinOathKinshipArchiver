@@ -415,7 +415,7 @@
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Mariana </text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Austria</text>
       </g>
-      <g id="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:kintype="EmFF|EmMMF" transform="translate(400.0, -200.0)" kin:path="">
+      <g id="tid_9a6b2064ee3e986aee5f9c356e18f27a" kin:kintype="EmFF,EmMMF" transform="translate(400.0, -200.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Philip III </text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Spain</text>
@@ -440,7 +440,7 @@
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Christina </text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Denmark</text>
       </g>
-      <g id="tid_8df34081dacc62a27192de73df463a54" kin:kintype="EmFM|EmMMM" transform="translate(600.0, -200.0)" kin:path="">
+      <g id="tid_8df34081dacc62a27192de73df463a54" kin:kintype="EmFM,EmMMM" transform="translate(600.0, -200.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Margaret </text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">of Austria</text>
