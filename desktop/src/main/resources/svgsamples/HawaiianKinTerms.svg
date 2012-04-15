@@ -614,14 +614,14 @@
       </kin:SymbolFieldsFields>
     </kin:IndexParameters>
     <kin:KinTermGroup kin:Show="true" kin:GroupColour="#0000FF" kin:GroupName="Hawaiian Kin Terms" kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html" kin:Generate="true">
-      <kin:KinTerm kin:Referent="EF|EFB|EMB" kin:Term="Makuakane" kin:Propositus="" kin:Description="Father, Uncle"/>
-      <kin:KinTerm kin:Referent="EM|EMZ|EFZ" kin:Term="Makuahini" kin:Propositus="" kin:Description="Mother, Aunt"/>
-      <kin:KinTerm kin:Referent="EmB|EmFBS|EmFZS|EmMBS|EmMZS" kin:Term="Kaikua'ana" kin:Propositus="" kin:Description=""/>
-      <kin:KinTerm kin:Referent="EfZ|EfFBD|EfFZD|EfMBD|EfMZD" kin:Term="Kaikua'ana" kin:Propositus="" kin:Description="Brother/Sister, Cousin"/>
-      <kin:KinTerm kin:Referent="EfB|EfFBS|EfFZS|EfMBS|EfMZS" kin:Term="Kaikuane" kin:Propositus="" kin:Description="Brother, Cousin"/>
-      <kin:KinTerm kin:Referent="EmZ|EmFBD|EmFZD|EmMBD|EmMZD" kin:Term="Kaikuane" kin:Propositus="" kin:Description="Sister, Cousin"/>
-      <kin:KinTerm kin:Referent="ES|EBS|EZS" kin:Term="Keikikane" kin:Propositus="" kin:Description="Son, Nephew"/>
-      <kin:KinTerm kin:Referent="ED|EBD|EZD" kin:Term="Keikamahini" kin:Propositus="" kin:Description="Daughter, Niece"/>
+      <kin:KinTerm kin:Referent="EF,EFB,EMB" kin:Term="Makuakane" kin:Propositus="" kin:Description="Father, Uncle"/>
+      <kin:KinTerm kin:Referent="EM,EMZ,EFZ" kin:Term="Makuahini" kin:Propositus="" kin:Description="Mother, Aunt"/>
+      <kin:KinTerm kin:Referent="EmB,EmFBS,EmFZS,EmMBS,EmMZS" kin:Term="Kaikua'ana" kin:Propositus="" kin:Description=""/>
+      <kin:KinTerm kin:Referent="EfZ,EfFBD,EfFZD,EfMBD,EfMZD" kin:Term="Kaikua'ana" kin:Propositus="" kin:Description="Brother/Sister, Cousin"/>
+      <kin:KinTerm kin:Referent="EfB,EfFBS,EfFZS,EfMBS,EfMZS" kin:Term="Kaikuane" kin:Propositus="" kin:Description="Brother, Cousin"/>
+      <kin:KinTerm kin:Referent="EmZ,EmFBD,EmFZD,EmMBD,EmMZD" kin:Term="Kaikuane" kin:Propositus="" kin:Description="Sister, Cousin"/>
+      <kin:KinTerm kin:Referent="ES,EBS,EZS" kin:Term="Keikikane" kin:Propositus="" kin:Description="Son, Nephew"/>
+      <kin:KinTerm kin:Referent="ED,EBD,EZD" kin:Term="Keikamahini" kin:Propositus="" kin:Description="Daughter, Niece"/>
     </kin:KinTermGroup>
     <SelectedProfiles>
       <kin:Profile kin:ProfileName="Individual" kin:ProfileId="clarin.eu:cr1:p_1320657629627"/>
