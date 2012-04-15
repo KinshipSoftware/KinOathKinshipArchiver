@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -454,7 +455,7 @@ public class KinTermPanel extends JPanel {
                 OutputStreamWriter fileWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
                 fileWriter.write(csvHeaderString + "\n");
                 for (KinTerm kinTerm : kinTerms.getKinTerms()) {
-                    fileWriter.write("'" + kinTerm.kinTerm + "','" + kinTerm.alterKinTypeStrings + "','" + kinTerm.propositusKinTypeStrings + "','" + kinTerm.kinTermDescription + "'\n");
+                    fileWriter.write(cleanOutputValue(kinTerm.kinTerm) + "," + cleanOutputValue(kinTerm.alterKinTypeStrings) + "," + cleanOutputValue(kinTerm.propositusKinTypeStrings) + "," + cleanOutputValue(kinTerm.kinTermDescription) + "\n");
                 }
                 fileWriter.close();
             } catch (IOException exception) {
@@ -463,12 +464,20 @@ public class KinTermPanel extends JPanel {
         }
     }
 
+    String cleanOutputValue(String outputString) {
+        return (outputString == null) ? "''" : "'" + outputString + "'";
+    }
+
     String getCleanValue(StringTokenizer stringTokenizer) {
-        String tokenString = stringTokenizer.nextToken();
-        tokenString = tokenString.trim();
-        tokenString = tokenString.replaceFirst("^'", "");
-        tokenString = tokenString.replaceFirst("'$", "");
-        return tokenString;
+        try {
+            String tokenString = stringTokenizer.nextToken();
+            tokenString = tokenString.trim();
+            tokenString = tokenString.replaceFirst("^'", "");
+            tokenString = tokenString.replaceFirst("'$", "");
+            return tokenString;
+        } catch (NoSuchElementException exception) {
+            return "";
+        }
     }
 
     public void importKinTerms() {
