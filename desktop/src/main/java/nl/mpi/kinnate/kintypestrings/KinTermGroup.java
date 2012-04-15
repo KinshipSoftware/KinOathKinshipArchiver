@@ -30,10 +30,6 @@ public class KinTermGroup implements KinTypeStringProvider {
         kinTermArray = new ArrayList<KinTerm>();
     }
 
-    public void addKinTerm(String kinTypeStrings, String kinTerm) {
-        kinTermArray.add(new KinTerm(kinTerm, null, null, kinTypeStrings, null));
-    }
-
     public void addKinTerm(KinTerm kinTerm) {
         kinTermArray.add(kinTerm);
     }
@@ -66,7 +62,7 @@ public class KinTermGroup implements KinTypeStringProvider {
         // todo: add the propositus to the selection criteria
         ArrayList<String> foundKinTerms = new ArrayList<String>();
         for (KinTerm kinTermItem : kinTermArray) {
-            for (String kinType : kinTermItem.alterKinTypeStrings.split("\\|")) {
+            for (String kinType : kinTermItem.alterKinTypeStrings.split("\\" + KinType.separator)) {
                 if (kinTypeString.trim().equals(kinType.trim())) {
                     foundKinTerms.add(kinTermItem.kinTerm);
                 }
@@ -80,10 +76,10 @@ public class KinTermGroup implements KinTypeStringProvider {
         if (graphGenerate) {
             for (KinTerm kinTerm : this.getKinTerms()) {
                 // todo: if these do not state E then maybe they should continue on from the Alter kin type string, iow the propositus could be specified from alter rather than ego
-                String[] alterKinTypeStrings = kinTerm.alterKinTypeStrings.split("\\|"); // todo: change this to ','
+                String[] alterKinTypeStrings = kinTerm.alterKinTypeStrings.split("\\" + KinType.separator);
                 kinTypeStringList.addAll(Arrays.asList(alterKinTypeStrings));
                 if (kinTerm.propositusKinTypeStrings != null) {
-                    String[] propositusKinTypeStrings = kinTerm.propositusKinTypeStrings.split("\\|"); // todo: change this to ','
+                    String[] propositusKinTypeStrings = kinTerm.propositusKinTypeStrings.split("\\" + KinType.separator);
                     kinTypeStringList.addAll(Arrays.asList(propositusKinTypeStrings));
                 }
             }
@@ -95,7 +91,7 @@ public class KinTermGroup implements KinTypeStringProvider {
         int totalLength = 0;
         if (graphGenerate) {
             for (KinTerm kinTerm : this.getKinTerms()) {
-                totalLength = totalLength + kinTerm.alterKinTypeStrings.split("\\|").length;
+                totalLength = totalLength + kinTerm.alterKinTypeStrings.split("\\" + KinType.separator).length;
             }
         }
         return totalLength;
