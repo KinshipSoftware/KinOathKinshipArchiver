@@ -1,15 +1,15 @@
 package nl.mpi.kinnate.kindata;
 
 import java.net.URI;
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.kintypestrings.LabelStringsParser;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  *  Document   : GraphDataNode
@@ -37,7 +37,7 @@ public class EntityData {
     @XmlElement(name = "Symbol", namespace = "http://mpi.nl/tla/kin")
     private String[] symbolNames = new String[]{};
     @XmlElement(name = "DateOfBirth", namespace = "http://mpi.nl/tla/kin")
-    private EntityDate dateOfBirth = null; // todo: use this in the graph sort
+    private EntityDate dateOfBirth = null; // todo:. use this in the graph sort
     @XmlElement(name = "DateOfDeath", namespace = "http://mpi.nl/tla/kin")
     private EntityDate dateOfDeath = null;
     @XmlElement(name = "Ego", namespace = "http://mpi.nl/tla/kin") // required for populating the tree when first loading a saved svg
@@ -178,7 +178,7 @@ public class EntityData {
         String returnString = "";
         if (kinTypeArray.length > 0) {
             for (String kinType : kinTypeArray) {
-                returnString = returnString + kinType + "|";
+                returnString = returnString + kinType + KinType.separator;
             }
             returnString = returnString.substring(0, returnString.length() - 1);
         }
