@@ -10,9 +10,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -29,6 +30,7 @@ import javax.swing.event.ChangeListener;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.kintypestrings.KinTerm;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 
@@ -434,6 +436,7 @@ public class KinTermPanel extends JPanel {
     }
 
     public void exportKinTerms() {
+        // todo: resolve issues using the Arbil file select for export files
         File[] exportFile = KinTermPanel.this.dialogHandler.showFileSelectBox("Export Kin Terms", false, false, false);
         if (exportFile.length != 1) {
             KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Export file not selected", "Export Kin Terms");
@@ -444,9 +447,12 @@ public class KinTermPanel extends JPanel {
                 }
             }
             try {
-                FileWriter fileWriter = new FileWriter(exportFile[0]);
-                // todo: complete the export and resolve issues using the Arbil file select for export files
-                fileWriter.write("wookies are lovely on toast.");
+                final FileOutputStream fileOutputStream = new FileOutputStream(exportFile[0]);
+                OutputStreamWriter fileWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+                fileWriter.write("Kin Term, Alter Kin Type Strings, Propositus KinType Strings, Kin Term Description\n");
+                for (KinTerm kinTerm : kinTerms.getKinTerms()) {
+                    fileWriter.write("'" + kinTerm.kinTerm + "','" + kinTerm.alterKinTypeStrings + "','" + kinTerm.propositusKinTypeStrings + "','" + kinTerm.kinTermDescription + "'\n");
+                }
                 fileWriter.close();
             } catch (IOException exception) {
                 BugCatcherManager.getBugCatcher().logError(exception);
