@@ -10,9 +10,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 import javax.swing.BoxLayout;
@@ -57,6 +58,7 @@ public class KinTermPanel extends JPanel {
 //    JTextField addAnchorKinType;
     KinTermTableModel kinTermTableModel;
     private MessageDialogHandler dialogHandler;
+    final String csvHeaderString = "Kin Term, Alter Kin Type Strings, Propositus KinType Strings, Kin Term Description";
 
     public KinTermPanel(SavePanel savePanelLocal, KinTermGroup kinTermsLocal, MessageDialogHandler dialogHandler) {
         this.dialogHandler = dialogHandler;
@@ -436,6 +438,7 @@ public class KinTermPanel extends JPanel {
     }
 
     public void exportKinTerms() {
+        // todo: move this to a import/export class
         // todo: resolve issues using the Arbil file select for export files
         File[] exportFile = KinTermPanel.this.dialogHandler.showFileSelectBox("Export Kin Terms", false, false, false);
         if (exportFile.length != 1) {
@@ -449,7 +452,7 @@ public class KinTermPanel extends JPanel {
             try {
                 final FileOutputStream fileOutputStream = new FileOutputStream(exportFile[0]);
                 OutputStreamWriter fileWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-                fileWriter.write("Kin Term, Alter Kin Type Strings, Propositus KinType Strings, Kin Term Description\n");
+                fileWriter.write(csvHeaderString + "\n");
                 for (KinTerm kinTerm : kinTerms.getKinTerms()) {
                     fileWriter.write("'" + kinTerm.kinTerm + "','" + kinTerm.alterKinTypeStrings + "','" + kinTerm.propositusKinTypeStrings + "','" + kinTerm.kinTermDescription + "'\n");
                 }
@@ -460,7 +463,16 @@ public class KinTermPanel extends JPanel {
         }
     }
 
+    String getCleanValue(StringTokenizer stringTokenizer) {
+        String tokenString = stringTokenizer.nextToken();
+        tokenString = tokenString.trim();
+        tokenString = tokenString.replaceFirst("^'", "");
+        tokenString = tokenString.replaceFirst("'$", "");
+        return tokenString;
+    }
+
     public void importKinTerms() {
+        // todo: move this to a import/export class
         File[] importFiles = KinTermPanel.this.dialogHandler.showFileSelectBox("Import Kin Terms", false, true, false);
         if (importFiles.length == 0) {
             KinTermPanel.this.dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kin Terms");
@@ -468,16 +480,22 @@ public class KinTermPanel extends JPanel {
         for (File currentFile : importFiles) {
             int importCount = 0;
             try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(currentFile));
-                String currentLine = null;
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(currentFile), "UTF-8"));
+                String currentLine = bufferedReader.readLine();
+                if (!csvHeaderString.equals(currentLine)) {
+                    KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Incorrect csv format, nothing imported", "Import Kin Terms");
+                    return;
+                }
                 while ((currentLine = bufferedReader.readLine()) != null) {
                     StringTokenizer stringTokenizer = new StringTokenizer(currentLine, ",");
                     if (stringTokenizer.countTokens() > 1) {
-                        String kinTypeStrings = stringTokenizer.nextToken();
-                        String kinTermLabel = stringTokenizer.nextToken();
-                        kinTypeStrings = kinTypeStrings.trim();
-                        kinTermLabel = kinTermLabel.trim();
-                        kinTerms.addKinTerm(kinTypeStrings, kinTermLabel);
+                        String kinTermString = getCleanValue(stringTokenizer);
+                        String alterKinTypeStrings = getCleanValue(stringTokenizer);
+                        String propositusKinTypeStrings = getCleanValue(stringTokenizer);
+                        String kinTermDescription = getCleanValue(stringTokenizer);
+
+                        KinTerm kinTerm = new KinTerm(kinTermString, kinTermDescription, null, alterKinTypeStrings, propositusKinTypeStrings);
+                        kinTerms.addKinTerm(kinTerm);
                         importCount++;
                     }
                 }
@@ -489,6 +507,7 @@ public class KinTermPanel extends JPanel {
             } catch (IOException exception) {
                 BugCatcherManager.getBugCatcher().logError(exception);
             }
+            kinTermTableModel.fireTableDataChanged();
             // todo: resolve why this dialogue does not show
             KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
         }
