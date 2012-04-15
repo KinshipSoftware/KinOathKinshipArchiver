@@ -475,7 +475,7 @@
       </g>
     </g>
     <g id="EntityGroup">
-      <g id="tid_86f1dfff0f007cb2005badf4c52f6433" kin:kintype="EMB|EPB" transform="translate(1300.0, 100.0)" kin:path="">
+      <g id="tid_86f1dfff0f007cb2005badf4c52f6433" kin:kintype="EMB,EPB" transform="translate(1300.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">morbror</text>
       </g>
@@ -497,7 +497,7 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">syster</text>
       </g>
-      <g id="tid_c213793f42ccee843f166030fdb4348e" kin:kintype="EPFF|EFFF" transform="translate(350.0, -300.0)" kin:path="">
+      <g id="tid_c213793f42ccee843f166030fdb4348e" kin:kintype="EPFF,EFFF" transform="translate(350.0, -300.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">gammelfarfar</text>
       </g>
@@ -513,7 +513,7 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">kusin</text>
       </g>
-      <g id="tid_e49b289d6cf1b1350acec0741afba06a" kin:kintype="EMZ|EPZ" transform="translate(1650.0, 100.0)" kin:path="">
+      <g id="tid_e49b289d6cf1b1350acec0741afba06a" kin:kintype="EMZ,EPZ" transform="translate(1650.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">moster</text>
       </g>
@@ -568,15 +568,15 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">svärfar</text>
       </g>
-      <g id="tid_f4bd057954a3f2a35fec8fd82dd2da1d" kin:kintype="EM|EP" transform="translate(1100.0, 100.0)" kin:path="">
+      <g id="tid_f4bd057954a3f2a35fec8fd82dd2da1d" kin:kintype="EM,EP" transform="translate(1100.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">moder</text>
       </g>
-      <g id="tid_07ad234554c057a7bcc912440d12d637" kin:kintype="EFM|EPM" transform="translate(800.0, 0.0)" kin:path="">
+      <g id="tid_07ad234554c057a7bcc912440d12d637" kin:kintype="EFM,EPM" transform="translate(800.0, 0.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">farmor</text>
       </g>
-      <g id="tid_63fdde5d18f8e68445e441c0ddaa20ae" kin:kintype="EFF|EPF" transform="translate(400.0, -200.0)" kin:path="">
+      <g id="tid_63fdde5d18f8e68445e441c0ddaa20ae" kin:kintype="EFF,EPF" transform="translate(400.0, -200.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">farfar</text>
       </g>
@@ -608,7 +608,7 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">kusin</text>
       </g>
-      <g id="tid_1b27134b4490e11b3c3f4570207652e7" kin:kintype="EFB|EPB" transform="translate(700.0, 100.0)" kin:path="">
+      <g id="tid_1b27134b4490e11b3c3f4570207652e7" kin:kintype="EFB,EPB" transform="translate(700.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">farbror</text>
       </g>
@@ -624,11 +624,11 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">gammelfarmor</text>
       </g>
-      <g id="tid_32fe18943457e46bb744cac2cfd73612" kin:kintype="EMM|EPM" transform="translate(1600.0, 0.0)" kin:path="">
+      <g id="tid_32fe18943457e46bb744cac2cfd73612" kin:kintype="EMM,EPM" transform="translate(1600.0, 0.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">mormor</text>
       </g>
-      <g id="tid_51c6bbbf05a8ec7e60a6652e3b857dd9" kin:kintype="EMF|EPF" transform="translate(1200.0, 0.0)" kin:path="">
+      <g id="tid_51c6bbbf05a8ec7e60a6652e3b857dd9" kin:kintype="EMF,EPF" transform="translate(1200.0, 0.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">morfar</text>
       </g>
@@ -666,14 +666,14 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">gammelmorfar</text>
       </g>
-      <g id="tid_87f07086c70190f0cd552fcf00eb1b4a" kin:kintype="EF|EP" transform="translate(900.0, 100.0)" kin:path="">
+      <g id="tid_87f07086c70190f0cd552fcf00eb1b4a" kin:kintype="EF,EP" transform="translate(900.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">fader</text>
       </g>
       <g id="tid_d8296ae7b284dfa6fd347f3f228247b8" kin:kintype="EFFFBCC" transform="translate(-50.0, 400.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
       </g>
-      <g id="tid_782d4fb25b0323d5fd1fbd111c3f6f43" kin:kintype="EFZ|EPZ" transform="translate(300.0, 100.0)" kin:path="">
+      <g id="tid_782d4fb25b0323d5fd1fbd111c3f6f43" kin:kintype="EFZ,EPZ" transform="translate(300.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="#0000FF" font-size="14" stroke-width="0" y="0">faster</text>
       </g>
@@ -737,9 +737,9 @@
       <kin:KinTerm kin:Referent="EMZ" kin:Term="moster" kin:Propositus="" kin:Description=""/>
       <kin:KinTerm kin:Referent="EH" kin:Term="make" kin:Propositus="" kin:Description=""/>
       <kin:KinTerm kin:Referent="EW" kin:Term="maka" kin:Propositus="" kin:Description=""/>
-      <kin:KinTerm kin:Referent="EHM|EWM" kin:Term="svärmor" kin:Propositus="" kin:Description=""/>
-      <kin:KinTerm kin:Referent="EHF|EWF" kin:Term="svärfar" kin:Propositus="" kin:Description=""/>
-      <kin:KinTerm kin:Referent="EPZC|EPBC" kin:Term="kusin" kin:Propositus="" kin:Description=""/>
+      <kin:KinTerm kin:Referent="EHM,EWM" kin:Term="svärmor" kin:Propositus="" kin:Description=""/>
+      <kin:KinTerm kin:Referent="EHF,EWF" kin:Term="svärfar" kin:Propositus="" kin:Description=""/>
+      <kin:KinTerm kin:Referent="EPZC,EPBC" kin:Term="kusin" kin:Propositus="" kin:Description=""/>
       <kin:KinTerm kin:Referent="EPFF" kin:Term="gammelfarfar" kin:Propositus="" kin:Description=""/>
       <kin:KinTerm kin:Referent="EPFM" kin:Term="gammelfarmor" kin:Propositus="" kin:Description=""/>
       <kin:KinTerm kin:Referent="EPMF" kin:Term="gammelmorfar" kin:Propositus="" kin:Description=""/>
