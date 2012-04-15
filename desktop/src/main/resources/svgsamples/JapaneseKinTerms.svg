@@ -405,7 +405,7 @@
       </g>
     </g>
     <g id="EntityGroup">
-      <g id="tid_f4bd057954a3f2a35fec8fd82dd2da1d" kin:kintype="EM|EP" transform="translate(1000.0, 100.0)" kin:path="">
+      <g id="tid_f4bd057954a3f2a35fec8fd82dd2da1d" kin:kintype="EM,EP" transform="translate(1000.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EM</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">EP</text>
@@ -426,7 +426,7 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#square" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPPZC</text>
       </g>
-      <g id="tid_c39e283f171e8d72fd58fd27375dc8d5" kin:kintype="EPF|EPP" transform="translate(1400.0, -50.0)" kin:path="">
+      <g id="tid_c39e283f171e8d72fd58fd27375dc8d5" kin:kintype="EPF,EPP" transform="translate(1400.0, -50.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPF</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">EPP</text>
@@ -489,14 +489,14 @@
         <text x="22.5" fill="#6600cc" font-size="14" stroke-width="0" y="15">おじさん</text>
         <text x="22.5" fill="#ff00cc" font-size="14" stroke-width="0" y="30">おじ</text>
       </g>
-      <g id="tid_0f57718a8b700a9a9cced71f1928a6c8" kin:kintype="EPF|EPP" transform="translate(700.0, -50.0)" kin:path="">
+      <g id="tid_0f57718a8b700a9a9cced71f1928a6c8" kin:kintype="EPF,EPP" transform="translate(700.0, -50.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPF</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">EPP</text>
         <text x="22.5" fill="#6600cc" font-size="14" stroke-width="0" y="30">おじいさん</text>
         <text x="22.5" fill="#ff00cc" font-size="14" stroke-width="0" y="45">祖父</text>
       </g>
-      <g id="tid_f9d72c5b3259ed11a3cc7d57e30413f6" kin:kintype="EPM|EPP" transform="translate(350.0, -50.0)" kin:path="">
+      <g id="tid_f9d72c5b3259ed11a3cc7d57e30413f6" kin:kintype="EPM,EPP" transform="translate(350.0, -50.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPM</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">EPP</text>
@@ -513,7 +513,7 @@
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#square" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPPBC</text>
       </g>
-      <g id="tid_87f07086c70190f0cd552fcf00eb1b4a" kin:kintype="EF|EP" transform="translate(800.0, 100.0)" kin:path="">
+      <g id="tid_87f07086c70190f0cd552fcf00eb1b4a" kin:kintype="EF,EP" transform="translate(800.0, 100.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EF</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">EP</text>
@@ -627,7 +627,7 @@
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EZ-</text>
         <text x="22.5" fill="#ff00cc" font-size="14" stroke-width="0" y="15">妹</text>
       </g>
-      <g id="tid_8ae0287f18ab4b60b2584482e9bf8685" kin:kintype="EPM|EPP" transform="translate(1050.0, -50.0)" kin:path="">
+      <g id="tid_8ae0287f18ab4b60b2584482e9bf8685" kin:kintype="EPM,EPP" transform="translate(1050.0, -50.0)" kin:path="">
         <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">EPM</text>
         <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">EPP</text>
@@ -730,11 +730,11 @@
       <kin:KinTerm kin:Referent="EM" kin:Term="母" kin:Propositus="" kin:Description="^M Mother (when speaking to other than family)"/>
       <kin:KinTerm kin:Referent="EZ+" kin:Term="姉" kin:Propositus="" kin:Description="^Z Elder Sister (when speaking to other than family)"/>
       <kin:KinTerm kin:Referent="EB-" kin:Term="弟" kin:Propositus="" kin:Description="Yonger Brother (when speaking to other than family) ^B (this needs to be able to indicate not family)"/>
-      <kin:KinTerm kin:Referent="EPZS|EPBS" kin:Term="従兄" kin:Propositus="" kin:Description="Older male cousin (when speaking to other than family)"/>
-      <kin:KinTerm kin:Referent="EPZD|EPBD" kin:Term="従姉" kin:Propositus="" kin:Description="Older female cousin (when speaking to other than family)"/>
-      <kin:KinTerm kin:Referent="EPZS|EPBS" kin:Term="従弟" kin:Propositus="" kin:Description="Yonger male cousin (when speaking to other than family)"/>
-      <kin:KinTerm kin:Referent="EPZD|EPBD" kin:Term="従妹" kin:Propositus="" kin:Description="Yonger female cousin (when speaking to other than family)"/>
-      <kin:KinTerm kin:Referent="EPPZCC|EPPBCC" kin:Term="はとこ" kin:Propositus="" kin:Description="Second Cousin"/>
+      <kin:KinTerm kin:Referent="EPZS,EPBS" kin:Term="従兄" kin:Propositus="" kin:Description="Older male cousin (when speaking to other than family)"/>
+      <kin:KinTerm kin:Referent="EPZD,EPBD" kin:Term="従姉" kin:Propositus="" kin:Description="Older female cousin (when speaking to other than family)"/>
+      <kin:KinTerm kin:Referent="EPZS,EPBS" kin:Term="従弟" kin:Propositus="" kin:Description="Yonger male cousin (when speaking to other than family)"/>
+      <kin:KinTerm kin:Referent="EPZD,EPBD" kin:Term="従妹" kin:Propositus="" kin:Description="Yonger female cousin (when speaking to other than family)"/>
+      <kin:KinTerm kin:Referent="EPPZCC,EPPBCC" kin:Term="はとこ" kin:Propositus="" kin:Description="Second Cousin"/>
       <kin:KinTerm kin:Referent="EPF" kin:Term="祖父" kin:Propositus="" kin:Description="Grand Father"/>
       <kin:KinTerm kin:Referent="EPM" kin:Term="祖母" kin:Propositus="" kin:Description="Grand Mother"/>
       <kin:KinTerm kin:Referent="EPZ" kin:Term="おば" kin:Propositus="" kin:Description=""/>
