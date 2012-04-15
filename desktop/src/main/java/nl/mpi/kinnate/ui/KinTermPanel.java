@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -37,9 +37,9 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 
 /**
- *  Document   : KinTermPanel
- *  Created on : Mar 8, 2011, 12:21:12 PM
- *  Author     : Peter Withers
+ * Document : KinTermPanel
+ * Created on : Mar 8, 2011, 12:21:12 PM
+ * Author : Peter Withers
  */
 public class KinTermPanel extends JPanel {
 
@@ -468,12 +468,12 @@ public class KinTermPanel extends JPanel {
         return (outputString == null) ? "''" : "'" + outputString + "'";
     }
 
-    String getCleanValue(StringTokenizer stringTokenizer) {
+    String getCleanValue(Scanner stringTokenizer) {
         try {
-            String tokenString = stringTokenizer.nextToken();
+            String tokenString = stringTokenizer.next();
             tokenString = tokenString.trim();
-            tokenString = tokenString.replaceFirst("^'", "");
-            tokenString = tokenString.replaceFirst("'$", "");
+//            tokenString = tokenString.replaceFirst("^'", "");
+//            tokenString = tokenString.replaceFirst("'$", "");
             return tokenString;
         } catch (NoSuchElementException exception) {
             return "";
@@ -489,6 +489,7 @@ public class KinTermPanel extends JPanel {
         for (File currentFile : importFiles) {
             int importCount = 0;
             try {
+                // todo: the Scanner can replace all of this file code also and would be simpler to read
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(currentFile), "UTF-8"));
                 String currentLine = bufferedReader.readLine();
                 if (!csvHeaderString.equals(currentLine)) {
@@ -496,17 +497,18 @@ public class KinTermPanel extends JPanel {
                     return;
                 }
                 while ((currentLine = bufferedReader.readLine()) != null) {
-                    StringTokenizer stringTokenizer = new StringTokenizer(currentLine, ",");
-                    if (stringTokenizer.countTokens() > 1) {
-                        String kinTermString = getCleanValue(stringTokenizer);
-                        String alterKinTypeStrings = getCleanValue(stringTokenizer);
-                        String propositusKinTypeStrings = getCleanValue(stringTokenizer);
-                        String kinTermDescription = getCleanValue(stringTokenizer);
+                    currentLine = currentLine.replaceFirst("^'", "");
+                    currentLine = currentLine.replaceFirst("'$", "");
+                    Scanner stringTokenizer = new Scanner(currentLine);
+                    stringTokenizer.useDelimiter("','");
+                    String kinTermString = getCleanValue(stringTokenizer);
+                    String alterKinTypeStrings = getCleanValue(stringTokenizer);
+                    String propositusKinTypeStrings = getCleanValue(stringTokenizer);
+                    String kinTermDescription = getCleanValue(stringTokenizer);
 
-                        KinTerm kinTerm = new KinTerm(kinTermString, kinTermDescription, null, alterKinTypeStrings, propositusKinTypeStrings);
-                        kinTerms.addKinTerm(kinTerm);
-                        importCount++;
-                    }
+                    KinTerm kinTerm = new KinTerm(kinTermString, kinTermDescription, null, alterKinTypeStrings, propositusKinTypeStrings);
+                    kinTerms.addKinTerm(kinTerm);
+                    importCount++;
                 }
                 bufferedReader.close();
 //                populateKinTermList();
