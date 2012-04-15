@@ -19,7 +19,7 @@ public class KinTreeMetaNode extends ArbilNode implements Comparable {
     private String labelString;
     protected SymbolGraphic symbolGraphic;
 
-    public KinTreeMetaNode(ArbilNode[] childNodes, String labelString, SymbolGraphic symbolGraphic) {
+    public KinTreeMetaNode(ArbilNode[] childNodes, String labelString, int notused, SymbolGraphic symbolGraphic) {
         this.childNodes = childNodes;
         this.labelString = labelString;
         this.symbolGraphic = symbolGraphic;
