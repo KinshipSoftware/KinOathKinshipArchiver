@@ -35,7 +35,10 @@ public class QueryParser implements EntityService {
         // set the alter entity for each relation if not already set (based on the known unique identifier)
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
             for (EntityRelation nodeRelation : graphDataNode.getRelatedNodesToBeLoaded()) {
-                nodeRelation.setAlterNode(loadedGraphNodes.get(nodeRelation.alterUniqueIdentifier));
+                final EntityData alterNode = loadedGraphNodes.get(nodeRelation.alterUniqueIdentifier);
+                if (alterNode != null) {
+                    nodeRelation.setAlterNode(alterNode);
+                }
             }
         }
     }
@@ -316,7 +319,10 @@ public class QueryParser implements EntityService {
         // set the alter entity for each relation if not already set (based on the known unique identifier)
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
             for (EntityRelation nodeRelation : graphDataNode.getRelatedNodesToBeLoaded()) {
-                nodeRelation.setAlterNode(loadedGraphNodes.get(nodeRelation.alterUniqueIdentifier));
+                final EntityData alterNode = loadedGraphNodes.get(nodeRelation.alterUniqueIdentifier);
+                if (alterNode != null) {
+                    nodeRelation.setAlterNode(alterNode);
+                }
             }
         }
         // either strip out the entities that are not shown
