@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.ui.ArbilNodeSearchPanel;
 import nl.mpi.arbil.ui.ArbilSplitPanel;
 import nl.mpi.arbil.ui.ArbilTable;
@@ -22,18 +23,19 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
- *  Document   : ArchiveEntityLinkerPanel
- *  Created on : Feb 3, 2011, 10:23:32 AM
- *  Author     : Peter Withers
+ * Document : ArchiveEntityLinkerPanel
+ * Created on : Feb 3, 2011, 10:23:32 AM
+ * Author : Peter Withers
  */
 public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
 
-    private KinTree archiveTree;
+    private KinTree archiveTree; // todo: do we really want to be using a kin tree not an arbil tree?
     private JButton nextButton;
     private TreeType treeType;
     private VisiblePanelSetting panelSetting;
     private ArbilTreeHelper treeHelper;
     private ArbilDataNodeLoader dataNodeLoader;
+    private ContainerNode rootNode;
 
     public enum TreeType {
 
@@ -45,7 +47,8 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
         this.dataNodeLoader = dataNodeLoader;
         this.treeType = treeType;
         this.panelSetting = panelSetting;
-        archiveTree = new KinTree(kinDiagramPanel, graphPanel);
+        rootNode = new ContainerNode("", null, new ArbilNode[]{}); // "corpus1.mpi.nl"
+        archiveTree = new KinTree(kinDiagramPanel, graphPanel, rootNode);
         this.setLayout(new BorderLayout());
         JPanel treePanel = new JPanel(new BorderLayout());
 //        tabbedPane = new JTabbedPane();
@@ -80,7 +83,7 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
                     this.setName("Nijmegen Corpus");
                     break;
             }
-            archiveTree.rootNodeChildren = allEntities;
+            rootNode.setChildNodes(allEntities);
             archiveTree.requestResort();
         } catch (URISyntaxException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
