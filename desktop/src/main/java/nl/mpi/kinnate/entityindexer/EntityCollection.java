@@ -50,9 +50,9 @@ import org.basex.query.item.Item;
 import org.basex.query.iter.Iter;
 
 /**
- *  Document   : EntityCollection
- *  Created on : Feb 15, 2011, 5:37:06 PM
- *  Author     : Peter Withers
+ * Document : EntityCollection
+ * Created on : Feb 15, 2011, 5:37:06 PM
+ * Author : Peter Withers
  */
 public class EntityCollection {
 
@@ -401,12 +401,12 @@ public class EntityCollection {
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
+        String queryResult = "";
 //        System.out.println("query1String: " + query1String);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             long startQueryTime = System.currentTimeMillis();
-            String queryResult;
             synchronized (databaseLock) {
                 queryResult = new XQuery(query1String).execute(context);
             }
@@ -423,10 +423,10 @@ public class EntityCollection {
 //            System.out.println("Query Result: " + queryResult);
             return selectedEntity;
         } catch (JAXBException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
+            BugCatcherManager.getBugCatcher().logError(query1String + "\n" + queryResult, exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity");
         } catch (BaseXException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
+            BugCatcherManager.getBugCatcher().logError(query1String + "\n" + queryResult, exception);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity");
         }
         return new EntityData(uniqueIdentifier, new String[]{"Error loading data", "view log for details"});
