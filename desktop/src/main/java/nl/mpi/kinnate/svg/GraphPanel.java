@@ -31,6 +31,7 @@ import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.MetadataPanel;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.dom.util.SAXIOException;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.JSVGScrollPane;
 import org.apache.batik.util.XMLResourceDescriptor;
@@ -163,8 +164,10 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            if (dataStoreSvg.graphData == null) {
 //                return null;
 //            }
-        } catch (IOException ioe) {
-            BugCatcherManager.getBugCatcher().logError(ioe);
+        } catch (SAXIOException exception) {
+            dialogHandler.addMessageDialogToQueue("Cannot open the diagram: " + exception.getMessage(), "Open Diagram");
+        } catch (IOException exception) {
+            dialogHandler.addMessageDialogToQueue("Cannot open the diagram: " + exception.getMessage(), "Open Diagram");
         }
 //        svgCanvas.setSVGDocument(doc);
         return; // dataStoreSvg.graphData.getDataNodes();
