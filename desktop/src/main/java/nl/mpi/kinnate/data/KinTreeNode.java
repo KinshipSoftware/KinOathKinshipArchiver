@@ -1,7 +1,6 @@
 package nl.mpi.kinnate.data;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,6 +9,7 @@ import javax.swing.ImageIcon;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
@@ -34,6 +34,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     protected ArbilDataNodeLoader dataNodeLoader;
 
     public KinTreeNode(EntityData entityData, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+        // todo: create new constructor that takes a unique identifer and loads from the database.
         super();
         this.indexerParameters = indexerParameters;
         this.entityData = entityData;
@@ -74,7 +75,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public ArbilNode[] getChildArray() {
-        // add the related entities grouped into metanodes and provide a relation type filter for each
+        // add the related entities grouped into metanodes by relation type and within each group the subsequent nodes are filtered by the type of relation.
         HashMap<DataTypes.RelationType, HashSet<KinTreeFilteredNode>> metaNodeMap = new HashMap<DataTypes.RelationType, HashSet<KinTreeFilteredNode>>();
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
             if (!metaNodeMap.containsKey(entityRelation.getRelationType())) {
@@ -87,11 +88,11 @@ public class KinTreeNode extends ArbilNode implements Comparable {
                 alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
                 entityRelation.setAlterNode(alterEntity);
             }
-            metaNodeMap.get(entityRelation.getRelationType()).add(new KinTreeFilteredNode(alterEntity, this.hashCode(), entityRelation.getRelationType(), indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
+            metaNodeMap.get(entityRelation.getRelationType()).add(new KinTreeFilteredNode(alterEntity, entityRelation.getRelationType(), indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
         }
         HashSet<ArbilNode> kinTreeMetaNodes = new HashSet<ArbilNode>();
         for (Map.Entry<DataTypes.RelationType, HashSet<KinTreeFilteredNode>> filteredNodeEntry : metaNodeMap.entrySet()) {//values().toArray(new KinTreeFilteredNode[]{})
-            kinTreeMetaNodes.add(new KinTreeMetaNode(filteredNodeEntry.getValue().toArray(new KinTreeFilteredNode[]{}), filteredNodeEntry.getKey().name(), this.hashCode(), symbolGraphic));
+            kinTreeMetaNodes.add(new ContainerNode(filteredNodeEntry.getKey().name(), null, filteredNodeEntry.getValue().toArray(new KinTreeFilteredNode[]{})));
         }
         getLinksMetaNode(kinTreeMetaNodes);
         childNodes = kinTreeMetaNodes.toArray(new ArbilNode[]{});
@@ -100,12 +101,12 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     protected void getLinksMetaNode(HashSet<ArbilNode> kinTreeMetaNodes) {
         if (entityData.archiveLinkArray != null) {
-            ArrayList<ArbilDataNode> relationList = new ArrayList<ArbilDataNode>();
+            HashSet<ArbilDataNode> relationList = new HashSet<ArbilDataNode>();
             for (URI archiveLink : entityData.archiveLinkArray) {
                 ArbilDataNode linkedArbilDataNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
                 relationList.add(linkedArbilDataNode);
             }
-            kinTreeMetaNodes.add(new KinTreeMetaNode(relationList.toArray(new ArbilDataNode[]{}), "External Links", this.hashCode(), symbolGraphic));
+            kinTreeMetaNodes.add(new ContainerNode("External Links", null, relationList.toArray(new ArbilDataNode[]{})));
         }
     }
 
@@ -240,15 +241,17 @@ public class KinTreeNode extends ArbilNode implements Comparable {
             return false;
         }
         final KinTreeNode other = (KinTreeNode) obj;
-        return this.hashCode() == other.hashCode();
+//        return this.entityData == other.entityData;
+        
+////        return this.hashCode() == other.hashCode();
 //        if (entityData == null || other.entityData == null) {
 //            // todo: it would be good for this to never be null, or at least to aways have the UniqueIdentifier to compare
 //            return false;
 //        }
-//        if (this.entityData.getUniqueIdentifier() != other.entityData.getUniqueIdentifier() && (this.entityData.getUniqueIdentifier() == null || !this.entityData.getUniqueIdentifier().equals(other.entityData.getUniqueIdentifier()))) {
-//            return false;
-//        }
-//        return true;
+        if (this.entityData.getUniqueIdentifier() != other.entityData.getUniqueIdentifier() && (this.entityData.getUniqueIdentifier() == null || !this.entityData.getUniqueIdentifier().equals(other.entityData.getUniqueIdentifier()))) {
+            return false;
+        }
+        return true;
     }
 
     @Override
