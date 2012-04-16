@@ -7,6 +7,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.HashSet;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -20,6 +21,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
@@ -49,6 +51,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
     private MessageDialogHandler dialogHandler;
     private ArbilDataNodeLoader dataNodeLoader;
     private String kinTypeString = "P";
+    ContainerNode rootNode;
 
     public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader, String nodeSetTitle, UniqueIdentifier[] entityIdentifiers) {
         InitPanel(entityCollection, kinDiagramPanel, graphPanel, dialogHandler, dataNodeLoader, nodeSetTitle, entityIdentifiers);
@@ -64,7 +67,8 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
         this.setLayout(new BorderLayout());
-        resultsTree = new KinTree(kinDiagramPanel, graphPanel);
+        rootNode = new ContainerNode("results", null, new ArbilNode[]{});
+        resultsTree = new KinTree(kinDiagramPanel, graphPanel, rootNode);
         resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
 //        resultsTree.setRootVisible(false);
         // resultsTree.requestResort();// this resort is unrequred
@@ -181,7 +185,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
 //                break;
 //            }
                 }
-                resultsTree.rootNodeChildren = resultsArray.toArray(new KinTreeNode[]{});
+                rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
                 resultsTree.requestResort();
                 searchPanel.remove(progressBar);
                 searchPanel.add(searchButton, BorderLayout.PAGE_END);
@@ -201,13 +205,13 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
 
             @Override
             public void run() {
-                ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
+                HashSet<ArbilNode> resultsArray = new HashSet<ArbilNode>();
                 resultsArea.setText("Loading " + entityIdentifiers.length + " entities\n");
                 int loadedCount = 0;
                 for (UniqueIdentifier entityId : entityIdentifiers) {
                     EntityData entityData = entityCollection.getEntity(entityId, graphPanel.getIndexParameters());
                     resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
-                    resultsTree.rootNodeChildren = resultsArray.toArray(new KinTreeNode[]{});
+                    rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
                     resultsTree.requestResort();
                     loadedCount++;
                     resultsArea.setText("Loaded " + loadedCount + " of " + entityIdentifiers.length + " entities\n");
