@@ -1,8 +1,11 @@
 package nl.mpi.kinnate.ui;
 
 import java.util.ArrayList;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -20,9 +23,12 @@ public class KinTree extends ArbilTree {
     private ArbilNode[] selectedNodeArray = new ArbilNode[]{};
     private boolean updateGraphOnSelectionChange = false;
 
-    public KinTree(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel) {
+    public KinTree(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, ContainerNode rootNode) {
         this.kinDiagramPanel = kinDiagramPanel;
         this.graphPanel = graphPanel;
+        this.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode), true));
+        this.setRootVisible(false);
+        this.setShowsRootHandles(true); 
     }
 
     @Override
