@@ -3,13 +3,13 @@ package nl.mpi.kinnate.ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.ui.ArbilTreeRenderer;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.data.KinTreeNode;
@@ -20,16 +20,20 @@ import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : EgoSelectionPanel
- *  Created on : Sep 29, 2010, 13:12:01 PM
- *  Author     : Peter Withers
+ * Document : EgoSelectionPanel
+ * Created on : Sep 29, 2010, 13:12:01 PM
+ * Author : Peter Withers
  */
 public class EgoSelectionPanel extends JPanel implements ActionListener {
 
     private KinTree egoTree;
+    private ContainerNode egoNode;
     private KinTree requiredTree;
+    private ContainerNode requiredNode;
     private KinTree impliedTree;
+    private ContainerNode impliedNode;
     private KinTree transientTree;
+    private ContainerNode transientNode;
     JPanel labelPanel3;
     JScrollPane metadataNodeScrolPane;
     JScrollPane transientNodeScrolPane;
@@ -52,25 +56,23 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         convertTransientButton.setEnabled(false);
         transientNodePanel.add(convertTransientButton, BorderLayout.PAGE_START);
 
-        transientTree = new KinTree(kinDiagramPanel, graphPanel);
+        transientNode = new ContainerNode("transient", null, new ArbilNode[]{});
+        transientTree = new KinTree(kinDiagramPanel, graphPanel, transientNode);
         transientTree.setBackground(transientNodePanel.getBackground());
         transientNodePanel.add(transientTree, BorderLayout.CENTER);
         transientNodeScrolPane = new JScrollPane(transientNodePanel);
 
         metadataNodePanel = new JPanel(new BorderLayout());
-        egoTree = new KinTree(kinDiagramPanel, graphPanel);
-//        egoTree.setRootVisible(false);
+        egoNode = new ContainerNode("ego", null, new ArbilNode[]{});
+        egoTree = new KinTree(kinDiagramPanel, graphPanel, egoNode);
         egoTree.setCellRenderer(new ArbilTreeRenderer());
-
-        requiredTree = new KinTree(kinDiagramPanel, graphPanel);
-//        requiredTree.setRootVisible(false);
+        requiredNode = new ContainerNode("required", null, new ArbilNode[]{});
+        requiredTree = new KinTree(kinDiagramPanel, graphPanel, requiredNode);
         requiredTree.setCellRenderer(new ArbilTreeRenderer());
-
-        impliedTree = new KinTree(kinDiagramPanel, graphPanel);
-//        impliedTree.setRootVisible(false);
+        impliedNode = new ContainerNode("implied", null, new ArbilNode[]{});
+        impliedTree = new KinTree(kinDiagramPanel, graphPanel, impliedNode);
         impliedTree.setCellRenderer(new ArbilTreeRenderer());
 
-//        egoTree.setRootVisible(false);
         this.setLayout(new BorderLayout());
         JPanel treePanel2 = new JPanel(new BorderLayout());
         metadataNodeScrolPane = new JScrollPane(metadataNodePanel);
@@ -118,9 +120,9 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         this.remove(transientNodeScrolPane);
         this.add(metadataNodeScrolPane, BorderLayout.CENTER);
         this.revalidate();
-        ArrayList<KinTreeNode> egoNodeArray = new ArrayList<KinTreeNode>();
-        ArrayList<KinTreeNode> requiredNodeArray = new ArrayList<KinTreeNode>();
-        ArrayList<KinTreeNode> remainingNodeArray = new ArrayList<KinTreeNode>();
+        HashSet<KinTreeNode> egoNodeArray = new HashSet<KinTreeNode>();
+        HashSet<KinTreeNode> requiredNodeArray = new HashSet<KinTreeNode>();
+        HashSet<KinTreeNode> remainingNodeArray = new HashSet<KinTreeNode>();
         for (EntityData entityData : allEntities) {
             if (entityData.isVisible) {
                 KinTreeNode kinTreeNode = new KinTreeNode(entityData, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
@@ -133,13 +135,16 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
                 }
             }
         }
-        egoTree.rootNodeChildren = egoNodeArray.toArray(new ArbilNode[]{});
+        System.out.println("egoNodeArray: " + egoNodeArray.size());
+        System.out.println("requiredNodeArray: " + requiredNodeArray.size());
+        System.out.println("remainingNodeArray: " + remainingNodeArray.size());
+        egoNode.setChildNodes(egoNodeArray.toArray(new ArbilNode[]{}));
+        requiredNode.setChildNodes(requiredNodeArray.toArray(new ArbilNode[]{}));
+        impliedNode.setChildNodes(remainingNodeArray.toArray(new ArbilNode[]{}));
+        transientNode.setChildNodes(new ArbilNode[]{});
         egoTree.requestResort();
-        requiredTree.rootNodeChildren = requiredNodeArray.toArray(new ArbilNode[]{});
         requiredTree.requestResort();
-        impliedTree.rootNodeChildren = remainingNodeArray.toArray(new ArbilNode[]{});
         impliedTree.requestResort();
-        transientTree.rootNodeChildren = new ArbilNode[]{};
         transientTree.requestResort();
     }
 
@@ -147,19 +152,18 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         this.remove(metadataNodeScrolPane);
         this.add(transientNodeScrolPane, BorderLayout.CENTER);
         this.revalidate();
-        ArrayList<KinTreeNode> transientNodeArray = new ArrayList<KinTreeNode>();
+        HashSet<KinTreeNode> transientNodeArray = new HashSet<KinTreeNode>();
         for (EntityData entityData : allEntities) {
             KinTreeNode kinTreeNode = new KinTreeNode(entityData, null, dialogHandler, entityCollection, dataNodeLoader);
             transientNodeArray.add(kinTreeNode);
         }
-        transientTree.rootNodeChildren = transientNodeArray.toArray(new ArbilNode[]{});
+        requiredNode.setChildNodes(transientNodeArray.toArray(new ArbilNode[]{}));
+        egoNode.setChildNodes(new ArbilNode[]{});
+        requiredNode.setChildNodes(new ArbilNode[]{});
+        impliedNode.setChildNodes(new ArbilNode[]{});
         transientTree.requestResort();
-
-        egoTree.rootNodeChildren = new ArbilNode[]{};
         egoTree.requestResort();
-        requiredTree.rootNodeChildren = new ArbilNode[]{};
         requiredTree.requestResort();
-        impliedTree.rootNodeChildren = new ArbilNode[]{};
         impliedTree.requestResort();
     }
 
