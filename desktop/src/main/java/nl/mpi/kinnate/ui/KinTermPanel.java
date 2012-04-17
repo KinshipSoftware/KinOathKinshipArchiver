@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import javax.swing.BoxLayout;
@@ -29,6 +30,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
@@ -439,27 +441,34 @@ public class KinTermPanel extends JPanel {
     }
 
     public void exportKinTerms() {
-        // todo: move this to a import/export class
-        // todo: resolve issues using the Arbil file select for export files
-        File[] exportFile = KinTermPanel.this.dialogHandler.showFileSelectBox("Export Kin Terms", false, false, false);
-        if (exportFile.length != 1) {
-            KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Export file not selected", "Export Kin Terms");
-        } else {
-            if (exportFile[0].exists()) {
-                if (!KinTermPanel.this.dialogHandler.showConfirmDialogBox("Export file already exists, overwrite?", "Export Kin Terms")) {
-                    return;
+        // todo: move this to a import/export class #1743 
+        File[] exportFile = KinTermPanel.this.dialogHandler.showFileSelectBox("Export Kin Terms", false, false, null);
+        if (exportFile != null) {
+            if (exportFile.length != 1) {
+                KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Export file not selected", "Export Kin Terms");
+            } else {
+                File outputFile;
+                if (exportFile[0].getName().toLowerCase().endsWith(".csv")) {
+                    outputFile = exportFile[0];
+                } else {
+                    outputFile = new File(exportFile[0].getParentFile(), exportFile[0].getName() + ".csv");
                 }
-            }
-            try {
-                final FileOutputStream fileOutputStream = new FileOutputStream(exportFile[0]);
-                OutputStreamWriter fileWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-                fileWriter.write(csvHeaderString + "\n");
-                for (KinTerm kinTerm : kinTerms.getKinTerms()) {
-                    fileWriter.write(cleanOutputValue(kinTerm.kinTerm) + "," + cleanOutputValue(kinTerm.alterKinTypeStrings) + "," + cleanOutputValue(kinTerm.propositusKinTypeStrings) + "," + cleanOutputValue(kinTerm.kinTermDescription) + "\n");
+                if (exportFile[0].exists()) {
+                    if (!KinTermPanel.this.dialogHandler.showConfirmDialogBox("Export file already exists, overwrite?", "Export Kin Terms")) {
+                        return;
+                    }
                 }
-                fileWriter.close();
-            } catch (IOException exception) {
-                BugCatcherManager.getBugCatcher().logError(exception);
+                try {
+                    final FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
+                    OutputStreamWriter fileWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+                    fileWriter.write(csvHeaderString + "\n");
+                    for (KinTerm kinTerm : kinTerms.getKinTerms()) {
+                        fileWriter.write(cleanOutputValue(kinTerm.kinTerm) + "," + cleanOutputValue(kinTerm.alterKinTypeStrings) + "," + cleanOutputValue(kinTerm.propositusKinTypeStrings) + "," + cleanOutputValue(kinTerm.kinTermDescription) + "\n");
+                    }
+                    fileWriter.close();
+                } catch (IOException exception) {
+                    BugCatcherManager.getBugCatcher().logError(exception);
+                }
             }
         }
     }
@@ -481,46 +490,64 @@ public class KinTermPanel extends JPanel {
     }
 
     public void importKinTerms() {
-        // todo: move this to a import/export class
-        File[] importFiles = KinTermPanel.this.dialogHandler.showFileSelectBox("Import Kin Terms", false, true, false);
-        if (importFiles.length == 0) {
-            KinTermPanel.this.dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kin Terms");
-        }
-        for (File currentFile : importFiles) {
-            int importCount = 0;
-            try {
-                // todo: the Scanner can replace all of this file code also and would be simpler to read
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(currentFile), "UTF-8"));
-                String currentLine = bufferedReader.readLine();
-                if (!csvHeaderString.equals(currentLine)) {
-                    KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Incorrect csv format, nothing imported", "Import Kin Terms");
-                    return;
-                }
-                while ((currentLine = bufferedReader.readLine()) != null) {
-                    currentLine = currentLine.replaceFirst("^'", "");
-                    currentLine = currentLine.replaceFirst("'$", "");
-                    Scanner stringTokenizer = new Scanner(currentLine);
-                    stringTokenizer.useDelimiter("','");
-                    String kinTermString = getCleanValue(stringTokenizer);
-                    String alterKinTypeStrings = getCleanValue(stringTokenizer);
-                    String propositusKinTypeStrings = getCleanValue(stringTokenizer);
-                    String kinTermDescription = getCleanValue(stringTokenizer);
+        // todo: move this to a import/export class #1743 
+        HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
+        for (final String[] currentType : new String[][]{{"Comma-separated values", ".csv"}}) { // {"Tab-separated values", ".txt"}, 
+            fileFilterMap.put(currentType[0], new FileFilter() {
 
-                    KinTerm kinTerm = new KinTerm(kinTermString, kinTermDescription, null, alterKinTypeStrings, propositusKinTypeStrings);
-                    kinTerms.addKinTerm(kinTerm);
-                    importCount++;
+                @Override
+                public boolean accept(File selectedFile) {
+                    final String extensionLowerCase = currentType[1].toLowerCase();
+                    return (selectedFile.exists() && (selectedFile.isDirectory() || selectedFile.getName().toLowerCase().endsWith(extensionLowerCase)));
                 }
-                bufferedReader.close();
-//                populateKinTermList();
-                revalidate();
-                savePanel.updateGraph();
-                savePanel.setRequiresSave();
-            } catch (IOException exception) {
-                BugCatcherManager.getBugCatcher().logError(exception);
+
+                @Override
+                public String getDescription() {
+                    return currentType[0];
+                }
+            });
+        }
+        File[] importFiles = KinTermPanel.this.dialogHandler.showFileSelectBox("Import Kin Terms", false, true, fileFilterMap);
+        if (importFiles != null) {
+            if (importFiles.length == 0) {
+                KinTermPanel.this.dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kin Terms");
             }
-            kinTermTableModel.fireTableDataChanged();
-            // todo: resolve why this dialogue does not show
-            KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
+            for (File currentFile : importFiles) {
+                int importCount = 0;
+                try {
+                    // todo: the Scanner can replace all of this file code also and would be simpler to read
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(currentFile), "UTF-8"));
+                    String currentLine = bufferedReader.readLine();
+                    if (!csvHeaderString.equals(currentLine)) {
+                        KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Incorrect csv format, nothing imported", "Import Kin Terms");
+                        return;
+                    }
+                    while ((currentLine = bufferedReader.readLine()) != null) {
+                        currentLine = currentLine.replaceFirst("^'", "");
+                        currentLine = currentLine.replaceFirst("'$", "");
+                        Scanner stringTokenizer = new Scanner(currentLine);
+                        stringTokenizer.useDelimiter("','");
+                        String kinTermString = getCleanValue(stringTokenizer);
+                        String alterKinTypeStrings = getCleanValue(stringTokenizer);
+                        String propositusKinTypeStrings = getCleanValue(stringTokenizer);
+                        String kinTermDescription = getCleanValue(stringTokenizer);
+
+                        KinTerm kinTerm = new KinTerm(kinTermString, kinTermDescription, null, alterKinTypeStrings, propositusKinTypeStrings);
+                        kinTerms.addKinTerm(kinTerm);
+                        importCount++;
+                    }
+                    bufferedReader.close();
+//                populateKinTermList();
+                    revalidate();
+                    savePanel.updateGraph();
+                    savePanel.setRequiresSave();
+                } catch (IOException exception) {
+                    BugCatcherManager.getBugCatcher().logError(exception);
+                }
+                kinTermTableModel.fireTableDataChanged();
+                // todo: resolve why this dialogue does not show
+                KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
+            }
         }
     }
 }
