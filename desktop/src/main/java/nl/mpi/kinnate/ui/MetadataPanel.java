@@ -7,8 +7,12 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilTree;
@@ -17,9 +21,9 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
- *  Document   : MetadataPanel
- *  Created on : Oct 13, 2011, 5:06:28 PM
- *  Author     : Peter Withers
+ * Document : MetadataPanel
+ * Created on : Oct 13, 2011, 5:06:28 PM
+ * Author : Peter Withers
  */
 public class MetadataPanel extends JPanel {
 
@@ -35,9 +39,12 @@ public class MetadataPanel extends JPanel {
     private ArrayList<SvgElementEditor> elementEditors = new ArrayList<SvgElementEditor>();
     //private DateEditorPanel dateEditorPanel;
     private ArbilDataNodeLoader dataNodeLoader;
+    private ContainerNode rootNode;
 
     public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader) {
         this.arbilTree = new ArbilTree();
+        rootNode = new ContainerNode("links", null, new ArbilNode[]{});
+        arbilTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode)));
         this.kinTableModel = new ArbilTableModel();
         this.archiveTableModel = new ArbilTableModel();
         this.dataNodeLoader = dataNodeLoader;
@@ -138,8 +145,8 @@ public class MetadataPanel extends JPanel {
             removeTab(kinTableScrollPane);
         }
         if (!archiveRootNodes.isEmpty()) {
-            arbilTree.rootNodeChildren = archiveRootNodes.toArray(new ArbilDataNode[]{});
             // todo: highlight or select the sub nodes that are actually linked
+            rootNode.setChildNodes(archiveRootNodes.toArray(new ArbilNode[]{}));
             arbilTree.requestResort();
         }
         arbilTree.setVisible(!archiveRootNodes.isEmpty());
