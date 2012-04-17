@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.ui.menu;
 
 import java.io.File;
+import java.util.HashMap;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -15,9 +16,9 @@ import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- *  Document   : FileMenu
- *  Created on : Dec 1, 2011, 4:04:06 PM
- *  Author     : Peter Withers
+ * Document : FileMenu
+ * Created on : Dec 1, 2011, 4:04:06 PM
+ * Author : Peter Withers
  */
 public class FileMenu extends javax.swing.JMenu {
 
@@ -111,7 +112,7 @@ public class FileMenu extends javax.swing.JMenu {
         this.add(jMenu3);
 
         openDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        openDiagram.setText("Open");
+        openDiagram.setText("Open Diagram");
         openDiagram.setActionCommand("open");
         openDiagram.addActionListener(new java.awt.event.ActionListener() {
 
@@ -248,7 +249,23 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Kin Diagram", false, true, false);
+        HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
+        for (final String[] currentType : new String[][]{{"Kinship Diagram", ".svg"}}) {
+            fileFilterMap.put(currentType[0], new FileFilter() {
+
+                @Override
+                public boolean accept(File selectedFile) {
+                    final String extensionLowerCase = currentType[1].toLowerCase();
+                    return (selectedFile.exists() && (selectedFile.isDirectory() || selectedFile.getName().toLowerCase().endsWith(extensionLowerCase)));
+                }
+
+                @Override
+                public String getDescription() {
+                    return currentType[0];
+                }
+            });
+        }
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, true, fileFilterMap);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 diagramWindowManager.openDiagram(selectedFile.getName(), selectedFile.toURI(), true);
