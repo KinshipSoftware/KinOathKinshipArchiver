@@ -22,7 +22,7 @@
 http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <property name="ShortDescription" value="KinOath is a kinship application that is flexible, culturally nonspecific and produces diagrams of publishable quality."/>
     </target>
-    <target name="clean" description="remove all artifact files" depends="setproperties, maven-clean">
+    <target name="clean" description="remove all artifact files" depends="setproperties">
         <delete dir="${OUTPUTDIR}"/>
         <mkdir dir="${OUTPUTDIR}"/>
     </target>
@@ -98,7 +98,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <updateSingleFile fileName="win-installer.iss"/>
         <updateSingleFile fileName="Info.plist"/>
         <updateSingleFile fileName="start"/>
-        <copy file="${OUTPUTDIR}/distribution/kinoath.jnlp" tofile="${SRCDIR}/JNLP-INF/application.jnlp"/>
+        <copy file="${OUTPUTDIR}/distribution/kinoath.jnlp" tofile="${SRCDIR}/../resources/JNLP-INF/application.jnlp"/>
         <copy file="${OUTPUTDIR}/distribution/kinoath.jnlp" tofile="${OUTPUTDIR}/distribution/${JarPrefix}.jnlp"/>        
     </target>
     <target name="buildWindowsInstaller" depends="signkinoath">
@@ -288,19 +288,11 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <!-- set the required permissions for apache --> 
         <sshexec host="lux09.mpi.nl" username="${lux09.user}" password="${lux09.pw}" command="chmod a+r /data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath*" verbose="true" />
     </target>
-    <target name="maven-clean">
-        <!-- this gets called from "clean" which is run before updateJnlpAndAppletHtml -->
-        <!-- while this could be done in a maven ant task, this method appears more portable at this stage -->
-        <exec dir="../desktop/" executable="mvn">
-            <arg line="clean" />
-            <arg line="-Doutput.directory=${OUTPUTDIR}"/>
-        </exec>
-    </target>
     <target name="maven-jar" depends="updateJnlpAndAppletHtml">
         <!-- clean must be run before updateJnlpAndAppletHtml otherwise the jnlp file gets deleted from the classes before making the jar file -->
         <!-- while this could be done in a maven ant task, this method appears more portable at this stage -->
         <exec dir="../desktop/" executable="mvn">
-            <arg line="install" />
+            <arg line="clean install" />
             <arg line="-Doutput.jarname=${JarPrefix}"/>
             <arg line="-Doutput.directory=${OUTPUTDIR}"/>
         </exec>
