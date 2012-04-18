@@ -203,7 +203,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(savePdfMenuItem);
 
-        exportToR.setText("Export to R / SPSS");
+        exportToR.setText("Export for R / SPSS");
         exportToR.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -283,7 +283,7 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void saveDiagramAsActionPerformed(java.awt.event.ActionEvent evt) {
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, false, getSvgFileFilter(), MessageDialogHandler.DialogueType.save);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Save Diagram As", false, false, getSvgFileFilter(), MessageDialogHandler.DialogueType.save);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 if (!selectedFile.getName().toLowerCase().endsWith(".svg")) {
@@ -431,13 +431,32 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void exportToRActionPerformed(java.awt.event.ActionEvent evt) {
-
-//    public KinTermSavePanel getKinTermPanel() {
-//        Object selectedComponent = jTabbedPane1.getComponentAt(jTabbedPane1.getSelectedIndex());
-//        KinTermSavePanel kinTermSavePanel = null;
         SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel();
-        if (currentSavePanel instanceof KinTermSavePanel) {
-            new ExportToR(sessionStorage, dialogHandler, BugCatcherManager.getBugCatcher()).doExport(this, (KinTermSavePanel) currentSavePanel);
+
+        HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
+        for (final String[] currentType : new String[][]{{"Data Frame Tab-separated Values", ".tab"}}) { // "Data Frame (CSV)"
+            fileFilterMap.put(currentType[0], new FileFilter() {
+
+                @Override
+                public boolean accept(File selectedFile) {
+                    final String extensionLowerCase = currentType[1].toLowerCase();
+                    return (selectedFile.exists() && (selectedFile.isDirectory() || selectedFile.getName().toLowerCase().endsWith(extensionLowerCase)));
+                }
+
+                @Override
+                public String getDescription() {
+                    return currentType[0];
+                }
+            });
+        }
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export Tab-separated Values", false, false, fileFilterMap, MessageDialogHandler.DialogueType.save);
+        if (selectedFilesArray != null) {
+            for (File selectedFile : selectedFilesArray) {
+                if (!selectedFile.getName().toLowerCase().endsWith(".tab")) {
+                    selectedFile = new File(selectedFile.getParentFile(), selectedFile.getName() + ".tab");
+                }
+                new ExportToR(sessionStorage, dialogHandler).doExport(this, currentSavePanel, selectedFile);
+            }
         }
     }
 
