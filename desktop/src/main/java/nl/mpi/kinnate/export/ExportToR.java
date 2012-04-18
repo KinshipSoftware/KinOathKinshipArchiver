@@ -4,67 +4,39 @@ import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcher;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
-import nl.mpi.kinnate.KinTermSavePanel;
+import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.kindata.EntityData;
 
 /**
- *  Document   : ExportToR
- *  Created on : May 30, 2011, 2:30:34 PM
- *  Author     : Peter Withers
+ * Document : ExportToR
+ * Created on : May 30, 2011, 2:30:34 PM
+ * Author : Peter Withers
  */
 public class ExportToR {
 
     private SessionStorage sessionStorage;
     private MessageDialogHandler dialogHandler;
-    private BugCatcher bugCatcher;
 
-    public ExportToR(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, BugCatcher bugCatcher) {
+    public ExportToR(SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
-        this.bugCatcher = bugCatcher;
     }
 
-    public void doExport(Component mainFrame, KinTermSavePanel savePanel) {
-        // todo: modify this to use the ArbilWindowManager and update the ArbilWindowManager file select to support save file actions
-        JFileChooser fc = new JFileChooser();
-        String lastSavedFileString = sessionStorage.loadString("kinoath.ExportToR");
-        if (lastSavedFileString != null) {
-            fc.setSelectedFile(new File(lastSavedFileString));
-        }
-        fc.addChoosableFileFilter(new FileFilter() {
-
-            @Override
-            public boolean accept(File file) {
-                if (file.isDirectory()) {
-                    return true;
-                }
-                return (file.getName().toLowerCase().endsWith(".csv"));
-            }
-
-            @Override
-            public String getDescription() {
-                return "Data Frame (CSV)";
-            }
-        });
-
-        int returnVal = fc.showSaveDialog(mainFrame);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            PedigreePackageExport packageExport = new PedigreePackageExport();
-            sessionStorage.saveString("kinoath.ExportToR", file.getPath());
-            try {
-                FileWriter fileWriter = new FileWriter(file, false);
-                fileWriter.write(packageExport.createCsvContents(savePanel.getGraphEntities()));
-                fileWriter.close();
+    public void doExport(Component mainFrame, SavePanel savePanel, File destinationFile) {
+        PedigreePackageExport packageExport = new PedigreePackageExport();
+        try {
+            FileWriter fileWriter = new FileWriter(destinationFile, false);
+            final EntityData[] dataNodes = savePanel.getGraphPanel().dataStoreSvg.graphData.getDataNodes();
+            fileWriter.write(packageExport.createCsvContents(dataNodes));
+            fileWriter.close();
+            dialogHandler.addMessageDialogToQueue("Exported " + dataNodes.length + " entities", "Export");
 //                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("File saved", "Export");
-            } catch (IOException exception) {
-                dialogHandler.addMessageDialogToQueue("Error, could not save file", "Export");
-                bugCatcher.logError(exception);
-            }
+        } catch (IOException exception) {
+            dialogHandler.addMessageDialogToQueue("Error, could not export the data to file", "Export");
+            BugCatcherManager.getBugCatcher().logError(exception);
         }
     }
     // example usage:
