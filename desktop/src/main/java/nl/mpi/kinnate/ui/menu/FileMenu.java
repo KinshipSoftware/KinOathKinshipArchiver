@@ -2,7 +2,6 @@ package nl.mpi.kinnate.ui.menu;
 
 import java.io.File;
 import java.util.HashMap;
-import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
@@ -248,9 +247,9 @@ public class FileMenu extends javax.swing.JMenu {
     private void fileMenuActionPerformed(java.awt.event.ActionEvent evt) {
     }
 
-    private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {
+    private HashMap<String, FileFilter> getSvgFileFilter() {
         HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
-        for (final String[] currentType : new String[][]{{"Kinship Diagram", ".svg"}}) {
+        for (final String[] currentType : new String[][]{{"Kinship Diagram (SVG format)", ".svg"}}) { // "Scalable Vector Graphics (SVG)";
             fileFilterMap.put(currentType[0], new FileFilter() {
 
                 @Override
@@ -265,7 +264,11 @@ public class FileMenu extends javax.swing.JMenu {
                 }
             });
         }
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, true, fileFilterMap, MessageDialogHandler.DialogueType.open);
+        return fileFilterMap;
+    }
+
+    private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, true, getSvgFileFilter(), MessageDialogHandler.DialogueType.open);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 diagramWindowManager.openDiagram(selectedFile.getName(), selectedFile.toURI(), true);
@@ -280,50 +283,19 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void saveDiagramAsActionPerformed(java.awt.event.ActionEvent evt) {
-        // todo: update the file select to limit to svg and test that a file has been selected
-        // todo: move this into the arbil window manager and get the last used directory
-        // todo: make sure the file has the svg suffix
-        JFileChooser fc = new JFileChooser();
-        fc.addChoosableFileFilter(new FileFilter() {
-
-            @Override
-            public boolean accept(File file) {
-                if (file.isDirectory()) {
-                    return true;
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, false, getSvgFileFilter(), MessageDialogHandler.DialogueType.save);
+        if (selectedFilesArray != null) {
+            for (File selectedFile : selectedFilesArray) {
+                if (!selectedFile.getName().toLowerCase().endsWith(".svg")) {
+                    selectedFile = new File(selectedFile.getParentFile(), selectedFile.getName() + ".svg");
                 }
-                return (file.getName().toLowerCase().endsWith(".svg"));
+                int tabIndex = Integer.valueOf(evt.getActionCommand());
+                SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
+                savePanel.saveToFile(selectedFile);
+                RecentFileMenu.addRecentFile(sessionStorage, selectedFile);
+                diagramWindowManager.setDiagramTitle(tabIndex, selectedFile.getName());
             }
-
-            @Override
-            public String getDescription() {
-                return "Scalable Vector Graphics (SVG)";
-            }
-        });
-
-        int returnVal = fc.showSaveDialog(this);
-        // make sure the file path ends in .svg lowercase
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File svgFile = fc.getSelectedFile();
-            if (!svgFile.getName().toLowerCase().endsWith(".svg")) {
-                svgFile = new File(svgFile.getParentFile(), svgFile.getName() + ".svg");
-            }
-            int tabIndex = Integer.valueOf(evt.getActionCommand());
-            SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
-            savePanel.saveToFile(svgFile);
-            RecentFileMenu.addRecentFile(sessionStorage, svgFile);
-            diagramWindowManager.setDiagramTitle(tabIndex, svgFile.getName());
-        } else {
-            // todo: warn user that no file selected and so cannot save
         }
-//        File selectedFile[] = LinorgWindowManager.getSingleInstance().showFileSelectBox("Save Kin Diagram", false, false, false);
-//        if (selectedFile != null && selectedFile.length > 0) {
-//            int tabIndex = Integer.valueOf(evt.getActionCommand());
-//            SavePanel savePanel = getSavePanel(tabIndex);
-//            savePanel.saveToFile(selectedFile[0]);
-//            jTabbedPane1.setTitleAt(tabIndex, selectedFile[0].getName());
-//        } else {
-//            // todo: warn user that no file selected and so cannot save
-//        }
     }
 
     private void exitApplicationActionPerformed(java.awt.event.ActionEvent evt) {
