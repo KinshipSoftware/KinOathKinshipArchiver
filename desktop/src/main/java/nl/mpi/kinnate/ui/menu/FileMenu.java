@@ -265,7 +265,7 @@ public class FileMenu extends javax.swing.JMenu {
                 }
             });
         }
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, true, fileFilterMap);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, true, fileFilterMap, MessageDialogHandler.DialogueType.open);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 diagramWindowManager.openDiagram(selectedFile.getName(), selectedFile.toURI(), true);
@@ -380,24 +380,42 @@ public class FileMenu extends javax.swing.JMenu {
         diagramWindowManager.newDiagram();
     }
 
-    private File showFileSelect() {
-        final String importStorageName = "nl.mpi.kinoath.import";
-        String lastFilePath = sessionStorage.loadString(importStorageName);
-        final JFileChooser fc = new JFileChooser(lastFilePath);
-        File selectedFile = null;
-        int returnVal = fc.showOpenDialog(FileMenu.this);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            selectedFile = fc.getSelectedFile();
-            sessionStorage.saveString(importStorageName, selectedFile.getAbsolutePath());
-        }
-        return selectedFile;
-    }
-
     private void importGedcomFileActionPerformed(java.awt.event.ActionEvent evt) {
-        File importFile = showFileSelect();
-        if (importFile != null) {
-            diagramWindowManager.openImportPanel(importFile);
+        HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
+        fileFilterMap.put("importfiles", new FileFilter() {
+
+            @Override
+            public boolean accept(File selectedFile) {
+                if (selectedFile.isDirectory()) {
+                    return true;
+                }
+                final String currentFileName = selectedFile.getName().toLowerCase();
+                if (currentFileName.endsWith(".gedcom")) {
+                    return true;
+                }
+                if (currentFileName.endsWith(".txt")) {
+                    return true;
+                }
+                if (currentFileName.endsWith(".csv")) {
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public String getDescription() {
+                return "GEDCOM or CSV Kinship Data";
+            }
+        });
+        File[] importFiles = dialogHandler.showFileSelectBox("Import Kinship Data", false, true, fileFilterMap, MessageDialogHandler.DialogueType.open);
+        if (importFiles != null) {
+            if (importFiles.length == 0) {
+                dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kinship Data");
+            } else {
+                for (File importFile : importFiles) {
+                    diagramWindowManager.openImportPanel(importFile);
+                }
+            }
         }
     }
 
