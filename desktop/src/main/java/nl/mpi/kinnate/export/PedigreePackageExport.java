@@ -30,9 +30,12 @@ public class PedigreePackageExport {
     private UniqueIdentifier getFirstMatchingParent(EntityData entityData, EntityData.SymbolType symbolType) {
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
             if (entityRelation.getRelationType().equals(DataTypes.RelationType.ancestor)) {
-                for (String symbolName : entityRelation.getAlterNode().getSymbolNames()) {
-                    if (symbolName.equals(symbolType.name())) {
-                        return entityRelation.getAlterNode().getUniqueIdentifier();
+                final EntityData alterNode = entityRelation.getAlterNode();
+                if (alterNode != null) {
+                    for (String symbolName : alterNode.getSymbolNames()) {
+                        if (symbolName.equals(symbolType.name())) {
+                            return entityRelation.getAlterNode().getUniqueIdentifier();
+                        }
                     }
                 }
             }
