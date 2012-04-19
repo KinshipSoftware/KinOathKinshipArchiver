@@ -193,7 +193,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(saveDiagramAs);
 
-        savePdfMenuItem.setText("Export Visible as PDF/JPEG/PNG");
+        savePdfMenuItem.setText("Export as PDF/JPEG/PNG/TIFF");
         savePdfMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
