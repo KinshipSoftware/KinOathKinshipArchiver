@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
@@ -30,9 +31,15 @@ public class ExportToR {
         try {
             FileWriter fileWriter = new FileWriter(destinationFile, false);
             final EntityData[] dataNodes = savePanel.getGraphPanel().dataStoreSvg.graphData.getDataNodes();
-            fileWriter.write(packageExport.createCsvContents(dataNodes));
+            ArrayList<EntityData> visibleEntities = new ArrayList<EntityData>();
+            for (EntityData currentEntity : dataNodes) {
+                if (currentEntity.isVisible) {
+                    visibleEntities.add(currentEntity);
+                }
+            }
+            fileWriter.write(packageExport.createCsvContents(visibleEntities.toArray(new EntityData[]{})));
             fileWriter.close();
-            dialogHandler.addMessageDialogToQueue("Exported " + dataNodes.length + " entities", "Export");
+            dialogHandler.addMessageDialogToQueue("Exported " + visibleEntities.size() + " entities", "Export");
 //                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("File saved", "Export");
         } catch (IOException exception) {
             dialogHandler.addMessageDialogToQueue("Error, could not export the data to file", "Export");
