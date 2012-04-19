@@ -10,8 +10,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import nl.mpi.kinnate.transcoder.DiagramTranscoder;
-import nl.mpi.kinnate.transcoder.DiagramTranscoder.OutputType;
+import nl.mpi.kinnate.svg.DiagramTranscoder;
+import nl.mpi.kinnate.svg.DiagramTranscoder.OutputType;
 
 /**
  * Document : DiagramTranscoderPanel
