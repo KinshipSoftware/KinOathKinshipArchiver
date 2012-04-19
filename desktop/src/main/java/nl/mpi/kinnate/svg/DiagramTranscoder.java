@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.geom.Dimension2D;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.SavePanel;
@@ -26,7 +25,7 @@ public class DiagramTranscoder {
 
     public enum OutputType {
 
-        JPEG, PDF
+        JPEG, PDF, PNG
     };
     private int dpi = 300;
     private OutputType outputType = OutputType.PDF;
@@ -69,38 +68,36 @@ public class DiagramTranscoder {
         this.outputFile = outputFile;
         switch (outputType) {
             case JPEG:
+                fixSuffix(".jpg");
                 saveAsJpg();
                 break;
             case PDF:
+                fixSuffix(".pdf");
                 saveAsPdf();
+                break;
+            case PNG:
+                fixSuffix(".png");
+                saveAsPng();
                 break;
         }
     }
 
+    private void fixSuffix(String requiredSuffix) {
+        if (!outputFile.getName().toLowerCase().endsWith(requiredSuffix)) {
+            String fileName = outputFile.getName();
+            fileName = fileName.replaceFirst("\\....$", "");
+            outputFile = new File(outputFile.getParentFile(), fileName + requiredSuffix);
+        }
+    }
+
     private void saveAsJpg() {
-        if (!outputFile.getName().toLowerCase().endsWith(".jpg")) {
-            outputFile = new File(outputFile.getParentFile(), outputFile.getName() + ".jpg");
-        }
-        if (savePanel.hasSaveFileName()) {
-            // todo: tell user to save as
-        }
-        if (savePanel.requiresSave()) {
-            // todo: tell user to save
-        }
-
-        File diagramSvg = savePanel.getFileName();
-//        File diagramJpg = new File(diagramSvg.getParentFile(), diagramSvg.getName().replaceFirst("\\.[Ss][Vv][Gg]$", ".jpg"));
         JPEGTranscoder transcoder = new JPEGTranscoder();
-
         transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(.8));
         transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / dpi)));
         transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
         transcoder.addTranscodingHint(PDFTranscoder.KEY_STROKE_TEXT, Boolean.FALSE);
-        InputStream inputStream = null;
         try {
-            inputStream = new java.io.FileInputStream(diagramSvg);
-            TranscoderInput transcoderInput = new TranscoderInput(inputStream);
-            transcoderInput.setURI(diagramSvg.toURI().toASCIIString());
+            TranscoderInput transcoderInput = new TranscoderInput(savePanel.getGraphPanel().doc);
             OutputStream outputStream = new java.io.FileOutputStream(outputFile);
             outputStream = new java.io.BufferedOutputStream(outputStream);
             try {
@@ -114,48 +111,16 @@ public class DiagramTranscoder {
             BugCatcherManager.getBugCatcher().logError(exception);
         } catch (IOException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException exception) {
-                    BugCatcherManager.getBugCatcher().logError(exception);
-                }
-            }
         }
     }
 
     private void saveAsPdf() {
-        if (!outputFile.getName().toLowerCase().endsWith(".jpg")) {
-            outputFile = new File(outputFile.getParentFile(), outputFile.getName() + ".jpg");
-        }
-        if (savePanel.hasSaveFileName()) {
-            // todo: tell user to save as
-        }
-        if (savePanel.requiresSave()) {
-            // todo: tell user to save
-        }
-        File diagramSvg = savePanel.getFileName();
-//        File diagramPdf = new File(diagramSvg.getParentFile(), diagramSvg.getName().replaceFirst("\\.[Ss][Vv][Gg]$", ".pdf"));
         Transcoder transcoder = new PDFTranscoder();
-
-        //Configure the transcoder
-//        try {
-//            DefaultConfigurationBuilder cfgBuilder = new DefaultConfigurationBuilder();
-//            Configuration cfg = cfgBuilder.buildFromFile(new File("pdf-renderer-cfg.xml"));
-//            ContainerUtil.configure(transcoder, cfg);
-//        } catch (Exception e) {
-//            throw new TranscoderException(e);
-//        }
-
         transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / dpi)));
         transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
         transcoder.addTranscodingHint(PDFTranscoder.KEY_STROKE_TEXT, Boolean.FALSE);
-        InputStream inputStream = null;
         try {
-            inputStream = new java.io.FileInputStream(diagramSvg);
-            TranscoderInput transcoderInput = new TranscoderInput(inputStream);
-            transcoderInput.setURI(diagramSvg.toURI().toASCIIString());
+            TranscoderInput transcoderInput = new TranscoderInput(savePanel.getGraphPanel().doc);
             OutputStream outputStream = new java.io.FileOutputStream(outputFile);
             outputStream = new java.io.BufferedOutputStream(outputStream);
             try {
@@ -168,14 +133,12 @@ public class DiagramTranscoder {
             BugCatcherManager.getBugCatcher().logError(exception);
         } catch (IOException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException exception) {
-                    BugCatcherManager.getBugCatcher().logError(exception);
-                }
-            }
         }
+    }
+
+    private void saveAsPng() {
+//        savePanel.getGraphPanel().doc;
+        // strip out the entity data
+        // save the dom in pretty format
     }
 }
