@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.export;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
@@ -61,7 +62,31 @@ public class PedigreePackageExport {
         ArrayList<UniqueIdentifier> allIdArray = new ArrayList<UniqueIdentifier>();
         allIdArray.add(orphanId); // in the pedigree package a non existet entity has the id of 0 so we must keep that free
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("id\tmomid\tdadid\tsex\taffected\n"); // todo: add remaining elements: \tstatus\trelations\n");
+
+        int labelMaxCount = 0;
+        ArrayList<String> symbolHeaders = new ArrayList<String>();
+        for (EntityData entityData : entityDataArray) {
+            for (String symbolName : entityData.getSymbolNames()) {
+                if (!symbolHeaders.contains(symbolName)) {
+                    symbolHeaders.add(symbolName);
+                }
+            }
+            int labelCount = entityData.getLabel().length;
+            if (labelMaxCount < labelCount) {
+                labelMaxCount = labelCount;
+            }
+        }
+        stringBuilder.append("id\tmomid\tdadid\tsex\tego\tdob\tdod");
+        for (int labelCounter = 0; labelCounter < labelMaxCount; labelCounter++) {
+            stringBuilder.append("\tlabel_");
+            stringBuilder.append(labelCounter);
+        }
+        for (String symbolString : symbolHeaders) {
+            stringBuilder.append("\tsymbol_");
+            stringBuilder.append(symbolString);
+        }
+        stringBuilder.append("\tUniqueIdentifier");
+        stringBuilder.append("\n"); // todo: add remaining elements: \tstatus\trelations\n");
         for (EntityData entityData : entityDataArray) {
             // prime the IDs so that the sequence matches the line sequence
             getSimpleId(allIdArray, entityData.getUniqueIdentifier());
@@ -84,13 +109,33 @@ public class PedigreePackageExport {
             // todo: this could use an xquery on the xml data of the entity or the imdi etc.
             // more info: http://hosho.ees.hokudai.ac.jp/~kubo/Rdoc/library/kinship/html/pedigree.html
             if (entityData.isEgo) {
-                stringBuilder.append("2");
-            } else {
                 stringBuilder.append("1");
+            } else {
+                stringBuilder.append("0");
             }
-//            stringBuilder.append("\t");
-            // status 	Status (0="censored", 1="dead")
-//            stringBuilder.append("\t");
+            stringBuilder.append("\t");
+            stringBuilder.append(entityData.getDateOfBirth().getDateString());
+            stringBuilder.append("\t");
+            stringBuilder.append(entityData.getDateOfDeath().getDateString());
+            stringBuilder.append("\t");
+            String[] currentLabels = entityData.getLabel();
+//            String[] labelArray = new String[labelCounter];
+            for (int labelCounter = 0; labelCounter < labelMaxCount; labelCounter++) {
+                if (labelCounter < currentLabels.length) {
+                    stringBuilder.append(currentLabels[labelCounter]);
+                }
+                stringBuilder.append("\t");
+            }
+            ArrayList<String> currentSymbols = new ArrayList<String>(Arrays.asList(entityData.getSymbolNames()));
+            for (String symbolString : symbolHeaders) {
+                if (currentSymbols.contains(symbolString)) {
+                    stringBuilder.append("1");
+                } else {
+                    stringBuilder.append("0");
+                }
+                stringBuilder.append("\t");
+            }
+            stringBuilder.append(entityData.getUniqueIdentifier().getAttributeIdentifier());
             // relations 	A matrix with 3 columns (id1, id2, code) specifying special relationship between pairs of individuals. Codes: 1=Monozygotic twin, 2=Dizygotic twin, 3=Twin of unknown zygosity, 4=Spouse and no children in pedigree
             stringBuilder.append("\n");
         }
