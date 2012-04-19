@@ -1,11 +1,10 @@
 package nl.mpi.kinnate.svg;
 
-import nl.mpi.kinnate.kindata.EntityData;
-import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import java.awt.BorderLayout;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Dimension2D;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -21,14 +20,16 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
-import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.IndexerParameters;
+import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphSorter;
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
+import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.MetadataPanel;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.util.SAXIOException;
@@ -41,9 +42,9 @@ import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- *  Document   : GraphPanel
- *  Created on : Aug 16, 2010, 5:31:33 PM
- *  Author     : Peter Withers
+ * Document : GraphPanel
+ * Created on : Aug 16, 2010, 5:31:33 PM
+ * Author : Peter Withers
  */
 public class GraphPanel extends JPanel implements SavePanel {
 
@@ -395,6 +396,14 @@ public class GraphPanel extends JPanel implements SavePanel {
         } else {
             return "";
         }
+    }
+
+    public Dimension2D getDiagramSize() {
+        return svgCanvas.getSVGDocumentSize();
+//    Element svgRoot = doc.getDocumentElement();
+//    String widthString = svgRoot.getAttribute("width");
+//    String heightString = svgRoot.getAttribute("height");
+//    return new Point(Integer.parseInt(widthString), Integer.parseInt(widthString));
     }
 
     public void resetZoom() {
