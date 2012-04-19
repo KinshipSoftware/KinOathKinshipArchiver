@@ -1,4 +1,4 @@
-package nl.mpi.kinnate.transcoder;
+package nl.mpi.kinnate.svg;
 
 import java.awt.Dimension;
 import java.awt.geom.Dimension2D;
