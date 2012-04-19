@@ -16,14 +16,46 @@ import org.apache.batik.transcoder.image.JPEGTranscoder;
 import org.apache.fop.svg.PDFTranscoder;
 
 /**
- *  Document   : DiagramTranscoder
- *  Created on : May 10, 2011, 9:03:47 PM
- *  Author     : Peter Withers
+ * Document : DiagramTranscoder
+ * Created on : May 10, 2011, 9:03:47 PM
+ * Author : Peter Withers
  */
 public class DiagramTranscoder {
 
-    public void saveAsJpg(SavePanel savePanel) {
-        // todo: offer user to select an export file name
+    enum OutputType {
+
+        JPEG, PDF
+    };
+    private OutputType outputType = OutputType.PDF;
+    private File outputFile;
+    private SavePanel savePanel;
+
+    public DiagramTranscoder(SavePanel savePanel, File outputFile) {
+        this.outputFile = outputFile;
+        this.savePanel = savePanel;
+        if (!outputFile.getName().toLowerCase().endsWith(".jpg")) {
+            outputType = OutputType.JPEG;
+        }
+        if (!outputFile.getName().toLowerCase().endsWith(".pdf")) {
+            outputType = OutputType.PDF;
+        }
+    }
+
+    public void exportDiagram() {
+        switch (outputType) {
+            case JPEG:
+                saveAsJpg();
+                break;
+            case PDF:
+                saveAsPdf();
+                break;
+        }
+    }
+
+    private void saveAsJpg() {
+        if (!outputFile.getName().toLowerCase().endsWith(".jpg")) {
+            outputFile = new File(outputFile.getParentFile(), outputFile.getName() + ".jpg");
+        }
         if (savePanel.hasSaveFileName()) {
             // todo: tell user to save as
         }
@@ -32,7 +64,7 @@ public class DiagramTranscoder {
         }
 
         File diagramSvg = savePanel.getFileName();
-        File diagramJpg = new File(diagramSvg.getParentFile(), diagramSvg.getName().replaceFirst("\\.[Ss][Vv][Gg]$", ".jpg"));
+//        File diagramJpg = new File(diagramSvg.getParentFile(), diagramSvg.getName().replaceFirst("\\.[Ss][Vv][Gg]$", ".jpg"));
         JPEGTranscoder transcoder = new JPEGTranscoder();
 
         transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(.8));
@@ -45,7 +77,7 @@ public class DiagramTranscoder {
             inputStream = new java.io.FileInputStream(diagramSvg);
             TranscoderInput transcoderInput = new TranscoderInput(inputStream);
             transcoderInput.setURI(diagramSvg.toURI().toASCIIString());
-            OutputStream outputStream = new java.io.FileOutputStream(diagramJpg);
+            OutputStream outputStream = new java.io.FileOutputStream(outputFile);
             outputStream = new java.io.BufferedOutputStream(outputStream);
             try {
                 TranscoderOutput transcoderOutput = new TranscoderOutput(outputStream);
@@ -69,8 +101,10 @@ public class DiagramTranscoder {
         }
     }
 
-    public void saveAsPdf(SavePanel savePanel) {
-        // todo: offer user to select an export file name
+    private void saveAsPdf() {
+        if (!outputFile.getName().toLowerCase().endsWith(".jpg")) {
+            outputFile = new File(outputFile.getParentFile(), outputFile.getName() + ".jpg");
+        }
         if (savePanel.hasSaveFileName()) {
             // todo: tell user to save as
         }
@@ -78,7 +112,7 @@ public class DiagramTranscoder {
             // todo: tell user to save
         }
         File diagramSvg = savePanel.getFileName();
-        File diagramPdf = new File(diagramSvg.getParentFile(), diagramSvg.getName().replaceFirst("\\.[Ss][Vv][Gg]$", ".pdf"));
+//        File diagramPdf = new File(diagramSvg.getParentFile(), diagramSvg.getName().replaceFirst("\\.[Ss][Vv][Gg]$", ".pdf"));
         Transcoder transcoder = new PDFTranscoder();
 
         //Configure the transcoder
@@ -99,7 +133,7 @@ public class DiagramTranscoder {
             inputStream = new java.io.FileInputStream(diagramSvg);
             TranscoderInput transcoderInput = new TranscoderInput(inputStream);
             transcoderInput.setURI(diagramSvg.toURI().toASCIIString());
-            OutputStream outputStream = new java.io.FileOutputStream(diagramPdf);
+            OutputStream outputStream = new java.io.FileOutputStream(outputFile);
             outputStream = new java.io.BufferedOutputStream(outputStream);
             try {
                 TranscoderOutput transcoderOutput = new TranscoderOutput(outputStream);
