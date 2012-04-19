@@ -1,5 +1,7 @@
 package nl.mpi.kinnate.transcoder;
 
+import java.awt.Dimension;
+import java.awt.geom.Dimension2D;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,26 +24,49 @@ import org.apache.fop.svg.PDFTranscoder;
  */
 public class DiagramTranscoder {
 
-    enum OutputType {
+    public enum OutputType {
 
         JPEG, PDF
     };
+    private int dpi = 300;
     private OutputType outputType = OutputType.PDF;
     private File outputFile;
     private SavePanel savePanel;
+    private Dimension2D diagramSize;
 
-    public DiagramTranscoder(SavePanel savePanel, File outputFile) {
-        this.outputFile = outputFile;
+    public DiagramTranscoder(SavePanel savePanel) {
         this.savePanel = savePanel;
-        if (!outputFile.getName().toLowerCase().endsWith(".jpg")) {
-            outputType = OutputType.JPEG;
-        }
-        if (!outputFile.getName().toLowerCase().endsWith(".pdf")) {
-            outputType = OutputType.PDF;
-        }
+        diagramSize = savePanel.getGraphPanel().getDiagramSize();
+//        if (!outputFile.getName().toLowerCase().endsWith(".jpg")) {
+//            outputType = OutputType.JPEG;
+//        }
+//        if (!outputFile.getName().toLowerCase().endsWith(".pdf")) {
+//            outputType = OutputType.PDF;
+//        }
     }
 
-    public void exportDiagram() {
+    public Dimension getCurrentSize() {
+        return new Dimension((int) (diagramSize.getWidth() / 25.4 * dpi), (int) (diagramSize.getHeight() / 25.4 * dpi));
+    }
+
+    public int getDpi() {
+        return dpi;
+    }
+
+    public void setDpi(int dpi) {
+        this.dpi = dpi;
+    }
+
+    public OutputType getOutputType() {
+        return outputType;
+    }
+
+    public void setOutputType(OutputType outputType) {
+        this.outputType = outputType;
+    }
+
+    public void exportDiagram(File outputFile) {
+        this.outputFile = outputFile;
         switch (outputType) {
             case JPEG:
                 saveAsJpg();
@@ -68,7 +93,6 @@ public class DiagramTranscoder {
         JPEGTranscoder transcoder = new JPEGTranscoder();
 
         transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(.8));
-        final int dpi = 300;
         transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / dpi)));
         transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
         transcoder.addTranscodingHint(PDFTranscoder.KEY_STROKE_TEXT, Boolean.FALSE);
@@ -124,7 +148,6 @@ public class DiagramTranscoder {
 //            throw new TranscoderException(e);
 //        }
 
-        final int dpi = 300;
         transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / dpi)));
         transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
         transcoder.addTranscodingHint(PDFTranscoder.KEY_STROKE_TEXT, Boolean.FALSE);
