@@ -14,6 +14,7 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.XMLAbstractTranscoder;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.transcoder.image.JPEGTranscoder;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.fop.svg.PDFTranscoder;
 
 /**
@@ -45,7 +46,11 @@ public class DiagramTranscoder {
     }
 
     public Dimension getCurrentSize() {
-        return new Dimension((int) (diagramSize.getWidth() / 25.4 * dpi), (int) (diagramSize.getHeight() / 25.4 * dpi));
+        if (diagramSize != null) {
+            return new Dimension((int) (diagramSize.getWidth() / 25.4 * dpi), (int) (diagramSize.getHeight() / 25.4 * dpi));
+        } else {
+            return null;
+        }
     }
 
     public int getDpi() {
@@ -66,20 +71,26 @@ public class DiagramTranscoder {
 
     public void exportDiagram(File outputFile) {
         this.outputFile = outputFile;
+        Transcoder transcoder;
         switch (outputType) {
             case JPEG:
                 fixSuffix(".jpg");
-                saveAsJpg();
-                break;
-            case PDF:
-                fixSuffix(".pdf");
-                saveAsPdf();
+                transcoder = new JPEGTranscoder();
+                transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(.8));
                 break;
             case PNG:
                 fixSuffix(".png");
-                saveAsPng();
+                transcoder = new PNGTranscoder();
+                break;
+            default:
+                fixSuffix(".pdf");
+                transcoder = new PDFTranscoder();
+                transcoder.addTranscodingHint(PDFTranscoder.KEY_STROKE_TEXT, Boolean.FALSE);
                 break;
         }
+        transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
+        transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / dpi)));
+        transcodeDom(transcoder);
     }
 
     private void fixSuffix(String requiredSuffix) {
@@ -90,12 +101,7 @@ public class DiagramTranscoder {
         }
     }
 
-    private void saveAsJpg() {
-        JPEGTranscoder transcoder = new JPEGTranscoder();
-        transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(.8));
-        transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / dpi)));
-        transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
-        transcoder.addTranscodingHint(PDFTranscoder.KEY_STROKE_TEXT, Boolean.FALSE);
+    private void transcodeDom(Transcoder transcoder) {
         try {
             TranscoderInput transcoderInput = new TranscoderInput(savePanel.getGraphPanel().doc);
             OutputStream outputStream = new java.io.FileOutputStream(outputFile);
@@ -112,33 +118,5 @@ public class DiagramTranscoder {
         } catch (IOException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
         }
-    }
-
-    private void saveAsPdf() {
-        Transcoder transcoder = new PDFTranscoder();
-        transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / dpi)));
-        transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
-        transcoder.addTranscodingHint(PDFTranscoder.KEY_STROKE_TEXT, Boolean.FALSE);
-        try {
-            TranscoderInput transcoderInput = new TranscoderInput(savePanel.getGraphPanel().doc);
-            OutputStream outputStream = new java.io.FileOutputStream(outputFile);
-            outputStream = new java.io.BufferedOutputStream(outputStream);
-            try {
-                TranscoderOutput transcoderOutput = new TranscoderOutput(outputStream);
-                transcoder.transcode(transcoderInput, transcoderOutput);
-            } finally {
-                outputStream.close();
-            }
-        } catch (TranscoderException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-        } catch (IOException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-        }
-    }
-
-    private void saveAsPng() {
-//        savePanel.getGraphPanel().doc;
-        // strip out the entity data
-        // save the dom in pretty format
     }
 }
