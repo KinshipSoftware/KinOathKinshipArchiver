@@ -7,7 +7,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.export.ExportToR;
-import nl.mpi.kinnate.transcoder.DiagramTranscoder;
+import nl.mpi.kinnate.svg.DiagramTranscoder;
 import nl.mpi.kinnate.ui.DiagramTranscoderPanel;
 import nl.mpi.kinnate.ui.ImportSamplesFileMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
