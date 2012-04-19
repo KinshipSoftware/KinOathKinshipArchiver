@@ -12,9 +12,9 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.XMLAbstractTranscoder;
-import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.transcoder.image.JPEGTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.apache.batik.transcoder.image.TIFFTranscoder;
 import org.apache.fop.svg.PDFTranscoder;
 
 /**
@@ -26,7 +26,7 @@ public class DiagramTranscoder {
 
     public enum OutputType {
 
-        JPEG, PDF, PNG
+        PDF, JPEG, PNG, TIFF
     };
 //    private int dpi = 300;
     private OutputType outputType = OutputType.PDF;
@@ -82,6 +82,10 @@ public class DiagramTranscoder {
             case PNG:
                 fixSuffix(".png");
                 transcoder = new PNGTranscoder();
+                break;
+            case TIFF:
+                fixSuffix(".tif");
+                transcoder = new TIFFTranscoder();
                 break;
             default:
                 fixSuffix(".pdf");
