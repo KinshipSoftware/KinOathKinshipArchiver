@@ -8,10 +8,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import nl.mpi.kinnate.svg.DiagramTranscoder;
 import nl.mpi.kinnate.svg.DiagramTranscoder.OutputType;
 
@@ -23,7 +19,7 @@ import nl.mpi.kinnate.svg.DiagramTranscoder.OutputType;
 public class DiagramTranscoderPanel extends JPanel {
 
     DiagramTranscoder diagramTranscoder;
-    JSpinner dpiSpinner;
+//    JSpinner dpiSpinner;
     JComboBox formatComboBox;
     JLabel ouputSizeLabel;
 
@@ -39,20 +35,20 @@ public class DiagramTranscoderPanel extends JPanel {
         }
         formatComboBox.setSelectedItem(this.diagramTranscoder.getOutputType().name());
         outerPanel.add(formatComboBox);
-        dpiSpinner = new JSpinner(new SpinnerNumberModel(this.diagramTranscoder.getDpi(), 10, 600, 10));
-        JPanel dpiPanel = new JPanel();
-        dpiPanel.add(dpiSpinner);
-        dpiPanel.add(new JLabel("DPI"));
-        outerPanel.add(dpiPanel);
+//        dpiSpinner = new JSpinner(new SpinnerNumberModel(this.diagramTranscoder.getDpi(), 10, 600, 10));
+//        JPanel dpiPanel = new JPanel();
+//        dpiPanel.add(dpiSpinner);
+//        dpiPanel.add(new JLabel("DPI"));
+//        outerPanel.add(dpiPanel);
         ouputSizeLabel = new JLabel(getSizeString(), JLabel.CENTER);
         outerPanel.add(ouputSizeLabel);
-        final ChangeListener changeListener = new ChangeListener() {
-
-            public void stateChanged(ChangeEvent e) {
-                updateSettings();
-            }
-        };
-        dpiSpinner.addChangeListener(changeListener);
+//        final ChangeListener changeListener = new ChangeListener() {
+//
+//            public void stateChanged(ChangeEvent e) {
+//                updateSettings();
+//            }
+//        };
+//        dpiSpinner.addChangeListener(changeListener);
         formatComboBox.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -62,7 +58,7 @@ public class DiagramTranscoderPanel extends JPanel {
     }
 
     protected void updateSettings() {
-        diagramTranscoder.setDpi(Integer.parseInt(dpiSpinner.getValue().toString()));
+//        diagramTranscoder.setDpi(Integer.parseInt(dpiSpinner.getValue().toString()));
         diagramTranscoder.setOutputType(OutputType.valueOf(formatComboBox.getSelectedItem().toString()));
         ouputSizeLabel.setText(getSizeString());
     }
