@@ -28,7 +28,7 @@ public class DiagramTranscoder {
 
         JPEG, PDF, PNG
     };
-    private int dpi = 300;
+//    private int dpi = 300;
     private OutputType outputType = OutputType.PDF;
     private File outputFile;
     private SavePanel savePanel;
@@ -47,19 +47,20 @@ public class DiagramTranscoder {
 
     public Dimension getCurrentSize() {
         if (diagramSize != null) {
-            return new Dimension((int) (diagramSize.getWidth() / 25.4 * dpi), (int) (diagramSize.getHeight() / 25.4 * dpi));
+//            return new Dimension((int) (diagramSize.getWidth() / 25.4 * dpi), (int) (diagramSize.getHeight() / 25.4 * dpi));
+            return new Dimension((int) (diagramSize.getWidth()), (int) (diagramSize.getHeight()));
         } else {
             return null;
         }
     }
 
-    public int getDpi() {
-        return dpi;
-    }
+//    public int getDpi() {
+//        return dpi;
+//    }
 
-    public void setDpi(int dpi) {
-        this.dpi = dpi;
-    }
+//    public void setDpi(int dpi) {
+//        this.dpi = dpi;
+//    }
 
     public OutputType getOutputType() {
         return outputType;
@@ -89,7 +90,7 @@ public class DiagramTranscoder {
                 break;
         }
         transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
-        transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / dpi)));
+//        transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / dpi)));
         transcodeDom(transcoder);
     }
 
