@@ -442,7 +442,7 @@ public class KinTermPanel extends JPanel {
 
     public void exportKinTerms() {
         // todo: move this to a import/export class #1743 
-        File[] exportFile = KinTermPanel.this.dialogHandler.showFileSelectBox("Export Kin Terms", false, false, null, MessageDialogHandler.DialogueType.save);
+        File[] exportFile = KinTermPanel.this.dialogHandler.showFileSelectBox("Export Kin Terms", false, false, null, MessageDialogHandler.DialogueType.save, null);
         if (exportFile != null) {
             if (exportFile.length != 1) {
                 KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Export file not selected", "Export Kin Terms");
@@ -507,7 +507,7 @@ public class KinTermPanel extends JPanel {
                 }
             });
         }
-        File[] importFiles = KinTermPanel.this.dialogHandler.showFileSelectBox("Import Kin Terms", false, true, fileFilterMap, MessageDialogHandler.DialogueType.open);
+        File[] importFiles = KinTermPanel.this.dialogHandler.showFileSelectBox("Import Kin Terms", false, true, fileFilterMap, MessageDialogHandler.DialogueType.open, null);
         if (importFiles != null) {
             if (importFiles.length == 0) {
                 KinTermPanel.this.dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kin Terms");
