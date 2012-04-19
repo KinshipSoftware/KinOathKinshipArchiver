@@ -4,12 +4,11 @@ import java.io.File;
 import java.util.HashMap;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
-import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.export.ExportToR;
 import nl.mpi.kinnate.transcoder.DiagramTranscoder;
+import nl.mpi.kinnate.ui.DiagramTranscoderPanel;
 import nl.mpi.kinnate.ui.ImportSamplesFileMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
@@ -194,7 +193,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(saveDiagramAs);
 
-        savePdfMenuItem.setText("Export as PDF");
+        savePdfMenuItem.setText("Export as PDF/JPEG");
         savePdfMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -268,7 +267,7 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, true, getSvgFileFilter(), MessageDialogHandler.DialogueType.open);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, true, getSvgFileFilter(), MessageDialogHandler.DialogueType.open, null);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 diagramWindowManager.openDiagram(selectedFile.getName(), selectedFile.toURI(), true);
@@ -283,7 +282,7 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void saveDiagramAsActionPerformed(java.awt.event.ActionEvent evt) {
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Save Diagram As", false, false, getSvgFileFilter(), MessageDialogHandler.DialogueType.save);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Save Diagram As", false, false, getSvgFileFilter(), MessageDialogHandler.DialogueType.save, null);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 if (!selectedFile.getName().toLowerCase().endsWith(".svg")) {
@@ -379,7 +378,7 @@ public class FileMenu extends javax.swing.JMenu {
                 return "GEDCOM or CSV Kinship Data";
             }
         });
-        File[] importFiles = dialogHandler.showFileSelectBox("Import Kinship Data", false, true, fileFilterMap, MessageDialogHandler.DialogueType.open);
+        File[] importFiles = dialogHandler.showFileSelectBox("Import Kinship Data", false, true, fileFilterMap, MessageDialogHandler.DialogueType.open, null);
         if (importFiles != null) {
             if (importFiles.length == 0) {
                 dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kinship Data");
@@ -423,11 +422,15 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void savePdfMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-        // todo: implement pdf export
-        // todo: add a file select here...
-        new DiagramTranscoder().saveAsPdf(diagramWindowManager.getCurrentSavePanel());
-        new DiagramTranscoder().saveAsJpg(diagramWindowManager.getCurrentSavePanel());
+
+        final DiagramTranscoder diagramTranscoder = new DiagramTranscoder(diagramWindowManager.getCurrentSavePanel());
+        DiagramTranscoderPanel diagramTranscoderPanel = new DiagramTranscoderPanel(diagramTranscoder);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export as PDF/JPEG", false, false, null, MessageDialogHandler.DialogueType.save, diagramTranscoderPanel);
+        if (selectedFilesArray != null) {
+            for (File selectedFile : selectedFilesArray) {
+                diagramTranscoder.exportDiagram(selectedFile);
+            }
+        }
     }
 
     private void exportToRActionPerformed(java.awt.event.ActionEvent evt) {
@@ -449,7 +452,7 @@ public class FileMenu extends javax.swing.JMenu {
                 }
             });
         }
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export Tab-separated Values", false, false, fileFilterMap, MessageDialogHandler.DialogueType.save);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export Tab-separated Values", false, false, fileFilterMap, MessageDialogHandler.DialogueType.save, null);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 if (!selectedFile.getName().toLowerCase().endsWith(".tab")) {
