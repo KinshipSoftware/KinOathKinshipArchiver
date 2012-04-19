@@ -193,7 +193,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(saveDiagramAs);
 
-        savePdfMenuItem.setText("Export as PDF/JPEG");
+        savePdfMenuItem.setText("Export Visible as PDF/JPEG/PNG");
         savePdfMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -425,7 +425,7 @@ public class FileMenu extends javax.swing.JMenu {
 
         final DiagramTranscoder diagramTranscoder = new DiagramTranscoder(diagramWindowManager.getCurrentSavePanel());
         DiagramTranscoderPanel diagramTranscoderPanel = new DiagramTranscoderPanel(diagramTranscoder);
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export as PDF/JPEG", false, false, null, MessageDialogHandler.DialogueType.save, diagramTranscoderPanel);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export as PDF/JPEG/PNG", false, false, null, MessageDialogHandler.DialogueType.save, diagramTranscoderPanel);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 diagramTranscoder.exportDiagram(selectedFile);
