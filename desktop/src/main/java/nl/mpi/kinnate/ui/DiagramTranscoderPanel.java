@@ -66,7 +66,7 @@ public class DiagramTranscoderPanel extends JPanel {
     private String getSizeString() {
         final Dimension2D currentSize = diagramTranscoder.getCurrentSize();
         if (currentSize != null) {
-            return (int) currentSize.getWidth() + " x " + (int) currentSize.getHeight();
+            return (int) currentSize.getWidth() + " x " + (int) currentSize.getHeight() + " ";
         } else {
             return ""; // size not available
         }
