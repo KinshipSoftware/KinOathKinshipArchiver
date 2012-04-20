@@ -33,6 +33,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
 import nl.mpi.kinnate.kindocument.ProfileManager;
+import nl.mpi.kinnate.kintypestrings.ImportRequiredException;
 import nl.mpi.kinnate.kintypestrings.KinTermCalculator;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
@@ -387,6 +388,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         } catch (ProcessAbortException exception) {
                             // if the process has been aborted then it should be safe to let the next thread loop take over from here
                             System.out.println("draw graph process has been aborted, it should be safe to let the next thread loop take over from here");
+                        } catch (ImportRequiredException exception) {
+                            if (exception.getImportURI() != null) {
+                                dialogHandler.addMessageDialogToQueue(exception.getMessageString() + "\nDo you want to import this data now?\n" + exception.getImportURI().toASCIIString(), "Draw Graph");
+                            } else {
+                                dialogHandler.addMessageDialogToQueue(exception.getMessageString(), "Draw Graph");
+                            }
                         }
                     }
                     progressBar.setVisible(false);
