@@ -16,4 +16,12 @@ public class ImportRequiredException extends Exception {
         this.messageString = messageString;
         this.importURI = importURI;
     }
+
+    public URI getImportURI() {
+        return importURI;
+    }
+
+    public String getMessageString() {
+        return messageString;
+    }
 }
