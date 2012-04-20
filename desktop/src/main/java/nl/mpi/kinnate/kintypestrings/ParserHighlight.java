@@ -9,7 +9,7 @@ public class ParserHighlight {
 
     public enum ParserHighlightType {
 
-        KinType, Comment, Error, Query, Parameter, Unknown
+        KinType, Comment, Error, Query, Parameter, Message, Unknown
     }
     public ParserHighlight nextHighlight = null;
     public ParserHighlightType highlight;

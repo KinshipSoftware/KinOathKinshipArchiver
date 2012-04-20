@@ -31,18 +31,6 @@ public class KinTypeStringConverter extends GraphSorter {
         Contains, Greater, Less, Equals
     }
 
-    public class QueryTerm {
-
-        public QueryTerm(String fieldXPath, QueryType comparatorType, String searchValue) {
-            this.fieldXPath = fieldXPath;
-            this.comparatorType = comparatorType;
-            this.searchValue = searchValue;
-        }
-        public String fieldXPath;
-        public QueryType comparatorType;
-        public String searchValue;
-    }
-
     public class KinTypeElement {
 
         public KinTypeElement() {
@@ -116,19 +104,37 @@ public class KinTypeStringConverter extends GraphSorter {
 //    }
     public ArrayList<KinTypeElement> getKinTypeElements(String consumableString, ParserHighlight parserHighlight) {
         int initialLength = consumableString.length();
-        if (consumableString.startsWith("[")) {
-            // todo: this is added so that a query can start with a [ since the initial kin type is redundant, however the addition of x= causes syntax highlighing issues partly because the ParserHighlight always creates an empty highlight ahead of the current one, but also it would be better to not be modifying this string
-            consumableString = "x=" + consumableString;
-        }
+//        if (consumableString.startsWith("[")) {
+//            // todo: this is added so that a query can start with a [ since the initial kin type is redundant, however the addition of x= causes syntax highlighing issues partly because the ParserHighlight always creates an empty highlight ahead of the current one, but also it would be better to not be modifying this string
+//            consumableString = "x" + consumableString;
+//        }
         ArrayList<KinTypeElement> kinTypeElementList = new ArrayList<KinTypeElement>();
         KinTypeElement previousElement = null;
         boolean foundKinType = true;
         String errorMessage = null;
+
+        if (consumableString.startsWith("@")) {
+            parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Message, initialLength - consumableString.length(), "A message will be shown if the required condition is met");
+//if (consumableString.startsWith("@ShowMessageIfNotFound")){
+
+//        consumableString
+//                    throw new ImportRequiredException();
+            return kinTypeElementList;
+        }
+
         while (foundKinType && consumableString.length() > 0) {
             for (KinType currentReferenceKinType : dataStoreSvg.getKinTypeDefinitions()) {
                 foundKinType = false;
+                boolean foundStart = false;
                 if (consumableString.startsWith(currentReferenceKinType.codeString)) {
+                    // todo: this change is not correct and the outer for loop should be run separately and only if [ is not found etc.
+                    // todo: this should also be moved into a parser package
+                    foundStart = true;
                     parserHighlight = parserHighlight.addHighlight(ParserHighlightType.KinType, initialLength - consumableString.length(), currentReferenceKinType.displayString);
+                } else if (consumableString.startsWith("[")) {
+                    foundStart = true;
+                }
+                if (foundStart) {
                     KinTypeElement currentElement = new KinTypeElement();
                     if (previousElement != null) {
                         previousElement.nextType = currentElement;
@@ -138,69 +144,14 @@ public class KinTypeStringConverter extends GraphSorter {
                     currentElement.kinType = currentReferenceKinType;
                     consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
 
-                    if (consumableString.startsWith("[")) {
-                        // todo: Ticket #1087 Multiple query terms should be possible in the kin type string queries. Eg: Ef=[Kundarr]PM=[Louise] (Based on Joe's data).
-                        int highlightPosition = initialLength - consumableString.length();
-                        String highlightMessage = "Query: ";
-//                        consumableString = consumableString.substring("=".length());
-                        while (consumableString.startsWith("[")) {
-                            // todo: allow multiple terms such as "=[foo][bar]" or "=[foo][bar][NAME=Bob]"
-                            int queryStart = "[".length();
-                            int queryEnd = consumableString.indexOf("]");
-                            if (queryEnd == -1) {
-                                // if the terms are incomplete then ignore the rest of the line
-                                highlightMessage += "No closing bracket ']' found";
-                                errorMessage = highlightMessage;
-                                foundKinType = false;
-                                break;
-                            }
-                            if (queryEnd - queryStart < 3) {
-                                // the query string must be more than 2 chars
-                                highlightMessage += "Query must be over 2 chars long";
-                                errorMessage = highlightMessage;
-                                foundKinType = false;
-                                break;
-                            }
-                            if (currentElement.queryTerms == null) {
-                                currentElement.queryTerms = new ArrayList<QueryTerm>();
-                            }
-                            String queryText = consumableString.substring(queryStart, queryEnd);
-                            consumableString = consumableString.substring(queryEnd + 1);
-                            String[] queryTerm;
-                            QueryType currentQueryType = null;
-                            queryTerm = queryText.split("=="); // detect which comparitor is used
-                            if (queryTerm.length > 1) {
-                                currentQueryType = QueryType.Equals;
-                            } else {
-                                queryTerm = queryText.split("=");
-                                if (queryTerm.length > 1) {
-                                    currentQueryType = QueryType.Contains;
-                                } else {
-                                    queryTerm = queryText.split("\\>");
-                                    if (queryTerm.length > 1) {
-                                        currentQueryType = QueryType.Greater;
-                                    } else {
-                                        queryTerm = queryText.split("\\<");
-                                        if (queryTerm.length > 1) {
-                                            currentQueryType = QueryType.Less;
-                                        }
-                                    }
-                                }
-                            }
 
-                            if (currentQueryType == null) {
-                                currentElement.queryTerms.add(new QueryTerm("*", QueryType.Contains, queryText));
-                                highlightMessage += "Any field containing '" + queryText + "'";
-                            } else {
-                                if (queryTerm[0].length() > 0 && queryTerm[1].length() > 0) {
-                                    // namespace wild cards *:* are inserted here so that the user does not need to specify the namespace
-                                    currentElement.queryTerms.add(new QueryTerm("*:" + queryTerm[0].replaceAll("\\.", "/*:"), currentQueryType, queryTerm[1]));
-                                    highlightMessage += "Only the field '" + queryTerm[0] + "' containing '" + queryTerm[1] + "'";
-                                }
-                            }
-                        }
-                        parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, highlightPosition, highlightMessage);
-                    }
+                    QuerySectionParser querySectionParser = new QuerySectionParser(consumableString, parserHighlight, foundKinType, errorMessage);
+                    querySectionParser.parseQuerySection(currentElement, initialLength);
+                    consumableString = querySectionParser.consumableString;
+                    parserHighlight = querySectionParser.parserHighlight;
+                    foundKinType = querySectionParser.foundKinType;
+                    errorMessage = querySectionParser.errorMessage;
+
                     kinTypeElementList.add(currentElement);
                     foundKinType = true;
                     break;
