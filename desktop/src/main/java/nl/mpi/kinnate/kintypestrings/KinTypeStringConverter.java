@@ -31,19 +31,6 @@ public class KinTypeStringConverter extends GraphSorter {
         Contains, Greater, Less, Equals
     }
 
-    public class KinTypeElement {
-
-        public KinTypeElement() {
-            entityData = new ArrayList<EntityData>();
-        }
-        public KinTypeElement prevType;
-        public KinTypeElement nextType;
-        public KinType kinType;
-        public ArrayList<QueryTerm> queryTerms;
-        public ArrayList<EntityData> entityData; // there may be multiple entities for each kin term
-        ParserHighlight[] highlightLocs;
-    }
-
     public void setEgoKinTypeString(EntityData entityData) {
         for (KinType kinType : dataStoreSvg.getKinTypeDefinitions()) {
             if (kinType.isEgoType() && kinType.matchesEgonessAndSymbol(entityData, null)) { // todo: should this be passing a kin type modifier?
@@ -104,23 +91,14 @@ public class KinTypeStringConverter extends GraphSorter {
 //    }
     public ArrayList<KinTypeElement> getKinTypeElements(String consumableString, ParserHighlight parserHighlight) {
         int initialLength = consumableString.length();
-//        if (consumableString.startsWith("[")) {
-//            // todo: this is added so that a query can start with a [ since the initial kin type is redundant, however the addition of x= causes syntax highlighing issues partly because the ParserHighlight always creates an empty highlight ahead of the current one, but also it would be better to not be modifying this string
-//            consumableString = "x" + consumableString;
-//        }
+        //if (consumableString.startsWith("[")) {
+        // todo: this is added so that a query can start with a [ since the initial kin type is redundant, however the addition of x= causes syntax highlighing issues partly because the ParserHighlight always creates an empty highlight ahead of the current one, but also it would be better to not be modifying this string
+        //  consumableString = "x" + consumableString;
+        //}
         ArrayList<KinTypeElement> kinTypeElementList = new ArrayList<KinTypeElement>();
         KinTypeElement previousElement = null;
         boolean foundKinType = true;
         String errorMessage = null;
-
-        if (consumableString.startsWith("@")) {
-            parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Message, initialLength - consumableString.length(), "A message will be shown if the required condition is met");
-//if (consumableString.startsWith("@ShowMessageIfNotFound")){
-
-//        consumableString
-//                    throw new ImportRequiredException();
-            return kinTypeElementList;
-        }
 
         while (foundKinType && consumableString.length() > 0) {
             for (KinType currentReferenceKinType : dataStoreSvg.getKinTypeDefinitions()) {
@@ -145,6 +123,7 @@ public class KinTypeStringConverter extends GraphSorter {
                     consumableString = consumableString.substring(currentReferenceKinType.codeString.length());
 
 
+                    foundKinType = true;
                     QuerySectionParser querySectionParser = new QuerySectionParser(consumableString, parserHighlight, foundKinType, errorMessage);
                     querySectionParser.parseQuerySection(currentElement, initialLength);
                     consumableString = querySectionParser.consumableString;
@@ -153,7 +132,6 @@ public class KinTypeStringConverter extends GraphSorter {
                     errorMessage = querySectionParser.errorMessage;
 
                     kinTypeElementList.add(currentElement);
-                    foundKinType = true;
                     break;
                 }
             }
