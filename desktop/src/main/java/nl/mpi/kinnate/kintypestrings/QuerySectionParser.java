@@ -21,7 +21,7 @@ public class QuerySectionParser {
         this.errorMessage = errorMessage;
     }
 
-    protected String parseQuerySection(KinTypeStringConverter.KinTypeElement currentElement, int initialLength) {
+    protected String parseQuerySection(KinTypeElement currentElement, int initialLength) {
         if (consumableString.startsWith("[")) {
             // todo: Ticket #1087 Multiple query terms should be possible in the kin type string queries. Eg: Ef=[Kundarr]PM=[Louise] (Based on Joe's data).
             int highlightPosition = initialLength - consumableString.length();
