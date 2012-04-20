@@ -6,7 +6,9 @@ import java.util.Iterator;
 import javax.swing.JProgressBar;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kintypestrings.KinTypeElement;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
+import nl.mpi.kinnate.kintypestrings.MessageStringParser;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.ui.KinTypeStringProvider;
@@ -190,97 +192,109 @@ public class QueryParser implements EntityService {
             final String[] kinTypeStrings = kinTypeStringProvider.getCurrentStrings();
             ParserHighlight[] parserHighlightArray = new ParserHighlight[kinTypeStrings.length];
             for (String inputString : kinTypeStrings) {
-                // todo: add #n to provide an identifier for an entity for later reference in the kin type strings
                 lineCounter++;
                 parserHighlightArray[lineCounter] = new ParserHighlight();
-                // convert the line into  kin types with queries if provided
-                ArrayList<KinTypeStringConverter.KinTypeElement> kinTypeElementArray = kinTypeStringConverter.getKinTypeElements(inputString, parserHighlightArray[lineCounter]);
-                for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeElementArray) {
-                    // handle all queries getting all matching entities
-                    if (kinTypeElement.queryTerms != null) {
-                        for (UniqueIdentifier currentFoundId : entityCollection.getEntityIdByTerm(kinTypeElement)) {
-                            if (abortProcess) {
-                                throw new ProcessAbortException();
-                            }
-                            EntityData queryNode;
+
+                MessageStringParser messageStringParser = new MessageStringParser();
+                messageStringParser.checkForMessages(inputString, parserHighlightArray[lineCounter]);
+                if (messageStringParser.foundQueryCondition()) {
+                    if (!messageStringParser.foundSyntaxError()) {
+                        UniqueIdentifier[] foundIds = entityCollection.getEntityIdByTerm(messageStringParser.getQueryElement());
+                        System.out.println("foundIds:" + foundIds.length);
+                        System.out.println("message:" + messageStringParser.getMessageString());
+                        System.out.println("uri:" + messageStringParser.getImportURI());
+
+                        //                      throw new ImportRequiredException();                        
+                    }
+                } else {
+                    // convert the line into  kin types with queries if provided
+                    ArrayList<KinTypeElement> kinTypeElementArray = kinTypeStringConverter.getKinTypeElements(inputString, parserHighlightArray[lineCounter]);
+                    for (KinTypeElement kinTypeElement : kinTypeElementArray) {
+                        // handle all queries getting all matching entities
+                        if (kinTypeElement.queryTerms != null) {
+                            for (UniqueIdentifier currentFoundId : entityCollection.getEntityIdByTerm(kinTypeElement)) {
+                                if (abortProcess) {
+                                    throw new ProcessAbortException();
+                                }
+                                EntityData queryNode;
 //                        currentFoundId = currentFoundId.trim();
 //                        if (currentFoundId.length() > 0 /* make sure that non results do not get mistaken for an identifier */) {
-                            if (loadedGraphNodes.containsKey(currentFoundId)) {
-                                queryNode = loadedGraphNodes.get(currentFoundId);
-                            } else {
-                                queryNode = entityCollection.getEntity(currentFoundId, indexParameters);
-                                loadedGraphNodes.put(queryNode.getUniqueIdentifier(), queryNode);
-                            }
-                            queryNode.isVisible = true;
-                            kinTypeElement.entityData.add(queryNode);
+                                if (loadedGraphNodes.containsKey(currentFoundId)) {
+                                    queryNode = loadedGraphNodes.get(currentFoundId);
+                                } else {
+                                    queryNode = entityCollection.getEntity(currentFoundId, indexParameters);
+                                    loadedGraphNodes.put(queryNode.getUniqueIdentifier(), queryNode);
+                                }
+                                queryNode.isVisible = true;
+                                kinTypeElement.entityData.add(queryNode);
 //                        queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
-                            if (kinTypeElement.kinType.isEgoType()) {
-                                queryNode.isEgo = true; // there might be multiple types for a single entitiy
-                                new KinTypeStringConverter(dataStoreSvg).setEgoKinTypeString(queryNode);
-                            }
-                        }
-                    }
-                }
-                if (kinTypeElementArray.size() > 0 && kinTypeElementArray.get(0).queryTerms == null) {
-                    // get any user specified ego nodes and add them as the first kin type if specified
-                    KinTypeStringConverter.KinTypeElement firstKinType = kinTypeElementArray.get(0);
-                    if (firstKinType.kinType.isEgoType()) {
-                        // the following could be removed if the ego nodes are replaces with the equavelent kin type string eg "E=Identifier" and E at the begining of the line was mandatory (neither are likely to be the case)
-                        for (UniqueIdentifier currentEgoId : dataStoreSvg.egoEntities) {
-                            if (abortProcess) {
-                                throw new ProcessAbortException();
-                            }
-                            // load all entities specified as ego nodes
-                            // if a query was not found on the first kintype then add all gernder matching egos to the first kin type
-                            EntityData egoNode;
-                            if (loadedGraphNodes.containsKey(currentEgoId)) {
-                                egoNode = loadedGraphNodes.get(currentEgoId);
-                            } else {
-                                egoNode = entityCollection.getEntity(currentEgoId, indexParameters);
-                                loadedGraphNodes.put(egoNode.getUniqueIdentifier(), egoNode);
-                            }
-                            egoNode.isEgo = true;
-                            egoNode.isVisible = true;
-                            if (firstKinType.kinType.matchesEgonessAndSymbol(egoNode, null)) {
-                                firstKinType.entityData.add(egoNode);
-                            }
-                        }
-                    } else {
-                        // todo: if no ego type has been specified then prepend all egos and match thie first kin type to the ego relations
-                    }
-                }
-                for (KinTypeStringConverter.KinTypeElement kinTypeElement : kinTypeElementArray) {
-                    if (abortProcess) {
-                        throw new ProcessAbortException();
-                    }
-                    // get all entities before and after each entity that has already found
-                    for (EntityData kinTypeEntityData : kinTypeElement.entityData) {
-                        for (EntityRelation entityRelationToLoad : kinTypeEntityData.getRelatedNodesToBeLoaded()) {
-                            if (abortProcess) {
-                                throw new ProcessAbortException();
-                            }
-                            // make sure all relation data is loaded and set in the relations of this entity
-                            EntityData relatedNode;
-                            if (loadedGraphNodes.containsKey(entityRelationToLoad.alterUniqueIdentifier)) {
-                                relatedNode = loadedGraphNodes.get(entityRelationToLoad.alterUniqueIdentifier);
-                            } else {
-                                relatedNode = entityCollection.getEntity(entityRelationToLoad.alterUniqueIdentifier, indexParameters);
-                                loadedGraphNodes.put(relatedNode.getUniqueIdentifier(), relatedNode);
-                            }
-                            entityRelationToLoad.setAlterNode(relatedNode);
-                        }
-                        for (EntityRelation entityRelation : kinTypeEntityData.getAllRelations()) { // this has been changed to check all the relations not just the sanguine nor only one relation per entitiy
-                            // compare each relation to the required kin type
-                            if (kinTypeElement.nextType != null) {
-                                if (kinTypeElement.nextType.kinType.matchesRelation(entityRelation, null)) { // todo: this should also take into account the modifier eg -, +, -1, -3, +2 etc..
-                                    kinTypeElement.nextType.entityData.add(entityRelation.getAlterNode());
-                                    entityRelation.getAlterNode().isVisible = true;
-//                                entityRelation.getAlterNode().appendTempLabel(kinTypeElement.kinType.getCodeString());
+                                if (kinTypeElement.kinType.isEgoType()) {
+                                    queryNode.isEgo = true; // there might be multiple types for a single entitiy
+                                    new KinTypeStringConverter(dataStoreSvg).setEgoKinTypeString(queryNode);
                                 }
                             }
-                            // todo: continue with the kinTypeElement.prevType
-
                         }
+                    }
+                    if (kinTypeElementArray.size() > 0 && kinTypeElementArray.get(0).queryTerms == null) {
+                        // get any user specified ego nodes and add them as the first kin type if specified
+                        KinTypeElement firstKinType = kinTypeElementArray.get(0);
+                        if (firstKinType.kinType.isEgoType()) {
+                            // the following could be removed if the ego nodes are replaces with the equavelent kin type string eg "E=Identifier" and E at the begining of the line was mandatory (neither are likely to be the case)
+                            for (UniqueIdentifier currentEgoId : dataStoreSvg.egoEntities) {
+                                if (abortProcess) {
+                                    throw new ProcessAbortException();
+                                }
+                                // load all entities specified as ego nodes
+                                // if a query was not found on the first kintype then add all gernder matching egos to the first kin type
+                                EntityData egoNode;
+                                if (loadedGraphNodes.containsKey(currentEgoId)) {
+                                    egoNode = loadedGraphNodes.get(currentEgoId);
+                                } else {
+                                    egoNode = entityCollection.getEntity(currentEgoId, indexParameters);
+                                    loadedGraphNodes.put(egoNode.getUniqueIdentifier(), egoNode);
+                                }
+                                egoNode.isEgo = true;
+                                egoNode.isVisible = true;
+                                if (firstKinType.kinType.matchesEgonessAndSymbol(egoNode, null)) {
+                                    firstKinType.entityData.add(egoNode);
+                                }
+                            }
+                        } else {
+                            // todo: if no ego type has been specified then prepend all egos and match thie first kin type to the ego relations
+                        }
+                    }
+                    for (KinTypeElement kinTypeElement : kinTypeElementArray) {
+                        if (abortProcess) {
+                            throw new ProcessAbortException();
+                        }
+                        // get all entities before and after each entity that has already found
+                        for (EntityData kinTypeEntityData : kinTypeElement.entityData) {
+                            for (EntityRelation entityRelationToLoad : kinTypeEntityData.getRelatedNodesToBeLoaded()) {
+                                if (abortProcess) {
+                                    throw new ProcessAbortException();
+                                }
+                                // make sure all relation data is loaded and set in the relations of this entity
+                                EntityData relatedNode;
+                                if (loadedGraphNodes.containsKey(entityRelationToLoad.alterUniqueIdentifier)) {
+                                    relatedNode = loadedGraphNodes.get(entityRelationToLoad.alterUniqueIdentifier);
+                                } else {
+                                    relatedNode = entityCollection.getEntity(entityRelationToLoad.alterUniqueIdentifier, indexParameters);
+                                    loadedGraphNodes.put(relatedNode.getUniqueIdentifier(), relatedNode);
+                                }
+                                entityRelationToLoad.setAlterNode(relatedNode);
+                            }
+                            for (EntityRelation entityRelation : kinTypeEntityData.getAllRelations()) { // this has been changed to check all the relations not just the sanguine nor only one relation per entitiy
+                                // compare each relation to the required kin type
+                                if (kinTypeElement.nextType != null) {
+                                    if (kinTypeElement.nextType.kinType.matchesRelation(entityRelation, null)) { // todo: this should also take into account the modifier eg -, +, -1, -3, +2 etc..
+                                        kinTypeElement.nextType.entityData.add(entityRelation.getAlterNode());
+                                        entityRelation.getAlterNode().isVisible = true;
+//                                entityRelation.getAlterNode().appendTempLabel(kinTypeElement.kinType.getCodeString());
+                                    }
+                                }
+                                // todo: continue with the kinTypeElement.prevType
+
+                            }
 
 
 //                    System.out.println("already loaded: " + kinTypeElement.kinType.getCodeString() + " : " + kinTypeElement.queryTerm);
@@ -294,6 +308,7 @@ public class QueryParser implements EntityService {
 //                            }
 //                        }
 //                    }
+                        }
                     }
                 }
                 progressBar.setValue(progressBar.getValue() + 1);
