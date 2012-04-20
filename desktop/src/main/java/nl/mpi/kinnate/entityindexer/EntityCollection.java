@@ -28,8 +28,8 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.kindata.EntityArray;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kintypestrings.KinTypeElement;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifierArray;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 import org.basex.core.BaseXException;
@@ -276,7 +276,7 @@ public class EntityCollection {
         return searchResults;
     }
 
-    public UniqueIdentifier[] getEntityIdByTerm(KinTypeStringConverter.KinTypeElement queryTerms) {
+    public UniqueIdentifier[] getEntityIdByTerm(KinTypeElement queryTerms) {
         // todo: add a query cache or determine that the xml database does the job of caching adequately (p.s. basex appears to cache the queries adequately)
         UniqueIdentifier[] returnArray = new UniqueIdentifier[]{};
         QueryBuilder queryBuilder = new QueryBuilder();
