@@ -26,6 +26,7 @@ public class KinTypeStringInput extends JTextPane implements KinTypeStringProvid
     protected Style styleKinType;
     protected Style styleQuery;
     protected Style styleParamater;
+    protected Style styleMessage;
     protected Style styleError;
     protected Style styleUnknown;
     private ParserHighlight[] parserHighlight = null;
@@ -43,6 +44,8 @@ public class KinTypeStringInput extends JTextPane implements KinTypeStringProvid
         StyleConstants.setForeground(styleKinType, new Color(43, 32, 161));
         styleQuery = this.addStyle("Query", null);
         StyleConstants.setForeground(styleQuery, new Color(183, 7, 140));
+        styleMessage = this.addStyle("Message", null);
+        StyleConstants.setForeground(styleMessage, new Color(7, 103, 200));
         styleParamater = this.addStyle("Parameter", null);
         StyleConstants.setForeground(styleParamater, new Color(103, 7, 200));
         styleError = this.addStyle("Error", null);
