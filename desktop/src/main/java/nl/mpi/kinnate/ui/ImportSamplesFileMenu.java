@@ -4,16 +4,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- *  Document   : RecentFileMenu
- *  Created on : Apr 15, 2011, 11:30:39 AM
- *  Author     : Peter Withers
+ * Document : RecentFileMenu
+ * Created on : Apr 15, 2011, 11:30:39 AM
+ * Author : Peter Withers
  */
 public class ImportSamplesFileMenu extends JMenu implements ActionListener {
 
-    AbstractDiagramManager diagramWindowManager;
+    private AbstractDiagramManager diagramWindowManager;
 
     public ImportSamplesFileMenu(AbstractDiagramManager diagramWindowManager) {
         this.diagramWindowManager = diagramWindowManager;
@@ -22,6 +23,8 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
         addSampleToMenu("Descententes de Jose Antonio de Figueiredo", "/gedcomsamples/descententes_de_jose_antonio_de_figueiredo.ged");
 //        addSampleToMenu("Wadeye-Joe-Blythe-20110525", "/AllianceSamples/Wadeye-Joe-Blythe-20110525.csv");
         addSampleToMenu("European Royalty (royal92.ged)", "/gedcomsamples/royal92.ged");
+//        addSampleToMenu("Doerte Sample", "/DoerteSamples/sample.csv");
+//        addSampleToMenu("AltNetspace Sample", "/AltNetspace/people.csv");
     }
 
     private void addSampleToMenu(String menuText, String sampleFileString) {
@@ -33,6 +36,7 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        diagramWindowManager.openJarImportPanel(e.getActionCommand());
+        SavePanel originatingSavePanel = diagramWindowManager.getCurrentSavePanel();
+        diagramWindowManager.openJarImportPanel(e.getActionCommand(), originatingSavePanel);
     }
 }
