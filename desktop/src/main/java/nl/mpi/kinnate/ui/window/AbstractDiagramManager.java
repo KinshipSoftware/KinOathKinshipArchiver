@@ -6,9 +6,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URI;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
@@ -27,9 +29,9 @@ import nl.mpi.kinnate.ui.menu.MainMenuBar;
 import nl.mpi.kinnate.ui.menu.RecentFileMenu;
 
 /**
- *  Document   : AbstractDiagramManager
- *  Created on : Dec 6, 2011, 12:28:56 PM
- *  Author     : Peter Withers
+ * Document : AbstractDiagramManager
+ * Created on : Dec 6, 2011, 12:28:56 PM
+ * Author : Peter Withers
  */
 public abstract class AbstractDiagramManager {
 
@@ -100,6 +102,16 @@ public abstract class AbstractDiagramManager {
 
     abstract public Component createDiagramContainer(Component diagramComponent);
 
+    public Component createDialogueContainer(Component diagramComponent, Component parentComponent) {
+        String diagramTitle = diagramComponent.getName();
+        JFrame parentFrame = (JFrame) SwingUtilities.getRoot(parentComponent);
+        JDialog jDialog = new JDialog(parentFrame, diagramTitle);
+        jDialog.getContentPane().removeAll();
+        jDialog.getContentPane().add(diagramComponent);
+        jDialog.setVisible(true);
+        return jDialog;
+    }
+
     abstract public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel);
 
     public void newDiagram() {
@@ -141,16 +153,16 @@ public abstract class AbstractDiagramManager {
         }
     }
 
-    public void openImportPanel(File importFile) {
-        new GedcomImportPanel(this, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importFile);
+    public void openImportPanel(File importFile, SavePanel originatingSavePanel) {
+        new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importFile);
     }
 
-    public void openImportPanel(String importUrlString) {
-        new GedcomImportPanel(this, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importUrlString);
+    public void openImportPanel(String importUrlString, SavePanel originatingSavePanel) {
+        new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importUrlString);
     }
 
-    public void openJarImportPanel(String importUrlString) {
-        new GedcomImportPanel(this, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImportJar(importUrlString);
+    public void openJarImportPanel(String importUrlString, SavePanel originatingSavePanel) {
+        new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImportJar(importUrlString);
     }
 
     public abstract void setSelectedDiagram(Component diagramComponent);
