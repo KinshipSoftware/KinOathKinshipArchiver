@@ -69,7 +69,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         this.setLayout(new BorderLayout());
         rootNode = new ContainerNode("results", null, new ArbilNode[]{});
         resultsTree = new KinTree(kinDiagramPanel, graphPanel, rootNode);
-        resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
+//        resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
 //        resultsTree.setRootVisible(false);
         // resultsTree.requestResort();// this resort is unrequred
         JLabel searchLabel = new JLabel(nodeSetTitle);
@@ -140,6 +140,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 resultsTree.setUpdateGraphOnSelectionChange(graphSelectionCheckBox.isSelected());
             }
         });
+        kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected() && graphSelectionCheckBox.isSelected());
         expandByKinTypeCheckBox.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
