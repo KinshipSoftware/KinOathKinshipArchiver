@@ -28,7 +28,7 @@ public class KinTree extends ArbilTree {
         this.graphPanel = graphPanel;
         this.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode), true));
         this.setRootVisible(false);
-        this.setShowsRootHandles(true); 
+        this.setShowsRootHandles(true);
     }
 
     @Override
