@@ -15,9 +15,9 @@ import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
- *  Document   : DiagramWindowManager
- *  Created on : Dec 1, 2011, 4:03:01 PM
- *  Author     : Peter Withers
+ * Document : DiagramWindowManager
+ * Created on : Dec 1, 2011, 4:03:01 PM
+ * Author : Peter Withers
  */
 public class WindowedDiagramManager extends AbstractDiagramManager {
 
