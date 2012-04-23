@@ -91,7 +91,7 @@ public class GedcomImportPanel extends JPanel {
             showButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection);
+                    final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, abstractDiagramManager);
 //                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
                     egoSelectionTestPanel.setName("Imported Entities");
                     abstractDiagramManager.createDiagramContainer(egoSelectionTestPanel);
@@ -143,7 +143,6 @@ public class GedcomImportPanel extends JPanel {
                 titleString = "Import: " + importFileString.substring(importFileString.lastIndexOf("/") + 1);
             }
             setName(titleString);
-            parentPanel = abstractDiagramManager.createDiagramContainer(GedcomImportPanel.this);
             progressBar = new JProgressBar(0, 100);
             endPagePanel = new JPanel(new BorderLayout());
             endPagePanel.add(progressBar, BorderLayout.PAGE_START);
@@ -152,6 +151,7 @@ public class GedcomImportPanel extends JPanel {
             JPanel topPanel = new JPanel();
             // todo: any existing files are always being overwritten and the entity id also being changed so existing relations will be broken, maybe prevent overwritting all entities for an import file?
             // todo: it might be better to check for a file already exsiting and if it does load it and strip out the relations and metadata that would be replaced by the import?
+            // todo: add a label and a better default for gedcom (non INDI does not need DOB etc.)
             final JComboBox profileSelectBox = new JComboBox(new DataStoreSvg().selectedProfiles);
             topPanel.add(profileSelectBox);
             overwriteOnImport = new JCheckBox("Overwrite Existing");
@@ -266,5 +266,6 @@ public class GedcomImportPanel extends JPanel {
                 }
             });
         }
+        parentPanel = abstractDiagramManager.createDiagramContainer(GedcomImportPanel.this);
     }
 }
