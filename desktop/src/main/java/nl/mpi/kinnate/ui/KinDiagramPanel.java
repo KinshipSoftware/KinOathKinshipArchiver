@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -44,6 +45,7 @@ import nl.mpi.kinnate.ui.entityprofiles.CmdiProfileSelectionPanel;
 import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.relationsettings.RelationSettingsPanel;
+import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -74,22 +76,25 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private ArbilDataNodeLoader dataNodeLoader;
     private ArbilTreeHelper treeHelper;
     private KinDragTransferHandler dragTransferHandler;
+    private AbstractDiagramManager diagramWindowManager;
 
-    public KinDiagramPanel(URI existingFile, boolean savableType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
+    public KinDiagramPanel(URI existingFile, boolean savableType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
         this.entityCollection = entityCollection;
+        this.diagramWindowManager = diagramWindowManager;
         initKinDiagramPanel(existingFile, null, savableType);
     }
 
-    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
+    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
         this.entityCollection = entityCollection;
+        this.diagramWindowManager = diagramWindowManager;
         initKinDiagramPanel(null, documentType, false);
     }
 
@@ -390,7 +395,16 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                             System.out.println("draw graph process has been aborted, it should be safe to let the next thread loop take over from here");
                         } catch (ImportRequiredException exception) {
                             if (exception.getImportURI() != null) {
-                                dialogHandler.addMessageDialogToQueue(exception.getMessageString() + "\nDo you want to import this data now?\n" + exception.getImportURI().toASCIIString(), "Draw Graph");
+                                final String[] optionStrings = new String[]{"Import", "Cancel"};
+                                int userOption = dialogHandler.showDialogBox(exception.getMessageString() + "\nDo you want to import this data now?\n" + exception.getImportURI().toASCIIString(), "Import Required", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, optionStrings, optionStrings[0]);
+                                // ask the user if they want to import the required file and start the import on yes
+                                if (userOption == 0) {
+                                    if ("jar".equals(exception.getImportURI().getScheme())) {
+                                        diagramWindowManager.openJarImportPanel(exception.getImportURI().getPath());
+                                    } else {
+                                        diagramWindowManager.openImportPanel(exception.getImportURI().toASCIIString());
+                                    }
+                                }
                             } else {
                                 dialogHandler.addMessageDialogToQueue(exception.getMessageString(), "Draw Graph");
                             }
