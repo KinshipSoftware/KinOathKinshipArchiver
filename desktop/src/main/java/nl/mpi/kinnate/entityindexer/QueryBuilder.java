@@ -1,7 +1,7 @@
 package nl.mpi.kinnate.entityindexer;
 
-import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
-import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter.QueryTerm;
+import nl.mpi.kinnate.kintypestrings.KinTypeElement;
+import nl.mpi.kinnate.kintypestrings.QueryTerm;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -42,9 +42,9 @@ public class QueryBuilder {
         stringBuilder.append(")");
         return stringBuilder.toString();
     }
-//.    excape quotes from symbol queries
-//. when getting the icon clause and the symbol the string input must be encoded for ' " &
-//.        http://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html#d38243e274
+// todo: escape quotes from symbol queries
+// todo: when getting the icon clause and the symbol the string input must be encoded for ' " &
+// ref:       http://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html#d38243e274
 
     public String getLabelsClause(IndexerParameters indexParameters, String docRootVar) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -217,7 +217,7 @@ public class QueryBuilder {
 //                //                + this.getRelationQuery()
 //                + "</Entity>\n";
 //    }
-    public String getTermQuery(KinTypeStringConverter.KinTypeElement queryTerms) {
+    public String getTermQuery(KinTypeElement queryTerms) {
 //        for $entityNode in collection('nl-mpi-kinnate')/Kinnate[(Entity|Gedcom)]
 //        where $entityNode//*="Bob /Cox/"
 //        return
@@ -229,8 +229,8 @@ public class QueryBuilder {
             } else {
 //                stringBuilder.append("(");
             }
-            // todo:. add sample diagram that demonstrates this syntax
-            // todo:. update the samples from =[ to [ format
+            // todo: add sample diagram that demonstrates this syntax
+            // todo: update the samples from =[ to [ format
             stringBuilder.append("$entityNode//*/");
             stringBuilder.append(queryTerm.fieldXPath);
             stringBuilder.append("[text() ");
