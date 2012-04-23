@@ -384,7 +384,7 @@ public class FileMenu extends javax.swing.JMenu {
                 dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kinship Data");
             } else {
                 for (File importFile : importFiles) {
-                    diagramWindowManager.openImportPanel(importFile);
+                    diagramWindowManager.openImportPanel(importFile, diagramWindowManager.getCurrentSavePanel());
                 }
             }
         }
@@ -417,7 +417,7 @@ public class FileMenu extends javax.swing.JMenu {
             "http://GedcomLibrary.com/gedcoms/misc2a.ged", //
             "http://GedcomLibrary.com/gedcoms/gl120372.ged"};
         for (String importUrlString : importList) {
-            diagramWindowManager.openImportPanel(importUrlString);
+            diagramWindowManager.openImportPanel(importUrlString, diagramWindowManager.getCurrentSavePanel());
         }
     }
 
