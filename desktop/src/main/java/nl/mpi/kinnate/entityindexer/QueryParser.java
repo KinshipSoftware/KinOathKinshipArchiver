@@ -6,6 +6,7 @@ import java.util.Iterator;
 import javax.swing.JProgressBar;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kintypestrings.ImportRequiredException;
 import nl.mpi.kinnate.kintypestrings.KinTypeElement;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.MessageStringParser;
@@ -162,7 +163,7 @@ public class QueryParser implements EntityService {
         abortProcess = false;
     }
 
-    public EntityData[] processKinTypeStrings(ArrayList<KinTypeStringProvider> kinTypeStringProviders, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException, ProcessAbortException {
+    public EntityData[] processKinTypeStrings(ArrayList<KinTypeStringProvider> kinTypeStringProviders, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException, ProcessAbortException, ImportRequiredException {
         foundOrder = 0; // temp for testing // todo: remove testing labels
         if (indexParameters.valuesChanged) {
             // discard all entity data from previous queries
@@ -200,11 +201,12 @@ public class QueryParser implements EntityService {
                 if (messageStringParser.foundQueryCondition()) {
                     if (!messageStringParser.foundSyntaxError()) {
                         UniqueIdentifier[] foundIds = entityCollection.getEntityIdByTerm(messageStringParser.getQueryElement());
-                        System.out.println("foundIds:" + foundIds.length);
-                        System.out.println("message:" + messageStringParser.getMessageString());
-                        System.out.println("uri:" + messageStringParser.getImportURI());
-
-                        //                      throw new ImportRequiredException();                        
+//                        System.out.println("foundIds:" + foundIds.length);
+//                        System.out.println("message:" + messageStringParser.getMessageString());
+//                        System.out.println("uri:" + messageStringParser.getImportURI());
+                        if (foundIds == null || foundIds.length < 1) {
+                            throw new ImportRequiredException(messageStringParser.getMessageString(), messageStringParser.getImportURI());
+                        }
                     }
                 } else {
                     // convert the line into  kin types with queries if provided
