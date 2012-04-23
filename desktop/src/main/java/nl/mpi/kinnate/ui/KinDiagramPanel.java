@@ -400,9 +400,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 // ask the user if they want to import the required file and start the import on yes
                                 if (userOption == 0) {
                                     if ("jar".equals(exception.getImportURI().getScheme())) {
-                                        diagramWindowManager.openJarImportPanel(exception.getImportURI().getPath());
+                                        diagramWindowManager.openJarImportPanel(exception.getImportURI().getPath(), KinDiagramPanel.this);
                                     } else {
-                                        diagramWindowManager.openImportPanel(exception.getImportURI().toASCIIString());
+                                        diagramWindowManager.openImportPanel(exception.getImportURI().toASCIIString(), KinDiagramPanel.this);
                                     }
                                 }
                             } else {
