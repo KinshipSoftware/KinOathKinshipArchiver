@@ -25,6 +25,7 @@ import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.XsdChecker;
+import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.CsvImporter;
 import nl.mpi.kinnate.gedcomimport.GedcomImporter;
@@ -45,6 +46,7 @@ public class GedcomImportPanel extends JPanel {
 
     private EntityCollection entityCollection;
     private AbstractDiagramManager abstractDiagramManager;
+    private SavePanel originatingSavePanel;
     private JTextArea importTextArea;
     private JProgressBar progressBar;
     private JCheckBox overwriteOnImport;
@@ -57,9 +59,10 @@ public class GedcomImportPanel extends JPanel {
     private ArbilTreeHelper treeHelper;
     private Component parentPanel;
 
-    public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager, EntityCollection entityCollection, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper) {
+    public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager, SavePanel originatingSavePanel, EntityCollection entityCollection, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper) {
         this.setPreferredSize(new Dimension(500, 500));
         this.abstractDiagramManager = abstractDiagramManager;
+        this.originatingSavePanel = originatingSavePanel;
         this.entityCollection = entityCollection;
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
@@ -91,10 +94,17 @@ public class GedcomImportPanel extends JPanel {
             showButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    final KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, abstractDiagramManager);
+                    KinDiagramPanel egoSelectionTestPanel;
+                    if (originatingSavePanel instanceof KinDiagramPanel) {
+                        egoSelectionTestPanel = (KinDiagramPanel) originatingSavePanel;
+                        egoSelectionTestPanel.updateGraph();
+                    } else {
+                        egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, abstractDiagramManager);
 //                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
-                    egoSelectionTestPanel.setName("Imported Entities");
-                    abstractDiagramManager.createDiagramContainer(egoSelectionTestPanel);
+                        egoSelectionTestPanel.setName("Imported Entities");
+                        abstractDiagramManager.createDiagramContainer(egoSelectionTestPanel);
+                    }
+                    final KinDiagramPanel kinDiagramPanel = egoSelectionTestPanel;
                     SwingUtilities.invokeLater(new Runnable() {
 
                         public void run() {
@@ -104,8 +114,8 @@ public class GedcomImportPanel extends JPanel {
                                     selectedIds.addAll((gedcomImporter.getCreatedNodeIds().get(currentCheckBox.getActionCommand())));
                                 }
                             }
-                            egoSelectionTestPanel.addNodeCollection(selectedIds.toArray(new UniqueIdentifier[]{}), "Imported Entities");
-                            egoSelectionTestPanel.loadAllTrees();
+                            kinDiagramPanel.addNodeCollection(selectedIds.toArray(new UniqueIdentifier[]{}), "Imported Entities");
+//                            egoSelectionTestPanel.loadAllTrees();
                         }
                     });
                 }
@@ -266,6 +276,10 @@ public class GedcomImportPanel extends JPanel {
                 }
             });
         }
-        parentPanel = abstractDiagramManager.createDiagramContainer(GedcomImportPanel.this);
+        if (originatingSavePanel instanceof KinDiagramPanel) {
+            parentPanel = abstractDiagramManager.createDialogueContainer(GedcomImportPanel.this, (KinDiagramPanel) originatingSavePanel);
+        } else {
+            parentPanel = abstractDiagramManager.createDiagramContainer(GedcomImportPanel.this);
+        }
     }
 }
