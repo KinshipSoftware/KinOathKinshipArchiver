@@ -29,9 +29,9 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- *  Document   : DataStoreSvg
- *  Created on : Mar 10, 2011, 8:37:26 AM
- *  Author     : Peter Withers
+ * Document : DataStoreSvg
+ * Created on : Mar 10, 2011, 8:37:26 AM
+ * Author : Peter Withers
  */
 @XmlRootElement(name = "KinDiagramData", namespace = "http://mpi.nl/tla/kin")
 public class DataStoreSvg {
@@ -59,7 +59,7 @@ public class DataStoreSvg {
     @XmlElementWrapper(name = "SelectedProfiles")
     @XmlElement(name = "Profile", namespace = "http://mpi.nl/tla/kin")
     // these profiles are set here so that old format diagrams have something in the add menu
-    public ProfileRecord selectedProfiles[] = new ProfileRecord[]{new ProfileRecord("Individual", "clarin.eu:cr1:p_1320657629627"), new ProfileRecord("Chromosome_Example", "clarin.eu:cr1:p_1332345811038"), new ProfileRecord("Gedcom_Entity", "clarin.eu:cr1:p_1332345811039")};
+    public ProfileRecord[] selectedProfiles = ProfileRecord.getDefaultProfiles();
     @XmlElement(name = "ShowLabels", namespace = "http://mpi.nl/tla/kin")
     public boolean showLabels = true;
     @XmlElement(name = "ShowKinTypeLabels", namespace = "http://mpi.nl/tla/kin")
