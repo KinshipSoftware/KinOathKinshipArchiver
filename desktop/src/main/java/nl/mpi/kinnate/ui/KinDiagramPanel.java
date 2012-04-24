@@ -30,6 +30,7 @@ import nl.mpi.kinnate.entityindexer.EntityService;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.ProcessAbortException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
+import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
@@ -399,10 +400,14 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 int userOption = dialogHandler.showDialogBox(exception.getMessageString() + "\nDo you want to import this data now?\n" + exception.getImportURI().toASCIIString(), "Import Required", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, optionStrings, optionStrings[0]);
                                 // ask the user if they want to import the required file and start the import on yes
                                 if (userOption == 0) {
-                                    if ("jar".equals(exception.getImportURI().getScheme())) {
-                                        diagramWindowManager.openJarImportPanel(exception.getImportURI().getPath(), KinDiagramPanel.this);
-                                    } else {
-                                        diagramWindowManager.openImportPanel(exception.getImportURI().toASCIIString(), KinDiagramPanel.this);
+                                    try {
+                                        if ("jar".equals(exception.getImportURI().getScheme())) {
+                                            diagramWindowManager.openJarImportPanel(exception.getImportURI().getPath(), KinDiagramPanel.this);
+                                        } else {
+                                            diagramWindowManager.openImportPanel(exception.getImportURI().toASCIIString(), KinDiagramPanel.this);
+                                        }
+                                    } catch (ImportException exception1) {
+                                        dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + exception.getImportURI().toASCIIString(), "Import Required Data");
                                     }
                                 }
                             } else {
