@@ -103,14 +103,13 @@ public abstract class AbstractDiagramManager {
 
     abstract public Component createDiagramContainer(Component diagramComponent);
 
-    public Component createDialogueContainer(Component diagramComponent, Component parentComponent) {
+    public JDialog createDialogueContainer(Component diagramComponent, Component parentComponent) {
         String diagramTitle = diagramComponent.getName();
         JFrame parentFrame = (JFrame) SwingUtilities.getRoot(parentComponent);
         JDialog jDialog = new JDialog(parentFrame, diagramTitle, true);
         jDialog.getContentPane().removeAll();
         jDialog.getContentPane().add(diagramComponent);
         jDialog.pack();
-        jDialog.setVisible(true);
         return jDialog;
     }
 
