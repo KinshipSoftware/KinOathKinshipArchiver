@@ -21,6 +21,7 @@ import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.ui.EntityUploadPanel;
 import nl.mpi.kinnate.ui.GedcomImportPanel;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
@@ -154,15 +155,15 @@ public abstract class AbstractDiagramManager {
         }
     }
 
-    public void openImportPanel(File importFile, SavePanel originatingSavePanel) {
+    public void openImportPanel(File importFile, SavePanel originatingSavePanel) throws ImportException {
         new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importFile);
     }
 
-    public void openImportPanel(String importUrlString, SavePanel originatingSavePanel) {
+    public void openImportPanel(String importUrlString, SavePanel originatingSavePanel) throws ImportException {
         new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importUrlString);
     }
 
-    public void openJarImportPanel(String importUrlString, SavePanel originatingSavePanel) {
+    public void openJarImportPanel(String importUrlString, SavePanel originatingSavePanel) throws ImportException {
         new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImportJar(importUrlString);
     }
 
