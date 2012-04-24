@@ -145,6 +145,9 @@ public class GedcomImportPanel extends JPanel {
             // todo: it might be better to check for a file already exsiting and if it does load it and strip out the relations and metadata that would be replaced by the import?
             // todo: add a label and a better default for gedcom (non INDI does not need DOB etc.)
             final JComboBox profileSelectBox = new JComboBox(new DataStoreSvg().selectedProfiles); // todo: changee this to use <default> for the gedcom profile
+            final ProfileRecord defaultImportProfile = ProfileRecord.getDefaultImportProfile();
+            profileSelectBox.addItem(defaultImportProfile);
+            profileSelectBox.setSelectedItem(defaultImportProfile);
             topPanel.add(profileSelectBox);
             overwriteOnImport = new JCheckBox("Overwrite Existing");
             overwriteOnImport.setEnabled(false);
@@ -172,6 +175,7 @@ public class GedcomImportPanel extends JPanel {
                     startButton.setEnabled(false);
                     overwriteOnImport.setEnabled(false);
                     validateImportedXml.setEnabled(false);
+                    profileSelectBox.setEnabled(false);
                     final String profileId = ((ProfileRecord) profileSelectBox.getSelectedItem()).profileId;
                     new Thread() {
 
