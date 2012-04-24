@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -15,9 +17,11 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 public class ImportSamplesFileMenu extends JMenu implements ActionListener {
 
     private AbstractDiagramManager diagramWindowManager;
+    private MessageDialogHandler dialogHandler;
 
-    public ImportSamplesFileMenu(AbstractDiagramManager diagramWindowManager) {
+    public ImportSamplesFileMenu(AbstractDiagramManager diagramWindowManager, MessageDialogHandler dialogHandler) {
         this.diagramWindowManager = diagramWindowManager;
+        this.dialogHandler = dialogHandler;
         addSampleToMenu("Gedcom Simple File", "/gedcomsamples/wiki-test-ged.ged");
         addSampleToMenu("Gedcom Torture File", "/TestGED/TGC55C.ged");
         addSampleToMenu("Descententes de Jose Antonio de Figueiredo", "/gedcomsamples/descententes_de_jose_antonio_de_figueiredo.ged");
@@ -37,6 +41,10 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         SavePanel originatingSavePanel = diagramWindowManager.getCurrentSavePanel();
-        diagramWindowManager.openJarImportPanel(e.getActionCommand(), originatingSavePanel);
+        try {
+            diagramWindowManager.openJarImportPanel(e.getActionCommand(), originatingSavePanel);
+        } catch (ImportException exception1) {
+            dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + e.getActionCommand(), "Import Sample Data");
+        }
     }
 }
