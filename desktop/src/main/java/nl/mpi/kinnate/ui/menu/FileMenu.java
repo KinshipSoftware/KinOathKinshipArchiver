@@ -7,6 +7,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.export.ExportToR;
+import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.svg.DiagramTranscoder;
 import nl.mpi.kinnate.ui.DiagramTranscoderPanel;
 import nl.mpi.kinnate.ui.ImportSamplesFileMenu;
@@ -60,7 +61,7 @@ public class FileMenu extends javax.swing.JMenu {
         openDiagram = new javax.swing.JMenuItem();
         recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage);
         jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler);
-        jMenu2 = new ImportSamplesFileMenu(diagramWindowManager);
+        jMenu2 = new ImportSamplesFileMenu(diagramWindowManager, dialogHandler);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         entityUploadMenuItem = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
@@ -384,7 +385,11 @@ public class FileMenu extends javax.swing.JMenu {
                 dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kinship Data");
             } else {
                 for (File importFile : importFiles) {
-                    diagramWindowManager.openImportPanel(importFile, diagramWindowManager.getCurrentSavePanel());
+                    try {
+                        diagramWindowManager.openImportPanel(importFile, diagramWindowManager.getCurrentSavePanel());
+                    } catch (ImportException exception1) {
+                        dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importFile.getAbsolutePath(), "Import File");
+                    }
                 }
             }
         }
@@ -417,7 +422,11 @@ public class FileMenu extends javax.swing.JMenu {
             "http://GedcomLibrary.com/gedcoms/misc2a.ged", //
             "http://GedcomLibrary.com/gedcoms/gl120372.ged"};
         for (String importUrlString : importList) {
-            diagramWindowManager.openImportPanel(importUrlString, diagramWindowManager.getCurrentSavePanel());
+            try {
+                diagramWindowManager.openImportPanel(importUrlString, diagramWindowManager.getCurrentSavePanel());
+            } catch (ImportException exception1) {
+                dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importUrlString, "Import File");
+            }
         }
     }
 
