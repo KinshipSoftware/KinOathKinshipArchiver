@@ -532,7 +532,7 @@ public class KinTermPanel extends JPanel {
                         String propositusKinTypeStrings = getCleanValue(stringTokenizer);
                         String kinTermDescription = getCleanValue(stringTokenizer);
 
-                        KinTerm kinTerm = new KinTerm(kinTermString, kinTermDescription, null, alterKinTypeStrings, propositusKinTypeStrings);
+                        KinTerm kinTerm = new KinTerm(kinTermString, kinTermDescription, alterKinTypeStrings, propositusKinTypeStrings);
                         kinTerms.addKinTerm(kinTerm);
                         importCount++;
                     }
