@@ -485,7 +485,7 @@
             stroke-width="2"/>
    </g>
    <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
-      <kin:KinTypeString>@ShowMessageIfNotFound[Maria Cristina of_Austria] "This diagram requires the data from 'European Royalty' sample data to be imported." jar:///gedcomsamples/royal92.ged</kin:KinTypeString>
+      <kin:KinTypeString>@ShowMessageIfNotFound[Maria Cristina of_Austria] "This diagram requires the 'European Royalty' sample data to be imported." jar:///gedcomsamples/royal92.ged</kin:KinTypeString>
       <kin:KinTypeString># kin type queries consist of kin types followed by search parameters</kin:KinTypeString>
       <kin:KinTypeString>m[Margaret of_Sweden]</kin:KinTypeString>
       <kin:KinTypeString># Subsequent kin types will add those matching the kin type to the diagram</kin:KinTypeString>
