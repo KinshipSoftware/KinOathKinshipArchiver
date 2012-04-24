@@ -3,9 +3,9 @@ package nl.mpi.kinnate.ui.entityprofiles;
 import javax.xml.bind.annotation.XmlAttribute;
 
 /**
- * Document   : ProfileRecord 
+ * Document : ProfileRecord
  * Created on : Mar 21, 2012, 2:45:30 PM
- * Author     : Peter Withers
+ * Author : Peter Withers
  */
 public class ProfileRecord {
 
@@ -25,5 +25,13 @@ public class ProfileRecord {
     @Override
     public String toString() {
         return profileName;
+    }
+
+    static public ProfileRecord getDefaultImportProfile() {
+        return new ProfileRecord("<default>", "clarin.eu:cr1:p_1332345811039");
+    }
+
+    static public ProfileRecord[] getDefaultProfiles() {
+        return new ProfileRecord[]{new ProfileRecord("Individual", "clarin.eu:cr1:p_1320657629627"), new ProfileRecord("Chromosome_Example", "clarin.eu:cr1:p_1332345811038")};
     }
 }
