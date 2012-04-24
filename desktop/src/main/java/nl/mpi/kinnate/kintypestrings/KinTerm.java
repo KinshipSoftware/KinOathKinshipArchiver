@@ -3,16 +3,16 @@ package nl.mpi.kinnate.kintypestrings;
 import javax.xml.bind.annotation.XmlAttribute;
 
 /**
- *  Document   : KinTerm
- *  Created on : Apr 15, 2011, 11:49:26 AM
- *  Author     : Peter Withers
+ * Document : KinTerm
+ * Created on : Apr 15, 2011, 11:49:26 AM
+ * Author : Peter Withers
  */
 public class KinTerm {
 
     public KinTerm() {
     }
 
-    public KinTerm(String kinTermLocal, String kinTermDescriptionLocal, String egoTypeLocal, String alterKinTypeStringsLocal, String propositusKinTypeStringsLocal) {
+    public KinTerm(String kinTermLocal, String kinTermDescriptionLocal, String alterKinTypeStringsLocal, String propositusKinTypeStringsLocal) {
         kinTerm = kinTermLocal;
         kinTermDescription = kinTermDescriptionLocal;
         alterKinTypeStrings = alterKinTypeStringsLocal;
