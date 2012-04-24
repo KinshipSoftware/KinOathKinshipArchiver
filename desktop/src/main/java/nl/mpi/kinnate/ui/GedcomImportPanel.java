@@ -8,9 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashSet;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -19,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
@@ -51,7 +48,9 @@ public class GedcomImportPanel extends JPanel {
     private JProgressBar progressBar;
     private JCheckBox overwriteOnImport;
     private JCheckBox validateImportedXml;
+    private JButton cancelButton;
     private JButton startButton;
+    private JButton closeButton;
     private JPanel endPagePanel;
     private SessionStorage sessionStorage;
     private ArbilWindowManager dialogHandler;
@@ -77,21 +76,11 @@ public class GedcomImportPanel extends JPanel {
 //    private DragTransferHandler dragTransferHandler;
     }
 
-    protected JPanel getCreatedNodesPane(final GenericImporter gedcomImporter) {
-        JPanel createdNodesPanel = new JPanel();
-        createdNodesPanel.setLayout(new BoxLayout(createdNodesPanel, BoxLayout.PAGE_AXIS));
+    protected String getCreatedNodesMessage(final GenericImporter gedcomImporter) {
         if (gedcomImporter.getCreatedNodeIds().isEmpty()) {
-            createdNodesPanel.add(new JLabel("No data was imported, nothing to show in the graph."));
+            return "No data was imported, nothing to show in the graph.";
         } else {
-            final ArrayList<JCheckBox> checkBoxArray = new ArrayList<JCheckBox>();
-            for (String typeString : gedcomImporter.getCreatedNodeIds().keySet()) {
-                JCheckBox currentCheckBox = new JCheckBox(typeString + " ( x " + gedcomImporter.getCreatedNodeIds().get(typeString).size() + ")", true);
-                currentCheckBox.setActionCommand(typeString);
-                checkBoxArray.add(currentCheckBox);
-                createdNodesPanel.add(currentCheckBox);
-            }
-            JButton showButton = new JButton("Show selected types in graph");
-            showButton.addActionListener(new ActionListener() {
+            closeButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
                     KinDiagramPanel egoSelectionTestPanel;
@@ -100,47 +89,44 @@ public class GedcomImportPanel extends JPanel {
                         egoSelectionTestPanel.updateGraph();
                     } else {
                         egoSelectionTestPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, abstractDiagramManager);
-//                    egoSelectionTestPanel.setDisplayNodes("X", selectedIds.toArray(new String[]{}));
                         egoSelectionTestPanel.setName("Imported Entities");
                         abstractDiagramManager.createDiagramContainer(egoSelectionTestPanel);
                     }
                     final KinDiagramPanel kinDiagramPanel = egoSelectionTestPanel;
-                    SwingUtilities.invokeLater(new Runnable() {
-
-                        public void run() {
-                            final HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>();
-                            for (final JCheckBox currentCheckBox : checkBoxArray) {
-                                if (currentCheckBox.isSelected()) {
-                                    selectedIds.addAll((gedcomImporter.getCreatedNodeIds().get(currentCheckBox.getActionCommand())));
-                                }
-                            }
-                            kinDiagramPanel.addNodeCollection(selectedIds.toArray(new UniqueIdentifier[]{}), "Imported Entities");
-//                            egoSelectionTestPanel.loadAllTrees();
-                        }
-                    });
+//                    SwingUtilities.invokeLater(new Runnable() {
+//
+//                        public void run() {
+                    final HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>();
+                    for (HashSet<UniqueIdentifier> identifiers : gedcomImporter.getCreatedNodeIds().values()) {
+                        selectedIds.addAll(identifiers);
+                    }
+                    kinDiagramPanel.addNodeCollection(selectedIds.toArray(new UniqueIdentifier[]{}), "Imported Entities");
+//                        }
+//                    });
+                    parentPanel.setVisible(false);
                 }
             });
-            createdNodesPanel.add(showButton);
+            closeButton.setEnabled(true);
         }
-        return createdNodesPanel;
+        return "Import complete.";
     }
 
-    public void startImport(File importFile) {
+    public void startImport(File importFile) throws ImportException {
         startImport(importFile, null, importFile.getName());
     }
 
-    public void startImport(String importUriString) {
+    public void startImport(String importUriString) throws ImportException {
         File cachedFile = sessionStorage.updateCache(importUriString, 30, true);
         startImport(cachedFile, null, importUriString);
     }
 
-    public void startImportJar(String importFileString) {
+    public void startImportJar(String importFileString) throws ImportException {
         startImport(null, importFileString, importFileString);
     }
 
-    private void startImport(final File importFile, final String importFileString, String importLabel) {
+    private void startImport(final File importFile, final String importFileString, String importLabel) throws ImportException {
         if (importFile != null && !importFile.exists()) {
-            GedcomImportPanel.this.add(new JLabel("File not found"));
+            throw new ImportException("The import file was not found.");
         } else {
             importTextArea = new JTextArea();
             JScrollPane importScrollPane = new JScrollPane(importTextArea);
@@ -158,6 +144,7 @@ public class GedcomImportPanel extends JPanel {
             endPagePanel.add(progressBar, BorderLayout.PAGE_START);
             GedcomImportPanel.this.add(endPagePanel, BorderLayout.PAGE_END);
             progressBar.setVisible(true);
+            JPanel bottomPanel = new JPanel();
             JPanel topPanel = new JPanel();
             // todo: any existing files are always being overwritten and the entity id also being changed so existing relations will be broken, maybe prevent overwritting all entities for an import file?
             // todo: it might be better to check for a file already exsiting and if it does load it and strip out the relations and metadata that would be replaced by the import?
@@ -166,18 +153,27 @@ public class GedcomImportPanel extends JPanel {
             topPanel.add(profileSelectBox);
             overwriteOnImport = new JCheckBox("Overwrite Existing");
             overwriteOnImport.setEnabled(false);
-            startButton = new JButton("Start");
+            cancelButton = new JButton("Cancel");
+            startButton = new JButton("Start Import");
+            closeButton = new JButton("Close");
+            closeButton.setEnabled(false);
             topPanel.add(overwriteOnImport);
             validateImportedXml = new JCheckBox("Validate Xml");
             topPanel.add(validateImportedXml);
-            topPanel.add(startButton);
+            bottomPanel.add(cancelButton);
+            bottomPanel.add(startButton);
+            bottomPanel.add(closeButton);
             JPanel topOuterPanel = new JPanel(new BorderLayout());
-            topOuterPanel.add(new JLabel(importLabel, JLabel.CENTER), BorderLayout.PAGE_START);
+            final JLabel messageLabel = new JLabel(importLabel, JLabel.CENTER);
+            endPagePanel.add(messageLabel, BorderLayout.CENTER);
             topOuterPanel.add(topPanel, BorderLayout.CENTER);
+            endPagePanel.add(bottomPanel, BorderLayout.PAGE_END);
             GedcomImportPanel.this.add(topOuterPanel, BorderLayout.PAGE_START);
+
             startButton.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
+                    cancelButton.setEnabled(false);
                     startButton.setEnabled(false);
                     overwriteOnImport.setEnabled(false);
                     validateImportedXml.setEnabled(false);
@@ -264,7 +260,7 @@ public class GedcomImportPanel extends JPanel {
 //                GraphData graphData = new GraphData();
 //                graphData.readData();
 //                graphPanel.drawNodes(graphData);
-                                GedcomImportPanel.this.endPagePanel.add(GedcomImportPanel.this.getCreatedNodesPane(genericImporter), BorderLayout.CENTER);
+                                messageLabel.setText(GedcomImportPanel.this.getCreatedNodesMessage(genericImporter));
                                 GedcomImportPanel.this.revalidate();
                             } catch (IOException exception) {
                                 importTextArea.append("Import Failed: " + exception.getMessage() + "\n");
@@ -281,5 +277,13 @@ public class GedcomImportPanel extends JPanel {
         } else {
             parentPanel = abstractDiagramManager.createDiagramContainer(GedcomImportPanel.this);
         }
+        cancelButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                parentPanel.setVisible(false);
+            }
+        });
+
+
     }
 }
