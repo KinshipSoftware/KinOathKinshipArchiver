@@ -310,7 +310,7 @@
     <rect x="-298.0" y="-298.0" fill="none" width="2646.0" id="PageBorder" height="496.0" stroke="grey" stroke-width="2"/>
   </g>
   <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
-    <kin:KinTypeString>@ShowMessageIfNotFound[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/] "This diagram requires the data from 'Descententes de Jose Antonio de Figueiredo' sample data to be imported." jar:///gedcomsamples/descententes_de_jose_antonio_de_figueiredo.ged</kin:KinTypeString>
+    <kin:KinTypeString>@ShowMessageIfNotFound[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/] "This diagram requires the 'Descententes de Jose Antonio de Figueiredo' sample data to be imported." jar:///gedcomsamples/descententes_de_jose_antonio_de_figueiredo.ged</kin:KinTypeString>
     <kin:KinTypeString>E[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/]P</kin:KinTypeString>
     <kin:KinTypeString>E[ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/]SD </kin:KinTypeString>
     <kin:IndexParameters>
