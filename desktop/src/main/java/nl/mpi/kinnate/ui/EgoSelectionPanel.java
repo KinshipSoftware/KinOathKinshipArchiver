@@ -54,7 +54,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         convertTransientButton.setActionCommand("convert");
         convertTransientButton.addActionListener(this);
         convertTransientButton.setEnabled(false);
-        transientNodePanel.add(convertTransientButton, BorderLayout.PAGE_START);
+        transientNodePanel.add(convertTransientButton, BorderLayout.PAGE_END);
 
         transientNode = new ContainerNode("transient", null, new ArbilNode[]{});
         transientTree = new KinTree(kinDiagramPanel, graphPanel, transientNode);
@@ -157,7 +157,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
             KinTreeNode kinTreeNode = new KinTreeNode(entityData, null, dialogHandler, entityCollection, dataNodeLoader);
             transientNodeArray.add(kinTreeNode);
         }
-        requiredNode.setChildNodes(transientNodeArray.toArray(new ArbilNode[]{}));
+        transientNode.setChildNodes(transientNodeArray.toArray(new ArbilNode[]{}));
         egoNode.setChildNodes(new ArbilNode[]{});
         requiredNode.setChildNodes(new ArbilNode[]{});
         impliedNode.setChildNodes(new ArbilNode[]{});
