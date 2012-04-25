@@ -11,6 +11,7 @@ import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.data.ProjectNode;
+import nl.mpi.kinnate.entityindexer.DatabaseUpdateListener;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -22,7 +23,7 @@ import nl.mpi.kinnate.svg.GraphPanel;
  * Created on : Apr 25, 2012, 11:03:10 AM
  * Author : Peter Withers
  */
-public class ProjectTreePanel extends JPanel {
+public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
 
     private EntityCollection entityCollection;
     private KinTree kinTree;
@@ -94,5 +95,9 @@ public class ProjectTreePanel extends JPanel {
     public void setTransferHandler(TransferHandler newHandler) {
         kinTree.setTransferHandler(newHandler);
         kinTree.setDragEnabled(true);
+    }
+
+    public void updateOccured() {
+        loadProjectTree();
     }
 }
