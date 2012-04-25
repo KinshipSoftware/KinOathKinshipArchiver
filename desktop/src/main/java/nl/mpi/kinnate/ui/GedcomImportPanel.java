@@ -96,6 +96,7 @@ public class GedcomImportPanel extends JPanel {
                         selectedIds.addAll(identifiers);
                     }
                     kinDiagramPanel.addNodeCollection(selectedIds.toArray(new UniqueIdentifier[]{}), "Imported Entities");
+                    kinDiagramPanel.loadAllTrees();
 //                        }
 //                    });
                     dialoguePanel.dispose();
