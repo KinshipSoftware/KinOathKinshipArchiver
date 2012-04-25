@@ -55,7 +55,7 @@ import org.basex.query.iter.Iter;
  * Created on : Feb 15, 2011, 5:37:06 PM
  * Author : Peter Withers
  */
-public class EntityCollection {
+public class EntityCollection extends DatabaseUpdateHandler {
 
     private SessionStorage sessionStorage;
     private MessageDialogHandler dialogHandler;
@@ -169,6 +169,7 @@ public class EntityCollection {
                 new Optimize().execute(context);
                 new Close().execute(context);
             }
+            updateOccured();
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             BugCatcherManager.getBugCatcher().logError(baseXException);
@@ -201,6 +202,7 @@ public class EntityCollection {
                 }
                 new Close().execute(context);
             }
+            updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Update Database");
@@ -218,6 +220,7 @@ public class EntityCollection {
                 new Optimize().execute(context);
                 new Close().execute(context);
             }
+            updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Update Database");
