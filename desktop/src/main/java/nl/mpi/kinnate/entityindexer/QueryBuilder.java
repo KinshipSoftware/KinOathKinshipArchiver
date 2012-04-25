@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.entityindexer;
 
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kintypestrings.KinTypeElement;
 import nl.mpi.kinnate.kintypestrings.QueryTerm;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -156,6 +157,14 @@ public class QueryBuilder {
                 // todo: test if "insert after" take longer than "insert into"
                 + ")\n"
                 + "return $copyNode\n";
+    }
+
+    public String getEntityByEndPointQuery(DataTypes.RelationType relationType, IndexerParameters indexParameters) {
+        return "<Entities> { for $doc in collection('nl-mpi-kinnate') where not (/*:Kinnate/*:Entity/*:Relations/*:Relation/@*:Type = \"" + relationType.name() + "\")\n"
+                + "and not (/*:Kinnate/*:CustomData/*:Type/text() = \"Gedcom Family Group\")\n"
+                + "return let $entityNode := $doc/*:Kinnate/*:Entity\n"
+                + getEntityQueryReturn(indexParameters)
+                + "}</Entities>";
     }
 
     public String getEntityByKeyWordQuery(String keyWords, IndexerParameters indexParameters) {
