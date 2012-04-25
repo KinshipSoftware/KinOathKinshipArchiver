@@ -26,6 +26,7 @@ import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinOathVersion;
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityArray;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.KinTypeElement;
@@ -318,10 +319,20 @@ public class EntityCollection {
         return returnArray;
     }
 
+    public EntityData[] getEntityByEndPoint(DataTypes.RelationType relationType, IndexerParameters indexParameters) {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        String query1String = queryBuilder.getEntityByEndPointQuery(relationType, indexParameters);
+        return getEntityByQuery(query1String, indexParameters);
+    }
+
     public EntityData[] getEntityByKeyWord(String keyWords, IndexerParameters indexParameters) {
-        long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityByKeyWordQuery(keyWords, indexParameters);
+        return getEntityByQuery(query1String, indexParameters);
+    }
+
+    private EntityData[] getEntityByQuery(String query1String, IndexerParameters indexParameters) {
+        long startTime = System.currentTimeMillis();
         System.out.println("query1String: " + query1String);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityArray.class);
@@ -398,7 +409,7 @@ public class EntityCollection {
     }
 
     public EntityData getEntity(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
-        long startTime = System.currentTimeMillis();
+//        long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
         String queryResult = "";
@@ -406,19 +417,21 @@ public class EntityCollection {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            long startQueryTime = System.currentTimeMillis();
+//            long startQueryTime = System.currentTimeMillis();
             synchronized (databaseLock) {
                 queryResult = new XQuery(query1String).execute(context);
             }
-            long queryMils = System.currentTimeMillis() - startQueryTime;
-            System.out.println("Query time: " + queryMils + "ms");
-            long startJaxbTime = System.currentTimeMillis();
+//            long queryMils = System.currentTimeMillis() - startQueryTime;
+//            System.out.println("Query time: " + queryMils + "ms");
+//            long startJaxbTime = System.currentTimeMillis();
 //            System.out.println("queryResult: " + queryResult);
             EntityData selectedEntity = (EntityData) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData.class).getValue();
-            long queryJaxBMils = System.currentTimeMillis() - startJaxbTime;
-            System.out.println("JaxB time: " + queryJaxBMils + "ms");
-            long queryTotalMils = System.currentTimeMillis() - startTime;
-            System.out.println("Total Query time: " + queryTotalMils + "ms");
+//            long queryJaxBMils = System.currentTimeMillis() - startJaxbTime;
+//            System.out.println("JaxB time: " + queryJaxBMils + "ms");
+//            long queryTotalMils = System.currentTimeMillis() - startTime;
+            // todo: this should not be called if the entire database has been loaded into the tree, check why it occurs
+//            final String queryTimeString = "Total Query time: " + queryTotalMils + "ms";
+//            System.out.println(queryTimeString);
 //            selectedEntity.appendTempLabel(queryTimeString);
 //            System.out.println("Query Result: " + queryResult);
             return selectedEntity;
