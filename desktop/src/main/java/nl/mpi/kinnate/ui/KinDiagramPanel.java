@@ -501,6 +501,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 archiveEntityLinkerPanelLocal.loadTreeNodes();
                 archiveEntityLinkerPanelMpiRemote.loadTreeNodes();
                 projectTree.loadProjectTree();
+                entityCollection.addDatabaseUpdateListener(projectTree);
 //        while (!treeLoadQueue.isEmpty()) {
 //            treeLoadQueue.remove(0).requestResort();
 //        }
