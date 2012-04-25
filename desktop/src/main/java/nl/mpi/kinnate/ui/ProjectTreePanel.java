@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.TransferHandler;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.util.MessageDialogHandler;
@@ -74,5 +75,11 @@ public class ProjectTreePanel extends JPanel {
             }
         }.start();
         kinTree.requestResort();
+    }
+
+    @Override
+    public void setTransferHandler(TransferHandler newHandler) {
+        kinTree.setTransferHandler(newHandler);
+        kinTree.setDragEnabled(true);
     }
 }
