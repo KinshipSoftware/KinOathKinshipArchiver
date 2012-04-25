@@ -14,6 +14,7 @@ import nl.mpi.kinnate.data.ProjectNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
@@ -61,8 +62,20 @@ public class ProjectTreePanel extends JPanel {
                 EntityData[] searchResults = entityCollection.getEntityByEndPoint(DataTypes.RelationType.ancestor, graphPanel.getIndexParameters());
 //                resultsArea.setText("Found " + searchResults.length + " entities\n");
                 for (EntityData entityData : searchResults) {
+                    boolean isHorizontalEndPoint = true;
+                    for (EntityRelation entityRelation : entityData.getAllRelations()) {
+                        if (entityRelation.getAlterNode() == null) {
+                            // if the alter node has not been loaded then it must not be an end point
+                            if (entityRelation.getRelationType() == DataTypes.RelationType.union || entityRelation.getRelationType() == DataTypes.RelationType.sibling) {
+                                isHorizontalEndPoint = false;
+                                break;
+                            }
+                        }
+                    }
 //            if (resultsArray.size() < 1000) {
-                    resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                    if (isHorizontalEndPoint) {
+                        resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                    }
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
 //                break;
