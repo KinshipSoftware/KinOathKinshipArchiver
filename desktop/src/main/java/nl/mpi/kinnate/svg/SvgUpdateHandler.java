@@ -26,9 +26,9 @@ import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGRect;
 
 /**
- *  Document   : DragHandler
- *  Created on : Mar 31, 2011, 12:52:12 PM
- *  Author     : Peter Withers
+ * Document : DragHandler
+ * Created on : Mar 31, 2011, 12:52:12 PM
+ * Author : Peter Withers
  */
 public class SvgUpdateHandler {
 
@@ -331,7 +331,7 @@ public class SvgUpdateHandler {
                                     highlightedIdentifiers.remove(currentIdentifier);
                                 }
                             }
-                            for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
+                            for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId.toArray(new UniqueIdentifier[0])) {
                                 Element selectedGroup = graphPanel.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
                                 Element existingHighlight = graphPanel.doc.getElementById("highlight_" + uniqueIdentifier.getAttributeIdentifier());
 //                            for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
