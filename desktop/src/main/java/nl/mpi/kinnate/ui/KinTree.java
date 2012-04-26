@@ -46,9 +46,9 @@ public class KinTree extends ArbilTree {
             } else if (arbilNode instanceof KinTreeNode) {
                 final KinTreeNode kinTreeNode = (KinTreeNode) arbilNode;
                 // set the graph selection
-                if (kinTreeNode.entityData != null) {
-                    identifierList.add(kinTreeNode.entityData.getUniqueIdentifier());
-                    graphPanel.metadataPanel.addEntityDataNode(kinDiagramPanel, ((KinTreeNode) arbilNode).entityData);
+                if (kinTreeNode.getEntityData() != null) {
+                    identifierList.add(kinTreeNode.getUniqueIdentifier());
+                    graphPanel.metadataPanel.addEntityDataNode(kinDiagramPanel, ((KinTreeNode) arbilNode).getEntityData());
                 }
             }
         }
