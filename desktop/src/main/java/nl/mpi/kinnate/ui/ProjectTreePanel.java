@@ -142,7 +142,7 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
 //                    }
 //            if (resultsArray.size() < 1000) {
                     if (isHorizontalEndPoint) {
-                        treeNodesArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                        treeNodesArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
 //                        final String testNodeName = "Node: " + nodeCount;
 //                        System.out.println("testNodeName: " + testNodeName);
 //                        treeNodesArray.add(new ContainerNode(testNodeName, null, new ArbilNode[0]));
