@@ -4,9 +4,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 
 /**
- *  Document   : RelationTypeDefinition
- *  Created on : Jan 2, 2012, 3:29:25 PM
- *  Author     : Peter Withers
+ * Document : RelationTypeDefinition
+ * Created on : Jan 2, 2012, 3:29:25 PM
+ * Author : Peter Withers
  */
 public class RelationTypeDefinition {
 
@@ -87,7 +87,7 @@ public class RelationTypeDefinition {
                 return false;
             }
         } else {
-            if (!entityRelation.getRelationType().equals(relationType)) {
+            if (!relationType.equals(entityRelation.getRelationType())) {
                 return false;
             }
         }
@@ -96,7 +96,7 @@ public class RelationTypeDefinition {
                 return false;
             }
         } else {
-            if (!entityRelation.customType.equals(displayName)) {
+            if (!displayName.equals(entityRelation.customType)) {
                 return false;
             }
         }
