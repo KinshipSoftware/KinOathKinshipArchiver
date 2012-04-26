@@ -180,7 +180,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 resultsArea.setText("Found " + searchResults.length + " entities\n");
                 for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
-                    resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                    resultsArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
 //                break;
@@ -211,7 +211,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 int loadedCount = 0;
                 for (UniqueIdentifier entityId : entityIdentifiers) {
                     EntityData entityData = entityCollection.getEntity(entityId, graphPanel.getIndexParameters());
-                    resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                    resultsArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
                     rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
                     resultsTree.requestResort();
                     loadedCount++;
@@ -237,7 +237,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
             }
             for (ArbilNode arbilNode : resultsTree.getSelectedNodeArray()) { // return getSelectedNodesOfType(ArbilNode.class).toArray(new ArbilNode[]{});
                 if (arbilNode instanceof KinTreeNode) {
-                    currentStrings.add(prefixString + "[Entity.Identifier=" + ((KinTreeNode) arbilNode).entityData.getUniqueIdentifier().getQueryIdentifier() + "]" + kinTypeStringExtention);
+                    currentStrings.add(prefixString + "[Entity.Identifier=" + ((KinTreeNode) arbilNode).getUniqueIdentifier().getQueryIdentifier() + "]" + kinTypeStringExtention);
                 }
             }
         }
