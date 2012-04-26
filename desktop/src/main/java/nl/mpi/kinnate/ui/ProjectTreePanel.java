@@ -105,7 +105,7 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
             if (endNode > treeNodesArray.size()) {
                 endNode = treeNodesArray.size();
             }
-            currentPageLabel.setText(currentPage + " of " + pageCount);
+            currentPageLabel.setText((currentPage + 1) + " of " + (pageCount + 1));
             rootNode.setChildNodes(treeNodesArray.subList(startNode, endNode).toArray(new ArbilNode[]{}));
             kinTree.requestResort();
 
