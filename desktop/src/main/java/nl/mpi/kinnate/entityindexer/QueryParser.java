@@ -321,14 +321,18 @@ public class QueryParser implements EntityService {
             if (abortProcess) {
                 throw new ProcessAbortException();
             }
-            UniqueIdentifier currentEgoId = iterator.next();
+            UniqueIdentifier currentId = iterator.next();
             // load and show any mandatory entities
             EntityData requiredNode;
-            if (loadedGraphNodes.containsKey(currentEgoId)) {
-                requiredNode = loadedGraphNodes.get(currentEgoId);
+            if (loadedGraphNodes.containsKey(currentId)) {
+                requiredNode = loadedGraphNodes.get(currentId);
             } else {
-                requiredNode = entityCollection.getEntity(currentEgoId, indexParameters);
+                requiredNode = entityCollection.getEntity(currentId, indexParameters);
                 loadedGraphNodes.put(requiredNode.getUniqueIdentifier(), requiredNode);
+            }
+            if (dataStoreSvg.egoEntities.contains(currentId)) {
+                // set the egoness based on the users selection
+                requiredNode.isEgo = true;
             }
             requiredNode.isVisible = true;
             progressBar.setValue(progressBar.getValue() + 1);
