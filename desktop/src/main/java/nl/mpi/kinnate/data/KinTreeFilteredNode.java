@@ -39,34 +39,36 @@ public class KinTreeFilteredNode extends KinTreeNode {
 
     @Override
     public ArbilNode[] getChildArray() {
-        if (subnodeFilter != DataTypes.RelationType.ancestor && subnodeFilter != DataTypes.RelationType.descendant) {
-            // anything other than directional relations need not be shown beneath this filtered node
-            // siblings need not show sub nodes of their siblings
-            // relation type other need not be shown 
-            return new ArbilNode[]{};
-        }
-        HashSet<ArbilNode> relationList = new HashSet<ArbilNode>();
-        for (EntityRelation entityRelation : entityData.getAllRelations()) {
-            if (subnodeFilter == entityRelation.getRelationType()) {
+        if (childNodes == null) {
+            if (subnodeFilter != DataTypes.RelationType.ancestor && subnodeFilter != DataTypes.RelationType.descendant) {
+                // anything other than directional relations need not be shown beneath this filtered node
+                // siblings need not show sub nodes of their siblings
+                // relation type other need not be shown 
+                return new ArbilNode[]{};
+            }
+            HashSet<ArbilNode> relationList = new HashSet<ArbilNode>();
+            for (EntityRelation entityRelation : entityData.getAllRelations()) {
+                if (subnodeFilter == entityRelation.getRelationType()) {
 //                EntityData alterEntity = entityRelation.getAlterNode();
 //                if (alterEntity == null) {
 //                    alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
 //                    entityRelation.setAlterNode(alterEntity);
 //                }
-                relationList.add(new KinTreeFilteredNode(entityRelation, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
-            }
-        }
-        getLinksMetaNode(relationList);
-        childNodes = relationList.toArray(new ArbilNode[]{});
-        new Thread() {
-
-            @Override
-            public void run() {
-                for (ArbilNode childNode : childNodes) {
-                    ((KinTreeFilteredNode) childNode).loadEntityIfNotLoaded();
+                    relationList.add(new KinTreeFilteredNode(entityRelation, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
                 }
             }
-        }.start();
+            getLinksMetaNode(relationList);
+            childNodes = relationList.toArray(new ArbilNode[]{});
+            new Thread() {
+
+                @Override
+                public void run() {
+                    for (ArbilNode childNode : childNodes) {
+                        ((KinTreeFilteredNode) childNode).loadEntityIfNotLoaded();
+                    }
+                }
+            }.start();
+        }
         return childNodes;
     }
 }
