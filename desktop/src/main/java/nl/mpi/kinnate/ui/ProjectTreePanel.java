@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,7 +39,7 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
     private MessageDialogHandler dialogHandler;
     private ArbilDataNodeLoader dataNodeLoader;
     private JProgressBar progressBar;
-    private ArrayList<ArbilNode> treeNodesArray = null;
+    private ArrayList<KinTreeNode> treeNodesArray = null;
     private int currentPage = 0;
     private int maxNodesPerPage = 100;
     private JPanel pagePanel;
@@ -124,7 +125,7 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
             @Override
             public void run() {
 //                int nodeCount = 0;
-                treeNodesArray = new ArrayList<ArbilNode>();
+                treeNodesArray = new ArrayList<KinTreeNode>();
                 EntityData[] projectEntities = entityCollection.getEntityByEndPoint(DataTypes.RelationType.ancestor, graphPanel.getIndexParameters());
 //                resultsArea.setText("Found " + searchResults.length + " entities\n");
                 for (EntityData entityData : projectEntities) {
@@ -152,6 +153,7 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
 //                break;
 //            }
                 }
+                Collections.sort(treeNodesArray);
                 ProjectTreePanel.this.remove(progressBar);
                 ProjectTreePanel.this.revalidate();
                 showPage();
