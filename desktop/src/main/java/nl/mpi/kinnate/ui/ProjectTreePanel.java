@@ -1,7 +1,12 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -15,7 +20,6 @@ import nl.mpi.kinnate.entityindexer.DatabaseUpdateListener;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
-import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
@@ -34,6 +38,11 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
     private MessageDialogHandler dialogHandler;
     private ArbilDataNodeLoader dataNodeLoader;
     private JProgressBar progressBar;
+    private ArrayList<ArbilNode> treeNodesArray = null;
+    private int currentPage = 0;
+    private int maxNodesPerPage = 100;
+    private JPanel pagePanel;
+    private JLabel currentPageLabel;
 
     public ProjectTreePanel(EntityCollection entityCollection, String panelName, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader) {
         super(new BorderLayout());
@@ -49,46 +58,105 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
         kinTree.setBackground(this.getBackground());
         this.add(new JScrollPane(kinTree), BorderLayout.CENTER);
         progressBar = new JProgressBar();
+        ActionListener actionListener = new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if ("<".equals(e.getActionCommand())) {
+                    currentPage--;
+                } else if (">".equals(e.getActionCommand())) {
+                    currentPage++;
+                }
+                showPage();
+            }
+        };
+        final JButton previousButton = new JButton("<");
+        final JButton nextButton = new JButton(">");
+        currentPageLabel = new JLabel("", JLabel.CENTER);
+
+        previousButton.setActionCommand("<");
+        nextButton.setActionCommand(">");
+
+        previousButton.addActionListener(actionListener);
+        nextButton.addActionListener(actionListener);
+
+        final Dimension preferredSize = previousButton.getPreferredSize();
+        final Dimension buttonDimension = new Dimension(preferredSize.height, preferredSize.height);
+        previousButton.setPreferredSize(buttonDimension);
+        nextButton.setPreferredSize(buttonDimension);
+
+        pagePanel = new JPanel(new BorderLayout());
+        pagePanel.add(previousButton, BorderLayout.LINE_START);
+        pagePanel.add(currentPageLabel, BorderLayout.CENTER);
+        pagePanel.add(nextButton, BorderLayout.LINE_END);
+    }
+
+    private void showPage() {
+        if (treeNodesArray != null) {
+            int pageCount = treeNodesArray.size() / maxNodesPerPage;
+            if (currentPage < 0) {
+                currentPage = 0;
+            }
+            if (currentPage > pageCount) {
+                currentPage = pageCount;
+            }
+            final int startNode = currentPage * maxNodesPerPage;
+            int endNode = startNode + maxNodesPerPage;
+            if (endNode > treeNodesArray.size()) {
+                endNode = treeNodesArray.size();
+            }
+            currentPageLabel.setText(currentPage + " of " + pageCount);
+            rootNode.setChildNodes(treeNodesArray.subList(startNode, endNode).toArray(new ArbilNode[]{}));
+            kinTree.requestResort();
+
+            this.add(pagePanel, BorderLayout.PAGE_END);
+        }
+        this.revalidate();
     }
 
     public void loadProjectTree() {
+        this.remove(pagePanel);
         this.add(progressBar, BorderLayout.PAGE_END);
         progressBar.setIndeterminate(true);
         this.revalidate();
+        kinTree.requestResort();
         new Thread() {
 
             @Override
             public void run() {
-                ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
-                EntityData[] searchResults = entityCollection.getEntityByEndPoint(DataTypes.RelationType.ancestor, graphPanel.getIndexParameters());
+//                int nodeCount = 0;
+                treeNodesArray = new ArrayList<ArbilNode>();
+                EntityData[] projectEntities = entityCollection.getEntityByEndPoint(DataTypes.RelationType.ancestor, graphPanel.getIndexParameters());
 //                resultsArea.setText("Found " + searchResults.length + " entities\n");
-                for (EntityData entityData : searchResults) {
+                for (EntityData entityData : projectEntities) {
                     boolean isHorizontalEndPoint = true;
-                    for (EntityRelation entityRelation : entityData.getAllRelations()) {
-                        if (entityRelation.getAlterNode() == null) {
-                            // if the alter node has not been loaded then it must not be an end point
-                            if (entityRelation.getRelationType() == DataTypes.RelationType.union || entityRelation.getRelationType() == DataTypes.RelationType.sibling) {
-                                isHorizontalEndPoint = false;
-                                break;
-                            }
-                        }
-                    }
+                    // this check is for end points that have a sibling or spouse who are not an end point, but it is removed because it is not possible to browse to a spouse or sibling in a directional branch
+//                    for (EntityRelation entityRelation : entityData.getAllRelations()) {
+//                        if (entityRelation.getAlterNode() == null) {
+//                            // if the alter node has not been loaded then it must not be an end point
+//                            if (entityRelation.getRelationType() == DataTypes.RelationType.union || entityRelation.getRelationType() == DataTypes.RelationType.sibling) {
+//                                isHorizontalEndPoint = false;
+//                                break;
+//                            }
+//                        }
+//                    }
 //            if (resultsArray.size() < 1000) {
                     if (isHorizontalEndPoint) {
-                        resultsArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                        treeNodesArray.add(new KinTreeNode(entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+//                        final String testNodeName = "Node: " + nodeCount;
+//                        System.out.println("testNodeName: " + testNodeName);
+//                        treeNodesArray.add(new ContainerNode(testNodeName, null, new ArbilNode[0]));
+//                        nodeCount++;
                     }
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
 //                break;
 //            }
                 }
-                rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
-                kinTree.requestResort();
                 ProjectTreePanel.this.remove(progressBar);
                 ProjectTreePanel.this.revalidate();
+                showPage();
             }
         }.start();
-        kinTree.requestResort();
     }
 
     @Override
