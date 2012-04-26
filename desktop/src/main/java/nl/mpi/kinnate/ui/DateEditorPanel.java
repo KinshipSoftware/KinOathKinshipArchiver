@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,9 +31,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- *  Document   : SvgElementEditor
- *  Created on : Aug 17, 2011, 1:17:13 PM
- *  Author     : Peter Withers
+ * Document : SvgElementEditor
+ * Created on : Aug 17, 2011, 1:17:13 PM
+ * Author : Peter Withers
  */
 public class DateEditorPanel extends JPanel {
 
@@ -58,13 +57,13 @@ public class DateEditorPanel extends JPanel {
 
     private JPanel getDateSpinners(EntityData entityData) {
         JPanel rowPanel = new JPanel(new FlowLayout());
-        KinTreeNode kinTreeNode = new KinTreeNode(entityData, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
+        KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
         rowPanel.add(new JLabel(kinTreeNode.toString(), kinTreeNode.getIcon(), JLabel.LEFT));
         SpinnerModel startDateModel;
 //        if (entityData.getDateOfBirth() != null) {
 //            startDateModel = new SpinnerDateModel(entityData.getDateOfBirth(), null, entityData.getDateOfDeath(), Calendar.YEAR);
 //        } else {
-            startDateModel = new SpinnerDateModel();
+        startDateModel = new SpinnerDateModel();
 //        }
         JSpinner startSpinner = new JSpinner(startDateModel);
         startSpinner.setEditor(new JSpinner.DateEditor(startSpinner, "yyyy/MM/dd"));
