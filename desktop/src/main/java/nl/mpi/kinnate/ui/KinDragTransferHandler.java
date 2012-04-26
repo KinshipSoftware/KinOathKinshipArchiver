@@ -29,8 +29,9 @@ import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document   : KinDragTransferHandler
+ * Document : KinDragTransferHandler
  * Created on : Wed Feb 02 11:17:40 CET 2011
+ *
  * @author Peter.Withers@mpi.nl
  */
 public class KinDragTransferHandler extends TransferHandler implements Transferable {
@@ -76,7 +77,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     }
     //////////////////////////////////////
 
-    public Object /*ArbilTreeObject[]*/ getTransferData(DataFlavor df) throws UnsupportedFlavorException, IOException {
+    public Object /* ArbilTreeObject[] */ getTransferData(DataFlavor df) throws UnsupportedFlavorException, IOException {
         if (df.equals(DataFlavor.stringFlavor)) {
             StringBuilder stringBuilder = new StringBuilder();
             for (ArbilNode arbilNode : selectedNodes) {
@@ -85,7 +86,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
                         stringBuilder.append("\n");
                     }
                     stringBuilder.append("[Entity.Identifier=");
-                    stringBuilder.append(((KinTreeNode) arbilNode).entityData.getUniqueIdentifier().getQueryIdentifier());
+                    stringBuilder.append(((KinTreeNode) arbilNode).getUniqueIdentifier().getQueryIdentifier());
                     stringBuilder.append("]");
                 }
             }
@@ -125,7 +126,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
                 if (dropNode == null) {
                     return true; //support.setDropAction(NONE);
                 } else if (dropNode instanceof KinTreeNode) {
-                    targetEntity = ((KinTreeNode) dropNode).entityData; //  final KinTreeNode kinTreeNode = (KinTreeNode) dropNode;
+                    targetEntity = ((KinTreeNode) dropNode).getEntityData(); //  final KinTreeNode kinTreeNode = (KinTreeNode) dropNode;
                     if (targetEntity == null || targetEntity.getUniqueIdentifier().isTransientIdentifier()) {
                         // only allow imdi and cmdi nodes to be droped to a kin entity that is permanent (having metadata)
                         return false; //support.setDropAction(NONE);
@@ -147,7 +148,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             for (ArbilNode currentArbilNode : selectedNodes) {
                 if (currentArbilNode instanceof KinTreeNode) {
                     KinTreeNode kinTreeNode = (KinTreeNode) currentArbilNode;
-                    slectedIdentifiers.add(kinTreeNode.entityData.getUniqueIdentifier());
+                    slectedIdentifiers.add(kinTreeNode.getUniqueIdentifier());
                     // the following methods use either the xml file or the arbil tree node to get the entity identifier
                     // while they are no longer used it is probably good to keep them for reference
 //                    try {
@@ -194,7 +195,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         try {
             ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
             for (ArbilNode draggedNode : selectedNodes) {
-                // todo:... allow the user to set EntityDocument.defaultDragType some where
+                // todo: allow the user to set EntityDocument.defaultDragType some where
                 EntityDocument entityDocument = new EntityDocument(EntityDocument.defaultDragType, importTranslator, sessionStorage);
                 entityDocument.insertValue("Name", draggedNode.toString());
                 if (draggedNode instanceof ArbilDataNode) {
