@@ -125,7 +125,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         HashSet<KinTreeNode> remainingNodeArray = new HashSet<KinTreeNode>();
         for (EntityData entityData : allEntities) {
             if (entityData.isVisible) {
-                KinTreeNode kinTreeNode = new KinTreeNode(entityData, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
+                KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
                 if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
                     egoNodeArray.add(kinTreeNode);
                 } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
@@ -154,7 +154,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         this.revalidate();
         HashSet<KinTreeNode> transientNodeArray = new HashSet<KinTreeNode>();
         for (EntityData entityData : allEntities) {
-            KinTreeNode kinTreeNode = new KinTreeNode(entityData, null, dialogHandler, entityCollection, dataNodeLoader);
+            KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, null, dialogHandler, entityCollection, dataNodeLoader);
             transientNodeArray.add(kinTreeNode);
         }
         transientNode.setChildNodes(transientNodeArray.toArray(new ArbilNode[]{}));
