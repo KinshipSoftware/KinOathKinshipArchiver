@@ -17,6 +17,7 @@ import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.svg.SymbolGraphic;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  * Document : KinTreeNode
@@ -25,42 +26,58 @@ import nl.mpi.kinnate.svg.SymbolGraphic;
  */
 public class KinTreeNode extends ArbilNode implements Comparable {
 
-    public EntityData entityData;
+    private UniqueIdentifier uniqueIdentifier;
+    protected EntityData entityData = null;
     protected IndexerParameters indexerParameters;
     protected ArbilNode[] childNodes = null;
-    static protected SymbolGraphic symbolGraphic;
+    static private SymbolGraphic symbolGraphic = null;
     protected EntityCollection entityCollection;
     protected MessageDialogHandler dialogHandler;
     protected ArbilDataNodeLoader dataNodeLoader;
+    private String derivedLabelString = null;
 
-    public KinTreeNode(EntityData entityData, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+    public KinTreeNode(UniqueIdentifier uniqueIdentifier, EntityData entityData, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         // todo: create new constructor that takes a unique identifer and loads from the database.
         super();
+        this.uniqueIdentifier = uniqueIdentifier;
         this.indexerParameters = indexerParameters;
         this.entityData = entityData;
         this.entityCollection = entityCollection;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
-        symbolGraphic = new SymbolGraphic(dialogHandler);
+        if (symbolGraphic == null) {
+            symbolGraphic = new SymbolGraphic(dialogHandler);
+        }
+    }
+
+    public EntityData getEntityData() {
+        return entityData;
+    }
+
+    public UniqueIdentifier getUniqueIdentifier() {
+        return uniqueIdentifier;
     }
 
     @Override
     public String toString() {
-        StringBuilder labelBuilder = new StringBuilder();
-        if (entityData == null) {
-            labelBuilder.append("(entity not loaded)");
-        } else {
-            final String[] labelArray = entityData.getLabel();
-            if (labelArray != null && labelArray.length > 0) {
-                for (String labelString : labelArray) {
-                    labelBuilder.append(labelString);
-                    labelBuilder.append(" ");
-                }
+        if (derivedLabelString == null) {
+            if (entityData == null) {
+                return "(entity not loaded)";
             } else {
-                labelBuilder.append("(unnamed entity)");
+                StringBuilder labelBuilder = new StringBuilder();
+                final String[] labelArray = entityData.getLabel();
+                if (labelArray != null && labelArray.length > 0) {
+                    for (String labelString : labelArray) {
+                        labelBuilder.append(labelString);
+                        labelBuilder.append(" ");
+                    }
+                } else {
+                    labelBuilder.append("(unnamed entity)");
+                }
+                derivedLabelString = labelBuilder.toString();
             }
         }
-        return labelBuilder.toString();
+        return derivedLabelString;
     }
 
     @Override
@@ -72,30 +89,28 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     public void getAllChildren(Vector<ArbilDataNode> allChildren) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+//    ArbilNode[] tempChildNodes = null;
 
     @Override
     public ArbilNode[] getChildArray() {
+//        if (tempChildNodes == null) {
         // add the related entities grouped into metanodes by relation type and within each group the subsequent nodes are filtered by the type of relation.
         HashMap<DataTypes.RelationType, HashSet<KinTreeFilteredNode>> metaNodeMap = new HashMap<DataTypes.RelationType, HashSet<KinTreeFilteredNode>>();
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
             if (!metaNodeMap.containsKey(entityRelation.getRelationType())) {
                 metaNodeMap.put(entityRelation.getRelationType(), new HashSet<KinTreeFilteredNode>());
             }
-            EntityData alterEntity = entityRelation.getAlterNode();
-            if (alterEntity == null) {
-                // todo: should these enties be cached? or will the entire tree be discarded on redraw?
-                // todo change this to return a node imediately and the node can then load itself and then request a tree resort
-                alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
-                entityRelation.setAlterNode(alterEntity);
-            }
-            metaNodeMap.get(entityRelation.getRelationType()).add(new KinTreeFilteredNode(alterEntity, entityRelation.getRelationType(), indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
+            metaNodeMap.get(entityRelation.getRelationType()).add(new KinTreeFilteredNode(entityRelation, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
         }
         HashSet<ArbilNode> kinTreeMetaNodes = new HashSet<ArbilNode>();
         for (Map.Entry<DataTypes.RelationType, HashSet<KinTreeFilteredNode>> filteredNodeEntry : metaNodeMap.entrySet()) {//values().toArray(new KinTreeFilteredNode[]{})
-            kinTreeMetaNodes.add(new ContainerNode(filteredNodeEntry.getKey().name(), null, filteredNodeEntry.getValue().toArray(new KinTreeFilteredNode[]{})));
+            kinTreeMetaNodes.add(new FilteredNodeContainer(filteredNodeEntry.getKey().name(), null, filteredNodeEntry.getValue().toArray(new KinTreeFilteredNode[]{})));
         }
         getLinksMetaNode(kinTreeMetaNodes);
         childNodes = kinTreeMetaNodes.toArray(new ArbilNode[]{});
+//            tempChildNodes = childNodes;
+//        }
+//        return tempChildNodes;
         return childNodes;
     }
 
@@ -242,13 +257,13 @@ public class KinTreeNode extends ArbilNode implements Comparable {
         }
         final KinTreeNode other = (KinTreeNode) obj;
 //        return this.entityData == other.entityData;
-        
+
 ////        return this.hashCode() == other.hashCode();
 //        if (entityData == null || other.entityData == null) {
 //            // todo: it would be good for this to never be null, or at least to aways have the UniqueIdentifier to compare
 //            return false;
 //        }
-        if (this.entityData.getUniqueIdentifier() != other.entityData.getUniqueIdentifier() && (this.entityData.getUniqueIdentifier() == null || !this.entityData.getUniqueIdentifier().equals(other.entityData.getUniqueIdentifier()))) {
+        if (this.getUniqueIdentifier() != other.getUniqueIdentifier() && (this.getUniqueIdentifier() == null || !this.getUniqueIdentifier().equals(other.getUniqueIdentifier()))) {
             return false;
         }
         return true;
@@ -257,7 +272,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash = 37 * hash + (this.entityData.getUniqueIdentifier() != null ? this.entityData.getUniqueIdentifier().hashCode() : 0);
+        hash = 37 * hash + (this.uniqueIdentifier != null ? this.uniqueIdentifier.hashCode() : 0);
         return hash;
     }
 }
