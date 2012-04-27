@@ -98,20 +98,20 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(File destinationDirectory, String nameString, String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
+    public EntityDocument(File destinationDirectory, UniqueIdentifier uniqueIdentifier, String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
         String idString;
-        entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
-        if (nameString != null) {
-            idString = nameString;
-            entityFile = new File(destinationDirectory, nameString + ".kmdi");
-        } else {
+        entityData = new EntityData(uniqueIdentifier);
+//        if (nameString != null) {
+//            idString = nameString;
+//            entityFile = new File(destinationDirectory, nameString + ".kmdi");
+//        } else {
             idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
             File subDirectory = new File(destinationDirectory, idString.substring(0, 2));
             subDirectory.mkdir();
             entityFile = new File(subDirectory, idString);
-        }
+//        }
         try {
             // construct the metadata file
             URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false);
