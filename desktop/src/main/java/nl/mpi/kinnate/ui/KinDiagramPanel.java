@@ -147,12 +147,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     showIndexerSettings = true;
                     graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
                     break;
-                case EntitySearch:
-                    showMetaData = true;
-                    showEntitySearch = true;
-                    showDiagramTree = true;
-                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
-                    break;
+//                case EntitySearch:
+//                    showMetaData = true;
+//                    showEntitySearch = true;
+//                    showDiagramTree = true;
+//                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
+//                    break;
                 case KinTerms:
                     showKinTerms = true;
                     graphPanel.addKinTermGroup();
@@ -166,6 +166,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 case Simple:
                     showMetaData = true;
                     showDiagramTree = true;
+                    showEntitySearch = true;
                     graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
                     break;
                 case Query:
@@ -249,7 +250,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         }
                         break;
                     case EntitySearch:
-                        panelSetting.setHidePane(kinTermHidePane, "Search Entities");
+                        panelSetting.setHidePane(egoSelectionHidePane, "Search Entities");
                         panelSetting.addTargetPanel(entitySearchPanel, false);
                         break;
                     case IndexerSettings:
