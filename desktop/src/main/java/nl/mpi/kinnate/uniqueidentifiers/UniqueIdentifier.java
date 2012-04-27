@@ -8,15 +8,15 @@ import javax.xml.bind.annotation.XmlValue;
 import nl.mpi.arbil.data.ArbilField;
 
 /**
- *  Document   : UniqueIdentifier
- *  Created on : Jul 21, 2011, 3:23:17 PM
- *  Author     : Peter Withers
+ * Document : UniqueIdentifier
+ * Created on : Jul 21, 2011, 3:23:17 PM
+ * Author : Peter Withers
  */
 public class UniqueIdentifier {
 
     public enum IdentifierType {
 
-        pid /*Persistent Identifier*/, lid /*Local Identifier*/, tid /*Transient Identifier produced by md5 summing a string */, gid /*Graphics Identifier*/
+        pid /* Persistent Identifier */, lid /* Local Identifier */, tid /* Transient Identifier produced by md5 summing a string */, gid /* Graphics Identifier */, iid /* imported identifier */
 
     }
     @XmlValue
@@ -70,6 +70,7 @@ public class UniqueIdentifier {
             }
             switch (identifierTypeLocal) {
                 case tid:
+                case iid:
                     identifierString = hexString.toString();
                     identifierType = identifierTypeLocal;
                     break;
