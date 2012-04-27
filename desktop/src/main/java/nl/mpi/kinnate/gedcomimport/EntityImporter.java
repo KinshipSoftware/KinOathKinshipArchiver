@@ -1,10 +1,9 @@
 package nl.mpi.kinnate.gedcomimport;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -58,18 +57,23 @@ public class EntityImporter implements GenericImporter {
         importTextArea.setCaretPosition(importTextArea.getText().length());
     }
 
-    public void calculateFileNameAndFileLength(BufferedReader bufferedReader) {
+    public void calculateFileNameAndFileLength(InputStream inputStream) {
         // count the lines in the file (for progress) and calculate the md5 sum (for unique file naming)
         currntLineCounter = 0;
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
+
+            byte[] buffer = new byte[1024];
+            int numRead;
+            do {
+                numRead = inputStream.read(buffer);
+                if (numRead > 0) {
+                    digest.update(buffer, 0, numRead);
+                }
+            } while (numRead != -1);
+            inputStream.close();
+
             StringBuilder hexString = new StringBuilder();
-            String strLine;
-            inputLineCount = 0;
-            while ((strLine = bufferedReader.readLine()) != null) {
-                digest.update(strLine.getBytes());
-                inputLineCount++;
-            }
             byte[] md5sum = digest.digest();
             for (int byteCounter = 0; byteCounter < md5sum.length; ++byteCounter) {
                 hexString.append(Integer.toHexString(0x0100 + (md5sum[byteCounter] & 0x00FF)).substring(1));
@@ -156,10 +160,10 @@ public class EntityImporter implements GenericImporter {
         return fileName.replaceAll("[^A-z0-9]", "_");
     }
 
-    public URI[] importFile(File testFile, String profileId) throws IOException, ImportException {
-        inputFileUri = testFile.toURI();
-        calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(testFile)))));
-        return importFile(new InputStreamReader(new DataInputStream(new FileInputStream(testFile))), profileId);
+    public URI[] importFile(File inputFile, String profileId) throws IOException, ImportException {
+        inputFileUri = inputFile.toURI();
+        calculateFileNameAndFileLength(new FileInputStream(inputFile));
+        return importFile(new InputStreamReader(new FileInputStream(inputFile)), profileId);
     }
 
     public URI[] importFile(String testFileString, String profileId) throws IOException, ImportException {
@@ -169,7 +173,7 @@ public class EntityImporter implements GenericImporter {
             BugCatcherManager.getBugCatcher().logError(exception);
             appendToTaskOutput("Error getting the import directory attached resources might not be correctly resolved");
         }
-        calculateFileNameAndFileLength(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(testFileString))));
+        calculateFileNameAndFileLength(getClass().getResourceAsStream(testFileString));
         return importFile(new InputStreamReader(getClass().getResourceAsStream(testFileString)), profileId);
     }
 
