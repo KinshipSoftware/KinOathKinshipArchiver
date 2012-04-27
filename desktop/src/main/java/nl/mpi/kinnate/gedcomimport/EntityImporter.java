@@ -22,9 +22,9 @@ import nl.mpi.kinnate.kindocument.ImportTranslator;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : EntityImporter
- *  Created on : May 30, 2011, 10:28:59 AM
- *  Author     : Peter Withers
+ * Document : EntityImporter
+ * Created on : May 30, 2011, 10:28:59 AM
+ * Author : Peter Withers
  */
 public class EntityImporter implements GenericImporter {
 
@@ -109,8 +109,9 @@ public class EntityImporter implements GenericImporter {
         idString = cleanFileName(idString);
         EntityDocument currentEntity = createdDocuments.get(idString);
         if (currentEntity == null) {
+            UniqueIdentifier uniqueIdentifier = new UniqueIdentifier(inputFileMd5Sum + ":" + idString, UniqueIdentifier.IdentifierType.iid);
             // create a new entity file
-            currentEntity = new EntityDocument(getDestinationDirectory(), idString, typeString, importTranslator, sessionStorage);
+            currentEntity = new EntityDocument(getDestinationDirectory(), uniqueIdentifier, typeString, importTranslator, sessionStorage);
 //            appendToTaskOutput("created: " + currentEntity.getFilePath());
             createdNodes.add(currentEntity.getFile().toURI());
             createdDocuments.put(idString, currentEntity);
