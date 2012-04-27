@@ -56,7 +56,14 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         ImportTranslator importTranslator = new ImportTranslator(true);
         // todo: add the translator values if required
 
-//        try {
+        importTranslator.addTranslationEntry("SEX", "F", "Gender", "Female");
+        importTranslator.addTranslationEntry("SEX", "M", "Gender", "Male");
+        importTranslator.addTranslationEntry("NAME", null, "Name", null);
+//            importTranslator.addTranslationEntry("Gender", "m", "Gender", "Male");
+//
+//            importTranslator.addTranslationEntry("Date_of_Birth", null, "DateOfBirth", null);
+//            importTranslator.addTranslationEntry("Date_of_Death", null, "DateOfDeath", null);
+
         String strLine;
         int gedcomLevel = 0;
         ArrayList<String> gedcomLevelStrings = new ArrayList<String>();
@@ -238,6 +245,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                     if (lineParts.length == 2) {
                         currentEntity.appendValue(lineParts[1], null, gedcomLevel);
                     } else if (lineParts.length > 2) {
+                        boolean notConsumed = true;
 //                        if (lineParts[1].equals("NAME")) {
 //                            ImdiField[] currentField = gedcomImdiObject.getFields().get("Gedcom.Name");
 //                            if (currentField != null && currentField.length > 0) {
@@ -316,8 +324,6 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                            }
 
 
-                        // todo: filter the links found and handled below from being added here as metadata
-                        currentEntity.appendValue(lineParts[1], lineParts[2], gedcomLevel);
 
                         if (gedcomLevelStrings.size() == 3) {
                             if (gedcomLevelStrings.get(2).equals("DATE")) {
@@ -361,6 +367,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                         } else {
                                             currentEntity.insertValue("DateOfDeath", entityDate.getDateString());
                                         }
+                                        notConsumed = false;
                                     } catch (ParseException exception) {
                                         System.out.println(exception.getMessage());
                                         appendToTaskOutput("Failed to parse date: " + strLine);
@@ -372,16 +379,22 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             }
                         }
                         if (gedcomLevelStrings.size() == 2) {
-                            if (gedcomLevelStrings.get(1).equals("SEX")) {
-                                String genderString = lineParts[2];
-                                if ("F".equals(genderString)) {
-                                    genderString = "Female";
-                                } else if ("M".equals(genderString)) {
-                                    genderString = "Male";
+                            if (gedcomLevelStrings.get(1).equals("SEX") || gedcomLevelStrings.get(1).equals("NAME")) {
+//                                String genderString = lineParts[2];
+//                                if ("F".equals(genderString)) {
+//                                    genderString = "Female";
+//                                } else if ("M".equals(genderString)) {
+//                                    genderString = "Male";
+//                                } else {
+//                                    appendToTaskOutput("Unknown gender type: " + genderString);
+//                                }
+//                                currentEntity.insertValue("Gender", genderString);
+                                if (gedcomLevel == 1) {
+                                    currentEntity.insertValue(lineParts[1], lineParts[2]);
                                 } else {
-                                    appendToTaskOutput("Unknown gender type: " + genderString);
+                                    currentEntity.appendValue(lineParts[1], lineParts[2], gedcomLevel);
                                 }
-                                currentEntity.insertValue("Gender", genderString);
+                                notConsumed = false;
                             }
                         }
                         if (gedcomLevelStrings.get(gedcomLevelStrings.size() - 1).equals("FILE")) {
@@ -399,6 +412,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                         resolvedUri = inputFileUri.resolve(lineParts[2]);
                                     }
                                     currentEntity.entityData.addArchiveLink(resolvedUri);
+                                    notConsumed = false;
                                 } catch (java.lang.IllegalArgumentException exception) {
                                     appendToTaskOutput("Unsupported File Path: " + lineParts[2]);
                                 }
@@ -487,6 +501,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             }
                             // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
                             currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, lineParts[2], importTranslator).entityData, targetRelation, null, null, null, lineParts[1]);
+                            notConsumed = false;
+                        }
+                        if (notConsumed) {
+                            // any unprocessed elements should now be added as they are into the metadata
+                            currentEntity.appendValue(lineParts[1], lineParts[2], gedcomLevel);
                         }
                     }
                 }
