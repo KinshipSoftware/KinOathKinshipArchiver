@@ -11,9 +11,9 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- *  Document   : RecentFileMenu
- *  Created on : Apr 15, 2011, 11:30:39 AM
- *  Author     : Peter Withers
+ * Document : RecentFileMenu
+ * Created on : Apr 15, 2011, 11:30:39 AM
+ * Author : Peter Withers
  */
 public class SamplesFileMenu extends JMenu implements ActionListener {
 
@@ -39,6 +39,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
 //        addSampleToMenu("Archive Link Example", "ArchiveLinks.svg");
         addSampleToMenu("Charles II of Spain", "Charles_II_of_Spain.svg");
         addSampleToMenu("Imported Data Query Example (ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/)", "QueryExample.svg");
+        addSampleToMenu("HaemophiliaEuropeanRoyalty", "HaemophiliaEuropeanRoyalty.svg");
 //        addSampleToMenu("Imported Entities (600)", "600ImportedEntities.svg");
 //        addSampleToMenu("R Usage of the Entity Server", "R-ServerUsage.svg");
     }
