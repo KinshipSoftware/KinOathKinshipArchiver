@@ -24,9 +24,9 @@ import org.w3c.dom.Text;
 import org.w3c.dom.events.EventTarget;
 
 /**
- *  Document   : EntitySvg
- *  Created on : Mar 9, 2011, 3:20:56 PM
- *  Author     : Peter Withers
+ * Document : EntitySvg
+ * Created on : Mar 9, 2011, 3:20:56 PM
+ * Author : Peter Withers
  */
 public class EntitySvg {
 
@@ -85,6 +85,20 @@ public class EntitySvg {
         Element svgRoot = doc.getDocumentElement();
         Element defsNode = doc.createElementNS(svgNameSpace, "defs");
         defsNode.setAttribute("id", "KinSymbols");
+
+        // add the blank symbol
+        Element blankGroup = doc.createElementNS(svgNameSpace, "g");
+        blankGroup.setAttribute("id", "blank");
+        Element blankNode = doc.createElementNS(svgNameSpace, "circle");
+        blankNode.setAttribute("cx", Float.toString(symbolSize + strokeWidth / 4f));
+        blankNode.setAttribute("cy", Float.toString(symbolSize + strokeWidth / 4f));
+        blankNode.setAttribute("r", Integer.toString((symbolSize - strokeWidth / 2)));
+//        circleNode.setAttribute("height", Integer.toString(symbolSize - (strokeWidth * 3)));
+        blankNode.setAttribute("stroke", "none");
+        blankNode.setAttribute("fill", "none");
+        blankGroup.appendChild(blankNode);
+        defsNode.appendChild(blankGroup);
+
         // add the circle symbol
         Element circleGroup = doc.createElementNS(svgNameSpace, "g");
         circleGroup.setAttribute("id", "circle");
@@ -260,29 +274,19 @@ public class EntitySvg {
 //        defsNode.appendChild(equalsGroup);
 //        svgRoot.appendChild(defsNode);
 
-        // add the cross symbol
-        Element crossGroup = doc.createElementNS(svgNameSpace, "g");
-        crossGroup.setAttribute("id", "cross");
-        Element crossNode = doc.createElementNS(svgNameSpace, "polyline");
-        int posX = symbolSize / 2;
-        int posY = symbolSize / 2;
-        int offsetAmount = symbolSize / 2;
-        crossNode.setAttribute("points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
-        crossNode.setAttribute("fill", "none");
-        crossNode.setAttribute("stroke", "black");
-        crossNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
-        crossGroup.appendChild(crossNode);
-        defsNode.appendChild(crossGroup);
-        svgRoot.appendChild(defsNode);
-
         // add the error symbol
         Element noneGroup = doc.createElementNS(svgNameSpace, "g");
         noneGroup.setAttribute("id", "error");
         Element noneNode = doc.createElementNS(svgNameSpace, "polyline");
         int posXnone = symbolSize / 2;
         int posYnone = symbolSize / 2;
-        int offsetNoneAmount = symbolSize / 2;
-        noneNode.setAttribute("points", (posXnone - offsetNoneAmount) + "," + (posYnone - offsetNoneAmount) + " " + (posXnone + offsetNoneAmount) + "," + (posYnone + offsetNoneAmount) + " " + (posXnone) + "," + (posYnone) + " " + (posXnone - offsetNoneAmount) + "," + (posYnone + offsetNoneAmount) + " " + (posXnone + offsetNoneAmount) + "," + (posYnone - offsetNoneAmount));
+        int offsetNoneAmount = symbolSize;
+        noneNode.setAttribute("points", (posXnone - offsetNoneAmount) + "," + (posYnone - offsetNoneAmount) + " " + (posXnone + offsetNoneAmount) + "," + (posYnone + offsetNoneAmount) + " " + (posXnone) + "," + (posYnone) + " " + (posXnone - offsetNoneAmount) + "," + (posYnone + offsetNoneAmount)
+                + " " + (posXnone + offsetNoneAmount) + "," + (posYnone - offsetNoneAmount)
+                + " " + (posXnone - offsetNoneAmount) + "," + (posYnone - offsetNoneAmount)
+                + " " + (posXnone - offsetNoneAmount) + "," + (posYnone + offsetNoneAmount)
+                + " " + (posXnone + offsetNoneAmount) + "," + (posYnone + offsetNoneAmount)
+                + " " + (posXnone + offsetNoneAmount) + "," + (posYnone - offsetNoneAmount));
         noneNode.setAttribute("fill", "none");
         noneNode.setAttribute("stroke", "red");
         noneNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
@@ -314,6 +318,21 @@ public class EntitySvg {
             lineNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
             lineGroup.appendChild(lineNode);
             defsNode.appendChild(lineGroup);
+
+            // add the cross symbol
+            Element crossGroup = doc.createElementNS(svgNameSpace, "g");
+            crossGroup.setAttribute("id", markerColour + "cross");
+            Element crossNode = doc.createElementNS(svgNameSpace, "polyline");
+            int posX = symbolSize / 2;
+            int posY = symbolSize / 2;
+            int offsetAmount = symbolSize / 2;
+            crossNode.setAttribute("points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
+            crossNode.setAttribute("fill", "none");
+            crossNode.setAttribute("stroke", markerColour);
+            crossNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            crossGroup.appendChild(crossNode);
+            defsNode.appendChild(crossGroup);
+            svgRoot.appendChild(defsNode);
         }
         return symbolSize;
     }
@@ -541,7 +560,7 @@ public class EntitySvg {
 //        counterTest++;
         String[] symbolNames = currentNode.getSymbolNames();
         if (symbolNames == null || symbolNames.length == 0) {
-            symbolNames = new String[]{"error"}; // todo:. do we really need to be putting this error symbol on the diagram?
+            symbolNames = new String[]{"blank"};
         }
         // todo: check that if an entity is already placed in which case do not recreate
         // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
