@@ -42,6 +42,7 @@
 1 NAME Victoria  /Hanover/
 1 TITL Queen of England
 1 SEX F
+1 chro Xx
 1 BIRT
 2 DATE 24 MAY 1819
 2 PLAC Kensington,Palace,London,England
@@ -57,6 +58,7 @@
 1 NAME Albert Augustus Charles//
 1 TITL Prince
 1 SEX M
+1 chro XY
 1 BIRT
 2 DATE 26 AUG 1819
 2 PLAC Schloss Rosenau,Near Coburg,Germany
@@ -71,6 +73,7 @@
 1 NAME Victoria Adelaide Mary//
 1 TITL Princess Royal
 1 SEX F
+1 chro XC
 1 BIRT
 2 DATE 21 NOV 1840
 2 PLAC Buckingham,Palace,London,England
@@ -88,6 +91,7 @@
 1 NAME Edward_VII  /Wettin/
 1 TITL King of England
 1 SEX M
+1 chro XY
 1 BIRT
 2 DATE  9 NOV 1841
 2 PLAC Buckingham,Palace,London,England
@@ -103,6 +107,7 @@
 1 NAME Alice Maud Mary//
 1 TITL Princess
 1 SEX F
+1 chro Xx
 1 BIRT
 2 DATE 25 APR 1843
 2 PLAC Buckingham,Palace,London,England
@@ -115,6 +120,7 @@
 1 NAME Alfred Ernest Albert//
 1 TITL Prince
 1 SEX M
+1 chro XY
 1 BIRT
 2 DATE  6 AUG 1844
 2 PLAC Windsor Castle,Berkshire,England
@@ -127,6 +133,7 @@
 1 NAME Helena Augusta Victoria//
 1 TITL Princess
 1 SEX F
+1 chro XX?
 1 BIRT
 2 DATE 25 MAY 1846
 2 PLAC Buckingham,Palace,London,England
@@ -139,6 +146,7 @@
 1 NAME Louise Caroline Alberta//
 1 TITL Princess
 1 SEX F
+1 chro XX?
 1 BIRT
 2 DATE 18 MAR 1848
 2 PLAC Buckingham,Palace,London,England
@@ -153,6 +161,7 @@
 1 NAME Arthur William Patrick//
 1 TITL Prince
 1 SEX M
+1 chro XY
 1 BIRT
 2 DATE  1 MAY 1850
 2 PLAC Buckingham,Palace,London,England
@@ -165,6 +174,7 @@
 1 NAME Leopold George Duncan//
 1 TITL Prince
 1 SEX M
+1 chro xY
 1 BIRT
 2 DATE  7 APR 1853
 2 PLAC Buckingham,Palace,London,England
@@ -177,6 +187,7 @@
 1 NAME Beatrice Mary Victoria//
 1 TITL Princess
 1 SEX F
+1 chro Xx
 1 BIRT
 2 DATE 14 APR 1857
 2 PLAC Buckingham,Palace,London,England
@@ -312,6 +323,7 @@
 1 NAME Louis_IV of_Hesse //
 1 TITL Grand Duke
 1 SEX M
+1 chro XY
 1 BIRT
 2 DATE        1837
 1 DEAT
@@ -322,6 +334,7 @@
 1 NAME Helena Frederica of_Waldeck//
 1 TITL Princess
 1 SEX F
+1 chro XX
 1 BIRT
 2 DATE 17 FEB 1861
 2 PLAC Arolsen
@@ -334,6 +347,7 @@
 1 NAME Alice of_Athlone //
 1 TITL Princess
 1 SEX F
+1 chro Xx
 1 BIRT
 2 DATE        1883
 1 DEAT
@@ -344,6 +358,7 @@
 1 NAME Henry Maurice of_Battenberg//
 1 TITL Prince
 1 SEX M
+1 chro XY
 1 BIRT
 2 DATE        1858
 1 DEAT
@@ -366,6 +381,7 @@
 1 NAME Victoria Eugenie "Ena"//
 1 TITL Queen of Spain
 1 SEX F
+1 chro Xx
 1 BIRT
 2 DATE        1887
 1 DEAT
@@ -376,6 +392,7 @@
 0 @I28@ INDI
 1 NAME Leopold  //
 1 SEX M
+1 chro xY
 1 BIRT
 2 DATE        1889
 1 DEAT
@@ -385,6 +402,7 @@
 1 NAME Maurice  //
 1 TITL Prince
 1 SEX M
+1 chro xY?
 1 BIRT
 2 DATE        1891
 1 DEAT
@@ -508,6 +526,7 @@
 1 NAME Alexandra Fedorovna "Alix"//
 1 TITL Tsarina
 1 SEX F
+1 chro Xx
 1 BIRT
 2 DATE  6 JUN 1872
 2 PLAC Darmstadt,,,Germany
@@ -913,6 +932,7 @@
 1 NAME Irene of_Hesse //
 1 TITL Princess
 1 SEX F
+1 chro Xx
 1 BIRT
 2 DATE        1866
 1 DEAT
@@ -922,6 +942,7 @@
 0 @I80@ INDI
 1 NAME Waldemar  //
 1 SEX M
+1 chro xY
 1 BIRT
 2 DATE        1889
 1 DEAT
@@ -930,6 +951,7 @@
 0 @I81@ INDI
 1 NAME Henry  //
 1 SEX M
+1 chro xY
 1 BIRT
 2 DATE        1900
 1 DEAT
@@ -973,6 +995,7 @@
 0 @I86@ INDI
 1 NAME Frederick  //
 1 SEX M
+1 chro xY
 1 BIRT
 2 DATE        1870
 1 DEAT
@@ -2793,6 +2816,7 @@
 1 NAME Alexander George of_Teck//
 1 TITL Earl of Athlone
 1 SEX M
+1 chro XY
 1 BIRT
 2 DATE        1874
 1 DEAT
@@ -2856,17 +2880,20 @@
 1 NAME Rupert  //
 1 TITL Vicount Trematon
 1 SEX M
+1 chro xY
 1 DEAT
 2 DATE        1928
 1 FAMC @F38@
 0 @I288@ INDI
 1 NAME Son_2  //
 1 SEX M
+1 chro xY
 1 FAMC @F38@
 0 @I289@ INDI
 1 NAME May Cambridge //
 1 TITL Lady
 1 SEX F
+1 chro XX
 1 BIRT
 2 DATE        1906
 1 FAMS @F669@
@@ -4163,6 +4190,7 @@
 1 NAME Alphonso of_Cavadonga //
 1 TITL Count
 1 SEX M
+1 chro xY
 1 BIRT
 2 DATE        1907
 1 DEAT
@@ -20670,6 +20698,7 @@
 0 @I2643@ INDI
 1 NAME Gonzalo  //
 1 SEX M
+1 chro xY
 1 BIRT
 2 DATE        1914
 1 DEAT
