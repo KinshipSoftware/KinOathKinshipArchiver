@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -113,6 +114,10 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
         }
         this.revalidate();
     }
+    static final private Object lockObject = new Object();
+    static final private AtomicBoolean ATOMIC_BOOLEAN = new AtomicBoolean(false);
+    static private ArrayList<KinTreeNode> staticTreeNodesArray = null;
+    static private boolean updateRequired = true;
 
     public void loadProjectTree() {
         this.remove(pagePanel);
@@ -124,13 +129,14 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
 
             @Override
             public void run() {
-//                int nodeCount = 0;
-                treeNodesArray = new ArrayList<KinTreeNode>();
-                EntityData[] projectEntities = entityCollection.getEntityByEndPoint(DataTypes.RelationType.ancestor, graphPanel.getIndexParameters());
-//                resultsArea.setText("Found " + searchResults.length + " entities\n");
-                for (EntityData entityData : projectEntities) {
-                    boolean isHorizontalEndPoint = true;
-                    // this check is for end points that have a sibling or spouse who are not an end point, but it is removed because it is not possible to browse to a spouse or sibling in a directional branch
+                boolean projectQueryRunning = ATOMIC_BOOLEAN.getAndSet(true);
+                synchronized (lockObject) {
+                    if (!projectQueryRunning && updateRequired) {
+                        staticTreeNodesArray = new ArrayList<KinTreeNode>();
+                        EntityData[] projectEntities = entityCollection.getEntityByEndPoint(DataTypes.RelationType.ancestor, graphPanel.getIndexParameters());
+                        for (EntityData entityData : projectEntities) {
+                            boolean isHorizontalEndPoint = true;
+                            // this check is for end points that have a sibling or spouse who are not an end point, but it is removed because it is not possible to browse to a spouse or sibling in a directional branch
 //                    for (EntityRelation entityRelation : entityData.getAllRelations()) {
 //                        if (entityRelation.getAlterNode() == null) {
 //                            // if the alter node has not been loaded then it must not be an end point
@@ -140,23 +146,19 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
 //                            }
 //                        }
 //                    }
-//            if (resultsArray.size() < 1000) {
-                    if (isHorizontalEndPoint) {
-                        treeNodesArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
-//                        final String testNodeName = "Node: " + nodeCount;
-//                        System.out.println("testNodeName: " + testNodeName);
-//                        treeNodesArray.add(new ContainerNode(testNodeName, null, new ArbilNode[0]));
-//                        nodeCount++;
+                            if (isHorizontalEndPoint) {
+                                staticTreeNodesArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                            }
+                        }
+                        Collections.sort(staticTreeNodesArray);
+                        updateRequired = false;
                     }
-//            } else {
-//                resultsArea.append("results limited to 1000\n");
-//                break;
-//            }
+                    treeNodesArray = staticTreeNodesArray;
+                    ProjectTreePanel.this.remove(progressBar);
+                    ProjectTreePanel.this.revalidate();
+                    showPage();
+                    ATOMIC_BOOLEAN.set(false);
                 }
-                Collections.sort(treeNodesArray);
-                ProjectTreePanel.this.remove(progressBar);
-                ProjectTreePanel.this.revalidate();
-                showPage();
             }
         }.start();
     }
@@ -168,6 +170,7 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
     }
 
     public void updateOccured() {
+        updateRequired = true;
         loadProjectTree();
     }
 }
