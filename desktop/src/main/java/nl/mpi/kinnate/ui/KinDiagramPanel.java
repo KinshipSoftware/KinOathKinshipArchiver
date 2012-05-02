@@ -391,7 +391,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                     KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg);
                                     graphData.readKinTypes(kinTypeStringProviders, graphPanel.dataStoreSvg);
                                     graphPanel.drawNodes(graphData);
-                                    egoSelectionPanel.setTransientNodes(graphData.getDataNodes());
+                                    egoSelectionPanel.setTreeNodes(graphPanel);
 //                KinDiagramPanel.this.doLayout();
                                     new KinTermCalculator().insertKinTerms(graphData.getDataNodes(), graphPanel.getkinTermGroups());
                                 }
