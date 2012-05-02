@@ -47,7 +47,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
     public String getColumnName(int column) {
         switch (column) {
             case 0:
-                return "Display Name";
+                return "Custom Name";
             case 1:
                 return "Data Category";
             case 2:
