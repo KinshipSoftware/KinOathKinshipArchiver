@@ -72,7 +72,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
                         labelBuilder.append(" ");
                     }
                 } else {
-                    labelBuilder.append("(unnamed entity)");
+                    labelBuilder.append("              ");
                 }
                 derivedLabelString = labelBuilder.toString();
             }
