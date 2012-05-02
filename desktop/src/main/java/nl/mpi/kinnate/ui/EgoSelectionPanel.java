@@ -35,8 +35,8 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
     private KinTree transientTree;
     private ContainerNode transientNode;
     JPanel labelPanel3;
-    JScrollPane metadataNodeScrolPane;
-    JScrollPane transientNodeScrolPane;
+    JPanel metadataNodePanel;
+    JPanel transientNodePanel;
     private MessageDialogHandler dialogHandler;
     private EntityCollection entityCollection;
     private ArbilDataNodeLoader dataNodeLoader;
@@ -45,8 +45,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         this.dialogHandler = dialogHandler;
         this.entityCollection = entityCollection;
         this.dataNodeLoader = dataNodeLoader;
-        JPanel metadataNodePanel;
-        JPanel transientNodePanel;
+        JScrollPane metadataNodeScrolPane;
         transientNodePanel = new JPanel(new BorderLayout());
         transientNodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Transient Entities"));
 
@@ -60,7 +59,6 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         transientTree = new KinTree(kinDiagramPanel, graphPanel, transientNode);
         transientTree.setBackground(transientNodePanel.getBackground());
         transientNodePanel.add(transientTree, BorderLayout.CENTER);
-        transientNodeScrolPane = new JScrollPane(transientNodePanel);
 
         metadataNodePanel = new JPanel(new BorderLayout());
         egoNode = new ContainerNode("ego", null, new ArbilNode[]{});
@@ -97,6 +95,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
 //        requiredTree.setCustomPreviewTable(previewTable);
 //        impliedTree.setCustomPreviewTable(previewTable);
 //        transientTree.setCustomPreviewTable(previewTable);
+        this.add(metadataNodeScrolPane, BorderLayout.CENTER);
     }
 
     public void setTransferHandler(KinDragTransferHandler dragTransferHandler) {
@@ -116,55 +115,43 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
             allEntities = new EntityData[0];
         }
         IndexerParameters indexerParameters = graphPanel.getIndexParameters();
-
-        this.remove(transientNodeScrolPane);
-        this.add(metadataNodeScrolPane, BorderLayout.CENTER);
-        this.revalidate();
         HashSet<KinTreeNode> egoNodeArray = new HashSet<KinTreeNode>();
         HashSet<KinTreeNode> requiredNodeArray = new HashSet<KinTreeNode>();
         HashSet<KinTreeNode> remainingNodeArray = new HashSet<KinTreeNode>();
+        HashSet<KinTreeNode> transientNodeArray = new HashSet<KinTreeNode>();
         for (EntityData entityData : allEntities) {
             if (entityData.isVisible) {
                 KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
-                if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
-                    egoNodeArray.add(kinTreeNode);
-                } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
-                    requiredNodeArray.add(kinTreeNode);
+                if (entityData.getUniqueIdentifier().isTransientIdentifier()) {
+                    transientNodeArray.add(kinTreeNode);
                 } else {
-                    remainingNodeArray.add(kinTreeNode);
+                    if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                        egoNodeArray.add(kinTreeNode);
+                    } else if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                        requiredNodeArray.add(kinTreeNode);
+                    } else {
+                        remainingNodeArray.add(kinTreeNode);
+                    }
                 }
             }
         }
         System.out.println("egoNodeArray: " + egoNodeArray.size());
         System.out.println("requiredNodeArray: " + requiredNodeArray.size());
         System.out.println("remainingNodeArray: " + remainingNodeArray.size());
+        System.out.println("transientNodeArray: " + transientNodeArray.size());
         egoNode.setChildNodes(egoNodeArray.toArray(new ArbilNode[]{}));
         requiredNode.setChildNodes(requiredNodeArray.toArray(new ArbilNode[]{}));
         impliedNode.setChildNodes(remainingNodeArray.toArray(new ArbilNode[]{}));
-        transientNode.setChildNodes(new ArbilNode[]{});
-        egoTree.requestResort();
-        requiredTree.requestResort();
-        impliedTree.requestResort();
-        transientTree.requestResort();
-    }
-
-    public void setTransientNodes(EntityData[] allEntities) {
-        this.remove(metadataNodeScrolPane);
-        this.add(transientNodeScrolPane, BorderLayout.CENTER);
-        this.revalidate();
-        HashSet<KinTreeNode> transientNodeArray = new HashSet<KinTreeNode>();
-        for (EntityData entityData : allEntities) {
-            KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, null, dialogHandler, entityCollection, dataNodeLoader);
-            transientNodeArray.add(kinTreeNode);
-        }
         transientNode.setChildNodes(transientNodeArray.toArray(new ArbilNode[]{}));
-        egoNode.setChildNodes(new ArbilNode[]{});
-        requiredNode.setChildNodes(new ArbilNode[]{});
-        impliedNode.setChildNodes(new ArbilNode[]{});
-        transientTree.requestResort();
         egoTree.requestResort();
         requiredTree.requestResort();
         impliedTree.requestResort();
+        transientTree.requestResort();
+        if (!transientNodeArray.isEmpty()) {
+            metadataNodePanel.removeAll();
+            metadataNodePanel.add(new JScrollPane(transientNodePanel), BorderLayout.CENTER);
+            this.revalidate();
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
