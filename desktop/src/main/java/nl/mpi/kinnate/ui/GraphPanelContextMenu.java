@@ -236,7 +236,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 //            }
             this.add(new JSeparator());
         }
-        setAsEgoMenuItem = new JMenuItem("Set as Ego (replacing list)");
+        setAsEgoMenuItem = new JMenuItem("Set as Ego (list will be cleared)");
         setAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
