@@ -160,6 +160,11 @@
             <artifactId>arbil</artifactId>
             <version>2.5-pretesting-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-codec</artifactId>
+            <version>1.7</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
