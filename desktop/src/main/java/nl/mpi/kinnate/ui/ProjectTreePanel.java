@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
@@ -110,8 +111,10 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
             rootNode.setChildNodes(treeNodesArray.subList(startNode, endNode).toArray(new ArbilNode[]{}));
             kinTree.requestResort();
 
-            this.add(pagePanel, BorderLayout.PAGE_END);
         }
+        progressBar.setVisible(false);
+        ProjectTreePanel.this.remove(progressBar);
+        ProjectTreePanel.this.add(pagePanel, BorderLayout.PAGE_END);
         this.revalidate();
     }
     static final private Object lockObject = new Object();
@@ -120,8 +123,9 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
     static private boolean updateRequired = true;
 
     public void loadProjectTree() {
-        this.remove(pagePanel);
-        this.add(progressBar, BorderLayout.PAGE_END);
+        ProjectTreePanel.this.remove(pagePanel);
+        ProjectTreePanel.this.add(progressBar, BorderLayout.PAGE_END);
+        progressBar.setVisible(true);
         progressBar.setIndeterminate(true);
         this.revalidate();
         kinTree.requestResort();
@@ -154,9 +158,12 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
                         updateRequired = false;
                     }
                     treeNodesArray = staticTreeNodesArray;
-                    ProjectTreePanel.this.remove(progressBar);
-                    ProjectTreePanel.this.revalidate();
-                    showPage();
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        public void run() {
+                            showPage();
+                        }
+                    });
                     ATOMIC_BOOLEAN.set(false);
                 }
             }
