@@ -15,9 +15,9 @@ import org.w3c.dom.Text;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- *  Document   : RelationSvg
- *  Created on : Mar 9, 2011, 3:21:16 PM
- *  Author     : Peter Withers
+ * Document : RelationSvg
+ * Created on : Mar 9, 2011, 3:21:16 PM
+ * Author : Peter Withers
  */
 public class RelationSvg {
 
@@ -183,6 +183,7 @@ public class RelationSvg {
             egoX = tempX;
             egoY = tempY;
         }
+        // todo: if this line is too straight then add a curve by tweeking the handles
         if (curveLineOrientation == CurveLineOrientation.vertical) {
             fromBezX = egoX;
             fromBezY = alterY;
@@ -232,7 +233,7 @@ public class RelationSvg {
                     for (EntityRelation egosRelation : currentNode.getAllRelations()) {
                         if (egosRelation.getRelationType() == DataTypes.RelationType.ancestor) {
                             if (altersRelation.alterUniqueIdentifier.equals(egosRelation.alterUniqueIdentifier)) {
-                                if (altersRelation.getAlterNode().isVisible) {
+                                if (altersRelation.getAlterNode() != null && altersRelation.getAlterNode().isVisible) {
                                     return true;
                                 }
                             }
