@@ -98,16 +98,16 @@ public class DiagramOptionsMenu extends JMenu {
             }
         });
         this.add(showSanguineLinesMenuItem);
-        JCheckBoxMenuItem showKinTermLinesMenuItem = new JCheckBoxMenuItem("Show Kin Term Lines");
-        showKinTermLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //  Hide/Show Kin Term lines on the graph
-                graphPanel.dataStoreSvg.showKinTermLines = !graphPanel.dataStoreSvg.showKinTermLines;
-                graphPanel.drawNodes();
-            }
-        });
-        this.add(showKinTermLinesMenuItem);
+//        JCheckBoxMenuItem showKinTermLinesMenuItem = new JCheckBoxMenuItem("Show Kin Term Lines");
+//        showKinTermLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+//
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                //  Hide/Show Kin Term lines on the graph
+//                graphPanel.dataStoreSvg.showKinTermLines = !graphPanel.dataStoreSvg.showKinTermLines;
+//                graphPanel.drawNodes();
+//            }
+//        });
+//        this.add(showKinTermLinesMenuItem);
         JCheckBoxMenuItem showLabelssMenuItem = new JCheckBoxMenuItem("Show Labels");
         showLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
@@ -196,7 +196,7 @@ public class DiagramOptionsMenu extends JMenu {
         highlightRelationsMenuItem.setSelected(graphPanel.dataStoreSvg.highlightRelationLines);
         showBorderMenuItem.setSelected(graphPanel.dataStoreSvg.showDiagramBorder);
         showSanguineLinesMenuItem.setSelected(graphPanel.dataStoreSvg.showSanguineLines);
-        showKinTermLinesMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLines);
+//        showKinTermLinesMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLines);
         showLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showLabels);
         showKinTypeLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTypeLabels);
 //        showKinTermLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLabels);
