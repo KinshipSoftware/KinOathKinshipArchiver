@@ -7,9 +7,9 @@ import javax.swing.JMenuItem;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- *  Document   : DocumentNewMenu
- *  Created on : Sep 27, 2011, 10:33:29 AM
- *  Author     : Peter Withers
+ * Document : DocumentNewMenu
+ * Created on : Sep 27, 2011, 10:33:29 AM
+ * Author : Peter Withers
  */
 public class DocumentNewMenu extends JMenu implements ActionListener {
 
@@ -22,8 +22,8 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
         KinTerms("Kin Terms Diagram"),
         Query("Query Diagram"),
         //EntitySearch("Entity Search"),
-        ArchiveLinker("Archive Data Linker"),
-        CustomQuery("Custom Data Formats");
+        ArchiveLinker("Archive Data Linker");//,
+//        CustomQuery("Custom Data Formats");
         private String displayName;
 
         private DocumentType(String displayName) {
