@@ -140,13 +140,13 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     showArchiveLinker = true;
                     graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
                     break;
-                case CustomQuery:
-                    showMetaData = true;
-                    showKinTypeStrings = true;
-                    showDiagramTree = true;
-                    showIndexerSettings = true;
-                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
-                    break;
+//                case CustomQuery:
+//                    showMetaData = true;
+//                    showKinTypeStrings = true;
+//                    showDiagramTree = true;
+//                    showIndexerSettings = true;
+//                    graphPanel.dataStoreSvg.diagramMode = DiagramMode.KinTypeQuery;
+//                    break;
 //                case EntitySearch:
 //                    showMetaData = true;
 //                    showEntitySearch = true;
