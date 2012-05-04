@@ -127,6 +127,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             deleteMenu.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    kinDiagramPanel.showProgressBar();
                     int entityCount = 0;
                     for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
                         if (!uniqueIdentifier.isGraphicsIdentifier() && !uniqueIdentifier.isTransientIdentifier()) {
@@ -145,6 +146,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                             if (uniqueIdentifier.isGraphicsIdentifier()) {
                                 graphPanel.svgUpdateHandler.deleteGraphics(uniqueIdentifier);
                             } else if (uniqueIdentifier.isTransientIdentifier()) {
+                                kinDiagramPanel.clearProgressBar();
                                 throw new UnsupportedOperationException("Cannot delete transient entities.");
                             } else {
                                 affectedIdentifiers.add(uniqueIdentifier);
@@ -160,6 +162,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                         kinDiagramPanel.removeRequiredNodes(affectedIdentifiersArray);
                         kinDiagramPanel.removeEgoNodes(affectedIdentifiersArray);
                     }
+                    kinDiagramPanel.clearProgressBar();
                 }
             });
             this.add(deleteMenu);
@@ -168,12 +171,16 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             mergeEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    kinDiagramPanel.showProgressBar();
                     try {
-                        UniqueIdentifier[] affectedIdentifiers = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).mergeEntities(selectedIdentifiers);
-                        kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
+                        final EntityMerger entityMerger = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection);
+                        entityMerger.mergeEntities(selectedIdentifiers);
+                        kinDiagramPanel.entityRelationsChanged(entityMerger.getAffectedIdentifiersArray());
+                        kinDiagramPanel.removeRequiredNodes(entityMerger.getDeletedIdentifiersArray());
                     } catch (ImportException exception) {
                         arbilWindowManager.addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
                     }
+                    kinDiagramPanel.clearProgressBar();
                 }
             });
             this.add(mergeEntitiesMenu);
@@ -182,6 +189,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             duplicateEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    kinDiagramPanel.showProgressBar();
                     try {
                         final UniqueIdentifier[] duplicateEntities = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).duplicateEntities(selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
@@ -189,6 +197,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                     } catch (ImportException exception) {
                         arbilWindowManager.addMessageDialogToQueue("Failed to duplicate: " + exception.getMessage(), duplicateEntitiesMenu.getText());
                     }
+                    kinDiagramPanel.clearProgressBar();
                 }
             });
             this.add(duplicateEntitiesMenu);
@@ -201,12 +210,14 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 addRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        kinDiagramPanel.showProgressBar();
                         try {
                             UniqueIdentifier[] affectedIdentifiers = new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).linkEntities(selectedIdentifiers, RelationType.valueOf(evt.getActionCommand()), null, null); // todo: custom relation types could be enabled here as could dcr values..
                             kinDiagramPanel.entityRelationsChanged(affectedIdentifiers);
                         } catch (ImportException exception) {
                             arbilWindowManager.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), addRelationEntityMenu.getText());
                         }
+                        kinDiagramPanel.clearProgressBar();
                     }
                 });
                 addRelationEntityMenu.add(addRelationEntityMenuItem);
@@ -224,12 +235,14 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             removeRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    kinDiagramPanel.showProgressBar();
                     try {
                         new RelationLinker(sessionStorage, arbilWindowManager, entityCollection).unlinkEntities(graphPanel, selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                     } catch (ImportException exception) {
                         arbilWindowManager.addMessageDialogToQueue("Failed to remove relations: " + exception.getMessage(), removeRelationEntityMenu.getText());
                     }
+                    kinDiagramPanel.clearProgressBar();
                 }
             });
             removeRelationEntityMenu.add(removeRelationEntityMenuItem);
@@ -315,12 +328,14 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         saveFileMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kinDiagramPanel.showProgressBar();
                 try {
                     arbilWindowManager.stopEditingInCurrentWindow();
                     dataNodeLoader.saveNodesNeedingSave(true);
                 } catch (Exception ex) {
                     BugCatcherManager.getBugCatcher().logError(ex);
                 }
+                kinDiagramPanel.clearProgressBar();
             }
         });
         this.add(saveFileMenuItem);
@@ -392,6 +407,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     }
 
     public void actionPerformed(ActionEvent e) {
+        kinDiagramPanel.showProgressBar();
         graphPanel.svgUpdateHandler.addGraphics(SvgUpdateHandler.GraphicsTypes.valueOf(e.getActionCommand()), xPos, yPos);
+        kinDiagramPanel.clearProgressBar();
     }
 }
