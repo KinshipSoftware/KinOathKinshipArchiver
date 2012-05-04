@@ -50,6 +50,15 @@ public class KinTreeNode extends ArbilNode implements Comparable {
         }
     }
 
+//    public void setEntityData(EntityData entityData) {
+//        // todo: this does not cause the tree to update so it is redundent 
+//        this.entityData = entityData;
+//        derivedLabelString = null;
+//        symbolGraphic = null;
+//        // todo: clear or set the child entity data 
+//        //childNodes
+//    }
+
     public EntityData getEntityData() {
         return entityData;
     }
@@ -253,17 +262,19 @@ public class KinTreeNode extends ArbilNode implements Comparable {
             return false;
         }
         final KinTreeNode other = (KinTreeNode) obj;
-//        return this.entityData == other.entityData;
+        // we compare the entity data instance because this is the only way to update the arbil tree
+        // todo: this does not break the graph selection process but check for other places where equals might be used
+        return this.entityData == other.entityData;
 
 ////        return this.hashCode() == other.hashCode();
 //        if (entityData == null || other.entityData == null) {
 //            // todo: it would be good for this to never be null, or at least to aways have the UniqueIdentifier to compare
 //            return false;
 //        }
-        if (this.getUniqueIdentifier() != other.getUniqueIdentifier() && (this.getUniqueIdentifier() == null || !this.getUniqueIdentifier().equals(other.getUniqueIdentifier()))) {
-            return false;
-        }
-        return true;
+//        if (this.getUniqueIdentifier() != other.getUniqueIdentifier() && (this.getUniqueIdentifier() == null || !this.getUniqueIdentifier().equals(other.getUniqueIdentifier()))) {
+//            return false;
+//        }
+//        return true;
     }
 
     @Override
