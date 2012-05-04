@@ -71,21 +71,23 @@ public class DiagramOptionsMenu extends JMenu {
         });
         this.add(showBorderMenuItem);
 
-        JMenu diagramSizeMenuItem = new JMenu("Diagram Size");
-        for (String currentString : graphPanel.graphPanelSize.getPreferredSizes()) {
-            JMenuItem currentMenuItem = new JMenuItem(currentString);
-            currentMenuItem.setActionCommand(currentString);
-            currentMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    String sizeString = evt.getActionCommand();
-                    graphPanel.graphPanelSize.setSize(sizeString);
-                    graphPanel.drawNodes();
-                }
-            });
-            diagramSizeMenuItem.add(currentMenuItem);
-        }
-        this.add(diagramSizeMenuItem);
+        // todo: reassess if the diagram page layout/size is of value to the user
+//        JMenu diagramSizeMenuItem = new JMenu("Diagram Size");
+//        for (String currentString : graphPanel.graphPanelSize.getPreferredSizes()) {
+//            JMenuItem currentMenuItem = new JMenuItem(currentString);
+//            currentMenuItem.setActionCommand(currentString);
+//            currentMenuItem.addActionListener(new java.awt.event.ActionListener() {
+//
+//                public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                    String sizeString = evt.getActionCommand();
+//                    graphPanel.graphPanelSize.setSize(sizeString);
+//                    graphPanel.drawNodes();
+//                }
+//            });
+//            diagramSizeMenuItem.add(currentMenuItem);
+//        }
+//        this.add(diagramSizeMenuItem);
+        
         JCheckBoxMenuItem showSanguineLinesMenuItem = new JCheckBoxMenuItem("Show Sanguin Lines");
         showSanguineLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
