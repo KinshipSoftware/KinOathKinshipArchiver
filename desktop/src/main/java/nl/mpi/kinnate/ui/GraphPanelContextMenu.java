@@ -171,16 +171,24 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             mergeEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    kinDiagramPanel.showProgressBar();
-                    try {
-                        final EntityMerger entityMerger = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection);
-                        entityMerger.mergeEntities(selectedIdentifiers);
-                        kinDiagramPanel.entityRelationsChanged(entityMerger.getAffectedIdentifiersArray());
-                        kinDiagramPanel.removeRequiredNodes(entityMerger.getDeletedIdentifiersArray());
-                    } catch (ImportException exception) {
-                        arbilWindowManager.addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
+                    String messageString = "The selected entites will be merged,\nAll relations will be preserved and " + (selectedIdentifiers.length - 1) + " entities will be deleted.\nOnly the data of the initialy selected entity will be kept:\n\"";
+                    for (String labelString : graphPanel.getEntityForElementId(selectedIdentifiers[0]).getLabel()) {
+                        messageString = messageString + labelString;
                     }
-                    kinDiagramPanel.clearProgressBar();
+                    messageString = messageString + "\"\nDo you wish to continue?";
+                    if (JOptionPane.OK_OPTION == arbilWindowManager.showDialogBox(messageString, "Merge Entities", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE)) {
+
+                        kinDiagramPanel.showProgressBar();
+                        try {
+                            final EntityMerger entityMerger = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection);
+                            entityMerger.mergeEntities(selectedIdentifiers);
+                            kinDiagramPanel.entityRelationsChanged(entityMerger.getAffectedIdentifiersArray());
+                            kinDiagramPanel.removeRequiredNodes(entityMerger.getDeletedIdentifiersArray());
+                        } catch (ImportException exception) {
+                            arbilWindowManager.addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
+                        }
+                        kinDiagramPanel.clearProgressBar();
+                    }
                 }
             });
             this.add(mergeEntitiesMenu);
