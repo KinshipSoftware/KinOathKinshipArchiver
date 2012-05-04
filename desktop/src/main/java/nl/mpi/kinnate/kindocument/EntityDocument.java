@@ -107,10 +107,10 @@ public class EntityDocument {
 //            idString = nameString;
 //            entityFile = new File(destinationDirectory, nameString + ".kmdi");
 //        } else {
-            idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
-            File subDirectory = new File(destinationDirectory, idString.substring(0, 2));
-            subDirectory.mkdir();
-            entityFile = new File(subDirectory, idString);
+        idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
+        File subDirectory = new File(destinationDirectory, idString.substring(0, 2));
+        subDirectory.mkdir();
+        entityFile = new File(subDirectory, idString);
 //        }
         try {
             // construct the metadata file
@@ -333,10 +333,6 @@ public class EntityDocument {
 
     public String getFilePath() {
         return entityFile.getAbsolutePath();
-    }
-
-    public void setAsDeletedDocument() throws ImportException {
-        // todo:
     }
 
     public void saveDocument() throws ImportException {
