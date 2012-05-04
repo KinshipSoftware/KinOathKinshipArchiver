@@ -517,13 +517,25 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void showProgressBar() {
-        progressBar.setIndeterminate(true);
-        progressBar.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                progressBar.setIndeterminate(true);
+                progressBar.setVisible(true);
+                KinDiagramPanel.this.revalidate();
+            }
+        });
     }
 
     public void clearProgressBar() {
-        progressBar.setIndeterminate(false);
-        progressBar.setVisible(false);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                progressBar.setIndeterminate(false);
+                progressBar.setVisible(false);
+                KinDiagramPanel.this.revalidate();
+            }
+        });
     }
 
     public boolean hasSaveFileName() {
