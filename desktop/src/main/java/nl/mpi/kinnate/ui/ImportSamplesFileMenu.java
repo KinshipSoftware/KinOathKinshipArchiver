@@ -22,8 +22,8 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
     public ImportSamplesFileMenu(AbstractDiagramManager diagramWindowManager, MessageDialogHandler dialogHandler) {
         this.diagramWindowManager = diagramWindowManager;
         this.dialogHandler = dialogHandler;
-        addSampleToMenu("Gedcom Simple File", "/gedcomsamples/wiki-test-ged.ged");
-        addSampleToMenu("Gedcom Torture File", "/TestGED/TGC55C.ged");
+        addSampleToMenu("Gedcom Simple File (small sample of three individuals)", "/gedcomsamples/wiki-test-ged.ged");
+        addSampleToMenu("Gedcom Torture File (only for testing GEDOM compliance)", "/TestGED/TGC55C.ged");
         addSampleToMenu("Descententes de Jose Antonio de Figueiredo", "/gedcomsamples/descententes_de_jose_antonio_de_figueiredo.ged");
 //        addSampleToMenu("Wadeye-Joe-Blythe-20110525", "/AllianceSamples/Wadeye-Joe-Blythe-20110525.csv");
         addSampleToMenu("European Royalty (royal92.ged)", "/gedcomsamples/royal92.ged");
