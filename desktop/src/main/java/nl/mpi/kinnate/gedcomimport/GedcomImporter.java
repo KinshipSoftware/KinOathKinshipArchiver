@@ -1,7 +1,5 @@
 package nl.mpi.kinnate.gedcomimport;
 
-import nl.mpi.kinnate.kindocument.EntityDocument;
-import nl.mpi.kinnate.kindocument.ImportTranslator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,11 +12,12 @@ import java.util.HashMap;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityDate;
 import nl.mpi.kinnate.kindata.EntityDateException;
+import nl.mpi.kinnate.kindocument.EntityDocument;
+import nl.mpi.kinnate.kindocument.ImportTranslator;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -59,6 +58,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         importTranslator.addTranslationEntry("SEX", "F", "Gender", "Female");
         importTranslator.addTranslationEntry("SEX", "M", "Gender", "Male");
         importTranslator.addTranslationEntry("NAME", null, "Name", null);
+        importTranslator.addTranslationEntry("chro", null, "Chromosome", null);
 //            importTranslator.addTranslationEntry("Gender", "m", "Gender", "Male");
 //
 //            importTranslator.addTranslationEntry("Date_of_Birth", null, "DateOfBirth", null);
@@ -126,13 +126,17 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             currentEntity.insertValue("Type", "Gedcom Header");
                             currentEntity.appendValue(lineParts[1], null, gedcomLevel);
                         } else {
-                            currentEntity.appendValue("GEDCOM-ID", lineParts[1], gedcomLevel);
+//                            currentEntity.appendValue("GEDCOM-ID", lineParts[1], gedcomLevel);
                             if (lineParts[2].equals("NOTE")) {
                                 currentEntity.insertValue("Type", "Gedcom Note");
                             } else if (lineParts[2].equals("FAM")) {
                                 currentEntity.insertValue("Type", "Gedcom Family Group");
                             } else if (lineParts[2].equals("INDI")) {
                                 // do not insert name elements for individuals
+                                currentEntity.insertValue("Name", "");
+                                currentEntity.insertValue("DateOfBirth", "");
+                                currentEntity.insertValue("DateOfDeath", "");
+                                currentEntity.insertValue("Gender", "");
                             } else if (lineParts[2].equals("OBJE")) {
                                 currentEntity.insertValue("Type", "Resource File");
                             } else if (lineParts[2].equals("REPO")) {
@@ -395,6 +399,14 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                     currentEntity.appendValue(lineParts[1], lineParts[2], gedcomLevel);
                                 }
                                 notConsumed = false;
+                            }
+                        }
+                        if (gedcomLevelStrings.size() == 2) {
+                            if (gedcomLevelStrings.get(1).equals("chro")) {
+                                if (gedcomLevel == 1) {
+                                    currentEntity.insertValue(lineParts[1], lineParts[2]);
+                                    notConsumed = false;
+                                }
                             }
                         }
                         if (gedcomLevelStrings.get(gedcomLevelStrings.size() - 1).equals("FILE")) {
