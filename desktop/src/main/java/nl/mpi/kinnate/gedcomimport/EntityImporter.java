@@ -60,6 +60,7 @@ public class EntityImporter implements GenericImporter {
     public void calculateFileNameAndFileLength(InputStream inputStream) {
         // count the lines in the file (for progress) and calculate the md5 sum (for unique file naming)
         currntLineCounter = 0;
+        byte newLineByte = "\n".getBytes()[0]; // to keep things simple we only use the one char where, this will not work on old macs which are the only ones to still use only \r, however new macs now use \n so this is a minumal issue.
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
 
@@ -68,6 +69,11 @@ public class EntityImporter implements GenericImporter {
             do {
                 numRead = inputStream.read(buffer);
                 if (numRead > 0) {
+                    for (byte currentByte : buffer) {
+                        if (currentByte == newLineByte) {
+                            inputLineCount++;
+                        }
+                    }
                     digest.update(buffer, 0, numRead);
                 }
             } while (numRead != -1);

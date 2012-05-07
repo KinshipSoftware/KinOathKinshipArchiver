@@ -4,9 +4,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- *  Document   : IndexParameters
- *  Created on : Feb 14, 2011, 11:47:34 AM
- *  Author     : Peter Withers
+ * Document : IndexParameters
+ * Created on : Feb 14, 2011, 11:47:34 AM
+ * Author : Peter Withers
  */
 public class IndexerParameters {
 
@@ -22,16 +22,9 @@ public class IndexerParameters {
     @XmlElement(name = "DateOfDeathFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam dateOfDeathField = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*:DateOfDeath"}});
     @XmlElement(name = "LabelFields", namespace = "http://mpi.nl/tla/kin")
-    public IndexerParam labelFields = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"},
-//                {"*:Kinnate/*:CustomData/*:INDI/*:NAME/*:NAME"},
-//                {"*:Kinnate/*:CustomData/*:INDI/*:NAME"},
-                {"*:Kinnate/*:CustomData/*:Type"}
-//                , {"*:Kinnate/*:CustomData/*:Name"}
-//    , {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NAME"}
-//    , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']/*:GedcomType"}
-//    , {"*:Kinnate/*:Gedcom/*:Entity/*:Text"}
-//    , {"*:Kinnate/*:Gedcom/*:Entity/*:NAME/*:NPFX"}
-//    , {"*:Kinnate/*:Gedcom/*:Entity/*:NoteText"}
+    public IndexerParam labelFields = new IndexerParam(new String[][]{
+                {"*:Kinnate/*:CustomData/*:Type"},
+                {"*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"}
             });
     @XmlElement(name = "SymbolFieldsFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam symbolFieldsFields = new IndexerParam(new String[][]{
@@ -40,8 +33,8 @@ public class IndexerParameters {
                 , {"*:Kinnate/*:CustomData[*:Gender='Female']", "circle"},
                 {"*:Kinnate/*:CustomData[*:Gender='']", "square"},
                 {"*:Kinnate/*:CustomData[*:DateOfDeath!='']", "blackstrikethrough"}, // the use of != is correct because if there is any node value in the DateOfBirth node or nodes then the symbol should be used
-                {"*:Kinnate/*:CustomData[*:INDI/*:chro='Xx']", "redmarker"},
-                {"*:Kinnate/*:CustomData[*:INDI/*:chro='xY']", "redmarker"}
+                {"*:Kinnate/*:CustomData[*:Chromosome='Xx']", "redmarker"},
+                {"*:Kinnate/*:CustomData[*:Chromosome='xY']", "redmarker"}
             //                , {"*:Kinnate/*:CustomData/*:Individual[*:Gender='']", "square"},
             //                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Male']", "triangle"},
             //                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Female']", "circle"}

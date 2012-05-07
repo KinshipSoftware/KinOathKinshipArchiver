@@ -39,7 +39,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
 //        addSampleToMenu("Archive Link Example", "ArchiveLinks.svg");
         addSampleToMenu("Charles II of Spain", "Charles_II_of_Spain.svg");
         addSampleToMenu("Imported Data Query Example (ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/)", "QueryExample.svg");
-        addSampleToMenu("HaemophiliaEuropeanRoyalty", "HaemophiliaEuropeanRoyalty.svg");
+        addSampleToMenu("Haemophilia in European Royalty", "HaemophiliaEuropeanRoyalty.svg");
 //        addSampleToMenu("Imported Entities (600)", "600ImportedEntities.svg");
 //        addSampleToMenu("R Usage of the Entity Server", "R-ServerUsage.svg");
     }
