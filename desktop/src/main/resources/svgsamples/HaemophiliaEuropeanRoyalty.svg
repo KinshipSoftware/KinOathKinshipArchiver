@@ -603,9 +603,9 @@
   
 <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
     <kin:KinTypeString>@ShowMessageIfNotFound[Maria Cristina of_Austria] "This diagram requires the 'European Royalty' sample data to be imported." jar:///gedcomsamples/royal92.ged</kin:KinTypeString>
-    <kin:KinTypeString>x[INDI.chro==Xx]C</kin:KinTypeString>
-    <kin:KinTypeString>x[INDI.chro==xY]C</kin:KinTypeString>
-    <kin:KinTypeString>x[INDI.chro==xY?]C</kin:KinTypeString>
+    <kin:KinTypeString>x[Chromosome==Xx]C</kin:KinTypeString>
+    <kin:KinTypeString>x[Chromosome==xY]C</kin:KinTypeString>
+    <kin:KinTypeString>x[Chromosome==xY?]C</kin:KinTypeString>
     <kin:IndexParameters>
       <kin:DateOfBirthFields>
         <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfBirth"/>
