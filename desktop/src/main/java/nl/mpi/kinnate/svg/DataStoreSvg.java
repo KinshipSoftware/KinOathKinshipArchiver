@@ -71,7 +71,7 @@ public class DataStoreSvg {
     @XmlElement(name = "ShowDateLabels", namespace = "http://mpi.nl/tla/kin")
     public boolean showDateLabels = false;
     @XmlElement(name = "ShowKinTermLines", namespace = "http://mpi.nl/tla/kin")
-    public boolean showKinTermLines = true;
+    public boolean showKinTermLines = true; // todo: assess if this is required otherwise remove
     @XmlElement(name = "SnapToGrid", namespace = "http://mpi.nl/tla/kin")
     public boolean snapToGrid = true;
     @XmlElement(name = "ShowSanguineLines", namespace = "http://mpi.nl/tla/kin")

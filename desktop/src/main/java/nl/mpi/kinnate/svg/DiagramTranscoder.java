@@ -12,6 +12,7 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.XMLAbstractTranscoder;
+import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.transcoder.image.JPEGTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.batik.transcoder.image.TIFFTranscoder;
@@ -57,11 +58,9 @@ public class DiagramTranscoder {
 //    public int getDpi() {
 //        return dpi;
 //    }
-
 //    public void setDpi(int dpi) {
 //        this.dpi = dpi;
 //    }
-
     public OutputType getOutputType() {
         return outputType;
     }
@@ -93,6 +92,7 @@ public class DiagramTranscoder {
                 transcoder.addTranscodingHint(PDFTranscoder.KEY_STROKE_TEXT, Boolean.FALSE);
                 break;
         }
+        transcoder.addTranscodingHint(ImageTranscoder.KEY_BACKGROUND_COLOR, java.awt.Color.WHITE);
         transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
 //        transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / dpi)));
         transcodeDom(transcoder);

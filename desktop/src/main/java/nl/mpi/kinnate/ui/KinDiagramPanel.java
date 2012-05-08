@@ -241,6 +241,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelRemote, false);
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelLocal, false);
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelMpiRemote, false);
+                        panelSetting.setMenuEnabled(false);
                         break;
                     case DiagramTree:
                         panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
@@ -248,10 +249,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         if (projectTree != null) {
                             panelSetting.addTargetPanel(projectTree, true);
                         }
+                        panelSetting.setMenuEnabled(true);
                         break;
                     case EntitySearch:
                         panelSetting.setHidePane(egoSelectionHidePane, "Search Entities");
                         panelSetting.addTargetPanel(entitySearchPanel, false);
+                        panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
                         break;
                     case IndexerSettings:
                         panelSetting.setHidePane(kinTypeHidePane, "Diagram Settings");
@@ -262,25 +265,32 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         // todo: Ticket #1115 add overlay fields as paramters
                         symbolFieldsPanel.setName("Symbol Fields");
                         labelFieldsPanel.setName("Label Fields");
-                        panelSetting.addTargetPanel(symbolFieldsPanel, false);
-                        panelSetting.addTargetPanel(labelFieldsPanel, false);
                         panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg), false);
                         panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg, dialogHandler), false);
-                        panelSetting.addTargetPanel(cmdiProfileSelectionPanel, false);
+                        if (graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm) {
+                            // hide some of the settings panels from freeform diagrams
+                            panelSetting.addTargetPanel(symbolFieldsPanel, false);
+                            panelSetting.addTargetPanel(labelFieldsPanel, false);
+                            panelSetting.addTargetPanel(cmdiProfileSelectionPanel, false);
+                        }
+                        panelSetting.setMenuEnabled(true);
                         break;
                     case KinTerms:
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
                         for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
                             panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, dialogHandler), false); //  + kinTerms.titleString
                         }
+                        panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode == DiagramMode.FreeForm);
                         break;
                     case KinTypeStrings:
                         panelSetting.setHidePane(kinTypeHidePane, "Kin Type Strings");
                         panelSetting.addTargetPanel(new JScrollPane(kinTypeStringInput), false);
+                        panelSetting.setMenuEnabled(true);
                         break;
                     case ExportPanel:
                         panelSetting.setHidePane(kinTypeHidePane, "Export Data");
                         panelSetting.addTargetPanel(new ExportPanel(), false);
+                        panelSetting.setMenuEnabled(false);
                         break;
 //                case MetaData:
 //                    panelSetting.setTargetPanel(tableHidePane, tableScrollPane, "Metadata");

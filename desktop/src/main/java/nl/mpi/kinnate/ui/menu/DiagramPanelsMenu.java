@@ -52,6 +52,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
                     menuItem.setSelected(panelSetting.isPanelShown());
                     menuItem.setActionCommand(panelSetting.getPanelType().name());
                     menuItem.addActionListener(this);
+                    menuItem.setEnabled(panelSetting.isMenuEnabled());
                     this.add(menuItem);
                 }
             }
