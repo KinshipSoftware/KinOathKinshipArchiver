@@ -12,10 +12,10 @@ package nl.mpi.kinnate;
             applicationIconName = "/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png";
             currentMajor = "1";
             currentMinor = "0";
-            currentRevision = "30741";
-            lastCommitDate = "Last Changed Date: 2012-05-07 17:50:47 +0200 (Mon, 07 May 2012)";
-            compileDate = "Mon May  7 17:51:58 CEST 2012";
-            fullInfo = "\nPath: ../desktop/src/main/java/nl/mpi/kinnate\nURL: https://svn.mpi.nl/LAT/Kinnate/branches/kinnate.1.0.x/desktop/src/main/java/nl/mpi/kinnate\nRepository Root: https://svn.mpi.nl/LAT\nRepository UUID: d4234c5b-7c33-0410-a85d-91bdcf7faf44\nRevision: 30742\nNode Kind: directory\nSchedule: normal\nLast Changed Author: petwit\nLast Changed Rev: 30741\nLast Changed Date: 2012-05-07 17:50:47 +0200 (Mon, 07 May 2012)\n";
+            currentRevision = "30776";
+            lastCommitDate = "Last Changed Date: 2012-05-08 14:52:10 +0200 (Tue, 08 May 2012)";
+            compileDate = "Tue May  8 14:53:37 CEST 2012";
+            fullInfo = "\nPath: ../desktop/src/main/java/nl/mpi/kinnate\nURL: https://svn.mpi.nl/LAT/Kinnate/branches/kinnate.1.0.x/desktop/src/main/java/nl/mpi/kinnate\nRepository Root: https://svn.mpi.nl/LAT\nRepository UUID: d4234c5b-7c33-0410-a85d-91bdcf7faf44\nRevision: 30776\nNode Kind: directory\nSchedule: normal\nLast Changed Author: petwit\nLast Changed Rev: 30776\nLast Changed Date: 2012-05-08 14:52:10 +0200 (Tue, 08 May 2012)\n";
             currentVersionFile = "http://www.mpi.nl/tg/j2se/jnlp/kinoath/kinoath-stable-current.txt";
             }
             }

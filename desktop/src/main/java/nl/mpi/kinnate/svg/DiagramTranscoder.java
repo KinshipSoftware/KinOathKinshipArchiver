@@ -69,7 +69,7 @@ public class DiagramTranscoder {
         this.outputType = outputType;
     }
 
-    public void exportDiagram(File outputFile) {
+    public void exportDiagram(File outputFile) throws IOException, TranscoderException {
         this.outputFile = outputFile;
         Transcoder transcoder;
         switch (outputType) {
@@ -106,22 +106,16 @@ public class DiagramTranscoder {
         }
     }
 
-    private void transcodeDom(Transcoder transcoder) {
+    private void transcodeDom(Transcoder transcoder) throws IOException, TranscoderException {
+        TranscoderInput transcoderInput = new TranscoderInput(savePanel.getGraphPanel().doc);
+        OutputStream outputStream = new java.io.FileOutputStream(outputFile);
+        outputStream = new java.io.BufferedOutputStream(outputStream);
         try {
-            TranscoderInput transcoderInput = new TranscoderInput(savePanel.getGraphPanel().doc);
-            OutputStream outputStream = new java.io.FileOutputStream(outputFile);
-            outputStream = new java.io.BufferedOutputStream(outputStream);
-            try {
-                TranscoderOutput transcoderOutput = new TranscoderOutput(outputStream);
-                // todo: resolve the issue here when transcoding to jpg
-                transcoder.transcode(transcoderInput, transcoderOutput);
-            } finally {
-                outputStream.close();
-            }
-        } catch (TranscoderException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-        } catch (IOException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
+            TranscoderOutput transcoderOutput = new TranscoderOutput(outputStream);
+            // todo: resolve the issue here when transcoding to jpg
+            transcoder.transcode(transcoderInput, transcoderOutput);
+        } finally {
+            outputStream.close();
         }
     }
 }
