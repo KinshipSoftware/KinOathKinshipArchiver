@@ -41,6 +41,9 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
             JMenuItem menuItem = new JMenuItem(documentType.getDisplayName());
             menuItem.setActionCommand(documentType.name());
             menuItem.addActionListener(this);
+            if (documentType == DocumentType.ArchiveLinker) {
+                menuItem.setEnabled(false);
+            }
             this.add(menuItem);
         }
     }
