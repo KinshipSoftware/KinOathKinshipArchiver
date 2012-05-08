@@ -218,13 +218,13 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         if (graphPanel.dataStoreSvg.getVisiblePanels() == null) {
             // in some older files and non kinoath files these values would not be set, so we make sure that they are here
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 150, showKinTerms, graphPanel.dataStoreSvg.diagramMode == DiagramMode.FreeForm);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, showArchiveLinker, false);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.DiagramTree, 150, showDiagramTree, true);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch, graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings, true);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings, true);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel, false);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 150, showKinTerms);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, showArchiveLinker);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.DiagramTree, 150, showDiagramTree);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel);
 //            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
         }
         final ProfileManager profileManager = new ProfileManager(sessionStorage, dialogHandler);
@@ -241,6 +241,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelRemote, false);
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelLocal, false);
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelMpiRemote, false);
+                        panelSetting.setMenuEnabled(false);
                         break;
                     case DiagramTree:
                         panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
@@ -248,10 +249,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         if (projectTree != null) {
                             panelSetting.addTargetPanel(projectTree, true);
                         }
+                        panelSetting.setMenuEnabled(true);
                         break;
                     case EntitySearch:
                         panelSetting.setHidePane(egoSelectionHidePane, "Search Entities");
                         panelSetting.addTargetPanel(entitySearchPanel, false);
+                        panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
                         break;
                     case IndexerSettings:
                         panelSetting.setHidePane(kinTypeHidePane, "Diagram Settings");
@@ -270,20 +273,24 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                             panelSetting.addTargetPanel(labelFieldsPanel, false);
                             panelSetting.addTargetPanel(cmdiProfileSelectionPanel, false);
                         }
+                        panelSetting.setMenuEnabled(true);
                         break;
                     case KinTerms:
                         panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
                         for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
                             panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, dialogHandler), false); //  + kinTerms.titleString
                         }
+                        panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode == DiagramMode.FreeForm);
                         break;
                     case KinTypeStrings:
                         panelSetting.setHidePane(kinTypeHidePane, "Kin Type Strings");
                         panelSetting.addTargetPanel(new JScrollPane(kinTypeStringInput), false);
+                        panelSetting.setMenuEnabled(true);
                         break;
                     case ExportPanel:
                         panelSetting.setHidePane(kinTypeHidePane, "Export Data");
                         panelSetting.addTargetPanel(new ExportPanel(), false);
+                        panelSetting.setMenuEnabled(false);
                         break;
 //                case MetaData:
 //                    panelSetting.setTargetPanel(tableHidePane, tableScrollPane, "Metadata");
