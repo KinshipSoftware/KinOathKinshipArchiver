@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import nl.mpi.kinnate.ui.HidePane;
 
 /**
- *  Document   : VisiblePanelSetting
- *  Created on : Sept 25, 2011, 12:02:44 PM
- *  Author     : Peter Withers
+ * Document : VisiblePanelSetting
+ * Created on : Sept 25, 2011, 12:02:44 PM
+ * Author : Peter Withers
  */
 public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
 
@@ -32,6 +32,8 @@ public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
     @XmlAttribute(name = "width", namespace = "http://mpi.nl/tla/kin")
     int panelWidth;
     @XmlTransient
+    boolean menuEnabled = true;
+    @XmlTransient
     private String displayName = "";
     @XmlTransient
     private HidePane hidePane;
@@ -41,15 +43,20 @@ public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
     public VisiblePanelSetting() {
     }
 
-    public VisiblePanelSetting(PanelType panelType, boolean panelShown, int panelWidth) {
+    public VisiblePanelSetting(PanelType panelType, boolean panelShown, int panelWidth, boolean menuEnabled) {
         this.panelType = panelType;
         this.panelShown = panelShown;
         this.panelWidth = panelWidth;
+        this.menuEnabled = menuEnabled;
     }
 
     public void setHidePane(HidePane hidePane, String displayName) {
         this.hidePane = hidePane;
         this.displayName = displayName;
+    }
+
+    public boolean isEnabled() {
+        return menuEnabled;
     }
 
     private void setUpdateUiState() {
