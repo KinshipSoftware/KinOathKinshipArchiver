@@ -444,7 +444,7 @@ public class FileMenu extends javax.swing.JMenu {
                     diagramTranscoder.exportDiagram(selectedFile);
                 }
             } catch (TranscoderException exception) {
-                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Export Image Error");
+                dialogHandler.addMessageDialogToQueue(exception.getMessage() + "\nThis may occur when using the webstart version.", "Export Image Error");
                 BugCatcherManager.getBugCatcher().logError(exception);
             } catch (IOException exception) {
                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Export Image Error");
