@@ -71,7 +71,7 @@ public class DataStoreSvg {
     @XmlElement(name = "ShowDateLabels", namespace = "http://mpi.nl/tla/kin")
     public boolean showDateLabels = false;
     @XmlElement(name = "ShowKinTermLines", namespace = "http://mpi.nl/tla/kin")
-    public boolean showKinTermLines = true;
+    public boolean showKinTermLines = true; // todo: assess if this is required otherwise remove
     @XmlElement(name = "SnapToGrid", namespace = "http://mpi.nl/tla/kin")
     public boolean snapToGrid = true;
     @XmlElement(name = "ShowSanguineLines", namespace = "http://mpi.nl/tla/kin")
@@ -155,11 +155,11 @@ public class DataStoreSvg {
         return visiblePanels.toArray(new VisiblePanelSetting[]{});
     }
 
-    public void setPanelState(VisiblePanelSetting.PanelType panelType, int panelWidth, boolean panelVisible) {
+    public void setPanelState(VisiblePanelSetting.PanelType panelType, int panelWidth, boolean panelVisible, boolean menuEnabled) {
         if (visiblePanels == null) {
             visiblePanels = new HashSet<VisiblePanelSetting>();
         }
-        visiblePanels.add(new VisiblePanelSetting(panelType, panelVisible, panelWidth));
+        visiblePanels.add(new VisiblePanelSetting(panelType, panelVisible, panelWidth, menuEnabled));
     }
 
     public GraphRelationData getEntitiesForRelations(Node relationGroup) throws IdentifierException {
