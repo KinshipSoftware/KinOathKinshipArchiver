@@ -169,6 +169,7 @@ public class FileMenu extends javax.swing.JMenu {
                 entityUploadMenuItemActionPerformed(evt);
             }
         });
+        entityUploadMenuItem.setEnabled(false);
         this.add(entityUploadMenuItem);
         this.add(jSeparator4);
 
