@@ -155,11 +155,11 @@ public class DataStoreSvg {
         return visiblePanels.toArray(new VisiblePanelSetting[]{});
     }
 
-    public void setPanelState(VisiblePanelSetting.PanelType panelType, int panelWidth, boolean panelVisible, boolean menuEnabled) {
+    public void setPanelState(VisiblePanelSetting.PanelType panelType, int panelWidth, boolean panelVisible) {
         if (visiblePanels == null) {
             visiblePanels = new HashSet<VisiblePanelSetting>();
         }
-        visiblePanels.add(new VisiblePanelSetting(panelType, panelVisible, panelWidth, menuEnabled));
+        visiblePanels.add(new VisiblePanelSetting(panelType, panelVisible, panelWidth));
     }
 
     public GraphRelationData getEntitiesForRelations(Node relationGroup) throws IdentifierException {
