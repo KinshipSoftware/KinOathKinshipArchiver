@@ -1,9 +1,11 @@
 package nl.mpi.kinnate.ui.menu;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.export.ExportToR;
@@ -13,6 +15,7 @@ import nl.mpi.kinnate.ui.DiagramTranscoderPanel;
 import nl.mpi.kinnate.ui.ImportSamplesFileMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
+import org.apache.batik.transcoder.TranscoderException;
 
 /**
  * Document : FileMenu
@@ -436,9 +439,18 @@ public class FileMenu extends javax.swing.JMenu {
         DiagramTranscoderPanel diagramTranscoderPanel = new DiagramTranscoderPanel(diagramTranscoder);
         final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export as PDF/JPEG/PNG", false, false, null, MessageDialogHandler.DialogueType.save, diagramTranscoderPanel);
         if (selectedFilesArray != null) {
-            for (File selectedFile : selectedFilesArray) {
-                diagramTranscoder.exportDiagram(selectedFile);
+            try {
+                for (File selectedFile : selectedFilesArray) {
+                    diagramTranscoder.exportDiagram(selectedFile);
+                }
+            } catch (TranscoderException exception) {
+                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Export Image Error");
+                BugCatcherManager.getBugCatcher().logError(exception);
+            } catch (IOException exception) {
+                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Export Image Error");
+                BugCatcherManager.getBugCatcher().logError(exception);
             }
+
         }
     }
 
