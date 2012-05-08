@@ -43,11 +43,10 @@ public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
     public VisiblePanelSetting() {
     }
 
-    public VisiblePanelSetting(PanelType panelType, boolean panelShown, int panelWidth, boolean menuEnabled) {
+    public VisiblePanelSetting(PanelType panelType, boolean panelShown, int panelWidth) {
         this.panelType = panelType;
         this.panelShown = panelShown;
         this.panelWidth = panelWidth;
-        this.menuEnabled = menuEnabled;
     }
 
     public void setHidePane(HidePane hidePane, String displayName) {
@@ -55,7 +54,11 @@ public class VisiblePanelSetting implements Comparable<VisiblePanelSetting> {
         this.displayName = displayName;
     }
 
-    public boolean isEnabled() {
+    public void setMenuEnabled(boolean menuEnabled) {
+        this.menuEnabled = menuEnabled;
+    }
+
+    public boolean isMenuEnabled() {
         return menuEnabled;
     }
 
