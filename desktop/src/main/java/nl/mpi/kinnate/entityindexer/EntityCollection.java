@@ -325,6 +325,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
     public EntityData[] getEntityByEndPoint(DataTypes.RelationType relationType, IndexerParameters indexParameters) {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityByEndPointQuery(relationType, indexParameters);
+        System.out.println("getEntityByEndPoint:" + query1String);
         return getEntityByQuery(query1String, indexParameters);
     }
 
@@ -347,7 +348,12 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //            System.out.println("queryResult: " + queryResult);
             EntityArray foundEntities = (EntityArray) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityArray.class).getValue();
             long queryMils = System.currentTimeMillis() - startTime;
-            String queryTimeString = "Query time: " + queryMils + "ms for " + foundEntities.getEntityDataArray().length + " entities";
+            final EntityData[] entityDataArray = foundEntities.getEntityDataArray();
+            int resultCount = 0;
+            if (entityDataArray != null) {
+                resultCount = entityDataArray.length;
+            }
+            String queryTimeString = "Query time: " + queryMils + "ms for " + resultCount + " entities";
             System.out.println(queryTimeString);
 //            selectedEntity.appendTempLabel(queryTimeString);
             return foundEntities.getEntityDataArray();
