@@ -129,6 +129,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             }
             kinTypeStringInput.setText(kinTermContents);
         } else {
+            kinTypeStringInput.setDefaultText();
             if (documentType == null) {
                 // this is the default document that users see when they run the application for the first time
                 documentType = DocumentType.Simple;
