@@ -63,7 +63,7 @@ public abstract class AbstractDiagramManager {
             diagramFame = new JFrame();
         }
         setWindowTitle(diagramFame, diagramTitle);
-        diagramFame.setJMenuBar(new MainMenuBar(this, sessionStorage, dialogHandler, versionManager));
+        diagramFame.setJMenuBar(new MainMenuBar(this, sessionStorage, dialogHandler, versionManager, diagramFame));
         if (diagramComponent != null) {
             diagramFame.setContentPane((Container) diagramComponent);
 //        } else {
@@ -147,12 +147,12 @@ public abstract class AbstractDiagramManager {
 
     abstract Component getSelectedDiagram();
 
-    public void loadAllTrees() {
-        Component selectedComponent = getSelectedDiagram();
-        if (selectedComponent instanceof KinDiagramPanel) {
-            ((KinDiagramPanel) selectedComponent).loadAllTrees();
-        }
-    }
+//    public void loadAllTrees(KinDiagramPanel kinDiagramPanel) {
+//        Component selectedComponent = getSelectedDiagram();
+//        if (selectedComponent instanceof KinDiagramPanel) {
+//            ((KinDiagramPanel) selectedComponent).loadAllTrees();
+//        }
+//    }
 
     public void openImportPanel(File importFile, SavePanel originatingSavePanel) throws ImportException {
         new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importFile);
@@ -184,12 +184,12 @@ public abstract class AbstractDiagramManager {
 //        uploadDialog.setVisible(true);
     }
 
-    public abstract int getSavePanelIndex();
+    public abstract int getSavePanelIndex(Component eventTarget);
 
     public abstract String getSavePanelTitle(int selectedIndex);
 
-    public SavePanel getCurrentSavePanel() {
-        return getSavePanel(getSavePanelIndex());
+    public SavePanel getCurrentSavePanel(Component parentComponent) {
+        return getSavePanel(getSavePanelIndex(parentComponent));
     }
 
     abstract Component getDiagramAt(int diagramIndex);
@@ -205,8 +205,8 @@ public abstract class AbstractDiagramManager {
 
     public abstract void closeSavePanel(int selectedIndex);
 
-    public KinTermSavePanel getKinTermPanel() {
-        SavePanel selectedComponent = getCurrentSavePanel();
+    public KinTermSavePanel getKinTermPanel(Component parentComponent) {
+        SavePanel selectedComponent = getCurrentSavePanel(parentComponent);
         KinTermSavePanel kinTermSavePanel = null;
         if (selectedComponent instanceof SavePanelFrame) {
             selectedComponent = (SavePanel) ((SavePanelFrame) selectedComponent).getContentPane();
