@@ -56,7 +56,7 @@ public class TabbedDiagramManager extends AbstractDiagramManager {
         jTabbedPane1.setSelectedIndex(diagramIndex);
     }
 
-    public int getSavePanelIndex() {
+    public int getSavePanelIndex(Component eventTarget) {
         return jTabbedPane1.getSelectedIndex();
     }
 
