@@ -7,9 +7,9 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
 
 /*
- *  Document   : MainFrame
- *  Author     : Peter Withers
- *  Created on : Aug 16, 2010, 5:20:20 PM
+ * Document : MainFrame
+ * Author : Peter Withers
+ * Created on : Aug 16, 2010, 5:20:20 PM
  */
 public class MainFrame extends javax.swing.JFrame {
 
@@ -53,7 +53,6 @@ public class MainFrame extends javax.swing.JFrame {
 //	if (arbilMenuBar.checkNewVersionAtStartCheckBoxMenuItem.isSelected()) {
                 // todo: Ticket #1066 add the check for updates and check now menu items
                 versionManager.checkForUpdate();
-                abstractDiagramManager.loadAllTrees();
             }
         });
     }
