@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
@@ -18,9 +19,11 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
 
     private AbstractDiagramManager diagramWindowManager;
     private MessageDialogHandler dialogHandler;
+    private Component parentComponent;
 
-    public ImportSamplesFileMenu(AbstractDiagramManager diagramWindowManager, MessageDialogHandler dialogHandler) {
+    public ImportSamplesFileMenu(AbstractDiagramManager diagramWindowManager, MessageDialogHandler dialogHandler, Component parentComponent) {
         this.diagramWindowManager = diagramWindowManager;
+        this.parentComponent = parentComponent;
         this.dialogHandler = dialogHandler;
         addSampleToMenu("Gedcom Simple File (small sample of three individuals)", "/gedcomsamples/wiki-test-ged.ged");
         addSampleToMenu("Gedcom Torture File (only for testing GEDOM compliance)", "/TestGED/TGC55C.ged");
@@ -40,7 +43,7 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        SavePanel originatingSavePanel = diagramWindowManager.getCurrentSavePanel();
+        SavePanel originatingSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
         try {
             diagramWindowManager.openJarImportPanel(e.getActionCommand(), originatingSavePanel);
         } catch (ImportException exception1) {
