@@ -91,17 +91,19 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.addMouseWheelListener(new MouseWheelListener() {
 
             public void mouseWheelMoved(MouseWheelEvent e) {
-                double scale = 1 - e.getUnitsToScroll() / 10.0;
-                double tx = -e.getX() * (scale - 1);
-                double ty = -e.getY() * (scale - 1);
+                if (e.isAltDown()) {
+                    double scale = 1 - e.getUnitsToScroll() / 10.0;
+                    double tx = -e.getX() * (scale - 1);
+                    double ty = -e.getY() * (scale - 1);
 //                System.out.println("scale: " + scale);
 //                System.out.println("scale: " + svgCanvas.getRenderingTransform().getScaleX());
-                if (scale > 1 || svgCanvas.getRenderingTransform().getScaleX() > 0.01) {
-                    AffineTransform at = new AffineTransform();
-                    at.translate(tx, ty);
-                    at.scale(scale, scale);
-                    at.concatenate(svgCanvas.getRenderingTransform());
-                    svgCanvas.setRenderingTransform(at);
+                    if (scale > 1 || svgCanvas.getRenderingTransform().getScaleX() > 0.01) {
+                        AffineTransform at = new AffineTransform();
+                        at.translate(tx, ty);
+                        at.scale(scale, scale);
+                        at.concatenate(svgCanvas.getRenderingTransform());
+                        svgCanvas.setRenderingTransform(at);
+                    }
                 }
             }
         });

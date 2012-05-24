@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui.menu;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JCheckBoxMenuItem;
@@ -9,15 +10,15 @@ import javax.swing.event.MenuListener;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- *  Document   : WindowMenu
- *  Created on : Dec 6, 2011, 12:58:54 PM
- *  Author     : Peter Withers
+ * Document : WindowMenu
+ * Created on : Dec 6, 2011, 12:58:54 PM
+ * Author : Peter Withers
  */
 public class WindowMenu extends JMenu implements ActionListener {
 
     AbstractDiagramManager diagramWindowManager;
 
-    public WindowMenu(AbstractDiagramManager diagramWindowManager) {
+    public WindowMenu(AbstractDiagramManager diagramWindowManager, final Component parentComponent) {
         this.setText("Window");
         this.diagramWindowManager = diagramWindowManager;
         this.addMenuListener(new MenuListener() {
@@ -29,15 +30,15 @@ public class WindowMenu extends JMenu implements ActionListener {
             }
 
             public void menuSelected(MenuEvent evt) {
-                initMenu();
+                initMenu(parentComponent);
             }
         });
     }
 
-    private void initMenu() {
+    private void initMenu(Component parentComponent) {
         this.removeAll();
         int diagramCount = diagramWindowManager.getAllDiagrams().length;
-        int selectedDiagramIndex = diagramWindowManager.getSavePanelIndex();
+        int selectedDiagramIndex = diagramWindowManager.getSavePanelIndex(parentComponent);
         for (int diagramCounter = 0; diagramCounter < diagramCount; diagramCounter++) {
             JCheckBoxMenuItem currentMenuItem = new JCheckBoxMenuItem(diagramWindowManager.getSavePanelTitle(diagramCounter));
             currentMenuItem.setActionCommand(Integer.toString(diagramCounter));

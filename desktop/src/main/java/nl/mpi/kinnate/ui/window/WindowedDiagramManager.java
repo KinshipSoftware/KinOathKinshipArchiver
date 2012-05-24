@@ -1,7 +1,6 @@
 package nl.mpi.kinnate.ui.window;
 
 import java.awt.Component;
-import java.awt.KeyboardFocusManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
@@ -81,7 +80,8 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
     @Override
     Component getSelectedDiagram() {
         // todo: this could cause issues if the application does not have focus
-        return KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+        //return KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -98,8 +98,13 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
         }
     }
 
-    public int getSavePanelIndex() { // Component parentSavePanel
-        return diagramArray.indexOf(getSelectedDiagram());
+    public int getSavePanelIndex(Component parentComponent) {
+        return diagramArray.indexOf(parentComponent);
+    }
+
+    @Override
+    public SavePanel getCurrentSavePanel(Component parentComponent) {
+        return (SavePanel) parentComponent;
     }
 
     public String getSavePanelTitle(int selectedIndex) {

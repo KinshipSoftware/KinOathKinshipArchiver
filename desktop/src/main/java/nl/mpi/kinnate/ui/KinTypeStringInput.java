@@ -64,7 +64,6 @@ public class KinTypeStringInput extends JTextPane implements KinTypeStringProvid
             }
         });
         this.setForeground(defaultColour);
-        this.setText(getDefaultText());
     }
 
     private String getDefaultText() {
@@ -96,13 +95,18 @@ public class KinTypeStringInput extends JTextPane implements KinTypeStringProvid
         this.setText(getDefaultText());
         StyledDocument styledDocument = this.getStyledDocument();
         styledDocument.setCharacterAttributes(0, styledDocument.getLength(), this.getStyle("Comment"), true);
-        this.setCaretPosition(0);
     }
 
     public void clearDefaultKinTypeInput() {
         if (this.getText().equals(lastDefaultString)) {
             this.setText("");
         }
+    }
+
+    @Override
+    public void setText(String t) {
+        super.setText(t);
+        this.setCaretPosition(0);
     }
 
     public void checkKinTypeInput() {

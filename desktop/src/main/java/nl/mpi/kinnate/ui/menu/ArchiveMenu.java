@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui.menu;
 
+import java.awt.Component;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -8,9 +9,9 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- *  Document   : KinTermsMenu
- *  Created on : Apr 1, 2011, 9:32:40 AM
- *  Author     : Peter Withers
+ * Document : KinTermsMenu
+ * Created on : Apr 1, 2011, 9:32:40 AM
+ * Author : Peter Withers
  */
 public class ArchiveMenu extends JMenu {
 
@@ -22,16 +23,12 @@ public class ArchiveMenu extends JMenu {
     JMenu showResultsMenu;
     JMenu closeResultsMenu;
 
-    public ArchiveMenu(AbstractDiagramManager diagramWindowManager) {
+    public ArchiveMenu(AbstractDiagramManager diagramWindowManager, Component parentComponent) {
         this.diagramWindowManager = diagramWindowManager;
-        initMenu();
+        initMenu(parentComponent);
     }
 
-    public ArchiveMenu() {
-        initMenu();
-    }
-
-    private void initMenu() {
+    private void initMenu(final Component parentComponent) {
         hideShowMenu = new JCheckBoxMenuItem("Show");
         showRemoteTreeMenu = new JMenuItem("Archive Tree");
         showLocalTreeMenu = new JMenuItem("Local Tree");
@@ -47,7 +44,7 @@ public class ArchiveMenu extends JMenu {
 
             public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // todo: check if a kin term pane is showing or associated with the diagram and that a diagam is showing
-                currentKinTermSavePanel = diagramWindowManager.getKinTermPanel();
+                currentKinTermSavePanel = diagramWindowManager.getKinTermPanel(parentComponent);
                 if (currentKinTermSavePanel != null) {
 //                    hideShowMenu.setEnabled(true);
                     if (currentKinTermSavePanel.getPanelState(PanelType.ArchiveLinker)) {

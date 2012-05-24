@@ -32,7 +32,7 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
 
     @Override
     public void createApplicationWindow() {
-        this.mainFrame = createDiagramWindow(getSavePanelTitle(getSavePanelIndex()), mainPanel);
+        this.mainFrame = createDiagramWindow(getSavePanelTitle(getSavePanelIndex(null)), mainPanel);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
     @Override
     public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel) {
         // todo: this should use the parentPanel not getSavePanelIndex.
-        int currentDiagramIndex = getSavePanelIndex();
+        int currentDiagramIndex = getSavePanelIndex(null);
         Component currentComponent = getDiagramAt(currentDiagramIndex);
         JTabbedPane tabbedPane;
         if (!(currentComponent instanceof JTabbedPane)) {
@@ -97,7 +97,7 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
         }
     }
 
-    public int getSavePanelIndex() {
+    public int getSavePanelIndex(Component eventTarget) {
         return diagramArray.indexOf(getSelectedDiagram());
     }
 

@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui.menu;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -13,16 +14,18 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- *  Document   : VisiblePanelSetting
- *  Created on : Sept 25, 2011, 12:50:44 PM
- *  Author     : Peter Withers
+ * Document : VisiblePanelSetting
+ * Created on : Sept 25, 2011, 12:50:44 PM
+ * Author : Peter Withers
  */
 public class DiagramPanelsMenu extends JMenu implements ActionListener {
 
     private AbstractDiagramManager diagramWindowManager;
+    private Component parentComponent;
 
-    public DiagramPanelsMenu(AbstractDiagramManager diagramWindowManager) {
+    public DiagramPanelsMenu(AbstractDiagramManager diagramWindowManager, Component parentComponent) {
         this.diagramWindowManager = diagramWindowManager;
+        this.parentComponent = parentComponent;
         this.setText("Panels");
         this.addMenuListener(new MenuListener() {
 
@@ -41,7 +44,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
     private void setupMenuItems() {
         this.removeAll();
         boolean menuItemsAdded = false;
-        KinTermSavePanel kinTermPanel = diagramWindowManager.getKinTermPanel();
+        KinTermSavePanel kinTermPanel = diagramWindowManager.getKinTermPanel(parentComponent);
         if (kinTermPanel != null) {
             VisiblePanelSetting[] visiblePanelsArray = kinTermPanel.getVisiblePanels();
             Arrays.sort(visiblePanelsArray);
@@ -66,7 +69,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         VisiblePanelSetting.PanelType selectedPanelType = VisiblePanelSetting.PanelType.valueOf(e.getActionCommand());
-        KinTermSavePanel kinTermPanel = diagramWindowManager.getKinTermPanel();
+        KinTermSavePanel kinTermPanel = diagramWindowManager.getKinTermPanel(parentComponent);
         if (kinTermPanel != null) {
             for (VisiblePanelSetting panelSetting : kinTermPanel.getVisiblePanels()) {
                 if (selectedPanelType.equals(panelSetting.getPanelType())) {
