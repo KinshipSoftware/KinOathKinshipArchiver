@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui.menu;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -49,12 +50,14 @@ public class FileMenu extends javax.swing.JMenu {
     private AbstractDiagramManager diagramWindowManager;
     private SessionStorage sessionStorage;
     private MessageDialogHandler dialogHandler; //ArbilWindowManager
+    private Component parentComponent;
 
-    public FileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
+    public FileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, Component parentComponent) {
         this.diagramWindowManager = diagramWindowManager;
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.diagramWindowManager = diagramWindowManager;
+        this.parentComponent = parentComponent;
         importGedcomUrl = new javax.swing.JMenuItem();
         importGedcomFile = new javax.swing.JMenuItem();
 //        importCsvFile = new javax.swing.JMenuItem();
@@ -64,7 +67,7 @@ public class FileMenu extends javax.swing.JMenu {
         openDiagram = new javax.swing.JMenuItem();
         recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage);
         jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler);
-        jMenu2 = new ImportSamplesFileMenu(diagramWindowManager, dialogHandler);
+        jMenu2 = new ImportSamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         entityUploadMenuItem = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
@@ -310,11 +313,10 @@ public class FileMenu extends javax.swing.JMenu {
 
     private void fileMenuMenuSelected(javax.swing.event.MenuEvent evt) {
         // set the save, save as and close text to include the tab to which the action will occur
-        int selectedIndex = diagramWindowManager.getSavePanelIndex();
-        SavePanel savePanel = null;
+        SavePanel savePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
+        int selectedIndex = diagramWindowManager.getSavePanelIndex(parentComponent);
+        String currentTabText = diagramWindowManager.getSavePanelTitle(selectedIndex);
         if (selectedIndex > -1) {
-            String currentTabText = diagramWindowManager.getSavePanelTitle(selectedIndex);
-            savePanel = diagramWindowManager.getSavePanel(selectedIndex);
             saveDiagramAs.setText("Save As (" + currentTabText + ")");
             saveDiagramAs.setActionCommand(Integer.toString(selectedIndex));
             saveDiagram.setText("Save (" + currentTabText + ")");
@@ -368,6 +370,9 @@ public class FileMenu extends javax.swing.JMenu {
                 if (currentFileName.endsWith(".gedcom")) {
                     return true;
                 }
+                if (currentFileName.endsWith(".ged")) {
+                    return true;
+                }
                 if (currentFileName.endsWith(".txt")) {
                     return true;
                 }
@@ -389,7 +394,7 @@ public class FileMenu extends javax.swing.JMenu {
             } else {
                 for (File importFile : importFiles) {
                     try {
-                        diagramWindowManager.openImportPanel(importFile, diagramWindowManager.getCurrentSavePanel());
+                        diagramWindowManager.openImportPanel(importFile, diagramWindowManager.getCurrentSavePanel(parentComponent));
                     } catch (ImportException exception1) {
                         dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importFile.getAbsolutePath(), "Import File");
                     }
@@ -426,7 +431,7 @@ public class FileMenu extends javax.swing.JMenu {
             "http://GedcomLibrary.com/gedcoms/gl120372.ged"};
         for (String importUrlString : importList) {
             try {
-                diagramWindowManager.openImportPanel(importUrlString, diagramWindowManager.getCurrentSavePanel());
+                diagramWindowManager.openImportPanel(importUrlString, diagramWindowManager.getCurrentSavePanel(parentComponent));
             } catch (ImportException exception1) {
                 dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importUrlString, "Import File");
             }
@@ -435,7 +440,7 @@ public class FileMenu extends javax.swing.JMenu {
 
     private void savePdfMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
 
-        final DiagramTranscoder diagramTranscoder = new DiagramTranscoder(diagramWindowManager.getCurrentSavePanel());
+        final DiagramTranscoder diagramTranscoder = new DiagramTranscoder(diagramWindowManager.getCurrentSavePanel(parentComponent));
         DiagramTranscoderPanel diagramTranscoderPanel = new DiagramTranscoderPanel(diagramTranscoder);
         final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export as PDF/JPEG/PNG", false, false, null, MessageDialogHandler.DialogueType.save, diagramTranscoderPanel);
         if (selectedFilesArray != null) {
@@ -455,7 +460,7 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void exportToRActionPerformed(java.awt.event.ActionEvent evt) {
-        SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel();
+        SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
 
         HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
         for (final String[] currentType : new String[][]{{"Data Frame Tab-separated Values", ".tab"}}) { // "Data Frame (CSV)"
