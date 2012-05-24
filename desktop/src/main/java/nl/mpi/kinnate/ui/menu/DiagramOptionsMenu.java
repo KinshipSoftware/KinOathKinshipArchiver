@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui.menu;
 
+import java.awt.Component;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -10,19 +11,19 @@ import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- *  Document   : DiagramOptionsMenu
- *  Created on : Dec 8, 2011, 10:35:50 AM
- *  Author     : Peter Withers
+ * Document : DiagramOptionsMenu
+ * Created on : Dec 8, 2011, 10:35:50 AM
+ * Author : Peter Withers
  */
 public class DiagramOptionsMenu extends JMenu {
 
-    public DiagramOptionsMenu(final AbstractDiagramManager diagramWindowManager) {
+    public DiagramOptionsMenu(final AbstractDiagramManager diagramWindowManager, final Component parentComponent) {
         this.setText("Diagram Options");
 
         this.addMenuListener(new MenuListener() {
 
             public void menuSelected(MenuEvent e) {
-                final SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel();
+                final SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
                 DiagramOptionsMenu.this.removeAll();
                 if (currentSavePanel != null) {
                     setupMenuItems(currentSavePanel, currentSavePanel.getGraphPanel());
@@ -87,7 +88,7 @@ public class DiagramOptionsMenu extends JMenu {
 //            diagramSizeMenuItem.add(currentMenuItem);
 //        }
 //        this.add(diagramSizeMenuItem);
-        
+
         JCheckBoxMenuItem showSanguineLinesMenuItem = new JCheckBoxMenuItem("Show Sanguin Lines");
         showSanguineLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
