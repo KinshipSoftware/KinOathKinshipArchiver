@@ -44,11 +44,11 @@ public class KinTermTableModel extends AbstractTableModel implements ActionListe
                 return "Kin Term";
             case 1:
                 return "Referent Kin Type Strings";
+//            case 2:
+//                return "Propositus Kin Type Strings";
             case 2:
-                return "Propositus Kin Type Strings";
-            case 3:
                 return "Description";
-            case 4:
+            case 3:
                 return "";
             default:
                 throw new UnsupportedOperationException("Too many columns");
@@ -58,7 +58,7 @@ public class KinTermTableModel extends AbstractTableModel implements ActionListe
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         switch (columnIndex) {
-            case 4:
+            case 3:
                 return Boolean.class;
             default:
                 return super.getColumnClass(columnIndex);
@@ -66,7 +66,7 @@ public class KinTermTableModel extends AbstractTableModel implements ActionListe
     }
 
     public int getColumnCount() {
-        return 5;
+        return 4;
     }
 
     public int getRowCount() {
@@ -83,7 +83,7 @@ public class KinTermTableModel extends AbstractTableModel implements ActionListe
             switch (columnIndex) {
                 case 1:
                     return defaultKinType;
-                case 4:
+                case 3:
                     return false;
                 default:
                     return "";
@@ -95,11 +95,11 @@ public class KinTermTableModel extends AbstractTableModel implements ActionListe
                 return kinTerm.kinTerm;
             case 1:
                 return kinTerm.alterKinTypeStrings;
+//            case 2:
+//                return kinTerm.propositusKinTypeStrings;
             case 2:
-                return kinTerm.propositusKinTypeStrings;
-            case 3:
                 return kinTerm.kinTermDescription;
-            case 4:
+            case 3:
                 return checkBoxSet.contains(kinTerm);
             default:
                 throw new UnsupportedOperationException("Too many columns");
@@ -111,7 +111,7 @@ public class KinTermTableModel extends AbstractTableModel implements ActionListe
         KinTerm kinTerm;
         if (kinTerms.getKinTerms().length <= rowIndex) {
             switch (columnIndex) {
-                case 4:
+                case 3:
                     if (checkBoxSet.isEmpty()) {
                         checkBoxSet.addAll(Arrays.asList(kinTerms.getKinTerms()));
                     } else {
@@ -144,13 +144,13 @@ public class KinTermTableModel extends AbstractTableModel implements ActionListe
             case 1:
                 kinTerm.alterKinTypeStrings = aValue.toString();
                 break;
-            case 2:
-                kinTerm.propositusKinTypeStrings = aValue.toString();
-                break;
-            case 3:               
+//            case 2:
+//                kinTerm.propositusKinTypeStrings = aValue.toString();
+//                break;
+            case 2:               
                 kinTerm.kinTermDescription = aValue.toString();
                 break;
-            case 4:
+            case 3:
                 if ((Boolean) aValue) {
                     checkBoxSet.add(kinTerm);
                 } else {
