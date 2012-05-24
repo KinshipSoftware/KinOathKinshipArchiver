@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.ui.menu;
 
+import java.awt.Component;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -8,9 +9,9 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- *  Document   : KinTermsMenu
- *  Created on : Apr 1, 2011, 9:32:40 AM
- *  Author     : Peter Withers
+ * Document : KinTermsMenu
+ * Created on : Apr 1, 2011, 9:32:40 AM
+ * Author : Peter Withers
  */
 public class KinTermsMenu extends JMenu {
 
@@ -21,9 +22,11 @@ public class KinTermsMenu extends JMenu {
     JMenuItem exportMenu;
     JMenuItem importMenu;
     JMenuItem deleteMenu;
+    private Component parentComponent;
 
-    public KinTermsMenu(AbstractDiagramManager diagramWindowManager) {
+    public KinTermsMenu(AbstractDiagramManager diagramWindowManager, Component parentComponent) {
         this.diagramWindowManager = diagramWindowManager;
+        this.parentComponent = parentComponent;
         initMenu();
     }
 
@@ -47,7 +50,7 @@ public class KinTermsMenu extends JMenu {
 
             public void menuSelected(javax.swing.event.MenuEvent evt) {
                 // todo: check if a kin term pane is showing or associated with the diagram and that a diagam is showing
-                currentKinTermSavePanel = diagramWindowManager.getKinTermPanel();
+                currentKinTermSavePanel = diagramWindowManager.getKinTermPanel(parentComponent);
                 if (currentKinTermSavePanel != null) {
                     if (currentKinTermSavePanel.getKinTermGroupCount() == 0) {
                         // if there are no kin term groups then present "new" not "show"
