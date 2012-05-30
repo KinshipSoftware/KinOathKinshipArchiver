@@ -99,6 +99,7 @@ public class HelpMenu extends JMenu {
                 }
             }
         });
+        this.add(checkForUpdatesMenuItem);
 
 //        JMenuItem updateKmdiProfileMenuItem = new JMenuItem("Check Component Registry Updates (this will be moved to a panel)");
 //        updateKmdiProfileMenuItem.addActionListener(new java.awt.event.ActionListener() {
