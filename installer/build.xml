@@ -10,7 +10,7 @@
         <property name="kinoath.current.major" value="1"/>
         <property name="kinoath.current.minor" value="0"/>
         <property name="kinoath.filenameidentifier" value="-stable"/>
-        <property name="kinoath.application-title" value="KinOath"/>
+        <property name="kinoath.application-title" value="KinOath Kinship Archiver"/>
         <property name="kinoath.icon-file-name" value="kinoath${kinoath.filenameidentifier}128x128"/>
         <property name="SRCDIR" value="../desktop/src/main/java/"/>
         <property name="IconsDir" value="../desktop/src/main/resources/nl/mpi/kinnate/resources/icons/"/>
@@ -18,9 +18,9 @@
         <property name="ClassesDir" value="../desktop/target/classes"/>
         <property name="LIBDIR" value="${OUTPUTDIR}lib/"/>
         <property name="pathToMpiTrunk" value="../../../../trunk/"/> <!-- pathToMpiTrunk is being used until a better method becomes available (such as when the required files are in a maven like repository) -->
-        <property name="LongDescription" value="KinOath is a kinship application with the primary goal of connecting kinship data with archived data, such as audio, video or written resources while also being closely integrated with the archive software such as Arbil. Beyond this primary goal it is designed to be flexible and culturally nonspecific, such that culturally different social structures can equally be represented. Kin type strings are used throughout the application for constructing and searching data sets. The representation of kin terms is also integrated into the application allowing comparative diagrams of kin terms. Graphical representation of the data is an important part of the application and the diagrams produced are intended to very flexible and of publishable quality.
+        <property name="LongDescription" value="KinOath Kinship Archiver is a kinship application with the primary goal of connecting kinship data with archived data, such as audio, video or written resources while also being closely integrated with the archive software such as Arbil. Beyond this primary goal it is designed to be flexible and culturally nonspecific, such that culturally different social structures can equally be represented. Kin type strings are used throughout the application for constructing and searching data sets. The representation of kin terms is also integrated into the application allowing comparative diagrams of kin terms. Graphical representation of the data is an important part of the application and the diagrams produced are intended to very flexible and of publishable quality.
 http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
-        <property name="ShortDescription" value="KinOath is a kinship application that is flexible, culturally nonspecific and produces diagrams of publishable quality."/>
+        <property name="ShortDescription" value="KinOath Kinship Archiver is a kinship application that is flexible, culturally nonspecific and produces diagrams of publishable quality."/>
     </target>
     <target name="clean" description="remove all artifact files" depends="setproperties">
         <delete dir="${OUTPUTDIR}"/>
@@ -242,7 +242,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
     <target name="GetTracTodoList" depends="getsvnversion, GetLoginData">
 <!--        todo: add another file for the rss feed of completed tasks-->        
         <property name="TodoListFile" value="${OUTPUTDIR}/distribution/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_todo.csv"/>
-        <get src="https://trac.mpi.nl/query?status=accepted&amp;status=assigned&amp;status=new&amp;status=reopened&amp;component=KinOath-desktop&amp;component=KinOath-web&amp;format=csv&amp;max=1000&amp;col=id&amp;col=summary&amp;col=component&amp;report=24&amp;order=summary"
+        <get src="https://trac.mpi.nl/query?status=accepted&amp;status=assigned&amp;status=new&amp;status=reopened&amp;component=KinOath-desktop&amp;milestone=!KinOath+Halle+Milestone&amp;format=csv&amp;max=1000&amp;col=id&amp;col=summary&amp;col=milestone&amp;report=24&amp;order=milestone"
              dest="${TodoListFile}"
              username="${lux09.user}"
              password="${lux09.pw}"/>
