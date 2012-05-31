@@ -242,7 +242,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
     <target name="GetTracTodoList" depends="getsvnversion, GetLoginData">
 <!--        todo: add another file for the rss feed of completed tasks-->        
         <property name="TodoListFile" value="${OUTPUTDIR}/distribution/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_todo.csv"/>
-        <get src="https://trac.mpi.nl/query?status=accepted&amp;status=assigned&amp;status=new&amp;status=reopened&amp;component=KinOath-desktop&amp;milestone=!KinOath+Halle+Milestone&amp;format=csv&amp;max=1000&amp;col=id&amp;col=summary&amp;col=milestone&amp;report=24&amp;order=milestone"
+        <get src="https://trac.mpi.nl/query?status=accepted&amp;status=assigned&amp;status=new&amp;status=reopened&amp;component=KinOath-desktop&amp;milestone=!KinOath+Halle+Milestone&amp;format=csv&amp;max=1000&amp;col=id&amp;col=summary&amp;col=milestone&amp;col=type&amp;report=24&amp;order=milestone"
              dest="${TodoListFile}"
              username="${lux09.user}"
              password="${lux09.pw}"/>
