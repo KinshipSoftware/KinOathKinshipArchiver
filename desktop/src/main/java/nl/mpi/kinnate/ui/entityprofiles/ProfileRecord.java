@@ -32,6 +32,6 @@ public class ProfileRecord {
     }
 
     static public ProfileRecord[] getDefaultProfiles() {
-        return new ProfileRecord[]{new ProfileRecord("Individual", "clarin.eu:cr1:p_1320657629627"), new ProfileRecord("Chromosome_Example", "clarin.eu:cr1:p_1332345811038")};
+        return new ProfileRecord[]{new ProfileRecord("Individual", "clarin.eu:cr1:p_1320657629627"), new ProfileRecord("Chromosome_Example", "clarin.eu:cr1:p_1332345811038"), new ProfileRecord("Clan_Example", "clarin.eu:cr1:p_1337778924934")};
     }
 }
