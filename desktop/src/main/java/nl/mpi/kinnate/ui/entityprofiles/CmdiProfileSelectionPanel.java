@@ -28,6 +28,7 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
     private ProfileTableModel profileTableModel;
     private ProfileManager profileManager;
     private GraphPanel graphPanel;
+    private Color foregroundColour;
 
     public CmdiProfileSelectionPanel(String panelName, ProfileManager profileManager, GraphPanel graphPanel) {
         this.profileManager = profileManager;
@@ -39,6 +40,7 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
         topPanel = new JPanel(new BorderLayout());
         profileReloadProgressBar = new JProgressBar();
         statusLabel = new JLabel();
+        foregroundColour = new JLabel().getForeground();
         reloadButton = new JButton("Reload List");
         reloadButton.addActionListener(this);
         topPanel.add(statusLabel, BorderLayout.CENTER);
@@ -52,7 +54,7 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
         if (isError) {
             statusLabel.setForeground(Color.red);
         } else {
-            statusLabel.setForeground(new JLabel().getForeground());
+            statusLabel.setForeground(foregroundColour);
         }
         statusLabel.setText(statusText);
         reloadButton.setEnabled(reloadEnable);
