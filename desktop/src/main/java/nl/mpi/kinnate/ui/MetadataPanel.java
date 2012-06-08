@@ -89,22 +89,28 @@ public class MetadataPanel extends JPanel {
 
     public void addEntityDataNode(KinDiagramPanel kinDiagramPanel, EntityData entityData) {
         String entityPath = entityData.getEntityPath();
+        System.out.println("entity path: " + entityPath);
+        boolean metadataFileMissing = false;
         if (entityPath != null && entityPath.length() > 0) {
             try {
                 ArbilDataNode arbilDataNode = dataNodeLoader.getArbilDataNode(null, new URI(entityPath));
-                // register this node with the graph panel
-                kinDiagramPanel.registerArbilNode(entityData.getUniqueIdentifier(), arbilDataNode);
-                kinTableModel.addSingleArbilDataNode(arbilDataNode);
-                metadataNodes.add(arbilDataNode);
-                // add the corpus links to the other table
-                if (entityData.archiveLinkArray != null) {
-                    for (URI archiveLink : entityData.archiveLinkArray) {
-                        ArbilDataNode archiveLinkNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
-                        // todo: we do not register this node with the graph panel because it is not rendered on the graph, but if the name of the node changes then it should be updated in the tree which is not yet handled
-                        archiveTableModel.addSingleArbilDataNode(archiveLinkNode);
-                        archiveTreeNodes.add(archiveLinkNode);
-                        archiveRootNodes.add(archiveLinkNode.getParentDomNode());
-                        metadataNodes.add(archiveLinkNode);
+                if (arbilDataNode.fileNotFound) {
+                    metadataFileMissing = true;
+                } else {
+                    // register this node with the graph panel
+                    kinDiagramPanel.registerArbilNode(entityData.getUniqueIdentifier(), arbilDataNode);
+                    kinTableModel.addSingleArbilDataNode(arbilDataNode);
+                    metadataNodes.add(arbilDataNode);
+                    // add the corpus links to the other table
+                    if (entityData.archiveLinkArray != null) {
+                        for (URI archiveLink : entityData.archiveLinkArray) {
+                            ArbilDataNode archiveLinkNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
+                            // todo: we do not register this node with the graph panel because it is not rendered on the graph, but if the name of the node changes then it should be updated in the tree which is not yet handled
+                            archiveTableModel.addSingleArbilDataNode(archiveLinkNode);
+                            archiveTreeNodes.add(archiveLinkNode);
+                            archiveRootNodes.add(archiveLinkNode.getParentDomNode());
+                            metadataNodes.add(archiveLinkNode);
+                        }
                     }
                 }
             } catch (URISyntaxException urise) {

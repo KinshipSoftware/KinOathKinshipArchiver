@@ -46,10 +46,10 @@ public class KinTree extends ArbilTree {
             } else if (arbilNode instanceof KinTreeNode) {
                 final KinTreeNode kinTreeNode = (KinTreeNode) arbilNode;
                 // set the graph selection
-                if (kinTreeNode.getEntityData() != null) {
-                    identifierList.add(kinTreeNode.getUniqueIdentifier());
-                    graphPanel.metadataPanel.addEntityDataNode(kinDiagramPanel, ((KinTreeNode) arbilNode).getEntityData());
-                }
+//                if (kinTreeNode.getEntityData() != null) { // todo: why do we care if the entity data is null or not? I think kinTreeNode object has changed and the null test is no longer required
+                identifierList.add(kinTreeNode.getUniqueIdentifier());
+                graphPanel.metadataPanel.addEntityDataNode(kinDiagramPanel, ((KinTreeNode) arbilNode).getEntityData());
+//                }
             }
         }
         // set the graph selection
