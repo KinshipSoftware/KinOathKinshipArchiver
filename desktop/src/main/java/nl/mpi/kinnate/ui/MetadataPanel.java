@@ -16,6 +16,7 @@ import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilTree;
+import nl.mpi.arbil.ui.ImageBoxRenderer;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -41,12 +42,12 @@ public class MetadataPanel extends JPanel {
     private ArbilDataNodeLoader dataNodeLoader;
     private ContainerNode rootNode;
 
-    public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader) {
+    public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer) {
         this.arbilTree = new ArbilTree();
         rootNode = new ContainerNode("links", null, new ArbilNode[]{});
         arbilTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode)));
-        this.kinTableModel = new ArbilTableModel();
-        this.archiveTableModel = new ArbilTableModel();
+        this.kinTableModel = new ArbilTableModel(imageBoxRenderer);
+        this.archiveTableModel = new ArbilTableModel(imageBoxRenderer);
         this.dataNodeLoader = dataNodeLoader;
         //dateEditorPanel = new DateEditorPanel();
         ArbilTable kinTable = new ArbilTable(kinTableModel, "Selected Nodes");
