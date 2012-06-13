@@ -215,7 +215,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
 
         TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
-        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, tableHidePane, tableCellDragHandler, dataNodeLoader));
+        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, tableHidePane, tableCellDragHandler, dataNodeLoader, null)); // todo: pass a ImageBoxRenderer here if you want thumbnails
 
         if (graphPanel.dataStoreSvg.getVisiblePanels() == null) {
             // in some older files and non kinoath files these values would not be set, so we make sure that they are here
@@ -335,6 +335,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTypeStringProviders.add(kinTypeStringInput);
         kinTypeStringProviders.add(entitySearchPanel);
         kinTypeStringProviders.addAll(Arrays.asList(graphPanel.getkinTermGroups()));
+//        graphPanel.svgUpdateHandler.updateEntities();
     }
 
     static public File getDefaultDiagramFile(SessionStorage sessionStorage) {
@@ -372,8 +373,13 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                             entityIndex.clearAbortRequest();
                             try {
                                 String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
-                                progressBar.setValue(0);
-                                progressBar.setVisible(true);
+                                SwingUtilities.invokeLater(new Runnable() {
+
+                                    public void run() {
+                                        progressBar.setValue(0);
+                                        progressBar.setVisible(true);
+                                    }
+                                });
                                 if (graphPanel.dataStoreSvg.diagramMode == DiagramMode.Undefined) {
                                     graphPanel.dataStoreSvg.diagramMode = DiagramMode.FreeForm;
                                     if (!graphPanel.dataStoreSvg.egoEntities.isEmpty() || !graphPanel.dataStoreSvg.requiredEntities.isEmpty()) {
@@ -724,6 +730,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void dataNodeRemoved(ArbilNode adn) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public boolean isFullyLoadedNodeRequired() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
