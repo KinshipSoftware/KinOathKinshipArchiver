@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kintypestrings.ImportRequiredException;
@@ -163,7 +164,7 @@ public class QueryParser implements EntityService {
         abortProcess = false;
     }
 
-    public EntityData[] processKinTypeStrings(ArrayList<KinTypeStringProvider> kinTypeStringProviders, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, JProgressBar progressBar) throws EntityServiceException, ProcessAbortException, ImportRequiredException {
+    public EntityData[] processKinTypeStrings(ArrayList<KinTypeStringProvider> kinTypeStringProviders, IndexerParameters indexParameters, DataStoreSvg dataStoreSvg, final JProgressBar progressBar) throws EntityServiceException, ProcessAbortException, ImportRequiredException {
         foundOrder = 0; // temp for testing // todo: remove testing labels
         if (indexParameters.valuesChanged) {
             // discard all entity data from previous queries
@@ -182,11 +183,17 @@ public class QueryParser implements EntityService {
         for (KinTypeStringProvider kinTypeStringProvider : kinTypeStringProviders) {
             totalProgressRequired = totalProgressRequired + kinTypeStringProvider.getTotalLength();
         }
-        progressBar.setMaximum(totalProgressRequired);
-        progressBar.setMinimum(0);
-        progressBar.setValue(0);
-        // only show specific progress when it is meaningful
-        progressBar.setIndeterminate(totalProgressRequired < 3);
+        final int totalProgressRequiredFinal = totalProgressRequired;
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                progressBar.setMaximum(totalProgressRequiredFinal);
+                progressBar.setMinimum(0);
+                progressBar.setValue(0);
+                // only show specific progress when it is meaningful
+                progressBar.setIndeterminate(totalProgressRequiredFinal < 3);
+            }
+        });
         // process each line of the users input
         for (KinTypeStringProvider kinTypeStringProvider : kinTypeStringProviders) {
             int lineCounter = -1;
@@ -313,7 +320,12 @@ public class QueryParser implements EntityService {
                         }
                     }
                 }
-                progressBar.setValue(progressBar.getValue() + 1);
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    public void run() {
+                        progressBar.setValue(progressBar.getValue() + 1);
+                    }
+                });
             }
             kinTypeStringProvider.highlightKinTypeStrings(parserHighlightArray, kinTypeStrings);
         }
@@ -335,7 +347,12 @@ public class QueryParser implements EntityService {
                 requiredNode.isEgo = true;
             }
             requiredNode.isVisible = true;
-            progressBar.setValue(progressBar.getValue() + 1);
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    progressBar.setValue(progressBar.getValue() + 1);
+                }
+            });
         }
         // set the alter entity for each relation if not already set (based on the known unique identifier)
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
