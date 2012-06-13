@@ -29,6 +29,9 @@ public class ProfileTableModel extends AbstractTableModel {
     }
 
     public int getRowCount() {
+        if (profileManager == null) {
+            return 0;
+        }
         return profileManager.getProfileCount();
     }
 
