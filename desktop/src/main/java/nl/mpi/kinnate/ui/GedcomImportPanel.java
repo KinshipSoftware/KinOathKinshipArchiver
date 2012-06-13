@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
@@ -59,6 +60,7 @@ public class GedcomImportPanel extends JPanel {
     private ArbilDataNodeLoader dataNodeLoader;
     private ArbilTreeHelper treeHelper;
     private JDialog dialoguePanel;
+    private Component errorPanel = null;
 
     public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager, SavePanel originatingSavePanel, EntityCollection entityCollection, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper) {
         this.setPreferredSize(new Dimension(500, 500));
@@ -207,26 +209,41 @@ public class GedcomImportPanel extends JPanel {
                                     int maxXsdErrorToShow = 3;
                                     importTextArea.append("Checking XML of imported data  (step 3/4)\n");
                                     importTextArea.setCaretPosition(importTextArea.getText().length());
-                                    progressBar.setValue(0);
-                                    progressBar.setMaximum(treeNodesArray.length + 1);
-                                    Component errorPanel = null;
-                                    for (URI currentNodeUri : treeNodesArray) {
-                                        progressBar.setValue(progressBar.getValue() + 1);
+                                    final int maxProgress = treeNodesArray.length + 1;
+                                    SwingUtilities.invokeLater(new Runnable() {
+
+                                        public void run() {
+                                            progressBar.setValue(0);
+                                            progressBar.setMaximum(maxProgress);
+                                        }
+                                    });
+                                    for (final URI currentNodeUri : treeNodesArray) {
+                                        SwingUtilities.invokeLater(new Runnable() {
+
+                                            public void run() {
+                                                progressBar.setValue(progressBar.getValue() + 1);
+                                            }
+                                        });
                                         if (maxXsdErrorToShow > 0) {
-                                            XsdChecker xsdChecker = new XsdChecker();
-                                            if (xsdChecker.simpleCheck(new File(currentNodeUri)) != null) {
-                                                if (errorPanel == null) {
-                                                    xsdChecker.setName("XSD Error on Import");
-                                                    errorPanel = abstractDiagramManager.createDiagramContainer(xsdChecker);
-                                                } else {
-                                                    abstractDiagramManager.createDiagramSubPanel("XSD Error on Import", xsdChecker, errorPanel);
+                                            SwingUtilities.invokeLater(new Runnable() {
+
+                                                public void run() {
+                                                    XsdChecker xsdChecker = new XsdChecker();
+                                                    if (xsdChecker.simpleCheck(new File(currentNodeUri)) != null) {
+                                                        xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentNodeUri));
+                                                        xsdChecker.setDividerLocation(0.5);
+                                                        if (errorPanel == null) {
+                                                            xsdChecker.setName("XSD Error on Import");
+                                                            errorPanel = abstractDiagramManager.createDiagramContainer(xsdChecker);
+                                                        } else {
+                                                            abstractDiagramManager.createDiagramSubPanel("XSD Error on Import", xsdChecker, errorPanel);
+                                                        }
+                                                    }
                                                 }
-                                                xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentNodeUri));
-                                                xsdChecker.setDividerLocation(0.5);
-                                                maxXsdErrorToShow--;
-                                                if (maxXsdErrorToShow <= 0) {
-                                                    importTextArea.append("maximum xsd errors shown, no more files will be tested" + "\n");
-                                                }
+                                            });
+                                            maxXsdErrorToShow--;
+                                            if (maxXsdErrorToShow <= 0) {
+                                                importTextArea.append("maximum xsd errors shown, no more files will be tested" + "\n");
                                             }
                                         }
                                     }
@@ -236,7 +253,12 @@ public class GedcomImportPanel extends JPanel {
                                 } else {
                                     importTextArea.append("Skipping check XML of imported data  (step 3/4)\n");
                                 }
-                                progressBar.setIndeterminate(true);
+                                SwingUtilities.invokeLater(new Runnable() {
+
+                                    public void run() {
+                                        progressBar.setIndeterminate(true);
+                                    }
+                                });
                                 // todo: it might be more efficient to only update the new files
                                 importTextArea.append("Starting update of entity database (step 4/4)\n");
                                 importTextArea.setCaretPosition(importTextArea.getText().length());
