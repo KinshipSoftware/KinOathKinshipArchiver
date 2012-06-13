@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindocument.EntityDocument;
@@ -94,16 +95,26 @@ public class EntityImporter implements GenericImporter {
 
     protected void incrementLineProgress() {
         currntLineCounter++;
-        int currentProgressPercent = (int) ((double) currntLineCounter / (double) inputLineCount * 100);
+        final int currentProgressPercent = (int) ((double) currntLineCounter / (double) inputLineCount * 100);
         if (progressBar != null) {
-            progressBar.setValue(currentProgressPercent);
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    progressBar.setValue(currentProgressPercent);
+                }
+            });
         }
     }
 
     protected void incrementSaveProgress(int documentCount, int savedCount) {
-        int currentProgressPercent = (int) ((double) savedCount / (double) documentCount * 100);
+        final int currentProgressPercent = (int) ((double) savedCount / (double) documentCount * 100);
         if (progressBar != null) {
-            progressBar.setValue(currentProgressPercent);
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    progressBar.setValue(currentProgressPercent);
+                }
+            });
         }
     }
 
@@ -142,7 +153,12 @@ public class EntityImporter implements GenericImporter {
     protected void saveAllDocuments() {
         appendToTaskOutput(createdDocuments.size() + " entities imported");
         appendToTaskOutput("Saving imported documents (step 2/4)");
-        progressBar.setValue(0);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                progressBar.setValue(0);
+            }
+        });
         int documentCount = createdDocuments.size();
         int savedCount = 0;
         for (EntityDocument currentDocument : createdDocuments.values()) {
