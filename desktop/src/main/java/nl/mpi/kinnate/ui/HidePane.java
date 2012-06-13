@@ -10,12 +10,13 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 
 /**
- *  Document   : HidePane
- *  Created on : Mar 11, 2011, 9:03:55 AM
- *  Author     : Peter Withers
+ * Document : HidePane
+ * Created on : Mar 11, 2011, 9:03:55 AM
+ * Author : Peter Withers
  */
 public class HidePane extends JPanel {
 
@@ -190,7 +191,7 @@ public class HidePane extends JPanel {
         }
     }
 
-    public void addTab(String tabString, Component tabComponent) {
+    public void addTab(final String tabString, final Component tabComponent) {
         int insertIndex = 0;
         for (int tabCounter = 0; tabCounter < tabbedPane.getTabCount(); tabCounter++) {
             if (tabString.compareToIgnoreCase(tabbedPane.getTitleAt(tabCounter)) < 0) {
@@ -198,7 +199,13 @@ public class HidePane extends JPanel {
             }
             insertIndex++;
         }
-        tabbedPane.insertTab(tabString, null, tabComponent, tabString, insertIndex);
+        final int insertIndexFinal = insertIndex;
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                tabbedPane.insertTab(tabString, null, tabComponent, tabString, insertIndexFinal);
+            }
+        });
     }
 
     public void addTab(VisiblePanelSetting panelSetting, String tabString, Component tabComponent) {
@@ -225,8 +232,13 @@ public class HidePane extends JPanel {
         return tabbedPane.getSelectedComponent();
     }
 
-    public void setSelectedComponent(Component component) {
-        tabbedPane.setSelectedComponent(component);
+    public void setSelectedComponent(final Component component) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                tabbedPane.setSelectedComponent(component);
+            }
+        });
     }
 
     public void removeTab(Component comp) {
