@@ -93,7 +93,7 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
     private void getSeachPanel() {
         JPanel searchPanel = new JPanel(new BorderLayout());
         String frameTitle = "Archive Search";
-        ArbilTableModel resultsTableModel = new ArbilTableModel();
+        ArbilTableModel resultsTableModel = new ArbilTableModel(null); // todo: pass a ImageBoxRenderer here if you want thumbnails
         ArbilTable imdiTable = new ArbilTable(resultsTableModel, frameTitle);
         ArbilSplitPanel imdiSplitPanel = new ArbilSplitPanel(imdiTable);
         // todo: take care of main window actions such as pack that might cause odd visuals
