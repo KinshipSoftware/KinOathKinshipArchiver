@@ -104,7 +104,11 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
 
     @Override
     public SavePanel getCurrentSavePanel(Component parentComponent) {
-        return (SavePanel) parentComponent;
+        if (parentComponent instanceof SavePanel) {
+            return (SavePanel) parentComponent; // in the case of clicking the panels menu on the import error window, this will not be a savepanel.
+        } else {
+            return null;
+        }
     }
 
     public String getSavePanelTitle(int selectedIndex) {
