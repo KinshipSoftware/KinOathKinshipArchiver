@@ -153,7 +153,6 @@ public abstract class AbstractDiagramManager {
 //            ((KinDiagramPanel) selectedComponent).loadAllTrees();
 //        }
 //    }
-
     public void openImportPanel(File importFile, SavePanel originatingSavePanel) throws ImportException {
         new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importFile);
     }
@@ -207,6 +206,9 @@ public abstract class AbstractDiagramManager {
 
     public KinTermSavePanel getKinTermPanel(Component parentComponent) {
         SavePanel selectedComponent = getCurrentSavePanel(parentComponent);
+        if (selectedComponent == null) {
+            return null;
+        }
         KinTermSavePanel kinTermSavePanel = null;
         if (selectedComponent instanceof SavePanelFrame) {
             selectedComponent = (SavePanel) ((SavePanelFrame) selectedComponent).getContentPane();
