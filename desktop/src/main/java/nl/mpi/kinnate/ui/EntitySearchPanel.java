@@ -17,8 +17,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
+import javax.swing.SwingUtilities;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.data.ContainerNode;
@@ -180,6 +179,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 resultsArea.setText("Found " + searchResults.length + " entities\n");
                 for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
+                    // todo: add cache and update of the tree nodes
                     resultsArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
@@ -211,12 +211,18 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 int loadedCount = 0;
                 for (UniqueIdentifier entityId : entityIdentifiers) {
                     EntityData entityData = entityCollection.getEntity(entityId, graphPanel.getIndexParameters());
+                    // todo: add cache and update of the tree nodes
                     resultsArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
                     rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
                     resultsTree.requestResort();
                     loadedCount++;
                     resultsArea.setText("Loaded " + loadedCount + " of " + entityIdentifiers.length + " entities\n");
-                    progressBar.setValue(loadedCount);
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        public void run() {
+                            progressBar.setValue(progressBar.getValue() + 1);
+                        }
+                    });
                 }
                 resultsArea.setText("");
                 resultsArea.setVisible(false);
