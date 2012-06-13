@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -177,28 +178,48 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
     }
 
-    public void updateDatabase(URI[] updatedFileArray, JProgressBar progressBar) {
+    public void updateDatabase(final URI[] updatedFileArray, final JProgressBar progressBar) {
         try {
             if (progressBar != null) {
-                progressBar.setMinimum(0);
-                progressBar.setMaximum(updatedFileArray.length);
-                progressBar.setIndeterminate(false);
-                progressBar.setValue(0);
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    public void run() {
+                        progressBar.setMinimum(0);
+                        progressBar.setMaximum(updatedFileArray.length);
+                        progressBar.setIndeterminate(false);
+                        progressBar.setValue(0);
+                    }
+                });
             }
             synchronized (databaseLock) {
                 new Open(databaseName).execute(context);
                 for (URI updatedFile : updatedFileArray) {
                     addFileToDB(updatedFile);
                     if (progressBar != null) {
-                        progressBar.setValue(progressBar.getValue() + 1);
+                        SwingUtilities.invokeLater(new Runnable() {
+
+                            public void run() {
+                                progressBar.setValue(progressBar.getValue() + 1);
+                            }
+                        });
                     }
                 }
                 if (progressBar != null) {
-                    progressBar.setIndeterminate(true);
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        public void run() {
+                            progressBar.setIndeterminate(true);
+                        }
+                    });
                 }
                 new Optimize().execute(context);
                 if (progressBar != null) {
-                    progressBar.setIndeterminate(false);
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        public void run() {
+                            progressBar.setIndeterminate(false);
+                        }
+                    });
                 }
                 new Close().execute(context);
             }
