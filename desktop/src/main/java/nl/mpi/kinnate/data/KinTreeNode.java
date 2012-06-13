@@ -220,6 +220,11 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     }
 
     @Override
+    public boolean isDataPartiallyLoaded() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public boolean isLocal() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
