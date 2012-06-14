@@ -13,13 +13,14 @@ import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.ui.kintypeeditor.CheckBoxModel;
 
 /**
- *  Document   : RelationTypesTableModel
- *  Created on : Jan 2, 2012, 2:05:08 PM
- *  Author     : Peter Withers
+ * Document : RelationTypesTableModel
+ * Created on : Jan 2, 2012, 2:05:08 PM
+ * Author : Peter Withers
  */
-public class RelationTypesTableModel extends AbstractTableModel implements ActionListener {
+public class RelationTypesTableModel extends AbstractTableModel implements ActionListener, CheckBoxModel {
 
     SavePanel savePanel;
     DataStoreSvg dataStoreSvg;
@@ -90,7 +91,11 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 case 1:
                     return kinType.getDataCategory();
                 case 2:
-                    return kinType.getRelationType();
+                    ArrayList<String> valuesList = new ArrayList<String>();
+                    for (DataTypes.RelationType relationType : kinType.getRelationType()) {
+                        valuesList.add(relationType.name());
+                    }
+                    return valuesList;
                 case 3:
                     return kinType.getLineColour();
                 case 4:
@@ -114,6 +119,40 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
         }
     }
 
+    public ArrayList<String> getValueRangeAt(int columnIndex) {
+        ArrayList<String> valuesList = new ArrayList<String>();
+        switch (columnIndex) {
+            case 0:
+            case 1:
+                throw new UnsupportedOperationException("Not a list row type");
+            case 2:
+                for (DataTypes.RelationType relationType : DataTypes.RelationType.values()) {
+                    valuesList.add(relationType.name());
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Not a list row type");
+        }
+        return valuesList;
+    }
+
+    public void setListValueAt(ArrayList<String> valuesList, int rowIndex, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+            case 1:
+                throw new UnsupportedOperationException("Not a list type");
+            case 2:
+                ArrayList<DataTypes.RelationType> relationTypeList = new ArrayList<RelationType>();
+                for (String stringValue : valuesList) {
+                    relationTypeList.add(DataTypes.RelationType.valueOf(stringValue));
+                }
+                setValueAt(relationTypeList.toArray(new DataTypes.RelationType[]{}), rowIndex, columnIndex);
+                break;
+            default:
+                throw new UnsupportedOperationException("Not a list type");
+        }
+    }
+
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         final RelationTypeDefinition[] kinTypeDefinitions = dataStoreSvg.getRelationTypeDefinitions();
@@ -128,7 +167,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             return;
         }
         String displayName = "undefined";
-        RelationType relationType = DataTypes.RelationType.ancestor;
+        RelationType[] relationType = new RelationType[]{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant, DataTypes.RelationType.sibling, DataTypes.RelationType.union};
         String dataCategory = "";
         String lineColour = "#999999";
         int lineWidth = 2;
@@ -155,7 +194,12 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 dataCategory = stringValue;
                 break;
             case 2:
-                relationType = DataTypes.RelationType.valueOf(stringValue);
+                // this will only be set by setValueAt(ArrayList<String>)
+                if (aValue instanceof DataTypes.RelationType[]) {
+                    relationType = (DataTypes.RelationType[]) aValue;
+                } else if (aValue == null) {
+                    relationType = null;
+                }
                 break;
             case 3:
                 lineColour = stringValue;
