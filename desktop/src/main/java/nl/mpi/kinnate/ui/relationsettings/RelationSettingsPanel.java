@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -27,11 +25,13 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.ui.kintypeeditor.ArrayListCellRenderer;
+import nl.mpi.kinnate.ui.kintypeeditor.CheckBoxRenderer;
 
 /**
- *  Document   : RelationSettingsPanel
- *  Created on : Jan 2, 2012, 1:30:21 PM
- *  Author     : Peter Withers
+ * Document : RelationSettingsPanel
+ * Created on : Jan 2, 2012, 1:30:21 PM
+ * Author : Peter Withers
  */
 public class RelationSettingsPanel extends JPanel implements ActionListener {
 
@@ -95,11 +95,12 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
 //            }
         };
         TableColumn columnRelationType = kinTypeTable.getColumnModel().getColumn(2);
-        JComboBox comboBoxRelationType = new JComboBox();
-        for (DataTypes.RelationType relationType : DataTypes.RelationType.values()) {
-            comboBoxRelationType.addItem(relationType);
-        }
-        columnRelationType.setCellEditor(new DefaultCellEditor(comboBoxRelationType));
+        final JComboBox relationTypeComboBox = new JComboBox(relationTypesTableModel.getValueRangeAt(2).toArray());
+        final CheckBoxRenderer relationTypeCheckBoxRenderer = new CheckBoxRenderer(relationTypesTableModel, relationTypeComboBox);
+        relationTypeComboBox.addActionListener(relationTypeCheckBoxRenderer);
+        relationTypeComboBox.setRenderer(relationTypeCheckBoxRenderer);
+        columnRelationType.setCellEditor(relationTypeCheckBoxRenderer);
+        columnRelationType.setCellRenderer(new ArrayListCellRenderer());
 
         kinTypeTable.getColumnModel().getColumn(4).setCellEditor(new NumberSpinnerEditor(relationTypesTableModel));
         kinTypeTable.getColumnModel().getColumn(5).setCellEditor(new NumberSpinnerEditor(relationTypesTableModel));
@@ -132,26 +133,14 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if ("scan".equals(e.getActionCommand())) {
-            ArrayList<RelationTypeDefinition> kinTypesList = new ArrayList<RelationTypeDefinition>(Arrays.asList(dataStoreSvg.getRelationTypeDefinitions()));
-            boolean changesMade = false;
-            int foundTypesCount = 0;
+            int initalTypeCount = dataStoreSvg.getRelationTypeDefinitions().length;
             for (EntityData entityData : dataStoreSvg.graphData.getDataNodes()) {
                 for (EntityRelation entityRelation : entityData.getAllRelations()) {
-                    boolean foundType = false;
-                    for (RelationTypeDefinition typeDefinition : kinTypesList) {
-                        if (typeDefinition.matchesType(entityRelation)) {
-                            foundType = true;
-                        }
-                    }
-                    if (!foundType) {
-                        foundTypesCount++;
-                        changesMade = true;
-                        kinTypesList.add(new RelationTypeDefinition(entityRelation.customType, entityRelation.dcrType, entityRelation.getRelationType(), "#999999", 2, null));
-                    }
+                    dataStoreSvg.addRelationTypeDefinition(new RelationTypeDefinition(entityRelation.customType, entityRelation.dcrType, new DataTypes.RelationType[]{entityRelation.getRelationType()}, "#999999", 2, null));
                 }
             }
-            if (changesMade) {
-                dataStoreSvg.setRelationTypeDefinitions(kinTypesList.toArray(new RelationTypeDefinition[]{}));
+            final int foundTypesCount = dataStoreSvg.getRelationTypeDefinitions().length - initalTypeCount;
+            if (foundTypesCount > 0) {
                 relationTypesTableModel.fireTableDataChanged();
                 dialogHandler.addMessageDialogToQueue("Added " + foundTypesCount + " new types from the diagram", Scan_For_Types);
             } else {
