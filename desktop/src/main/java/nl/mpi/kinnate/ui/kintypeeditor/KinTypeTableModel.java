@@ -20,7 +20,7 @@ import nl.mpi.kinnate.svg.DataStoreSvg;
  *  Created on : Oct 18, 2011, 11:20:55 AM
  *  Author     : Peter Withers
  */
-public class KinTypeTableModel extends AbstractTableModel implements ActionListener {
+public class KinTypeTableModel extends AbstractTableModel implements ActionListener, CheckBoxModel {
 
     SavePanel savePanel;
     DataStoreSvg dataStoreSvg;
