@@ -17,7 +17,7 @@ public class RelationTypeDefinition {
     @XmlAttribute(name = "name", namespace = "http://mpi.nl/tla/kin")
     private String displayName;
     @XmlAttribute(name = "type", namespace = "http://mpi.nl/tla/kin")
-    private RelationType relationType;
+    private RelationType[] relationType;
     @XmlAttribute(name = "dcr", namespace = "http://mpi.nl/tla/kin")
     private String dataCategory;
     @XmlAttribute(name = "colour", namespace = "http://mpi.nl/tla/kin")
@@ -32,7 +32,7 @@ public class RelationTypeDefinition {
     public RelationTypeDefinition() {
     }
 
-    public RelationTypeDefinition(String displayName, String dataCategory, RelationType relationType, String lineColour, int lineWidth, String lineStye) {
+    public RelationTypeDefinition(String displayName, String dataCategory, RelationType relationType[], String lineColour, int lineWidth, String lineStye) {
         this.displayName = displayName;
         this.relationType = relationType;
         this.dataCategory = dataCategory;
@@ -61,7 +61,7 @@ public class RelationTypeDefinition {
         return dataCategory;
     }
 
-    public RelationType getRelationType() {
+    public RelationType[] getRelationType() {
         return relationType;
     }
 
