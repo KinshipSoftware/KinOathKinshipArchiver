@@ -19,13 +19,13 @@ import javax.swing.table.TableCellEditor;
  */
 public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRenderer, TableCellEditor, ActionListener {
 
-    private KinTypeTableModel kinTypeTableModel;
+    private CheckBoxModel kinTypeTableModel;
     private JComboBox comboBoxRelationType;
     private ArrayList<String> selectedItems;
     private int row;
     private int column;
 
-    public CheckBoxRenderer(KinTypeTableModel kinTypeTableModel, JComboBox comboBoxRelationType) {
+    public CheckBoxRenderer(CheckBoxModel kinTypeTableModel, JComboBox comboBoxRelationType) {
         super(comboBoxRelationType);
         this.kinTypeTableModel = kinTypeTableModel;
         this.comboBoxRelationType = comboBoxRelationType;
