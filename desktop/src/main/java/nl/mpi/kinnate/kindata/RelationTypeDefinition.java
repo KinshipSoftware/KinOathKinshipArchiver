@@ -87,7 +87,14 @@ public class RelationTypeDefinition {
                 return false;
             }
         } else {
-            if (!relationType.equals(entityRelation.getRelationType())) {
+            boolean foundType = false;
+            final RelationType entityRelationType = entityRelation.getRelationType();
+            for (RelationType currentType : relationType) {
+                if (currentType.equals(entityRelationType)) {
+                    foundType = true;
+                }
+            }
+            if (!foundType) {
                 return false;
             }
         }
