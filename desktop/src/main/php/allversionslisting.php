@@ -42,7 +42,7 @@ $directoryListing = getSortedDirectoryListing();
 #outputTable($directoryListing, "/^kinoath-testing.*jnlp$/", "Testing Webstart");
 #outputTable($directoryListing, "/^kinoath-stable.*deb$/", "Stable Debian");
 #outputTable($directoryListing, "/^kinoath-testing.*deb$/", "Testing Debian");
-#outputTable($directoryListing, "/^kinoath.*jnlp$/", "Webstart");
+outputTable($directoryListing, "/^kinoath.*jnlp$/", "Webstart");
 outputTable($directoryListing, "/^kinoath.*_.*deb$/", "Debian Packages");
 outputTable($directoryListing, "/^kinoath.*_.*zip$/", "Windows Installers");
 outputTable($directoryListing, "/^kinoath.*_.*tar$/", "Mac Installers");
