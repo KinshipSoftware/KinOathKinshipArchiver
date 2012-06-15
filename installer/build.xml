@@ -19,7 +19,7 @@
         <property name="LIBDIR" value="${OUTPUTDIR}lib/"/>
         <property name="pathToMpiTrunk" value="../../../../trunk/"/> <!-- pathToMpiTrunk is being used until a better method becomes available (such as when the required files are in a maven like repository) -->
         <property name="LongDescription" value="KinOath Kinship Archiver is a kinship application with the primary goal of connecting kinship data with archived data, such as audio, video or written resources while also being closely integrated with the archive software such as Arbil. Beyond this primary goal it is designed to be flexible and culturally nonspecific, such that culturally different social structures can equally be represented. Kin type strings are used throughout the application for constructing and searching data sets. The representation of kin terms is also integrated into the application allowing comparative diagrams of kin terms. Graphical representation of the data is an important part of the application and the diagrams produced are intended to very flexible and of publishable quality.
-http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
+        http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <property name="ShortDescription" value="KinOath Kinship Archiver is a kinship application that is flexible, culturally nonspecific and produces diagrams of publishable quality."/>
     </target>
     <target name="clean" description="remove all artifact files" depends="setproperties">
@@ -88,7 +88,8 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
                             <token key="ShortDescription" value="${ShortDescription}"/>
                             <token key="DistName" value="kinoath"/>
                             <token key="AppName" value="KinOath"/>
-                            <token key="MainClass" value="nl.mpi.kinnate.ui.MainFrame"/>
+                            <token key="MainClass" value="nl.mpi.kinnate.ui.MainFrame"/>                            
+                            <token key="MaximumMbAllocation" value="1024"/>
                         </replacetokens>
                     </filterchain>
                 </copy>
@@ -248,6 +249,13 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
              password="${lux09.pw}"/>
         <scp file="${TodoListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <scp file="${TodoListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath-all_todo.csv"/> <!-- ${kinoath.filenameidentifier}-->
+        <property name="ChangeListFile" value="${OUTPUTDIR}/distribution/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_changes.csv"/>
+        <get src="https://trac.mpi.nl/query?status=closed&amp;component=KinOath-desktop&amp;milestone=!KinOath+Halle+Milestone&amp;format=csv&amp;max=1000&amp;col=id&amp;col=summary&amp;col=milestone&amp;col=type&amp;report=24&amp;order=milestone"
+             dest="${ChangeListFile}"
+             username="${lux09.user}"
+             password="${lux09.pw}"/>
+        <scp file="${ChangeListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+        <scp file="${ChangeListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath-all_changes.csv"/> <!-- ${kinoath.filenameidentifier}-->
     </target>
     <target name="GetLoginData">
         <input message="Please enter lux09 username:" addproperty="lux09.user" />
