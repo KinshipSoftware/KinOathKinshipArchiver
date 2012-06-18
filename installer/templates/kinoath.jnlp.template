@@ -22,7 +22,7 @@
     </security>
     <update check="timeout" policy="always"/>
     <resources>
-        <java max-heap-size="1073741824" version="1.5+"/>
+        <java max-heap-size="@MaximumMbAllocation@m" version="1.5+"/>
         <jar href="@DistJarName@" main="true" download="eager"/>
         <jar href="lib/Saxon-HE-9.4.jar" download="eager"/>
         <jar href="lib/batik-css-1.7.jar" download="eager"/>
