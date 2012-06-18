@@ -65,7 +65,7 @@ Name: "{commondesktop}\@ApplicationTitle@"; Filename: "{app}\@DistJarName@"; Wor
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\@ApplicationTitle@"; Filename: "{app}\@DistJarName@"; Tasks: quicklaunchicon; IconFileName:"{app}\@InstalledIcon@.ico";
 
 [Run]
-Filename: "{app}\@DistJarName@"; WorkingDir: "{app}"; Description: "{cm:LaunchProgram,@AppName@}"; Flags: shellexec postinstall skipifsilent
+Filename: "java -classpath {app}\lib;{app}\@DistJarName@ -Xmx@MaximumMbAllocation@m @MainClass@"; WorkingDir: "{app}"; Description: "{cm:LaunchProgram,@AppName@}"; Flags: shellexec postinstall skipifsilent
 
 [Code]
 function InitializeSetup: Boolean;
