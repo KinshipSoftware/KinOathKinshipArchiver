@@ -1,0 +1,1 @@
+start java -classpath @DistJarName@;lib -Xmx@MaximumMbAllocation@m @MainClass@
