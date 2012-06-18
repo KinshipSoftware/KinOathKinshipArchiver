@@ -58,7 +58,6 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 //        // todo: clear or set the child entity data 
 //        //childNodes
 //    }
-
     public EntityData getEntityData() {
         return entityData;
     }
@@ -71,7 +70,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     public String toString() {
         if (derivedLabelString == null) {
             if (entityData == null) {
-                return "(entity not loaded)";
+                return "<entity not loaded>";
             } else {
                 StringBuilder labelBuilder = new StringBuilder();
                 final String[] labelArray = entityData.getLabel();
@@ -80,10 +79,11 @@ public class KinTreeNode extends ArbilNode implements Comparable {
                         labelBuilder.append(labelString);
                         labelBuilder.append(" ");
                     }
-                } else {
-                    labelBuilder.append("              ");
                 }
                 derivedLabelString = labelBuilder.toString();
+                if (derivedLabelString.replaceAll("\\s", "").isEmpty()) {
+                    derivedLabelString = "<unlabeled entity>";
+                }
             }
         }
         return derivedLabelString;
