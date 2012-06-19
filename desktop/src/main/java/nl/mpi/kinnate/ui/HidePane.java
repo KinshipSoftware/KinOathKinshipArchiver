@@ -249,20 +249,55 @@ public class HidePane extends JPanel {
         }
     }
 
-    public void removeTab(Component comp) {
-        tabbedPane.remove(comp);
-//        this.setVisible(tabbedPane.getComponentCount() > 0);
+    public void removeTab(final Component comp) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            tabbedPane.remove(comp);
+            this.setVisible(tabbedPane.getComponentCount() > 0);
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    tabbedPane.remove(comp);
+                    HidePane.this.setVisible(tabbedPane.getComponentCount() > 0);
+                }
+            });
+        }
     }
 
-    public void remove(VisiblePanelSetting panelSetting) {
-        for (Component currentPanel : panelSetting.getTargetPanels()) {
-            tabbedPane.remove(currentPanel);
+    public void remove(final VisiblePanelSetting panelSetting) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            for (Component currentPanel : panelSetting.getTargetPanels()) {
+                tabbedPane.remove(currentPanel);
+            }
+            this.setVisible(tabbedPane.getComponentCount() > 0);
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    for (Component currentPanel : panelSetting.getTargetPanels()) {
+                        tabbedPane.remove(currentPanel);
+                    }
+                    HidePane.this.setVisible(tabbedPane.getComponentCount() > 0);
+                }
+            });
         }
-        this.setVisible(tabbedPane.getComponentCount() > 0);
         registeredPanelSettings.remove(panelSetting);
     }
 
     public void setHiddeState() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            setHiddeStatePrivate();
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    setHiddeStatePrivate();
+                }
+            });
+        }
+    }
+
+    private void setHiddeStatePrivate() {
         boolean showEditor = tabbedPane.getComponentCount() > 0;
         if (hiddenState == showEditor) {
             toggleHiddenState();
