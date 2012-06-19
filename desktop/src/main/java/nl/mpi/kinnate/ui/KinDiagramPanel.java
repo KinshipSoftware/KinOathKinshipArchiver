@@ -395,8 +395,13 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 }
                                 if (graphPanel.dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
 //                                    diagramMode = DiagramMode.KinTypeQuery;
-                                    EntityData[] graphNodes = entityIndex.processKinTypeStrings(kinTypeStringProviders, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
-                                    progressBar.setIndeterminate(true);
+                                    final EntityData[] graphNodes = entityIndex.processKinTypeStrings(kinTypeStringProviders, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
+                                    SwingUtilities.invokeLater(new Runnable() {
+
+                                        public void run() {
+                                            progressBar.setIndeterminate(true);
+                                        }
+                                    });
                                     graphPanel.dataStoreSvg.graphData.setEntitys(graphNodes);
                                     // register interest Arbil updates and update the graph when data is edited in the table
 //                                registerCurrentNodes(graphSorter.getDataNodes());
@@ -441,7 +446,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                             }
                         }
                     }
-                    progressBar.setVisible(false);
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        public void run() {
+                            progressBar.setVisible(false);
+                        }
+                    });
                     graphThreadRunning = false;
                     if (uniqueIdentifiers != null) {
                         graphPanel.setSelectedIds(uniqueIdentifiers);
@@ -514,45 +524,49 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void loadAllTrees() {
-        // todo: is this invoke later really required and does it even stop the tree loading error for which it was intended?
-        SwingUtilities.invokeLater(new Runnable() {
-
-            public void run() {
-                egoSelectionPanel.setTreeNodes(graphPanel); // init the trees in the side panel
-                archiveEntityLinkerPanelRemote.loadTreeNodes();
-                archiveEntityLinkerPanelLocal.loadTreeNodes();
-                archiveEntityLinkerPanelMpiRemote.loadTreeNodes();
-                if (projectTree != null) {
-                    projectTree.loadProjectTree();
-                    entityCollection.addDatabaseUpdateListener(projectTree);
-                }
-//        while (!treeLoadQueue.isEmpty()) {
-//            treeLoadQueue.remove(0).requestResort();
-//        }
-            }
-        });
+        egoSelectionPanel.setTreeNodes(graphPanel); // init the trees in the side panel
+        archiveEntityLinkerPanelRemote.loadTreeNodes();
+        archiveEntityLinkerPanelLocal.loadTreeNodes();
+        archiveEntityLinkerPanelMpiRemote.loadTreeNodes();
+        if (projectTree != null) {
+            projectTree.loadProjectTree();
+            entityCollection.addDatabaseUpdateListener(projectTree);
+        }
     }
 
     public void showProgressBar() {
-        SwingUtilities.invokeLater(new Runnable() {
+        if (SwingUtilities.isEventDispatchThread()) {
 
-            public void run() {
-                progressBar.setIndeterminate(true);
-                progressBar.setVisible(true);
-                KinDiagramPanel.this.revalidate();
-            }
-        });
+            progressBar.setIndeterminate(true);
+            progressBar.setVisible(true);
+            KinDiagramPanel.this.revalidate();
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    progressBar.setIndeterminate(true);
+                    progressBar.setVisible(true);
+                    KinDiagramPanel.this.revalidate();
+                }
+            });
+        }
     }
 
     public void clearProgressBar() {
-        SwingUtilities.invokeLater(new Runnable() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            progressBar.setIndeterminate(false);
+            progressBar.setVisible(false);
+            KinDiagramPanel.this.revalidate();
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
 
-            public void run() {
-                progressBar.setIndeterminate(false);
-                progressBar.setVisible(false);
-                KinDiagramPanel.this.revalidate();
-            }
-        });
+                public void run() {
+                    progressBar.setIndeterminate(false);
+                    progressBar.setVisible(false);
+                    KinDiagramPanel.this.revalidate();
+                }
+            });
+        }
     }
 
     public boolean hasSaveFileName() {
