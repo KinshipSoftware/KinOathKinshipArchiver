@@ -24,21 +24,21 @@ public class RelationTypeDefinition {
     private String lineColour;
     @XmlAttribute(name = "width", namespace = "http://mpi.nl/tla/kin")
     private int lineWidth;
-    @XmlAttribute(name = "style", namespace = "http://mpi.nl/tla/kin")
-    private String lineStye;
+    @XmlAttribute(name = "dash", namespace = "http://mpi.nl/tla/kin")
+    private int lineDash;
     @XmlAttribute(name = "orientation", namespace = "http://mpi.nl/tla/kin")
     private CurveLineOrientation curveLineOrientation = CurveLineOrientation.horizontal; // used to define the line orientation of curve lines only
 
     public RelationTypeDefinition() {
     }
 
-    public RelationTypeDefinition(String displayName, String dataCategory, RelationType relationType[], String lineColour, int lineWidth, String lineStye) {
+    public RelationTypeDefinition(String displayName, String dataCategory, RelationType relationType[], String lineColour, int lineWidth, int lineDash) {
         this.displayName = displayName;
         this.relationType = relationType;
         this.dataCategory = dataCategory;
         this.lineColour = lineColour;
         this.lineWidth = lineWidth;
-        this.lineStye = lineStye;
+        this.lineDash = lineDash;
     }
 
     public String getDisplayName() {
@@ -49,8 +49,8 @@ public class RelationTypeDefinition {
         return lineColour;
     }
 
-    public String getLineStye() {
-        return lineStye;
+    public int getLineDash() {
+        return lineDash;
     }
 
     public int getLineWidth() {
