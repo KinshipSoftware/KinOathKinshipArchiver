@@ -221,7 +221,22 @@ public class RelationSvg {
                     toBezX = (alterX - egoX) / 2 + egoX;
                 }
             }
-
+//            System.out.println("egoY: " + egoY + " alterY: " + alterY);
+            final float distanceY = Math.abs(egoY - alterY);
+//            System.out.println("distanceY: " + distanceY);
+            if (distanceY < hSpacing / 4) {
+//                System.out.println("needs curve added");
+                boolean quadrantType = egoX > alterX == egoY > alterY; // top left and bottom right need to be handled differently from top right and bottom left                
+//                System.out.println("quadrantType: " + quadrantType);
+                final float curveToAdd = hSpacing / 8;
+                if (quadrantType) {
+                    fromBezY -= curveToAdd;
+                    toBezY += curveToAdd;
+                } else {
+                    fromBezY += curveToAdd;
+                    toBezY -= curveToAdd;
+                }
+            }
         }
         targetNode.setAttribute("d", "M " + egoX + "," + egoY + " C " + fromBezX + "," + fromBezY + " " + toBezX + "," + toBezY + " " + alterX + "," + alterY);
     }
