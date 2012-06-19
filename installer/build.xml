@@ -99,7 +99,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <updateSingleFile fileName="win-installer.iss"/>
         <updateSingleFile fileName="Info.plist"/>
         <updateSingleFile fileName="start"/>
-        <updateSingleFile fileName="start.bat"/>
+        <!-- <updateSingleFile fileName="start.bat"/>-->
         <copy file="${OUTPUTDIR}/distribution/kinoath.jnlp" tofile="${SRCDIR}/../resources/JNLP-INF/application.jnlp"/>
         <copy file="${OUTPUTDIR}/distribution/kinoath.jnlp" tofile="${OUTPUTDIR}/distribution/${JarPrefix}.jnlp"/>        
     </target>
@@ -111,7 +111,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <copy todir="${OUTPUTDIR}/distribution-win32/temp/">
             <fileset dir="${IconsDir}" includes="*.ico"/>
         </copy>
-        <copy file="${OUTPUTDIR}/distribution/start.bat" todir="${OUTPUTDIR}/distribution-win32/"/>
+        <!-- <copy file="${OUTPUTDIR}/distribution/start.bat" todir="${OUTPUTDIR}/distribution-win32/"/>-->
         <!--get unzip then delete the imagemagick jar-->
 <!--        <get src="http://www.mpi.nl/tg/j2se/jnlp/kinoath/lib/ImageMagick-6.5.9-Win32.jar" dest="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar"/>
         <unzip src="${OUTPUTDIR}/ImageMagick-6.5.9-Win32.jar" dest="${OUTPUTDIR}/distribution-win32/temp/ImageMagick"/>
