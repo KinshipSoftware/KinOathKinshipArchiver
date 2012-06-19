@@ -186,24 +186,43 @@ public class RelationSvg {
         // todo: if this line is too straight then add a curve by tweeking the handles
         if (curveLineOrientation == CurveLineOrientation.vertical) {
             fromBezX = egoX;
-            fromBezY = alterY;
             toBezX = alterX;
-            toBezY = egoY;
-            // todo: update the bezier positions similar to in the follwing else statement
-            if (1 / (egoY - alterY) < vSpacing) {
-                fromBezX = egoX;
-                fromBezY = alterY - vSpacing / 2;
-                toBezX = alterX;
-                toBezY = egoY - vSpacing / 2;
+            if (egoY > alterY) {
+                if (egoY - alterY < hSpacing / 4) {
+                    fromBezY = egoY - hSpacing / 4;
+                    toBezY = alterY - hSpacing / 4;
+                } else {
+                    fromBezY = (egoY - alterY) / 2 + alterY;
+                    toBezY = (egoY - alterY) / 2 + alterY;
+                }
+            } else {
+                if (alterY - egoY < hSpacing / 4) {
+                    fromBezY = egoY + hSpacing / 4;
+                    toBezY = alterY + hSpacing / 4;
+                } else {
+                    fromBezY = (alterY - egoY) / 2 + egoY;
+                    toBezY = (alterY - egoY) / 2 + egoY;
+                }
+            }
+//            System.out.println("egoY: " + egoY + " alterY: " + alterY);
+            final float distanceX = Math.abs(egoX - alterX);
+//            System.out.println("distanceY: " + distanceY);
+            if (distanceX < hSpacing / 4) {
+//                System.out.println("needs curve added");
+                boolean quadrantType = egoY > alterY == egoY > alterY; // top left and bottom right need to be handled differently from top right and bottom left                
+//                System.out.println("quadrantType: " + quadrantType);
+                final float curveToAdd = hSpacing / 8;
+                if (quadrantType) {
+                    fromBezX -= curveToAdd;
+                    toBezX += curveToAdd;
+                } else {
+                    fromBezX += curveToAdd;
+                    toBezX -= curveToAdd;
+                }
             }
         } else {
-            fromBezX = alterX;
             fromBezY = egoY;
-            toBezX = egoX;
             toBezY = alterY;
-            // todo: if the nodes are almost in align then this test fails and it should insted check for proximity not equality
-//            System.out.println(1 / (egoX - alterX));
-//            if (1 / (egoX - alterX) < vSpacing) {              
             if (egoX > alterX) {
                 if (egoX - alterX < hSpacing / 4) {
                     fromBezX = egoX - hSpacing / 4;
