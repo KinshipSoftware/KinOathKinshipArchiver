@@ -57,15 +57,15 @@ Source: "..\lib\*"; DestDir: "{app}\lib\"; Flags: ignoreversion recursesubdirs c
 
 [Icons]
 ; TODO: put the text "Launch @ApplicationTitle@ Via Webstart" into the language files
-Name: "{group}\@ApplicationTitle@"; Filename: "{app}\start.bat"; WorkingDir: "{app}"; IconFileName:"{app}\@InstalledIcon@.ico"; Flags: runhidden
+Name: "{group}\@ApplicationTitle@"; Filename: "javaw"; Parameters: "-classpath @DistJarName@;lib -Xmx@MaximumMbAllocation@m @MainClass@"; IconFileName:"{app}\@InstalledIcon@.ico";
 Name: "{group}\{cm:ProgramOnTheWeb,@AppName@}"; Filename: "http://www.lat-mpi.eu/tools/@DistName@"
 Name: "{group}\{cm:ProgramOnTheWeb,@AppName@ Forum}"; Filename: "http://www.lat-mpi.eu/tools/@DistName@/@AppName@-forum/"
 Name: "{group}\Launch @ApplicationTitle@ Via Webstart"; Filename: "http://www.mpi.nl/tg/j2se/jnlp/@DistName@/@DistName@@FilenameIdentifier@.jnlp"
-Name: "{commondesktop}\@ApplicationTitle@"; Filename: "{app}\start.bat"; WorkingDir: "{app}"; Tasks: desktopicon; IconFileName:"{app}\@InstalledIcon@.ico"; Flags: runhidden
-; Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\@ApplicationTitle@"; Filename: "{app}\start.bat"; WorkingDir: "{app}"; Tasks: quicklaunchicon; IconFileName:"{app}\@InstalledIcon@.ico"; Flags: shellexec runhidden
+Name: "{commondesktop}\@ApplicationTitle@"; Filename: "javaw"; Parameters: "-classpath @DistJarName@;lib -Xmx@MaximumMbAllocation@m @MainClass@"; Tasks: desktopicon; IconFileName:"{app}\@InstalledIcon@.ico"; Flags: runhidden
+; Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\@ApplicationTitle@"; Filename: "{app}\start.bat"; Tasks: quicklaunchicon; IconFileName:"{app}\@InstalledIcon@.ico";
 
 [Run]
-Filename: "{app}\start.bat"; WorkingDir: "{app}"; Description: "{cm:LaunchProgram,@AppName@}"; Flags: shellexec postinstall skipifsilent runhidden
+Filename: "javaw"; Parameters: "-classpath @DistJarName@;lib -Xmx@MaximumMbAllocation@m @MainClass@"; Description: "{cm:LaunchProgram,@AppName@}"; Flags: shellexec postinstall skipifsilent
 
 [Code]
 function InitializeSetup: Boolean;
