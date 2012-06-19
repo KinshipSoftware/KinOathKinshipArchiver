@@ -61,7 +61,7 @@ Name: "{group}\@ApplicationTitle@"; Filename: "javaw"; Parameters: "-classpath @
 Name: "{group}\{cm:ProgramOnTheWeb,@AppName@}"; Filename: "http://www.lat-mpi.eu/tools/@DistName@"
 Name: "{group}\{cm:ProgramOnTheWeb,@AppName@ Forum}"; Filename: "http://www.lat-mpi.eu/tools/@DistName@/@AppName@-forum/"
 Name: "{group}\Launch @ApplicationTitle@ Via Webstart"; Filename: "http://www.mpi.nl/tg/j2se/jnlp/@DistName@/@DistName@@FilenameIdentifier@.jnlp"
-Name: "{commondesktop}\@ApplicationTitle@"; Filename: "javaw"; Parameters: "-classpath @DistJarName@;lib -Xmx@MaximumMbAllocation@m @MainClass@"; Tasks: desktopicon; IconFileName:"{app}\@InstalledIcon@.ico"; Flags: runhidden
+Name: "{commondesktop}\@ApplicationTitle@"; Filename: "javaw"; Parameters: "-classpath @DistJarName@;lib -Xmx@MaximumMbAllocation@m @MainClass@"; Tasks: desktopicon; IconFileName:"{app}\@InstalledIcon@.ico";
 ; Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\@ApplicationTitle@"; Filename: "{app}\start.bat"; Tasks: quicklaunchicon; IconFileName:"{app}\@InstalledIcon@.ico";
 
 [Run]
