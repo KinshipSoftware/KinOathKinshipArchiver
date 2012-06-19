@@ -60,7 +60,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             case 5:
                 return "Line/Dash";
             case 6: // todo: add this to the relation definitions table
-                return "Line Orientation";
+                return "Curve Line Orientation";
             case 7:
                 return "";
             default:
@@ -103,7 +103,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 case 5:
                     return kinType.getLineDash();
                 case 6:
-                    return kinType.getCurveLineOrientation();
+                    return kinType.getCurveLineOrientation().name();
                 case 7:
                     return checkBoxSet.contains(kinType);
                 default:
@@ -227,7 +227,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 throw new UnsupportedOperationException("Too many columns");
         }
         if (rowIndex < dataStoreSvg.getRelationTypeDefinitions().length) {
-            kinTypeDefinitions[rowIndex] = new RelationTypeDefinition(displayName, dataCategory, relationType, lineColour, lineWidth, lineDash);
+            kinTypeDefinitions[rowIndex] = new RelationTypeDefinition(displayName, dataCategory, relationType, lineColour, lineWidth, lineDash, curveLineOrientation);
             dataStoreSvg.setRelationTypeDefinitions(kinTypeDefinitions);
         } else {
             if ("".equals(aValue)) {
@@ -235,7 +235,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 return;
             }
             ArrayList<RelationTypeDefinition> kinTypesList = new ArrayList<RelationTypeDefinition>(Arrays.asList(kinTypeDefinitions));
-            kinTypesList.add(new RelationTypeDefinition(displayName, dataCategory, relationType, lineColour, lineWidth, lineDash));
+            kinTypesList.add(new RelationTypeDefinition(displayName, dataCategory, relationType, lineColour, lineWidth, lineDash, curveLineOrientation));
             dataStoreSvg.setRelationTypeDefinitions(kinTypesList.toArray(new RelationTypeDefinition[]{}));
         }
         savePanel.updateGraph();
