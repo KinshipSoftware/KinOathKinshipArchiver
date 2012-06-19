@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import nl.mpi.kinnate.kindocument.ProfileManager;
 import nl.mpi.kinnate.svg.GraphPanel;
 
@@ -50,17 +51,23 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
         this.add(new JScrollPane(profileTable), BorderLayout.CENTER);
     }
 
-    public void setStatus(boolean reloadEnable, String statusText, boolean isError) {
-        if (isError) {
-            statusLabel.setForeground(Color.red);
-        } else {
-            statusLabel.setForeground(foregroundColour);
-        }
-        statusLabel.setText(statusText);
-        reloadButton.setEnabled(reloadEnable);
-        profileReloadProgressBar.setVisible(!reloadEnable);
-        profileReloadProgressBar.setIndeterminate(true);
-        profileTableModel.fireTableDataChanged(); //todo: this might not be required in some cases, but when a profile fails to load then the table needs to refresh so that the faild profile shows as unchecked 
+    public void setStatus(final boolean reloadEnable, final String statusText, final boolean isError) {
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                if (isError) {
+                    statusLabel.setForeground(Color.red);
+                } else {
+                    statusLabel.setForeground(foregroundColour);
+                }
+                statusLabel.setText(statusText);
+                reloadButton.setEnabled(reloadEnable);
+                profileReloadProgressBar.setVisible(!reloadEnable);
+                profileReloadProgressBar.setIndeterminate(true);
+                profileTableModel.fireTableDataChanged(); //todo: this might not be required in some cases, but when a profile fails to load then the table needs to refresh so that the faild profile shows as unchecked 
+            }
+        });
 //        this.doLayout(); // seems not to be required
     }
 
@@ -68,10 +75,9 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
         profileTableModel.setProfileManager(profileManager);
     }
 
-    public JProgressBar getProfileReloadProgressBar() {
-        return profileReloadProgressBar;
-    }
-
+//    public JProgressBar getProfileReloadProgressBar() {
+//        return profileReloadProgressBar;
+//    }
     public void actionPerformed(ActionEvent e) {
         profileManager.loadProfiles(true, CmdiProfileSelectionPanel.this, graphPanel);
     }
