@@ -267,7 +267,7 @@ public class RelationSvg {
 //        }
 //
 //    }
-    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
+    protected void insertRelation(GraphPanel graphPanel, Element relationGroupNode, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
         float[] egoSymbolPoint;
         float[] alterSymbolPoint;
         float[] parentPoint;
@@ -295,6 +295,7 @@ public class RelationSvg {
         float toY = (alterSymbolPoint[1]); // * vSpacing + vSpacing
 
         boolean addedRelationLine = false;
+        Element linkLine;
         if (!DataTypes.isSanguinLine(directedRelation)) {
 //            case kinTermLine:
             // this case uses the following case
@@ -316,24 +317,8 @@ public class RelationSvg {
             //System.out.println("link: " + graphLinkNode.getAlterNode().xPos + ":" + graphLinkNode.getAlterNode().yPos);
 
             //                <line id="_15" transform="translate(146.0,112.0)" x1="0" y1="0" x2="100" y2="100" ="black" stroke-width="1"/>
-            Element linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
-
+            linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
             setPathPointsAttribute(linkLine, curveLineOrientation, hSpacing, vSpacing, fromX, fromY, toX, toY);
-            //                    linkLine.setAttribute("x1", );
-            //                    linkLine.setAttribute("y1", );
-            //
-            //                    linkLine.setAttribute("x2", );
-            linkLine.setAttribute("fill", "none");
-            if (lineColour != null) {
-                linkLine.setAttribute("stroke", lineColour);
-            } else {
-                linkLine.setAttribute("stroke", "blue");
-            }
-            linkLine.setAttribute("stroke-width", Integer.toString(lineWidth));
-            linkLine.setAttribute("id", lineIdString);
-            defsNode.appendChild(linkLine);
-            addedRelationLine = true;
-//                break;
         } else {
 //            case sanguineLine:
             //                            Element squareLinkLine = doc.createElement("line");
@@ -344,22 +329,24 @@ public class RelationSvg {
             //                            squareLinkLine.setAttribute("y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
             //                            squareLinkLine.setAttribute("stroke", "grey");
             //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
-            Element squareLinkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-
-            setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineIdString, squareLinkLine, directedRelation, vSpacing, fromX, fromY, toX, toY, parentPoint);
-
-            squareLinkLine.setAttribute("fill", "none");
-            if (lineColour != null) {
-                squareLinkLine.setAttribute("stroke", lineColour);
-            } else {
-                squareLinkLine.setAttribute("stroke", "grey"); // todo: get the line colour from the settings
-            }
-            squareLinkLine.setAttribute("stroke-width", Integer.toString(lineWidth));
-            squareLinkLine.setAttribute("id", lineIdString);
-            defsNode.appendChild(squareLinkLine);
-            addedRelationLine = true;
-//                break;
+            linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
+            setPolylinePointsAttribute(graphPanel.lineLookUpTable, lineIdString, linkLine, directedRelation, vSpacing, fromX, fromY, toX, toY, parentPoint);
         }
+        if (lineDash > 0) {
+            linkLine.setAttribute("stroke-dasharray", Integer.toString(lineDash));
+            linkLine.setAttribute("stroke-dashoffset", "0");
+        }
+        linkLine.setAttribute("fill", "none");
+        if (lineColour != null) {
+            linkLine.setAttribute("stroke", lineColour);
+        } else {
+            linkLine.setAttribute("stroke", "grey"); // todo: get the line colour from the settings
+        }
+        linkLine.setAttribute("stroke-width", Integer.toString(lineWidth));
+        linkLine.setAttribute("id", lineIdString);
+        defsNode.appendChild(linkLine);
+        addedRelationLine = true;
+
         groupNode.appendChild(defsNode);
 
         if (addedRelationLine) {
