@@ -910,17 +910,19 @@ public class SvgUpdateHandler {
                                     String lineColour = graphLinkNode.lineColour;
                                     CurveLineOrientation curveLineOrientation = CurveLineOrientation.horizontal;
                                     int lineWidth = EntitySvg.strokeWidth;
+                                    int lineDash = 0;
                                     if (lineColour == null) {
                                         for (RelationTypeDefinition relationTypeDefinition : graphPanel.dataStoreSvg.getRelationTypeDefinitions()) {
                                             if (relationTypeDefinition.matchesType(graphLinkNode)) {
                                                 lineColour = relationTypeDefinition.getLineColour();
                                                 lineWidth = relationTypeDefinition.getLineWidth();
                                                 curveLineOrientation = relationTypeDefinition.getCurveLineOrientation();
+                                                lineDash = relationTypeDefinition.getLineDash();
                                                 break;
                                             }
                                         }
                                     }
-                                    relationSvg.insertRelation(graphPanel, relationGroupNode, leftEntity, rightEntity, directedRelation, lineWidth, curveLineOrientation, lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
+                                    relationSvg.insertRelation(graphPanel, relationGroupNode, leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
                                 }
                             }
                         }
