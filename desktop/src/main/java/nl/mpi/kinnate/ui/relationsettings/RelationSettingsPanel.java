@@ -136,7 +136,7 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
             int initalTypeCount = dataStoreSvg.getRelationTypeDefinitions().length;
             for (EntityData entityData : dataStoreSvg.graphData.getDataNodes()) {
                 for (EntityRelation entityRelation : entityData.getAllRelations()) {
-                    dataStoreSvg.addRelationTypeDefinition(new RelationTypeDefinition(entityRelation.customType, entityRelation.dcrType, new DataTypes.RelationType[]{entityRelation.getRelationType()}, "#999999", 2, null));
+                    dataStoreSvg.addRelationTypeDefinition(new RelationTypeDefinition(entityRelation.customType, entityRelation.dcrType, new DataTypes.RelationType[]{entityRelation.getRelationType()}, "#999999", 2, 0));
                 }
             }
             final int foundTypesCount = dataStoreSvg.getRelationTypeDefinitions().length - initalTypeCount;
