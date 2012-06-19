@@ -59,7 +59,7 @@ public class ProfileManager {
                 // find any selected profiles that are not in the list of profiles from the server
                 ArrayList<ProfileRecord> selectedProfiles = new ArrayList<ProfileRecord>(Arrays.asList(graphPanel.dataStoreSvg.selectedProfiles));
                 for (CmdiProfileReader.CmdiProfile currentProfile : cmdiProfileReader.cmdiProfileArray) {
-                    for (ProfileRecord profileRecord : selectedProfiles) {
+                    for (ProfileRecord profileRecord : selectedProfiles.toArray(new ProfileRecord[0])) {
                         if (profileRecord.profileId.equals(currentProfile.id)) {
                             selectedProfiles.remove(profileRecord);
                         }
