@@ -101,7 +101,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 case 4:
                     return kinType.getLineWidth();
                 case 5:
-                    return kinType.getLineStye();
+                    return kinType.getLineDash();
                 case 6:
                     return kinType.getCurveLineOrientation();
                 case 7:
@@ -171,7 +171,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
         String dataCategory = "";
         String lineColour = "#999999";
         int lineWidth = 2;
-        String lineStye = null;
+        int lineDash = 0;
         CurveLineOrientation curveLineOrientation = RelationTypeDefinition.CurveLineOrientation.horizontal;
 
         RelationTypeDefinition kinType = null;
@@ -182,7 +182,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             dataCategory = kinType.getDataCategory();
             lineColour = kinType.getLineColour();
             lineWidth = kinType.getLineWidth();
-            lineStye = kinType.getLineStye();
+            lineDash = kinType.getLineDash();
             curveLineOrientation = kinType.getCurveLineOrientation();
         }
         String stringValue = aValue.toString();
@@ -209,7 +209,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 lineWidth = Integer.parseInt(stringValue.replaceAll("[^0-9]", ""));
                 break;
             case 5:
-                lineStye = stringValue;
+                lineDash = Integer.parseInt(stringValue.replaceAll("[^0-9]", ""));
                 break;
             case 6:
                 curveLineOrientation = RelationTypeDefinition.CurveLineOrientation.valueOf(stringValue);
@@ -227,7 +227,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 throw new UnsupportedOperationException("Too many columns");
         }
         if (rowIndex < dataStoreSvg.getRelationTypeDefinitions().length) {
-            kinTypeDefinitions[rowIndex] = new RelationTypeDefinition(displayName, dataCategory, relationType, lineColour, lineWidth, lineStye);
+            kinTypeDefinitions[rowIndex] = new RelationTypeDefinition(displayName, dataCategory, relationType, lineColour, lineWidth, lineDash);
             dataStoreSvg.setRelationTypeDefinitions(kinTypeDefinitions);
         } else {
             if ("".equals(aValue)) {
@@ -235,7 +235,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 return;
             }
             ArrayList<RelationTypeDefinition> kinTypesList = new ArrayList<RelationTypeDefinition>(Arrays.asList(kinTypeDefinitions));
-            kinTypesList.add(new RelationTypeDefinition(displayName, dataCategory, relationType, lineColour, lineWidth, lineStye));
+            kinTypesList.add(new RelationTypeDefinition(displayName, dataCategory, relationType, lineColour, lineWidth, lineDash));
             dataStoreSvg.setRelationTypeDefinitions(kinTypesList.toArray(new RelationTypeDefinition[]{}));
         }
         savePanel.updateGraph();
