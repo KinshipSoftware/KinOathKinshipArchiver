@@ -184,7 +184,7 @@ public class DataStoreSvg {
                 HashSet<RelationType> relationTypes = new HashSet<RelationType>(Arrays.asList(foundType.getRelationType()));
                 relationTypes.addAll(Arrays.asList(relationTypeDefinition.getRelationType()));
                 // because added RelationTypeDefinition is added first, we will keep the properties of the existing RelationTypeDefinition here
-                kinTypesList.put(relationTypeHashKey, new RelationTypeDefinition(relationTypeDefinition.getDisplayName(), relationTypeDefinition.getDataCategory(), relationTypes.toArray(new RelationType[]{}), relationTypeDefinition.getLineColour(), relationTypeDefinition.getLineWidth(), relationTypeDefinition.getLineDash()));
+                kinTypesList.put(relationTypeHashKey, new RelationTypeDefinition(relationTypeDefinition.getDisplayName(), relationTypeDefinition.getDataCategory(), relationTypes.toArray(new RelationType[]{}), relationTypeDefinition.getLineColour(), relationTypeDefinition.getLineWidth(), relationTypeDefinition.getLineDash(), relationTypeDefinition.getCurveLineOrientation()));
             }
         }
         this.relationTypeDefinitions = kinTypesList.values().toArray(new RelationTypeDefinition[]{});
