@@ -25,20 +25,21 @@ public class RelationTypeDefinition {
     @XmlAttribute(name = "width", namespace = "http://mpi.nl/tla/kin")
     private int lineWidth;
     @XmlAttribute(name = "dash", namespace = "http://mpi.nl/tla/kin")
-    private int lineDash;
+    private int lineDash = 0;
     @XmlAttribute(name = "orientation", namespace = "http://mpi.nl/tla/kin")
     private CurveLineOrientation curveLineOrientation = CurveLineOrientation.horizontal; // used to define the line orientation of curve lines only
 
     public RelationTypeDefinition() {
     }
 
-    public RelationTypeDefinition(String displayName, String dataCategory, RelationType relationType[], String lineColour, int lineWidth, int lineDash) {
+    public RelationTypeDefinition(String displayName, String dataCategory, RelationType relationType[], String lineColour, int lineWidth, int lineDash, CurveLineOrientation curveLineOrientation) {
         this.displayName = displayName;
         this.relationType = relationType;
         this.dataCategory = dataCategory;
         this.lineColour = lineColour;
         this.lineWidth = lineWidth;
         this.lineDash = lineDash;
+        this.curveLineOrientation = curveLineOrientation;
     }
 
     public String getDisplayName() {
