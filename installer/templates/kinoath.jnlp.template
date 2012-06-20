@@ -30,7 +30,7 @@
         <jar href="lib/commons-logging-1.0.4.jar" download="eager"/>
         <jar href="lib/log4j-1.2.16.jar" download="eager"/>
         <jar href="lib/xml-apis-1.3.04.jar" download="eager"/>
-        <jar href="lib/﻿arbil-2.5.31276-pretesting.jar" download="eager"/>
+        <jar href="lib/arbil-2.5.31276-pretesting.jar" download="eager"/>
         <jar href="lib/batik-dom-1.7.jar" download="eager"/>
         <jar href="lib/batik-swing-1.7.jar" download="eager"/>
         <jar href="lib/corpusstructure-api-1.7.3.jar" download="eager"/>
