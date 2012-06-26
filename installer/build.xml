@@ -258,6 +258,13 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
              password="${lux09.pw}"/>
         <scp file="${ChangeListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
         <scp file="${ChangeListFile}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath-all_changes.csv"/> <!-- ${kinoath.filenameidentifier}-->
+        <property name="ChangeListRSS" value="${OUTPUTDIR}/distribution/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_changes.rss"/>
+        <get src="https://trac.mpi.nl/query?status=closed&amp;component=KinOath-desktop&amp;milestone=!KinOath+Halle+Milestone&amp;format=rss&amp;max=1000&amp;col=id&amp;col=summary&amp;col=milestone&amp;col=type&amp;report=24&amp;order=milestone"
+             dest="${ChangeListRSS}"
+             username="${lux09.user}"
+             password="${lux09.pw}"/>
+        <scp file="${ChangeListRSS}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/"/>
+        <scp file="${ChangeListRSS}" todir="${lux09.user}:${lux09.pw}@lux09.mpi.nl:/data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath-all-changes.rss"/> <!-- ${kinoath.filenameidentifier}-->
     </target>
     <target name="GetLoginData">
         <input message="Please enter lux09 username:" addproperty="lux09.user" />
