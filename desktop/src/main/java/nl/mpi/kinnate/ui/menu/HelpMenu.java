@@ -45,10 +45,10 @@ public class HelpMenu extends JMenu {
             }
         });
         this.add(aboutMenuItem);
-        JMenuItem helpMenuItem = new JMenuItem("Help");
+        JMenuItem helpMenuItem = new JMenuItem("Internal Help");
         helpMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
         helpMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
+            
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     // todo: update this when the manual is written
@@ -59,13 +59,41 @@ public class HelpMenu extends JMenu {
                 }
             }
         });
+        helpMenuItem.setEnabled(false);
         this.add(helpMenuItem);
+        
+        JMenuItem arbilWebsiteMenuItem = new JMenuItem("KinOath Website");
+        arbilWebsiteMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    dialogHandler.openFileInExternalApplication(new URI("http://tla.mpi.nl/tools/tla-tools/kinoath"));
+                } catch (Exception ex) {
+                    BugCatcherManager.getBugCatcher().logError(ex);
+                }
+            }
+        });
+        this.add(arbilWebsiteMenuItem);
+        
+        JMenuItem arbilOnlineManualMenuItem = new JMenuItem("KinOath Online Manual");
+        arbilOnlineManualMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    dialogHandler.openFileInExternalApplication(new URI("http://www.mpi.nl/corpus/html/kinoath/index.html"));
+                } catch (Exception ex) {
+                    BugCatcherManager.getBugCatcher().logError(ex);
+                }
+            }
+        });
+        this.add(arbilOnlineManualMenuItem);
+        
         JMenuItem arbilForumMenuItem = new JMenuItem("KinOath Forum (Website)");
         arbilForumMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    dialogHandler.openFileInExternalApplication(new URI("http://www.lat-mpi.eu/tools/kinoath/kinoath-forum/"));
+                    dialogHandler.openFileInExternalApplication(new URI("http://tla.mpi.nl/forums/software/kinoath"));
                 } catch (Exception ex) {
                     BugCatcherManager.getBugCatcher().logError(ex);
                 }
