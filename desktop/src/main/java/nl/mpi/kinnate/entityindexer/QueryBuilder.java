@@ -37,7 +37,7 @@ public class QueryBuilder {
                 stringBuilder.append("(");
             }
             stringBuilder.append("\"");
-            stringBuilder.append(currentEntry.getXpathString());
+            stringBuilder.append(escapeBadChars(currentEntry.getXpathString()));
             stringBuilder.append("\"");
         }
         stringBuilder.append(")");
@@ -48,7 +48,8 @@ public class QueryBuilder {
 // ref:       http://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html#d38243e274
 
     static String escapeBadChars(String inputString) {
-        return inputString.replace("&", "&amp;").replace("'", "&apos;").replace("\"", "&quot;");
+        // our queries use double quotes so single quotes are allowed
+        return inputString.replace("&", "&amp;").replace("\"", "&quot;"); // .replace("'", "&apos;")
     }
 
     public String getLabelsClause(IndexerParameters indexParameters, String docRootVar) {
