@@ -442,7 +442,7 @@ public class FileMenu extends javax.swing.JMenu {
 
         final DiagramTranscoder diagramTranscoder = new DiagramTranscoder(diagramWindowManager.getCurrentSavePanel(parentComponent));
         DiagramTranscoderPanel diagramTranscoderPanel = new DiagramTranscoderPanel(diagramTranscoder);
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export as PDF/JPEG/PNG", false, false, null, MessageDialogHandler.DialogueType.save, diagramTranscoderPanel);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export as PDF/JPEG/PNG/TIFF", false, false, null, MessageDialogHandler.DialogueType.save, diagramTranscoderPanel);
         if (selectedFilesArray != null) {
             try {
                 for (File selectedFile : selectedFilesArray) {
