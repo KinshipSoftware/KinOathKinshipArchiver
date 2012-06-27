@@ -21,7 +21,7 @@ public class QueryBuilder {
                 stringBuilder.append("(");
             }
             stringBuilder.append("\"");
-            stringBuilder.append(currentEntry);
+            stringBuilder.append(escapeBadChars(currentEntry));
             stringBuilder.append("\"");
         }
         stringBuilder.append(")");
@@ -46,6 +46,10 @@ public class QueryBuilder {
 // todo: escape quotes from symbol queries
 // todo: when getting the icon clause and the symbol the string input must be encoded for ' " &
 // ref:       http://www.balisage.net/Proceedings/vol7/html/Vlist02/BalisageVol7-Vlist02.html#d38243e274
+
+    static String escapeBadChars(String inputString) {
+        return inputString.replace("&", "&amp;").replace("'", "&apos;").replace("\"", "&quot;");
+    }
 
     public String getLabelsClause(IndexerParameters indexParameters, String docRootVar) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -162,7 +166,7 @@ public class QueryBuilder {
     public String getEntityByEndPointQuery(DataTypes.RelationType relationType, IndexerParameters indexParameters) {
         return "<Entities> { for $doc in collection('nl-mpi-kinnate') where not (/*:Kinnate/*:Entity/*:Relations/*:Relation/@*:Type = \"" + relationType.name() + "\")\n"
                 + "and not (/*:Kinnate/*:CustomData/*:Type/text() = \"Gedcom Family Group\")\n"
-//                + "order by /*:Entity/*:Label \n" // this will not sort because the label nodes do not exist yet
+                //                + "order by /*:Entity/*:Label \n" // this will not sort because the label nodes do not exist yet
                 + "return let $entityNode := $doc/*:Kinnate/*:Entity\n"
                 + getEntityQueryReturn(indexParameters)
                 + "}</Entities>";
