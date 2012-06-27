@@ -31,13 +31,13 @@ public class QueryBuilderTest extends TestCase {
      */
     public void testAsSequenceString_StringArr() {
         System.out.println("asSequenceString");
-        String[] stringArray = new String[]{"one", "two"};
+        String[] stringArray = new String[]{"one", "two", "one&two", "single'quote", "double\"quote"};
         QueryBuilder instance = new QueryBuilder();
-        String expResult = "(\"one\",\"two\")";
+        String expResult = "(\"one\",\"two\",\"one&amp;two\",\"single&apos;quote\",\"double&quot;quote\")";
         String result = instance.asSequenceString(stringArray);
         assertEquals(expResult, result);
     }
-
+    
     /**
      * Test of asSequenceString method, of class QueryBuilder.
      */
