@@ -28,6 +28,23 @@ public class QueryBuilder {
         return stringBuilder.toString();
     }
 
+    public String asContainsString(String keyWords) {
+        String[] stringArray = keyWords.split("\\s");
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String currentEntry : stringArray) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append(" and ");
+            } else {
+                stringBuilder.append("[");
+            }
+            stringBuilder.append("//. contains text \"");
+            stringBuilder.append(escapeBadChars(currentEntry));
+            stringBuilder.append("\" using fuzzy using case insensitive");
+        }
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
+
     public String asSequenceString(IndexerParam indexerParam) {
         StringBuilder stringBuilder = new StringBuilder();
         for (ParameterElement currentEntry : indexerParam.getValues()) {
@@ -175,11 +192,18 @@ public class QueryBuilder {
     }
 
     public String getEntityByKeyWordQuery(String keyWords, IndexerParameters indexParameters) {
-        String escapedKeywordSequence = asSequenceString(keyWords.split("\\s"));
+//        String escapedKeywordSequence = asSequenceString(keyWords.split("\\s"));
         return "<Entities> { "
-                + "for $KinnateNode in collection('nl-mpi-kinnate')/*:Kinnate[//. contains text "
-                + escapedKeywordSequence
-                + " using case insensitive distance at most 2 words]\n"
+                + "for $KinnateNode in collection('nl-mpi-kinnate')/*:Kinnate"
+                + asContainsString(keyWords)
+                + "\n"
+                //                + "[//. contains text "
+                //                + escapedKeywordSequence
+                //                + "\""
+                //                + escapeBadChars(keyWords)
+                //                + "\""
+                //                + " using fuzzy using case insensitive]\n"
+                //                + " using case insensitive distance at most 2 words]\n"
                 + "return let $entityNode := $KinnateNode/*:Entity\n"
                 //                + "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + keyWords + "\")\n"
                 //                + "return let $entityNode := $doc/*:Kinnate/*:Entity\n"
