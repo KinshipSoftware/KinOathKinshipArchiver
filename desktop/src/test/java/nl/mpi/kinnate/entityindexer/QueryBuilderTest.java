@@ -33,7 +33,7 @@ public class QueryBuilderTest extends TestCase {
         System.out.println("asSequenceString");
         String[] stringArray = new String[]{"one", "two", "one&two", "single'quote", "double\"quote"};
         QueryBuilder instance = new QueryBuilder();
-        String expResult = "(\"one\",\"two\",\"one&amp;two\",\"single&apos;quote\",\"double&quot;quote\")";
+        String expResult = "(\"one\",\"two\",\"one&amp;two\",\"single'quote\",\"double&quot;quote\")";
         String result = instance.asSequenceString(stringArray);
         assertEquals(expResult, result);
     }
@@ -43,13 +43,18 @@ public class QueryBuilderTest extends TestCase {
      */
     public void testAsSequenceString_IndexerParam() {
         System.out.println("asSequenceString");
-        IndexerParam indexerParam = null;
+        IndexerParam indexerParam = new IndexerParam(new String[][]{
+                {"one&two", "triangle"},
+                {"single'quote", "triangle"},
+                {"double\"quote", "triangle"},
+                {"*:Kinnate/*:CustomData[*:Gender='Male']", "triangle"},
+                {"*:Kinnate/*:CustomData[*:Gender='']", "square"},
+                {"*:Kinnate/*:CustomData[*:DateOfDeath!='']", "blackstrikethrough"}
+            });
         QueryBuilder instance = new QueryBuilder();
-        String expResult = "";
+        String expResult = "(\"one&amp;two\",\"single'quote\",\"double&quot;quote\",\"*:Kinnate/*:CustomData[*:Gender='Male']\",\"*:Kinnate/*:CustomData[*:Gender='']\",\"*:Kinnate/*:CustomData[*:DateOfDeath!='']\")";
         String result = instance.asSequenceString(indexerParam);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
