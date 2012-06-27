@@ -18,13 +18,13 @@ public class QueryBuilder {
             if (stringBuilder.length() > 0) {
                 stringBuilder.append(",");
             } else {
-                stringBuilder.append("(");
+                stringBuilder.append("{");
             }
             stringBuilder.append("\"");
             stringBuilder.append(escapeBadChars(currentEntry));
             stringBuilder.append("\"");
         }
-        stringBuilder.append(")");
+        stringBuilder.append("}");
         return stringBuilder.toString();
     }
 
@@ -49,6 +49,7 @@ public class QueryBuilder {
 
     static String escapeBadChars(String inputString) {
         // our queries use double quotes so single quotes are allowed
+        // todo: could ; cause issues?
         return inputString.replace("&", "&amp;").replace("\"", "&quot;"); // .replace("'", "&apos;")
     }
 
@@ -174,8 +175,14 @@ public class QueryBuilder {
     }
 
     public String getEntityByKeyWordQuery(String keyWords, IndexerParameters indexParameters) {
-        return "<Entities> { for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + keyWords + "\")\n"
-                + "return let $entityNode := $doc/*:Kinnate/*:Entity\n"
+        String escapedKeywordSequence = asSequenceString(keyWords.split("\\s"));
+        return "<Entities> { "
+                + "for $KinnateNode in collection('nl-mpi-kinnate')/*:Kinnate[//. contains text "
+                + escapedKeywordSequence
+                + " using case insensitive distance at most 2 words]\n"
+                + "return let $entityNode := $KinnateNode/*:Entity\n"
+                //                + "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + keyWords + "\")\n"
+                //                + "return let $entityNode := $doc/*:Kinnate/*:Entity\n"
                 + getEntityQueryReturn(indexParameters)
                 + "}</Entities>";
     }
