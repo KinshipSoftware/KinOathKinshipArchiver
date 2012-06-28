@@ -295,7 +295,7 @@ public class QueryBuilder {
                     stringBuilder.append("contains text");
             }
             stringBuilder.append(" \"");
-            stringBuilder.append(queryTerm.searchValue);
+            stringBuilder.append(escapeBadChars(queryTerm.searchValue));
             stringBuilder.append("\"]");
         }
 //        stringBuilder.append(")");
