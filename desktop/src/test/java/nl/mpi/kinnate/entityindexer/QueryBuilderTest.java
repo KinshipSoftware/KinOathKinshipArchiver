@@ -133,14 +133,15 @@ public class QueryBuilderTest extends TestCase {
         System.out.println("getTermQuery");
         KinTypeElement queryTerms = new KinTypeElement();
         queryTerms.queryTerms = new ArrayList<QueryTerm>();
-        queryTerms.queryTerms.add(new QueryTerm("one&two", KinTypeStringConverter.QueryType.Greater, "value"));
+//        queryTerms.queryTerms.add(new QueryTerm("one&two", KinTypeStringConverter.QueryType.Greater, "value"));
         queryTerms.queryTerms.add(new QueryTerm("field", KinTypeStringConverter.QueryType.Greater, "one&two"));
         queryTerms.queryTerms.add(new QueryTerm("single'quote", KinTypeStringConverter.QueryType.Greater, "value"));
         queryTerms.queryTerms.add(new QueryTerm("field", KinTypeStringConverter.QueryType.Greater, "single'quote"));
-        queryTerms.queryTerms.add(new QueryTerm("double\"quote", KinTypeStringConverter.QueryType.Greater, "value"));
+//        queryTerms.queryTerms.add(new QueryTerm("double\"quote", KinTypeStringConverter.QueryType.Greater, "value"));
         queryTerms.queryTerms.add(new QueryTerm("field", KinTypeStringConverter.QueryType.Greater, "double\"quote"));
         QueryBuilder instance = new QueryBuilder();
         String result = instance.getTermQuery(queryTerms);
+//        System.out.println("result: " + result);
         assertEquals(result.indexOf("one&two"), -1);
 //        assertEquals(result.indexOf("single'quote"), -1); // single quotes are fine because we use double quotes for the query strings
         assertEquals(result.indexOf("double\"quote"), -1);
