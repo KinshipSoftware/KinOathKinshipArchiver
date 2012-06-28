@@ -1,7 +1,10 @@
 package nl.mpi.kinnate.entityindexer;
 
+import java.util.ArrayList;
 import junit.framework.TestCase;
 import nl.mpi.kinnate.kintypestrings.KinTypeElement;
+import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
+import nl.mpi.kinnate.kintypestrings.QueryTerm;
 
 /**
  * Document : QueryBuilderTest
@@ -128,12 +131,18 @@ public class QueryBuilderTest extends TestCase {
      */
     public void testGetTermQuery() {
         System.out.println("getTermQuery");
-        KinTypeElement queryTerms = null;
+        KinTypeElement queryTerms = new KinTypeElement();
+        queryTerms.queryTerms = new ArrayList<QueryTerm>();
+        queryTerms.queryTerms.add(new QueryTerm("one&two", KinTypeStringConverter.QueryType.Greater, "value"));
+        queryTerms.queryTerms.add(new QueryTerm("field", KinTypeStringConverter.QueryType.Greater, "one&two"));
+        queryTerms.queryTerms.add(new QueryTerm("single'quote", KinTypeStringConverter.QueryType.Greater, "value"));
+        queryTerms.queryTerms.add(new QueryTerm("field", KinTypeStringConverter.QueryType.Greater, "single'quote"));
+        queryTerms.queryTerms.add(new QueryTerm("double\"quote", KinTypeStringConverter.QueryType.Greater, "value"));
+        queryTerms.queryTerms.add(new QueryTerm("field", KinTypeStringConverter.QueryType.Greater, "double\"quote"));
         QueryBuilder instance = new QueryBuilder();
-        String expResult = "";
         String result = instance.getTermQuery(queryTerms);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(result.indexOf("one&two"), -1);
+//        assertEquals(result.indexOf("single'quote"), -1); // single quotes are fine because we use double quotes for the query strings
+        assertEquals(result.indexOf("double\"quote"), -1);
     }
 }
