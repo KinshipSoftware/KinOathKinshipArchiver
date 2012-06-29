@@ -27,15 +27,15 @@ public class QueryParser implements EntityService {
     EntityCollection entityCollection;
     public boolean abortProcess = false; // used to abort queries when another query is requested
 
-    public QueryParser(EntityData[] svgEntities, EntityCollection entityCollection) {
+    public QueryParser(/* UniqueIdentifier[] preloadEntities, */ /* EntityData[] svgEntities, */EntityCollection entityCollection) {
         this.entityCollection = entityCollection;
         loadedGraphNodes = new HashMap<UniqueIdentifier, EntityData>();
-        if (svgEntities != null) {
-            for (EntityData svgStoredEntity : svgEntities) {
-                // todo: consider if having the entities stored in two locations (admitedly this one is a hash map, the other and array) but maybe this could be confusing?
-                loadedGraphNodes.put(svgStoredEntity.getUniqueIdentifier(), svgStoredEntity);
-            }
-        }
+//        if (svgEntities != null) {
+//            for (EntityData svgStoredEntity : svgEntities) {
+//                // todo: consider if having the entities stored in two locations (admitedly this one is a hash map, the other and array) but maybe this could be confusing?
+//                loadedGraphNodes.put(svgStoredEntity.getUniqueIdentifier(), svgStoredEntity);
+//            }
+//        }
         // set the alter entity for each relation if not already set (based on the known unique identifier)
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
             for (EntityRelation nodeRelation : graphDataNode.getRelatedNodesToBeLoaded()) {
