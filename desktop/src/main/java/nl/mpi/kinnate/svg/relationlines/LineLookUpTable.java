@@ -1,9 +1,8 @@
-package nl.mpi.kinnate.svg;
+package nl.mpi.kinnate.svg.relationlines;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
-import nl.mpi.kinnate.svg.relationlines.LineRecord;
 
 /**
  * Document : LineLookUpTable
