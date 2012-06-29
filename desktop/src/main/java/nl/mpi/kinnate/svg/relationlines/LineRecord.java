@@ -104,11 +104,11 @@ public class LineRecord {
         return new Point[]{pointsList.get(segmentIndex), pointsList.get(segmentIndex + 1)};
     }
 
-    protected Point getIntersection(LineRecord lineRecord) {
-        return null; //Point((lineRecord.startPoint.x + lineRecord.endPoint.x) / 2, (lineRecord.startPoint.y + lineRecord.endPoint.y) / 2);
-        // todo: get the actual intersections and insert loops
-        // todo: in RelationSVG on first load the lineLookUpTable is null and loops will not be drawn
-    }
+//    protected Point getIntersection(LineRecord lineRecord) {
+//        return null; //Point((lineRecord.startPoint.x + lineRecord.endPoint.x) / 2, (lineRecord.startPoint.y + lineRecord.endPoint.y) / 2);
+//        // todo: get the actual intersections and insert loops
+//        // todo: in RelationSVG on first load the lineLookUpTable is null and loops will not be drawn
+//    }
 
     public void insertLoop(int linePart, int positionX) {
         System.out.println("insertLoop");
