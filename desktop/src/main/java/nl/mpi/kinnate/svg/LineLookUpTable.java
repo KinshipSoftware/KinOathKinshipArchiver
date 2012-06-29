@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- *  Document   : LineLookUpTable
- *  Created on : Sep 30, 2011, 3:24:55 PM
- *  Author     : Peter Withers
+ * Document : LineLookUpTable
+ * Created on : Sep 30, 2011, 3:24:55 PM
+ * Author : Peter Withers
  */
 public class LineLookUpTable {
 
@@ -23,6 +23,36 @@ public class LineLookUpTable {
         }
         private String lineIdSring;
         private ArrayList<Point> pointsList;
+
+        private Point getIntersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+            double denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+            if (denominator == 0.0) { // Lines are parallel.
+                return null;
+            }
+            double ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator;
+            double ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator;
+            if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
+                // Get the intersection point.
+                return new Point((int) (x1 + ua * (x2 - x1)), (int) (y1 + ua * (y2 - y1)));
+            }
+            return null;
+        }
+
+        // sanguine lines are either horizontal or vertical but never diagonal so this makes the following calculations simpler
+        protected int getFirstHorizontal() {
+            return getNextHorizontal(-1);
+        }
+
+        protected int getNextHorizontal(int current) {
+            for (int currentIndex = current + 1; currentIndex < pointsList.size() - 1; currentIndex++) {
+                Point startPoint = pointsList.get(currentIndex);
+                Point endPoint = pointsList.get(currentIndex + 1);
+                if (startPoint.y == endPoint.y) {
+                    return currentIndex;
+                }
+            }
+            return -1;
+        }
 
         protected Point getIntersection(LineRecord lineRecord) {
             return null; //Point((lineRecord.startPoint.x + lineRecord.endPoint.x) / 2, (lineRecord.startPoint.y + lineRecord.endPoint.y) / 2);
@@ -94,6 +124,12 @@ public class LineLookUpTable {
     private Point[] getIntersections(LineRecord localLineRecord) {
         HashSet<Point> intersectionPoints = new HashSet<Point>();
         for (LineRecord lineRecord : lineRecords) {
+            int currentHorizontal = lineRecord.getFirstHorizontal();
+            while (currentHorizontal > -1) {
+                System.out.println("currentHorizontal: " + currentHorizontal);
+                currentHorizontal = lineRecord.getNextHorizontal(currentHorizontal);
+            }
+
             Point intersectionPoint = localLineRecord.getIntersection(lineRecord);
             if (lineRecord != null) {
                 intersectionPoints.add(intersectionPoint);
