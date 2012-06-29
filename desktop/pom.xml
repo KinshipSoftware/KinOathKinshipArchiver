@@ -172,6 +172,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>arbil</artifactId>
+        <!-- when changing the Arbil version make sure that the JNLP dependencies are also updated -->
             <version>2.5.31276-pretesting</version>
         </dependency>
         <dependency>
