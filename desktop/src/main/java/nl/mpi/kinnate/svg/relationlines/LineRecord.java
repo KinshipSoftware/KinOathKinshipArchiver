@@ -36,6 +36,14 @@ public class LineRecord {
 //            return null;
 //        }
     // sanguine lines are either horizontal or vertical but never diagonal so this makes the following calculations simpler
+    protected int getLastHorizontal() {
+        return getPrevHorizontal(pointsList.size() - 1);
+    }
+
+    protected int getPrevHorizontal(int current) {
+        return getPrev(current, Orientation.horizontal);
+    }
+
     protected int getFirstHorizontal() {
         return getNextHorizontal(-1);
     }
@@ -50,6 +58,26 @@ public class LineRecord {
 
     protected int getNextVertical(int current) {
         return getNext(current, Orientation.vertical);
+    }
+
+    private int getPrev(int current, Orientation orientation) {
+        for (int currentIndex = current - 1; currentIndex > 0; currentIndex--) {
+            Point startPoint = pointsList.get(currentIndex);
+            Point endPoint = pointsList.get(currentIndex + 1);
+            switch (orientation) {
+                case horizontal:
+                    if (startPoint.y == endPoint.y) {
+                        return currentIndex;
+                    }
+                    break;
+                case vertical:
+                    if (startPoint.x == endPoint.x) {
+                        return currentIndex;
+                    }
+                    break;
+            }
+        }
+        return -1;
     }
 
     private int getNext(int current, Orientation orientation) {
@@ -72,7 +100,7 @@ public class LineRecord {
         return -1;
     }
 
-    private Point[] getSegment(int segmentIndex) {
+    protected Point[] getSegment(int segmentIndex) {
         return new Point[]{pointsList.get(segmentIndex), pointsList.get(segmentIndex + 1)};
     }
 
@@ -82,7 +110,7 @@ public class LineRecord {
         // todo: in RelationSVG on first load the lineLookUpTable is null and loops will not be drawn
     }
 
-    private void insertLoop(int linePart, int positionX) {
+    public void insertLoop(int linePart, int positionX) {
         System.out.println("insertLoop");
         // todo: this is test needs to be extended to place the loops in the correct locations and to produce pretty curved loops
         Point startPoint = this.pointsList.get(linePart);
