@@ -15,6 +15,11 @@ public class LineLookUpTable {
     // todo: there will probably be multiple line parts for each pari of entities: start segment, end segment, main line and maybe some zig zag bits, even if these zig zag bits are not ued they probably should always be there for simplicity
     HashSet<LineRecord> lineRecords = new HashSet<LineRecord>();
 
+    private enum Orientation {
+
+        horizontal, vertical
+    };
+
     protected class LineRecord {
 
         public LineRecord(String lineIdString, ArrayList<Point> pointsList) {
@@ -24,31 +29,51 @@ public class LineLookUpTable {
         private String lineIdSring;
         private ArrayList<Point> pointsList;
 
-        private Point getIntersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-            double denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
-            if (denominator == 0.0) { // Lines are parallel.
-                return null;
-            }
-            double ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator;
-            double ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator;
-            if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
-                // Get the intersection point.
-                return new Point((int) (x1 + ua * (x2 - x1)), (int) (y1 + ua * (y2 - y1)));
-            }
-            return null;
-        }
-
+//        private Point getIntersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+//            double denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+//            if (denominator == 0.0) { // Lines are parallel.
+//                return null;
+//            }
+//            double ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator;
+//            double ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator;
+//            if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
+//                // Get the intersection point.
+//                return new Point((int) (x1 + ua * (x2 - x1)), (int) (y1 + ua * (y2 - y1)));
+//            }
+//            return null;
+//        }
         // sanguine lines are either horizontal or vertical but never diagonal so this makes the following calculations simpler
         protected int getFirstHorizontal() {
             return getNextHorizontal(-1);
         }
 
         protected int getNextHorizontal(int current) {
+            return getNext(current, Orientation.horizontal);
+        }
+
+        protected int getFirstVertical() {
+            return getNextHorizontal(-1);
+        }
+
+        protected int getNextVertical(int current) {
+            return getNext(current, Orientation.vertical);
+        }
+
+        private int getNext(int current, Orientation orientation) {
             for (int currentIndex = current + 1; currentIndex < pointsList.size() - 1; currentIndex++) {
                 Point startPoint = pointsList.get(currentIndex);
                 Point endPoint = pointsList.get(currentIndex + 1);
-                if (startPoint.y == endPoint.y) {
-                    return currentIndex;
+                switch (orientation) {
+                    case horizontal:
+                        if (startPoint.y == endPoint.y) {
+                            return currentIndex;
+                        }
+                        break;
+                    case vertical:
+                        if (startPoint.x == endPoint.x) {
+                            return currentIndex;
+                        }
+                        break;
                 }
             }
             return -1;
