@@ -55,11 +55,10 @@ public class GraphPanel extends JPanel implements SavePanel {
     private boolean requiresSave = false;
     private File svgFile = null;
     public GraphPanelSize graphPanelSize;
-    protected LineLookUpTable lineLookUpTable;
     protected ArrayList<UniqueIdentifier> selectedGroupId;
     protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     public DataStoreSvg dataStoreSvg;
-    protected EntitySvg entitySvg;
+    public EntitySvg entitySvg;
 //    private URI[] egoPathsTemp = null;
     public SvgUpdateHandler svgUpdateHandler;
     public MouseListenerSvg mouseListenerSvg;
