@@ -1,7 +1,6 @@
 package nl.mpi.kinnate.svg.relationlines;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -35,20 +34,20 @@ public class LineLookUpTable {
             Point[] currentHorizontalLine = lineRecordForLoops.getSegment(currentHorizontal);
             while (currentHorizontal > -1) {
                 System.out.println("currentHorizontal: " + currentHorizontal);
-                currentHorizontal = lineRecordForLoops.getNextHorizontal(currentHorizontal);
                 for (LineRecord lineRecord : lineRecords) {
                     if (lineRecord != lineRecordForLoops) {
                         int currentVertical = lineRecord.getFirstVertical();
                         System.out.println("currentVertical: " + currentVertical);
                         while (currentVertical > -1) {
-                            currentVertical = lineRecord.getNextVertical(currentVertical);
                             Point[] currentVerticalLine = lineRecord.getSegment(currentVertical);
                             if (intersects(currentHorizontalLine, currentVerticalLine)) {
                                 lineRecordForLoops.insertLoop(currentHorizontal, currentVerticalLine[0].x);
                             }
+                            currentVertical = lineRecord.getNextVertical(currentVertical);
                         }
                     }
                 }
+                currentHorizontal = lineRecordForLoops.getNextHorizontal(currentHorizontal);
             }
         }
     }
@@ -70,11 +69,14 @@ public class LineLookUpTable {
         return intersectionPoints.toArray(new Point[]{});
     }
 
-    public LineRecord adjustLineToObstructions(String lineIdString, ArrayList<Point> pointsList) {
-        LineRecord lineRecord = new LineRecord(lineIdString, pointsList);
-//        getIntersections(localLineRecord);
-//        //localLineRecord.insertLoop(3);
+    public void addRecord(LineRecord lineRecord) {
         lineRecords.add(lineRecord);
-        return lineRecord;
     }
+//    public LineRecord adjustLineToObstructions(String lineIdString, ArrayList<Point> pointsList) {
+//        LineRecord lineRecord = new LineRecord(lineIdString, pointsList);
+////        getIntersections(localLineRecord);
+////        //localLineRecord.insertLoop(3);
+//        lineRecords.add(lineRecord);
+//        return lineRecord;
+//    }
 }
