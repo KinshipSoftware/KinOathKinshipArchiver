@@ -32,6 +32,14 @@ public class RelationRecord {
     public LineRecord lineRecord;
     public String curveLinePoints = null;
 
+    public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, float[] averageParentPassed) throws OldFormatException {
+        lineRecord = setPolylinePointsAttribute(lineIdString, relationType, vSpacing, egoX, egoY, alterX, alterY, averageParentPassed);
+    }
+
+    public RelationRecord(RelationTypeDefinition.CurveLineOrientation curveLineOrientation, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
+        curveLinePoints = setPathPointsAttribute(curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
+    }
+
     public RelationRecord(GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
         this.graphPanel = graphPanel;
         this.leftEntity = leftEntity;
