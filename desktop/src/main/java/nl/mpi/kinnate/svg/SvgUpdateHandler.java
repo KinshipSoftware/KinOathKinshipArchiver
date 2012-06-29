@@ -15,6 +15,7 @@ import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.svg.relationlines.LineLookUpTable;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
+import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
@@ -48,6 +49,8 @@ public class SvgUpdateHandler {
     private boolean resizeRequired = false;
     protected RelationDragHandle relationDragHandle = null;
     private HashSet<UniqueIdentifier> highlightedIdentifiers = new HashSet<UniqueIdentifier>();
+    public LineLookUpTable lineLookUpTable;
+    public RelationRecordTable relationRecords;
     private boolean oldFormatWarningShown = false;
 
     public enum GraphicsTypes {
@@ -254,7 +257,7 @@ public class SvgUpdateHandler {
                 relationHighlightGroup.appendChild(symbolNode);
             }
         }
-        graphPanel.lineLookUpTable.addLoops();
+//        graphPanel.lineLookUpTable.addLoops();
 //        ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
@@ -615,7 +618,7 @@ public class SvgUpdateHandler {
 //                    } 
                         int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); // graphPanel.dataStoreSvg.graphData.gridHeight);
                         int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
-                        new RelationSvg(dialogHandler).updateRelationLines(graphPanel, graphPanel.selectedGroupId, hSpacing, vSpacing);
+                        new RelationSvg(dialogHandler).updateRelationLines(graphPanel, relationRecords, lineLookUpTable, graphPanel.selectedGroupId, hSpacing, vSpacing);
                         updateSanguineHighlights(entityGroup);
                         //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                     }
@@ -826,7 +829,8 @@ public class SvgUpdateHandler {
 
     public void drawEntities() { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
         graphPanel.dataStoreSvg.graphData.setPadding(graphPanel.graphPanelSize);
-        graphPanel.lineLookUpTable = new LineLookUpTable();
+        lineLookUpTable = new LineLookUpTable();
+        relationRecords = new RelationRecordTable();
         int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);
         int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); //dataStoreSvg.graphData.gridWidth);
 //        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
@@ -884,7 +888,6 @@ public class SvgUpdateHandler {
             }
             RelationSvg relationSvg = new RelationSvg(dialogHandler);
             ArrayList<String> doneRelations = new ArrayList<String>();
-            ArrayList<RelationRecord> relationRecords = new ArrayList<RelationRecord>();
             for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getAllRelations()) {
@@ -941,7 +944,7 @@ public class SvgUpdateHandler {
                                         }
                                     }
                                     try {
-                                        relationRecords.add(new RelationRecord(graphPanel, relationRecords.size(), leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, graphLinkNode.labelString, hSpacing, vSpacing));
+                                        relationRecords.addRecord(new RelationRecord(graphPanel, lineLookUpTable, relationRecords.size(), leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, graphLinkNode.labelString, hSpacing, vSpacing));
                                     } catch (OldFormatException exception) {
                                         if (!oldFormatWarningShown) {
                                             dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
@@ -954,8 +957,7 @@ public class SvgUpdateHandler {
                     }
                 }
             }
-            graphPanel.lineLookUpTable.addLoops();
-            new RelationSvg(dialogHandler).createRelationElements(graphPanel, relationRecords, relationGroupNode);
+            new RelationSvg(dialogHandler).createRelationElements(graphPanel, relationRecords, lineLookUpTable, relationGroupNode);
             // todo: allow the user to set an entity as the provider of new dat being entered, this selected user can then be added to each field that is updated as the providence for that data. this would be best done in a cascading fashon so that there is a default informant for the entity and if required for sub nodes and fields
 //            ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();
