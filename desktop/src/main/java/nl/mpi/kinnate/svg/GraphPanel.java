@@ -423,6 +423,10 @@ public class GraphPanel extends JPanel implements SavePanel {
         drawNodes();
     }
 
+    public UniqueIdentifier[] getDiagramUniqueIdentifiers() {
+        return entitySvg.entityPositions.keySet().toArray(new UniqueIdentifier[0]);
+    }
+
     public void clearEntityLocations(UniqueIdentifier[] selectedIdentifiers) {
         entitySvg.clearEntityLocations(selectedIdentifiers);
     }
