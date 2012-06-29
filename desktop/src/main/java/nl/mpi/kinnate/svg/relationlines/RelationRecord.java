@@ -40,7 +40,7 @@ public class RelationRecord {
         curveLinePoints = setPathPointsAttribute(curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
     }
 
-    public RelationRecord(GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
+    public RelationRecord(GraphPanel graphPanel, LineLookUpTable lineLookUpTable, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
         this.graphPanel = graphPanel;
         this.leftEntity = leftEntity;
         this.rightEntity = rightEntity;
@@ -111,7 +111,7 @@ public class RelationRecord {
             //                            squareLinkLine.setAttribute("stroke", "grey");
             //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
             this.lineRecord = setPolylinePointsAttribute(lineIdString, directedRelation, vSpacing, fromX, fromY, toX, toY, parentPoint);
-            graphPanel.lineLookUpTable.addRecord(this.lineRecord);
+            lineLookUpTable.addRecord(this.lineRecord);
 
 //          todo: check for cases when lineLookUpTable is null 
 //            if (lineLookUpTable != null) {
