@@ -100,6 +100,7 @@ public class RelationSvg {
 //
 //    }
     public void createRelationElements(GraphPanel graphPanel, ArrayList<RelationRecord> relationRecords, Element relationGroupNode) {
+        graphPanel.lineLookUpTable.addLoops();
         for (RelationRecord relationRecord : relationRecords) {
             Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
             groupNode.setAttribute("id", relationRecord.idString);
@@ -165,6 +166,7 @@ public class RelationSvg {
     }
 
     public void updateRelationLines(GraphPanel graphPanel, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) {
+//        graphPanel.lineLookUpTable.addLoops();
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = graphPanel.doc.getElementById("RelationGroup");
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
@@ -211,6 +213,7 @@ public class RelationSvg {
                             if ("polyline".equals(relationLineElement.getLocalName())) {
                                 try {
                                     //System.out.println("polyline to update: " + lineElementId);
+                                    // todo: we need to be getting the record from the lineLookUpTable not creating a new one
                                     RelationRecord relationRecord = new RelationRecord(/* graphPanel.lineLookUpTable, */lineElementId, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
                                     relationLineElement.setAttribute("points", relationRecord.lineRecord.getPointsAttribute());
                                 } catch (OldFormatException exception) {
