@@ -52,22 +52,22 @@ public class LineLookUpTable {
         }
     }
 
-    private Point[] getIntersections(LineRecord localLineRecord) {
-        HashSet<Point> intersectionPoints = new HashSet<Point>();
-        for (LineRecord lineRecord : lineRecords) {
-            int currentHorizontal = lineRecord.getFirstHorizontal();
-            while (currentHorizontal > -1) {
-                System.out.println("currentHorizontal: " + currentHorizontal);
-                currentHorizontal = lineRecord.getNextHorizontal(currentHorizontal);
-            }
-
-            Point intersectionPoint = localLineRecord.getIntersection(lineRecord);
-            if (lineRecord != null) {
-                intersectionPoints.add(intersectionPoint);
-            }
-        }
-        return intersectionPoints.toArray(new Point[]{});
-    }
+//    private Point[] getIntersections(LineRecord localLineRecord) {
+//        HashSet<Point> intersectionPoints = new HashSet<Point>();
+//        for (LineRecord lineRecord : lineRecords) {
+//            int currentHorizontal = lineRecord.getFirstHorizontal();
+//            while (currentHorizontal > -1) {
+//                System.out.println("currentHorizontal: " + currentHorizontal);
+//                currentHorizontal = lineRecord.getNextHorizontal(currentHorizontal);
+//            }
+//
+//            Point intersectionPoint = localLineRecord.getIntersection(lineRecord);
+//            if (lineRecord != null) {
+//                intersectionPoints.add(intersectionPoint);
+//            }
+//        }
+//        return intersectionPoints.toArray(new Point[]{});
+//    }
 
     public void addRecord(LineRecord lineRecord) {
         lineRecords.add(lineRecord);
