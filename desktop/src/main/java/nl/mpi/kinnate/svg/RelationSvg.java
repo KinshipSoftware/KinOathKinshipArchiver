@@ -5,7 +5,9 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.svg.relationlines.LineLookUpTable;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
+import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
@@ -99,9 +101,9 @@ public class RelationSvg {
 //        }
 //
 //    }
-    public void createRelationElements(GraphPanel graphPanel, ArrayList<RelationRecord> relationRecords, Element relationGroupNode) {
-        graphPanel.lineLookUpTable.addLoops();
-        for (RelationRecord relationRecord : relationRecords) {
+    public void createRelationElements(GraphPanel graphPanel, RelationRecordTable relationRecords, LineLookUpTable lineLookUpTable, Element relationGroupNode) {
+        lineLookUpTable.addLoops();
+        for (RelationRecord relationRecord : relationRecords.getAllRecords()) {
             Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
             groupNode.setAttribute("id", relationRecord.idString);
             Element defsNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "defs");
@@ -165,10 +167,11 @@ public class RelationSvg {
         }
     }
 
-    public void updateRelationLines(GraphPanel graphPanel, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) {
+    public void updateRelationLines(GraphPanel graphPanel, RelationRecordTable relationRecords, LineLookUpTable lineLookUpTable, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) {
 //        graphPanel.lineLookUpTable.addLoops();
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = graphPanel.doc.getElementById("RelationGroup");
+//        createRelationElements(graphPanel, relationRecords, lineLookUpTable, relationGroup);
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
             if ("g".equals(currentChild.getLocalName())) {
                 Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
