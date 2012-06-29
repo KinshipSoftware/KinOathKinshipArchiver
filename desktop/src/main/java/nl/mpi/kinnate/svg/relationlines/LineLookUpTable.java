@@ -24,13 +24,13 @@ public class LineLookUpTable {
         boolean startsBefore = horizontalLine[0].x <= verticalLine[0].x;
         boolean endsBefore = horizontalLine[1].x <= verticalLine[0].x;
         boolean startsAbove = verticalLine[0].y <= horizontalLine[0].y;
-        boolean endsAbove = verticalLine[0].y <= horizontalLine[0].y;
+        boolean endsAbove = verticalLine[1].y <= horizontalLine[0].y;
         return (startsBefore != endsBefore && startsAbove != endsAbove);
     }
 
     public void addLoops() {
         for (LineRecord lineRecordForLoops : lineRecords) {
-            int currentHorizontal = lineRecordForLoops.getFirstHorizontal();
+            int currentHorizontal = lineRecordForLoops.getLastHorizontal();
             Point[] currentHorizontalLine = lineRecordForLoops.getSegment(currentHorizontal);
             while (currentHorizontal > -1) {
                 System.out.println("currentHorizontal: " + currentHorizontal);
@@ -47,7 +47,7 @@ public class LineLookUpTable {
                         }
                     }
                 }
-                currentHorizontal = lineRecordForLoops.getNextHorizontal(currentHorizontal);
+                currentHorizontal = lineRecordForLoops.getPrevHorizontal(currentHorizontal);
             }
         }
     }
