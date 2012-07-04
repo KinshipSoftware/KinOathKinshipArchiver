@@ -3,20 +3,25 @@ package nl.mpi.kinnate.export;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileFilter;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
-import org.basex.core.cmd.XQuery;
 
 /**
  * Document : GedcomExport
@@ -24,6 +29,17 @@ import org.basex.core.cmd.XQuery;
  * Author : Peter Withers
  */
 public class GedcomExport {
+
+    private ArbilWindowManager arbilWindowManager;
+    private KinSessionStorage kinSessionStorage;
+    private EntityCollection entityCollection;
+    private Context context = null;
+
+    public GedcomExport(ArbilWindowManager arbilWindowManager, KinSessionStorage kinSessionStorage, EntityCollection entityCollection) {
+        this.arbilWindowManager = arbilWindowManager;
+        this.kinSessionStorage = kinSessionStorage;
+        this.entityCollection = entityCollection;
+    }
 
     private String getHeader() {
         return "let $headerString := \"0 HEAD\n"
@@ -51,7 +67,7 @@ public class GedcomExport {
 
     private String getCvsQuery() {
         // todo: add quotes to the header line
-        return "let $colNames := distinct-values(collection('nl-mpi-kinnate')/*:Kinnate/*:CustomData/*//local-name())\n"
+        return "let $colNames := distinct-values(collection('nl-mpi-kinnate')/*:Kinnate/*:CustomData/*//local-name())\n" // todo: get the xpath not the node name
                 // todo: need to handle unknown number of description fields etc
                 // todo: this might now be handling sub nodes correctly 
                 + "let $fileHeader := concat(string-join($colNames, \",\"), \"&#10;\")\n"
@@ -65,8 +81,19 @@ public class GedcomExport {
                 + "let $fileBody := string-join($fileLines, \"&#10;\")\n"
                 + "return concat($fileHeader, $fileBody)\n";
     }
-    // todo: this context probalby should be static and only declaired in "EntityCollection"
-    static Context context = new Context();
+
+    public void dropAndCreate(File importDirectory, String fileFilter) throws BaseXException {
+        context = null;
+        context = entityCollection.createExportDatabase(importDirectory, fileFilter, "SimpleExportTemp");
+    }
+
+    public String generateExport(String exportQuery) throws BaseXException {
+        return entityCollection.performExportQuery(context, exportQuery);
+    }
+
+    public boolean databaseReady() {
+        return context != null;
+    }
 
     static public void main(String[] args) {
         JFrame jFrame = new JFrame("Test Query Window");
@@ -75,35 +102,100 @@ public class GedcomExport {
         final JLabel queryTimeLabel = new JLabel();
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
         final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
+        arbilWindowManager.setSessionStorage(kinSessionStorage);
         final EntityCollection entityCollection = new EntityCollection(kinSessionStorage, arbilWindowManager);
-        final GedcomExport gedcomExport = new GedcomExport();
+        final GedcomExport gedcomExport = new GedcomExport(arbilWindowManager, kinSessionStorage, entityCollection);
+        final JProgressBar jProgressBar = new JProgressBar();
         //queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityWithRelationsQuery("e4dfbd92d311088bf692211ced5179e5", new String[]{"e4dfbd92d311088bf692211ced5179e5"}, new IndexerParameters()));
+
+
+        final JComboBox formatSelect = new JComboBox(new String[]{"*.cmdi", "*.imdi", "*.kmdi"});
+        final String browseOption = "<browse>";
+        final JComboBox locationSelect = new JComboBox(new String[]{browseOption});
+
+        File defaultArbilDirectory = new ArbilSessionStorage().getStorageDirectory();
+        locationSelect.addItem(defaultArbilDirectory.toString());
+        File defaultKinOathDirectory = new ArbilSessionStorage().getStorageDirectory();
+        for (File currentFile : defaultKinOathDirectory.getParentFile().listFiles(new FileFilter() {
+
+            public boolean accept(File pathname) {
+                return pathname.getName().startsWith(".kinoath");
+            }
+        })) {
+            locationSelect.addItem(currentFile.toString());
+        }
         queryText.setText(gedcomExport.getCvsQuery());
         final JTextArea resultsText = new JTextArea();
         resultsText.setVisible(false);
-        JButton jButton = new JButton("run query");
-        jButton.addActionListener(new ActionListener() {
+        final JButton runQueryButton = new JButton("run query");
+        runQueryButton.setEnabled(gedcomExport.databaseReady());
+        runQueryButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
+                jProgressBar.setIndeterminate(true);
                 resultsText.setText("");
                 try {
                     long startTime = System.currentTimeMillis();
-                    resultsText.append(new XQuery(queryText.getText()).execute(context));
+                    resultsText.append(gedcomExport.generateExport(queryText.getText()));
                     long queryMils = System.currentTimeMillis() - startTime;
                     String queryTimeString = "Query time: " + queryMils + "ms";
                     queryTimeLabel.setText(queryTimeString);
                 } catch (BaseXException exception) {
                     resultsText.append(exception.getMessage());
-                    arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Action Performed");
+                    arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), runQueryButton.getText());
                 }
 //                SearchResults results = entityCollection.performQuery(queryText.getText());
 //                for (String resultLine : results.resultsPathArray) {
 //                    resultsText.append(resultLine + "\n");
 //                }
                 resultsText.setVisible(true);
+                jProgressBar.setIndeterminate(false);
+                runQueryButton.setEnabled(gedcomExport.databaseReady());
+            }
+        });
+
+        JButton recreateButton = new JButton("Create Database");
+        recreateButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                runQueryButton.setEnabled(false);
+                File importDirectory = null;
+                if (!locationSelect.getSelectedItem().toString().equals(browseOption)) {
+                    importDirectory = new File(locationSelect.getSelectedItem().toString());
+                } else {
+                    File[] importDirectoryArray = arbilWindowManager.showFileSelectBox("Select Import Directory", true, false, null, MessageDialogHandler.DialogueType.open, null/* formatSelect */);
+                    if (importDirectoryArray != null && importDirectoryArray.length > 0) {
+                        importDirectory = importDirectoryArray[0];
+                    }
+                }
+                jProgressBar.setIndeterminate(true);
+                resultsText.setVisible(true);
+                if (importDirectory != null) {
+                    resultsText.setText("recreating database for: " + importDirectory);
+                    final File importDirectoryFinal = importDirectory;
+                    new Thread() {
+
+                        public void run() {
+                            try {
+                                gedcomExport.dropAndCreate(importDirectoryFinal, formatSelect.getSelectedItem().toString());
+                                resultsText.setText("done\n");
+                            } catch (BaseXException exception) {
+                                resultsText.append(exception.getMessage());
+                                arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), runQueryButton.getText());
+                            }
+                            resultsText.setVisible(true);
+                            jProgressBar.setIndeterminate(false);
+                            runQueryButton.setEnabled(gedcomExport.databaseReady());
+                        }
+                    }.start();
+                } else {
+                    resultsText.setText("Invalid Import Directory");
+                    jProgressBar.setIndeterminate(false);
+                    runQueryButton.setEnabled(false);
+                }
             }
         });
 
@@ -111,9 +203,13 @@ public class GedcomExport {
         jPanel.add(queryText, BorderLayout.CENTER);
         jPanel.add(resultsText, BorderLayout.PAGE_END);
         JPanel buttonPanel = new JPanel();
-        buttonPanel.add(jButton);
+        buttonPanel.add(locationSelect);
+        buttonPanel.add(formatSelect);
+        buttonPanel.add(recreateButton);
+        buttonPanel.add(runQueryButton);
         buttonPanel.add(queryTimeLabel);
         jPanel.add(buttonPanel, BorderLayout.PAGE_START);
+        jPanel.add(jProgressBar, BorderLayout.PAGE_END);
         jFrame.setContentPane(new JScrollPane(jPanel));
         jFrame.pack();
         jFrame.setVisible(true);
