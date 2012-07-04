@@ -1,4 +1,4 @@
-package nl.mpi.kinnate.export;
+package nl.mpi.kinnate.plugins.export;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -18,10 +18,9 @@ import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinOathVersion;
-import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.CollectionExport;
+import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
-import org.basex.core.BaseXException;
-import org.basex.core.Context;
 
 /**
  * Document : GedcomExport
@@ -30,15 +29,9 @@ import org.basex.core.Context;
  */
 public class GedcomExport {
 
-    private ArbilWindowManager arbilWindowManager;
-    private KinSessionStorage kinSessionStorage;
-    private EntityCollection entityCollection;
-    private Context context = null;
-    private final String databaseName = "SimpleExportTemp";
+    private CollectionExport entityCollection;
 
-    public GedcomExport(ArbilWindowManager arbilWindowManager, KinSessionStorage kinSessionStorage, EntityCollection entityCollection) {
-        this.arbilWindowManager = arbilWindowManager;
-        this.kinSessionStorage = kinSessionStorage;
+    public GedcomExport(CollectionExport entityCollection) {
         this.entityCollection = entityCollection;
     }
 
@@ -83,29 +76,29 @@ public class GedcomExport {
                 + "return concat($fileHeader, $fileBody)\n";
     }
 
-    public void dropAndCreate(File importDirectory, String fileFilter) throws BaseXException {
-        context = null;
-        context = entityCollection.createExportDatabase(importDirectory, fileFilter, databaseName);
+    public void dropAndCreate(File importDirectory, String fileFilter) throws QueryException {
+        entityCollection.createExportDatabase(importDirectory, fileFilter);
     }
 
-    public String generateExport(String exportQuery) throws BaseXException {
-        return entityCollection.performExportQuery(context, databaseName, exportQuery);
+    public String generateExport(String exportQuery) throws QueryException {
+        return entityCollection.performExportQuery(exportQuery);
     }
 
     public boolean databaseReady() {
-        return context != null;
+//        throw new UnsupportedOperationException();
+        return true;
     }
 
     static public void main(String[] args) {
-        JFrame jFrame = new JFrame("Test Query Window");
+        JFrame jFrame = new JFrame("CMDI/IMDI/KMDI Export Tool");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final JTextArea queryText = new JTextArea();
         final JLabel queryTimeLabel = new JLabel();
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
         final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
         arbilWindowManager.setSessionStorage(kinSessionStorage);
-        final EntityCollection entityCollection = new EntityCollection(kinSessionStorage, arbilWindowManager);
-        final GedcomExport gedcomExport = new GedcomExport(arbilWindowManager, kinSessionStorage, entityCollection);
+        final CollectionExport entityCollection = new CollectionExport();
+        final GedcomExport gedcomExport = new GedcomExport(entityCollection);
         final JProgressBar jProgressBar = new JProgressBar();
         //queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
@@ -145,7 +138,7 @@ public class GedcomExport {
                     long queryMils = System.currentTimeMillis() - startTime;
                     String queryTimeString = "Query time: " + queryMils + "ms";
                     queryTimeLabel.setText(queryTimeString);
-                } catch (BaseXException exception) {
+                } catch (QueryException exception) {
                     resultsText.append("Error: " + exception.getMessage() + "\n");
                     arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), runQueryButton.getText());
                 }
@@ -179,7 +172,7 @@ public class GedcomExport {
                             try {
                                 gedcomExport.dropAndCreate(importDirectoryFinal, formatSelect.getSelectedItem().toString());
                                 resultsText.append("done\n");
-                            } catch (BaseXException exception) {
+                            } catch (QueryException exception) {
                                 resultsText.append("Error: " + exception.getMessage() + "\n");
                                 arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), runQueryButton.getText());
                             }

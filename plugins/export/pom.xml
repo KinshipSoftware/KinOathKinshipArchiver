@@ -10,7 +10,7 @@
     <artifactId>kinnate-plugins-export</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>Export</name>
+    <name>Export Plugin</name>
     <url>http://maven.apache.org</url>
     <build>
         <plugins>
@@ -77,6 +77,22 @@
             <groupId>org.basex</groupId>
             <artifactId>basex</artifactId>
             <version>6.7.1</version>
+        </dependency>        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>arbil</artifactId>
+        <!-- when changing the Arbil version make sure that the JNLP dependencies are also updated -->
+            <version>2.5.30721-pretesting</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kinnate-plugins-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Kinnate</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <repositories>
