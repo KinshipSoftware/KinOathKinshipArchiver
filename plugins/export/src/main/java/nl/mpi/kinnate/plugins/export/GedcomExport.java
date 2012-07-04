@@ -61,7 +61,7 @@ public class GedcomExport {
 
     private String getCvsQuery() {
         // todo: add quotes to the header line
-        return "let $colNames := distinct-values(collection('nl-mpi-kinnate')/*:Kinnate/*:CustomData/*//local-name())\n" // todo: get the xpath not the node name
+        return "let $colNames := distinct-values(collection('" + entityCollection.getDatabaseName() + "')/*:Kinnate/*:CustomData/*//local-name())\n" // todo: get the xpath not the node name
                 // todo: need to handle unknown number of description fields etc
                 // todo: this might now be handling sub nodes correctly 
                 + "let $fileHeader := concat(string-join($colNames, \",\"), \"&#10;\")\n"
