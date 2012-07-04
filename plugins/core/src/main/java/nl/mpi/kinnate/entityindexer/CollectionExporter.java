@@ -8,4 +8,6 @@ package nl.mpi.kinnate.entityindexer;
 public interface CollectionExporter {
 
     public String performExportQuery(String exportQueryString) throws QueryException;
+
+    public String getDatabaseName();
 }
