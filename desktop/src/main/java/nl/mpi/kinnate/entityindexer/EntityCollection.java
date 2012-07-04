@@ -131,6 +131,44 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
     }
 
+    /////////////////// Export Queries ///////////////////
+    public Context openExistingExportDatabase(String exportDatabaseName) throws BaseXException {
+        Context tempDbContext = new Context();
+        synchronized (databaseLock) {
+            new Open(exportDatabaseName).execute(tempDbContext);
+        }
+        return tempDbContext;
+    }
+
+    public void dropExportDatabase(Context tempDbContext, String exportDatabaseName) throws BaseXException {
+        synchronized (databaseLock) {
+            new DropDB(exportDatabaseName).execute(tempDbContext);
+        }
+    }
+
+    public Context createExportDatabase(File directoryOfInputFiles, String suffixFilter, String exportDatabaseName) throws BaseXException {
+        if (suffixFilter == null) {
+            suffixFilter = "*.kmdi";
+        }
+        Context tempDbContext = new Context();
+        synchronized (databaseLock) {
+            new DropDB(exportDatabaseName).execute(tempDbContext);
+            new Set("CREATEFILTER", suffixFilter).execute(tempDbContext);
+            new CreateDB(exportDatabaseName, directoryOfInputFiles.toString()).execute(tempDbContext);
+        }
+        return tempDbContext;
+    }
+
+    public String performExportQuery(Context tempDbContext, String exportQueryString) throws BaseXException {
+        if (tempDbContext == null) {
+            tempDbContext = context;
+        }
+        synchronized (databaseLock) {
+            return new XQuery(exportQueryString).execute(tempDbContext);
+        }
+    }
+    /////////////////// End Export Queries ///////////////////
+
     public void dropDatabase() {
         try {
             synchronized (databaseLock) {
