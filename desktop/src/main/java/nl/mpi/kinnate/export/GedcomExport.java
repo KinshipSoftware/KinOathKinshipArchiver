@@ -34,6 +34,7 @@ public class GedcomExport {
     private KinSessionStorage kinSessionStorage;
     private EntityCollection entityCollection;
     private Context context = null;
+    private final String databaseName = "SimpleExportTemp";
 
     public GedcomExport(ArbilWindowManager arbilWindowManager, KinSessionStorage kinSessionStorage, EntityCollection entityCollection) {
         this.arbilWindowManager = arbilWindowManager;
@@ -84,11 +85,11 @@ public class GedcomExport {
 
     public void dropAndCreate(File importDirectory, String fileFilter) throws BaseXException {
         context = null;
-        context = entityCollection.createExportDatabase(importDirectory, fileFilter, "SimpleExportTemp");
+        context = entityCollection.createExportDatabase(importDirectory, fileFilter, databaseName);
     }
 
     public String generateExport(String exportQuery) throws BaseXException {
-        return entityCollection.performExportQuery(context, exportQuery);
+        return entityCollection.performExportQuery(context, databaseName, exportQuery);
     }
 
     public boolean databaseReady() {
