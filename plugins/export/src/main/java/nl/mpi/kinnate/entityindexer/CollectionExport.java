@@ -61,6 +61,10 @@ public class CollectionExport implements CollectionExporter {
         }
     }
 
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
     public String performExportQuery(String exportQueryString) throws QueryException {
         String returnString = null;
         try {
