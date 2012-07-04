@@ -136,22 +136,18 @@ public class GedcomExport {
 
             public void actionPerformed(ActionEvent e) {
                 jProgressBar.setIndeterminate(true);
+                resultsText.setVisible(true);
                 resultsText.setText("");
                 try {
                     long startTime = System.currentTimeMillis();
-                    resultsText.append(gedcomExport.generateExport(queryText.getText()));
+                    resultsText.append(gedcomExport.generateExport(queryText.getText()) + "\n");
                     long queryMils = System.currentTimeMillis() - startTime;
                     String queryTimeString = "Query time: " + queryMils + "ms";
                     queryTimeLabel.setText(queryTimeString);
                 } catch (BaseXException exception) {
-                    resultsText.append(exception.getMessage());
+                    resultsText.append("Error: " + exception.getMessage() + "\n");
                     arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), runQueryButton.getText());
                 }
-//                SearchResults results = entityCollection.performQuery(queryText.getText());
-//                for (String resultLine : results.resultsPathArray) {
-//                    resultsText.append(resultLine + "\n");
-//                }
-                resultsText.setVisible(true);
                 jProgressBar.setIndeterminate(false);
                 runQueryButton.setEnabled(gedcomExport.databaseReady());
             }
@@ -174,25 +170,24 @@ public class GedcomExport {
                 jProgressBar.setIndeterminate(true);
                 resultsText.setVisible(true);
                 if (importDirectory != null) {
-                    resultsText.setText("recreating database for: " + importDirectory);
+                    resultsText.setText("recreating database for: " + importDirectory + "\n");
                     final File importDirectoryFinal = importDirectory;
                     new Thread() {
 
                         public void run() {
                             try {
                                 gedcomExport.dropAndCreate(importDirectoryFinal, formatSelect.getSelectedItem().toString());
-                                resultsText.setText("done\n");
+                                resultsText.append("done\n");
                             } catch (BaseXException exception) {
-                                resultsText.append(exception.getMessage());
+                                resultsText.append("Error: " + exception.getMessage() + "\n");
                                 arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), runQueryButton.getText());
                             }
-                            resultsText.setVisible(true);
                             jProgressBar.setIndeterminate(false);
                             runQueryButton.setEnabled(gedcomExport.databaseReady());
                         }
                     }.start();
                 } else {
-                    resultsText.setText("Invalid Import Directory");
+                    resultsText.append("Invalid Import Directory" + "\n");
                     jProgressBar.setIndeterminate(false);
                     runQueryButton.setEnabled(false);
                 }
@@ -200,17 +195,19 @@ public class GedcomExport {
         });
 
         JPanel jPanel = new JPanel(new BorderLayout());
-        jPanel.add(queryText, BorderLayout.CENTER);
-        jPanel.add(resultsText, BorderLayout.PAGE_END);
+        jPanel.add(queryText, BorderLayout.PAGE_END);
+        jPanel.add(new JScrollPane(resultsText), BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(locationSelect);
         buttonPanel.add(formatSelect);
         buttonPanel.add(recreateButton);
         buttonPanel.add(runQueryButton);
         buttonPanel.add(queryTimeLabel);
-        jPanel.add(buttonPanel, BorderLayout.PAGE_START);
-        jPanel.add(jProgressBar, BorderLayout.PAGE_END);
-        jFrame.setContentPane(new JScrollPane(jPanel));
+        JPanel progressPanel = new JPanel(new BorderLayout());
+        progressPanel.add(buttonPanel, BorderLayout.PAGE_START);
+        progressPanel.add(jProgressBar, BorderLayout.PAGE_END);
+        jPanel.add(progressPanel, BorderLayout.PAGE_START);
+        jFrame.setContentPane(jPanel);
         jFrame.pack();
         jFrame.setVisible(true);
     }
