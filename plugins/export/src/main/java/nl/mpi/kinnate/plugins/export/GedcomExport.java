@@ -66,7 +66,7 @@ public class GedcomExport {
                 // todo: this might now be handling sub nodes correctly 
                 + "let $fileHeader := concat(string-join($colNames, \",\"), \"&#10;\")\n"
                 + "let $fileLines :=\n"
-                + "for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate\n"
+                + "for $entityNode in collection('" + entityCollection.getDatabaseName() + "')/*:Kinnate\n"
                 + "let $lineString := \n"
                 + "for $column in $colNames\n"
                 // todo: need to escape quotes in the data
@@ -74,6 +74,25 @@ public class GedcomExport {
                 + "return string-join($lineString, \",\")\n"
                 + "let $fileBody := string-join($fileLines, \"&#10;\")\n"
                 + "return concat($fileHeader, $fileBody)\n";
+    }
+
+    public String getCsvDemoQuery() {
+        return "let $colNames := collection('SimpleExportTemp')[1]\n"
+                + "return  $colNames\n";
+    }
+
+    public String getHeaderQuery() {
+        return "let $colNames := distinct-values(collection('" + entityCollection.getDatabaseName() + "')/*:Kinnate/*:CustomData/*/name())\n"
+                + "return  $colNames\n";
+    }
+
+    public String getXPaths() {
+        return "for $elementName in collection('" + entityCollection.getDatabaseName() + "')/*:Kinnate/*:CustomData\n"
+                + "return fn:path($elementName)\n";
+    }
+
+    public String dropAndImportCsv(File importDirectory, String fileFilter) throws QueryException {
+        return entityCollection.dropAndImportCsv(importDirectory, fileFilter);
     }
 
     public void dropAndCreate(File importDirectory, String fileFilter) throws QueryException {
@@ -104,9 +123,8 @@ public class GedcomExport {
 //        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityWithRelationsQuery("e4dfbd92d311088bf692211ced5179e5", new String[]{"e4dfbd92d311088bf692211ced5179e5"}, new IndexerParameters()));
-
-
-        final JComboBox formatSelect = new JComboBox(new String[]{"*.cmdi", "*.imdi", "*.kmdi"});
+        final String csvOption = "*.csv";
+        final JComboBox formatSelect = new JComboBox(new String[]{"*.cmdi", "*.imdi", "*.kmdi", csvOption});
         final String browseOption = "<browse>";
         final JComboBox locationSelect = new JComboBox(new String[]{browseOption});
 
@@ -121,7 +139,7 @@ public class GedcomExport {
         })) {
             locationSelect.addItem(currentFile.toString());
         }
-        queryText.setText(gedcomExport.getCvsQuery());
+        queryText.setText(gedcomExport.getHeaderQuery());
         final JTextArea resultsText = new JTextArea();
         resultsText.setVisible(false);
         final JButton runQueryButton = new JButton("run query");
@@ -170,7 +188,13 @@ public class GedcomExport {
 
                         public void run() {
                             try {
-                                gedcomExport.dropAndCreate(importDirectoryFinal, formatSelect.getSelectedItem().toString());
+                                final Object selectedItem = formatSelect.getSelectedItem();
+                                if (csvOption.equals(selectedItem)) {
+                                    queryText.setText(gedcomExport.getCvsQuery());
+                                    resultsText.append(gedcomExport.dropAndImportCsv(importDirectoryFinal, selectedItem.toString()));
+                                } else {
+                                    gedcomExport.dropAndCreate(importDirectoryFinal, selectedItem.toString());
+                                }
                                 resultsText.append("done\n");
                             } catch (QueryException exception) {
                                 resultsText.append("Error: " + exception.getMessage() + "\n");
