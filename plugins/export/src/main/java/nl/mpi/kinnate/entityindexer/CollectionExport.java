@@ -61,6 +61,27 @@ public class CollectionExport implements CollectionExporter {
         }
     }
 
+    public String dropAndImportCsv(File directoryOfInputFiles, String suffixFilter) throws QueryException {
+        if (suffixFilter == null) {
+            suffixFilter = "*.csv";
+        }
+        try {
+            synchronized (databaseLock) {
+                new DropDB(databaseName).execute(context);
+                new Set("CREATEFILTER", suffixFilter).execute(context);
+                new CreateDB(databaseName).execute(context);
+
+                String importQuery = "declare option db:parser \"csv\";\n"
+                        + "declare option db:parseropt \"header=yes\";\n"
+                        + "for $file in file:list(\"" + directoryOfInputFiles.toString() + "\", false(), \"" + suffixFilter + "\")\n"
+                        + "return db:add('" + databaseName + "', $file)\n";
+                return performExportQuery(importQuery);
+            }
+        } catch (BaseXException exception) {
+            throw new QueryException(exception.getMessage());
+        }
+    }
+
     public String getDatabaseName() {
         return databaseName;
     }
