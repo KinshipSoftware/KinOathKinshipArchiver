@@ -190,7 +190,7 @@ public class GedcomExport {
                             try {
                                 final Object selectedItem = formatSelect.getSelectedItem();
                                 if (csvOption.equals(selectedItem)) {
-                                    queryText.setText(gedcomExport.getCvsQuery());
+                                    queryText.setText(gedcomExport.getCsvDemoQuery());
                                     resultsText.append(gedcomExport.dropAndImportCsv(importDirectoryFinal, selectedItem.toString()));
                                 } else {
                                     gedcomExport.dropAndCreate(importDirectoryFinal, selectedItem.toString());
