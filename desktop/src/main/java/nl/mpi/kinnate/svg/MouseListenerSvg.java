@@ -30,9 +30,9 @@ import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGMatrix;
 
 /**
- *  Document   : MouseListenerSvg
- *  Created on : Mar 9, 2011, 3:21:53 PM
- *  Author     : Peter Withers
+ * Document : MouseListenerSvg
+ * Created on : Mar 9, 2011, 3:21:53 PM
+ * Author : Peter Withers
  */
 public class MouseListenerSvg extends MouseInputAdapter implements EventListener {
 
@@ -90,7 +90,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     private void checkSelectionClearRequired(MouseEvent me) {
         boolean shiftDown = me.isShiftDown();
-        if (!shiftDown && /* !mouseActionIsDrag &&  */ !mouseActionIsPopupTrigger && !mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
+        if (!shiftDown && /* !mouseActionIsDrag && */ !mouseActionIsPopupTrigger && !mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
             System.out.println("Clear selection");
             graphPanel.selectedGroupId.clear();
             updateSelectionDisplay();
@@ -137,6 +137,13 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void handleEvent(Event evt) {
+        if (graphPanel.dataStoreSvg.graphData == null) {
+//            // if the first draw has not occured then we must do this now
+            if (dialogHandler.showConfirmDialogBox("The diagram needs to be recalculated before it can be interacted with.\nRecalculate now?", "Recalculate Diagram")) {
+                kinDiagramPanel.drawGraph();
+            }
+            return;
+        }
         mouseActionOnNode = true;
         boolean shiftDown = false;
         if (evt instanceof DOMMouseEvent) {
