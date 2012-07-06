@@ -32,6 +32,7 @@ import nl.mpi.kinnate.entityindexer.ProcessAbortException;
 import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
 import nl.mpi.kinnate.kindocument.ProfileManager;
@@ -402,6 +403,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                             progressBar.setIndeterminate(true);
                                         }
                                     });
+                                    if (graphPanel.dataStoreSvg.graphData == null) {
+                                        // this will only be null when the diagram has been opened but not recalculated yet
+                                        graphPanel.dataStoreSvg.graphData = new GraphSorter();
+                                    }
                                     graphPanel.dataStoreSvg.graphData.setEntitys(graphNodes);
                                     // register interest Arbil updates and update the graph when data is edited in the table
 //                                registerCurrentNodes(graphSorter.getDataNodes());
