@@ -89,7 +89,7 @@ public class DataStoreSvg {
     // keeping the entity data in the svg allows fast response but also invites stale data and can make the svg quite large
     // refs: #1883 #1973
     @XmlTransient // @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
-    public GraphSorter graphData;
+    public GraphSorter graphData = null;
 
     public enum DiagramMode {
 
