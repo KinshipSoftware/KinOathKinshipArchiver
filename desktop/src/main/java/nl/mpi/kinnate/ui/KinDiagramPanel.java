@@ -267,7 +267,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         symbolFieldsPanel.setName("Symbol Fields");
                         labelFieldsPanel.setName("Label Fields");
                         panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg), false);
-                        panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg, dialogHandler), false);
+//                        panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg, dialogHandler), false);
                         if (graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm) {
                             // hide some of the settings panels from freeform diagrams
                             panelSetting.addTargetPanel(symbolFieldsPanel, false);
