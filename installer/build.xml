@@ -9,8 +9,8 @@
     <target name="setproperties">
         <property name="kinoath.current.major" value="0"/>
         <property name="kinoath.current.minor" value="8"/>
-        <property name="kinoath.filenameidentifier" value="-testing"/>
-        <property name="kinoath.application-title" value="KinOath Kinship Archiver (testing)"/>
+        <property name="kinoath.filenameidentifier" value="-pretesting"/>
+        <property name="kinoath.application-title" value="KinOath Kinship Archiver (pretesting)"/>
         <property name="kinoath.icon-file-name" value="kinoath${kinoath.filenameidentifier}128x128"/>
         <property name="SRCDIR" value="../desktop/src/main/java/"/>
         <property name="IconsDir" value="../desktop/src/main/resources/nl/mpi/kinnate/resources/icons/"/>
