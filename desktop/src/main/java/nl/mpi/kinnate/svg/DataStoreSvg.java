@@ -84,8 +84,9 @@ public class DataStoreSvg {
     public boolean highlightRelationLines = true;
     @XmlElement(name = "ShowDiagramBorder", namespace = "http://mpi.nl/tla/kin")
     public boolean showDiagramBorder = true;
-    @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
-    public GraphSorter graphData;
+    // keeping the entity data in the svg allows fast response but also invites stale data and can make the svg quite large
+    @XmlTransient // @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
+    public GraphSorter graphData = null;
 
     public enum DiagramMode {
 
