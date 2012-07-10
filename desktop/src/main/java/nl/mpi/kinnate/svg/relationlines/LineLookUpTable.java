@@ -14,6 +14,9 @@ public class LineLookUpTable {
     // todo: there will probably be multiple line parts for each pari of entities: start segment, end segment, main line and maybe some zig zag bits, even if these zig zag bits are not ued they probably should always be there for simplicity
     HashSet<LineRecord> lineRecords = new HashSet<LineRecord>();
 
+    protected LineLookUpTable() {
+    }
+
     public void getIntersectsEntity() {
     }
 
@@ -68,7 +71,6 @@ public class LineLookUpTable {
 //        }
 //        return intersectionPoints.toArray(new Point[]{});
 //    }
-
     public void addRecord(LineRecord lineRecord) {
         lineRecords.add(lineRecord);
     }
