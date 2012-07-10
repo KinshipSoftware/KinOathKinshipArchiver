@@ -178,7 +178,9 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     RelationTypeDefinition customTypeDefinition = null;
                     DataTypes.RelationType relationType = null;
                     if (handleTypeString.startsWith("custom:")) {
-                        int typeHashCode = Integer.parseInt(handleTypeString.substring("custom:".length()));
+                        String[] handleParts = handleTypeString.split(":");
+                        relationType = DataTypes.RelationType.valueOf(handleParts[1]);
+                        int typeHashCode = Integer.parseInt(handleParts[2]);
                         for (RelationTypeDefinition currentDefinition : graphPanel.dataStoreSvg.getRelationTypeDefinitions()) {
                             if (currentDefinition.hashCode() == typeHashCode) {
                                 customTypeDefinition = currentDefinition;
