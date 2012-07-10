@@ -97,6 +97,7 @@ public class SvgUpdateHandler {
     }
 
     private void updateSanguineHighlights(Element entityGroup) {
+        // this is used to draw the highlighted relations for the selected entities
         // this must be only called from within a svg runnable
         removeRelationHighLights();
         if (graphPanel.dataStoreSvg.highlightRelationLines) {
@@ -109,55 +110,56 @@ public class SvgUpdateHandler {
                 Node dataElement = currentRelation.getFirstChild();
                 if (dataElement != null && dataElement.hasAttributes()) {
                     NamedNodeMap dataAttributes = dataElement.getAttributes();
-                    if (DataTypes.isSanguinLine(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "relationType").getNodeValue())) {
-                        Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
-                        try {
-                            if (graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue())) || graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue()))) {
-                                // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
+//                    if (DataTypes.isSanguinLine(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "relationType").getNodeValue())) {
+                    Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
+                    try {
+                        if (graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue())) || graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue()))) {
+                            // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
 //                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
 //                                            useNode.setAttributeNS(null, "stroke", "blue");
 //                                            relationHighlightGroup.appendChild(useNode);
 
-                                // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
-                                // as a comprimise these highlighs can be removed when a node is dragged
-                                // add a white background
-                                Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-                                highlightBackgroundLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
-                                highlightBackgroundLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
-                                highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
-                                highlightBackgroundLine.setAttribute("stroke", "white");
-                                relationHighlightGroup.appendChild(highlightBackgroundLine);
-                                // add a blue dotted line
-                                Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-                                highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
-                                highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
-                                highlightLine.setAttribute("points", polyLineElement.getAttribute("points"));
-                                highlightLine.setAttribute("stroke", "blue");
-                                highlightLine.setAttribute("stroke-dasharray", "3");
-                                highlightLine.setAttribute("stroke-dashoffset", "0");
-                                relationHighlightGroup.appendChild(highlightLine);
+                            // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
+                            // as a comprimise these highlighs can be removed when a node is dragged
+                            // add a white background
+                            Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
+                            highlightBackgroundLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
+                            highlightBackgroundLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
+                            highlightBackgroundLine.setAttribute("d", polyLineElement.getAttribute("d"));
+                            highlightBackgroundLine.setAttribute("stroke", "white");
+                            relationHighlightGroup.appendChild(highlightBackgroundLine);
+                            // add a blue dotted line
+                            Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
+                            highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
+                            highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
+                            highlightLine.setAttribute("d", polyLineElement.getAttribute("d"));
+                            highlightLine.setAttribute("stroke", "blue");
+                            highlightLine.setAttribute("stroke-dasharray", "3");
+                            highlightLine.setAttribute("stroke-dashoffset", "0");
+                            relationHighlightGroup.appendChild(highlightLine);
 
-                                // try changing the target lines attributes (does not get updated maybe due to the 'use' node rendering)
+                            // try changing the target lines attributes (does not get updated maybe due to the 'use' node rendering)
 //                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("blue");
 //                                            polyLineElement.setAttributeNS(null, "stroke", "blue");
 //                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth * 2));
-                            } else {
+                        } else {
 //                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("green");
 //                                            polyLineElement.setAttributeNS(null, "stroke", "grey");
 //                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
-                            }
-                        } catch (IdentifierException exception) {
-                            BugCatcherManager.getBugCatcher().logError(exception);
-                            dialogHandler.addMessageDialogToQueue("Failed to read relation data, highlight might not be correct", "Sanguine Highlights");
                         }
+                    } catch (IdentifierException exception) {
+                        BugCatcherManager.getBugCatcher().logError(exception);
+                        dialogHandler.addMessageDialogToQueue("Failed to read relation data, highlight might not be correct", "Sanguine Highlights");
                     }
+//                    }
                 }
             }
         }
     }
 
     private void updateDragRelationLines(Element entityGroup, float localDragNodeX, float localDragNodeY) {
+        // this is used to draw the lines for the drag handles when the user is creating relations
         // this must be only called from within a svg runnable
         RelationDragHandle localRelationDragHandle = relationDragHandle;
         if (localRelationDragHandle != null) {
@@ -178,25 +180,25 @@ public class SvgUpdateHandler {
                 Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
                 relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
                 entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
-//                float vSpacing = graphPanel.graphPanelSize.getVerticalSpacing();
-//                float hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing();
+                float vSpacing = graphPanel.graphPanelSize.getVerticalSpacing();
+                float hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing();
                 for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
                     String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
-//                    float[] egoSymbolPoint;// = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-//                    float[] parentPoint; // = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
-//                    float[] dragPoint;
+                    float[] egoSymbolPoint;// = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                    float[] parentPoint; // = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
+                    float[] dragPoint;
 //
                     DataTypes.RelationType directedRelation = localRelationDragHandle.getRelationType();
-//                    if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
-//                        egoSymbolPoint = new float[]{dragNodeX, dragNodeY};
-//                        dragPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-//                        parentPoint = dragPoint;
-//                        directedRelation = DataTypes.RelationType.ancestor;
-//                    } else {
-//                        egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-//                        dragPoint = new float[]{dragNodeX, dragNodeY};
-//                        parentPoint = dragPoint;
-//                    }
+                    if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
+                        egoSymbolPoint = new float[]{dragNodeX, dragNodeY};
+                        dragPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                        parentPoint = dragPoint;
+                        directedRelation = DataTypes.RelationType.ancestor;
+                    } else {
+                        egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                        dragPoint = new float[]{dragNodeX, dragNodeY};
+                        parentPoint = dragPoint;
+                    }
                     // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
 //                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
@@ -205,48 +207,38 @@ public class SvgUpdateHandler {
 
                     // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
                     // as a comprimise these highlighs can be removed when a node is dragged
-                    String svgLineType = (DataTypes.isSanguinLine(directedRelation)) ? "polyline" : "path";
+                    String svgLineType = "path"; // (DataTypes.isSanguinLine(directedRelation)) ? "polyline" : "path";
                     // add a white background
                     Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, svgLineType);
                     highlightBackgroundLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                     highlightBackgroundLine.setAttribute("fill", "none");
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
                     highlightBackgroundLine.setAttribute("stroke", "white");
-//                    try {
-                    RelationRecord relationRecord;
-                    relationRecord = relationRecords.getRecord(dragLineElementId);
-
-//                        if (DataTypes.isSanguinLine(directedRelation)) {
-//                            relationRecord = new RelationRecord(dragLineElementId, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
-//                        } else {
-//                            relationRecord = new RelationRecord(localRelationDragHandle.getCurveLineOrientation(), hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1]);
-//                        }
-                    if (relationRecord.curveLinePoints != null) {
+                    try {
+                        RelationRecord relationRecord;
+                        if (DataTypes.isSanguinLine(directedRelation)) {
+                            relationRecord = new RelationRecord(dragLineElementId, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
+                        } else {
+                            relationRecord = new RelationRecord(localRelationDragHandle.getCurveLineOrientation(), hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1]);
+                        }
                         highlightBackgroundLine.setAttribute("d", relationRecord.getPathPointsString());
-                    } else {
-                        highlightBackgroundLine.setAttribute("points", relationRecord.lineRecord.getPointsAttribute());
-                    }
-                    relationHighlightGroup.appendChild(highlightBackgroundLine);
-                    // add a blue dotted line
-                    Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, svgLineType);
-                    highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
-                    highlightLine.setAttribute("fill", "none");
+                        relationHighlightGroup.appendChild(highlightBackgroundLine);
+                        // add a blue dotted line
+                        Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, svgLineType);
+                        highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+                        highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
-                    if (relationRecord.curveLinePoints != null) {
                         highlightLine.setAttribute("d", relationRecord.getPathPointsString());
-                    } else {
-                        highlightLine.setAttribute("points", relationRecord.lineRecord.getPointsAttribute());
+                        highlightLine.setAttribute("stroke", localRelationDragHandle.getRelationColour());
+                        highlightLine.setAttribute("stroke-dasharray", "3");
+                        highlightLine.setAttribute("stroke-dashoffset", "0");
+                        relationHighlightGroup.appendChild(highlightLine);
+                    } catch (OldFormatException exception) {
+                        if (!oldFormatWarningShown) {
+                            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
+                            oldFormatWarningShown = true;
+                        }
                     }
-                    highlightLine.setAttribute("stroke", localRelationDragHandle.getRelationColour());
-                    highlightLine.setAttribute("stroke-dasharray", "3");
-                    highlightLine.setAttribute("stroke-dashoffset", "0");
-                    relationHighlightGroup.appendChild(highlightLine);
-//                    } catch (OldFormatException exception) {
-//                        if (!oldFormatWarningShown) {
-//                            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
-//                            oldFormatWarningShown = true;
-//                        }
-//                    }
                 }
                 Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
                 symbolNode.setAttribute("cx", Float.toString(dragNodeX));
