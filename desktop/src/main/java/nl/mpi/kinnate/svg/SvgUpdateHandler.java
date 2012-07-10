@@ -255,15 +255,24 @@ public class SvgUpdateHandler {
 
     protected void addRelationDragHandles(RelationTypeDefinition[] relationTypeDefinitions, Element highlightGroupNode, SVGRect bbox, int paddingDistance) {
         // add the standard relation types
-        for (DataTypes.RelationType relationType : new DataTypes.RelationType[]{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant}) {
+        for (DataTypes.RelationType relationType : new DataTypes.RelationType[]{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant, DataTypes.RelationType.union, DataTypes.RelationType.sibling}) {
             Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
-            symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() / 2));
             switch (relationType) {
                 case ancestor:
                     symbolNode.setAttribute("cy", Float.toString(bbox.getY() - paddingDistance));
+                    symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() / 2));
                     break;
                 case descendant:
                     symbolNode.setAttribute("cy", Float.toString(bbox.getY() + bbox.getHeight() + paddingDistance));
+                    symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() / 2));
+                    break;
+                case union:
+                    symbolNode.setAttribute("cy", Float.toString(bbox.getY() + bbox.getHeight()));
+                    symbolNode.setAttribute("cx", Float.toString(bbox.getX() - paddingDistance));
+                    break;
+                case sibling:
+                    symbolNode.setAttribute("cy", Float.toString(bbox.getY()));
+                    symbolNode.setAttribute("cx", Float.toString(bbox.getX() - paddingDistance));
                     break;
             }
             symbolNode.setAttribute("r", "5");
@@ -280,21 +289,23 @@ public class SvgUpdateHandler {
         float stepC = 12; //(bbox.getHeight() + paddingDistance) / relationTypeDefinitions.length;
         float maxCY = bbox.getHeight() + paddingDistance;
         for (RelationTypeDefinition typeDefinition : relationTypeDefinitions) {
-            // use a constant spacing between the drag handle dots and to start a new column when each line is full
-            Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
-            symbolNode.setAttribute("cx", Float.toString(currentCX));
-            symbolNode.setAttribute("cy", Float.toString(currentCY));
-            currentCY += stepC;
-            if (currentCY >= maxCY) {
-                currentCY = minCY;
-                currentCX += stepC;
+            for (DataTypes.RelationType relationType : typeDefinition.getRelationType()) {
+                // use a constant spacing between the drag handle dots and to start a new column when each line is full
+                Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
+                symbolNode.setAttribute("cx", Float.toString(currentCX));
+                symbolNode.setAttribute("cy", Float.toString(currentCY));
+                currentCY += stepC;
+                if (currentCY >= maxCY) {
+                    currentCY = minCY;
+                    currentCX += stepC;
+                }
+                symbolNode.setAttribute("r", "5");
+                symbolNode.setAttribute("handletype", "custom:" + relationType + ":" + typeDefinition.hashCode());
+                symbolNode.setAttribute("fill", typeDefinition.getLineColour());
+                symbolNode.setAttribute("stroke", "none");
+                ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
+                highlightGroupNode.appendChild(symbolNode);
             }
-            symbolNode.setAttribute("r", "5");
-            symbolNode.setAttribute("handletype", "custom:" + typeDefinition.hashCode());
-            symbolNode.setAttribute("fill", typeDefinition.getLineColour());
-            symbolNode.setAttribute("stroke", "none");
-            ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
-            highlightGroupNode.appendChild(symbolNode);
         }
     }
 
