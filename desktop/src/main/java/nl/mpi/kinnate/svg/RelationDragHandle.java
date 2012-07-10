@@ -7,9 +7,9 @@ import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : RelationDragHandle
- *  Created on : Sep 6, 2011, 1:45:49 PM
- *  Author     : Peter Withers
+ * Document : RelationDragHandle
+ * Created on : Sep 6, 2011, 1:45:49 PM
+ * Author : Peter Withers
  */
 public class RelationDragHandle {
 
@@ -23,6 +23,9 @@ public class RelationDragHandle {
     protected UniqueIdentifier targetIdentifier = null;
 
     public RelationDragHandle(RelationTypeDefinition customTypeDefinition, DataTypes.RelationType relationType, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) {
+        if (relationType == null) {
+            throw new UnsupportedOperationException("relationType must be specified in RelationDragHandle");
+        }
         this.customTypeDefinition = customTypeDefinition;
         this.relationType = relationType;
         this.elementStartX = elementStartX;
@@ -41,11 +44,7 @@ public class RelationDragHandle {
     }
 
     public RelationType getRelationType() {
-        if (customTypeDefinition != null) {
-            return customTypeDefinition.getRelationType();
-        } else {
-            return relationType;
-        }
+        return relationType;
     }
 
     public String getRelationColour() {
