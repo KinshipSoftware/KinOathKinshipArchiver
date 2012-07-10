@@ -109,7 +109,6 @@ public class LineRecord {
 //        // todo: get the actual intersections and insert loops
 //        // todo: in RelationSVG on first load the lineLookUpTable is null and loops will not be drawn
 //    }
-
     public void insertLoop(int linePart, int positionX) {
         System.out.println("insertLoop");
         // todo: this is test needs to be extended to place the loops in the correct locations and to produce pretty curved loops
@@ -145,7 +144,16 @@ public class LineRecord {
 
     public String getPointsAttribute() {
         StringBuilder stringBuilder = new StringBuilder();
+        boolean moveRequired = true;
+        boolean lineToRequired = true;
         for (Point currentPoint : this.pointsList.toArray(new Point[]{})) {
+            if (moveRequired) {
+                moveRequired = false;
+                stringBuilder.append("M ");
+            } else if (lineToRequired) {
+                lineToRequired = false;
+                stringBuilder.append("L ");
+            }
             stringBuilder.append(currentPoint.x);
             stringBuilder.append(",");
             stringBuilder.append(currentPoint.y);
