@@ -111,14 +111,8 @@ public class RelationSvg {
             new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, relationRecord.directedRelation, relationRecord.curveLineOrientation, relationRecord.leftEntity.getUniqueIdentifier(), relationRecord.rightEntity.getUniqueIdentifier());
             boolean addedRelationLine = false;
             Element linkLine;
-            if (relationRecord.curveLinePoints != null) {
-                linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
-                linkLine.setAttribute("d", relationRecord.getPathPointsString());
-            } else {
-                linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
-                // todo: set the points herefrom the line record
-                linkLine.setAttribute("points", relationRecord.lineRecord.getPointsAttribute());
-            }
+            linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
+            linkLine.setAttribute("d", relationRecord.getPathPointsString());
             if (relationRecord.lineDash > 0) {
                 linkLine.setAttribute("stroke-dasharray", Integer.toString(relationRecord.lineDash));
                 linkLine.setAttribute("stroke-dashoffset", "0");
