@@ -16,14 +16,16 @@ import nl.mpi.kinnate.svg.OldFormatException;
 public class RelationRecordTable {
 
     HashMap<String, RelationRecord> recordStore = new HashMap<String, RelationRecord>();
-    LineLookUpTable lineLookUpTable = new LineLookUpTable();
+    LineLookUpTable lineLookUpTable;
 
     public void addRecord(GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
-        RelationRecord relationRecord = new RelationRecord(graphPanel, lineLookUpTable, relationLineIndex, leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, lineLabel, hSpacing, vSpacing);
+        RelationRecord relationRecord = new RelationRecord(graphPanel, relationLineIndex, leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, lineLabel, hSpacing, vSpacing);
         recordStore.put(relationRecord.lineIdString, relationRecord);
+//        System.out.println("Added RelationRecord: " + relationRecord.lineIdString);
     }
 
     public RelationRecord getRecord(String idString) {
+//        System.out.println("get RelationRecord: " + idString);
         return recordStore.get(idString);
     }
 
@@ -35,9 +37,12 @@ public class RelationRecordTable {
         return recordStore.size();
     }
 
-    public void adjustLines() {
+    public void adjustLines() throws OldFormatException {
+        lineLookUpTable = new LineLookUpTable();
+        for (RelationRecord relationRecord : recordStore.values()) {
+            relationRecord.updatePathPoints(lineLookUpTable);
+        }
         // todo: update all entity positions
-        
         lineLookUpTable.addLoops();
     }
 }
