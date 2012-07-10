@@ -178,25 +178,25 @@ public class SvgUpdateHandler {
                 Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
                 relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
                 entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
-                float vSpacing = graphPanel.graphPanelSize.getVerticalSpacing();
-                float hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing();
+//                float vSpacing = graphPanel.graphPanelSize.getVerticalSpacing();
+//                float hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing();
                 for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
                     String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
-                    float[] egoSymbolPoint;// = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-                    float[] parentPoint; // = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
-                    float[] dragPoint;
+//                    float[] egoSymbolPoint;// = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+//                    float[] parentPoint; // = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
+//                    float[] dragPoint;
 //
                     DataTypes.RelationType directedRelation = localRelationDragHandle.getRelationType();
-                    if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
-                        egoSymbolPoint = new float[]{dragNodeX, dragNodeY};
-                        dragPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-                        parentPoint = dragPoint;
-                        directedRelation = DataTypes.RelationType.ancestor;
-                    } else {
-                        egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-                        dragPoint = new float[]{dragNodeX, dragNodeY};
-                        parentPoint = dragPoint;
-                    }
+//                    if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
+//                        egoSymbolPoint = new float[]{dragNodeX, dragNodeY};
+//                        dragPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+//                        parentPoint = dragPoint;
+//                        directedRelation = DataTypes.RelationType.ancestor;
+//                    } else {
+//                        egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+//                        dragPoint = new float[]{dragNodeX, dragNodeY};
+//                        parentPoint = dragPoint;
+//                    }
                     // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
 //                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
@@ -542,53 +542,54 @@ public class SvgUpdateHandler {
 //                    relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
 //                }
                 Element entityGroup = graphPanel.doc.getElementById("EntityGroup");
-                boolean continueUpdating = true;
-                while (continueUpdating) {
-                    continueUpdating = false;
-                    int updateDragNodeXInner;
-                    int updateDragNodeYInner;
-                    synchronized (SvgUpdateHandler.this) {
-                        dragUpdateRequired = false;
-                        updateDragNodeXInner = updateDragNodeX;
-                        updateDragNodeYInner = updateDragNodeY;
-                        updateDragNodeX = 0;
-                        updateDragNodeY = 0;
-                    }
+                try {
+                    boolean continueUpdating = true;
+                    while (continueUpdating) {
+                        continueUpdating = false;
+                        int updateDragNodeXInner;
+                        int updateDragNodeYInner;
+                        synchronized (SvgUpdateHandler.this) {
+                            dragUpdateRequired = false;
+                            updateDragNodeXInner = updateDragNodeX;
+                            updateDragNodeYInner = updateDragNodeY;
+                            updateDragNodeX = 0;
+                            updateDragNodeY = 0;
+                        }
 //                    System.out.println("updateDragNodeX: " + updateDragNodeXInner);
 //                    System.out.println("updateDragNodeY: " + updateDragNodeYInner);
-                    if (graphPanel.doc == null || graphPanel.dataStoreSvg.graphData == null) {
-                        BugCatcherManager.getBugCatcher().logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
-                    } else {
+                        if (graphPanel.doc == null || graphPanel.dataStoreSvg.graphData == null) {
+                            BugCatcherManager.getBugCatcher().logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
+                        } else {
 //                        if (relationDragHandleType != null) {
 //                            // drag relation handles
 ////                            updateSanguineHighlights(entityGroup);
 //                            removeHighLights();
 //                            updateDragRelationLines(entityGroup, updateDragNodeXInner, updateDragNodeYInner);
 //                        } else {
-                        // drag the entities
-                        boolean allRealtionsSelected = true;
-                        relationLoop:
-                        for (EntityData selectedEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
-                            if (selectedEntity.isVisible
-                                    && graphPanel.selectedGroupId.contains(selectedEntity.getUniqueIdentifier())) {
-                                for (EntityData relatedEntity : selectedEntity.getVisiblyRelated()) {
-                                    if (relatedEntity.isVisible && !graphPanel.selectedGroupId.contains(relatedEntity.getUniqueIdentifier())) {
-                                        allRealtionsSelected = false;
-                                        break relationLoop;
+                            // drag the entities
+                            boolean allRealtionsSelected = true;
+                            relationLoop:
+                            for (EntityData selectedEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+                                if (selectedEntity.isVisible
+                                        && graphPanel.selectedGroupId.contains(selectedEntity.getUniqueIdentifier())) {
+                                    for (EntityData relatedEntity : selectedEntity.getVisiblyRelated()) {
+                                        if (relatedEntity.isVisible && !graphPanel.selectedGroupId.contains(relatedEntity.getUniqueIdentifier())) {
+                                            allRealtionsSelected = false;
+                                            break relationLoop;
+                                        }
                                     }
                                 }
                             }
-                        }
-                        int dragCounter = 0;
-                        for (UniqueIdentifier entityId : graphPanel.selectedGroupId) {
-                            // store the remainder after snap for re use on each update
-                            synchronized (SvgUpdateHandler.this) {
-                                if (dragRemainders.length > dragCounter) {
-                                    dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, allRealtionsSelected);
+                            int dragCounter = 0;
+                            for (UniqueIdentifier entityId : graphPanel.selectedGroupId) {
+                                // store the remainder after snap for re use on each update
+                                synchronized (SvgUpdateHandler.this) {
+                                    if (dragRemainders.length > dragCounter) {
+                                        dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, allRealtionsSelected);
+                                    }
                                 }
+                                dragCounter++;
                             }
-                            dragCounter++;
-                        }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
 //                    for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
 //                        if ("g".equals(currentChild.getLocalName())) {
@@ -616,28 +617,36 @@ public class SvgUpdateHandler {
 //                            }
 //                        }
 //                    } 
-                        int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); // graphPanel.dataStoreSvg.graphData.gridHeight);
-                        int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
-                        new RelationSvg(dialogHandler).updateRelationLines(graphPanel, relationRecords, graphPanel.selectedGroupId, hSpacing, vSpacing);
-                        updateSanguineHighlights(entityGroup);
-                        //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
-                    }
-//                    }
-                    // graphPanel.updateCanvasSize(); // updating the canvas size here is too slow so it is moved into the drag ended 
+                            int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); // graphPanel.dataStoreSvg.graphData.gridHeight);
+                            int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
+                            new RelationSvg(dialogHandler).updateRelationLines(graphPanel, relationRecords, graphPanel.selectedGroupId, hSpacing, vSpacing);
+                            updateSanguineHighlights(entityGroup);
+                            //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+                        }
+                        // graphPanel.updateCanvasSize(); // updating the canvas size here is too slow so it is moved into the drag ended 
 //                    if (graphPanel.dataStoreSvg.graphData.isRedrawRequired()) { // this has been abandoned in favour of preventing dragging past zero
-                    // todo: update the position of all nodes
-                    // todo: any labels and other non entity graphics must also be taken into account here
+                        // todo: update the position of all nodes
+                        // todo: any labels and other non entity graphics must also be taken into account here
 //                        for (EntityData selectedEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
 //                            if (selectedEntity.isVisible) {
 //                                graphPanel.entitySvg.moveEntity(graphPanel, selectedEntity.getUniqueIdentifier(), updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, true);
 //                            }
 //                        }
 //                    }
-                    synchronized (SvgUpdateHandler.this) {
-                        continueUpdating = dragUpdateRequired;
-                        if (!continueUpdating) {
-                            threadRunning = false;
+                        synchronized (SvgUpdateHandler.this) {
+                            continueUpdating = dragUpdateRequired;
+                            if (!continueUpdating) {
+                                threadRunning = false;
+                            }
                         }
+                    }
+                } catch (OldFormatException exception) {
+                    synchronized (SvgUpdateHandler.this) {
+                        threadRunning = false;
+                    }
+                    if (!oldFormatWarningShown) {
+                        dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
+                        oldFormatWarningShown = true;
                     }
                 }
                 graphPanel.setRequiresSave();
