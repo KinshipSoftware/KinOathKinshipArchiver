@@ -168,7 +168,8 @@ public class RelationSvg {
         }
     }
 
-    public void updateRelationLines(GraphPanel graphPanel, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) {
+    public void updateRelationLines(GraphPanel graphPanel, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) throws OldFormatException {
+        relationRecords.adjustLines();
 //        graphPanel.lineLookUpTable.addLoops();
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = graphPanel.doc.getElementById("RelationGroup");
@@ -190,21 +191,21 @@ public class RelationSvg {
                         Element relationLineElement = graphPanel.doc.getElementById(lineElementId);
                         if (relationLineElement != null) {
                             //System.out.println("type: " + relationLineElement.getLocalName());
-                            float[] egoSymbolPoint;
-                            float[] alterSymbolPoint;
-                            float[] parentPoint;
+//                            float[] egoSymbolPoint;
+//                            float[] alterSymbolPoint;
+//                            float[] parentPoint;
 //                        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.egoNodeId);
 //                        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphRelationData.alterNodeId);
-                            DataTypes.RelationType directedRelation = graphRelationData.relationType;
+//                            DataTypes.RelationType directedRelation = graphRelationData.relationType;
                             // the relation lines are already directed so there is no need to make then unidirectional here
-                            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
-                            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
-                            parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.egoNodeId);
+//                            egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.egoNodeId);
+//                            alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(graphRelationData.alterNodeId);
+//                            parentPoint = graphPanel.entitySvg.getAverageParentLocation(graphRelationData.egoNodeId);
 
-                            float egoX = egoSymbolPoint[0];
-                            float egoY = egoSymbolPoint[1];
-                            float alterX = alterSymbolPoint[0];
-                            float alterY = alterSymbolPoint[1];
+//                            float egoX = egoSymbolPoint[0];
+//                            float egoY = egoSymbolPoint[1];
+//                            float alterX = alterSymbolPoint[0];
+//                            float alterY = alterSymbolPoint[1];
 
 //                        SVGRect egoSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.egoNodeId);
 //                        SVGRect alterSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.alterNodeId);
