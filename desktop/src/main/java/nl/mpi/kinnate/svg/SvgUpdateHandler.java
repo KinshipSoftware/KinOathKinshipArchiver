@@ -213,34 +213,34 @@ public class SvgUpdateHandler {
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
                     highlightBackgroundLine.setAttribute("stroke", "white");
 //                    try {
-                        RelationRecord relationRecord;
-                        relationRecord = relationRecords.getRecord(dragLineElementId);
+                    RelationRecord relationRecord;
+                    relationRecord = relationRecords.getRecord(dragLineElementId);
 
 //                        if (DataTypes.isSanguinLine(directedRelation)) {
 //                            relationRecord = new RelationRecord(dragLineElementId, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
 //                        } else {
 //                            relationRecord = new RelationRecord(localRelationDragHandle.getCurveLineOrientation(), hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1]);
 //                        }
-                        if (relationRecord.curveLinePoints != null) {
-                            highlightBackgroundLine.setAttribute("d", relationRecord.curveLinePoints);
-                        } else {
-                            highlightBackgroundLine.setAttribute("points", relationRecord.lineRecord.getPointsAttribute());
-                        }
-                        relationHighlightGroup.appendChild(highlightBackgroundLine);
-                        // add a blue dotted line
-                        Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, svgLineType);
-                        highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
-                        highlightLine.setAttribute("fill", "none");
+                    if (relationRecord.curveLinePoints != null) {
+                        highlightBackgroundLine.setAttribute("d", relationRecord.getPathPointsString());
+                    } else {
+                        highlightBackgroundLine.setAttribute("points", relationRecord.lineRecord.getPointsAttribute());
+                    }
+                    relationHighlightGroup.appendChild(highlightBackgroundLine);
+                    // add a blue dotted line
+                    Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, svgLineType);
+                    highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+                    highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
-                        if (relationRecord.curveLinePoints != null) {
-                            highlightLine.setAttribute("d", relationRecord.curveLinePoints);
-                        } else {
-                            highlightLine.setAttribute("points", relationRecord.lineRecord.getPointsAttribute());
-                        }
-                        highlightLine.setAttribute("stroke", localRelationDragHandle.getRelationColour());
-                        highlightLine.setAttribute("stroke-dasharray", "3");
-                        highlightLine.setAttribute("stroke-dashoffset", "0");
-                        relationHighlightGroup.appendChild(highlightLine);
+                    if (relationRecord.curveLinePoints != null) {
+                        highlightLine.setAttribute("d", relationRecord.getPathPointsString());
+                    } else {
+                        highlightLine.setAttribute("points", relationRecord.lineRecord.getPointsAttribute());
+                    }
+                    highlightLine.setAttribute("stroke", localRelationDragHandle.getRelationColour());
+                    highlightLine.setAttribute("stroke-dasharray", "3");
+                    highlightLine.setAttribute("stroke-dashoffset", "0");
+                    relationHighlightGroup.appendChild(highlightLine);
 //                    } catch (OldFormatException exception) {
 //                        if (!oldFormatWarningShown) {
 //                            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
@@ -969,6 +969,9 @@ public class SvgUpdateHandler {
 //            };
         } catch (DOMException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
+            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "SVG Error");
+        } catch (OldFormatException exception) {
+            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
         }
         // todo: this repaint might not resolve all cases of redraw issues
         graphPanel.svgCanvas.repaint(); // make sure no remnants are left over after the last redraw
