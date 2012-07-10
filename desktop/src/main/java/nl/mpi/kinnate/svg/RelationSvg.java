@@ -101,7 +101,7 @@ public class RelationSvg {
 //        }
 //
 //    }
-    public void createRelationElements(GraphPanel graphPanel, RelationRecordTable relationRecords, Element relationGroupNode) {
+    public void createRelationElements(GraphPanel graphPanel, RelationRecordTable relationRecords, Element relationGroupNode) throws OldFormatException {
         relationRecords.adjustLines();
 
         for (RelationRecord relationRecord : relationRecords.getAllRecords()) {
@@ -113,7 +113,7 @@ public class RelationSvg {
             Element linkLine;
             if (relationRecord.curveLinePoints != null) {
                 linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
-                linkLine.setAttribute("d", relationRecord.curveLinePoints);
+                linkLine.setAttribute("d", relationRecord.getPathPointsString());
             } else {
                 linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "polyline");
                 // todo: set the points herefrom the line record
@@ -215,21 +215,16 @@ public class RelationSvg {
 //                        float alterY = alterSymbolRect.getY() + alterSymbolRect.getHeight() / 2;
 
                             if ("polyline".equals(relationLineElement.getLocalName())) {
-                                try {
-                                    //System.out.println("polyline to update: " + lineElementId);
-                                    // todo:.. we need to be getting the record from the lineLookUpTable not creating a new one
-                                    RelationRecord relationRecord = relationRecords.getRecord(lineElementId);
+                                //System.out.println("polyline to update: " + lineElementId);
+                                // todo: we need to be getting the record from the lineLookUpTable not creating a new one
+                                RelationRecord relationRecord = relationRecords.getRecord(lineElementId);
 //                                    RelationRecord relationRecord = new RelationRecord(/* graphPanel.lineLookUpTable, */lineElementId, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
-                                    relationRecord.setUpdatedPoint(lineElementId, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
-                                    relationLineElement.setAttribute("points", relationRecord.getUpdatedPoint());
-                                } catch (OldFormatException exception) {
-                                    dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
-                                }
+                                relationLineElement.setAttribute("points", relationRecord.getPathPointsString());
                             }
                             if ("path".equals(relationLineElement.getLocalName())) {
                                 //System.out.println("path to update: " + relationLineElement.getLocalName());
                                 RelationRecord relationRecord = relationRecords.getRecord(lineElementId); //new RelationRecord(graphRelationData.curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
-                                relationLineElement.setAttribute("d", relationRecord.curveLinePoints);
+                                relationLineElement.setAttribute("d", relationRecord.getPathPointsString());
                             }
                             addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
                             updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
