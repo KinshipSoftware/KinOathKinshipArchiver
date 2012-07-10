@@ -29,18 +29,10 @@ public class RelationRecord {
     public int hSpacing;
     public int vSpacing;
     public int relationLineIndex;
-    public LineRecord lineRecord;
-    public String curveLinePoints = null;
+    public LineRecord lineRecord; // todo: remove this 
+    public String curveLinePoints = null; // todo: remove this 
 
-    protected RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, float[] averageParentPassed) throws OldFormatException {
-        lineRecord = setPolylinePointsAttribute(lineIdString, relationType, vSpacing, egoX, egoY, alterX, alterY, averageParentPassed);
-    }
-
-    protected RelationRecord(RelationTypeDefinition.CurveLineOrientation curveLineOrientation, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
-        curveLinePoints = setPathPointsAttribute(curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
-    }
-
-    protected RelationRecord(GraphPanel graphPanel, LineLookUpTable lineLookUpTable, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
+    protected RelationRecord(GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
         this.graphPanel = graphPanel;
         this.leftEntity = leftEntity;
         this.rightEntity = rightEntity;
@@ -53,7 +45,19 @@ public class RelationRecord {
         this.hSpacing = hSpacing;
         this.vSpacing = vSpacing;
         this.relationLineIndex = relationLineIndex;
+        idString = "relation" + relationLineIndex;
+        lineIdString = "relation" + relationLineIndex + "Line";
+    }
 
+    public String getPathPointsString() {
+        if (curveLinePoints != null) {
+            return curveLinePoints;
+        } else {
+            return lineRecord.getPointsAttribute();
+        }
+    }
+
+    public void updatePathPoints(LineLookUpTable lineLookUpTable) throws OldFormatException {
         float[] egoSymbolPoint;
         float[] alterSymbolPoint;
         float[] parentPoint;
@@ -63,8 +67,6 @@ public class RelationRecord {
         parentPoint = graphPanel.entitySvg.getAverageParentLocation(leftEntity);
 
 //            relationLineIndex = relationGroupNode.getChildNodes().getLength();
-        idString = "relation" + relationLineIndex;
-        lineIdString = "relation" + relationLineIndex + "Line";
 
         // set the line end points
 //        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(currentNode.getUniqueIdentifier());
@@ -110,7 +112,7 @@ public class RelationRecord {
             //                            squareLinkLine.setAttribute("y2", Integer.toString(graphLinkNode.linkedNode.yPos * vSpacing + vSpacing));
             //                            squareLinkLine.setAttribute("stroke", "grey");
             //                            squareLinkLine.setAttribute("stroke-width", Integer.toString(strokeWidth));
-            this.lineRecord = setPolylinePointsAttribute(lineIdString, directedRelation, vSpacing, fromX, fromY, toX, toY, parentPoint);
+            lineRecord = setPolylinePointsAttribute(lineIdString, directedRelation, vSpacing, fromX, fromY, toX, toY, parentPoint);
             lineLookUpTable.addRecord(this.lineRecord);
 
 //          todo: check for cases when lineLookUpTable is null 
@@ -125,14 +127,6 @@ public class RelationRecord {
 //            } 
         }
 
-    }
-
-    public void setUpdatedPoint(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, float[] averageParentPassed) throws OldFormatException {
-        lineRecord = setPolylinePointsAttribute(lineIdString, relationType, vSpacing, egoX, egoY, alterX, alterY, averageParentPassed);
-    }
-
-    public String getUpdatedPoint() {
-        return lineRecord.getPointsAttribute();
     }
 
     private LineRecord setPolylinePointsAttribute(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, float[] averageParentPassed) throws OldFormatException {
