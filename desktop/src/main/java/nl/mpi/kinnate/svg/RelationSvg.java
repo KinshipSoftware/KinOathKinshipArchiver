@@ -101,8 +101,9 @@ public class RelationSvg {
 //        }
 //
 //    }
-    public void createRelationElements(GraphPanel graphPanel, RelationRecordTable relationRecords, LineLookUpTable lineLookUpTable, Element relationGroupNode) {
-        lineLookUpTable.addLoops();
+    public void createRelationElements(GraphPanel graphPanel, RelationRecordTable relationRecords, Element relationGroupNode) {
+        relationRecords.adjustLines();
+
         for (RelationRecord relationRecord : relationRecords.getAllRecords()) {
             Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
             groupNode.setAttribute("id", relationRecord.idString);
@@ -167,7 +168,7 @@ public class RelationSvg {
         }
     }
 
-    public void updateRelationLines(GraphPanel graphPanel, RelationRecordTable relationRecords, LineLookUpTable lineLookUpTable, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) {
+    public void updateRelationLines(GraphPanel graphPanel, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) {
 //        graphPanel.lineLookUpTable.addLoops();
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = graphPanel.doc.getElementById("RelationGroup");
@@ -216,16 +217,18 @@ public class RelationSvg {
                             if ("polyline".equals(relationLineElement.getLocalName())) {
                                 try {
                                     //System.out.println("polyline to update: " + lineElementId);
-                                    // todo: we need to be getting the record from the lineLookUpTable not creating a new one
-                                    RelationRecord relationRecord = new RelationRecord(/* graphPanel.lineLookUpTable, */lineElementId, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
-                                    relationLineElement.setAttribute("points", relationRecord.lineRecord.getPointsAttribute());
+                                    // todo:.. we need to be getting the record from the lineLookUpTable not creating a new one
+                                    RelationRecord relationRecord = relationRecords.getRecord(lineElementId);
+//                                    RelationRecord relationRecord = new RelationRecord(/* graphPanel.lineLookUpTable, */lineElementId, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
+                                    relationRecord.setUpdatedPoint(lineElementId, directedRelation, vSpacing, egoX, egoY, alterX, alterY, parentPoint);
+                                    relationLineElement.setAttribute("points", relationRecord.getUpdatedPoint());
                                 } catch (OldFormatException exception) {
                                     dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
                                 }
                             }
                             if ("path".equals(relationLineElement.getLocalName())) {
                                 //System.out.println("path to update: " + relationLineElement.getLocalName());
-                                RelationRecord relationRecord = new RelationRecord(graphRelationData.curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
+                                RelationRecord relationRecord = relationRecords.getRecord(lineElementId); //new RelationRecord(graphRelationData.curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
                                 relationLineElement.setAttribute("d", relationRecord.curveLinePoints);
                             }
                             addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
