@@ -21,11 +21,9 @@ public class RelationRecordTable {
     public void addRecord(GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
         RelationRecord relationRecord = new RelationRecord(graphPanel, relationLineIndex, leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, lineLabel, hSpacing, vSpacing);
         recordStore.put(relationRecord.lineIdString, relationRecord);
-//        System.out.println("Added RelationRecord: " + relationRecord.lineIdString);
     }
 
     public RelationRecord getRecord(String idString) {
-//        System.out.println("get RelationRecord: " + idString);
         return recordStore.get(idString);
     }
 
@@ -42,7 +40,6 @@ public class RelationRecordTable {
         for (RelationRecord relationRecord : recordStore.values()) {
             relationRecord.updatePathPoints(lineLookUpTable);
         }
-        // todo: update all entity positions
         lineLookUpTable.addLoops();
     }
 }
