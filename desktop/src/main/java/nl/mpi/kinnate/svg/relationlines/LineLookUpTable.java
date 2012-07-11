@@ -87,6 +87,7 @@ public class LineLookUpTable {
                 }
                 currentHorizontal = lineRecordForLoops.getPrevHorizontal(currentHorizontal);
             }
+            lineRecordForLoops.sortLoops();
         }
     }
 
