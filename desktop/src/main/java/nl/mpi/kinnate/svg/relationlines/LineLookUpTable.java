@@ -63,16 +63,19 @@ public class LineLookUpTable {
     }
 
     public void separateOverlappingLines() {
-        for (LineRecord lineRecordForLoops : lineRecords) {
-            for (int currentIndexA = lineRecordForLoops.getLastSegment(); currentIndexA > -1; currentIndexA--) {
-                Point[] currentSegmentA = lineRecordForLoops.getSegment(currentIndexA);
+        LineRecord[] lineRecordArray = lineRecords.toArray(new LineRecord[0]);
+        for (int lineRecordCount = 0; lineRecordCount < lineRecordArray.length; lineRecordCount++) {
+            LineRecord lineRecordOuter = lineRecordArray[lineRecordCount];
+            for (int currentIndexA = lineRecordOuter.getLastSegment(); currentIndexA > -1; currentIndexA--) {
+                Point[] currentSegmentA = lineRecordOuter.getSegment(currentIndexA);
 //                System.out.println("currentHorizontal: " + currentHorizontal);
-                for (LineRecord lineRecord : lineRecords) {
-                    if (lineRecord != lineRecordForLoops) {
-                        for (int currentIndexB = 0; currentIndexB <= lineRecord.getLastSegment(); currentIndexB++) {
-                            Point[] otherHorizontalLine = lineRecord.getSegment(currentIndexB);
+                for (int lineRecordInnerCount = lineRecordCount + 1; lineRecordInnerCount < lineRecordArray.length; lineRecordInnerCount++) {
+                    LineRecord lineRecordInner = lineRecordArray[lineRecordInnerCount];
+                    if (lineRecordInner != lineRecordOuter) {
+                        for (int currentIndexB = 0; currentIndexB <= lineRecordInner.getLastSegment(); currentIndexB++) {
+                            Point[] otherHorizontalLine = lineRecordInner.getSegment(currentIndexB);
                             if (overlaps(currentSegmentA, otherHorizontalLine)) {
-                                lineRecordForLoops.moveAside(currentIndexA, 6);
+                                lineRecordInner.moveAside(currentIndexA, 6);
                             }
                         }
                     }
