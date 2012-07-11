@@ -32,17 +32,34 @@ public class LineLookUpTable {
     }
 
     private boolean overlaps(Point[] lineA, Point[] lineB) {
-        // todo: complete this comparison
         boolean verticalMatch = lineA[0].x == lineB[0].x && lineA[0].x == lineB[1].x && lineA[0].x == lineA[1].x;
         boolean horizontalMatch = lineA[0].y == lineB[0].y && lineA[0].y == lineB[1].y && lineA[0].y == lineA[1].y;
-//        System.out.println("horizontalMatch || verticalMatch:" + horizontalMatch + ":" + verticalMatch);
-        return horizontalMatch || verticalMatch;
-//
-//        boolean startsBefore = lineA[0].x <= lineB[0].x;
-//        boolean endsBefore = lineA[1].x <= lineB[0].x;
-//        boolean startsAbove = lineB[0].y <= lineA[0].y;
-//        boolean endsAbove = lineB[1].y <= lineA[0].y;
-//        return (startsBefore != endsBefore && startsAbove != endsAbove);
+        // horizontalMatch
+        int startA = lineA[0].x;
+        int startB = lineB[0].x;
+        int endA = lineA[1].x;
+        int endB = lineB[1].x;
+        if (verticalMatch) {
+            // verticalMatch
+            startA = lineA[0].y;
+            startB = lineB[0].y;
+            endA = lineA[1].y;
+            endB = lineB[1].y;
+        }
+        if (horizontalMatch || verticalMatch) {
+            // is lineA within lineB
+            // is lineB within lineA
+            if (startA < startB && startA > endB) {
+                return true;
+            } else if (startA > startB && startA < endB) {
+                return true;
+            } else if (startB < startA && startB > endA) {
+                return true;
+            } else if (startB > startA && startB < endA) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void separateOverlappingLines() {
