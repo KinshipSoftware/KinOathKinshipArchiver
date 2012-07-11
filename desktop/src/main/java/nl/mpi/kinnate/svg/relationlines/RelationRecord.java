@@ -58,11 +58,14 @@ public class RelationRecord {
     }
 
     public String getPathPointsString() {
+        String returnValue;
         if (curveLinePoints != null) {
-            return curveLinePoints;
+            returnValue = curveLinePoints;
         } else {
-            return lineRecord.getPointsAttribute();
+            returnValue = lineRecord.getPointsAttribute();
         }
+//        System.out.println("getPathPointsString: " + returnValue);
+        return returnValue;
     }
 
     public void updatePathPoints(LineLookUpTable lineLookUpTable) throws OldFormatException {
