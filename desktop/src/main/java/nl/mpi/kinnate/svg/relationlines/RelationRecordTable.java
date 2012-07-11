@@ -40,6 +40,7 @@ public class RelationRecordTable {
         for (RelationRecord relationRecord : recordStore.values()) {
             relationRecord.updatePathPoints(lineLookUpTable);
         }
+        lineLookUpTable.separateOverlappingLines();
         lineLookUpTable.addLoops();
     }
 }
