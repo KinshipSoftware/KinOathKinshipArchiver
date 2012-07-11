@@ -197,30 +197,35 @@ public class LineRecord {
     private boolean addCurveLoops(StringBuilder stringBuilder, int segmentIndex, int separationDistance) {
         // add loops in the correct direction for the line
         boolean lineToRequired = false;
+        Point lastPoint = null;
         for (IntersectionRecord intersectionRecord : intersectionList) {
-            int separationDistanceDirected;
-            if (intersectionRecord.isLeftHand) {
-                separationDistanceDirected = -separationDistance;
-            } else {
-                separationDistanceDirected = separationDistance;
-            }
-            if (intersectionRecord.lineSegment == segmentIndex) {
-                if (lineToRequired) {
-                    stringBuilder.append("L ");
+            // prevent two loops being placed over the top in the same spot
+            if (lastPoint == null || !lastPoint.equals(intersectionRecord.intersectionPoint)) {
+                lastPoint = intersectionRecord.intersectionPoint;
+                int separationDistanceDirected;
+                if (intersectionRecord.isLeftHand) {
+                    separationDistanceDirected = -separationDistance;
+                } else {
+                    separationDistanceDirected = separationDistance;
                 }
-                stringBuilder.append(intersectionRecord.intersectionPoint.x - separationDistanceDirected / 2);
-                stringBuilder.append(",");
-                stringBuilder.append(intersectionRecord.intersectionPoint.y);
-                stringBuilder.append(" ");
-                stringBuilder.append("s ");
-                stringBuilder.append(separationDistanceDirected / 2);
-                stringBuilder.append(",");
-                stringBuilder.append(-separationDistance);
-                stringBuilder.append(" ");
-                stringBuilder.append(separationDistanceDirected);
-                stringBuilder.append(",0 ");
+                if (intersectionRecord.lineSegment == segmentIndex) {
+                    if (lineToRequired) {
+                        stringBuilder.append("L ");
+                    }
+                    stringBuilder.append(intersectionRecord.intersectionPoint.x - separationDistanceDirected / 2);
+                    stringBuilder.append(",");
+                    stringBuilder.append(intersectionRecord.intersectionPoint.y);
+                    stringBuilder.append(" ");
+                    stringBuilder.append("s ");
+                    stringBuilder.append(separationDistanceDirected / 2);
+                    stringBuilder.append(",");
+                    stringBuilder.append(-separationDistance);
+                    stringBuilder.append(" ");
+                    stringBuilder.append(separationDistanceDirected);
+                    stringBuilder.append(",0 ");
 //                stringBuilder.append("L ");
-                lineToRequired = true;
+                    lineToRequired = true;
+                }
             }
         }
         return lineToRequired;
