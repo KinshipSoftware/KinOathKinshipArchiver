@@ -78,7 +78,8 @@ public class LineLookUpTable {
                         while (currentVertical > -1) {
                             Point[] currentVerticalLine = lineRecord.getSegment(currentVertical);
                             if (intersects(currentHorizontalLine, currentVerticalLine)) {
-                                lineRecordForLoops.insertLoop(currentHorizontal, currentVerticalLine[0].x);
+                                boolean isLeftHand = currentHorizontalLine[0].x > currentHorizontalLine[1].x;
+                                lineRecordForLoops.insertLoop(currentHorizontal, currentVerticalLine[0].x, isLeftHand);
                             }
                             currentVertical = lineRecord.getNextVertical(currentVertical);
                         }
