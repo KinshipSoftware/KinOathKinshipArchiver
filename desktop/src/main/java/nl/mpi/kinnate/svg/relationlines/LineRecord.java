@@ -15,12 +15,24 @@ public class LineRecord {
         horizontal, vertical
     };
 
+    private class IntersectionRecord {
+
+        int lineSegment;
+        Point intersectionPoint;
+
+        public IntersectionRecord(int lineSegment, Point intersectionPoint) {
+            this.lineSegment = lineSegment;
+            this.intersectionPoint = intersectionPoint;
+        }
+    }
+
     public LineRecord(String lineIdString, ArrayList<Point> pointsList) {
         this.lineIdSring = lineIdString;
         this.pointsList = pointsList;
     }
     private String lineIdSring;
     private ArrayList<Point> pointsList;
+    private ArrayList<IntersectionRecord> intersectionList = new ArrayList<IntersectionRecord>();
 
 //        private Point getIntersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
 //            double denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
@@ -128,43 +140,76 @@ public class LineRecord {
     }
 
     public void insertLoop(int linePart, int positionX) {
-//        System.out.println("insertLoop");
-        // todo: this is test needs to be extended to place the loops in the correct locations and to produce pretty curved loops
         Point startPoint = this.pointsList.get(linePart);
-        Point endPoint = this.pointsList.get(linePart + 1);
         int centerX = positionX;
         int centerY = startPoint.y;
-        int startOffset = -5;
-        int endOffset = +5;
-        int loopHeight = -10;
-//            if (startPoint.x == endPoint.x) {
-//                // horizontal lines
-//                if (startPoint.y < endPoint.y) {
-//                    startOffset = +5;
-//                    endOffset = -5;
-//                }
-//                this.pointsList.add(linePart + 1, new Point(centerX, centerY + startOffset));
-//                this.pointsList.add(linePart + 1, new Point(centerX + loopHeight, centerY + startOffset));
-//                this.pointsList.add(linePart + 1, new Point(centerX + loopHeight, centerY + endOffset));
-//                this.pointsList.add(linePart + 1, new Point(centerX, centerY + endOffset));
-//            } else {
-        // vertical lines
-        if (startPoint.x < endPoint.x) {
-            startOffset = +5;
-            endOffset = -5;
-        }
-        this.pointsList.add(linePart + 1, new Point(centerX + startOffset, centerY));
-        this.pointsList.add(linePart + 1, new Point(centerX + startOffset, centerY + loopHeight));
-        this.pointsList.add(linePart + 1, new Point(centerX + endOffset, centerY + loopHeight));
-        this.pointsList.add(linePart + 1, new Point(centerX + endOffset, centerY));
+        Point intersectionPoint = new Point(centerX, centerY);
+        intersectionList.add(new IntersectionRecord(linePart, intersectionPoint));
+//        System.out.println("insertLoop");
+        // todo: this is test needs to be extended to place the loops in the correct locations and to produce pretty curved loops
+//        
+//        Point endPoint = this.pointsList.get(linePart + 1);
+//        int startOffset = -5;
+//        int endOffset = +5;
+//        int loopHeight = -10;
+////            if (startPoint.x == endPoint.x) {
+////                // horizontal lines
+////                if (startPoint.y < endPoint.y) {
+////                    startOffset = +5;
+////                    endOffset = -5;
+////                }
+////                this.pointsList.add(linePart + 1, new Point(centerX, centerY + startOffset));
+////                this.pointsList.add(linePart + 1, new Point(centerX + loopHeight, centerY + startOffset));
+////                this.pointsList.add(linePart + 1, new Point(centerX + loopHeight, centerY + endOffset));
+////                this.pointsList.add(linePart + 1, new Point(centerX, centerY + endOffset));
+////            } else {
+//        // vertical lines
+//        if (startPoint.x < endPoint.x) {
+//            startOffset = +5;
+//            endOffset = -5;
+//        }
+//        this.pointsList.add(linePart + 1, new Point(centerX + startOffset, centerY));
+//        this.pointsList.add(linePart + 1, new Point(centerX + startOffset, centerY + loopHeight));
+//        this.pointsList.add(linePart + 1, new Point(centerX + endOffset, centerY + loopHeight));
+//        this.pointsList.add(linePart + 1, new Point(centerX + endOffset, centerY));
 //            }
     }
 
+    private boolean addCurveLoops(StringBuilder stringBuilder, int segmentIndex, int separationDistance) {
+        // todo: sort the intersection points so that the lines are in the correct direction 
+        // currently assuming left to right
+        boolean lineToRequired = false;
+        for (IntersectionRecord intersectionRecord : intersectionList) {
+            if (intersectionRecord.lineSegment == segmentIndex) {
+                if (lineToRequired) {
+                    stringBuilder.append("L ");
+                }
+                stringBuilder.append(intersectionRecord.intersectionPoint.x - separationDistance / 2);
+                stringBuilder.append(",");
+                stringBuilder.append(intersectionRecord.intersectionPoint.y);
+                stringBuilder.append(" ");
+                stringBuilder.append("s ");
+                stringBuilder.append(separationDistance / 2);
+                stringBuilder.append(",");
+                stringBuilder.append(-separationDistance);
+                stringBuilder.append(" ");
+                stringBuilder.append(separationDistance);
+                stringBuilder.append(",0 ");
+//                stringBuilder.append("L ");
+                lineToRequired = true;
+            }
+        }
+        return lineToRequired;
+    }
+
     public String getPointsAttribute() {
+        int separationDistance = 12;
         StringBuilder stringBuilder = new StringBuilder();
         boolean moveRequired = true;
         boolean lineToRequired = true;
-        for (Point currentPoint : this.pointsList.toArray(new Point[]{})) {
+        for (int segmentIndex = 0; segmentIndex < this.pointsList.size(); segmentIndex++) {
+//        for (Point currentPoint : this.pointsList.toArray(new Point[]{})) {
+            Point currentPoint = this.pointsList.get(segmentIndex);
             if (moveRequired) {
                 moveRequired = false;
                 stringBuilder.append("M ");
@@ -176,6 +221,11 @@ public class LineRecord {
             stringBuilder.append(",");
             stringBuilder.append(currentPoint.y);
             stringBuilder.append(" ");
+            if (lineToRequired) {
+                lineToRequired = false;
+                stringBuilder.append("L ");
+            }
+            lineToRequired = addCurveLoops(stringBuilder, segmentIndex, separationDistance);
         }
         return (stringBuilder.toString());
     }
