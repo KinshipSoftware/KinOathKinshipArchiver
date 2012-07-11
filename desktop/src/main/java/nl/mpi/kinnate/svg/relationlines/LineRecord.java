@@ -97,12 +97,12 @@ public class LineRecord {
             Point endPoint = pointsList.get(currentIndex + 1);
             switch (orientation) {
                 case horizontal:
-                    if (startPoint.y == endPoint.y) {
+                    if (startPoint.x != endPoint.x) {
                         return currentIndex;
                     }
                     break;
                 case vertical:
-                    if (startPoint.x == endPoint.x) {
+                    if (startPoint.y != endPoint.y) {
                         return currentIndex;
                     }
                     break;
@@ -117,12 +117,12 @@ public class LineRecord {
             Point endPoint = pointsList.get(currentIndex + 1);
             switch (orientation) {
                 case horizontal:
-                    if (startPoint.y == endPoint.y) {
+                    if (startPoint.x != endPoint.x) {
                         return currentIndex;
                     }
                     break;
                 case vertical:
-                    if (startPoint.x == endPoint.x) {
+                    if (startPoint.y != endPoint.y) {
                         return currentIndex;
                     }
                     break;
