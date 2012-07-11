@@ -31,16 +31,50 @@ public class LineLookUpTable {
         return (startsBefore != endsBefore && startsAbove != endsAbove);
     }
 
+    private boolean overlaps(Point[] lineA, Point[] lineB) {
+        // todo: complete this comparison
+        boolean verticalMatch = lineA[0].x == lineB[0].x && lineA[0].x == lineB[1].x && lineA[0].x == lineA[1].x;
+        boolean horizontalMatch = lineA[0].y == lineB[0].y && lineA[0].y == lineB[1].y && lineA[0].y == lineA[1].y;
+//        System.out.println("horizontalMatch || verticalMatch:" + horizontalMatch + ":" + verticalMatch);
+        return horizontalMatch || verticalMatch;
+//
+//        boolean startsBefore = lineA[0].x <= lineB[0].x;
+//        boolean endsBefore = lineA[1].x <= lineB[0].x;
+//        boolean startsAbove = lineB[0].y <= lineA[0].y;
+//        boolean endsAbove = lineB[1].y <= lineA[0].y;
+//        return (startsBefore != endsBefore && startsAbove != endsAbove);
+    }
+
+    public void separateOverlappingLines() {
+        for (LineRecord lineRecordForLoops : lineRecords) {
+            for (int currentIndexA = lineRecordForLoops.getLastSegment(); currentIndexA > -1; currentIndexA--) {
+                Point[] currentSegmentA = lineRecordForLoops.getSegment(currentIndexA);
+//                System.out.println("currentHorizontal: " + currentHorizontal);
+                for (LineRecord lineRecord : lineRecords) {
+                    if (lineRecord != lineRecordForLoops) {
+                        for (int currentIndexB = 0; currentIndexB <= lineRecord.getLastSegment(); currentIndexB++) {
+                            Point[] otherHorizontalLine = lineRecord.getSegment(currentIndexB);
+                            if (overlaps(currentSegmentA, otherHorizontalLine)) {
+                                lineRecordForLoops.moveAside(currentIndexA, 6);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
     public void addLoops() {
         for (LineRecord lineRecordForLoops : lineRecords) {
             int currentHorizontal = lineRecordForLoops.getLastHorizontal();
-            Point[] currentHorizontalLine = lineRecordForLoops.getSegment(currentHorizontal);
             while (currentHorizontal > -1) {
-                System.out.println("currentHorizontal: " + currentHorizontal);
+                Point[] currentHorizontalLine = lineRecordForLoops.getSegment(currentHorizontal);
+//                System.out.println("currentHorizontal: " + currentHorizontal);
                 for (LineRecord lineRecord : lineRecords) {
                     if (lineRecord != lineRecordForLoops) {
                         int currentVertical = lineRecord.getFirstVertical();
-                        System.out.println("currentVertical: " + currentVertical);
+//                        System.out.println("currentVertical: " + currentVertical);
                         while (currentVertical > -1) {
                             Point[] currentVerticalLine = lineRecord.getSegment(currentVertical);
                             if (intersects(currentHorizontalLine, currentVerticalLine)) {
