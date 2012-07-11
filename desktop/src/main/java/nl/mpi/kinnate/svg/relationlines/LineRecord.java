@@ -84,7 +84,7 @@ public class LineRecord {
     }
 
     protected int getFirstVertical() {
-        return getNextHorizontal(-1);
+        return getNextVertical(-1);
     }
 
     protected int getNextVertical(int current) {
