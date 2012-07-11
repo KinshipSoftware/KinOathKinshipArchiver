@@ -35,6 +35,10 @@ public class LineRecord {
 //            }
 //            return null;
 //        }
+    protected int getLastSegment() {
+        return pointsList.size() - 2;
+    }
+
     // sanguine lines are either horizontal or vertical but never diagonal so this makes the following calculations simpler
     protected int getLastHorizontal() {
         return getPrevHorizontal(pointsList.size() - 1);
@@ -109,8 +113,22 @@ public class LineRecord {
 //        // todo: get the actual intersections and insert loops
 //        // todo: in RelationSVG on first load the lineLookUpTable is null and loops will not be drawn
 //    }
+    public void moveAside(int linePart, int distance) {
+        Point startPoint = this.pointsList.get(linePart);
+        Point endPoint = this.pointsList.get(linePart + 1);
+        if (startPoint.x == endPoint.x) {
+            startPoint.setLocation(startPoint.x - distance, startPoint.y);
+            endPoint.setLocation(endPoint.x - distance, endPoint.y);
+        } else {
+            startPoint.setLocation(startPoint.x, startPoint.y - distance);
+            endPoint.setLocation(endPoint.x, endPoint.y - distance);
+        }
+//        this.pointsList.set(linePart, new Point(startPoint.x, startPoint.y - 3));
+//        this.pointsList.set(linePart + 1, new Point(endPoint.x, endPoint.y - 3));
+    }
+
     public void insertLoop(int linePart, int positionX) {
-        System.out.println("insertLoop");
+//        System.out.println("insertLoop");
         // todo: this is test needs to be extended to place the loops in the correct locations and to produce pretty curved loops
         Point startPoint = this.pointsList.get(linePart);
         Point endPoint = this.pointsList.get(linePart + 1);
