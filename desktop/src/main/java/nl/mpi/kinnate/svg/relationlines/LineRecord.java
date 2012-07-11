@@ -227,7 +227,7 @@ public class LineRecord {
     }
 
     public String getPointsAttribute() {
-        int separationDistance = 12;
+        int separationDistance = 8;
         StringBuilder stringBuilder = new StringBuilder();
         boolean moveRequired = true;
         boolean lineToRequired = true;
