@@ -2,6 +2,7 @@ package nl.mpi.kinnate.svg.relationlines;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Document : LineRecord
@@ -15,7 +16,7 @@ public class LineRecord {
         horizontal, vertical
     };
 
-    private class IntersectionRecord {
+    private class IntersectionRecord implements Comparable<IntersectionRecord> {
 
         int lineSegment;
         Point intersectionPoint;
@@ -25,6 +26,18 @@ public class LineRecord {
             this.lineSegment = lineSegment;
             this.intersectionPoint = intersectionPoint;
             this.isLeftHand = isLeftHand;
+        }
+
+        public int compareTo(IntersectionRecord o) {
+            if (lineSegment != o.lineSegment) {
+                return lineSegment - o.lineSegment;
+            } else {
+                if (!this.isLeftHand) {
+                    return intersectionPoint.x - o.intersectionPoint.x;
+                } else {
+                    return o.intersectionPoint.x - intersectionPoint.x;
+                }
+            }
         }
     }
 
@@ -141,6 +154,10 @@ public class LineRecord {
 //        this.pointsList.set(linePart + 1, new Point(endPoint.x, endPoint.y - 3));
     }
 
+    public void sortLoops() {
+        Collections.sort(intersectionList);
+    }
+
     public void insertLoop(int linePart, int positionX, boolean isLeftHand) {
         Point startPoint = this.pointsList.get(linePart);
         int centerX = positionX;
@@ -178,8 +195,7 @@ public class LineRecord {
     }
 
     private boolean addCurveLoops(StringBuilder stringBuilder, int segmentIndex, int separationDistance) {
-        // todo: sort the intersection points so that the lines are in the correct direction 
-        // currently assuming left to right
+        // add loops in the correct direction for the line
         boolean lineToRequired = false;
         for (IntersectionRecord intersectionRecord : intersectionList) {
             int separationDistanceDirected;
