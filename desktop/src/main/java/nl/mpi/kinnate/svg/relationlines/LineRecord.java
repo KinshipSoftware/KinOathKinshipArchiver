@@ -19,10 +19,12 @@ public class LineRecord {
 
         int lineSegment;
         Point intersectionPoint;
+        boolean isLeftHand;
 
-        public IntersectionRecord(int lineSegment, Point intersectionPoint) {
+        public IntersectionRecord(int lineSegment, Point intersectionPoint, boolean isLeftHand) {
             this.lineSegment = lineSegment;
             this.intersectionPoint = intersectionPoint;
+            this.isLeftHand = isLeftHand;
         }
     }
 
@@ -139,12 +141,12 @@ public class LineRecord {
 //        this.pointsList.set(linePart + 1, new Point(endPoint.x, endPoint.y - 3));
     }
 
-    public void insertLoop(int linePart, int positionX) {
+    public void insertLoop(int linePart, int positionX, boolean isLeftHand) {
         Point startPoint = this.pointsList.get(linePart);
         int centerX = positionX;
         int centerY = startPoint.y;
         Point intersectionPoint = new Point(centerX, centerY);
-        intersectionList.add(new IntersectionRecord(linePart, intersectionPoint));
+        intersectionList.add(new IntersectionRecord(linePart, intersectionPoint, isLeftHand));
 //        System.out.println("insertLoop");
         // todo: this is test needs to be extended to place the loops in the correct locations and to produce pretty curved loops
 //        
@@ -180,20 +182,26 @@ public class LineRecord {
         // currently assuming left to right
         boolean lineToRequired = false;
         for (IntersectionRecord intersectionRecord : intersectionList) {
+            int separationDistanceDirected;
+            if (intersectionRecord.isLeftHand) {
+                separationDistanceDirected = -separationDistance;
+            } else {
+                separationDistanceDirected = separationDistance;
+            }
             if (intersectionRecord.lineSegment == segmentIndex) {
                 if (lineToRequired) {
                     stringBuilder.append("L ");
                 }
-                stringBuilder.append(intersectionRecord.intersectionPoint.x - separationDistance / 2);
+                stringBuilder.append(intersectionRecord.intersectionPoint.x - separationDistanceDirected / 2);
                 stringBuilder.append(",");
                 stringBuilder.append(intersectionRecord.intersectionPoint.y);
                 stringBuilder.append(" ");
                 stringBuilder.append("s ");
-                stringBuilder.append(separationDistance / 2);
+                stringBuilder.append(separationDistanceDirected / 2);
                 stringBuilder.append(",");
                 stringBuilder.append(-separationDistance);
                 stringBuilder.append(" ");
-                stringBuilder.append(separationDistance);
+                stringBuilder.append(separationDistanceDirected);
                 stringBuilder.append(",0 ");
 //                stringBuilder.append("L ");
                 lineToRequired = true;
