@@ -9,6 +9,7 @@ import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.OldFormatException;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  * Document : RelationRecordTable
@@ -76,6 +77,7 @@ public class RelationRecordTable {
         }
     }
 
+//    public String getParentPointIdentifier(EntityData currentNode, EntityRelation graphLinkNode) {
     public boolean hasCommonParent(EntityData currentNode, EntityRelation graphLinkNode) {
         if (graphLinkNode.getRelationType() == DataTypes.RelationType.sibling) {
             for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getAllRelations()) {
@@ -101,6 +103,16 @@ public class RelationRecordTable {
 
     public Collection<RelationRecord> getAllRecords() {
         return recordStore.values();
+    }
+
+    public ArrayList<RelationRecord> getRecordsForSelection(ArrayList<UniqueIdentifier> selectedIdentifiers) {
+        ArrayList<RelationRecord> returnRecords = new ArrayList<RelationRecord>();
+        for (RelationRecord relationRecord : recordStore.values()) {
+            if (relationRecord.pertainsToEntity(selectedIdentifiers)) {
+                returnRecords.add(relationRecord);
+            }
+        }
+        return returnRecords;
     }
 
     public int size() {
