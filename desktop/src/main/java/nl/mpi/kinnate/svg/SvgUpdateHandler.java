@@ -96,7 +96,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void updateSanguineHighlights(Element entityGroup) {
+    private void createRelationLineHighlights(Element entityGroup) {
         // this is used to draw the highlighted relations for the selected entities
         // this must be only called from within a svg runnable
         removeRelationHighLights();
@@ -426,7 +426,7 @@ public class SvgUpdateHandler {
                                 }
                                 isLeadSelection = false;
                             }
-                            updateSanguineHighlights(graphPanel.doc.getElementById("EntityGroup"));
+                            createRelationLineHighlights(graphPanel.doc.getElementById("EntityGroup"));
                         }
                     }
                     // Em:1:FMDH:1:
@@ -594,7 +594,7 @@ public class SvgUpdateHandler {
                             int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); // graphPanel.dataStoreSvg.graphData.gridHeight);
                             int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
                             new RelationSvg(dialogHandler).updateRelationLines(graphPanel, relationRecords, graphPanel.selectedGroupId, hSpacing, vSpacing);
-                            updateSanguineHighlights(entityGroup);
+                            createRelationLineHighlights(entityGroup);
                             //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                         }
                         // graphPanel.updateCanvasSize(); // updating the canvas size here is too slow so it is moved into the drag ended 
