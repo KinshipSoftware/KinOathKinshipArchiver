@@ -223,29 +223,28 @@ public class DataStoreSvg {
         visiblePanels.add(new VisiblePanelSetting(panelType, panelVisible, panelWidth));
     }
 
-    public GraphRelationData getEntitiesForRelations(Node relationGroup) throws IdentifierException {
-        for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
-            if ("RelationEntities".equals(currentChild.getLocalName())) {
-                GraphRelationData graphRelationData = new GraphRelationData();
-                graphRelationData.egoNodeId = new UniqueIdentifier(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "ego").getNodeValue());
-                graphRelationData.alterNodeId = new UniqueIdentifier(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "alter").getNodeValue());
-                graphRelationData.relationType = DataTypes.RelationType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "relationType").getNodeValue());
-                graphRelationData.curveLineOrientation = CurveLineOrientation.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "curveLineOrientation").getNodeValue());
-                return graphRelationData;
-            }
-        }
-        return null;
-    }
-
-    public void storeRelationParameters(SVGDocument doc, Element relationGroup, DataTypes.RelationType relationType, CurveLineOrientation curveLineOrientation, UniqueIdentifier egoEntity, UniqueIdentifier alterEntity) {
-        Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:relationType", relationType.name());
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:ego", egoEntity.getAttributeIdentifier());
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:alter", alterEntity.getAttributeIdentifier());
-        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:curveLineOrientation", curveLineOrientation.name());
-        relationGroup.appendChild(dataRecordNode);
-    }
-
+//    public GraphRelationData getEntitiesForRelations(Node relationGroup) throws IdentifierException {
+//        for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
+//            if ("RelationEntities".equals(currentChild.getLocalName())) {
+//                GraphRelationData graphRelationData = new GraphRelationData();
+//                graphRelationData.egoNodeId = new UniqueIdentifier(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "ego").getNodeValue());
+//                graphRelationData.alterNodeId = new UniqueIdentifier(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "alter").getNodeValue());
+//                graphRelationData.relationType = DataTypes.RelationType.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "relationType").getNodeValue());
+//                graphRelationData.curveLineOrientation = CurveLineOrientation.valueOf(currentChild.getAttributes().getNamedItemNS(kinDataNameSpace, "curveLineOrientation").getNodeValue());
+//                return graphRelationData;
+//            }
+//        }
+//        return null;
+//    }
+//
+//    public void storeRelationParameters(SVGDocument doc, Element relationGroup, DataTypes.RelationType relationType, CurveLineOrientation curveLineOrientation, UniqueIdentifier egoEntity, UniqueIdentifier alterEntity) {
+//        Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:RelationEntities");
+//        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:relationType", relationType.name());
+//        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:ego", egoEntity.getAttributeIdentifier());
+//        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:alter", alterEntity.getAttributeIdentifier());
+//        dataRecordNode.setAttributeNS(kinDataNameSpace, "kin:curveLineOrientation", curveLineOrientation.name());
+//        relationGroup.appendChild(dataRecordNode);
+//    }
 //    private void storeParameter(SVGDocument doc, Element dataStoreElement, String parameterName, String[] ParameterValues) {
 //        for (String currentKinType : ParameterValues) {
 //            Element dataRecordNode = doc.createElementNS(kinDataNameSpace, "kin:" + parameterName);
