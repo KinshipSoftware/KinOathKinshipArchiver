@@ -54,19 +54,19 @@ public class LineLookUpTable {
         if (horizontalMatch || verticalMatch) {
             // is lineA within lineB
             // is lineB within lineA
-            if (startA < startB && startA > endB) {
+            if (startA <= startB && startA >= endB) {
 //                System.out.print(horizontalMatch + "||" + verticalMatch);
 //                System.out.print("x");
                 return true;
-            } else if (startA > startB && startA < endB) {
+            } else if (startA >= startB && startA <= endB) {
 //                System.out.print(horizontalMatch + "||" + verticalMatch);
 //                System.out.print("y");
                 return true;
-            } else if (startB < startA && startB > endA) {
+            } else if (startB <= startA && startB >= endA) {
 //                System.out.print(horizontalMatch + "||" + verticalMatch);
 //                System.out.print("z");
                 return true;
-            } else if (startB > startA && startB < endA) {
+            } else if (startB >= startA && startB <= endA) {
 //                System.out.print(horizontalMatch + "||" + verticalMatch);
 //                System.out.print("w");
                 return true;
@@ -80,7 +80,7 @@ public class LineLookUpTable {
         for (int lineRecordCount = 0; lineRecordCount < lineRecordArray.length; lineRecordCount++) {
 //            System.out.print(lineRecordCount + ": ");
             LineRecord lineRecordOuter = lineRecordArray[lineRecordCount];
-            for (int currentIndexA = lineRecordOuter.getLastSegment(); currentIndexA > -1; currentIndexA--) {
+            for (int currentIndexA = 0; currentIndexA <= lineRecordOuter.getLastSegment(); currentIndexA++) {
                 Point[] currentSegmentA = lineRecordOuter.getSegment(currentIndexA);
 //                System.out.print("[a" + currentIndexA + "]");
                 for (int lineRecordInnerCount = lineRecordCount + 1; lineRecordInnerCount < lineRecordArray.length; lineRecordInnerCount++) {
@@ -98,7 +98,6 @@ public class LineLookUpTable {
                         }
                     }
                 }
-
             }
 //            System.out.println("");
         }
