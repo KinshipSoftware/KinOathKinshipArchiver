@@ -898,70 +898,18 @@ public class SvgUpdateHandler {
                 }
             }
             RelationSvg relationSvg = new RelationSvg(dialogHandler);
-            ArrayList<String> doneRelations = new ArrayList<String>();
             for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getAllRelations()) {
                         if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.getRelationType() != DataTypes.RelationType.kinterm)
                                 && (graphPanel.dataStoreSvg.showSanguineLines || !DataTypes.isSanguinLine(graphLinkNode.getRelationType()))
                                 && (graphLinkNode.getAlterNode() != null && graphLinkNode.getAlterNode().isVisible)) {
-                            // make directed and exclude any lines that are already done
-                            DataTypes.RelationType directedRelation = graphLinkNode.getRelationType();
-                            EntityData leftEntity;
-                            EntityData rightEntity;
-                            if (graphLinkNode.getRelationType() == DataTypes.RelationType.descendant) {
-                                // make sure the ancestral relations are unidirectional
-                                directedRelation = DataTypes.RelationType.ancestor;
-                                leftEntity = graphLinkNode.getAlterNode();
-                                rightEntity = currentNode;
-                            } else if (graphLinkNode.getRelationType() == DataTypes.RelationType.ancestor) {
-                                // make sure the ancestral relations are unidirectional
-                                leftEntity = currentNode;
-                                rightEntity = graphLinkNode.getAlterNode();
-                            } else if (currentNode.getUniqueIdentifier().getQueryIdentifier().compareTo(graphLinkNode.getAlterNode().getUniqueIdentifier().getQueryIdentifier()) > 0) {
-                                // make sure all other relations are directed by the string sort order so that they can be made unique
-                                leftEntity = graphLinkNode.getAlterNode();
-                                rightEntity = currentNode;
-                            } else {
-                                // make sure all other relations are directed by the string sort order so that they can be made unique
-                                leftEntity = currentNode;
-                                rightEntity = graphLinkNode.getAlterNode();
-                            }
-                            String compoundIdentifier = leftEntity.getUniqueIdentifier().getQueryIdentifier() + rightEntity.getUniqueIdentifier().getQueryIdentifier() + directedRelation.name() + ":" + graphLinkNode.dcrType + ":" + graphLinkNode.customType;
-                            // make sure each equivalent relation is drawn only once
-                            if (!doneRelations.contains(compoundIdentifier)) {
-                                boolean skipCurrentRelation = false;
-                                if (DataTypes.isSanguinLine(graphLinkNode.getRelationType())) {
-                                    if (relationSvg.hasCommonParent(leftEntity, graphLinkNode)) {
-                                        // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
-                                        skipCurrentRelation = true;
-                                    }
-                                }
-                                if (!skipCurrentRelation) {
-                                    doneRelations.add(compoundIdentifier);
-                                    String lineColour = graphLinkNode.lineColour;
-                                    CurveLineOrientation curveLineOrientation = CurveLineOrientation.horizontal;
-                                    int lineWidth = EntitySvg.strokeWidth;
-                                    int lineDash = 0;
-                                    if (lineColour == null) {
-                                        for (RelationTypeDefinition relationTypeDefinition : graphPanel.dataStoreSvg.getRelationTypeDefinitions()) {
-                                            if (relationTypeDefinition.matchesType(graphLinkNode)) {
-                                                lineColour = relationTypeDefinition.getLineColour();
-                                                lineWidth = relationTypeDefinition.getLineWidth();
-                                                curveLineOrientation = relationTypeDefinition.getCurveLineOrientation();
-                                                lineDash = relationTypeDefinition.getLineDash();
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    try {
-                                        relationRecords.addRecord(graphPanel, relationRecords.size(), leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
-                                    } catch (OldFormatException exception) {
-                                        if (!oldFormatWarningShown) {
-                                            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
-                                            oldFormatWarningShown = true;
-                                        }
-                                    }
+                            try {
+                                relationRecords.addRecord(graphPanel, currentNode, graphLinkNode, hSpacing, vSpacing, EntitySvg.strokeWidth);
+                            } catch (OldFormatException exception) {
+                                if (!oldFormatWarningShown) {
+                                    dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
+                                    oldFormatWarningShown = true;
                                 }
                             }
                         }
