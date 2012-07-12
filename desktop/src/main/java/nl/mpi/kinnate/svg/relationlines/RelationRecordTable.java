@@ -22,47 +22,47 @@ public class RelationRecordTable {
     LineLookUpTable lineLookUpTable;
     ArrayList<String> doneRelations = new ArrayList<String>();
 
-    public void addRecord(GraphPanel graphPanel, EntityData currentNode, EntityRelation graphLinkNode, int hSpacing, int vSpacing, int lineWidth) throws OldFormatException {
+    public void addRecord(GraphPanel graphPanel, EntityData entityData, EntityRelation entityRelation, int hSpacing, int vSpacing, int lineWidth) throws OldFormatException {
         // make directed and exclude any lines that are already done
-        DataTypes.RelationType directedRelation = graphLinkNode.getRelationType();
+        DataTypes.RelationType directedRelation = entityRelation.getRelationType();
         EntityData leftEntity;
         EntityData rightEntity;
-        if (graphLinkNode.getRelationType() == DataTypes.RelationType.descendant) {
+        if (entityRelation.getRelationType() == DataTypes.RelationType.descendant) {
             // make sure the ancestral relations are unidirectional
             directedRelation = DataTypes.RelationType.ancestor;
-            leftEntity = graphLinkNode.getAlterNode();
-            rightEntity = currentNode;
-        } else if (graphLinkNode.getRelationType() == DataTypes.RelationType.ancestor) {
+            leftEntity = entityRelation.getAlterNode();
+            rightEntity = entityData;
+        } else if (entityRelation.getRelationType() == DataTypes.RelationType.ancestor) {
             // make sure the ancestral relations are unidirectional
-            leftEntity = currentNode;
-            rightEntity = graphLinkNode.getAlterNode();
-        } else if (currentNode.getUniqueIdentifier().getQueryIdentifier().compareTo(graphLinkNode.getAlterNode().getUniqueIdentifier().getQueryIdentifier()) > 0) {
+            leftEntity = entityData;
+            rightEntity = entityRelation.getAlterNode();
+        } else if (entityData.getUniqueIdentifier().getQueryIdentifier().compareTo(entityRelation.getAlterNode().getUniqueIdentifier().getQueryIdentifier()) > 0) {
             // make sure all other relations are directed by the string sort order so that they can be made unique
-            leftEntity = graphLinkNode.getAlterNode();
-            rightEntity = currentNode;
+            leftEntity = entityRelation.getAlterNode();
+            rightEntity = entityData;
         } else {
             // make sure all other relations are directed by the string sort order so that they can be made unique
-            leftEntity = currentNode;
-            rightEntity = graphLinkNode.getAlterNode();
+            leftEntity = entityData;
+            rightEntity = entityRelation.getAlterNode();
         }
-        String compoundIdentifier = leftEntity.getUniqueIdentifier().getQueryIdentifier() + rightEntity.getUniqueIdentifier().getQueryIdentifier() + directedRelation.name() + ":" + graphLinkNode.dcrType + ":" + graphLinkNode.customType;
+        String compoundIdentifier = leftEntity.getUniqueIdentifier().getQueryIdentifier() + rightEntity.getUniqueIdentifier().getQueryIdentifier() + directedRelation.name() + ":" + entityRelation.dcrType + ":" + entityRelation.customType;
         // make sure each equivalent relation is drawn only once
         if (!doneRelations.contains(compoundIdentifier)) {
             boolean skipCurrentRelation = false;
-            if (DataTypes.isSanguinLine(graphLinkNode.getRelationType())) {
-                if (hasCommonParent(leftEntity, graphLinkNode)) {
+            if (DataTypes.isSanguinLine(entityRelation.getRelationType())) {
+                if (hasCommonParent(leftEntity, entityRelation)) {
                     // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
                     skipCurrentRelation = true;
                 }
             }
             if (!skipCurrentRelation) {
                 doneRelations.add(compoundIdentifier);
-                String lineColour = graphLinkNode.lineColour;
+                String lineColour = entityRelation.lineColour;
                 RelationTypeDefinition.CurveLineOrientation curveLineOrientation = RelationTypeDefinition.CurveLineOrientation.horizontal;
                 int lineDash = 0;
                 if (lineColour == null) {
                     for (RelationTypeDefinition relationTypeDefinition : graphPanel.dataStoreSvg.getRelationTypeDefinitions()) {
-                        if (relationTypeDefinition.matchesType(graphLinkNode)) {
+                        if (relationTypeDefinition.matchesType(entityRelation)) {
                             lineColour = relationTypeDefinition.getLineColour();
                             lineWidth = relationTypeDefinition.getLineWidth();
                             curveLineOrientation = relationTypeDefinition.getCurveLineOrientation();
@@ -71,7 +71,7 @@ public class RelationRecordTable {
                         }
                     }
                 }
-                RelationRecord relationRecord = new RelationRecord(graphPanel, this.size(), leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, graphLinkNode.labelString, hSpacing, vSpacing);
+                RelationRecord relationRecord = new RelationRecord(graphPanel, this.size(), leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, entityRelation.labelString, hSpacing, vSpacing);
                 recordStore.put(relationRecord.lineIdString, relationRecord);
             }
         }
