@@ -105,55 +105,26 @@ public class SvgUpdateHandler {
             Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
             relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
             entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
-            Element relationsGroup = graphPanel.doc.getElementById("RelationGroup");
-            for (Node currentRelation = relationsGroup.getFirstChild(); currentRelation != null; currentRelation = currentRelation.getNextSibling()) {
-                Node dataElement = currentRelation.getFirstChild();
-                if (dataElement != null && dataElement.hasAttributes()) {
-                    NamedNodeMap dataAttributes = dataElement.getAttributes();
-//                    if (DataTypes.isSanguinLine(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "relationType").getNodeValue())) {
-                    Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
-                    try {
-                        if (graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue())) || graphPanel.selectedGroupId.contains(new UniqueIdentifier(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue()))) {
-                            // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
-//                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
-//                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
-//                                            useNode.setAttributeNS(null, "stroke", "blue");
-//                                            relationHighlightGroup.appendChild(useNode);
-
-                            // try creating a new node based on the original lines attributes (these lines do not get updated when a node is dragged)
-                            // as a comprimise these highlighs can be removed when a node is dragged
-                            // add a white background
-                            Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
-                            highlightBackgroundLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
-                            highlightBackgroundLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
-                            highlightBackgroundLine.setAttribute("d", polyLineElement.getAttribute("d"));
-                            highlightBackgroundLine.setAttribute("stroke", "white");
-                            relationHighlightGroup.appendChild(highlightBackgroundLine);
-                            // add a blue dotted line
-                            Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
-                            highlightLine.setAttribute("stroke-width", polyLineElement.getAttribute("stroke-width"));
-                            highlightLine.setAttribute("fill", polyLineElement.getAttribute("fill"));
-                            highlightLine.setAttribute("d", polyLineElement.getAttribute("d"));
-                            highlightLine.setAttribute("stroke", "blue");
-                            highlightLine.setAttribute("stroke-dasharray", "3");
-                            highlightLine.setAttribute("stroke-dashoffset", "0");
-                            relationHighlightGroup.appendChild(highlightLine);
-
-                            // try changing the target lines attributes (does not get updated maybe due to the 'use' node rendering)
-//                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("blue");
-//                                            polyLineElement.setAttributeNS(null, "stroke", "blue");
-//                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth * 2));
-                        } else {
-//                                            polyLineElement.getAttributes().getNamedItem("stroke").setNodeValue("green");
-//                                            polyLineElement.setAttributeNS(null, "stroke", "grey");
-//                                            polyLineElement.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
-                        }
-                    } catch (IdentifierException exception) {
-                        BugCatcherManager.getBugCatcher().logError(exception);
-                        dialogHandler.addMessageDialogToQueue("Failed to read relation data, highlight might not be correct", "Sanguine Highlights");
-                    }
-//                    }
-                }
+            // create new relation lines for each highlight in a separate group so that they can all be removed after the drag
+            for (RelationRecord relationRecord : relationRecords.getRecordsForSelection(graphPanel.selectedGroupId)) {
+                final String lineWidth = Integer.toString(relationRecord.lineWidth);
+                final String pathPointsString = relationRecord.getPathPointsString();
+                // add a white background
+                Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
+                highlightBackgroundLine.setAttribute("stroke-width", lineWidth);
+                highlightBackgroundLine.setAttribute("fill", "none");
+                highlightBackgroundLine.setAttribute("d", pathPointsString);
+                highlightBackgroundLine.setAttribute("stroke", "white");
+                relationHighlightGroup.appendChild(highlightBackgroundLine);
+                // add a blue dotted line
+                Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
+                highlightLine.setAttribute("stroke-width", lineWidth);
+                highlightLine.setAttribute("fill", "none");
+                highlightLine.setAttribute("d", pathPointsString);
+                highlightLine.setAttribute("stroke", "blue");
+                highlightLine.setAttribute("stroke-dasharray", "3");
+                highlightLine.setAttribute("stroke-dashoffset", "0");
+                relationHighlightGroup.appendChild(highlightLine);
             }
         }
     }
