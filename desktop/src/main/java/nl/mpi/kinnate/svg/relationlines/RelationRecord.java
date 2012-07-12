@@ -7,6 +7,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.OldFormatException;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  * Document : RelationRecord
@@ -55,6 +56,10 @@ public class RelationRecord {
         this.relationLineIndex = relationLineIndex;
         idString = "relation" + relationLineIndex;
         lineIdString = "relation" + relationLineIndex + "Line";
+    }
+
+    public boolean pertainsToEntity(ArrayList<UniqueIdentifier> selectedIdentifiers) {
+        return (selectedIdentifiers.contains(leftEntity.getUniqueIdentifier()) || selectedIdentifiers.contains(rightEntity.getUniqueIdentifier()));
     }
 
     public String getPathPointsString() {
