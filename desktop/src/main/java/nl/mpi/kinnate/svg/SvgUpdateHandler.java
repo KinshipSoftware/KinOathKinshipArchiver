@@ -897,7 +897,6 @@ public class SvgUpdateHandler {
                     entityGroupNode.appendChild(graphPanel.entitySvg.createEntitySymbol(graphPanel, currentNode));
                 }
             }
-            RelationSvg relationSvg = new RelationSvg(dialogHandler);
             for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getAllRelations()) {
