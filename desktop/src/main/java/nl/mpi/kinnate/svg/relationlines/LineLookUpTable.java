@@ -46,16 +46,29 @@ public class LineLookUpTable {
             endA = lineA[1].y;
             endB = lineB[1].y;
         }
+        boolean zeroLength = startA == endA || startB == endB;
+        if (zeroLength) {
+            // zero length lines don't count as a match
+            return false;
+        }
         if (horizontalMatch || verticalMatch) {
             // is lineA within lineB
             // is lineB within lineA
             if (startA < startB && startA > endB) {
+//                System.out.print(horizontalMatch + "||" + verticalMatch);
+//                System.out.print("x");
                 return true;
             } else if (startA > startB && startA < endB) {
+//                System.out.print(horizontalMatch + "||" + verticalMatch);
+//                System.out.print("y");
                 return true;
             } else if (startB < startA && startB > endA) {
+//                System.out.print(horizontalMatch + "||" + verticalMatch);
+//                System.out.print("z");
                 return true;
             } else if (startB > startA && startB < endA) {
+//                System.out.print(horizontalMatch + "||" + verticalMatch);
+//                System.out.print("w");
                 return true;
             }
         }
@@ -65,23 +78,29 @@ public class LineLookUpTable {
     public void separateOverlappingLines() {
         LineRecord[] lineRecordArray = lineRecords.toArray(new LineRecord[0]);
         for (int lineRecordCount = 0; lineRecordCount < lineRecordArray.length; lineRecordCount++) {
+//            System.out.print(lineRecordCount + ": ");
             LineRecord lineRecordOuter = lineRecordArray[lineRecordCount];
             for (int currentIndexA = lineRecordOuter.getLastSegment(); currentIndexA > -1; currentIndexA--) {
                 Point[] currentSegmentA = lineRecordOuter.getSegment(currentIndexA);
-//                System.out.println("currentHorizontal: " + currentHorizontal);
+//                System.out.print("[a" + currentIndexA + "]");
                 for (int lineRecordInnerCount = lineRecordCount + 1; lineRecordInnerCount < lineRecordArray.length; lineRecordInnerCount++) {
-                    LineRecord lineRecordInner = lineRecordArray[lineRecordInnerCount];
-                    if (lineRecordInner != lineRecordOuter) {
+                    if (lineRecordCount != lineRecordInnerCount) {
+                        LineRecord lineRecordInner = lineRecordArray[lineRecordInnerCount];
                         for (int currentIndexB = 0; currentIndexB <= lineRecordInner.getLastSegment(); currentIndexB++) {
                             Point[] otherHorizontalLine = lineRecordInner.getSegment(currentIndexB);
+//                            System.out.print("[b" + currentIndexB + "]");
                             if (overlaps(currentSegmentA, otherHorizontalLine)) {
-                                lineRecordInner.moveAside(currentIndexA, 6);
+//                                System.out.print(" overlaps,");
+                                lineRecordInner.moveAside(currentIndexB, 6);
+                            } else {
+//                                System.out.print(",");
                             }
                         }
                     }
                 }
 
             }
+//            System.out.println("");
         }
     }
 
