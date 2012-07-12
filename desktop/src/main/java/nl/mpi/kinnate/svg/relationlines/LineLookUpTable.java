@@ -74,19 +74,24 @@ public class LineLookUpTable {
         }
         return false;
     }
+    boolean excludeFirstLastSegments = true;
 
     public void separateOverlappingLines() {
+        int offset = 0;
+        if (excludeFirstLastSegments) {
+            offset = 1;
+        }
         LineRecord[] lineRecordArray = lineRecords.toArray(new LineRecord[0]);
         for (int lineRecordCount = 0; lineRecordCount < lineRecordArray.length; lineRecordCount++) {
 //            System.out.print(lineRecordCount + ": ");
             LineRecord lineRecordOuter = lineRecordArray[lineRecordCount];
-            for (int currentIndexA = 0; currentIndexA <= lineRecordOuter.getLastSegment(); currentIndexA++) {
+            for (int currentIndexA = 0 + offset; currentIndexA <= lineRecordOuter.getLastSegment() - offset; currentIndexA++) {
                 Point[] currentSegmentA = lineRecordOuter.getSegment(currentIndexA);
 //                System.out.print("[a" + currentIndexA + "]");
                 for (int lineRecordInnerCount = lineRecordCount + 1; lineRecordInnerCount < lineRecordArray.length; lineRecordInnerCount++) {
                     if (lineRecordCount != lineRecordInnerCount) {
                         LineRecord lineRecordInner = lineRecordArray[lineRecordInnerCount];
-                        for (int currentIndexB = 0; currentIndexB <= lineRecordInner.getLastSegment(); currentIndexB++) {
+                        for (int currentIndexB = 0 + offset; currentIndexB <= lineRecordInner.getLastSegment() - offset; currentIndexB++) {
                             Point[] otherHorizontalLine = lineRecordInner.getSegment(currentIndexB);
 //                            System.out.print("[b" + currentIndexB + "]");
                             if (overlaps(currentSegmentA, otherHorizontalLine)) {
