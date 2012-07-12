@@ -60,25 +60,6 @@ public class RelationSvg {
         }
     }
 
-    public boolean hasCommonParent(EntityData currentNode, EntityRelation graphLinkNode) {
-        if (graphLinkNode.getRelationType() == DataTypes.RelationType.sibling) {
-            for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getAllRelations()) {
-                if (altersRelation.getRelationType() == DataTypes.RelationType.ancestor) {
-                    for (EntityRelation egosRelation : currentNode.getAllRelations()) {
-                        if (egosRelation.getRelationType() == DataTypes.RelationType.ancestor) {
-                            if (altersRelation.alterUniqueIdentifier.equals(egosRelation.alterUniqueIdentifier)) {
-                                if (altersRelation.getAlterNode() != null && altersRelation.getAlterNode().isVisible) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
 //    private Float getCommonParentMaxY(EntitySvg entitySvg, EntityData currentNode, EntityRelation graphLinkNode) {
 //        if (graphLinkNode.relationType == DataTypes.RelationType.sibling) {
 //            Float maxY = null;
