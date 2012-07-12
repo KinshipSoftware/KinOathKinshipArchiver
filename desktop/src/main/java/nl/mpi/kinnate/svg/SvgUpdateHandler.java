@@ -100,31 +100,33 @@ public class SvgUpdateHandler {
         // this is used to draw the highlighted relations for the selected entities
         // this must be only called from within a svg runnable
         removeRelationHighLights();
-        if (graphPanel.dataStoreSvg.highlightRelationLines) {
-            // add highlights for relation lines
-            Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
-            relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
-            entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
-            // create new relation lines for each highlight in a separate group so that they can all be removed after the drag
-            for (RelationRecord relationRecord : relationRecords.getRecordsForSelection(graphPanel.selectedGroupId)) {
-                final String lineWidth = Integer.toString(relationRecord.lineWidth);
-                final String pathPointsString = relationRecord.getPathPointsString();
-                // add a white background
-                Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
-                highlightBackgroundLine.setAttribute("stroke-width", lineWidth);
-                highlightBackgroundLine.setAttribute("fill", "none");
-                highlightBackgroundLine.setAttribute("d", pathPointsString);
-                highlightBackgroundLine.setAttribute("stroke", "white");
-                relationHighlightGroup.appendChild(highlightBackgroundLine);
-                // add a blue dotted line
-                Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
-                highlightLine.setAttribute("stroke-width", lineWidth);
-                highlightLine.setAttribute("fill", "none");
-                highlightLine.setAttribute("d", pathPointsString);
-                highlightLine.setAttribute("stroke", "blue");
-                highlightLine.setAttribute("stroke-dasharray", "3");
-                highlightLine.setAttribute("stroke-dashoffset", "0");
-                relationHighlightGroup.appendChild(highlightLine);
+        if (relationRecords != null) {
+            if (graphPanel.dataStoreSvg.highlightRelationLines) {
+                // add highlights for relation lines
+                Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+                relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
+                entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
+                // create new relation lines for each highlight in a separate group so that they can all be removed after the drag
+                for (RelationRecord relationRecord : relationRecords.getRecordsForSelection(graphPanel.selectedGroupId)) {
+                    final String lineWidth = Integer.toString(relationRecord.lineWidth);
+                    final String pathPointsString = relationRecord.getPathPointsString();
+                    // add a white background
+                    Element highlightBackgroundLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
+                    highlightBackgroundLine.setAttribute("stroke-width", lineWidth);
+                    highlightBackgroundLine.setAttribute("fill", "none");
+                    highlightBackgroundLine.setAttribute("d", pathPointsString);
+                    highlightBackgroundLine.setAttribute("stroke", "white");
+                    relationHighlightGroup.appendChild(highlightBackgroundLine);
+                    // add a blue dotted line
+                    Element highlightLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
+                    highlightLine.setAttribute("stroke-width", lineWidth);
+                    highlightLine.setAttribute("fill", "none");
+                    highlightLine.setAttribute("d", pathPointsString);
+                    highlightLine.setAttribute("stroke", "blue");
+                    highlightLine.setAttribute("stroke-dasharray", "3");
+                    highlightLine.setAttribute("stroke-dashoffset", "0");
+                    relationHighlightGroup.appendChild(highlightLine);
+                }
             }
         }
     }
