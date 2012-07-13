@@ -31,7 +31,6 @@ import org.w3c.dom.events.EventTarget;
 public class EntitySvg {
 
     protected HashMap<UniqueIdentifier, float[]> entityPositions = new HashMap<UniqueIdentifier, float[]>();
-    private HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>> parentIdentifiers = new HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>>();
     private int symbolSize = 15;
     static protected int strokeWidth = 2;
     private MessageDialogHandler dialogHandler;
@@ -393,45 +392,6 @@ public class EntitySvg {
         float xPos = returnLoc[0] + (symbolSize / 2);
         float yPos = returnLoc[1] + (symbolSize / 2);
         return new float[]{xPos, yPos};
-    }
-
-    public float[] getAverageParentLocation(UniqueIdentifier entityId) {
-        // note that getAverageParentLocation(EntityData entityData) must be called at least once for each entity to poputlate parentIdentifiers
-        Float maxY = null;
-        float averageX = 0;
-        int parentCount = 0;
-        final HashSet<UniqueIdentifier> parentIdSet = parentIdentifiers.get(entityId);
-        if (parentIdSet != null) {
-            for (UniqueIdentifier parentIdentifier : parentIdSet) {
-                float[] parentLoc = getEntityLocation(parentIdentifier);
-                if (maxY == null) {
-                    maxY = parentLoc[1];
-                } else {
-                    maxY = (maxY >= parentLoc[1]) ? maxY : parentLoc[1];
-                }
-                averageX += parentLoc[0];
-                parentCount++;
-            }
-        }
-        averageX = averageX / parentCount;
-        if (maxY == null) {
-            return null;
-        } else {
-            return new float[]{averageX, maxY};
-        }
-    }
-
-    public float[] getAverageParentLocation(EntityData entityData) {
-        HashSet<UniqueIdentifier> identifierSet = new HashSet<UniqueIdentifier>();
-        for (EntityRelation entityRelation : entityData.getAllRelations()) {
-            if (entityRelation.getAlterNode() != null && entityRelation.getAlterNode().isVisible) {
-                if (entityRelation.getRelationType() == RelationType.ancestor) {
-                    identifierSet.add(entityRelation.alterUniqueIdentifier);
-                }
-            }
-        }
-        parentIdentifiers.put(entityData.getUniqueIdentifier(), identifierSet);
-        return getAverageParentLocation(entityData.getUniqueIdentifier());
     }
 
 //    public float[] getEntityLocation(SVGDocument doc, String entityId) {
