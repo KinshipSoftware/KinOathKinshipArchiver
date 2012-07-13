@@ -12,9 +12,9 @@ import nl.mpi.kinnate.kintypestrings.LabelStringsParser;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : GraphDataNode
- *  Created on : Sep 11, 2010, 4:30:41 PM
- *  Author     : Peter Withers
+ * Document : GraphDataNode
+ * Created on : Sep 11, 2010, 4:30:41 PM
+ * Author : Peter Withers
  */
 @XmlRootElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
 public class EntityData {
@@ -222,6 +222,18 @@ public class EntityData {
         }
     }
 
+    private void insertUnionRelations(EntityData childEntity, String dcrType, String customType) {
+        // update the union relations of the parents other children
+        for (EntityRelation entityRelation : childEntity.getAllRelations()) {
+            if (entityRelation.getRelationType().equals(DataTypes.RelationType.ancestor)) {
+                if (!entityRelation.getAlterNode().equals(this)) {
+                    entityRelation.getAlterNode().addRelatedNode(this, DataTypes.RelationType.union, null, null, dcrType, customType);
+                    this.addRelatedNode(entityRelation.getAlterNode(), DataTypes.RelationType.union, null, null, dcrType, customType);
+                }
+            }
+        }
+    }
+
     private void insertSiblingRelations(EntityData parentEntity, String dcrType, String customType) {
         // update the sibling relations of the parents other children
         for (EntityRelation entityRelation : parentEntity.getAllRelations()) {
@@ -248,7 +260,7 @@ public class EntityData {
         distinctRelateNodes = null;
     }
 
-    public EntityRelation addRelatedNode(EntityData alterNodeLocal, /*int generationalDistance,*/ DataTypes.RelationType relationType, String lineColour, String labelString, String dcrType, String customType) {
+    public EntityRelation addRelatedNode(EntityData alterNodeLocal, /* int generationalDistance, */ DataTypes.RelationType relationType, String lineColour, String labelString, String dcrType, String customType) {
         // note that the test gedcom file has multiple links for a given pair so in might be necessary to filter incoming links on a preferential basis
         EntityRelation nodeRelation = new EntityRelation(dcrType, customType, lineColour, relationType, labelString);
         nodeRelation.setAlterNode(alterNodeLocal);
@@ -272,11 +284,14 @@ public class EntityData {
 //        if (!relationType.equals(DataTypes.RelationType.none)) {
         DataTypes.RelationType opposingRelationType = DataTypes.getOpposingRelationType(relationType);
         alterNodeLocal.addRelatedNode(this, opposingRelationType, null, null, dcrType, customType);
+        // if a child relation is beig added then update the union relations of the other parents of that child
         // if a parent relation is beig added then update the sibling relations of the other children of that parent
         if (relationType.equals(DataTypes.RelationType.ancestor)) {
             this.insertSiblingRelations(alterNodeLocal, dcrType, customType);
+            alterNodeLocal.insertUnionRelations(this, dcrType, customType);
         } else if (relationType.equals(DataTypes.RelationType.descendant)) {
             alterNodeLocal.insertSiblingRelations(this, dcrType, customType);
+            this.insertUnionRelations(alterNodeLocal, dcrType, customType);
         }
         // if a sibling has been added then there is no way to know if any of the parents are common to the other sibings, so we do nothing in this case
 //        }
