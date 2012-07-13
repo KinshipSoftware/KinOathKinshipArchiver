@@ -2,8 +2,10 @@ package nl.mpi.kinnate.svg.relationlines;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.OldFormatException;
@@ -72,6 +74,51 @@ public class RelationRecord {
 //        System.out.println("getPathPointsString: " + returnValue);
         return returnValue;
     }
+    // start caclulate the average parent position
+//    private HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>> parentIdentifiers = new HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>>();
+
+    public float[] getAverageParentLocation(HashSet<UniqueIdentifier> parentIdSet) {
+        // note that getAverageParentLocation(EntityData entityData) must be called at least once for each entity to poputlate parentIdentifiers
+        Float maxY = null;
+        float averageX = 0;
+        int parentCount = 0;
+//        final HashSet<UniqueIdentifier> parentIdSet = parentIdentifiers.get(entityId);
+        if (parentIdSet != null) {
+            for (UniqueIdentifier parentIdentifier : parentIdSet) {
+                float[] parentLoc = graphPanel.entitySvg.getEntityLocation(parentIdentifier);
+                if (maxY == null) {
+                    maxY = parentLoc[1];
+                } else {
+                    maxY = (maxY >= parentLoc[1]) ? maxY : parentLoc[1];
+                }
+                averageX += parentLoc[0];
+                parentCount++;
+            }
+        }
+        averageX = averageX / parentCount;
+        if (maxY == null) {
+            return null;
+        } else {
+            return new float[]{averageX, maxY};
+        }
+    }
+
+    public float[] getAverageParentLocation(EntityData entityData) {
+        HashSet<UniqueIdentifier> identifierSet = new HashSet<UniqueIdentifier>();
+        for (EntityRelation entityRelation : entityData.getAllRelations()) {
+            if (entityRelation.getAlterNode() != null && entityRelation.getAlterNode().isVisible) {
+                if (entityRelation.getRelationType() == DataTypes.RelationType.ancestor) {
+                    identifierSet.add(entityRelation.alterUniqueIdentifier);
+                }
+            }
+        }
+        if (identifierSet.size() < 2) {
+            return null;
+        }
+//        parentIdentifiers.put(entityData.getUniqueIdentifier(), identifierSet);
+        return getAverageParentLocation(identifierSet);
+    }
+    // end caclulate the average parent position
 
     public void updatePathPoints(LineLookUpTable lineLookUpTable) throws OldFormatException {
         float[] egoSymbolPoint;
@@ -80,7 +127,7 @@ public class RelationRecord {
         // the ancestral relations should already be unidirectional and duplicates should have been removed
         egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(leftEntity.getUniqueIdentifier());
         alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(rightEntity.getUniqueIdentifier());
-        parentPoint = graphPanel.entitySvg.getAverageParentLocation(leftEntity);
+        parentPoint = getAverageParentLocation(leftEntity);
 
 //            relationLineIndex = relationGroupNode.getChildNodes().getLength();
 
@@ -229,8 +276,10 @@ public class RelationRecord {
             initialPointsList.add(new Point((int) centerX, (int) egoYmid));
             initialPointsList.add(new Point((int) centerX, (int) alterYmid));
         }
-        initialPointsList.add(new Point((int) alterX, (int) alterYmid));
-        initialPointsList.add(new Point((int) alterX, (int) alterY));
+        if (averageParentPassed == null) {
+            initialPointsList.add(new Point((int) alterX, (int) alterYmid));
+            initialPointsList.add(new Point((int) alterX, (int) alterY));
+        }
 
         return new LineRecord(lineIdString, initialPointsList);
     }
