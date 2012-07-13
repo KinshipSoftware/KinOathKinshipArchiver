@@ -45,7 +45,12 @@ public class RelationRecordTable {
             leftEntity = entityData;
             rightEntity = entityRelation.getAlterNode();
         }
-        String compoundIdentifier = leftEntity.getUniqueIdentifier().getQueryIdentifier() + rightEntity.getUniqueIdentifier().getQueryIdentifier() + directedRelation.name() + ":" + entityRelation.dcrType + ":" + entityRelation.customType;
+        String compoundIdentifier;
+        if (directedRelation == DataTypes.RelationType.ancestor) {
+            compoundIdentifier = "commonparent:" + leftEntity.getUniqueIdentifier().getQueryIdentifier() + directedRelation.name() + ":" + entityRelation.dcrType + ":" + entityRelation.customType;
+        } else {
+            compoundIdentifier = leftEntity.getUniqueIdentifier().getQueryIdentifier() + rightEntity.getUniqueIdentifier().getQueryIdentifier() + directedRelation.name() + ":" + entityRelation.dcrType + ":" + entityRelation.customType;
+        }
         // make sure each equivalent relation is drawn only once
         if (!doneRelations.contains(compoundIdentifier)) {
             boolean skipCurrentRelation = false;
