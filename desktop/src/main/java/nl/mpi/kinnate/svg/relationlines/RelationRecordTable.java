@@ -2,6 +2,7 @@ package nl.mpi.kinnate.svg.relationlines;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -53,14 +54,14 @@ public class RelationRecordTable {
         }
         // make sure each equivalent relation is drawn only once
         if (!doneRelations.contains(compoundIdentifier)) {
-            boolean skipCurrentRelation = false;
-            if (DataTypes.isSanguinLine(entityRelation.getRelationType())) {
-                if (hasCommonParent(leftEntity, entityRelation)) {
-                    // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
-                    skipCurrentRelation = true;
-                }
+            boolean skipSiblingRelation = false;
+            String groupId = getGroupId(entityData, entityRelation);
+            if (entityRelation.getRelationType() == DataTypes.RelationType.sibling) {
+                String siblingGroupId = getGroupId(entityData, entityRelation);
+                // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
+                skipSiblingRelation = groupId.equals(siblingGroupId);
             }
-            if (!skipCurrentRelation) {
+            if (!skipSiblingRelation) {
                 doneRelations.add(compoundIdentifier);
                 String lineColour = entityRelation.lineColour;
                 RelationTypeDefinition.CurveLineOrientation curveLineOrientation = RelationTypeDefinition.CurveLineOrientation.horizontal;
@@ -76,30 +77,48 @@ public class RelationRecordTable {
                         }
                     }
                 }
-                RelationRecord relationRecord = new RelationRecord(graphPanel, this.size(), leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, entityRelation.labelString, hSpacing, vSpacing);
+                RelationRecord relationRecord = new RelationRecord(groupId, graphPanel, this.size(), leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, entityRelation.labelString, hSpacing, vSpacing);
                 recordStore.put(relationRecord.lineIdString, relationRecord);
             }
         }
     }
 
-//    public String getParentPointIdentifier(EntityData currentNode, EntityRelation graphLinkNode) {
-    public boolean hasCommonParent(EntityData currentNode, EntityRelation graphLinkNode) {
-        if (graphLinkNode.getRelationType() == DataTypes.RelationType.sibling) {
-            for (EntityRelation altersRelation : graphLinkNode.getAlterNode().getAllRelations()) {
-                if (altersRelation.getRelationType() == DataTypes.RelationType.ancestor) {
-                    for (EntityRelation egosRelation : currentNode.getAllRelations()) {
-                        if (egosRelation.getRelationType() == DataTypes.RelationType.ancestor) {
-                            if (altersRelation.alterUniqueIdentifier.equals(egosRelation.alterUniqueIdentifier)) {
-                                if (altersRelation.getAlterNode() != null && altersRelation.getAlterNode().isVisible) {
-                                    return true;
-                                }
-                            }
+    public String getGroupId(EntityData currentNode, EntityRelation graphLinkNode) {
+//        System.out.println("ego: " + graphLinkNode.getRelationType() + " : " + currentNode.getLabel()[0].toString());
+        if (!DataTypes.isSanguinLine(graphLinkNode.getRelationType())) {
+            // group ids do not apply to non sangune relations
+            return null;
+        }
+        ArrayList<String> parentIdList = new ArrayList<String>(); // we use a string here so that it can be sorted consistently, the array list is used because any number of parents could exist
+        if (graphLinkNode.getRelationType() == DataTypes.RelationType.union) {
+            // get the common parent id based on the union
+            // todo: could this cause issues when there are three or more parents to one child?
+            parentIdList.add(currentNode.getUniqueIdentifier().getAttributeIdentifier());
+//            System.out.println("P1: " + currentNode.getLabel()[0]);
+            if (!parentIdList.contains(graphLinkNode.alterUniqueIdentifier.getAttributeIdentifier())) {
+                parentIdList.add(graphLinkNode.alterUniqueIdentifier.getAttributeIdentifier());
+//                System.out.println("P2: " + graphLinkNode.getAlterNode().getLabel()[0]);
+            }
+        } else {
+            // generate the id based on the ancestors of the entity
+            for (EntityRelation egosRelation : currentNode.getAllRelations()) {
+                if (egosRelation.getRelationType() == DataTypes.RelationType.ancestor) {
+                    if (egosRelation.getAlterNode() != null && egosRelation.getAlterNode().isVisible) {
+                        if (!parentIdList.contains(egosRelation.alterUniqueIdentifier.getAttributeIdentifier())) {
+                            parentIdList.add(egosRelation.alterUniqueIdentifier.getAttributeIdentifier());
+//                            System.out.println("P3: " + egosRelation.getAlterNode().getLabel()[0]);
                         }
                     }
                 }
             }
         }
-        return false;
+        if (parentIdList.isEmpty()) {
+            return null;
+        } else {
+            Collections.sort(parentIdList);
+//            System.out.println("getGroupId: " + parentIdList.toString());
+            return parentIdList.toString();
+        }
     }
 
     public RelationRecord getRecord(String idString) {
