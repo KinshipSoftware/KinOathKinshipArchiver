@@ -101,7 +101,13 @@ public class RelationRecordTable {
             }
         } else {
             // generate the id based on the ancestors of the entity
-            for (EntityRelation egosRelation : currentNode.getAllRelations()) {
+            EntityData childNode;
+            if (graphLinkNode.getRelationType() != DataTypes.RelationType.descendant) {
+                childNode = currentNode;
+            } else {
+                childNode = graphLinkNode.getAlterNode();
+            }
+            for (EntityRelation egosRelation : childNode.getAllRelations()) {
                 if (egosRelation.getRelationType() == DataTypes.RelationType.ancestor) {
                     if (egosRelation.getAlterNode() != null && egosRelation.getAlterNode().isVisible) {
                         if (!parentIdList.contains(egosRelation.alterUniqueIdentifier.getAttributeIdentifier())) {
