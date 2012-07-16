@@ -141,7 +141,7 @@ public class RelationRecord {
         // the ancestral relations should already be unidirectional and duplicates should have been removed
         egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(leftEntity.getUniqueIdentifier());
         alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(rightEntity.getUniqueIdentifier());
-        if (directedRelation != DataTypes.RelationType.sibling) {
+        if (directedRelation != DataTypes.RelationType.sibling && directedRelation != DataTypes.RelationType.union) {
             parentPoint = getAverageParentLocation(leftEntity);
         }
 
@@ -252,12 +252,18 @@ public class RelationRecord {
 //                centerX = (egoY > alterY && egoX == alterX) ? centerX - midSpacing : centerX;
 //                break;
             case sibling:
+                if (averageParentPassed != null) {
+                    throw new UnsupportedOperationException();
+                }
                 egoYmid = egoY - midSpacing;
                 alterYmid = alterY - midSpacing;
                 centerX = (egoY < alterY) ? alterX : egoX;
                 centerX = (egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
             case union:
+                if (averageParentPassed != null) {
+                    throw new UnsupportedOperationException();
+                }
 //                float unionMid = (egoY > alterY) ? egoY : alterY;
                 egoYmid = egoY + 30;
                 alterYmid = alterY + 30;
