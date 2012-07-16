@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
@@ -137,8 +138,16 @@ public class RelationRecordTable {
 
     public ArrayList<RelationRecord> getRecordsForSelection(ArrayList<UniqueIdentifier> selectedIdentifiers) {
         ArrayList<RelationRecord> returnRecords = new ArrayList<RelationRecord>();
+        HashSet<String> groupSet = new HashSet<String>();
         for (RelationRecord relationRecord : recordStore.values()) {
             if (relationRecord.pertainsToEntity(selectedIdentifiers)) {
+                returnRecords.add(relationRecord);
+                groupSet.add(relationRecord.getGroupName());
+            }
+        }
+        // expand the selection to include the entire groups of any already partially included
+        for (RelationRecord relationRecord : recordStore.values()) {
+            if (relationRecord.belongsToGroup(groupSet)) {
                 returnRecords.add(relationRecord);
             }
         }
