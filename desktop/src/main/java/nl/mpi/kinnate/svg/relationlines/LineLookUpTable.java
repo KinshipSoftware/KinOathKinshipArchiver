@@ -120,15 +120,17 @@ public class LineLookUpTable {
 //                System.out.println("currentHorizontal: " + currentHorizontal);
                 for (LineRecord lineRecord : lineRecords) {
                     if (lineRecord != lineRecordForLoops) {
-                        int currentVertical = lineRecord.getFirstVertical();
+                        if (!lineRecord.sharesSameGroup(lineRecordForLoops)) {
+                            int currentVertical = lineRecord.getFirstVertical();
 //                        System.out.println("currentVertical: " + currentVertical);
-                        while (currentVertical > -1) {
-                            Point[] currentVerticalLine = lineRecord.getSegment(currentVertical);
-                            if (intersects(currentHorizontalLine, currentVerticalLine)) {
-                                boolean isLeftHand = currentHorizontalLine[0].x > currentHorizontalLine[1].x;
-                                lineRecordForLoops.insertLoop(currentHorizontal, currentVerticalLine[0].x, isLeftHand);
+                            while (currentVertical > -1) {
+                                Point[] currentVerticalLine = lineRecord.getSegment(currentVertical);
+                                if (intersects(currentHorizontalLine, currentVerticalLine)) {
+                                    boolean isLeftHand = currentHorizontalLine[0].x > currentHorizontalLine[1].x;
+                                    lineRecordForLoops.insertLoop(currentHorizontal, currentVerticalLine[0].x, isLeftHand);
+                                }
+                                currentVertical = lineRecord.getNextVertical(currentVertical);
                             }
-                            currentVertical = lineRecord.getNextVertical(currentVertical);
                         }
                     }
                 }
