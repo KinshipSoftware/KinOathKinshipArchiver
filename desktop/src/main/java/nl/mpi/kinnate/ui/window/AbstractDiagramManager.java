@@ -243,17 +243,22 @@ public abstract class AbstractDiagramManager {
     public boolean offerUserToSave(SavePanel savePanel, String diagramName) {
         if (savePanel.requiresSave()) {
             // warn user to save
-            switch (dialogHandler.showDialogBox("There are unsaved changes in: \"" + diagramName + "\"\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
-                case JOptionPane.YES_OPTION:
-                    if (savePanel.hasSaveFileName()) {
-                        savePanel.saveToFile();
-                    } else {
-                        saveDiagramAs(savePanel);
-                    }
-                case JOptionPane.NO_OPTION:
-                    break;
-                case JOptionPane.CANCEL_OPTION:
-                    return true;
+            boolean fileSaved = false;
+            while (!fileSaved) {
+                switch (dialogHandler.showDialogBox("There are unsaved changes in: \"" + diagramName + "\"\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
+                    case JOptionPane.YES_OPTION:
+                        if (savePanel.hasSaveFileName()) {
+                            savePanel.saveToFile();
+                            return false;
+                        } else {
+                            fileSaved = null != saveDiagramAs(savePanel);
+                        }
+                        break;
+                    case JOptionPane.NO_OPTION:
+                        return false;
+                    case JOptionPane.CANCEL_OPTION:
+                        return true;
+                }
             }
         }
         return false;
