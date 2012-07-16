@@ -91,14 +91,18 @@ public class LineLookUpTable {
                 for (int lineRecordInnerCount = lineRecordCount + 1; lineRecordInnerCount < lineRecordArray.length; lineRecordInnerCount++) {
                     if (lineRecordCount != lineRecordInnerCount) {
                         LineRecord lineRecordInner = lineRecordArray[lineRecordInnerCount];
-                        for (int currentIndexB = 0 + offset; currentIndexB <= lineRecordInner.getLastSegment() - offset; currentIndexB++) {
-                            Point[] otherHorizontalLine = lineRecordInner.getSegment(currentIndexB);
+                        if (lineRecordOuter.sharesSameGroup(lineRecordInner)) {
+                            // todo: hide lines that are overlapped by lines in the same group
+                        } else {
+                            for (int currentIndexB = 0 + offset; currentIndexB <= lineRecordInner.getLastSegment() - offset; currentIndexB++) {
+                                Point[] otherHorizontalLine = lineRecordInner.getSegment(currentIndexB);
 //                            System.out.print("[b" + currentIndexB + "]");
-                            if (overlaps(currentSegmentA, otherHorizontalLine)) {
+                                if (overlaps(currentSegmentA, otherHorizontalLine)) {
 //                                System.out.print(" overlaps,");
-                                lineRecordInner.moveAside(currentIndexB, 6);
-                            } else {
+                                    lineRecordInner.moveAside(currentIndexB, 6);
+                                } else {
 //                                System.out.print(",");
+                                }
                             }
                         }
                     }
