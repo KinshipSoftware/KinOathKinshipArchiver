@@ -18,6 +18,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class RelationRecord {
 
+    private String groupName = null;
     public String idString;
     public String lineIdString;
     public GraphPanel graphPanel;
@@ -43,7 +44,8 @@ public class RelationRecord {
         curveLinePoints = setPathPointsAttribute(curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
     }
 
-    protected RelationRecord(GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
+    protected RelationRecord(String groupName, GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
+        this.groupName = groupName;
         this.graphPanel = graphPanel;
         this.leftEntity = leftEntity;
         this.rightEntity = rightEntity;
@@ -284,7 +286,7 @@ public class RelationRecord {
             initialPointsList.add(initialPointsList.get(initialPointsList.size() - 1));
         }
 
-        return new LineRecord(lineIdString, initialPointsList);
+        return new LineRecord(groupName, lineIdString, initialPointsList);
     }
 
     private String setPathPointsAttribute(RelationTypeDefinition.CurveLineOrientation curveLineOrientation, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
