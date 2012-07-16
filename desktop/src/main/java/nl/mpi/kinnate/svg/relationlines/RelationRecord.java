@@ -279,6 +279,9 @@ public class RelationRecord {
         if (averageParentPassed == null) {
             initialPointsList.add(new Point((int) alterX, (int) alterYmid));
             initialPointsList.add(new Point((int) alterX, (int) alterY));
+        } else {
+            // the first and last segments are not moved when they overlap, so we add a final segment here so that the parent point line will be moved when overlapping 
+            initialPointsList.add(initialPointsList.get(initialPointsList.size() - 1));
         }
 
         return new LineRecord(lineIdString, initialPointsList);
