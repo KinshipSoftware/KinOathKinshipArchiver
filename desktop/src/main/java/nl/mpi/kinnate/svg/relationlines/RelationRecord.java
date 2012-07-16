@@ -125,11 +125,13 @@ public class RelationRecord {
     public void updatePathPoints(LineLookUpTable lineLookUpTable) throws OldFormatException {
         float[] egoSymbolPoint;
         float[] alterSymbolPoint;
-        float[] parentPoint;
+        float[] parentPoint = null;
         // the ancestral relations should already be unidirectional and duplicates should have been removed
         egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(leftEntity.getUniqueIdentifier());
         alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(rightEntity.getUniqueIdentifier());
-        parentPoint = getAverageParentLocation(leftEntity);
+        if (directedRelation != DataTypes.RelationType.sibling) {
+            parentPoint = getAverageParentLocation(leftEntity);
+        }
 
 //            relationLineIndex = relationGroupNode.getChildNodes().getLength();
 
