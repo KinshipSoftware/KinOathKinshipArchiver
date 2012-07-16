@@ -66,6 +66,18 @@ public class RelationRecord {
         return (selectedIdentifiers.contains(leftEntity.getUniqueIdentifier()) || selectedIdentifiers.contains(rightEntity.getUniqueIdentifier()));
     }
 
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public boolean belongsToGroup(HashSet<String> groupSet) {
+        if (groupName != null) {
+            return groupSet.contains(groupName);
+        } else {
+            return false;
+        }
+    }
+
     public String getPathPointsString() {
         String returnValue;
         if (curveLinePoints != null) {
