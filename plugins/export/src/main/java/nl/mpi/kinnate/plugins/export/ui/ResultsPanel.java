@@ -1,6 +1,8 @@
 package nl.mpi.kinnate.plugins.export.ui;
 
+import java.awt.BorderLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
@@ -12,8 +14,17 @@ import javax.swing.table.AbstractTableModel;
 public class ResultsPanel extends JPanel {
 
     JTable resultsTable;
+    String[] resultsHeader = null;
     String[][] tableData = null;
     AbstractTableModel resultsModel = new AbstractTableModel() {
+
+        @Override
+        public String getColumnName(int column) {
+            if (resultsHeader == null) {
+                return "";
+            }
+            return resultsHeader[column];
+        }
 
         public int getRowCount() {
             if (tableData == null) {
@@ -23,35 +34,49 @@ public class ResultsPanel extends JPanel {
         }
 
         public int getColumnCount() {
-            if (tableData == null || tableData.length < 1) {
+            if (tableData == null || tableData.length == 0) {
                 return 0;
             }
-            return tableData[0].length;
+            return resultsHeader.length;
         }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
-            return tableData[rowIndex][columnIndex];
+            System.out.println(rowIndex + " : " + columnIndex);
+            if (columnIndex < tableData[rowIndex].length) {
+                return tableData[rowIndex][columnIndex];
+            } else {
+                return "<error>";
+            }
         }
     };
 
     public ResultsPanel() {
+        this.setLayout(new BorderLayout());
         resultsTable = new JTable(resultsModel);
-        this.add(resultsTable);
+        this.add(new JScrollPane(resultsTable), BorderLayout.CENTER);
     }
 
     public void updateTable(String resultsString) {
         String[] resultsRows = resultsString.split("\n");
         if (resultsRows.length > 0) {
-            final String fieldSeparator = "\",\"";
-            String[] resultsHeader = resultsRows[0].split(fieldSeparator);
-            tableData = new String[resultsRows.length][resultsHeader.length];
-            tableData[0] = resultsHeader;
-            for (int rowCounter = 1; rowCounter < resultsRows.length; rowCounter++) {
+//            final String fieldSeparator = "\",\"";
+            final String fieldSeparator = ",";
+            resultsHeader = resultsRows[0].split(fieldSeparator);
+            tableData = new String[resultsRows.length - 1][resultsHeader.length];
+//            tableData[0] = resultsHeader;
+            boolean allRowsCorrectLength = true;
+            for (int rowCounter = 1; rowCounter < resultsRows.length - 1; rowCounter++) {
                 tableData[rowCounter] = resultsRows[rowCounter].split(fieldSeparator);
+                if (resultsHeader.length != tableData[rowCounter].length) {
+                    allRowsCorrectLength = false;
+                }
+            }
+            if (allRowsCorrectLength) {
+                // todo: show error message
             }
         } else {
             tableData = new String[0][0];
         }
-        resultsModel.fireTableDataChanged();
+        resultsModel.fireTableStructureChanged();
     }
 }
