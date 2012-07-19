@@ -3,13 +3,14 @@ package nl.mpi.kinnate.plugins.export.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import nl.mpi.kinnate.entityindexer.CollectionExport;
 import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.plugins.export.GedcomExport;
@@ -63,19 +64,18 @@ public class FieldsPanel extends JPanel {
                 selectedFieldPaths[currentIndex] = currentField;
                 fieldsPanel.add(new JLabel(selectedFieldPaths[currentIndex]));
                 fieldTextAreas[currentIndex] = new JTextArea(selectedFieldNames[currentIndex]);
-                final int currentIndexFinal = currentIndex;
-                fieldTextAreas[currentIndex].addKeyListener(new KeyListener() {
+                fieldTextAreas[currentIndex].getDocument().addDocumentListener(new DocumentListener() {
 
-                    public void keyTyped(KeyEvent e) {
-                        // todo: this does not respond to the first text change and hence it is the wrong listner to use
-                        selectedFieldNames[currentIndexFinal] = ((JTextArea) e.getSource()).getText();
+                    public void changedUpdate(DocumentEvent e) {
                         namesAreUnique();
                     }
 
-                    public void keyPressed(KeyEvent e) {
+                    public void removeUpdate(DocumentEvent e) {
+                        namesAreUnique();
                     }
 
-                    public void keyReleased(KeyEvent e) {
+                    public void insertUpdate(DocumentEvent e) {
+                        namesAreUnique();
                     }
                 });
                 fieldsPanel.add(fieldTextAreas[currentIndex]);
@@ -92,23 +92,31 @@ public class FieldsPanel extends JPanel {
     public boolean namesAreUnique() {
         boolean namesAreUnique = true;
         ArrayList<String> fieldNames = new ArrayList<String>();
-        // todo: sort out this swing edt issue and test the latency when typing text
-//        SwingUtilities.invokeLater(new Runnable() {
-//
-//            public void run() {
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//        });
-        for (JTextArea currentTextArea : fieldTextAreas) {
+        final boolean validFields[] = new boolean[fieldTextAreas.length];
+        for (int fieldCounter = 0; fieldCounter < fieldTextAreas.length; fieldCounter++) {
+            JTextArea currentTextArea = fieldTextAreas[fieldCounter];
             final String currentText = currentTextArea.getText();
+            selectedFieldNames[fieldCounter] = currentText;
             if (fieldNames.contains(currentText)) {
+                validFields[fieldCounter] = false;
                 namesAreUnique = false;
-                currentTextArea.setBackground(Color.red);
             } else {
-                currentTextArea.setBackground(defaultTextBackground);
+                validFields[fieldCounter] = true;
             }
             fieldNames.add(currentText);
         }
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                for (int fieldCounter = 0; fieldCounter < fieldTextAreas.length; fieldCounter++) {
+                    if (validFields[fieldCounter]) {
+                        fieldTextAreas[fieldCounter].setBackground(defaultTextBackground);
+                    } else {
+                        fieldTextAreas[fieldCounter].setBackground(Color.red);
+                    }
+                }
+            }
+        });
         return namesAreUnique;
     }
 
