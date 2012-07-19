@@ -44,6 +44,7 @@ public class ExportPanel extends JPanel implements ActionListener {
         try {
             if (fieldsPanel.namesAreUnique()) {
                 final String queryString = gedcomExport.generateExport(fieldsPanel.getSelectedFieldNames(), fieldsPanel.getSelectedFieldPaths());
+                outerTabbedPane.add("Query Text", new JScrollPane(new JTextArea(queryString)));
                 SwingUtilities.invokeLater(new Thread() {
 
                     @Override
