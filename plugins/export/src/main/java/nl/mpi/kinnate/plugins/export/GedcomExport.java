@@ -61,6 +61,19 @@ public class GedcomExport {
 
     private String getCvsQuery() {
         // todo: add quotes to the header line
+        // for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = "8719d4e8c7f5f343aa17007ee4ad4c59"]/* return <a>{path($entityNode)}</a>
+
+        // for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate[*:Entity/*:Identifier/text() = "8719d4e8c7f5f343aa17007ee4ad4c59"]/* return <a>{distinct-values($entityNode/descendant-or-self::*/local-name(.))}</a>
+
+        /*
+         * for $xpathString in
+         * for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = "8719d4e8c7f5f343aa17007ee4ad4c59"]/descendant-or-self::*
+         * return path($entityNode)
+         * return
+         * <a>{$xpathString}</a>
+         */
+
+
         return "let $colNames := distinct-values(collection('" + entityCollection.getDatabaseName() + "')/*:Kinnate/*:CustomData/*//local-name())\n" // todo: get the xpath not the node name
                 // todo: need to handle unknown number of description fields etc
                 // todo: this might now be handling sub nodes correctly 
@@ -82,8 +95,15 @@ public class GedcomExport {
     }
 
     public String getHeaderQuery() {
-        return "let $colNames := distinct-values(collection('" + entityCollection.getDatabaseName() + "')/*:Kinnate/*:CustomData/*/name())\n"
-                + "return  $colNames\n";
+//        return "let $colNames := distinct-values(collection('" + entityCollection.getDatabaseName() + "')/*:Kinnate/*:CustomData/*/name())\n"
+//                + "return  $colNames\n";
+        return "for $xpathString in distinct-values(\n"
+                // + "for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() != '']/descendant-or-self::*\n"
+                + "for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate/*:CustomData/descendant-or-self::*[text() != '']\n"
+                + "return path($entityNode)\n"
+                + ")\n"
+                + "return\n"
+                + "$xpathString";
     }
 
     public String getXPaths() {
@@ -97,6 +117,37 @@ public class GedcomExport {
 
     public void dropAndCreate(File importDirectory, String fileFilter) throws QueryException {
         entityCollection.createExportDatabase(importDirectory, fileFilter);
+    }
+
+    public String generateExport(String[] selectedFieldNames, String[] selectedFieldPath) throws QueryException {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String currentHeader : selectedFieldNames) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append(",");
+            } else {
+                stringBuilder.append("let $headerString := '");
+            }
+            stringBuilder.append(currentHeader);
+        }
+        stringBuilder.append("\n'\n");
+        stringBuilder.append("let $bodyString := for $documentNode in collection('");
+        stringBuilder.append(entityCollection.getDatabaseName());
+//        stringBuilder.append("')/*:Kinnate/*:CustomData\nreturn\n");
+        stringBuilder.append("')\nreturn\nconcat(\n'\"',\n");
+        boolean firstColumn = true;
+        for (String currentField : selectedFieldPath) {
+            if (firstColumn) {
+                firstColumn = false;
+            } else {
+                stringBuilder.append(",'\"',\n");
+            }
+            stringBuilder.append("$documentNode");
+            stringBuilder.append(currentField);
+        }
+        stringBuilder.append(")\n");
+        stringBuilder.append("return concat($headerString, string-join($bodyString,\"\n\"))\n");
+//        return entityCollection.performExportQuery(stringBuilder.toString());
+        return stringBuilder.toString();
     }
 
     public String generateExport(String exportQuery) throws QueryException {
