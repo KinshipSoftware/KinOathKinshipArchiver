@@ -57,7 +57,10 @@ public class ResultsPanel extends JPanel {
     }
 
     public void updateTable(String resultsString) {
-        String[] resultsRows = resultsString.split("\n");
+        resultsString = resultsString.replaceAll("^\"", "");
+        resultsString = resultsString.replaceAll("\"$", "");
+        // include the quotes in the line separator so that line breaks in the data are ignored (not entirely reliable, but this is only a sample output)
+        String[] resultsRows = resultsString.split("\"\\n\"");
         if (resultsRows.length > 0) {
             final String fieldSeparator = "\",\"";
 //            final String fieldSeparator = ",";
@@ -66,7 +69,12 @@ public class ResultsPanel extends JPanel {
 //            tableData[0] = resultsHeader;
             boolean allRowsCorrectLength = true;
             for (int rowCounter = 1; rowCounter < resultsRows.length - 1; rowCounter++) {
-                tableData[rowCounter] = resultsRows[rowCounter].split(fieldSeparator);
+                // add start and end quites so that the column count is correct 
+                tableData[rowCounter] = ("\"" + resultsRows[rowCounter] + "\"").split(fieldSeparator);
+                // trim the last and first quote 
+                tableData[rowCounter][0] = tableData[rowCounter][0].replaceAll("^\"", "");
+                tableData[rowCounter][tableData[rowCounter].length - 1] = tableData[rowCounter][tableData[rowCounter].length - 1].replaceAll("\"$", "");
+
                 if (resultsHeader.length != tableData[rowCounter].length) {
                     allRowsCorrectLength = false;
                 }
