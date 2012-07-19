@@ -41,7 +41,7 @@ public class ResultsPanel extends JPanel {
         }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
-            System.out.println(rowIndex + " : " + columnIndex);
+//            System.out.println(rowIndex + " : " + columnIndex);
             if (columnIndex < tableData[rowIndex].length) {
                 return tableData[rowIndex][columnIndex];
             } else {
@@ -59,8 +59,8 @@ public class ResultsPanel extends JPanel {
     public void updateTable(String resultsString) {
         String[] resultsRows = resultsString.split("\n");
         if (resultsRows.length > 0) {
-//            final String fieldSeparator = "\",\"";
-            final String fieldSeparator = ",";
+            final String fieldSeparator = "\",\"";
+//            final String fieldSeparator = ",";
             resultsHeader = resultsRows[0].split(fieldSeparator);
             tableData = new String[resultsRows.length - 1][resultsHeader.length];
 //            tableData[0] = resultsHeader;
