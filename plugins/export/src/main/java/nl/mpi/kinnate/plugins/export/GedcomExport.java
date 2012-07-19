@@ -123,13 +123,13 @@ public class GedcomExport {
         StringBuilder stringBuilder = new StringBuilder();
         for (String currentHeader : selectedFieldNames) {
             if (stringBuilder.length() > 0) {
-                stringBuilder.append(",");
+                stringBuilder.append("\",\"");
             } else {
-                stringBuilder.append("let $headerString := '");
+                stringBuilder.append("let $headerString := '\"");
             }
             stringBuilder.append(currentHeader);
         }
-        stringBuilder.append("\n'\n");
+        stringBuilder.append("\"\n'\n");
         stringBuilder.append("let $bodyString := for $documentNode in collection('");
         stringBuilder.append(entityCollection.getDatabaseName());
 //        stringBuilder.append("')/*:Kinnate/*:CustomData\nreturn\n");
@@ -139,12 +139,13 @@ public class GedcomExport {
             if (firstColumn) {
                 firstColumn = false;
             } else {
-                stringBuilder.append(",'\"',\n");
+                stringBuilder.append(",'\",\"',\n");
             }
             stringBuilder.append("$documentNode");
             stringBuilder.append(currentField);
+            stringBuilder.append("/text()");
         }
-        stringBuilder.append(")\n");
+        stringBuilder.append(",'\"')\n");
         stringBuilder.append("return concat($headerString, string-join($bodyString,\"\n\"))\n");
 //        return entityCollection.performExportQuery(stringBuilder.toString());
         return stringBuilder.toString();
