@@ -1,27 +1,25 @@
 package nl.mpi.kinnate.svg;
 
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map.Entry;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
-import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityDate;
-import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.GraphLabel;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.svg.SVGDocument;
 
 /**
  * Document : EntitySvg
@@ -30,7 +28,7 @@ import org.w3c.dom.events.EventTarget;
  */
 public class EntitySvg {
 
-    protected HashMap<UniqueIdentifier, float[]> entityPositions = new HashMap<UniqueIdentifier, float[]>();
+    protected HashMap<UniqueIdentifier, Point> entityPositions = new HashMap<UniqueIdentifier, Point>();
     private int symbolSize = 15;
     static protected int strokeWidth = 2;
     private MessageDialogHandler dialogHandler;
@@ -60,7 +58,7 @@ public class EntitySvg {
                             String[] stringPos = transformString.split(",");
 //                        System.out.println("entityId: " + entityId);
 //                        System.out.println("transformString: " + transformString);
-                            entityPositions.put(entityId, new float[]{Float.parseFloat(stringPos[0]), Float.parseFloat(stringPos[1])});
+                            entityPositions.put(entityId, new Point((int) Float.parseFloat(stringPos[0]), (int) Float.parseFloat(stringPos[1]))); // the input data here could be in float format
 //                      SVGRect bbox = ((SVGLocatable) entityNode).getBBox();
 //                      SVGMatrix sVGMatrix = ((SVGLocatable) entityNode).getCTM();
 //                      System.out.println("getE: " + sVGMatrix.getE());
@@ -365,10 +363,10 @@ public class EntitySvg {
     public UniqueIdentifier getClosestEntity(float[] locationArray, int maximumDistance, ArrayList<UniqueIdentifier> excludeIdentifiers) {
         double closestDistance = -1;
         UniqueIdentifier closestIdentifier = null;
-        for (Entry<UniqueIdentifier, float[]> currentEntry : entityPositions.entrySet()) {
+        for (Entry<UniqueIdentifier, Point> currentEntry : entityPositions.entrySet()) {
             if (!excludeIdentifiers.contains(currentEntry.getKey())) {
-                float hDistance = locationArray[0] - currentEntry.getValue()[0];
-                float vDistance = locationArray[1] - currentEntry.getValue()[1];
+                float hDistance = locationArray[0] - currentEntry.getValue().x;
+                float vDistance = locationArray[1] - currentEntry.getValue().y;
                 double entityDistance = Math.sqrt(hDistance * hDistance + vDistance * vDistance);
                 if (closestIdentifier == null) {
                     closestDistance = entityDistance;
@@ -387,11 +385,15 @@ public class EntitySvg {
         return closestIdentifier;
     }
 
-    public float[] getEntityLocation(UniqueIdentifier entityId) {
-        float[] returnLoc = entityPositions.get(entityId);
-        float xPos = returnLoc[0] + (symbolSize / 2);
-        float yPos = returnLoc[1] + (symbolSize / 2);
-        return new float[]{xPos, yPos};
+    public Point[] getAllEntityLocations() {
+        return entityPositions.values().toArray(new Point[0]);
+    }
+
+    public Point getEntityLocation(UniqueIdentifier entityId) {
+        Point returnLoc = entityPositions.get(entityId);
+        int xPos = returnLoc.x + (symbolSize / 2);
+        int yPos = returnLoc.y + (symbolSize / 2);
+        return new Point(xPos, yPos);
     }
 
 //    public float[] getEntityLocation(SVGDocument doc, String entityId) {
@@ -448,9 +450,9 @@ public class EntitySvg {
 //            float updatedPositionX = sVGMatrix.getE() + shiftX;
 //            float updatedPositionY = sVGMatrix.getF();
 
-            float[] entityPosition = entityPositions.get(entityId);
-            float updatedPositionX = (float) (entityPosition[0] + shiftXscaled);
-            float updatedPositionY = entityPosition[1];
+            Point entityPosition = entityPositions.get(entityId);
+            float updatedPositionX = (float) (entityPosition.x + shiftXscaled);
+            float updatedPositionY = entityPosition.y;
 
             if (allowYshift) {
                 updatedPositionY = (float) (updatedPositionY + shiftYscaled);
@@ -480,14 +482,14 @@ public class EntitySvg {
 //                graphPanel.dataStoreSvg.graphData.setEntityLocation(entityId, updatedPositionX, updatedPositionY);
 //            entityPositions.put(entityId, new float[]{(float) at.getTranslateX(), (float) at.getTranslateY()});
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(at.getTranslateX()) + ", " + String.valueOf(at.getTranslateY()) + ")");
-            entityPositions.put(entityId, new float[]{updatedPositionX, updatedPositionY});
+            entityPositions.put(entityId, new Point((int) updatedPositionX, (int) updatedPositionY));
             final String translateString = "translate(" + String.valueOf(updatedPositionX) + ", " + String.valueOf(updatedPositionY) + ")";
             ((Element) entitySymbol).setAttribute("transform", translateString);
             if (highlightGroup != null) {
                 highlightGroup.setAttribute("transform", translateString);
             }
-            float distanceXmoved = ((float) ((updatedPositionX - entityPosition[0]) * scaleFactor));
-            float distanceYmoved = ((float) ((updatedPositionY - entityPosition[1]) * scaleFactor));
+            float distanceXmoved = ((float) ((updatedPositionX - entityPosition.x) * scaleFactor));
+            float distanceYmoved = ((float) ((updatedPositionY - entityPosition.y) * scaleFactor));
             remainderAfterSnapX = shiftXfloat - distanceXmoved;
             remainderAfterSnapY = shiftYfloat - distanceYmoved;
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + (sVGMatrix.getF() + shiftY) + ")");
@@ -524,10 +526,10 @@ public class EntitySvg {
         }
         // todo: check that if an entity is already placed in which case do not recreate
         // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
-        float[] storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
+        Point storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
             BugCatcherManager.getBugCatcher().logError(new Exception("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier()));
-            storedPosition = new float[]{0, 0};
+            storedPosition = new Point(0, 0);
             // todo: it looks like the stored positon can be null
 //            throw new Exception("Entity position should have been set in the graph sorter");
 //            // loop through the filled locations and move to the right or left if not empty required
@@ -560,7 +562,7 @@ public class EntitySvg {
             symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + currentSymbol); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
 
             // todo: resolve the null pointer on first run with transient nodes (last test on this did not get a null pointer so maybe it is resolved)
-            groupNode.setAttribute("transform", "translate(" + Float.toString(storedPosition[0]) + ", " + Float.toString(storedPosition[1]) + ")");
+            groupNode.setAttribute("transform", "translate(" + Integer.toString(storedPosition.x) + ", " + Integer.toString(storedPosition.y) + ")");
             if (currentNode.isEgo) {
                 symbolNode.setAttribute("fill", "black");
             } else {
