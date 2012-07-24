@@ -158,11 +158,12 @@ public class RelationRecordTable {
         return recordStore.size();
     }
 
-    public void adjustLines() throws OldFormatException {
+    public void adjustLines(GraphPanel graphPanel) throws OldFormatException {
         lineLookUpTable = new LineLookUpTable();
         for (RelationRecord relationRecord : recordStore.values()) {
             relationRecord.updatePathPoints(lineLookUpTable);
         }
+        lineLookUpTable.separateLinesOverlappingEntities(graphPanel.entitySvg.getAllEntityLocations());
         lineLookUpTable.separateOverlappingLines();
         lineLookUpTable.addLoops();
     }
