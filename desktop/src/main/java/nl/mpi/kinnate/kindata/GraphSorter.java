@@ -1,16 +1,17 @@
 package nl.mpi.kinnate.kindata;
 
-import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.bind.annotation.XmlElement;
 import nl.mpi.kinnate.svg.GraphPanelSize;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : GraphData
- *  Created on : Sep 11, 2010, 4:51:36 PM
- *  Author     : Peter Withers
+ * Document : GraphData
+ * Created on : Sep 11, 2010, 4:51:36 PM
+ * Author : Peter Withers
  */
 public class GraphSorter {
 
@@ -37,7 +38,7 @@ public class GraphSorter {
         ArrayList<SortingEntity> mustBeNextTo;
         ArrayList<SortingEntity> couldBeNextTo;
         EntityRelation[] allRelateNodes;
-        float[] calculatedPosition = null;
+        Point calculatedPosition = null;
 
         public SortingEntity(EntityData entityData) {
             selfEntityId = entityData.getUniqueIdentifier();
@@ -69,10 +70,10 @@ public class GraphSorter {
             }
         }
 
-        private boolean positionIsFree(UniqueIdentifier currentIdentifier, float[] targetPosition, HashMap<UniqueIdentifier, float[]> entityPositions) {
+        private boolean positionIsFree(UniqueIdentifier currentIdentifier, Point targetPosition, HashMap<UniqueIdentifier, Point> entityPositions) {
             int useCount = 0;
-            for (float[] currentPosition : entityPositions.values()) {
-                if (currentPosition[0] == targetPosition[0] && currentPosition[1] == targetPosition[1]) {
+            for (Point currentPosition : entityPositions.values()) {
+                if (currentPosition.x == targetPosition.x && currentPosition.y == targetPosition.y) {
                     useCount++;
                 }
             }
@@ -80,10 +81,10 @@ public class GraphSorter {
                 return true;
             }
             if (useCount == 1) {
-                float[] entityPosition = entityPositions.get(currentIdentifier);
+                Point entityPosition = entityPositions.get(currentIdentifier);
                 if (entityPosition != null) {
                     // todo: change this to compare distance not exact location
-                    if (entityPosition[0] == targetPosition[0] && entityPosition[1] == targetPosition[1]) {
+                    if (entityPosition.x == targetPosition.x && entityPosition.y == targetPosition.y) {
                         // if there is one entity already in this position then check if it is the current entity, in which case it is free
                         return true;
                     }
@@ -92,7 +93,7 @@ public class GraphSorter {
             return false;
         }
 
-        protected float[] getPosition(HashMap<UniqueIdentifier, float[]> entityPositions, float[] defaultPosition) {
+        protected Point getPosition(HashMap<UniqueIdentifier, Point> entityPositions, Point defaultPosition) {
 //            System.out.println("getPosition: " + selfEntityId.getAttributeIdentifier());
             calculatedPosition = entityPositions.get(selfEntityId);
             if (calculatedPosition == null) {
@@ -100,13 +101,13 @@ public class GraphSorter {
                     // note that this get position also sets the position and the result will not be null
 //                    float[] nextAbovePos = sortingEntity.getPosition(entityPositions, defaultPosition);
                     // note that this does not set the position and the result can be null
-                    float[] nextAbovePos = entityPositions.get(sortingEntity.selfEntityId);
+                    Point nextAbovePos = entityPositions.get(sortingEntity.selfEntityId);
                     if (nextAbovePos != null) {
                         if (calculatedPosition == null) {
-                            calculatedPosition = new float[]{nextAbovePos[0], nextAbovePos[1]};
+                            calculatedPosition = new Point(nextAbovePos.x, nextAbovePos.y);
                         }
-                        if (nextAbovePos[1] > calculatedPosition[1] - yPadding) {
-                            calculatedPosition[1] = nextAbovePos[1] + yPadding;
+                        if (nextAbovePos.y > calculatedPosition.y - yPadding) {
+                            calculatedPosition.y = nextAbovePos.y + yPadding;
 //                        calculatedPosition[0] = nextAbovePos[0];
                             System.out.println("move down: " + selfEntityId.getAttributeIdentifier());
                         }
@@ -115,22 +116,22 @@ public class GraphSorter {
                 if (calculatedPosition == null) {
                     for (SortingEntity sortingEntity : couldBeNextTo) {
                         // note that this does not set the position and the result can be null
-                        float[] nextToPos = entityPositions.get(sortingEntity.selfEntityId);
+                        Point nextToPos = entityPositions.get(sortingEntity.selfEntityId);
                         if (calculatedPosition == null && nextToPos != null) {
-                            calculatedPosition = new float[]{nextToPos[0], nextToPos[1]};
+                            calculatedPosition = new Point(nextToPos.x, nextToPos.y);
                         }
                     }
                 }
                 if (calculatedPosition == null) {
                     for (SortingEntity sortingEntity : mustBeAbove) {
                         // note that this does not set the position and the result can be null
-                        float[] nextBelowPos = entityPositions.get(sortingEntity.selfEntityId);
+                        Point nextBelowPos = entityPositions.get(sortingEntity.selfEntityId);
                         if (nextBelowPos != null) {
                             if (calculatedPosition == null) {
-                                calculatedPosition = new float[]{nextBelowPos[0], nextBelowPos[1]};
+                                calculatedPosition = new Point(nextBelowPos.x, nextBelowPos.y);
                             }
-                            if (nextBelowPos[1] < calculatedPosition[1] + yPadding) {
-                                calculatedPosition[1] = nextBelowPos[1] - yPadding;
+                            if (nextBelowPos.y < calculatedPosition.y + yPadding) {
+                                calculatedPosition.y = nextBelowPos.y - yPadding;
 //                        calculatedPosition[0] = nextAbovePos[0];
                                 System.out.println("move up: " + selfEntityId.getAttributeIdentifier());
                             }
@@ -138,15 +139,15 @@ public class GraphSorter {
                     }
                 }
                 if (calculatedPosition == null) {
-                    calculatedPosition = new float[]{defaultPosition[0], 0};
+                    calculatedPosition = new Point(defaultPosition.x, 0);
                 }
                 // make sure any spouses are in the same row
                 // todo: this should probably be moved into a separate action and when a move is made then move in sequence the entities that are below and to the right
                 for (SortingEntity sortingEntity : mustBeNextTo) {
-                    float[] nextToPos = entityPositions.get(sortingEntity.selfEntityId);
+                    Point nextToPos = entityPositions.get(sortingEntity.selfEntityId);
                     if (nextToPos != null) {
-                        if (nextToPos[1] > calculatedPosition[1]) {
-                            calculatedPosition = new float[]{nextToPos[0], nextToPos[1]};
+                        if (nextToPos.y > calculatedPosition.y) {
+                            calculatedPosition = new Point(nextToPos.x, nextToPos.y);
                         }
 //                    } else {
 //                        // prepopulate the spouse position
@@ -161,7 +162,7 @@ public class GraphSorter {
                 }
                 while (!positionIsFree(selfEntityId, calculatedPosition, entityPositions)) {
                     // todo: this should be checking min distance not free
-                    calculatedPosition[0] = calculatedPosition[0] + xPadding;
+                    calculatedPosition.x = calculatedPosition.y + xPadding;
                     System.out.println("move right: " + selfEntityId.getAttributeIdentifier());
                 }
 //                System.out.println("Insert: " + selfEntityId + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
@@ -175,7 +176,7 @@ public class GraphSorter {
             return calculatedPosition;
         }
 
-        protected void getRelatedPositions(HashMap<UniqueIdentifier, float[]> entityPositions) {
+        protected void getRelatedPositions(HashMap<UniqueIdentifier, Point> entityPositions) {
             ArrayList<SortingEntity> allRelations = new ArrayList<SortingEntity>();
             allRelations.addAll(mustBeAbove);
             allRelations.addAll(mustBeBelow);
@@ -184,7 +185,7 @@ public class GraphSorter {
             for (SortingEntity sortingEntity : allRelations) {
                 if (sortingEntity.calculatedPosition == null) {
                     Rectangle rectangle = getGraphSize(entityPositions);
-                    float[] defaultPosition = new float[]{rectangle.width, rectangle.height};
+                    Point defaultPosition = new Point(rectangle.width, rectangle.height);
                     sortingEntity.getPosition(entityPositions, defaultPosition);
                     sortingEntity.getRelatedPositions(entityPositions);
                 }
@@ -221,20 +222,20 @@ public class GraphSorter {
 //
 //        }
 //    }
-    public Rectangle getGraphSize(HashMap<UniqueIdentifier, float[]> entityPositions) {
+    public Rectangle getGraphSize(HashMap<UniqueIdentifier, Point> entityPositions) {
         // get min positions
         // this should also take into account any graphics such as labels, although the border provided should be adequate, in other situations the page size could be set, in which case maybe an align option would be helpful
         int[] minPostion = null;
         int[] maxPostion = null;
-        for (float[] currentPosition : entityPositions.values()) {
+        for (Point currentPosition : entityPositions.values()) {
             if (minPostion == null) {
-                minPostion = new int[]{Math.round(currentPosition[0]), Math.round(currentPosition[1])};
-                maxPostion = new int[]{Math.round(currentPosition[0]), Math.round(currentPosition[1])};
+                minPostion = new int[]{Math.round(currentPosition.x), Math.round(currentPosition.y)};
+                maxPostion = new int[]{Math.round(currentPosition.x), Math.round(currentPosition.y)};
             } else {
-                minPostion[0] = Math.min(minPostion[0], Math.round(currentPosition[0]));
-                minPostion[1] = Math.min(minPostion[1], Math.round(currentPosition[1]));
-                maxPostion[0] = Math.max(maxPostion[0], Math.round(currentPosition[0]));
-                maxPostion[1] = Math.max(maxPostion[1], Math.round(currentPosition[1]));
+                minPostion[0] = Math.min(minPostion[0], Math.round(currentPosition.x));
+                minPostion[1] = Math.min(minPostion[1], Math.round(currentPosition.y));
+                maxPostion[0] = Math.max(maxPostion[0], Math.round(currentPosition.x));
+                maxPostion[1] = Math.max(maxPostion[1], Math.round(currentPosition.y));
             }
         }
         if (minPostion == null) {
@@ -249,7 +250,7 @@ public class GraphSorter {
         return new Rectangle(xOffset, yOffset, graphWidth, graphHeight);
     }
 
-    public void placeAllNodes(HashMap<UniqueIdentifier, float[]> entityPositions) {
+    public void placeAllNodes(HashMap<UniqueIdentifier, Point> entityPositions) {
         // make a has table of all entites
         // find the first ego node
         // place it and all its immediate relatives onto the graph, each time checking that the space is free
@@ -275,7 +276,7 @@ public class GraphSorter {
         if (knownSortingEntities != null) {
             for (SortingEntity currentSorter : knownSortingEntities.values()) {
                 Rectangle rectangle = getGraphSize(entityPositions);
-                float[] defaultPosition = new float[]{rectangle.width + xPadding, rectangle.height + yPadding};
+                Point defaultPosition = new Point(rectangle.width + xPadding, rectangle.height + yPadding);
                 currentSorter.getPosition(entityPositions, defaultPosition);
                 currentSorter.getRelatedPositions(entityPositions);
             }
