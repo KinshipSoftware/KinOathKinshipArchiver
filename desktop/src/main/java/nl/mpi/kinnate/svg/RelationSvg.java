@@ -2,13 +2,8 @@ package nl.mpi.kinnate.svg;
 
 import java.util.ArrayList;
 import nl.mpi.arbil.util.MessageDialogHandler;
-import nl.mpi.kinnate.kindata.DataTypes;
-import nl.mpi.kinnate.kindata.EntityData;
-import nl.mpi.kinnate.kindata.EntityRelation;
-import nl.mpi.kinnate.svg.relationlines.LineLookUpTable;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
 import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
-import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -83,7 +78,7 @@ public class RelationSvg {
 //
 //    }
     public void createRelationElements(GraphPanel graphPanel, RelationRecordTable relationRecords, Element relationGroupNode) throws OldFormatException {
-        relationRecords.adjustLines();
+        relationRecords.adjustLines(graphPanel);
 
         for (RelationRecord relationRecord : relationRecords.getAllRecords()) {
             Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
@@ -144,7 +139,7 @@ public class RelationSvg {
     }
 
     public void updateRelationLines(GraphPanel graphPanel, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) throws OldFormatException {
-        relationRecords.adjustLines();
+        relationRecords.adjustLines(graphPanel);
 //        graphPanel.lineLookUpTable.addLoops();
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
         Element relationGroup = graphPanel.doc.getElementById("RelationGroup");
