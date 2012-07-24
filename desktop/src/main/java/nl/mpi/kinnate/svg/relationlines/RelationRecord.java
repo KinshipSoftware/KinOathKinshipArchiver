@@ -36,12 +36,12 @@ public class RelationRecord {
     public LineRecord lineRecord; // todo: remove this 
     private String curveLinePoints = null; // todo: remove this 
 
-    public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, float[] averageParentPassed) throws OldFormatException {
-        lineRecord = setPolylinePointsAttribute(lineIdString, relationType, vSpacing, egoX, egoY, alterX, alterY, averageParentPassed);
+    public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, Point egoPoint, Point alterPoint, Point averageParentPassed) throws OldFormatException {
+        lineRecord = setPolylinePointsAttribute(lineIdString, relationType, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y, averageParentPassed);
     }
 
-    public RelationRecord(RelationTypeDefinition.CurveLineOrientation curveLineOrientation, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
-        curveLinePoints = setPathPointsAttribute(curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
+    public RelationRecord(RelationTypeDefinition.CurveLineOrientation curveLineOrientation, float hSpacing, float vSpacing, Point egoPoint, Point alterPoint) {
+        curveLinePoints = setPathPointsAttribute(curveLineOrientation, hSpacing, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y);
     }
 
     protected RelationRecord(String groupName, GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
@@ -91,21 +91,21 @@ public class RelationRecord {
     // start caclulate the average parent position
 //    private HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>> parentIdentifiers = new HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>>();
 
-    public float[] getAverageParentLocation(HashSet<UniqueIdentifier> parentIdSet) {
+    public Point getAverageParentLocation(HashSet<UniqueIdentifier> parentIdSet) {
         // note that getAverageParentLocation(EntityData entityData) must be called at least once for each entity to poputlate parentIdentifiers
-        Float maxY = null;
-        float averageX = 0;
+        Integer maxY = null;
+        int averageX = 0;
         int parentCount = 0;
 //        final HashSet<UniqueIdentifier> parentIdSet = parentIdentifiers.get(entityId);
         if (parentIdSet != null) {
             for (UniqueIdentifier parentIdentifier : parentIdSet) {
-                float[] parentLoc = graphPanel.entitySvg.getEntityLocation(parentIdentifier);
+                Point parentLoc = graphPanel.entitySvg.getEntityLocation(parentIdentifier);
                 if (maxY == null) {
-                    maxY = parentLoc[1];
+                    maxY = parentLoc.y;
                 } else {
-                    maxY = (maxY >= parentLoc[1]) ? maxY : parentLoc[1];
+                    maxY = (maxY >= parentLoc.y) ? maxY : parentLoc.y;
                 }
-                averageX += parentLoc[0];
+                averageX += parentLoc.x;
                 parentCount++;
             }
         }
@@ -113,11 +113,11 @@ public class RelationRecord {
         if (maxY == null) {
             return null;
         } else {
-            return new float[]{averageX, maxY};
+            return new Point(averageX, maxY);
         }
     }
 
-    public float[] getAverageParentLocation(EntityData entityData) {
+    public Point getAverageParentLocation(EntityData entityData) {
         HashSet<UniqueIdentifier> identifierSet = new HashSet<UniqueIdentifier>();
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
             if (entityRelation.getAlterNode() != null && entityRelation.getAlterNode().isVisible) {
@@ -135,9 +135,9 @@ public class RelationRecord {
     // end caclulate the average parent position
 
     public void updatePathPoints(LineLookUpTable lineLookUpTable) throws OldFormatException {
-        float[] egoSymbolPoint;
-        float[] alterSymbolPoint;
-        float[] parentPoint = null;
+        Point egoSymbolPoint;
+        Point alterSymbolPoint;
+        Point parentPoint = null;
         // the ancestral relations should already be unidirectional and duplicates should have been removed
         egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(leftEntity.getUniqueIdentifier());
         alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(rightEntity.getUniqueIdentifier());
@@ -154,10 +154,10 @@ public class RelationRecord {
 //        float fromY = (currentNode.getyPos()); // * vSpacing + vSpacing
 //        float toX = (graphLinkNode.getAlterNode().getxPos()); // * hSpacing + hSpacing
 //        float toY = (graphLinkNode.getAlterNode().getyPos()); // * vSpacing + vSpacing
-        float fromX = (egoSymbolPoint[0]); // * hSpacing + hSpacing
-        float fromY = (egoSymbolPoint[1]); // * vSpacing + vSpacing
-        float toX = (alterSymbolPoint[0]); // * hSpacing + hSpacing
-        float toY = (alterSymbolPoint[1]); // * vSpacing + vSpacing
+        int fromX = (egoSymbolPoint.x); // * hSpacing + hSpacing
+        int fromY = (egoSymbolPoint.y); // * vSpacing + vSpacing
+        int toX = (alterSymbolPoint.x); // * hSpacing + hSpacing
+        int toY = (alterSymbolPoint.y); // * vSpacing + vSpacing
 
         if (!DataTypes.isSanguinLine(directedRelation)) {
 //            case kinTermLine:
@@ -208,11 +208,11 @@ public class RelationRecord {
 
     }
 
-    private LineRecord setPolylinePointsAttribute(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, float[] averageParentPassed) throws OldFormatException {
+    private LineRecord setPolylinePointsAttribute(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, Point averageParentPassed) throws OldFormatException {
         //float midY = (egoY + alterY) / 2;
         // todo: Ticket #1064 when an entity is above one that it should be below the line should make a zigzag to indicate it        
         ArrayList<Point> initialPointsList = new ArrayList<Point>();
-        float[] averageParent = null;
+        Point averageParent = null;
         float midSpacing = vSpacing / 2;
 //        float parentSpacing = 10;
         float egoYmid;
@@ -222,13 +222,13 @@ public class RelationRecord {
             case ancestor:
                 if (averageParentPassed == null) {
                     // if no parent location has been provided then just use the current parent
-                    averageParent = new float[]{alterX, alterY};
+                    averageParent = new Point((int) alterX, (int) alterY);
                 } else {
                     // todo: this is filtering out the parent location for non ancestor relations, but it would be more efficient to no get the parent location unless required
                     averageParent = averageParentPassed;
                 }
                 egoYmid = egoY - midSpacing;
-                alterYmid = averageParent[1] + 30;
+                alterYmid = averageParent.y + 30;
 //                alterYmid = alterY + midSpacing;
 //                egoYmid = alterYmid + 30;
                 centerX = (egoYmid < alterYmid) ? centerX : egoX;
@@ -290,8 +290,8 @@ public class RelationRecord {
         initialPointsList.add(new Point((int) egoX, (int) egoYmid));
 
         if (averageParent != null) {
-            float averageParentX = averageParent[0];
-//            float minParentY = averageParent[1];
+            float averageParentX = averageParent.x;
+//            float minParentY = averageParent.y;
             initialPointsList.add(new Point((int) averageParentX, (int) egoYmid));
             initialPointsList.add(new Point((int) averageParentX, (int) alterYmid));
         } else {
