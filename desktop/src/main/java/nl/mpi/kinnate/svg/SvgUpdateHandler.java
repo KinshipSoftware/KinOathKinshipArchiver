@@ -1,8 +1,8 @@
 package nl.mpi.kinnate.svg;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 import java.util.HashSet;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
@@ -11,16 +11,13 @@ import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
-import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
 import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
-import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventTarget;
@@ -145,9 +142,9 @@ public class SvgUpdateHandler {
 
                 localRelationDragHandle.targetIdentifier = graphPanel.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30, graphPanel.selectedGroupId);
                 if (localRelationDragHandle.targetIdentifier != null) {
-                    float[] closestEntityPoint = graphPanel.entitySvg.getEntityLocation(localRelationDragHandle.targetIdentifier);
-                    dragNodeX = closestEntityPoint[0];
-                    dragNodeY = closestEntityPoint[1];
+                    Point closestEntityPoint = graphPanel.entitySvg.getEntityLocation(localRelationDragHandle.targetIdentifier);
+                    dragNodeX = closestEntityPoint.x;
+                    dragNodeY = closestEntityPoint.y;
                 }
 
                 Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
@@ -157,20 +154,19 @@ public class SvgUpdateHandler {
                 float hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing();
                 for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
                     String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
-                    float[] egoSymbolPoint;// = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-                    float[] parentPoint; // = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
-                    float[] dragPoint;
+                    Point egoSymbolPoint;// = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                    Point parentPoint = null; // = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
+                    Point dragPoint;
 //
                     DataTypes.RelationType directedRelation = localRelationDragHandle.getRelationType();
                     if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
-                        egoSymbolPoint = new float[]{dragNodeX, dragNodeY};
+                        egoSymbolPoint = new Point((int) dragNodeX, (int) dragNodeY);
                         dragPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-                        parentPoint = dragPoint;
+//                        parentPoint = dragPoint;
                         directedRelation = DataTypes.RelationType.ancestor;
                     } else {
                         egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
-                        dragPoint = new float[]{dragNodeX, dragNodeY};
-                        parentPoint = dragPoint;
+                        dragPoint = new Point((int) dragNodeX, (int) dragNodeY);
                     }
                     // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
 //                                            Element useNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
@@ -190,9 +186,9 @@ public class SvgUpdateHandler {
                     try {
                         RelationRecord relationRecord;
                         if (DataTypes.isSanguinLine(directedRelation)) {
-                            relationRecord = new RelationRecord(dragLineElementId, directedRelation, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1], parentPoint);
+                            relationRecord = new RelationRecord(dragLineElementId, directedRelation, vSpacing, egoSymbolPoint, dragPoint, parentPoint);
                         } else {
-                            relationRecord = new RelationRecord(localRelationDragHandle.getCurveLineOrientation(), hSpacing, vSpacing, egoSymbolPoint[0], egoSymbolPoint[1], dragPoint[0], dragPoint[1]);
+                            relationRecord = new RelationRecord(localRelationDragHandle.getCurveLineOrientation(), hSpacing, vSpacing, egoSymbolPoint, dragPoint);
                         }
                         highlightBackgroundLine.setAttribute("d", relationRecord.getPathPointsString());
                         relationHighlightGroup.appendChild(highlightBackgroundLine);
@@ -774,11 +770,11 @@ public class SvgUpdateHandler {
 
                     UniqueIdentifier labelId = new UniqueIdentifier(UniqueIdentifier.IdentifierType.gid);
 //                    String labelIdString = "label" + labelGroup.getChildNodes().getLength();
-                    float[] labelPosition = new float[]{graphSize.x + graphSize.width / 2, graphSize.y + graphSize.height / 2};
+                    Point labelPosition = new Point(graphSize.x + graphSize.width / 2, graphSize.y + graphSize.height / 2);
 //                    labelText.setAttribute("x", "0"); // todo: update this to use the mouse click location // xPos
 //                    labelText.setAttribute("y", "0"); // yPos
                     labelText.setAttribute("id", labelId.getAttributeIdentifier());
-                    labelText.setAttribute("transform", "translate(" + Float.toString(labelPosition[0]) + ", " + Float.toString(labelPosition[1]) + ")");
+                    labelText.setAttribute("transform", "translate(" + Integer.toString(labelPosition.x) + ", " + Integer.toString(labelPosition.y) + ")");
 //
                     // put this into the geometry group or the label group depending on its type so that labels sit above entitis and graphics sit below entities
                     if (graphicsType.equals(GraphicsTypes.Label)) {
