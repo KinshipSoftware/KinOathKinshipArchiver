@@ -123,7 +123,7 @@ public class GraphSorter {
                         if (nextAbovePos.y > calculatedPosition.y - yPadding) {
                             calculatedPosition.setLocation(calculatedPosition.x, nextAbovePos.y + yPadding);
 //                        calculatedPosition[0] = nextAbovePos[0];
-                            System.out.println("move down: " + selfEntityId.getAttributeIdentifier());
+//                            System.out.println("move down: " + selfEntityId.getAttributeIdentifier());
                             addLabel(":D");
                         }
                     }
@@ -150,7 +150,7 @@ public class GraphSorter {
                             if (nextBelowPos.y < calculatedPosition.y + yPadding) {
                                 calculatedPosition.setLocation(calculatedPosition.x, nextBelowPos.y - yPadding);
 //                        calculatedPosition[0] = nextAbovePos[0];
-                                System.out.println("move up: " + selfEntityId.getAttributeIdentifier());
+//                                System.out.println("move up: " + selfEntityId.getAttributeIdentifier());
                                 addLabel(":U");
                             }
                         }
@@ -185,7 +185,7 @@ public class GraphSorter {
                     // todo: this should be checking min distance not free
                     // todo: this should be sorting by need for position (eg spouse with no parents needs to be next to while a spouse with parents needs to be below the parents) and then by age
                     calculatedPosition.setLocation(calculatedPosition.x + xPadding, calculatedPosition.y);
-                    System.out.println("move right: " + selfEntityId.getAttributeIdentifier());
+//                    System.out.println("move right: " + selfEntityId.getAttributeIdentifier());
                     addLabel(":R");
                 }
 //                System.out.println("Insert: " + selfEntityId + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
