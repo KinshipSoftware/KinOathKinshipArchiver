@@ -622,7 +622,9 @@ public class EntitySvg {
             textSpanCounter = addTextLabel(graphPanel, groupNode, "modified", "red", textSpanCounter);
         }
         for (String currentTextLable : labelList) {
-            textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable, "black", textSpanCounter);
+            if (!currentTextLable.isEmpty()) {
+                textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable, "black", textSpanCounter);
+            }
         }
         for (GraphLabel currentTextLable : currentNode.getKinTermStrings()) {
             textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable.getLabelString(), currentTextLable.getColourString(), textSpanCounter);
