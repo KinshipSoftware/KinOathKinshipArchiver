@@ -12,15 +12,33 @@ public class TipLineStructure extends ImportLineStructure {
     public TipLineStructure(String lineString, ArrayList<String> gedcomLevelStrings) {
         super(lineString, gedcomLevelStrings);
         isFileHeader = lineString.startsWith("*");
-        String[] lineParts = lineString.split(" ", 3);
-        gedcomLevel = Integer.parseInt(lineParts[0]);
-        currentName = lineParts[1];
+        System.out.println("lineString: " + lineString);
+        if (isFileHeader) {
+            gedcomLevel = 0;
+            String[] lineParts = lineString.substring(1).split(":", 1);
+            currentName = lineParts[0];
+            lineContents = "";
+            if (lineParts.length > 1) {
+                lineContents = lineParts[1];
+            }
+        } else {
+            String[] lineParts = lineString.split("\t", 4);
+            System.out.println("lineParts:" + lineParts.length);
+            System.out.println("lineParts:" + lineParts);
+            currentID = lineParts[1];
+            if (lineParts[0].equals("1")) {
+                // todo: add relations at this point
+            } else {
+                gedcomLevel = Integer.parseInt(lineParts[0]);
+                currentName = lineParts[1];
+                lineContents = "";
+                if (lineParts.length > 3) {
+                    lineContents = lineParts[3];
+                }
+            }
+        }
         while (gedcomLevelStrings.size() > gedcomLevel) {
             gedcomLevelStrings.remove(gedcomLevelStrings.size() - 1);
-        }
-        lineContents = "";
-        if (lineParts.length > 2) {
-            lineContents = lineParts[2];
         }
         gedcomLevelStrings.add(currentName);
     }
