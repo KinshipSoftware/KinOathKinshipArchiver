@@ -63,12 +63,12 @@ public class GedcomLineStructure extends ImportLineStructure {
     }
 
     @Override
-    public boolean isContineLine() {
+    public boolean isContinueLine() {
         return currentName != null && currentName.equals("CONC");
     }
 
     @Override
-    public boolean isContineLineBreak() {
+    public boolean isContinueLineBreak() {
         return currentName != null && currentName.equals("CONT");
     }
 
