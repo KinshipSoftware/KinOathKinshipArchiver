@@ -17,10 +17,10 @@ public class TipLineStructure extends ImportLineStructure {
             currentID = "head";
             gedcomLevel = 0;
             String[] lineParts = lineString.substring(1).split(":", 2);
-            currentName = lineParts[0];
-            lineContents = "";
             if (lineParts.length > 1) {
-                lineContents = lineParts[1];
+                addFieldEntry(lineParts[0], lineParts[1]);
+            } else {
+                addFieldEntry(lineParts[0], "");
             }
         } else {
             String[] lineParts = lineString.split("\t");
@@ -40,8 +40,7 @@ public class TipLineStructure extends ImportLineStructure {
             } else if (lineParts[0].equals("2")) {
                 System.out.println("2 Property line");
                 // todo: add notes etc at this point
-                currentName = lineParts[2];
-                lineContents = lineParts[3];
+                addFieldEntry(lineParts[2], lineParts[3]);
                 // todo: handle cv envents
                 /*
                  * d. the place (in case of cv events)
@@ -51,9 +50,10 @@ public class TipLineStructure extends ImportLineStructure {
             } else if (lineParts[0].equals("0")) {
                 System.out.println("0 Identity line");
                 // add name and gender at this point
-                currentName = "Name";
                 if (lineParts.length > 3) {
-                    lineContents = lineParts[3];
+                    addFieldEntry("Name", lineParts[3]);
+                } else {
+                    addFieldEntry("Name", "");
                 }
             } else {
                 throw new ImportException("Invalid TIP line type: " + lineString);
@@ -95,13 +95,15 @@ public class TipLineStructure extends ImportLineStructure {
         while (gedcomLevelStrings.size() > gedcomLevel) {
             gedcomLevelStrings.remove(gedcomLevelStrings.size() - 1);
         }
-        gedcomLevelStrings.add(currentName);
-        System.out.println("currentID: " + currentID);
-        System.out.println("currentName: " + currentName);
-        System.out.println("lineContents: " + lineContents);
+        if (hasCurrent()) {
+            gedcomLevelStrings.add(getCurrent().currentName);
+            System.out.println("currentID: " + currentID);
+            System.out.println("currentName: " + getCurrent().currentName);
+            System.out.println("lineContents: " + getCurrent().lineContents);
+        }
     }
 
     public boolean isRelation() {
-        return lineContents != null && lineContents.startsWith("@") && lineContents.endsWith("@");
+        return hasCurrent() && getCurrent().lineContents != null && getCurrent().lineContents.startsWith("@") && getCurrent().lineContents.endsWith("@");
     }
 }
