@@ -89,11 +89,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 //                System.out.println("gedcomLevelString: " + gedcomLevelStrings);
 //                appendToTaskOutput(importTextArea, strLine);
                 boolean lastFieldContinued = false;
-                if (lineStructure.isContineLineBreak()) {
+                if (lineStructure.isContinueLineBreak()) {
                     // todo: if the previous field is null this should be caught and handled as an error in the source file                
                     currentEntity.appendValueToLast("\n" + lineStructure.getLineContents());
                     lastFieldContinued = true;
-                } else if (lineStructure.isContineLine()) {
+                } else if (lineStructure.isContinueLine()) {
                     // todo: if the previous field is null this should be caught and handled as an error in the source file
                     currentEntity.appendValueToLast(lineStructure.getLineContents());
                     lastFieldContinued = true;
