@@ -15,12 +15,14 @@ public abstract class ImportLineStructure {
     String currentID = null;
     String entityType = null;
     boolean isFileHeader = false;
+    boolean incompleteLine = false;
 
     public ImportLineStructure(String lineString, ArrayList<String> gedcomLevelStrings) {
     }
 
     public String getCurrentID() throws ImportException {
         if (currentID == null) {
+//            new Exception().printStackTrace();
             throw new ImportException("CurrentID has not been set");
         }
         return currentID;
@@ -68,6 +70,10 @@ public abstract class ImportLineStructure {
 
     public boolean isEndOfFileMarker() {
         return false;
+    }
+
+    public boolean isIncompleteLine() {
+        return incompleteLine;
     }
 
     abstract boolean isRelation();
