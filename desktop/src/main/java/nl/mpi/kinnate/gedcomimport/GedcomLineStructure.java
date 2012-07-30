@@ -14,8 +14,12 @@ public class GedcomLineStructure extends ImportLineStructure {
         isFileHeader = lineString.startsWith("0 HEAD");
         String[] lineParts = lineString.split(" ", 3);
         gedcomLevel = Integer.parseInt(lineParts[0]);
-        if (!isFileHeader && gedcomLevel == 0) {
+        if (isFileHeader) {
             currentID = lineParts[1];
+            currentName = lineParts[1];
+        } else if (!isFileHeader && gedcomLevel == 0) {
+            currentID = lineParts[1];
+//            currentName = lineParts[2];
             if (lineParts.length > 2) {
                 setType(lineParts[2]);
                 if (!currentID.startsWith("@") || !currentID.endsWith("@")) {
@@ -23,7 +27,7 @@ public class GedcomLineStructure extends ImportLineStructure {
                 }
             }
         } else {
-            currentID = lineParts[1];
+//            currentID = lineParts[1];
             currentName = lineParts[1];
             lineContents = "";
             if (lineParts.length > 2) {
