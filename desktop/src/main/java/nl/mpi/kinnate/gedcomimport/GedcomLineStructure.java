@@ -16,7 +16,7 @@ public class GedcomLineStructure extends ImportLineStructure {
         gedcomLevel = Integer.parseInt(lineParts[0]);
         if (isFileHeader) {
             currentID = lineParts[1];
-            currentName = lineParts[1];
+            addFieldEntry(lineParts[1], null);
         } else if (!isFileHeader && gedcomLevel == 0) {
             currentID = lineParts[1];
 //            currentName = lineParts[2];
@@ -27,17 +27,16 @@ public class GedcomLineStructure extends ImportLineStructure {
                 }
             }
         } else {
-//            currentID = lineParts[1];
-            currentName = lineParts[1];
-            lineContents = "";
             if (lineParts.length > 2) {
-                lineContents = lineParts[2];
+                addFieldEntry(lineParts[1], lineParts[2]);
+            } else {
+                addFieldEntry(lineParts[1], "");
             }
         }
         while (gedcomLevelStrings.size() > gedcomLevel) {
             gedcomLevelStrings.remove(gedcomLevelStrings.size() - 1);
         }
-        gedcomLevelStrings.add(currentName);
+        gedcomLevelStrings.add(lineParts[1]);
     }
 
     private void setType(String getdomType) {
@@ -64,12 +63,12 @@ public class GedcomLineStructure extends ImportLineStructure {
 
     @Override
     public boolean isContinueLine() {
-        return currentName != null && currentName.equals("CONC");
+        return hasCurrent() && getCurrent().currentName.equals("CONC");
     }
 
     @Override
     public boolean isContinueLineBreak() {
-        return currentName != null && currentName.equals("CONT");
+        return hasCurrent() && getCurrent().currentName.equals("CONT");
     }
 
     @Override
@@ -78,6 +77,6 @@ public class GedcomLineStructure extends ImportLineStructure {
     }
 
     public boolean isRelation() {
-        return lineContents != null && lineContents.startsWith("@") && lineContents.endsWith("@");
+        return hasCurrent() && getCurrent().lineContents != null && getCurrent().lineContents.startsWith("@") && getCurrent().lineContents.endsWith("@");
     }
 }
