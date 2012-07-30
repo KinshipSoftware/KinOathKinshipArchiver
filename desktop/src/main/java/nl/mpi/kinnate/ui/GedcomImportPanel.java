@@ -31,6 +31,7 @@ import nl.mpi.kinnate.gedcomimport.CsvImporter;
 import nl.mpi.kinnate.gedcomimport.GedcomImporter;
 import nl.mpi.kinnate.gedcomimport.GenericImporter;
 import nl.mpi.kinnate.gedcomimport.ImportException;
+import nl.mpi.kinnate.gedcomimport.TipImporter;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
@@ -186,15 +187,25 @@ public class GedcomImportPanel extends JPanel {
                         public void run() {
                             try {
                                 boolean overwriteExisting = overwriteOnImport.isSelected();
-                                GenericImporter genericImporter = new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
-                                if (importFileString != null) {
-                                    if (!genericImporter.canImport(importFileString)) {
-                                        genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
+                                GenericImporter genericImporter = null;
+                                for (GenericImporter testImporter : new GenericImporter[]{new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage),
+                                            new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage),
+                                            new TipImporter(progressBar, importTextArea, overwriteExisting, sessionStorage)}) {
+                                    if (importFileString != null) {
+                                        if (testImporter.canImport(importFileString)) {
+                                            genericImporter = testImporter;
+                                            break;
+                                        }
+                                    } else {
+                                        if (testImporter.canImport(importFile.toString())) {
+                                            genericImporter = testImporter;
+                                            break;
+                                        }
                                     }
-                                } else {
-                                    if (!genericImporter.canImport(importFile.toString())) {
-                                        genericImporter = new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage);
-                                    }
+                                }
+                                if (genericImporter == null) {
+                                    importTextArea.append("No importers found for this file\n");
+                                    return;
                                 }
                                 URI[] treeNodesArray;
                                 importTextArea.append("Importing the kinship data (step 1/4)\n");
