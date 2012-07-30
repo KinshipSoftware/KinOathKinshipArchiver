@@ -9,15 +9,51 @@ import java.util.ArrayList;
  */
 public abstract class ImportLineStructure {
 
-    String lineContents = null;
     int gedcomLevel = 0;
-    String currentName = null;
     String currentID = null;
     String entityType = null;
     boolean isFileHeader = false;
     boolean incompleteLine = false;
+    private int currentFieldIndex = 0;
+
+    protected class FieldEntry {
+
+        protected String lineContents = null;
+        protected String currentName = null;
+
+        protected FieldEntry(String currentName, String lineContents) throws ImportException {
+            if (currentName == null) {
+                throw new ImportException("Cannot have null names to a field.");
+            }
+            this.currentName = currentName;
+            this.lineContents = lineContents;
+        }
+    }
+    ArrayList<FieldEntry> fieldEntryList = new ArrayList<FieldEntry>();
 
     public ImportLineStructure(String lineString, ArrayList<String> gedcomLevelStrings) {
+    }
+
+    protected void addFieldEntry(String currentName, String lineContents) throws ImportException {
+        fieldEntryList.add(new FieldEntry(currentName, lineContents));
+    }
+
+    private FieldEntry getFirst() {
+        currentFieldIndex = 0;
+        return fieldEntryList.get(currentFieldIndex);
+    }
+
+    protected FieldEntry getCurrent() {
+        return fieldEntryList.get(currentFieldIndex);
+    }
+
+    private FieldEntry getNext() {
+        currentFieldIndex++;
+        return fieldEntryList.get(currentFieldIndex);
+    }
+
+    protected boolean hasCurrent() {
+        return currentFieldIndex < fieldEntryList.size();
     }
 
     public String getCurrentID() throws ImportException {
@@ -29,11 +65,11 @@ public abstract class ImportLineStructure {
     }
 
     public String getCurrentName() throws ImportException {
-        if (currentName == null) {
+        if (getCurrent().currentName == null) {
 //            new Exception().printStackTrace();
             throw new ImportException("CurrentName has not been set");
         }
-        return currentName;
+        return getCurrent().currentName;
     }
 
     public int getGedcomLevel() {
@@ -41,15 +77,15 @@ public abstract class ImportLineStructure {
     }
 
     public boolean hasLineContents() {
-        return lineContents != null;
+        return hasCurrent() && getCurrent().lineContents != null;
     }
 
     public String getLineContents() throws ImportException {
-        if (lineContents == null) {
+        if (!hasCurrent() || getCurrent().lineContents == null) {
 //            new Exception().printStackTrace();
             throw new ImportException("LineContents has not been set");
         }
-        return lineContents;
+        return getCurrent().lineContents;
     }
 
     public String getEntityType() {
