@@ -60,11 +60,11 @@ public abstract class ImportLineStructure {
         return isFileHeader;
     }
 
-    public boolean isContineLine() {
+    public boolean isContinueLine() {
         return false;
     }
 
-    public boolean isContineLineBreak() {
+    public boolean isContinueLineBreak() {
         return false;
     }
 
