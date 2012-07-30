@@ -11,13 +11,26 @@ public abstract class ImportLineStructure {
 
     String lineContents = null;
     int gedcomLevel = 0;
-    String currentName;
-    boolean isFileHeader;
+    String currentName = null;
+    String currentID = null;
+    String entityType = null;
+    boolean isFileHeader = false;
 
     public ImportLineStructure(String lineString, ArrayList<String> gedcomLevelStrings) {
     }
 
-    public String getCurrentName() {
+    public String getCurrentID() throws ImportException {
+        if (currentID == null) {
+            throw new ImportException("CurrentID has not been set");
+        }
+        return currentID;
+    }
+
+    public String getCurrentName() throws ImportException {
+        if (currentName == null) {
+//            new Exception().printStackTrace();
+            throw new ImportException("CurrentName has not been set");
+        }
         return currentName;
     }
 
@@ -29,12 +42,32 @@ public abstract class ImportLineStructure {
         return lineContents != null;
     }
 
-    public String getLineContents() {
+    public String getLineContents() throws ImportException {
+        if (lineContents == null) {
+//            new Exception().printStackTrace();
+            throw new ImportException("LineContents has not been set");
+        }
         return lineContents;
+    }
+
+    public String getEntityType() {
+        return entityType;
     }
 
     public boolean isFileHeader() {
         return isFileHeader;
+    }
+
+    public boolean isContineLine() {
+        return false;
+    }
+
+    public boolean isContineLineBreak() {
+        return false;
+    }
+
+    public boolean isEndOfFileMarker() {
+        return false;
     }
 
     abstract boolean isRelation();
