@@ -20,12 +20,12 @@ public class TipLineStructure extends ImportLineStructure {
             if (lineParts.length > 1) {
                 addFieldEntry(lineParts[0], lineParts[1]);
             } else {
-                addFieldEntry(lineParts[0], "");
+                addFieldEntry("Comment", lineParts[0]);
             }
         } else {
             String[] lineParts = lineString.split("\t");
             if (lineParts.length < 2) {
-                System.out.println("Incomplete line: " + lineString);
+                System.out.println("Incomplete line: \"" + lineString + "\"");
                 System.out.println("lineParts:" + lineParts.length);
                 incompleteLine = true;
                 return;
@@ -34,11 +34,17 @@ public class TipLineStructure extends ImportLineStructure {
             gedcomLevel = 0; //Integer.parseInt(lineParts[0]);
             if (lineParts[0].equals("1")) {
                 System.out.println("1 Kinship line");
+                if (lineParts.length != 4) {
+                    throw new ImportException("Incorrect number of fields in line:\n" + lineString);
+                }
                 // todo: add relations at this point
 //                currentName = "A realation ID";
 //                lineContents = lineParts[2];
             } else if (lineParts[0].equals("2")) {
                 System.out.println("2 Property line");
+                if (lineParts.length != 7) {
+                    throw new ImportException("Incorrect number of fields in line:\n" + lineString);
+                }
                 // todo: add notes etc at this point
                 addFieldEntry(lineParts[2], lineParts[3]);
                 // todo: handle cv envents
@@ -49,6 +55,9 @@ public class TipLineStructure extends ImportLineStructure {
                  */
             } else if (lineParts[0].equals("0")) {
                 System.out.println("0 Identity line");
+                if (lineParts.length != 4) {
+                    throw new ImportException("Incorrect number of fields in line:\n" + lineString);
+                }
                 // add name and gender at this point
                 if (lineParts.length > 3) {
                     addFieldEntry("Name", lineParts[3]);
