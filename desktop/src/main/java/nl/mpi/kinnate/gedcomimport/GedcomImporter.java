@@ -233,6 +233,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 }
                                 // create the link node when required
                                 if (lineStructure.isRelation()) {
+                                    // todo: move this into the gedcom line structure class and use lineStructure.getRelationList() to later retrieve the list
 //                                appendToTaskOutput("--> adding social relation");
                                     RelationType targetRelation = RelationType.other;
                                     // here the following five relation types are mapped to the correct relation types after this the association is cretaed and later the indigiduals are linked with sanguine relations
@@ -262,6 +263,9 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             }
                         }
                         lineStructure.moveToNextField();
+                    }
+                    for (ImportLineStructure.RelationEntry relationEntry : lineStructure.getRelationList()) {
+                        getEntityDocument(createdNodes, profileId, relationEntry.egoIdString, importTranslator).entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, relationEntry.alterIdString, importTranslator).entityData, relationEntry.relationType, null, null, null, relationEntry.customType);
                     }
                 }
                 super.incrementLineProgress();
