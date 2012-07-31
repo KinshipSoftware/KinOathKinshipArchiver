@@ -23,11 +23,13 @@ public abstract class ImportLineStructure {
         protected String egoIdString;
         protected String alterIdString;
         protected DataTypes.RelationType relationType;
+        protected String customType;
 
-        public RelationEntry(String egoIdString, String alterIdString, RelationType relationType) {
+        public RelationEntry(String egoIdString, String alterIdString, RelationType relationType, String customType) {
             this.egoIdString = egoIdString;
             this.alterIdString = alterIdString;
             this.relationType = relationType;
+            this.customType = customType;
         }
     }
 
@@ -56,8 +58,8 @@ public abstract class ImportLineStructure {
         fieldEntryList.add(new FieldEntry(currentName, lineContents));
     }
 
-    protected void addRelationEntry(String egoIdString, String alterIdString, RelationType relationType) throws ImportException {
-        relationEntryList.add(new RelationEntry(egoIdString, alterIdString, relationType));
+    protected void addRelationEntry(String egoIdString, String alterIdString, RelationType relationType, String customType) throws ImportException {
+        relationEntryList.add(new RelationEntry(egoIdString, alterIdString, relationType, customType));
     }
 
     protected FieldEntry getCurrentField() {
@@ -70,6 +72,10 @@ public abstract class ImportLineStructure {
 
     protected boolean hasCurrentField() {
         return currentFieldIndex < fieldEntryList.size();
+    }
+
+    public RelationEntry[] getRelationList() {
+        return relationEntryList.toArray(new RelationEntry[0]);
     }
 
     public String getCurrentID() throws ImportException {
