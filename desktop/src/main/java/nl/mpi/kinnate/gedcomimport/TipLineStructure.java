@@ -37,7 +37,7 @@ public class TipLineStructure extends ImportLineStructure {
                 if (lineParts.length != 4) {
                     throw new ImportException("Incorrect number of fields in line:\n" + lineString);
                 }
-                // todo: add relations at this point
+                // todo:.. add relations at this point
 //                currentName = "A realation ID";
 //                lineContents = lineParts[2];
             } else if (lineParts[0].equals("2")) {
@@ -56,7 +56,7 @@ public class TipLineStructure extends ImportLineStructure {
                     addFieldEntry(lineParts[2].trim() + "_Date", lineParts[5]);
                 }
                 if (!lineParts[5].trim().isEmpty()) {
-                    // todo: add a relatin here
+                    // todo:.. add a relation here
                     addFieldEntry(lineParts[2].trim() + "_AlterID", lineParts[5]);
                 }
 
@@ -72,11 +72,29 @@ public class TipLineStructure extends ImportLineStructure {
                     throw new ImportException("Incorrect number of fields in line:\n" + lineString);
                 }
                 // add name and gender at this point
-                if (lineParts.length > 3) {
-                    addFieldEntry("Name", lineParts[3]);
+                final String[] nameParts = lineParts[3].split("/");
+                if (nameParts.length == 1) {
+                    addFieldEntry("Name", nameParts[0]);
                 } else {
-                    addFieldEntry("Name", "");
+                    for (int nameCount = 0; nameCount < nameParts.length; nameCount++) {
+                        addFieldEntry("Name" + (nameCount + 1), nameParts[nameCount]);
+                    }
                 }
+                if ("0".equals(lineParts[2])) {
+                    addFieldEntry("Gender", "Male");
+                } else if ("1".equals(lineParts[2])) {
+                    addFieldEntry("Gender", "Female");
+                } else if ("2".equals(lineParts[2])) {
+                    addFieldEntry("Gender", "Unknown");
+                } else {
+                    addFieldEntry("Gender", lineParts[2]);
+                }
+                /*
+                 * 0 Identity line: contains
+                 * a. the individual's ID number
+                 * b. gender number (0 male, 1 female, 2 unknown gender)
+                 * c. name (different parts being separated by a slash (/)
+                 */
             } else {
                 throw new ImportException("Invalid TIP line type: " + lineString);
 //                currentName = lineParts[2];
