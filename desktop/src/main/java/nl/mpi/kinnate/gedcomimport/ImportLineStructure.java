@@ -1,6 +1,8 @@
 package nl.mpi.kinnate.gedcomimport;
 
 import java.util.ArrayList;
+import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 
 /**
  * Document : ImportLineStructure
@@ -15,6 +17,19 @@ public abstract class ImportLineStructure {
     boolean isFileHeader = false;
     boolean incompleteLine = false;
     private int currentFieldIndex = 0;
+
+    protected class RelationEntry {
+
+        protected String egoIdString;
+        protected String alterIdString;
+        protected DataTypes.RelationType relationType;
+
+        public RelationEntry(String egoIdString, String alterIdString, RelationType relationType) {
+            this.egoIdString = egoIdString;
+            this.alterIdString = alterIdString;
+            this.relationType = relationType;
+        }
+    }
 
     protected class FieldEntry {
 
@@ -32,6 +47,7 @@ public abstract class ImportLineStructure {
         }
     }
     ArrayList<FieldEntry> fieldEntryList = new ArrayList<FieldEntry>();
+    ArrayList<RelationEntry> relationEntryList = new ArrayList<RelationEntry>();
 
     public ImportLineStructure(String lineString, ArrayList<String> gedcomLevelStrings) {
     }
@@ -40,15 +56,19 @@ public abstract class ImportLineStructure {
         fieldEntryList.add(new FieldEntry(currentName, lineContents));
     }
 
-    protected FieldEntry getCurrent() {
+    protected void addRelationEntry(String egoIdString, String alterIdString, RelationType relationType) throws ImportException {
+        relationEntryList.add(new RelationEntry(egoIdString, alterIdString, relationType));
+    }
+
+    protected FieldEntry getCurrentField() {
         return fieldEntryList.get(currentFieldIndex);
     }
 
-    protected void moveToNext() {
+    protected void moveToNextField() {
         currentFieldIndex++;
     }
 
-    protected boolean hasCurrent() {
+    protected boolean hasCurrentField() {
         return currentFieldIndex < fieldEntryList.size();
     }
 
@@ -61,11 +81,11 @@ public abstract class ImportLineStructure {
     }
 
     public String getCurrentName() throws ImportException {
-        if (getCurrent().currentName == null) {
+        if (getCurrentField().currentName == null) {
 //            new Exception().printStackTrace();
             throw new ImportException("CurrentName has not been set");
         }
-        return getCurrent().currentName;
+        return getCurrentField().currentName;
     }
 
     public int getGedcomLevel() {
@@ -73,15 +93,15 @@ public abstract class ImportLineStructure {
     }
 
     public boolean hasLineContents() {
-        return hasCurrent() && getCurrent().lineContents != null;
+        return hasCurrentField() && getCurrentField().lineContents != null;
     }
 
     public String getLineContents() throws ImportException {
-        if (!hasCurrent() || getCurrent().lineContents == null) {
+        if (!hasCurrentField() || getCurrentField().lineContents == null) {
 //            new Exception().printStackTrace();
             throw new ImportException("LineContents has not been set");
         }
-        return getCurrent().lineContents;
+        return getCurrentField().lineContents;
     }
 
     public String getEntityType() {
