@@ -115,10 +115,14 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             currentEntity = getEntityDocument(createdNodes, typeString, lineStructure.getCurrentID(), importTranslator);
                             if (lineStructure.isFileHeader()) {
                                 // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
-                                appendToTaskOutput("Reading Gedcom Header");
+//                                appendToTaskOutput("Reading Gedcom Header");
                                 // todo: maybe replace this "Gedcom Header" string with the file name of the import file
-                                currentEntity.insertValue("Type", "Imported File Header");
-                                currentEntity.appendValue(lineStructure.getCurrentName(), null, lineStructure.getGedcomLevel());
+                                currentEntity.insertValue("Type", "Imported File Header"); // inserting a value will only add that value once, if the value already exists then no action is taken
+                                if (lineStructure.hasLineContents()) {
+                                    currentEntity.insertValue(lineStructure.getCurrentName(), lineStructure.getLineContents());
+                                } else {
+                                    currentEntity.appendValue(lineStructure.getCurrentName(), null, lineStructure.getGedcomLevel());
+                                }
                             } else {
                                 if (lineStructure.getEntityType() != null) {
                                     currentEntity.insertValue("Type", lineStructure.getEntityType());
