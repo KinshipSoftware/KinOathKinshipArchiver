@@ -58,7 +58,7 @@ public class GraphSorter {
         // for testing only
         private void addLabel(String labelString) {
 //            tempLabels.append(labelString);
-            entityData.appendTempLabel(labelString);
+//            entityData.appendTempLabel(labelString);
         }
 
         public void calculateRelations(HashMap<UniqueIdentifier, SortingEntity> knownSortingEntities) {
