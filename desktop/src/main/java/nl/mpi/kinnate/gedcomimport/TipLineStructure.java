@@ -46,7 +46,20 @@ public class TipLineStructure extends ImportLineStructure {
                     throw new ImportException("Incorrect number of fields in line:\n" + lineString);
                 }
                 // todo: add notes etc at this point
-                addFieldEntry(lineParts[2], lineParts[3]);
+                if (!lineParts[3].trim().isEmpty()) {
+                    addFieldEntry(lineParts[2], lineParts[3]);
+                }
+                if (!lineParts[4].trim().isEmpty()) {
+                    addFieldEntry(lineParts[2].trim() + "_Place", lineParts[4]);
+                }
+                if (!lineParts[5].trim().isEmpty()) {
+                    addFieldEntry(lineParts[2].trim() + "_Date", lineParts[5]);
+                }
+                if (!lineParts[5].trim().isEmpty()) {
+                    // todo: add a relatin here
+                    addFieldEntry(lineParts[2].trim() + "_AlterID", lineParts[5]);
+                }
+
                 // todo: handle cv envents
                 /*
                  * d. the place (in case of cv events)
