@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.gedcomimport;
 
 import java.util.ArrayList;
+import nl.mpi.kinnate.kindata.DataTypes;
 
 /**
  * Document : TipLineStructure
@@ -37,9 +38,15 @@ public class TipLineStructure extends ImportLineStructure {
                 if (lineParts.length != 4) {
                     throw new ImportException("Incorrect number of fields in line:\n" + lineString);
                 }
-                // todo:.. add relations at this point
-//                currentName = "A realation ID";
-//                lineContents = lineParts[2];
+                DataTypes.RelationType relationType = DataTypes.RelationType.other;
+                if ("0".equals(lineParts[3])) {
+                    relationType = DataTypes.RelationType.ancestor;
+                } else if ("1".equals(lineParts[3])) {
+                    relationType = DataTypes.RelationType.ancestor;
+                } else if ("2".equals(lineParts[3])) {
+                    relationType = DataTypes.RelationType.union;
+                }
+                addRelationEntry(lineParts[1], lineParts[2], relationType, null);
             } else if (lineParts[0].equals("2")) {
 //                System.out.println("2 Property line");
                 if (lineParts.length != 7) {
