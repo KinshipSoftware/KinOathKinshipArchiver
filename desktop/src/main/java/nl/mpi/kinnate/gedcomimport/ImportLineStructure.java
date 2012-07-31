@@ -25,8 +25,8 @@ public abstract class ImportLineStructure {
             if (currentName == null) {
                 throw new ImportException("Cannot have null names to a field.");
             }
-            this.currentName = currentName;
-            this.lineContents = lineContents;
+            this.currentName = currentName.trim();
+            this.lineContents = lineContents.trim();
         }
     }
     ArrayList<FieldEntry> fieldEntryList = new ArrayList<FieldEntry>();
