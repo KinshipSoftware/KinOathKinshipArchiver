@@ -63,12 +63,12 @@ public class GedcomLineStructure extends ImportLineStructure {
 
     @Override
     public boolean isContinueLine() {
-        return hasCurrent() && getCurrent().currentName.equals("CONC");
+        return hasCurrentField() && getCurrentField().currentName.equals("CONC");
     }
 
     @Override
     public boolean isContinueLineBreak() {
-        return hasCurrent() && getCurrent().currentName.equals("CONT");
+        return hasCurrentField() && getCurrentField().currentName.equals("CONT");
     }
 
     @Override
@@ -77,6 +77,6 @@ public class GedcomLineStructure extends ImportLineStructure {
     }
 
     public boolean isRelation() {
-        return hasCurrent() && getCurrent().lineContents != null && getCurrent().lineContents.startsWith("@") && getCurrent().lineContents.endsWith("@");
+        return hasCurrentField() && getCurrentField().lineContents != null && getCurrentField().lineContents.startsWith("@") && getCurrentField().lineContents.endsWith("@");
     }
 }
