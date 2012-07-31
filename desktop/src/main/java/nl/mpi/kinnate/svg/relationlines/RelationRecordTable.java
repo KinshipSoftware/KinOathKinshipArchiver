@@ -60,7 +60,7 @@ public class RelationRecordTable {
             if (entityRelation.getRelationType() == DataTypes.RelationType.sibling) {
                 String siblingGroupId = getGroupId(entityData, entityRelation);
                 // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
-                skipSiblingRelation = groupId.equals(siblingGroupId);
+                skipSiblingRelation = groupId != null && groupId.equals(siblingGroupId);
             }
             if (!skipSiblingRelation) {
                 doneRelations.add(compoundIdentifier);
