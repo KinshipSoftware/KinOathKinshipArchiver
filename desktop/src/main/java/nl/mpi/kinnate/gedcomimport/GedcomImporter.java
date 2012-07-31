@@ -71,6 +71,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         String strLine;
         ArrayList<String> gedcomLevelStrings = new ArrayList<String>();
         EntityDocument currentEntity = null;
+        EntityDocument fileHeaderEntity = null;
         boolean skipFileEntity = false;
         while ((strLine = bufferedReader.readLine()) != null) {
             if (skipFileEntity) {
@@ -114,6 +115,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             // todo: the type string needs to determine if this is an entity or a metadata file
                             currentEntity = getEntityDocument(createdNodes, typeString, lineStructure.getCurrentID(), importTranslator);
                             if (lineStructure.isFileHeader()) {
+                                fileHeaderEntity = currentEntity;
                                 // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
 //                                appendToTaskOutput("Reading Gedcom Header");
                                 // todo: maybe replace this "Gedcom Header" string with the file name of the import file
@@ -124,6 +126,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                     currentEntity.appendValue(lineStructure.getCurrentName(), null, lineStructure.getGedcomLevel());
                                 }
                             } else {
+                                fileHeaderEntity.entityData.addRelatedNode(currentEntity.entityData, RelationType.other, null, null, null, "source");
                                 if (lineStructure.getEntityType() != null) {
                                     currentEntity.insertValue("Type", lineStructure.getEntityType());
                                 }
