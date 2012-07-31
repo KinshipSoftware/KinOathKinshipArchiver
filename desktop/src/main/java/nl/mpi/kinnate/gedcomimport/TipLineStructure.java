@@ -52,7 +52,6 @@ public class TipLineStructure extends ImportLineStructure {
                 if (lineParts.length != 7) {
                     throw new ImportException("Incorrect number of fields in line:\n" + lineString);
                 }
-                // todo: add notes etc at this point
                 if (!lineParts[3].trim().isEmpty()) {
                     addFieldEntry(lineParts[2], lineParts[3]);
                 }
@@ -63,16 +62,10 @@ public class TipLineStructure extends ImportLineStructure {
                     addFieldEntry(lineParts[2].trim() + "_Date", lineParts[5]);
                 }
                 if (!lineParts[5].trim().isEmpty()) {
-                    // todo:.. add a relation here
+                    // add the relation type here
                     addFieldEntry(lineParts[2].trim() + "_AlterID", lineParts[5]);
+                    addRelationEntry(lineParts[1], lineParts[5], DataTypes.RelationType.other, lineParts[2].trim());
                 }
-
-                // todo: handle cv envents
-                /*
-                 * d. the place (in case of cv events)
-                 * e. the date (in case of cv events)
-                 * f. alter's ID number (in case of cv events)
-                 */
             } else if (lineParts[0].equals("0")) {
 //                System.out.println("0 Identity line");
                 if (lineParts.length != 4) {
