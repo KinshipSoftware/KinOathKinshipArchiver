@@ -61,9 +61,9 @@ public class TipLineStructure extends ImportLineStructure {
                 if (!lineParts[5].trim().isEmpty()) {
                     addFieldEntry(lineParts[2].trim() + "_Date", lineParts[5]);
                 }
-                if (!lineParts[5].trim().isEmpty()) {
+                if (!lineParts[6].trim().isEmpty()) {
                     // add the relation type here
-                    addFieldEntry(lineParts[2].trim() + "_AlterID", lineParts[5]);
+                    addFieldEntry(lineParts[2].trim() + "_AlterID", lineParts[6]);
                     addRelationEntry(lineParts[1], lineParts[5], DataTypes.RelationType.other, lineParts[2].trim());
                 }
             } else if (lineParts[0].equals("0")) {
