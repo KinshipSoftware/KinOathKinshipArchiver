@@ -20,11 +20,8 @@ public class TipImporter extends GedcomImporter {
     @Override
     protected ImportTranslator getImportTranslator() {
         ImportTranslator importTranslator = new ImportTranslator(true);
-        // todo: add the translator values if required
-//        importTranslator.addTranslationEntry("SEX", "F", "Gender", "Female");
-//        importTranslator.addTranslationEntry("SEX", "M", "Gender", "Male");
-//        importTranslator.addTranslationEntry("NAME", null, "Name", null);
-//        importTranslator.addTranslationEntry("chro", null, "Chromosome", null);
+        importTranslator.addTranslationEntry("BIRT_Date", null, "DateOfBirth", null);
+        importTranslator.addTranslationEntry("DEAT_Date", null, "DateOfDeath", null);
         return importTranslator;
     }
 
