@@ -40,18 +40,12 @@ public abstract class ImportLineStructure {
         fieldEntryList.add(new FieldEntry(currentName, lineContents));
     }
 
-    private FieldEntry getFirst() {
-        currentFieldIndex = 0;
-        return fieldEntryList.get(currentFieldIndex);
-    }
-
     protected FieldEntry getCurrent() {
         return fieldEntryList.get(currentFieldIndex);
     }
 
-    private FieldEntry getNext() {
+    protected void moveToNext() {
         currentFieldIndex++;
-        return fieldEntryList.get(currentFieldIndex);
     }
 
     protected boolean hasCurrent() {
