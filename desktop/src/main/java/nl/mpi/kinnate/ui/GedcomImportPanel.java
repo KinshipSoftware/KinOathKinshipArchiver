@@ -278,7 +278,6 @@ public class GedcomImportPanel extends JPanel {
                                 importTextArea.setCaretPosition(importTextArea.getText().length());
 //                            System.out.println("added the imported files to the database");
                                 progressBar.setIndeterminate(false);
-                                progressBar.setVisible(false);
                                 messageLabel.setText(GedcomImportPanel.this.getCreatedNodesMessage(genericImporter));
                                 GedcomImportPanel.this.revalidate();
                             } catch (IOException exception) {
@@ -286,6 +285,7 @@ public class GedcomImportPanel extends JPanel {
                             } catch (ImportException exception) {
                                 importTextArea.append("Import Failed:" + exception.getMessage() + "\n");
                             }
+                            progressBar.setVisible(false);
                         }
                     }.start();
                 }
