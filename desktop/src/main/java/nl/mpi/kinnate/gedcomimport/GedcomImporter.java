@@ -99,7 +99,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                     lastFieldContinued = true;
                 }
                 if (lastFieldContinued == false) {
-                    while (lineStructure.hasCurrent()) {
+                    while (lineStructure.hasCurrentField()) {
                         if (lineStructure.getGedcomLevel() == 0) {
                             if (lineStructure.isEndOfFileMarker()) {
                                 appendToTaskOutput("End of file found");
@@ -261,7 +261,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 }
                             }
                         }
-                        lineStructure.moveToNext();
+                        lineStructure.moveToNextField();
                     }
                 }
                 super.incrementLineProgress();
