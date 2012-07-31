@@ -12,7 +12,7 @@ public class TipLineStructure extends ImportLineStructure {
     public TipLineStructure(String lineString, ArrayList<String> gedcomLevelStrings) throws ImportException {
         super(lineString, gedcomLevelStrings);
         isFileHeader = lineString.startsWith("*");
-        System.out.println("lineString: " + lineString);
+//        System.out.println("lineString: " + lineString);
         if (isFileHeader) {
             currentID = "head";
             gedcomLevel = 0;
@@ -25,15 +25,15 @@ public class TipLineStructure extends ImportLineStructure {
         } else {
             String[] lineParts = lineString.split("\t");
             if (lineParts.length < 2) {
-                System.out.println("Incomplete line: \"" + lineString + "\"");
-                System.out.println("lineParts:" + lineParts.length);
+//                System.out.println("Incomplete line: \"" + lineString + "\"");
+//                System.out.println("lineParts:" + lineParts.length);
                 incompleteLine = true;
                 return;
             }
             currentID = lineParts[1];
             gedcomLevel = 0; //Integer.parseInt(lineParts[0]);
             if (lineParts[0].equals("1")) {
-                System.out.println("1 Kinship line");
+//                System.out.println("1 Kinship line");
                 if (lineParts.length != 4) {
                     throw new ImportException("Incorrect number of fields in line:\n" + lineString);
                 }
@@ -41,7 +41,7 @@ public class TipLineStructure extends ImportLineStructure {
 //                currentName = "A realation ID";
 //                lineContents = lineParts[2];
             } else if (lineParts[0].equals("2")) {
-                System.out.println("2 Property line");
+//                System.out.println("2 Property line");
                 if (lineParts.length != 7) {
                     throw new ImportException("Incorrect number of fields in line:\n" + lineString);
                 }
@@ -67,7 +67,7 @@ public class TipLineStructure extends ImportLineStructure {
                  * f. alter's ID number (in case of cv events)
                  */
             } else if (lineParts[0].equals("0")) {
-                System.out.println("0 Identity line");
+//                System.out.println("0 Identity line");
                 if (lineParts.length != 4) {
                     throw new ImportException("Incorrect number of fields in line:\n" + lineString);
                 }
@@ -135,15 +135,15 @@ public class TipLineStructure extends ImportLineStructure {
         while (gedcomLevelStrings.size() > gedcomLevel) {
             gedcomLevelStrings.remove(gedcomLevelStrings.size() - 1);
         }
-        if (hasCurrent()) {
-            gedcomLevelStrings.add(getCurrent().currentName);
-            System.out.println("currentID: " + currentID);
-            System.out.println("currentName: " + getCurrent().currentName);
-            System.out.println("lineContents: " + getCurrent().lineContents);
+        if (hasCurrentField()) {
+            gedcomLevelStrings.add(getCurrentField().currentName);
+//            System.out.println("currentID: " + currentID);
+//            System.out.println("currentName: " + getCurrentField().currentName);
+//            System.out.println("lineContents: " + getCurrentField().lineContents);
         }
     }
 
     public boolean isRelation() {
-        return hasCurrent() && getCurrent().lineContents != null && getCurrent().lineContents.startsWith("@") && getCurrent().lineContents.endsWith("@");
+        return false;
     }
 }
