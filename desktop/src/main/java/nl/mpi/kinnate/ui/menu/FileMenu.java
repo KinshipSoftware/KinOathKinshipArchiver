@@ -135,7 +135,7 @@ public class FileMenu extends javax.swing.JMenu {
 
         this.add(jSeparator1);
 
-        importGedcomFile.setText("Import Gedcom / CSV File");
+        importGedcomFile.setText("Import Gedcom / CSV / TIP File");
         importGedcomFile.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -379,12 +379,15 @@ public class FileMenu extends javax.swing.JMenu {
                 if (currentFileName.endsWith(".csv")) {
                     return true;
                 }
+                if (currentFileName.endsWith(".tip")) {
+                    return true;
+                }
                 return false;
             }
 
             @Override
             public String getDescription() {
-                return "GEDCOM or CSV Kinship Data";
+                return "GEDCOM, CSV, TIP Kinship Data";
             }
         });
         File[] importFiles = dialogHandler.showFileSelectBox("Import Kinship Data", false, true, fileFilterMap, MessageDialogHandler.DialogueType.open, null);
