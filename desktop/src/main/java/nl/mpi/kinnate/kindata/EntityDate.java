@@ -4,11 +4,11 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 
 /**
- *  Document   : EntityDate
- *  Created on : Mar 15, 2012, 4:23:27 PM
- *  Author     : Peter Withers
+ * Document : EntityDate
+ * Created on : Mar 15, 2012, 4:23:27 PM
+ * Author : Peter Withers
  */
-public class EntityDate {
+public class EntityDate implements Comparable<EntityDate> {
 
     @XmlValue
     private String fullDateString;
@@ -64,5 +64,21 @@ public class EntityDate {
             checkDateString();
         }
         return dateIsValid;
+    }
+
+    public int compareTo(EntityDate o) {
+        if (o == null) {
+            return -1;
+        }
+        if (!this.dateIsValid() && !o.dateIsValid()) {
+            return 0;
+        }
+        if (this.dateIsValid() && !o.dateIsValid()) {
+            return -1;
+        }
+        if (!this.dateIsValid() && o.dateIsValid()) {
+            return +1;
+        }
+        return this.fullDateString.compareTo(o.fullDateString);
     }
 }
