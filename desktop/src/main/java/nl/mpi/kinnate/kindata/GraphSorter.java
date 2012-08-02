@@ -3,6 +3,7 @@ package nl.mpi.kinnate.kindata;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import javax.xml.bind.annotation.XmlElement;
 import nl.mpi.kinnate.svg.GraphPanelSize;
@@ -31,7 +32,7 @@ public class GraphSorter {
         yPadding = graphPanelSize.getVerticalSpacing();
     }
 
-    private class SortingEntity {
+    private class SortingEntity implements Comparable<SortingEntity> {
 
         UniqueIdentifier selfEntityId;
         ArrayList<SortingEntity> mustBeBelow;
@@ -53,6 +54,10 @@ public class GraphSorter {
             mustBeAbove = new ArrayList<SortingEntity>();
             mustBeNextTo = new ArrayList<SortingEntity>();
             couldBeNextTo = new ArrayList<SortingEntity>();
+        }
+
+        public int compareTo(SortingEntity o) {
+            return this.entityData.getDateOfBirth().compareTo(o.entityData.getDateOfBirth());
         }
 
         // for testing only
@@ -80,6 +85,8 @@ public class GraphSorter {
                     }
                 }
             }
+            Collections.sort(mustBeAbove);
+            Collections.sort(couldBeNextTo);
         }
 
         private boolean positionIsFree(UniqueIdentifier currentIdentifier, Point targetPosition, HashMap<UniqueIdentifier, Point> entityPositions) {
@@ -227,8 +234,8 @@ public class GraphSorter {
             ArrayList<SortingEntity> allRelations = new ArrayList<SortingEntity>();
             allRelations.addAll(mustBeBelow);
             allRelations.add(this);
-            allRelations.addAll(mustBeNextTo); // those that are in mustBeNextTo are also in couldBeNextTo
             allRelations.addAll(couldBeNextTo);
+            allRelations.addAll(mustBeNextTo); // those that are in mustBeNextTo are also in couldBeNextTo
             allRelations.addAll(mustBeAbove);
             for (SortingEntity sortingEntity : allRelations) {
                 if (sortingEntity.calculatedPosition == null) {
