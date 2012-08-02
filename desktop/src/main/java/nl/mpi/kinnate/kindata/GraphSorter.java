@@ -226,6 +226,7 @@ public class GraphSorter {
         protected void getRelatedPositions(HashMap<UniqueIdentifier, Point> entityPositions) {
             ArrayList<SortingEntity> allRelations = new ArrayList<SortingEntity>();
             allRelations.addAll(mustBeBelow);
+            allRelations.add(this);
             allRelations.addAll(mustBeNextTo); // those that are in mustBeNextTo are also in couldBeNextTo
             allRelations.addAll(couldBeNextTo);
             allRelations.addAll(mustBeAbove);
@@ -322,6 +323,25 @@ public class GraphSorter {
             }
         }
         if (knownSortingEntities != null) {
+            // start with the top most ancestors
+            for (SortingEntity currentSorter : knownSortingEntities.values()) {
+                // find all the entities without ancestors
+                if (currentSorter.mustBeBelow.isEmpty()) {
+                    boolean hasNoAncestors = true;
+                    currentSorter.addLabel("HasNoAncestors");
+                    // exclude those with spouses or siblings that have ancestors
+                    for (SortingEntity spouseOrSibling : currentSorter.couldBeNextTo) {
+                        if (!spouseOrSibling.mustBeBelow.isEmpty()) {
+                            hasNoAncestors = false;
+                            currentSorter.addLabel("SpouseHasAncestors");
+                            break;
+                        }
+                    }
+                    if (hasNoAncestors) {
+                        currentSorter.getRelatedPositions(entityPositions);
+                    }
+                }
+            }
             for (SortingEntity currentSorter : knownSortingEntities.values()) {
                 Rectangle rectangle = getGraphSize(entityPositions);
                 Point defaultPosition = new Point(rectangle.width + xPadding, rectangle.height + yPadding);
