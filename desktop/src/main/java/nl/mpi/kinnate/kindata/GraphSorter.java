@@ -117,11 +117,17 @@ public class GraphSorter {
                     Point nextAbovePos = entityPositions.get(sortingEntity.selfEntityId);
                     if (nextAbovePos != null) {
                         if (calculatedPosition == null) {
+                            // calculate the parent average position
                             float averageX = 0;
                             for (SortingEntity sortingEntityInner : mustBeBelow) {
                                 averageX = averageX + entityPositions.get(sortingEntityInner.selfEntityId).x;
                             }
                             averageX = averageX / mustBeBelow.size();
+                            // offset by the number of siblings                             
+//                            Set<SortingEntity> intersection = new HashSet<SortingEntity>(mustBeAbove);
+//                            intersection.retainAll(couldBeNextTo);
+//                            averageX = averageX - xPadding * intersection.size() / 2;
+                            averageX = averageX - xPadding * couldBeNextTo.size() / 2;
                             calculatedPosition = new Point((int) averageX, nextAbovePos.y);
                             addLabel(":mustBeBelow");
                         }
@@ -131,6 +137,7 @@ public class GraphSorter {
 //                            System.out.println("move down: " + selfEntityId.getAttributeIdentifier());
                             addLabel(":D");
                         }
+                        break;
                     }
                 }
                 if (calculatedPosition == null) {
@@ -140,6 +147,7 @@ public class GraphSorter {
                         if (calculatedPosition == null && nextToPos != null) {
                             calculatedPosition = new Point(nextToPos.x, nextToPos.y);
                             addLabel(":couldBeNextTo");
+                            break;
                         }
                     }
                 }
@@ -148,8 +156,10 @@ public class GraphSorter {
                         // note that this does not set the position and the result can be null
                         Point nextBelowPos = entityPositions.get(sortingEntity.selfEntityId);
                         if (nextBelowPos != null) {
+                            // offset by the number of children
+                            float averageX = nextBelowPos.x + xPadding * (mustBeAbove.size() - 1) / 2.0f;
                             if (calculatedPosition == null) {
-                                calculatedPosition = new Point(nextBelowPos.x, nextBelowPos.y);
+                                calculatedPosition = new Point((int) averageX, nextBelowPos.y);
                                 addLabel(":mustBeAbove");
                             }
                             if (nextBelowPos.y < calculatedPosition.y + yPadding) {
@@ -158,6 +168,7 @@ public class GraphSorter {
 //                                System.out.println("move up: " + selfEntityId.getAttributeIdentifier());
                                 addLabel(":U");
                             }
+                            break;
                         }
                     }
                 }
