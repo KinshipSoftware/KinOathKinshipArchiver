@@ -117,7 +117,12 @@ public class GraphSorter {
                     Point nextAbovePos = entityPositions.get(sortingEntity.selfEntityId);
                     if (nextAbovePos != null) {
                         if (calculatedPosition == null) {
-                            calculatedPosition = new Point(nextAbovePos.x, nextAbovePos.y);
+                            float averageX = 0;
+                            for (SortingEntity sortingEntityInner : mustBeBelow) {
+                                averageX = averageX + entityPositions.get(sortingEntityInner.selfEntityId).x;
+                            }
+                            averageX = averageX / mustBeBelow.size();
+                            calculatedPosition = new Point((int) averageX, nextAbovePos.y);
                             addLabel(":mustBeBelow");
                         }
                         if (nextAbovePos.y > calculatedPosition.y - yPadding) {
@@ -170,15 +175,23 @@ public class GraphSorter {
                             calculatedPosition = new Point(nextToPos.x, nextToPos.y);
                             addLabel(":mustBeNextTo");
                         }
-//                    } else {
-//                        // prepopulate the spouse position
-//                        float[] spousePosition = new float[]{calculatedPosition[0], calculatedPosition[1]};
-//                        while (!positionIsFree(sortingEntity.selfEntityId, spousePosition, entityPositions)) {
-//                            // todo: this should be checking min distance not free
-//                            spousePosition[0] = spousePosition[0] + xPadding;
-//                            System.out.println("move spouse right: " + selfEntityId);
+
+
+//                    Point nextToPos = entityPositions.get(sortingEntity.selfEntityId);
+//                    if (nextToPos != null) {
+//                        if (nextToPos.y > calculatedPosition.y) {
+//                            calculatedPosition = new Point(nextToPos.x, nextToPos.y);
+//                            addLabel(":mustBeNextTo");
 //                        }
-//                        entityPositions.put(sortingEntity.selfEntityId, spousePosition);
+////                    } else {
+////                        // prepopulate the spouse position
+////                        float[] spousePosition = new float[]{calculatedPosition[0], calculatedPosition[1]};
+////                        while (!positionIsFree(sortingEntity.selfEntityId, spousePosition, entityPositions)) {
+////                            // todo: this should be checking min distance not free
+////                            spousePosition[0] = spousePosition[0] + xPadding;
+////                            System.out.println("move spouse right: " + selfEntityId);
+////                        }
+////                        entityPositions.put(sortingEntity.selfEntityId, spousePosition);
                     }
                 }
                 while (!positionIsFree(selfEntityId, calculatedPosition, entityPositions)) {
@@ -201,12 +214,13 @@ public class GraphSorter {
 
         protected void getRelatedPositions(HashMap<UniqueIdentifier, Point> entityPositions) {
             ArrayList<SortingEntity> allRelations = new ArrayList<SortingEntity>();
-            allRelations.addAll(mustBeAbove);
             allRelations.addAll(mustBeBelow);
-//            allRelations.addAll(mustBeNextTo); // those that are in mustBeNextTo are also in couldBeNextTo
+            allRelations.addAll(mustBeNextTo); // those that are in mustBeNextTo are also in couldBeNextTo
             allRelations.addAll(couldBeNextTo);
+            allRelations.addAll(mustBeAbove);
             for (SortingEntity sortingEntity : allRelations) {
                 if (sortingEntity.calculatedPosition == null) {
+                    sortingEntity.addLabel("RelatedPositions");
                     Rectangle rectangle = getGraphSize(entityPositions);
                     Point defaultPosition = new Point(rectangle.width, rectangle.height);
                     sortingEntity.getPosition(entityPositions, defaultPosition);
