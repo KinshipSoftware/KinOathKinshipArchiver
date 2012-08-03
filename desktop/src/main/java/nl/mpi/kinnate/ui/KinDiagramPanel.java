@@ -355,6 +355,18 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     boolean graphThreadRunning = false;
     boolean graphUpdateRequired = false;
 
+    public boolean verifyDiagramDataLoaded() {
+        if (graphPanel.dataStoreSvg.graphData == null) {
+//            // if the first draw has not occured then we must do this now
+            if (dialogHandler.showConfirmDialogBox("The diagram needs to be recalculated before it can be interacted with.\nRecalculate now?", "Recalculate Diagram")) {
+                this.drawGraph();
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public synchronized void drawGraph() {
         drawGraph(null);
     }
