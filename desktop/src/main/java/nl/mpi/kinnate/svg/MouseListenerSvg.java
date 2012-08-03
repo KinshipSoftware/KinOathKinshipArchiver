@@ -137,11 +137,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void handleEvent(Event evt) {
-        if (graphPanel.dataStoreSvg.graphData == null) {
-//            // if the first draw has not occured then we must do this now
-            if (dialogHandler.showConfirmDialogBox("The diagram needs to be recalculated before it can be interacted with.\nRecalculate now?", "Recalculate Diagram")) {
-                kinDiagramPanel.drawGraph();
-            }
+        if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
             return;
         }
         mouseActionOnNode = true;
