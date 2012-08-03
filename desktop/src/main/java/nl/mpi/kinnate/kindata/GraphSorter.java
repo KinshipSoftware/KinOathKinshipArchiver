@@ -216,32 +216,32 @@ public class GraphSorter {
                 // make sure any spouses are in the same row
                 // todo: this should probably be moved into a separate action and when a move is made then move in sequence the entities that are below and to the right
                 // todo: mustBeNextTo could be sorted first 
-                for (SortingEntity sortingEntity : mustBeNextTo) {
-                    Point nextToPos = entityPositions.get(sortingEntity.selfEntityId);
-                    if (nextToPos != null) {
-                        if (nextToPos.y > calculatedPosition.y) {
-                            calculatedPosition = new Point(nextToPos.x, nextToPos.y);
-                            addLabel(":mustBeNextTo");
-                        }
-
-
+//                for (SortingEntity sortingEntity : mustBeNextTo) {
 //                    Point nextToPos = entityPositions.get(sortingEntity.selfEntityId);
 //                    if (nextToPos != null) {
 //                        if (nextToPos.y > calculatedPosition.y) {
 //                            calculatedPosition = new Point(nextToPos.x, nextToPos.y);
 //                            addLabel(":mustBeNextTo");
 //                        }
-////                    } else {
-////                        // prepopulate the spouse position
-////                        float[] spousePosition = new float[]{calculatedPosition[0], calculatedPosition[1]};
-////                        while (!positionIsFree(sortingEntity.selfEntityId, spousePosition, entityPositions)) {
-////                            // todo: this should be checking min distance not free
-////                            spousePosition[0] = spousePosition[0] + xPadding;
-////                            System.out.println("move spouse right: " + selfEntityId);
+//
+//
+////                    Point nextToPos = entityPositions.get(sortingEntity.selfEntityId);
+////                    if (nextToPos != null) {
+////                        if (nextToPos.y > calculatedPosition.y) {
+////                            calculatedPosition = new Point(nextToPos.x, nextToPos.y);
+////                            addLabel(":mustBeNextTo");
 ////                        }
-////                        entityPositions.put(sortingEntity.selfEntityId, spousePosition);
-                    }
-                }
+//////                    } else {
+//////                        // prepopulate the spouse position
+//////                        float[] spousePosition = new float[]{calculatedPosition[0], calculatedPosition[1]};
+//////                        while (!positionIsFree(sortingEntity.selfEntityId, spousePosition, entityPositions)) {
+//////                            // todo: this should be checking min distance not free
+//////                            spousePosition[0] = spousePosition[0] + xPadding;
+//////                            System.out.println("move spouse right: " + selfEntityId);
+//////                        }
+//////                        entityPositions.put(sortingEntity.selfEntityId, spousePosition);
+//                    }
+//                }
                 while (!positionIsFree(selfEntityId, calculatedPosition, entityPositions)) {
                     // todo: this should be checking min distance not free
                     // todo: this should be sorting by need for position (eg spouse with no parents needs to be next to while a spouse with parents needs to be below the parents) and then by age
@@ -251,7 +251,7 @@ public class GraphSorter {
                 }
 //                System.out.println("Insert: " + selfEntityId + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
                 entityPositions.put(selfEntityId, calculatedPosition);
-//                addLabel("FinalX:" + calculatedPosition.x);
+                addLabel("FinalX:" + calculatedPosition.x);
             }
 //            System.out.println("Position: " + selfEntityId.getAttributeIdentifier() + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
 //            float[] debugArray = entityPositions.get("Charles II of Spain");
