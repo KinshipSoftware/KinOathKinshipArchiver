@@ -90,7 +90,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.addMouseWheelListener(new MouseWheelListener() {
 
             public void mouseWheelMoved(MouseWheelEvent e) {
-                if (e.isAltDown()) {
+                if (e.isShiftDown()) {
                     double scale = 1 - e.getUnitsToScroll() / 10.0;
                     double tx = -e.getX() * (scale - 1);
                     double ty = -e.getY() * (scale - 1);
@@ -103,6 +103,8 @@ public class GraphPanel extends JPanel implements SavePanel {
                         at.concatenate(svgCanvas.getRenderingTransform());
                         svgCanvas.setRenderingTransform(at);
                     }
+                } else {
+                    // todo: add a ToolTip or StatusBar to give hints "Hold shift + mouse wheel to zoom"
                 }
             }
         });
@@ -416,6 +418,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void resetLayout() {
+        // this requires that the entity data is loaded by recalculating the diagram at least once
         entitySvg = new EntitySvg(dialogHandler);
         dataStoreSvg.graphData.setEntitys(dataStoreSvg.graphData.getDataNodes());
         dataStoreSvg.graphData.placeAllNodes(entitySvg.entityPositions);
