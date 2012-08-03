@@ -314,6 +314,9 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         resetLayoutMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
+                    return;
+                }
                 graphPanel.resetLayout();
             }
         });
