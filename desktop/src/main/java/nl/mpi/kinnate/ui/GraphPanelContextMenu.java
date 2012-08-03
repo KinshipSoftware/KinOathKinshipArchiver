@@ -65,6 +65,9 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             final ActionListener addMenuActionListener = new java.awt.event.ActionListener() {
 
                 public void actionPerformed(final java.awt.event.ActionEvent evt) {
+                    if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
+                        return;
+                    }
                     new Thread() {
 
                         @Override

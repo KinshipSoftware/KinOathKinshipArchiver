@@ -488,7 +488,10 @@ public class EntitySvg {
 //                graphPanel.dataStoreSvg.graphData.setEntityLocation(entityId, updatedPositionX, updatedPositionY);
 //            entityPositions.put(entityId, new float[]{(float) at.getTranslateX(), (float) at.getTranslateY()});
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(at.getTranslateX()) + ", " + String.valueOf(at.getTranslateY()) + ")");
-            entityPositions.put(entityId, new Point((int) updatedPositionX, (int) updatedPositionY));
+            // store the changed location as a preferred location
+            final Point updatedLocationPoint = new Point((int) updatedPositionX, (int) updatedPositionY);
+            entityPositions.put(entityId, updatedLocationPoint);
+            graphPanel.dataStoreSvg.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{entityId}, updatedLocationPoint);
             final String translateString = "translate(" + String.valueOf(updatedPositionX) + ", " + String.valueOf(updatedPositionY) + ")";
             ((Element) entitySymbol).setAttribute("transform", translateString);
             if (highlightGroup != null) {

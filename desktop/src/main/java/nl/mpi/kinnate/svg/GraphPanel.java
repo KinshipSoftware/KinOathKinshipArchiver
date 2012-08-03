@@ -431,13 +431,14 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void clearEntityLocations(UniqueIdentifier[] selectedIdentifiers) {
-        // change the entities stored location into a preferred location rather than a fixed location
-        for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
-            final Point entityLocation = entitySvg.getEntityLocation(uniqueIdentifier);
-            if (entityLocation != null) {
-                dataStoreSvg.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{uniqueIdentifier}, entityLocation);
-            }
-        }
+        // all entity locations are now stored as preferred locations when the graph sorter completes
+//        // change the entities stored location into a preferred location rather than a fixed location
+//        for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
+//            final Point entityLocation = entitySvg.getEntityLocation(uniqueIdentifier);
+//            if (entityLocation != null) {
+//                dataStoreSvg.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{uniqueIdentifier}, entityLocation);
+//            }
+//        }
         entitySvg.clearEntityLocations(selectedIdentifiers);
     }
 
