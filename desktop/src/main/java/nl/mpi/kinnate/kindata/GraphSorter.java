@@ -5,6 +5,8 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlElement;
 import nl.mpi.kinnate.svg.GraphPanelSize;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -152,13 +154,21 @@ public class GraphSorter {
                             float averageX = 0;
                             for (SortingEntity sortingEntityInner : mustBeBelow) {
                                 averageX = averageX + entityPositions.get(sortingEntityInner.selfEntityId).x;
+//                                addLabel("TotalX:" + averageX);
                             }
                             averageX = averageX / mustBeBelow.size();
-                            // offset by the number of siblings                             
+//                            addLabel("AverageX1:" + averageX);
+                            // offset by the number of siblings  
+                            Set<SortingEntity> unionOfSiblings = new HashSet<SortingEntity>();
+                            for (SortingEntity sortingEntityInner : mustBeBelow) {
+                                unionOfSiblings.addAll(sortingEntityInner.mustBeAbove);
+                            }
 //                            Set<SortingEntity> intersection = new HashSet<SortingEntity>(mustBeAbove);
 //                            intersection.retainAll(couldBeNextTo);
 //                            averageX = averageX - xPadding * intersection.size() / 2;
-                            averageX = averageX - xPadding * couldBeNextTo.size() / 2;
+                            addLabel("NumberOfSiblings:" + unionOfSiblings.size());
+                            averageX = averageX - xPadding * (unionOfSiblings.size() - 1) / 2;
+//                            addLabel("AverageX2:" + averageX);
                             calculatedPosition = new Point((int) averageX, nextAbovePos.y);
                             addLabel(":mustBeBelow");
                         }
@@ -245,6 +255,7 @@ public class GraphSorter {
                 }
 //                System.out.println("Insert: " + selfEntityId + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
                 entityPositions.put(selfEntityId, calculatedPosition);
+//                addLabel("FinalX:" + calculatedPosition.x);
             }
 //            System.out.println("Position: " + selfEntityId.getAttributeIdentifier() + " : " + calculatedPosition[0] + " : " + calculatedPosition[1]);
 //            float[] debugArray = entityPositions.get("Charles II of Spain");
