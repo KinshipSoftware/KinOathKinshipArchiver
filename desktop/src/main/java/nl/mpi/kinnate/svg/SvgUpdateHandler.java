@@ -16,12 +16,14 @@ import nl.mpi.kinnate.svg.relationlines.RelationRecord;
 import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
+import org.apache.batik.dom.svg.SVGOMPoint;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGLocatable;
+import org.w3c.dom.svg.SVGMatrix;
 import org.w3c.dom.svg.SVGRect;
 
 /**
@@ -288,6 +290,39 @@ public class SvgUpdateHandler {
         symbolNode.setAttribute("stroke", "none");
         ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
         highlightGroupNode.appendChild(symbolNode);
+    }
+
+    public void updateMouseDot(final Point currentLocation) {
+//        this is only used to test the screen to document transform
+        UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+
+                public void run() {
+                    Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
+                    Element mouseDotElement = graphPanel.doc.getElementById("MouseDot");
+                    if (mouseDotElement == null) {
+                        mouseDotElement = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
+                        mouseDotElement.setAttribute("id", "MouseDot");
+                        mouseDotElement.setAttribute("r", "5");
+                        mouseDotElement.setAttribute("fill", "blue");
+                        mouseDotElement.setAttribute("stroke", "none");
+                        labelGroup.appendChild(mouseDotElement);
+                    }
+                    SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
+                    SVGOMPoint pointOnDocument = getPointOnDocument(currentLocation, labelGroupLocatable);
+                    mouseDotElement.setAttribute("cx", Float.toString(pointOnDocument.getX()));
+                    mouseDotElement.setAttribute("cy", Float.toString(pointOnDocument.getY()));
+                }
+            });
+        }
+    }
+
+    private SVGOMPoint getPointOnDocument(final Point screenLocation, SVGLocatable targetGroupElement) {
+        SVGOMPoint pointOnScreen = new SVGOMPoint(screenLocation.x, screenLocation.y);
+        SVGMatrix mat = targetGroupElement.getScreenCTM();  // this gives us the element to screen transform
+        mat = mat.inverse();                                // this converts that into the screen to element transform
+        return (SVGOMPoint) pointOnScreen.matrixTransform(mat);
     }
 
     protected void updateSvgSelectionHighlights() {
@@ -708,19 +743,12 @@ public class SvgUpdateHandler {
         }
     }
 
-    public void addGraphics(final GraphicsTypes graphicsType, final float xPos, final float yPos) {
+    public void addGraphics(final GraphicsTypes graphicsType, final Point locationOnScreen) {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
 
                 public void run() {
-                    Rectangle graphSize;
-//                    if (graphPanel.dataStoreSvg.graphData == null) {
-                    // handle case where the diagram has not been drawn yet and the graph data and graph size is not available
-//                        graphSize = new Rectangle(0, 0, 0, 0);
-//                    } else {
-                    graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
-//                    }
                     Element labelText;
                     switch (graphicsType) {
                         case Circle:
@@ -769,23 +797,21 @@ public class SvgUpdateHandler {
 //                        * Path <path>
 
                     UniqueIdentifier labelId = new UniqueIdentifier(UniqueIdentifier.IdentifierType.gid);
-//                    String labelIdString = "label" + labelGroup.getChildNodes().getLength();
-                    Point labelPosition = new Point(graphSize.x + graphSize.width / 2, graphSize.y + graphSize.height / 2);
-//                    labelText.setAttribute("x", "0"); // todo: update this to use the mouse click location // xPos
-//                    labelText.setAttribute("y", "0"); // yPos
                     labelText.setAttribute("id", labelId.getAttributeIdentifier());
-                    labelText.setAttribute("transform", "translate(" + Integer.toString(labelPosition.x) + ", " + Integer.toString(labelPosition.y) + ")");
-//
                     // put this into the geometry group or the label group depending on its type so that labels sit above entitis and graphics sit below entities
+                    Element targetGroup;
                     if (graphicsType.equals(GraphicsTypes.Label)) {
-                        Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
-                        labelGroup.appendChild(labelText);
+                        targetGroup = graphPanel.doc.getElementById("LabelsGroup");
                     } else {
-                        Element graphicsGroup = graphPanel.doc.getElementById("GraphicsGroup");
-                        graphicsGroup.appendChild(labelText);
+                        targetGroup = graphPanel.doc.getElementById("GraphicsGroup");
                     }
+                    SVGOMPoint pointOnDocument = getPointOnDocument(locationOnScreen, (SVGLocatable) targetGroup);
+                    Point labelPosition = new Point((int) pointOnDocument.getX(), (int) pointOnDocument.getY()); // we discard the float precision because the diagram does not need that level of resolution 
+                    final String transformAttribute = "translate(" + Integer.toString(labelPosition.x) + ", " + Integer.toString(labelPosition.y) + ")";
+                    System.out.println("transformAttribute:" + transformAttribute);
+                    labelText.setAttribute("transform", transformAttribute);
+                    targetGroup.appendChild(labelText);
                     graphPanel.entitySvg.entityPositions.put(labelId, labelPosition);
-//                    graphPanel.doc.getDocumentElement().appendChild(labelText);
                     ((EventTarget) labelText).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
                     resizeCanvas(graphPanel.doc.getDocumentElement(), graphPanel.doc.getElementById("DiagramGroup"));
                 }

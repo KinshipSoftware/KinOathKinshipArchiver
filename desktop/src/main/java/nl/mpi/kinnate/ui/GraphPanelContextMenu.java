@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
@@ -53,8 +54,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     final JSeparator jSeparator2 = new JSeparator();
     final JSeparator jSeparator3 = new JSeparator();
     private UniqueIdentifier[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
-    private float xPos;
-    private float yPos;
+    private Point eventLocation;
     private ArbilDataNodeLoader dataNodeLoader;
 
     public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, final GraphPanel graphPanelLocal, final EntityCollection entityCollection, final ArbilWindowManager arbilWindowManager, ArbilDataNodeLoader dataNodeLoaderL, final SessionStorage sessionStorage) {
@@ -366,8 +366,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 //    }
     @Override
     public void show(Component cmpnt, int i, int i1) {
-        xPos = cmpnt.getMousePosition().x;
-        yPos = cmpnt.getMousePosition().y;
+        eventLocation = new Point(i, i1);
+//        System.out.println("ContextMenu: " + i + ":" + i1);
         selectedIdentifiers = graphPanel.getSelectedIds();
         int nonTransientNodeCount = 0;
         int transientNodeCount = 0;
@@ -418,8 +418,11 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     }
 
     public void actionPerformed(ActionEvent e) {
+        if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
+            return;
+        }
         kinDiagramPanel.showProgressBar();
-        graphPanel.svgUpdateHandler.addGraphics(SvgUpdateHandler.GraphicsTypes.valueOf(e.getActionCommand()), xPos, yPos);
+        graphPanel.svgUpdateHandler.addGraphics(SvgUpdateHandler.GraphicsTypes.valueOf(e.getActionCommand()), eventLocation);
         kinDiagramPanel.clearProgressBar();
     }
 }
