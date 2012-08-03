@@ -240,6 +240,13 @@ public class GraphSorter {
             for (SortingEntity sortingEntity : allRelations) {
                 if (sortingEntity.calculatedPosition == null) {
                     sortingEntity.addLabel("RelatedPositions");
+                    // make sure the parent entity has its polstion calculated
+                    for (SortingEntity sortingEntityInner : sortingEntity.mustBeBelow) {
+                        if (sortingEntityInner.calculatedPosition == null) {
+                            sortingEntityInner.addLabel("RelatedPositionsInner");
+                            sortingEntityInner.getRelatedPositions(entityPositions);
+                        }
+                    }
                     Rectangle rectangle = getGraphSize(entityPositions);
                     Point defaultPosition = new Point(rectangle.width, rectangle.height);
                     sortingEntity.getPosition(entityPositions, defaultPosition);
