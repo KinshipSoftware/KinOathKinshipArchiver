@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.BorderLayout;
+import java.awt.Point;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -430,6 +431,13 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void clearEntityLocations(UniqueIdentifier[] selectedIdentifiers) {
+        // change the entities stored location into a preferred location rather than a fixed location
+        for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
+            final Point entityLocation = entitySvg.getEntityLocation(uniqueIdentifier);
+            if (entityLocation != null) {
+                dataStoreSvg.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{uniqueIdentifier}, entityLocation);
+            }
+        }
         entitySvg.clearEntityLocations(selectedIdentifiers);
     }
 

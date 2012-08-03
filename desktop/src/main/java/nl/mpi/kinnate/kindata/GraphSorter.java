@@ -20,6 +20,7 @@ public class GraphSorter {
     @XmlElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
     private EntityData[] graphDataNodeArray = new EntityData[]{};
     private HashMap<UniqueIdentifier, SortingEntity> knownSortingEntities;
+    private HashMap<UniqueIdentifier, Point> preferredLocations = null;
     // todo: should these padding vars be stored in the svg, currently they are stored
     private int xPadding = 100; // todo sort out one place for this var
     private int yPadding = 100; // todo sort out one place for this var
@@ -30,6 +31,29 @@ public class GraphSorter {
     public void setPadding(GraphPanelSize graphPanelSize) {
         xPadding = graphPanelSize.getHorizontalSpacing();
         yPadding = graphPanelSize.getVerticalSpacing();
+    }
+
+    public void setPreferredEntityLocation(UniqueIdentifier[] egoIdentifierArray, Point defaultLocation) {
+        if (preferredLocations == null) {
+            preferredLocations = new HashMap<UniqueIdentifier, Point>();
+        }
+        for (UniqueIdentifier uniqueIdentifier : egoIdentifierArray) {
+            preferredLocations.put(uniqueIdentifier, defaultLocation);
+        }
+    }
+
+    private Point getDefaultPosition(HashMap<UniqueIdentifier, Point> entityPositions, UniqueIdentifier uniqueIdentifier) {
+        if (preferredLocations != null) {
+            Point preferredPoint = preferredLocations.get(uniqueIdentifier);
+            if (preferredPoint != null) {
+                return preferredPoint;
+            }
+        }
+        Rectangle rectangle = getGraphSize(entityPositions);
+        Point defaultPosition = new Point(rectangle.width + xPadding, rectangle.height + yPadding);
+//                            Point defaultPosition = new Point(rectangle.width, rectangle.height);
+        return new Point(defaultPosition.x, 0);
+//        return new Point(0, 0);
     }
 
     private class SortingEntity implements Comparable<SortingEntity> {
@@ -112,7 +136,7 @@ public class GraphSorter {
             return false;
         }
 
-        protected Point getPosition(HashMap<UniqueIdentifier, Point> entityPositions, Point defaultPosition) {
+        protected Point getPosition(HashMap<UniqueIdentifier, Point> entityPositions) {
 //            System.out.println("getPosition: " + selfEntityId.getAttributeIdentifier());
             addLabel("Sorting:" + sortCounter++); // for testing only
             calculatedPosition = entityPositions.get(selfEntityId);
@@ -180,7 +204,7 @@ public class GraphSorter {
                     }
                 }
                 if (calculatedPosition == null) {
-                    calculatedPosition = new Point(defaultPosition.x, 0);
+                    calculatedPosition = getDefaultPosition(entityPositions, selfEntityId);
                     addLabel(":defaultPosition");
                 }
                 // make sure any spouses are in the same row
@@ -247,9 +271,7 @@ public class GraphSorter {
                             sortingEntityInner.getRelatedPositions(entityPositions);
                         }
                     }
-                    Rectangle rectangle = getGraphSize(entityPositions);
-                    Point defaultPosition = new Point(rectangle.width, rectangle.height);
-                    sortingEntity.getPosition(entityPositions, defaultPosition);
+                    sortingEntity.getPosition(entityPositions);
                     sortingEntity.getRelatedPositions(entityPositions);
                 }
             }
@@ -357,12 +379,11 @@ public class GraphSorter {
                 }
             }
             for (SortingEntity currentSorter : knownSortingEntities.values()) {
-                Rectangle rectangle = getGraphSize(entityPositions);
-                Point defaultPosition = new Point(rectangle.width + xPadding, rectangle.height + yPadding);
-                currentSorter.getPosition(entityPositions, defaultPosition);
+                currentSorter.getPosition(entityPositions);
                 currentSorter.getRelatedPositions(entityPositions);
             }
         }
+        preferredLocations = null;
     }
 //    // todo: look into http://www.jgraph.com/jgraph.html
 //    // todo: and http://books.google.nl/books?id=diqHjRjMhW0C&pg=PA138&lpg=PA138&dq=SVGDOMImplementation+add+namespace&source=bl&ots=IuqzAz7dsz&sig=e5FW_B1bQbhnth6i2rifalv2LuQ&hl=nl&ei=zYpnTYD3E4KVOuPF2YoL&sa=X&oi=book_result&ct=result&resnum=3&ved=0CC0Q6AEwAg#v=onepage&q&f=false

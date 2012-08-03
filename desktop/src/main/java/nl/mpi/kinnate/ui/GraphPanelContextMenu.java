@@ -77,7 +77,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                                 entityDocument.saveDocument();
                                 URI addedEntityUri = entityDocument.getFile().toURI();
                                 entityCollection.updateDatabase(addedEntityUri);
-                                kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
+                                kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()}, GraphPanelContextMenu.this.eventLocation);
                             } catch (ImportException exception) {
                                 kinDiagramPanel.clearProgressBar();
                                 BugCatcherManager.getBugCatcher().logError(exception);
@@ -201,7 +201,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                     try {
                         final UniqueIdentifier[] duplicateEntities = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection).duplicateEntities(selectedIdentifiers);
                         kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
-                        kinDiagramPanel.addRequiredNodes(duplicateEntities);
+                        kinDiagramPanel.addRequiredNodes(duplicateEntities, eventLocation);
                     } catch (ImportException exception) {
                         arbilWindowManager.addMessageDialogToQueue("Failed to duplicate: " + exception.getMessage(), duplicateEntitiesMenu.getText());
                     }
@@ -287,7 +287,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         addAsRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kinDiagramPanel.addRequiredNodes(selectedIdentifiers); //getSelectedUriArray(),
+                kinDiagramPanel.addRequiredNodes(selectedIdentifiers, null); //getSelectedUriArray(),
             }
         });
         this.add(addAsRequiredMenuItem);

@@ -99,7 +99,7 @@ public class RelationRecord {
 //        final HashSet<UniqueIdentifier> parentIdSet = parentIdentifiers.get(entityId);
         if (parentIdSet != null) {
             for (UniqueIdentifier parentIdentifier : parentIdSet) {
-                Point parentLoc = graphPanel.entitySvg.getEntityLocation(parentIdentifier);
+                Point parentLoc = graphPanel.entitySvg.getEntityLocationOffset(parentIdentifier);
                 if (maxY == null) {
                     maxY = parentLoc.y;
                 } else {
@@ -139,8 +139,8 @@ public class RelationRecord {
         Point alterSymbolPoint;
         Point parentPoint = null;
         // the ancestral relations should already be unidirectional and duplicates should have been removed
-        egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(leftEntity.getUniqueIdentifier());
-        alterSymbolPoint = graphPanel.entitySvg.getEntityLocation(rightEntity.getUniqueIdentifier());
+        egoSymbolPoint = graphPanel.entitySvg.getEntityLocationOffset(leftEntity.getUniqueIdentifier());
+        alterSymbolPoint = graphPanel.entitySvg.getEntityLocationOffset(rightEntity.getUniqueIdentifier());
         if (directedRelation != DataTypes.RelationType.sibling && directedRelation != DataTypes.RelationType.union) {
             parentPoint = getAverageParentLocation(leftEntity);
         }
@@ -148,8 +148,8 @@ public class RelationRecord {
 //            relationLineIndex = relationGroupNode.getChildNodes().getLength();
 
         // set the line end points
-//        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(currentNode.getUniqueIdentifier());
-//        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocation(graphLinkNode.getAlterNode().getUniqueIdentifier());
+//        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocationOffset(currentNode.getUniqueIdentifier());
+//        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocationOffset(graphLinkNode.getAlterNode().getUniqueIdentifier());
 //        float fromX = (currentNode.getxPos()); // * hSpacing + hSpacing
 //        float fromY = (currentNode.getyPos()); // * vSpacing + vSpacing
 //        float toX = (graphLinkNode.getAlterNode().getxPos()); // * hSpacing + hSpacing

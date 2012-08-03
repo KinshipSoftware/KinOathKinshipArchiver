@@ -389,14 +389,19 @@ public class EntitySvg {
         return entityPositions.values().toArray(new Point[0]);
     }
 
-    public Point getEntityLocation(UniqueIdentifier entityId) {
+    public Point getEntityLocationOffset(UniqueIdentifier entityId) {
+//         this offset is added so that the relation lines meet to the center of the symbols, however the symbols should be updated so that they are centered on 0
         Point returnLoc = entityPositions.get(entityId);
         int xPos = returnLoc.x + (symbolSize / 2);
         int yPos = returnLoc.y + (symbolSize / 2);
         return new Point(xPos, yPos);
     }
 
-//    public float[] getEntityLocation(SVGDocument doc, String entityId) {
+    public Point getEntityLocation(UniqueIdentifier entityId) {
+        Point returnLoc = entityPositions.get(entityId);
+        return returnLoc;
+    }
+//    public float[] getEntityLocationOffset(SVGDocument doc, String entityId) {
 //        Element entitySymbol = doc.getElementById(entityId + "symbol");
 ////        Element entitySymbol = doc.getElementById(entityId); // the sybol group node
 //        if (entitySymbol != null) {
@@ -421,6 +426,7 @@ public class EntitySvg {
 //            return null;
 //        }
 //    }
+
     public float[] moveEntity(GraphPanel graphPanel, UniqueIdentifier entityId, float shiftXfloat, float shiftYfloat, boolean snapToGrid, boolean allRealtionsSelected) {
         Element entitySymbol = graphPanel.doc.getElementById(entityId.getAttributeIdentifier());
         Element highlightGroup = null;

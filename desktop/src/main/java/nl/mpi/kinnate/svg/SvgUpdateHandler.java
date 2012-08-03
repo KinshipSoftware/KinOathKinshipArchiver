@@ -144,7 +144,7 @@ public class SvgUpdateHandler {
 
                 localRelationDragHandle.targetIdentifier = graphPanel.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30, graphPanel.selectedGroupId);
                 if (localRelationDragHandle.targetIdentifier != null) {
-                    Point closestEntityPoint = graphPanel.entitySvg.getEntityLocation(localRelationDragHandle.targetIdentifier);
+                    Point closestEntityPoint = graphPanel.entitySvg.getEntityLocationOffset(localRelationDragHandle.targetIdentifier);
                     dragNodeX = closestEntityPoint.x;
                     dragNodeY = closestEntityPoint.y;
                 }
@@ -156,18 +156,18 @@ public class SvgUpdateHandler {
                 float hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing();
                 for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
                     String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
-                    Point egoSymbolPoint;// = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                    Point egoSymbolPoint;// = graphPanel.entitySvg.getEntityLocationOffset(uniqueIdentifier);
                     Point parentPoint = null; // = graphPanel.entitySvg.getAverageParentLocation(uniqueIdentifier);
                     Point dragPoint;
 //
                     DataTypes.RelationType directedRelation = localRelationDragHandle.getRelationType();
                     if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
                         egoSymbolPoint = new Point((int) dragNodeX, (int) dragNodeY);
-                        dragPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                        dragPoint = graphPanel.entitySvg.getEntityLocationOffset(uniqueIdentifier);
 //                        parentPoint = dragPoint;
                         directedRelation = DataTypes.RelationType.ancestor;
                     } else {
-                        egoSymbolPoint = graphPanel.entitySvg.getEntityLocation(uniqueIdentifier);
+                        egoSymbolPoint = graphPanel.entitySvg.getEntityLocationOffset(uniqueIdentifier);
                         dragPoint = new Point((int) dragNodeX, (int) dragNodeY);
                     }
                     // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
@@ -316,6 +316,12 @@ public class SvgUpdateHandler {
                 }
             });
         }
+    }
+
+    public Point getEntityPointOnDocument(final Point screenLocation) {
+        Element etityGroup = graphPanel.doc.getElementById("EntityGroup");
+        SVGOMPoint pointOnDocument = getPointOnDocument(screenLocation, (SVGLocatable) etityGroup);
+        return new Point((int) pointOnDocument.getX(), (int) pointOnDocument.getY()); // we discard the float precision because the diagram does not need that level of resolution 
     }
 
     private SVGOMPoint getPointOnDocument(final Point screenLocation, SVGLocatable targetGroupElement) {

@@ -2,6 +2,7 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -530,7 +531,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTypeStringProviders.add(kinTermGroup);
     }
 
-    public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray) {
+    public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray, Point screenLocation) {
+        if (screenLocation != null) {
+            Point defaultLocation = graphPanel.svgUpdateHandler.getEntityPointOnDocument(screenLocation);
+            graphPanel.dataStoreSvg.graphData.setPreferredEntityLocation(egoIdentifierArray, defaultLocation);
+        }
         graphPanel.dataStoreSvg.requiredEntities.addAll(Arrays.asList(egoIdentifierArray));
         drawGraph();
     }

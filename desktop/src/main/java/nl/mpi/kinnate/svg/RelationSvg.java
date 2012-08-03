@@ -139,6 +139,10 @@ public class RelationSvg {
     }
 
     public void updateRelationLines(GraphPanel graphPanel, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) throws OldFormatException {
+        if (relationRecords == null) {
+            // no relations therefore nothing to do here
+            return;
+        }
         relationRecords.adjustLines(graphPanel);
 //        graphPanel.lineLookUpTable.addLoops();
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
