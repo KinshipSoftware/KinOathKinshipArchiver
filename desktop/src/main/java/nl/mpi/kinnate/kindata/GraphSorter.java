@@ -144,42 +144,38 @@ public class GraphSorter {
             calculatedPosition = entityPositions.get(selfEntityId);
             if (calculatedPosition == null) {
                 for (SortingEntity sortingEntity : mustBeBelow) {
-                    // note that this get position also sets the position and the result will not be null
-//                    float[] nextAbovePos = sortingEntity.getPosition(entityPositions, defaultPosition);
                     // note that this does not set the position and the result can be null
                     Point nextAbovePos = entityPositions.get(sortingEntity.selfEntityId);
-                    if (nextAbovePos != null) {
-                        if (calculatedPosition == null) {
-                            // calculate the parent average position
-                            float averageX = 0;
-                            for (SortingEntity sortingEntityInner : mustBeBelow) {
-                                averageX = averageX + entityPositions.get(sortingEntityInner.selfEntityId).x;
+                    // this should not be called until all parents have locations set, hence nextAbovePos should never be null
+                    if (calculatedPosition == null) {
+                        // calculate the parent average position
+                        float averageX = 0;
+                        int maxParentY = nextAbovePos.y;
+                        for (SortingEntity sortingEntityInner : mustBeBelow) {
+                            final Point parentPosition = entityPositions.get(sortingEntityInner.selfEntityId);
+                            averageX = averageX + parentPosition.x;
 //                                addLabel("TotalX:" + averageX);
+                            if (maxParentY < parentPosition.y) {
+                                maxParentY = parentPosition.y;
                             }
-                            averageX = averageX / mustBeBelow.size();
+                        }
+                        averageX = averageX / mustBeBelow.size();
 //                            addLabel("AverageX1:" + averageX);
-                            // offset by the number of siblings  
-                            Set<SortingEntity> unionOfSiblings = new HashSet<SortingEntity>();
-                            for (SortingEntity sortingEntityInner : mustBeBelow) {
-                                unionOfSiblings.addAll(sortingEntityInner.mustBeAbove);
-                            }
+                        // offset by the number of siblings  
+                        Set<SortingEntity> unionOfSiblings = new HashSet<SortingEntity>();
+                        for (SortingEntity sortingEntityInner : mustBeBelow) {
+                            unionOfSiblings.addAll(sortingEntityInner.mustBeAbove);
+                        }
 //                            Set<SortingEntity> intersection = new HashSet<SortingEntity>(mustBeAbove);
 //                            intersection.retainAll(couldBeNextTo);
 //                            averageX = averageX - xPadding * intersection.size() / 2;
-                            addLabel("NumberOfSiblings:" + unionOfSiblings.size());
-                            averageX = averageX - xPadding * (unionOfSiblings.size() - 1) / 2;
+                        addLabel("NumberOfSiblings:" + unionOfSiblings.size());
+                        averageX = averageX - xPadding * (unionOfSiblings.size() - 1) / 2;
 //                            addLabel("AverageX2:" + averageX);
-                            calculatedPosition = new Point((int) averageX, nextAbovePos.y);
-                            addLabel(":mustBeBelow");
-                        }
-                        if (nextAbovePos.y > calculatedPosition.y - yPadding) {
-                            calculatedPosition.setLocation(calculatedPosition.x, nextAbovePos.y + yPadding);
-//                        calculatedPosition[0] = nextAbovePos[0];
-//                            System.out.println("move down: " + selfEntityId.getAttributeIdentifier());
-                            addLabel(":D");
-                        }
-                        break;
+                        calculatedPosition = new Point((int) averageX, maxParentY + yPadding);
+                        addLabel(":mustBeBelow");
                     }
+                    break;
                 }
                 if (calculatedPosition == null) {
                     for (SortingEntity sortingEntity : couldBeNextTo) {
