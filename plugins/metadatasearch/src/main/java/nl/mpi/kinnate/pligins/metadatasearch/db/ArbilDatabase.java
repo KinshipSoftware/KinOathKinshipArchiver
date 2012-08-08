@@ -74,14 +74,14 @@ public class ArbilDatabase {
 //                + "return"
 //                + "$xpathString";
         return "<MetadataFileType>\n"
-                + "<childMetadataTypes>{\n"
+                + "{\n"
                 + "for $xpathString in distinct-values(\n"
                 + "for $entityNode in collection('" + databaseName + "')/*\n"
                 + "return path($entityNode)\n"
                 + ")\n"
                 + "return\n"
                 + "<MetadataFileType><rootXpath>{$xpathString}</rootXpath></MetadataFileType>\n"
-                + "}</childMetadataTypes></MetadataFileType>";
+                + "}</MetadataFileType>";
     }
 
     public MetadataFileType[] getMetadataTypes(MetadataFileType metadataFileType[]) {

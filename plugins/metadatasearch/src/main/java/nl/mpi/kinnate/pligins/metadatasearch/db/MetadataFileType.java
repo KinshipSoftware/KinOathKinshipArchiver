@@ -14,10 +14,11 @@ public class MetadataFileType {
     @XmlElement(name = "rootXpath")
     private String rootXpath;
     @XmlElement(name = "displayString")
-    private String displayString;
+    private String displayString = null;
     @XmlElement(name = "recordCount")
     private int recordCount = 0;
-    @XmlElement(name = "childMetadataTypes")
+//    @XmlElementWrapper(name = "childMetadataTypes")
+    @XmlElement(name = "MetadataFileType")
     private MetadataFileType[] childMetadataTypes = null;
 
     public MetadataFileType() {
@@ -34,6 +35,9 @@ public class MetadataFileType {
 
     @Override
     public String toString() {
+        if (displayString == null) {
+            displayString = rootXpath;
+        }
         return displayString;
     }
 }
