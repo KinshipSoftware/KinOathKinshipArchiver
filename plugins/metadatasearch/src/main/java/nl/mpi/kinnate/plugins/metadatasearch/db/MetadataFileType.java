@@ -36,7 +36,7 @@ public class MetadataFileType {
     @Override
     public String toString() {
         if (displayString == null) {
-            displayString = rootXpath;
+            displayString = rootXpath.replaceAll("\"[^\"]*\":", "").replaceAll("\\[\\d*\\]", "");
         }
         return displayString;
     }
