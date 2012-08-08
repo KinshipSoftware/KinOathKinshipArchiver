@@ -1,7 +1,7 @@
 package nl.mpi.kinnate.pligins.metadatasearch.ui;
 
 import javax.swing.JComboBox;
-import nl.mpi.kinnate.pligins.metadatasearch.db.MetadataFileType;
+import nl.mpi.kinnate.plugins.metadatasearch.db.MetadataFileType;
 
 /**
  * Document : SearchOptionBox

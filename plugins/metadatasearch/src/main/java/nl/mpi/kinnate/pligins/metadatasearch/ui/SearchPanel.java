@@ -13,8 +13,8 @@ import nl.mpi.arbil.ui.ArbilNodeSearchPanel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.entityindexer.QueryException;
-import nl.mpi.kinnate.pligins.metadatasearch.db.ArbilDatabase;
-import nl.mpi.kinnate.pligins.metadatasearch.db.MetadataFileType;
+import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase;
+import nl.mpi.kinnate.plugins.metadatasearch.db.MetadataFileType;
 
 /**
  * Document : SearchPanel
