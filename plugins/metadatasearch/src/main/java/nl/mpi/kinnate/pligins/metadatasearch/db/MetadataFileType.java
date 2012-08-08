@@ -12,13 +12,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class MetadataFileType {
 
     @XmlElement(name = "rootXpath")
-    final private String rootXpath;
+    private String rootXpath;
     @XmlElement(name = "displayString")
-    final private String displayString;
+    private String displayString;
     @XmlElement(name = "recordCount")
     private int recordCount = 0;
     @XmlElement(name = "childMetadataTypes")
     private MetadataFileType[] childMetadataTypes = null;
+
+    public MetadataFileType() {
+    }
 
     public MetadataFileType(String rootXpath, String displayString) {
         this.rootXpath = rootXpath;

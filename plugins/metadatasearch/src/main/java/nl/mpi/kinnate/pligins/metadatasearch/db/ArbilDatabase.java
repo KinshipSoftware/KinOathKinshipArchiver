@@ -51,27 +51,39 @@ public class ArbilDatabase {
         }
     }
 
-    public void createDatabase(File directoryOfInputFiles) throws QueryException {
+    public void createDatabase() throws QueryException {
         String suffixFilter = "*.*mdi";
         try {
             synchronized (databaseLock) {
                 new DropDB(databaseName).execute(context);
                 new Set("CREATEFILTER", suffixFilter).execute(context);
-                new CreateDB(databaseName, directoryOfInputFiles.toString()).execute(context);
+                final File cacheDirectory = sessionStorage.getCacheDirectory();
+                System.out.println("cacheDirectory: " + cacheDirectory);
+                new CreateDB(databaseName, cacheDirectory.toString()).execute(context);
             }
         } catch (BaseXException exception) {
             throw new QueryException(exception.getMessage());
         }
     }
 
-    private String getQuery(){
-        return "for $xpathString in distinct-values(\n"
-                + "for $entityNode in collection('SimpleExportTemp')/*\n"
+    private String getQuery() {
+//        return "for $xpathString in distinct-values(\n"
+//                + "for $entityNode in collection('" + databaseName + "')/*\n"
+//                + "return path($entityNode)\n"
+//                + ")\n"
+//                + "return"
+//                + "$xpathString";
+        return "<MetadataFileType>\n"
+                + "<childMetadataTypes>{\n"
+                + "for $xpathString in distinct-values(\n"
+                + "for $entityNode in collection('" + databaseName + "')/*\n"
                 + "return path($entityNode)\n"
                 + ")\n"
-                + "return"
-                + "$xpathString";
+                + "return\n"
+                + "<MetadataFileType><rootXpath>{$xpathString}</rootXpath></MetadataFileType>\n"
+                + "}</childMetadataTypes></MetadataFileType>";
     }
+
     public MetadataFileType[] getMetadataTypes(MetadataFileType metadataFileType[]) {
         long startTime = System.currentTimeMillis();
         try {
@@ -79,9 +91,11 @@ public class ArbilDatabase {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String queryResult;
             synchronized (databaseLock) {
-                queryResult = new XQuery(getQuery()).execute(context);
+                final String queryString = getQuery();
+                System.out.println("queryString: " + queryString);
+                queryResult = new XQuery(queryString).execute(context);
             }
-//            System.out.println("queryResult: " + queryResult);
+            System.out.println("queryResult: " + queryResult);
             MetadataFileType foundEntities = (MetadataFileType) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), MetadataFileType.class).getValue();
             long queryMils = System.currentTimeMillis() - startTime;
             final MetadataFileType[] entityDataArray = foundEntities.getChildMetadataTypes();
