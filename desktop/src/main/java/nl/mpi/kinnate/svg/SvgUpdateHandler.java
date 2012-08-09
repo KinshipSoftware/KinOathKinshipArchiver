@@ -3,6 +3,7 @@ package nl.mpi.kinnate.svg;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+//import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
@@ -14,6 +15,7 @@ import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
 import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
+import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
 import org.apache.batik.dom.svg.SVGOMPoint;
@@ -34,7 +36,7 @@ import org.w3c.dom.svg.SVGRect;
 public class SvgUpdateHandler {
 
     private GraphPanel graphPanel;
-    private KinTermSavePanel kinTermSavePanel;
+    final private KinDiagramPanel kinTermSavePanel;
     private MessageDialogHandler dialogHandler;
     private boolean dragUpdateRequired = false;
     private boolean threadRunning = false;
@@ -62,7 +64,7 @@ public class SvgUpdateHandler {
 //                        * Path <path>
     }
 
-    public SvgUpdateHandler(GraphPanel graphPanel, KinTermSavePanel kinTermSavePanel, MessageDialogHandler dialogHandler) {
+    public SvgUpdateHandler(GraphPanel graphPanel, KinDiagramPanel kinTermSavePanel, MessageDialogHandler dialogHandler) {
         this.graphPanel = graphPanel;
         this.kinTermSavePanel = kinTermSavePanel;
         this.dialogHandler = dialogHandler;
@@ -333,6 +335,7 @@ public class SvgUpdateHandler {
 
     protected void updateSvgSelectionHighlights() {
         if (kinTermSavePanel != null) {
+            kinTermSavePanel.setStatusBarText(graphPanel.selectedGroupId.size() + " selected of " + kinTermSavePanel.getGraphEntities().length + "");
             String kinTypeStrings = "";
             for (UniqueIdentifier entityID : graphPanel.selectedGroupId) {
                 if (kinTypeStrings.length() != 0) {
@@ -349,6 +352,8 @@ public class SvgUpdateHandler {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
 
                 public void run() {
+//..                    SVGRect documentRect = ((SVGLocatable) graphPanel.svgCanvas.getSVGDocument().getDocumentElement()).getBBox();
+//..                    Rectangle2D selectionRect = new Rectangle((int) documentRect.getX(), (int) documentRect.getY(), (int) documentRect.getWidth(), (int) documentRect.getHeight());
                     if (graphPanel.doc != null) {
 //                        for (String groupString : new String[]{"EntityGroup", "LabelsGroup"}) {
 //                            Element entityGroup = graphPanel.doc.getElementById(groupString);
@@ -395,6 +400,7 @@ public class SvgUpdateHandler {
                                 if (existingHighlight == null && selectedGroup != null) {
 //                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                                     SVGRect bbox = ((SVGLocatable) selectedGroup).getBBox();
+//..                                    selectionRect = selectionRect.createUnion(new Rectangle((int) bbox.getX(), (int) bbox.getY(), (int) bbox.getWidth(), (int) bbox.getHeight()));
 //                                        System.out.println("bbox X: " + bbox.getX());
 //                                        System.out.println("bbox Y: " + bbox.getY());
 //                                        System.out.println("bbox W: " + bbox.getWidth());
@@ -470,6 +476,9 @@ public class SvgUpdateHandler {
                     }
                     // Em:1:FMDH:1:
 //                    ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
+//..                set the svg canvas to zoom on the selected entities
+//..                    graphPanel.svgCanvas.updateRenderingTransform
+//..                            getVisibleRect()setscrollRectToVisible(selectionRect.getBounds());
                 }
             });
         }

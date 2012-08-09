@@ -66,8 +66,10 @@ public class GraphPanel extends JPanel implements SavePanel {
     private MessageDialogHandler dialogHandler;
     private SessionStorage sessionStorage;
 //    private EntityCollection entityCollection;
+    final KinDiagramPanel kinDiagramPanel;
 
     public GraphPanel(KinDiagramPanel kinDiagramPanel, final ArbilWindowManager arbilWindowManager, SessionStorage sessionStorage, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+        this.kinDiagramPanel = kinDiagramPanel;
         this.dialogHandler = arbilWindowManager;
         this.sessionStorage = sessionStorage;
 //        this.entityCollection = entityCollection;
@@ -105,7 +107,8 @@ public class GraphPanel extends JPanel implements SavePanel {
                         svgCanvas.setRenderingTransform(at);
                     }
                 } else {
-                    // todo: add a ToolTip or StatusBar to give hints "Hold shift + mouse wheel to zoom"
+                    //  add a ToolTip or StatusBar to give hints "Hold shift + mouse wheel to zoom"
+                    GraphPanel.this.kinDiagramPanel.setStatusBarText("hint: Hold shift + mouse wheel to zoom");
                 }
             }
         });
@@ -343,6 +346,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         selectedGroupId.clear();
         selectedGroupId.addAll(Arrays.asList(uniqueIdentifiers));
         svgUpdateHandler.updateSvgSelectionHighlights();
+        //.. todo: pan the diagram so that the selected are in the center
 //        mouseListenerSvg.updateSelectionDisplay();
     }
 
@@ -449,6 +453,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void drawNodes(GraphSorter graphDataLocal) {
+        kinDiagramPanel.setStatusBarText(graphDataLocal.getDataNodes().length + " entities shown");
         dataStoreSvg.graphData = graphDataLocal;
         drawNodes();
         if (graphDataLocal.getDataNodes().length == 0) {

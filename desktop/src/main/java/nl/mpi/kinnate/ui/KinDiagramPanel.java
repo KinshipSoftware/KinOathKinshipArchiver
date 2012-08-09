@@ -81,6 +81,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private ArbilTreeHelper treeHelper;
     private KinDragTransferHandler dragTransferHandler;
     private AbstractDiagramManager diagramWindowManager;
+    private StatusBar statusBar;
 
     public KinDiagramPanel(URI existingFile, boolean savableType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager) {
         this.sessionStorage = sessionStorage;
@@ -309,7 +310,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinGraphPanel.add(kinTermHidePane, BorderLayout.LINE_END);
         kinGraphPanel.add(tableHidePane, BorderLayout.PAGE_END);
 
-        this.add(kinGraphPanel);
+        this.add(kinGraphPanel, BorderLayout.CENTER);
+        statusBar = new StatusBar("diagram data not yet loaded");
+        this.add(statusBar, BorderLayout.SOUTH);
 
         EntityData[] svgDataNodes;
         if (graphPanel.dataStoreSvg.graphData != null) {
@@ -338,6 +341,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTypeStringProviders.add(entitySearchPanel);
         kinTypeStringProviders.addAll(Arrays.asList(graphPanel.getkinTermGroups()));
 //        graphPanel.svgUpdateHandler.updateEntities();
+    }
+
+    public void setStatusBarText(String statusText) {
+        statusBar.setStatusBarText(statusText);
     }
 
     static public File getDefaultDiagramFile(SessionStorage sessionStorage) {
