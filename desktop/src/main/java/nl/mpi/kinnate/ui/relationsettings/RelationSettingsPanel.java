@@ -7,14 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.colorchooser.AbstractColorChooserPanel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -35,7 +31,6 @@ import nl.mpi.kinnate.ui.kintypeeditor.CheckBoxRenderer;
  */
 public class RelationSettingsPanel extends JPanel implements ActionListener {
 
-    private AbstractColorChooserPanel colourPickerPanel;
     private DataStoreSvg dataStoreSvg;
     private RelationTypesTableModel relationTypesTableModel;
     private ArbilWindowManager dialogHandler;
@@ -48,8 +43,6 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
         this.setLayout(new BorderLayout());
         final JButton deleteButton = new JButton("Delete Selected");
         final JButton scanButton = new JButton(Scan_For_Types);
-        final JColorChooser colourChooser = new JColorChooser();
-        colourPickerPanel = colourChooser.getChooserPanels()[0];
         scanButton.setEnabled(true);
         scanButton.setActionCommand("scan");
         scanButton.addActionListener(this);
@@ -101,7 +94,7 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
         relationTypeComboBox.setRenderer(relationTypeCheckBoxRenderer);
         columnRelationType.setCellEditor(relationTypeCheckBoxRenderer);
         columnRelationType.setCellRenderer(new ArrayListCellRenderer());
-
+        kinTypeTable.getColumnModel().getColumn(3).setCellEditor(new ColourCellEditor());
         kinTypeTable.getColumnModel().getColumn(4).setCellEditor(new NumberSpinnerEditor(relationTypesTableModel));
         kinTypeTable.getColumnModel().getColumn(5).setCellEditor(new NumberSpinnerEditor(relationTypesTableModel));
 
@@ -112,22 +105,10 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
         }
         columnCurveLineOrientation.setCellEditor(new DefaultCellEditor(comboBoxCurveLineOrientation));
 
-        colourChooser.setPreviewPanel(new JPanel());
-        colourChooser.getSelectionModel().addChangeListener(new ChangeListener() {
-
-            public void stateChanged(ChangeEvent e) {
-                for (int selectedRow : kinTypeTable.getSelectedRows()) {
-                    if (selectedRow < kinTypeTable.getRowCount() - 1) {
-                        kinTypeTable.getModel().setValueAt("#" + Integer.toHexString(colourChooser.getColor().getRGB()).substring(2), selectedRow, 3);
-                    }
-                }
-            }
-        });
         this.add(new JScrollPane(kinTypeTable), BorderLayout.CENTER);
         JPanel buttonPanel = new JPanel(new BorderLayout());
         buttonPanel.add(deleteButton, BorderLayout.PAGE_START);
         buttonPanel.add(scanButton, BorderLayout.PAGE_END);
-        buttonPanel.add(new JScrollPane(colourPickerPanel), BorderLayout.CENTER);
         this.add(buttonPanel, BorderLayout.LINE_END);
     }
 
