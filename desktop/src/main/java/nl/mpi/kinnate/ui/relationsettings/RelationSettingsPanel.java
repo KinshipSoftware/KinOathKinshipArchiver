@@ -94,7 +94,7 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
         relationTypeComboBox.setRenderer(relationTypeCheckBoxRenderer);
         columnRelationType.setCellEditor(relationTypeCheckBoxRenderer);
         columnRelationType.setCellRenderer(new ArrayListCellRenderer());
-        kinTypeTable.getColumnModel().getColumn(3).setCellEditor(new ColourCellEditor());
+        kinTypeTable.getColumnModel().getColumn(3).setCellEditor(new ColourCellEditor(kinTypeTable));
         kinTypeTable.getColumnModel().getColumn(4).setCellEditor(new NumberSpinnerEditor(relationTypesTableModel));
         kinTypeTable.getColumnModel().getColumn(5).setCellEditor(new NumberSpinnerEditor(relationTypesTableModel));
 
