@@ -24,13 +24,15 @@ public class ColourCellEditor extends DefaultCellEditor implements ChangeListene
     private AbstractColorChooserPanel colourPickerPanel;
     final JColorChooser colourChooser;
     final JPopupMenu popupMenu;
-    private JTable table;
+//    final private JTable table;
     final JPanel editorPanel;
-    private boolean isEditable = false;
+//    private boolean isEditable = false;
     private String cellValue = null;
+    private Color currentColour = null;
 
-    public ColourCellEditor() {
+    public ColourCellEditor(final JTable table) {
         super(new JTextField());
+//        this.table = table;
         editorPanel = new JPanel();
         colourChooser = new JColorChooser();
         colourPickerPanel = colourChooser.getChooserPanels()[0];
@@ -43,9 +45,9 @@ public class ColourCellEditor extends DefaultCellEditor implements ChangeListene
         editorPanel.addMouseListener(new MouseListener() {
 
             public void mouseClicked(MouseEvent e) {
-                if (isEditable) {
-                    popupMenu.show(table, e.getX(), e.getY());
-                }
+//                if (isEditable) {
+                popupMenu.show(table, e.getX(), e.getY());
+//                }
             }
 
             public void mousePressed(MouseEvent e) {
@@ -70,23 +72,30 @@ public class ColourCellEditor extends DefaultCellEditor implements ChangeListene
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         System.out.println("getTableCellEditorComponent");
-        this.table = table;
-        isEditable = row < table.getRowCount() - 1;
+//        this.table = table;
+//        isEditable = row < table.getRowCount() - 1;
 //        super.getTableCellEditorComponent(table, value, isSelected, row, column);
         try {
-            editorPanel.setBackground(Color.decode(value.toString()));
+            currentColour = Color.decode(value.toString());
+            editorPanel.setBackground(currentColour);
+            cellValue = value.toString();
         } catch (NumberFormatException exception) {
+//            cellValue = "";
+            currentColour = Color.GRAY;
+            editorPanel.setBackground(currentColour);
+            cellValue = "#" + Integer.toHexString(Color.GRAY.getRGB()).substring(2);
         }
+        colourChooser.setColor(currentColour);
         return editorPanel;
     }
 
     public void stateChanged(ChangeEvent e) {
-        if (colourChooser.getColor() != null) {
+        if (colourChooser.getColor() != null && currentColour != colourChooser.getColor()) {
             final Color selectedColor = colourChooser.getColor();
             cellValue = "#" + Integer.toHexString(selectedColor.getRGB()).substring(2);
             editorPanel.setBackground(selectedColor);
+            colourChooser.setColor(null);
+            popupMenu.setVisible(false);
         }
-        colourChooser.setColor(null);
-        popupMenu.setVisible(false);
     }
 }
