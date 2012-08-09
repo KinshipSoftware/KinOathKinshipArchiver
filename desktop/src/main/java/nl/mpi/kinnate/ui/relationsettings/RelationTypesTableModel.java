@@ -37,7 +37,8 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex != 3; // prevent non colour data being entered into the colour field
+//        return columnIndex != 3; // prevent non colour data being entered into the colour field
+        return true;
     }
 
     public int getColumnCount() {
@@ -167,7 +168,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             return;
         }
         String displayName = "undefined";
-        RelationType[] relationType = new RelationType[]{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant, DataTypes.RelationType.sibling, DataTypes.RelationType.union};
+        RelationType[] relationType = new RelationType[0]; //{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant, DataTypes.RelationType.sibling, DataTypes.RelationType.union};
         String dataCategory = "";
         String lineColour = "#999999";
         int lineWidth = 2;
