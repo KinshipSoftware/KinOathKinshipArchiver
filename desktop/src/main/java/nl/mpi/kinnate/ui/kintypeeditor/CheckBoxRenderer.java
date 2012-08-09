@@ -13,9 +13,9 @@ import javax.swing.ListCellRenderer;
 import javax.swing.table.TableCellEditor;
 
 /**
- *  Document   : CheckBoxRenderer
- *  Created on : Jan 12, 2012, 4:01:07 PM
- *  Author     : Peter Withers
+ * Document : CheckBoxRenderer
+ * Created on : Jan 12, 2012, 4:01:07 PM
+ * Author : Peter Withers
  */
 public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRenderer, TableCellEditor, ActionListener {
 
@@ -34,7 +34,11 @@ public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRende
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        selectedItems = (ArrayList<String>) value;
+        if (value instanceof ArrayList) {
+            selectedItems = (ArrayList<String>) value;
+        } else {
+            selectedItems = new ArrayList<String>();
+        }
         this.row = row;
         this.column = column;
         return comboBoxRelationType;
