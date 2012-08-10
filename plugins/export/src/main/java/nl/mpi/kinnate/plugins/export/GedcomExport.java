@@ -8,6 +8,7 @@ import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -78,7 +79,7 @@ public class GedcomExport {
 
     private String getIndividual() {
         return "return concat(\"0 @\","
-                + "$kinnateNode/*:Entity/*:Identifier//text(),"
+                + "$kinnateNode/*:Entity/*:Identifier/@*:type/string(), \"_\", $kinnateNode/*:Entity/*:Identifier/text(),"
                 + "\"@ INDI\n\",\n"
                 + getEntityFields()
                 + ",\n"
@@ -237,7 +238,27 @@ public class GedcomExport {
         saveAsButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                File[] saveFile = arbilWindowManager.showFileSelectBox("Save KinOath Export File", false, false, null, MessageDialogHandler.DialogueType.save, null);
+                HashMap<String, javax.swing.filechooser.FileFilter> fileFilterMap = new HashMap<String, javax.swing.filechooser.FileFilter>(2);
+                fileFilterMap.put("KinOath Export", new javax.swing.filechooser.FileFilter() {
+
+                    @Override
+                    public boolean accept(File selectedFile) {
+                        if (selectedFile.isDirectory()) {
+                            return true;
+                        }
+                        final String currentFileName = selectedFile.getName().toLowerCase();
+                        if (currentFileName.endsWith(".kinoath")) {
+                            return true;
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "KinOath Kinship Data";
+                    }
+                });
+                File[] saveFile = arbilWindowManager.showFileSelectBox("Save KinOath Export File", false, false, fileFilterMap, MessageDialogHandler.DialogueType.save, null);
                 if (saveFile != null) {
                     try {
                         final String generateExportResult = gedcomExport.generateExport(gedcomExport.getGedcomQuery());
