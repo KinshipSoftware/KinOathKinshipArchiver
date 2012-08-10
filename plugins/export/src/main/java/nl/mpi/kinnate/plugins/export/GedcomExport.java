@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -230,6 +232,28 @@ public class GedcomExport {
         final JTextArea resultsText = new JTextArea();
         resultsText.setVisible(false);
         final JButton runQueryButton = new JButton("run query");
+        final JButton saveAsButton = new JButton("Save KinOath Export File");
+//        saveAsButton.setEnabled(false);
+        saveAsButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                File[] saveFile = arbilWindowManager.showFileSelectBox("Save KinOath Export File", false, false, null, MessageDialogHandler.DialogueType.save, null);
+                if (saveFile != null) {
+                    try {
+                        final String generateExportResult = gedcomExport.generateExport(gedcomExport.getGedcomQuery());
+                        FileWriter fileWriter = new FileWriter(saveFile[0]);
+                        fileWriter.write(generateExportResult);
+                        fileWriter.close();
+                        arbilWindowManager.addMessageDialogToQueue("Save Complete", "Save File");
+                    } catch (IOException exception) {
+                        arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Error Saving File");
+                    } catch (QueryException exception) {
+                        arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Error Creating Export");
+                    }
+                }
+            }
+        });
+
         runQueryButton.setEnabled(gedcomExport.databaseReady());
         runQueryButton.addActionListener(new ActionListener() {
 
@@ -239,7 +263,8 @@ public class GedcomExport {
                 resultsText.setText("");
                 try {
                     long startTime = System.currentTimeMillis();
-                    resultsText.append(gedcomExport.generateExport(queryText.getText()) + "\n");
+                    final String generateExportResult = gedcomExport.generateExport(queryText.getText());
+                    resultsText.append(generateExportResult + "\n");
                     long queryMils = System.currentTimeMillis() - startTime;
                     String queryTimeString = "Query time: " + queryMils + "ms";
                     queryTimeLabel.setText(queryTimeString);
@@ -307,6 +332,7 @@ public class GedcomExport {
         buttonPanel.add(formatSelect);
         buttonPanel.add(recreateButton);
         buttonPanel.add(runQueryButton);
+        buttonPanel.add(saveAsButton);
         buttonPanel.add(queryTimeLabel);
         JPanel progressPanel = new JPanel(new BorderLayout());
         progressPanel.add(buttonPanel, BorderLayout.PAGE_START);
