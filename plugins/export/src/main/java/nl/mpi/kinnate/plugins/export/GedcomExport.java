@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -36,27 +37,32 @@ public class GedcomExport {
     }
 
     private String getHeader() {
+        final KinOathVersion kinOathVersion = new KinOathVersion();
         return "let $headerString := \"0 HEAD\n"
-                + "1 SOUR Reunion\n"
-                + "2 VERS V8.0\n"
-                + "2 CORP Leister Productions\n"
-                + "1 DEST Reunion\n"
-                + "1 DATE 11 FEB 2006\n"
-                + "1 FILE test\n"
-                + "1 GEDC\n"
-                + "2 VERS 5.5\n"
-                + "1 CHAR MACINTOSH\n\"";
+                + "1 KinOathVersion " + kinOathVersion.currentMajor + "." + kinOathVersion.currentMinor + "." + kinOathVersion.currentRevision + "\n"
+                + "1 ExportDate " + new Date().toString() + "\n\"\n";
     }
 
-    private String getIndividual() {
-        return "string(\"0 @\"),"
-                + "{$entityNode/*:Entity/*:UniqueIdentifier//text()},"
-                + "string(\"@ INDI\n\")"
-                + "1 NAME Bobby Jo /Cox/\n"
+    private String getEntityFields() {
+        return "1 NAME Bobby Jo /Cox/\n"
                 + "1 SEX M\n"
                 + "1 FAMC @F1@\n"
                 + "1 CHAN\n"
-                + "2 DATE 11 FEB 2006\n";
+                + "2 DATE 11 FEB 2006\")\n";
+    }
+
+    private String getIndividual() {
+        return "return concat(\"0 @\","
+                + "$kinnateNode/*:Entity/*:Identifier//text(),"
+                + "\"@ INDI\n"
+                + getEntityFields();
+    }
+
+    private String getGedcomQuery() {
+        return getHeader()
+                + "let $entitySection := for $kinnateNode in collection('nl-mpi-kinnate')/*:Kinnate\n"
+                + getIndividual()
+                + "return concat($headerString, string-join($entitySection))\n";
     }
 
     private String getCvsQuery() {
@@ -120,6 +126,8 @@ public class GedcomExport {
     }
 
     public String generateExport(String[] selectedFieldNames, String[] selectedFieldPath) throws QueryException {
+        // todo: need to add kin id and relations including custom types
+        // todo: for imdi and cmdi the attributes need to also be included
         StringBuilder stringBuilder = new StringBuilder();
         for (String currentHeader : selectedFieldNames) {
             if (stringBuilder.length() > 0) {
@@ -191,7 +199,8 @@ public class GedcomExport {
         })) {
             locationSelect.addItem(currentFile.toString());
         }
-        queryText.setText(gedcomExport.getHeaderQuery());
+//        queryText.setText(gedcomExport.getHeaderQuery());
+        queryText.setText(gedcomExport.getGedcomQuery());
         final JTextArea resultsText = new JTextArea();
         resultsText.setVisible(false);
         final JButton runQueryButton = new JButton("run query");
