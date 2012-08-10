@@ -45,21 +45,42 @@ public class GedcomExport {
 
     private String getQueryFunctions() {
         return "declare function local:getSubFields($levelCounter, $currentNode) {\n"
+                //                + "if (string-join($currentNode/descendant-or-self::*/text()) then "
                 + "let $result := concat($levelCounter, \" \", $currentNode/name(), \" \",$currentNode/text(),\"\n\",\n"
                 + "string-join("
                 + "for $subNode in $currentNode/*\n"
                 + " return local:getSubFields($levelCounter + 1, $subNode)))\nreturn $result};\n";
     }
 
+    private String getRelationFields() {
+        return "string-join(for $relationNode in $kinnateNode/*:Entity/*:Relations/*"
+                + "return concat("
+                + "\"1 \",\n"
+                + "$relationNode/@*:Type/string(),\n"
+                + "\":\","
+                + "$relationNode/@*:CustomType/string(),"
+                + "\":\","
+                + "$relationNode/@*:dcr/string(),\n"
+                + "\" @\","
+                + "$relationNode/*:Identifier/@*:type/string(),\n"
+                + "\"_\","
+                + "$relationNode/*:Identifier/text(),"
+                + "\"@\n\"\n"
+                + "))\n";
+    }
+
     private String getEntityFields() {
-        return "string-join(local:getSubFields(1, $kinnateNode/*:CustomData)))\n";
+        return "string-join(local:getSubFields(1, $kinnateNode/*:CustomData))\n";
     }
 
     private String getIndividual() {
         return "return concat(\"0 @\","
                 + "$kinnateNode/*:Entity/*:Identifier//text(),"
                 + "\"@ INDI\n\",\n"
-                + getEntityFields();
+                + getEntityFields()
+                + ",\n"
+                + getRelationFields()
+                + ")\n";
     }
 
     private String getGedcomQuery() {
