@@ -45,11 +45,12 @@ public class GedcomExport {
 
     private String getQueryFunctions() {
         return "declare function local:getSubFields($levelCounter, $currentNode) {\n"
-                //                + "if (string-join($currentNode/descendant-or-self::*/text()) then "
+                + "if ($currentNode/descendant-or-self::*/text() != \"\") then (\n"
                 + "let $result := concat($levelCounter, \" \", $currentNode/name(), \" \",$currentNode/text(),\"\n\",\n"
                 + "string-join("
                 + "for $subNode in $currentNode/*\n"
-                + " return local:getSubFields($levelCounter + 1, $subNode)))\nreturn $result};\n";
+                + " return local:getSubFields($levelCounter + 1, $subNode)))\nreturn $result\n"
+                + ") else ( )};\n";
     }
 
     private String getRelationFields() {
