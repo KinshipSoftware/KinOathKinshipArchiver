@@ -31,6 +31,7 @@ import nl.mpi.kinnate.gedcomimport.CsvImporter;
 import nl.mpi.kinnate.gedcomimport.GedcomImporter;
 import nl.mpi.kinnate.gedcomimport.GenericImporter;
 import nl.mpi.kinnate.gedcomimport.ImportException;
+import nl.mpi.kinnate.gedcomimport.KinOathImporter;
 import nl.mpi.kinnate.gedcomimport.TipImporter;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
@@ -190,6 +191,7 @@ public class GedcomImportPanel extends JPanel {
                                 GenericImporter genericImporter = null;
                                 for (GenericImporter testImporter : new GenericImporter[]{new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage),
                                             new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage),
+                                            new KinOathImporter(progressBar, importTextArea, overwriteExisting, sessionStorage),
                                             new TipImporter(progressBar, importTextArea, overwriteExisting, sessionStorage)}) {
                                     if (importFileString != null) {
                                         if (testImporter.canImport(importFileString)) {

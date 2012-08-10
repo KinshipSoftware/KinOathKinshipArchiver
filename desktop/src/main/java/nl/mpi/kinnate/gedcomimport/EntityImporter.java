@@ -19,6 +19,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
+import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -129,8 +130,15 @@ public class EntityImporter implements GenericImporter {
     protected EntityDocument getEntityDocument(ArrayList<URI> createdNodes, String typeString, String idString, ImportTranslator importTranslator) throws ImportException {
         idString = cleanFileName(idString);
         EntityDocument currentEntity = createdDocuments.get(idString);
+        UniqueIdentifier uniqueIdentifier;
         if (currentEntity == null) {
-            UniqueIdentifier uniqueIdentifier = new UniqueIdentifier(inputFileMd5Sum + ":" + idString, UniqueIdentifier.IdentifierType.iid);
+            try {
+                // if an existing identifier is provided the keep using it
+                uniqueIdentifier = new UniqueIdentifier(idString.substring(1, idString.length() - 1));
+            } catch (IdentifierException exception) {idString = cleanFileName(idString);
+                // otherwise create a new identifier
+                uniqueIdentifier = new UniqueIdentifier(inputFileMd5Sum + ":" + idString, UniqueIdentifier.IdentifierType.iid);
+            }
             // create a new entity file
             currentEntity = new EntityDocument(getDestinationDirectory(), uniqueIdentifier, typeString, importTranslator, sessionStorage);
 //            appendToTaskOutput("created: " + currentEntity.getFilePath());

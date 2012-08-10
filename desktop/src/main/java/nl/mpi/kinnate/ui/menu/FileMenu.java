@@ -382,6 +382,9 @@ public class FileMenu extends javax.swing.JMenu {
                 if (currentFileName.endsWith(".tip")) {
                     return true;
                 }
+                if (currentFileName.endsWith(".kinoath")) {
+                    return true;
+                }
                 return false;
             }
 
