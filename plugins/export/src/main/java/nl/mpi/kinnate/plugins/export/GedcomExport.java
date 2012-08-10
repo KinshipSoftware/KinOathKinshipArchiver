@@ -71,7 +71,7 @@ public class GedcomExport {
     }
 
     private String getEntityFields() {
-        return "string-join(local:getSubFields(1, $kinnateNode/*:CustomData))\n";
+        return "string-join(for $dataField in $kinnateNode/*:CustomData/* return local:getSubFields(1, $dataField))\n";
     }
 
     private String getIndividual() {
