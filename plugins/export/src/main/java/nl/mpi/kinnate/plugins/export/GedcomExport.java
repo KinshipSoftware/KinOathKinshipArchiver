@@ -43,23 +43,27 @@ public class GedcomExport {
                 + "1 ExportDate " + new Date().toString() + "\n\"\n";
     }
 
+    private String getQueryFunctions() {
+        return "declare function local:getSubFields($levelCounter, $currentNode) {\n"
+                + "let $result := concat($levelCounter, \" \", $currentNode/name(), \" \",$currentNode/text(),\"\n\",\n"
+                + "string-join("
+                + "for $subNode in $currentNode/*\n"
+                + " return local:getSubFields($levelCounter + 1, $subNode)))\nreturn $result};\n";
+    }
+
     private String getEntityFields() {
-        return "1 NAME Bobby Jo /Cox/\n"
-                + "1 SEX M\n"
-                + "1 FAMC @F1@\n"
-                + "1 CHAN\n"
-                + "2 DATE 11 FEB 2006\")\n";
+        return "string-join(local:getSubFields(1, $kinnateNode/*:CustomData)))\n";
     }
 
     private String getIndividual() {
         return "return concat(\"0 @\","
                 + "$kinnateNode/*:Entity/*:Identifier//text(),"
-                + "\"@ INDI\n"
+                + "\"@ INDI\n\",\n"
                 + getEntityFields();
     }
 
     private String getGedcomQuery() {
-        return getHeader()
+        return getQueryFunctions() + getHeader()
                 + "let $entitySection := for $kinnateNode in collection('nl-mpi-kinnate')/*:Kinnate\n"
                 + getIndividual()
                 + "return concat($headerString, string-join($entitySection))\n";
