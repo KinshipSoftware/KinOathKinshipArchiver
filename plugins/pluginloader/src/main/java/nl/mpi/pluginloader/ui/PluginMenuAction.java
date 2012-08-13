@@ -26,11 +26,11 @@ public class PluginMenuAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         if (pluginManager.isActivated(kinOathPlugin)) {
             pluginManager.deactivatePlugin(kinOathPlugin);
-            ((JCheckBoxMenuItem) e.getSource()).setSelected(false);
         } else {
             pluginManager.activatePlugin(kinOathPlugin);
-            ((JCheckBoxMenuItem) e.getSource()).setSelected(true);
         }
+        // we check if the plugin was actualy enabled and set the menu accordingly
+        ((JCheckBoxMenuItem) e.getSource()).setSelected(pluginManager.isActivated(kinOathPlugin));
         System.out.println("kinOathPlugin: " + kinOathPlugin.getName());
         System.out.println("kinOathPluginDescription: " + kinOathPlugin.getDescription());
         System.out.println("kinOathPluginNumber: " + kinOathPlugin.getVersionNumber());
