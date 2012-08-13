@@ -1,12 +1,13 @@
 package nl.mpi.pluginloader.ui;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import nl.mpi.pluginloader.KinOathPlugin;
@@ -30,8 +31,9 @@ public class PluginMenu extends JMenu {
             while (pluginIterator.hasNext()) {
                 final KinOathPlugin kinOathPlugin = pluginIterator.next();
                 System.out.println("Plugin: " + kinOathPlugin.getName());
-                JMenuItem menuItem = new JMenuItem(new PluginMenuAction(pluginManager, kinOathPlugin));
+                JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(new PluginMenuAction(pluginManager, kinOathPlugin));
                 menuItem.addActionListener(actionListener);
+                menuItem.setSelected(pluginManager.isActivated(kinOathPlugin));
                 this.add(menuItem);
             }
         } catch (ServiceConfigurationError serviceError) {
@@ -46,11 +48,19 @@ public class PluginMenu extends JMenu {
         final JTextArea jTextArea = new JTextArea();
         PluginManager pluginManager = new PluginManager() {
 
+            HashSet<KinOathPlugin> hashSet = new HashSet<KinOathPlugin>();
+
+            public boolean isActivated(KinOathPlugin kinOathPlugin) {
+                return hashSet.contains(kinOathPlugin);
+            }
+
             public void activatePlugin(KinOathPlugin kinOathPlugin) {
+                hashSet.add(kinOathPlugin);
                 jTextArea.setText("activate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getVersionNumber() + "\n" + kinOathPlugin.getDescription());
             }
 
             public void deactivatePlugin(KinOathPlugin kinOathPlugin) {
+                hashSet.remove(kinOathPlugin);
                 jTextArea.setText("deactivate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getVersionNumber() + "\n" + kinOathPlugin.getDescription());
             }
         };

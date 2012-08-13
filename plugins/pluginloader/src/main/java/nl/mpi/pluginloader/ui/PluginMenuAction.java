@@ -2,6 +2,7 @@ package nl.mpi.pluginloader.ui;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.JCheckBoxMenuItem;
 import nl.mpi.pluginloader.KinOathPlugin;
 import nl.mpi.pluginloader.PluginManager;
 
@@ -23,7 +24,13 @@ public class PluginMenuAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        pluginManager.activatePlugin(kinOathPlugin);
+        if (pluginManager.isActivated(kinOathPlugin)) {
+            pluginManager.deactivatePlugin(kinOathPlugin);
+            ((JCheckBoxMenuItem) e.getSource()).setSelected(false);
+        } else {
+            pluginManager.activatePlugin(kinOathPlugin);
+            ((JCheckBoxMenuItem) e.getSource()).setSelected(true);
+        }
         System.out.println("kinOathPlugin: " + kinOathPlugin.getName());
         System.out.println("kinOathPluginDescription: " + kinOathPlugin.getDescription());
         System.out.println("kinOathPluginNumber: " + kinOathPlugin.getVersionNumber());
