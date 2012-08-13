@@ -1,4 +1,4 @@
-package nl.mpi.kinnate.plugins;
+package nl.mpi.pluginloader;
 
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;

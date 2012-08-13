@@ -1,4 +1,4 @@
-package nl.mpi.kinnate.plugins;
+package nl.mpi.pluginloader;
 
 import javax.swing.table.TableModel;
 
