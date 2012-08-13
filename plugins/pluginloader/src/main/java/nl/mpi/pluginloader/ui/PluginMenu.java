@@ -28,7 +28,9 @@ public class PluginMenu extends JMenu {
         this.pluginService = pluginService;
         try {
             Iterator<KinOathPlugin> pluginIterator = pluginService.getPlugins();
+            boolean hasPlugins = false;
             while (pluginIterator.hasNext()) {
+                hasPlugins = true;
                 final KinOathPlugin kinOathPlugin = pluginIterator.next();
                 System.out.println("Plugin: " + kinOathPlugin.getName());
                 JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(new PluginMenuAction(pluginManager, kinOathPlugin));
@@ -36,8 +38,11 @@ public class PluginMenu extends JMenu {
                 menuItem.setSelected(pluginManager.isActivated(kinOathPlugin));
                 this.add(menuItem);
             }
+            if (!hasPlugins) {
+                this.add(new JLabel("<no plugins found>"));
+            }
         } catch (ServiceConfigurationError serviceError) {
-            this.add(new JLabel("<could not load any plugins>"));
+            this.add(new JLabel("<failed to load any plugins>"));
         }
     }
 
