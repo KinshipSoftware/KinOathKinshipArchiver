@@ -1,6 +1,5 @@
 package nl.mpi.pluginloader;
 
-import javax.swing.table.TableModel;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -9,6 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Author : Peter Withers
  */
 @XmlRootElement(name = "PluginSettings")
-public interface PluginSettings extends TableModel {
+public interface PluginSettings {
 // This class should be used to store run time settings for the plugin and should be annotated for jaxb
 }

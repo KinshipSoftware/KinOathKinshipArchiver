@@ -1,6 +1,6 @@
 package nl.mpi.pluginloader;
 
-import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  * Document : KinOathPanelPlugin
@@ -9,6 +9,6 @@ import javax.swing.JPanel;
  */
 public interface KinOathPanelPlugin {
 
-    public JPanel getUiPanel();
-//    public void setDiagramConnector(DiagramConnector diagramConnector);
+    public JScrollPane getUiPanel();
+
 }
