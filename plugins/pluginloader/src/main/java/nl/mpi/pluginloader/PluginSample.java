@@ -10,7 +10,7 @@ import javax.swing.event.TableModelListener;
  */
 //@MetaInfServices
 //@Service
-public class PluginSample implements KinOathPlugin, PluginSettings {
+public class PluginSample implements BasePlugin, KinOathPanelPlugin, PluginSettings {
 
     DiagramConnector diagramConnector;
 
