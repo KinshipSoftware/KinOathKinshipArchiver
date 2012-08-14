@@ -400,7 +400,7 @@ public class FileMenu extends javax.swing.JMenu {
             } else {
                 for (File importFile : importFiles) {
                     try {
-                        diagramWindowManager.openImportPanel(importFile, diagramWindowManager.getCurrentSavePanel(parentComponent));
+                        diagramWindowManager.openImportPanel(importFile, parentComponent);
                     } catch (ImportException exception1) {
                         dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importFile.getAbsolutePath(), "Import File");
                     }
@@ -437,7 +437,7 @@ public class FileMenu extends javax.swing.JMenu {
             "http://GedcomLibrary.com/gedcoms/gl120372.ged"};
         for (String importUrlString : importList) {
             try {
-                diagramWindowManager.openImportPanel(importUrlString, diagramWindowManager.getCurrentSavePanel(parentComponent));
+                diagramWindowManager.openImportPanel(importUrlString, parentComponent);
             } catch (ImportException exception1) {
                 dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importUrlString, "Import File");
             }

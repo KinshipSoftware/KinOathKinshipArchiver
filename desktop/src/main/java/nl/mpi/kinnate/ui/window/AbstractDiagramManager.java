@@ -153,16 +153,16 @@ public abstract class AbstractDiagramManager {
 //            ((KinDiagramPanel) selectedComponent).loadAllTrees();
 //        }
 //    }
-    public void openImportPanel(File importFile, SavePanel originatingSavePanel) throws ImportException {
-        new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importFile);
+    public void openImportPanel(File importFile, Component parentComponent) throws ImportException {
+        new GedcomImportPanel(this, parentComponent, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importFile);
     }
 
-    public void openImportPanel(String importUrlString, SavePanel originatingSavePanel) throws ImportException {
-        new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importUrlString);
+    public void openImportPanel(String importUrlString, Component parentComponent) throws ImportException {
+        new GedcomImportPanel(this, parentComponent, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importUrlString);
     }
 
-    public void openJarImportPanel(String importUrlString, SavePanel originatingSavePanel) throws ImportException {
-        new GedcomImportPanel(this, originatingSavePanel, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImportJar(importUrlString);
+    public void openJarImportPanel(String importUrlString, Component parentComponent) throws ImportException {
+        new GedcomImportPanel(this, parentComponent, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImportJar(importUrlString);
     }
 
     public abstract void setSelectedDiagram(Component diagramComponent);

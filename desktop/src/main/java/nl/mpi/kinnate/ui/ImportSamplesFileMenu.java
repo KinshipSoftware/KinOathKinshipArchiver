@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import nl.mpi.arbil.util.MessageDialogHandler;
-import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
@@ -43,9 +42,9 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        SavePanel originatingSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
+//        SavePanel originatingSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
         try {
-            diagramWindowManager.openJarImportPanel(e.getActionCommand(), originatingSavePanel);
+            diagramWindowManager.openJarImportPanel(e.getActionCommand(), parentComponent);
         } catch (ImportException exception1) {
             dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + e.getActionCommand(), "Import Sample Data");
         }
