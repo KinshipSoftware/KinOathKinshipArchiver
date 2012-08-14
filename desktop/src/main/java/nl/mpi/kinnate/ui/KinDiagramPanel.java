@@ -222,91 +222,108 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
         graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, tableHidePane, tableCellDragHandler, dataNodeLoader, null)); // todo: pass a ImageBoxRenderer here if you want thumbnails
 
-        if (graphPanel.dataStoreSvg.getVisiblePanels() == null) {
-            // in some older files and non kinoath files these values would not be set, so we make sure that they are here
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 150, showKinTerms);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, showArchiveLinker);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.DiagramTree, 150, showDiagramTree);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel);
-            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.PluginPanel, 150, false);
-//            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
-        }
+        // in some older files and non kinoath files these VisiblePanelSettings would not be set, so we make sure that they are here
         final ProfileManager profileManager = new ProfileManager(sessionStorage, dialogHandler);
         final CmdiProfileSelectionPanel cmdiProfileSelectionPanel = new CmdiProfileSelectionPanel("Entity Profiles", profileManager, graphPanel);
         profileManager.loadProfiles(false, cmdiProfileSelectionPanel, graphPanel);
-        for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
-            if (panelSetting.getPanelType() != null) {
-                switch (panelSetting.getPanelType()) {
-                    case ArchiveLinker:
-                        panelSetting.setHidePane(kinTermHidePane, "Archive Linker");
-                        archiveEntityLinkerPanelRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree, treeHelper, dataNodeLoader);
-                        archiveEntityLinkerPanelLocal = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree, treeHelper, dataNodeLoader);
-                        archiveEntityLinkerPanelMpiRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree, treeHelper, dataNodeLoader);
-                        panelSetting.addTargetPanel(archiveEntityLinkerPanelRemote, false);
-                        panelSetting.addTargetPanel(archiveEntityLinkerPanelLocal, false);
-                        panelSetting.addTargetPanel(archiveEntityLinkerPanelMpiRemote, false);
-                        panelSetting.setMenuEnabled(false);
-                        break;
-                    case DiagramTree:
-                        panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
-                        panelSetting.addTargetPanel(egoSelectionPanel, false);
-                        if (projectTree != null) {
-                            panelSetting.addTargetPanel(projectTree, true);
-                        }
-                        panelSetting.setMenuEnabled(true);
-                        break;
-                    case EntitySearch:
-                        panelSetting.setHidePane(egoSelectionHidePane, "Search Entities");
-                        panelSetting.addTargetPanel(entitySearchPanel, false);
-                        panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
-                        break;
-                    case IndexerSettings:
-                        panelSetting.setHidePane(kinTypeHidePane, "Diagram Settings");
-                        graphPanel.getIndexParameters().symbolFieldsFields.setParent(graphPanel.getIndexParameters());
-                        graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
-                        final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
-                        final JScrollPane labelFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().labelFields, tableCellDragHandler));
-                        // todo: Ticket #1115 add overlay fields as paramters
-                        symbolFieldsPanel.setName("Symbol Fields");
-                        labelFieldsPanel.setName("Label Fields");
-                        panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg), false);
-                        panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg, dialogHandler), false);
-                        if (graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm) {
-                            // hide some of the settings panels from freeform diagrams
-                            panelSetting.addTargetPanel(symbolFieldsPanel, false);
-                            panelSetting.addTargetPanel(labelFieldsPanel, false);
-                            panelSetting.addTargetPanel(cmdiProfileSelectionPanel, false);
-                        }
-                        panelSetting.setMenuEnabled(true);
-                        break;
-                    case KinTerms:
-                        panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
-                        for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
-                            panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, dialogHandler), false); //  + kinTerms.titleString
-                        }
-                        panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode == DiagramMode.FreeForm);
-                        break;
-                    case KinTypeStrings:
-                        panelSetting.setHidePane(kinTypeHidePane, "Kin Type Strings");
-                        panelSetting.addTargetPanel(new JScrollPane(kinTypeStringInput), false);
-                        panelSetting.setMenuEnabled(true);
-                        break;
-                    case ExportPanel:
-                        panelSetting.setHidePane(kinTypeHidePane, "Export Data");
-                        panelSetting.addTargetPanel(new ExportPanel(), false);
-                        panelSetting.setMenuEnabled(false);
-                        break;
+        for (PanelType panelType : PanelType.values()) {
+            VisiblePanelSetting panelSetting = graphPanel.dataStoreSvg.getPanelSettingByType(panelType);
+            switch (panelType) {
+                case ArchiveLinker:
+                    if (panelSetting == null) {
+                        panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, showArchiveLinker);
+                    }
+                    panelSetting.setHidePane(kinTermHidePane, "Archive Linker");
+                    archiveEntityLinkerPanelRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree, treeHelper, dataNodeLoader);
+                    archiveEntityLinkerPanelLocal = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree, treeHelper, dataNodeLoader);
+                    archiveEntityLinkerPanelMpiRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree, treeHelper, dataNodeLoader);
+                    panelSetting.addTargetPanel(archiveEntityLinkerPanelRemote, false);
+                    panelSetting.addTargetPanel(archiveEntityLinkerPanelLocal, false);
+                    panelSetting.addTargetPanel(archiveEntityLinkerPanelMpiRemote, false);
+                    panelSetting.setMenuEnabled(false);
+                    break;
+                case DiagramTree:
+                    if (panelSetting == null) {
+                        panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.DiagramTree, 150, showDiagramTree);
+                    }
+                    panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
+                    panelSetting.addTargetPanel(egoSelectionPanel, false);
+                    if (projectTree != null) {
+                        panelSetting.addTargetPanel(projectTree, true);
+                    }
+                    panelSetting.setMenuEnabled(true);
+                    break;
+                case EntitySearch:
+                    if (panelSetting == null) {
+                        panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch);
+                    }
+                    panelSetting.setHidePane(egoSelectionHidePane, "Search Entities");
+                    panelSetting.addTargetPanel(entitySearchPanel, false);
+                    panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
+                    break;
+                case IndexerSettings:
+                    if (panelSetting == null) {
+                        panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
+                    }
+                    panelSetting.setHidePane(kinTypeHidePane, "Diagram Settings");
+                    graphPanel.getIndexParameters().symbolFieldsFields.setParent(graphPanel.getIndexParameters());
+                    graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
+                    final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
+                    final JScrollPane labelFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().labelFields, tableCellDragHandler));
+                    // todo: Ticket #1115 add overlay fields as paramters
+                    symbolFieldsPanel.setName("Symbol Fields");
+                    labelFieldsPanel.setName("Label Fields");
+                    panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg), false);
+                    panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg, dialogHandler), false);
+                    if (graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm) {
+                        // hide some of the settings panels from freeform diagrams
+                        panelSetting.addTargetPanel(symbolFieldsPanel, false);
+                        panelSetting.addTargetPanel(labelFieldsPanel, false);
+                        panelSetting.addTargetPanel(cmdiProfileSelectionPanel, false);
+                    }
+                    panelSetting.setMenuEnabled(true);
+                    break;
+                case KinTerms:
+                    if (panelSetting == null) {
+                        panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 150, showKinTerms);
+                    }
+                    panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
+                    for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
+                        panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, dialogHandler), false); //  + kinTerms.titleString
+                    }
+                    panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode == DiagramMode.FreeForm);
+                    break;
+                case KinTypeStrings:
+                    if (panelSetting == null) {
+                        panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
+                    }
+                    panelSetting.setHidePane(kinTypeHidePane, "Kin Type Strings");
+                    panelSetting.addTargetPanel(new JScrollPane(kinTypeStringInput), false);
+                    panelSetting.setMenuEnabled(true);
+                    break;
+                case ExportPanel:
+                    if (panelSetting == null) {
+                        panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel);
+                    }
+                    panelSetting.setHidePane(kinTypeHidePane, "Export Data");
+                    panelSetting.addTargetPanel(new ExportPanel(), false);
+                    panelSetting.setMenuEnabled(false);
+                    break;
 //                case MetaData:
+//                    if (panelSetting == null) {
+//                       panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
+//                    }
 //                    panelSetting.setTargetPanel(tableHidePane, tableScrollPane, "Metadata");
 //                    break;
-                    case PluginPanel:
-                        panelSetting.setHidePane(kinTypeHidePane, "Active Plugins");
-                        panelSetting.setMenuEnabled(panelSetting.getTargetPanels().length > 0);
-                        break;
-                }
+                case PluginPanel:
+                    if (panelSetting == null) {
+                        panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.PluginPanel, 150, false);
+                    }
+                    panelSetting.setHidePane(kinTypeHidePane, "Active Plugins");
+                    panelSetting.setMenuEnabled(panelSetting.getTargetPanels().length > 0);
+                    break;
+                default:
+                    dialogHandler.addMessageDialogToQueue("Panel type '" + panelType.name() + "' unknown or unsupported.", "Load Diagram");
             }
         }
         tableHidePane.setVisible(false);
@@ -546,18 +563,17 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void addPluginPanel(KinOathPanelPlugin kinOathPanelPlugin, boolean isVisible) {
-        for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
-            if (panelSetting.getPanelType() == PanelType.PluginPanel) {
-                final JScrollPane uiPanel = kinOathPanelPlugin.getUiPanel();
-                uiPanel.setName("Plugin: " + ((BasePlugin) kinOathPanelPlugin).getName());
-                if (isVisible) {
-                    panelSetting.setPanelShown(true);
-                    panelSetting.addTargetPanel(uiPanel, true);
-                } else {
-                    panelSetting.removeTargetPanel(uiPanel);
-                }
-                panelSetting.setMenuEnabled(panelSetting.getTargetPanels().length > 0);
+        VisiblePanelSetting panelSetting = graphPanel.dataStoreSvg.getPanelSettingByType(PanelType.PluginPanel);
+        if (panelSetting != null) {
+            final JScrollPane uiPanel = kinOathPanelPlugin.getUiPanel();
+            uiPanel.setName("Plugin: " + ((BasePlugin) kinOathPanelPlugin).getName());
+            if (isVisible) {
+                panelSetting.setPanelShown(true);
+                panelSetting.addTargetPanel(uiPanel, true);
+            } else {
+                panelSetting.removeTargetPanel(uiPanel);
             }
+            panelSetting.setMenuEnabled(panelSetting.getTargetPanels().length > 0);
         }
     }
 

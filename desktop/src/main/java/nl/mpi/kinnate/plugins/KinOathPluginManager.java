@@ -40,7 +40,7 @@ public class KinOathPluginManager implements PluginManager {
             setPluginPanel((KinOathPanelPlugin) kinOathPlugin, true);
             hashSet.add(kinOathPlugin);
         } else {
-            dialogHandler.addMessageDialogToQueue("activate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription(), "Enable Plugin");
+            dialogHandler.addMessageDialogToQueue("No method to activate this type of plugin yet.\n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription(), "Enable Plugin");
         }
     }
 
@@ -49,7 +49,7 @@ public class KinOathPluginManager implements PluginManager {
             setPluginPanel((KinOathPanelPlugin) kinOathPlugin, false);
             hashSet.remove(kinOathPlugin);
         } else {
-            dialogHandler.addMessageDialogToQueue("deactivate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription(), "Enable Plugin");
+            dialogHandler.addMessageDialogToQueue("No method to deactivate this type of plugin yet.\n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription(), "Enable Plugin");
         }
     }
 

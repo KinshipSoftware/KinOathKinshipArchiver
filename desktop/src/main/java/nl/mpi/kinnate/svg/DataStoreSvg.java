@@ -216,11 +216,23 @@ public class DataStoreSvg {
         return visiblePanels.toArray(new VisiblePanelSetting[]{});
     }
 
-    public void setPanelState(VisiblePanelSetting.PanelType panelType, int panelWidth, boolean panelVisible) {
+    public VisiblePanelSetting getPanelSettingByType(VisiblePanelSetting.PanelType panelType) {
+        VisiblePanelSetting[] visiblePanelsArray = getVisiblePanels();
+        for (VisiblePanelSetting panelSetting : visiblePanelsArray) {
+            if (panelSetting.getPanelType() != null && panelSetting.getPanelType() == panelType) {
+                return panelSetting;
+            }
+        }
+        return null;
+    }
+
+    public VisiblePanelSetting setPanelState(VisiblePanelSetting.PanelType panelType, int panelWidth, boolean panelVisible) {
         if (visiblePanels == null) {
             visiblePanels = new HashSet<VisiblePanelSetting>();
         }
-        visiblePanels.add(new VisiblePanelSetting(panelType, panelVisible, panelWidth));
+        final VisiblePanelSetting visiblePanelSetting = new VisiblePanelSetting(panelType, panelVisible, panelWidth);
+        visiblePanels.add(visiblePanelSetting);
+        return visiblePanelSetting;
     }
 
 //    public GraphRelationData getEntitiesForRelations(Node relationGroup) throws IdentifierException {
