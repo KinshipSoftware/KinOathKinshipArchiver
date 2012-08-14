@@ -33,6 +33,6 @@ public class PluginMenuAction extends AbstractAction {
         ((JCheckBoxMenuItem) e.getSource()).setSelected(pluginManager.isActivated(kinOathPlugin));
         System.out.println("kinOathPlugin: " + kinOathPlugin.getName());
         System.out.println("kinOathPluginDescription: " + kinOathPlugin.getDescription());
-        System.out.println("kinOathPluginNumber: " + kinOathPlugin.getVersionNumber());
+        System.out.println("kinOathPluginNumber: " + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber());
     }
 }

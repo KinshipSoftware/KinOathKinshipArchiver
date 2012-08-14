@@ -61,12 +61,12 @@ public class PluginMenu extends JMenu {
 
             public void activatePlugin(KinOathPlugin kinOathPlugin) {
                 hashSet.add(kinOathPlugin);
-                jTextArea.setText("activate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getVersionNumber() + "\n" + kinOathPlugin.getDescription());
+                jTextArea.setText("activate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
             }
 
             public void deactivatePlugin(KinOathPlugin kinOathPlugin) {
                 hashSet.remove(kinOathPlugin);
-                jTextArea.setText("deactivate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getVersionNumber() + "\n" + kinOathPlugin.getDescription());
+                jTextArea.setText("deactivate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
             }
         };
         jMenuBar.add(new PluginMenu(PluginService.getInstance(), pluginManager));

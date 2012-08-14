@@ -1,11 +1,12 @@
 package nl.mpi.pluginloader;
 
+import javax.swing.JPanel;
 import javax.swing.event.TableModelListener;
 
 /**
- *  Document   : PluginSample
- *  Created on : Dec 22, 2011, 3:58:34 PM
- *  Author     : Peter Withers
+ * Document : PluginSample
+ * Created on : Dec 22, 2011, 3:58:34 PM
+ * Author : Peter Withers
  */
 //@MetaInfServices
 //@Service
@@ -21,9 +22,20 @@ public class PluginSample implements KinOathPlugin, PluginSettings {
         return "Sample Plugin Description String";
     }
 
-    public String getVersionNumber() {
-        // this is the version of the plugin itself and is separate from the version numbers of the interfaces
-        return "0.0.1";
+    public int getBuildVersionNumber() {
+        return 3;
+    }
+
+    public int getMajorVersionNumber() {
+        return 1;
+    }
+
+    public int getMinorVersionNumber() {
+        return 2;
+    }
+
+    public JPanel getUiPanel() {
+        return null;
     }
 
     public void setDiagramConnector(DiagramConnector diagramConnector) {
