@@ -50,6 +50,8 @@ import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.relationsettings.RelationSettingsPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import nl.mpi.pluginloader.BasePlugin;
+import nl.mpi.pluginloader.KinOathPanelPlugin;
 
 /**
  * Document : KinTypeStringTestPanel
@@ -229,6 +231,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
             graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel);
+            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.PluginPanel, 150, false);
 //            graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.MetaData, 150, showMetaData);
         }
         final ProfileManager profileManager = new ProfileManager(sessionStorage, dialogHandler);
@@ -299,6 +302,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //                case MetaData:
 //                    panelSetting.setTargetPanel(tableHidePane, tableScrollPane, "Metadata");
 //                    break;
+                    case PluginPanel:
+                        panelSetting.setHidePane(kinTypeHidePane, "Active Plugins");
+                        panelSetting.setMenuEnabled(panelSetting.getTargetPanels().length > 0);
+                        break;
                 }
             }
         }
@@ -536,6 +543,22 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             }
         }
         kinTypeStringProviders.add(kinTermGroup);
+    }
+
+    public void addPluginPanel(KinOathPanelPlugin kinOathPanelPlugin, boolean isVisible) {
+        for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
+            if (panelSetting.getPanelType() == PanelType.PluginPanel) {
+                final JScrollPane uiPanel = kinOathPanelPlugin.getUiPanel();
+                uiPanel.setName("Plugin: " + ((BasePlugin) kinOathPanelPlugin).getName());
+                if (isVisible) {
+                    panelSetting.setPanelShown(true);
+                    panelSetting.addTargetPanel(uiPanel, true);
+                } else {
+                    panelSetting.removeTargetPanel(uiPanel);
+                }
+                panelSetting.setMenuEnabled(panelSetting.getTargetPanels().length > 0);
+            }
+        }
     }
 
     public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray, Point screenLocation) {

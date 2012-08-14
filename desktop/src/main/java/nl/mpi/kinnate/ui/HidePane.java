@@ -212,7 +212,20 @@ public class HidePane extends JPanel {
         }
     }
 
-    public void addTab(VisiblePanelSetting panelSetting, String tabString, Component tabComponent) {
+    public void addTab(final VisiblePanelSetting panelSetting, final String tabString, final Component tabComponent) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            addTabInner(panelSetting, tabString, tabComponent);
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    addTabInner(panelSetting, tabString, tabComponent);
+                }
+            });
+        }
+    }
+
+    private void addTabInner(VisiblePanelSetting panelSetting, String tabString, Component tabComponent) {
         addTab(tabString, tabComponent);
         shownWidth = panelSetting.getPanelWidth();
         hiddenState = false;
@@ -238,12 +251,16 @@ public class HidePane extends JPanel {
 
     public void setSelectedComponent(final Component component) {
         if (SwingUtilities.isEventDispatchThread()) {
-            tabbedPane.setSelectedComponent(component);
+            if (tabbedPane.indexOfComponent(component) > -1) {
+                tabbedPane.setSelectedComponent(component);
+            }
         } else {
             SwingUtilities.invokeLater(new Runnable() {
 
                 public void run() {
-                    tabbedPane.setSelectedComponent(component);
+                    if (tabbedPane.indexOfComponent(component) > -1) {
+                        tabbedPane.setSelectedComponent(component);
+                    }
                 }
             });
         }
