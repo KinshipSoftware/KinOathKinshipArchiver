@@ -3,7 +3,7 @@ package nl.mpi.pluginloader.ui;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
-import nl.mpi.pluginloader.KinOathPlugin;
+import nl.mpi.pluginloader.BasePlugin;
 import nl.mpi.pluginloader.PluginManager;
 
 /**
@@ -14,9 +14,9 @@ import nl.mpi.pluginloader.PluginManager;
 public class PluginMenuAction extends AbstractAction {
 
     final private PluginManager pluginManager;
-    final private KinOathPlugin kinOathPlugin;
+    final private BasePlugin kinOathPlugin;
 
-    public PluginMenuAction(PluginManager pluginManager, KinOathPlugin kinOathPlugin) {
+    public PluginMenuAction(PluginManager pluginManager, BasePlugin kinOathPlugin) {
         super(kinOathPlugin.getName());
         this.pluginManager = pluginManager;
         this.kinOathPlugin = kinOathPlugin;

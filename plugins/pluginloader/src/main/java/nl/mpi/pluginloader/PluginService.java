@@ -12,10 +12,10 @@ import java.util.ServiceLoader;
 public class PluginService {
 
     private static PluginService pluginService;
-    private ServiceLoader<KinOathPlugin> serviceLoader;
+    private ServiceLoader<BasePlugin> serviceLoader;
 
     private PluginService() {
-        serviceLoader = ServiceLoader.load(KinOathPlugin.class);
+        serviceLoader = ServiceLoader.load(BasePlugin.class);
     }
 
     public static synchronized PluginService getInstance() {
@@ -25,15 +25,15 @@ public class PluginService {
         return pluginService;
     }
 
-    public Iterator<KinOathPlugin> getPlugins() throws ServiceConfigurationError {
+    public Iterator<BasePlugin> getPlugins() throws ServiceConfigurationError {
         return serviceLoader.iterator();
     }
 
     public void listPlugins() {
         try {
-            Iterator<KinOathPlugin> pluginIterator = serviceLoader.iterator();
+            Iterator<BasePlugin> pluginIterator = serviceLoader.iterator();
             while (pluginIterator.hasNext()) {
-                KinOathPlugin d = pluginIterator.next();
+                BasePlugin d = pluginIterator.next();
                 System.out.println("Name: " + d.getName());
             }
         } catch (ServiceConfigurationError serviceError) {

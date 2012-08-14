@@ -7,9 +7,9 @@ package nl.mpi.pluginloader;
  */
 public interface PluginManager {
 
-    public boolean isActivated(KinOathPlugin kinOathPlugin);
+    public boolean isActivated(BasePlugin kinOathPlugin);
 
-    public void activatePlugin(KinOathPlugin kinOathPlugin);
+    public void activatePlugin(BasePlugin kinOathPlugin);
 
-    public void deactivatePlugin(KinOathPlugin kinOathPlugin);
+    public void deactivatePlugin(BasePlugin kinOathPlugin);
 }

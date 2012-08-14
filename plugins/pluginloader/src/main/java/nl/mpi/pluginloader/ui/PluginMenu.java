@@ -10,7 +10,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import nl.mpi.pluginloader.KinOathPlugin;
+import nl.mpi.pluginloader.BasePlugin;
 import nl.mpi.pluginloader.PluginManager;
 import nl.mpi.pluginloader.PluginService;
 
@@ -27,14 +27,13 @@ public class PluginMenu extends JMenu {
         super("Plugins");
         this.pluginService = pluginService;
         try {
-            Iterator<KinOathPlugin> pluginIterator = pluginService.getPlugins();
+            Iterator<BasePlugin> pluginIterator = pluginService.getPlugins();
             boolean hasPlugins = false;
             while (pluginIterator.hasNext()) {
                 hasPlugins = true;
-                final KinOathPlugin kinOathPlugin = pluginIterator.next();
+                final BasePlugin kinOathPlugin = pluginIterator.next();
                 System.out.println("Plugin: " + kinOathPlugin.getName());
                 JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(new PluginMenuAction(pluginManager, kinOathPlugin));
-                menuItem.addActionListener(actionListener);
                 menuItem.setSelected(pluginManager.isActivated(kinOathPlugin));
                 this.add(menuItem);
             }
@@ -53,18 +52,18 @@ public class PluginMenu extends JMenu {
         final JTextArea jTextArea = new JTextArea();
         PluginManager pluginManager = new PluginManager() {
 
-            HashSet<KinOathPlugin> hashSet = new HashSet<KinOathPlugin>();
+            HashSet<BasePlugin> hashSet = new HashSet<BasePlugin>();
 
-            public boolean isActivated(KinOathPlugin kinOathPlugin) {
+            public boolean isActivated(BasePlugin kinOathPlugin) {
                 return hashSet.contains(kinOathPlugin);
             }
 
-            public void activatePlugin(KinOathPlugin kinOathPlugin) {
+            public void activatePlugin(BasePlugin kinOathPlugin) {
                 hashSet.add(kinOathPlugin);
                 jTextArea.setText("activate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
             }
 
-            public void deactivatePlugin(KinOathPlugin kinOathPlugin) {
+            public void deactivatePlugin(BasePlugin kinOathPlugin) {
                 hashSet.remove(kinOathPlugin);
                 jTextArea.setText("deactivate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
             }
