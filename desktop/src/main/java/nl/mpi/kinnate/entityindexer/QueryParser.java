@@ -195,7 +195,7 @@ public class QueryParser implements EntityService {
             }
         });
         // process each line of the users input
-        for (KinTypeStringProvider kinTypeStringProvider : kinTypeStringProviders) {
+        for (KinTypeStringProvider kinTypeStringProvider : kinTypeStringProviders.toArray(new KinTypeStringProvider[0])) {
             int lineCounter = -1;
             final String[] kinTypeStrings = kinTypeStringProvider.getCurrentStrings();
             ParserHighlight[] parserHighlightArray = new ParserHighlight[kinTypeStrings.length];
