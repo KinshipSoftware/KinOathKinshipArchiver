@@ -31,27 +31,18 @@ public class KinOathExportPanel extends JPanel {
 
     final PluginDialogHandler arbilWindowManager;
     final PluginBugCatcher bugCatcher;
-//final KinSessionStorage kinSessionStorage;
 
     public KinOathExportPanel(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage, PluginBugCatcher bugCatcher) {
         super(new BorderLayout());
         this.arbilWindowManager = dialogHandler;
         this.bugCatcher = bugCatcher;
-//        this.kinSessionStorage=kinSessionStorage;
         this.setName("CMDI/IMDI/KMDI Export Tool");
-        final JTextArea queryText = new JTextArea();
         final JLabel queryTimeLabel = new JLabel();
         final CollectionExport entityCollection = new CollectionExport(bugCatcher);
         final GedcomExport gedcomExport = new GedcomExport(entityCollection);
         final JProgressBar jProgressBar = new JProgressBar();
-        final String csvOption = "*.csv";
-        final JComboBox formatSelect = new JComboBox(new String[]{"*.cmdi", "*.imdi", "*.kmdi", csvOption});
         final String browseOption = "<browse>";
         final JComboBox locationSelect = new JComboBox(new String[]{browseOption});
-
-        // get the default Arbil storage directory
-//        File defaultArbilDirectory = new ArbilSessionStorage().getStorageDirectory();
-//        locationSelect.addItem(defaultArbilDirectory.toString());
         File defaultKinOathDirectory = sessionStorage.getStorageDirectory();
         for (File currentFile : defaultKinOathDirectory.getParentFile().listFiles(new FileFilter() {
             public boolean accept(File pathname) {
@@ -60,14 +51,15 @@ public class KinOathExportPanel extends JPanel {
         })) {
             locationSelect.addItem(currentFile.toString());
         }
-        queryText.setText(gedcomExport.getGedcomQuery());
         final JTextArea resultsText = new JTextArea();
-        resultsText.setVisible(false);
-        final JButton runQueryButton = new JButton("run query");
         final JButton saveAsButton = new JButton("Save KinOath Export File");
-//        saveAsButton.setEnabled(false);
+        final JButton recreateButton = new JButton("Create Temporary Database");
         saveAsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                saveAsButton.setEnabled(false);
+                recreateButton.setEnabled(false);
+                locationSelect.setEnabled(false);
+                jProgressBar.setIndeterminate(true);
                 HashMap<String, javax.swing.filechooser.FileFilter> fileFilterMap = new HashMap<String, javax.swing.filechooser.FileFilter>(2);
                 fileFilterMap.put("KinOath Export", new javax.swing.filechooser.FileFilter() {
                     @Override
@@ -90,45 +82,35 @@ public class KinOathExportPanel extends JPanel {
                 File[] saveFile = arbilWindowManager.showFileSelectBox("Save KinOath Export File", false, false, fileFilterMap, PluginDialogHandler.DialogueType.save, null);
                 if (saveFile != null) {
                     try {
+                        resultsText.setText("Generating export contents.\n");
                         final String generateExportResult = gedcomExport.generateExport(gedcomExport.getGedcomQuery());
+                        resultsText.setText("Creating export file: " + saveFile.toString() + "\n");
                         FileWriter fileWriter = new FileWriter(saveFile[0]);
                         fileWriter.write(generateExportResult);
                         fileWriter.close();
+                        resultsText.setText("Export file complete.\n");
                         arbilWindowManager.addMessageDialogToQueue("Save Complete", "Save File");
                     } catch (IOException exception) {
+                        resultsText.setText("Error Saving File.\n");
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Error Saving File");
                     } catch (QueryException exception) {
+                        resultsText.setText("Error Creating Export.\n");
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Error Creating Export");
                     }
-                }
-            }
-        });
-
-        runQueryButton.setEnabled(gedcomExport.databaseReady());
-        runQueryButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                jProgressBar.setIndeterminate(true);
-                resultsText.setVisible(true);
-                resultsText.setText("");
-                try {
-                    long startTime = System.currentTimeMillis();
-                    final String generateExportResult = gedcomExport.generateExport(queryText.getText());
-                    resultsText.append(generateExportResult + "\n");
-                    long queryMils = System.currentTimeMillis() - startTime;
-                    String queryTimeString = "Query time: " + queryMils + "ms";
-                    queryTimeLabel.setText(queryTimeString);
-                } catch (QueryException exception) {
-                    resultsText.append("Error: " + exception.getMessage() + "\n");
-                    arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), runQueryButton.getText());
+                } else {
+                    resultsText.setText("Export file not valid, no export created.\n");
                 }
                 jProgressBar.setIndeterminate(false);
-                runQueryButton.setEnabled(gedcomExport.databaseReady());
+                saveAsButton.setEnabled(true);
+                recreateButton.setEnabled(true);
+                locationSelect.setEnabled(true);
             }
         });
-        JButton recreateButton = new JButton("Create Database");
         recreateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                runQueryButton.setEnabled(false);
+                saveAsButton.setEnabled(false);
+                recreateButton.setEnabled(false);
+                locationSelect.setEnabled(false);
                 File importDirectory = null;
                 if (!locationSelect.getSelectedItem().toString().equals(browseOption)) {
                     importDirectory = new File(locationSelect.getSelectedItem().toString());
@@ -139,47 +121,43 @@ public class KinOathExportPanel extends JPanel {
                     }
                 }
                 jProgressBar.setIndeterminate(true);
-                resultsText.setVisible(true);
                 if (importDirectory != null) {
-                    resultsText.setText("recreating database for: " + importDirectory + "\n");
+                    resultsText.setText("Dropping old temporary database\n");
+                    resultsText.setText("Creating new temporary database for: " + importDirectory + "\n");
                     final File importDirectoryFinal = importDirectory;
                     new Thread() {
+                        @Override
                         public void run() {
                             try {
-                                final Object selectedItem = formatSelect.getSelectedItem();
-                                if (csvOption.equals(selectedItem)) {
-                                    queryText.setText(gedcomExport.getCsvDemoQuery());
-                                    resultsText.append(gedcomExport.dropAndImportCsv(importDirectoryFinal, selectedItem.toString()));
-                                } else {
-                                    gedcomExport.dropAndCreate(importDirectoryFinal, selectedItem.toString());
-                                }
-                                resultsText.append("done\n");
+                                gedcomExport.dropAndCreate(importDirectoryFinal, "*.kmdi");
+                                resultsText.append("Completed cteating temporary database\n");
                             } catch (QueryException exception) {
-                                resultsText.append("Error: " + exception.getMessage() + "\n");
-                                arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), runQueryButton.getText());
+                                resultsText.append("Error creating temporary database: " + exception.getMessage() + "\n");
+                                arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Create Temporary Database");
                             }
                             jProgressBar.setIndeterminate(false);
-                            runQueryButton.setEnabled(gedcomExport.databaseReady());
+                            saveAsButton.setEnabled(true);
+                            recreateButton.setEnabled(true);
+                            locationSelect.setEnabled(true);
                         }
                     }.start();
                 } else {
                     resultsText.append("Invalid Import Directory" + "\n");
                     jProgressBar.setIndeterminate(false);
-                    runQueryButton.setEnabled(false);
+                    saveAsButton.setEnabled(true);
+                    recreateButton.setEnabled(true);
+                    locationSelect.setEnabled(true);
                 }
             }
         });
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(locationSelect);
-        buttonPanel.add(formatSelect);
         buttonPanel.add(recreateButton);
-        buttonPanel.add(runQueryButton);
         buttonPanel.add(saveAsButton);
         buttonPanel.add(queryTimeLabel);
         JPanel progressPanel = new JPanel(new BorderLayout());
         progressPanel.add(buttonPanel, BorderLayout.PAGE_START);
         progressPanel.add(jProgressBar, BorderLayout.PAGE_END);
-        this.add(queryText, BorderLayout.PAGE_END);
         this.add(new JScrollPane(resultsText), BorderLayout.CENTER);
         this.add(progressPanel, BorderLayout.PAGE_START);
     }

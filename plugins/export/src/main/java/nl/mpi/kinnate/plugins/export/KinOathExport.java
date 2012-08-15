@@ -16,11 +16,11 @@ import nl.mpi.kinnate.plugins.export.ui.KinOathExportPanel;
 public class KinOathExport implements BasePlugin, KinOathPanelPlugin {
 
     public String getDescription() {
-        return "Exports KinOath files.";
+        return "Creates a single KinOath file which contains all fields and relations of all entities via a temp database.";
     }
 
     public String getName() {
-        return "KinOath single file export";
+        return "KinOath Single File Export";
     }
 
     public int getBuildVersionNumber() {

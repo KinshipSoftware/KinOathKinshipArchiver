@@ -120,18 +120,18 @@ public class FieldsPanel extends JPanel {
         return namesAreUnique;
     }
 
-    static public void main(String[] args) {
-        JFrame jFrame = new JFrame("Fields Panel Test");
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
-//        final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
-//        arbilWindowManager.setSessionStorage(kinSessionStorage);
-        final CollectionExport entityCollection = new CollectionExport();
-        final GedcomExport gedcomExport = new GedcomExport(entityCollection);
-        FieldsPanel fieldsPanel = new FieldsPanel(gedcomExport);
-        fieldsPanel.populateFields();
-        jFrame.setContentPane(fieldsPanel);
-        jFrame.pack();
-        jFrame.setVisible(true);
-    }
+//    static public void main(String[] args) {
+//        JFrame jFrame = new JFrame("Fields Panel Test");
+//        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+////        final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
+////        final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
+////        arbilWindowManager.setSessionStorage(kinSessionStorage);
+//        final CollectionExport entityCollection = new CollectionExport();
+//        final GedcomExport gedcomExport = new GedcomExport(entityCollection);
+//        FieldsPanel fieldsPanel = new FieldsPanel(gedcomExport);
+//        fieldsPanel.populateFields();
+//        jFrame.setContentPane(fieldsPanel);
+//        jFrame.pack();
+//        jFrame.setVisible(true);
+//    }
 }

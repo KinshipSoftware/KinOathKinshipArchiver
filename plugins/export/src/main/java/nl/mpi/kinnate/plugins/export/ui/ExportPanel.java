@@ -4,30 +4,27 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.kinnate.entityindexer.CollectionExport;
+import nl.mpi.arbil.plugin.PluginDialogHandler;
 import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.plugins.export.GedcomExport;
 
 /**
- * Document : ExportPanel
- * Created on : Jul 18, 2012, 5:37:51 PM
- * Author : Peter Withers
+ * Document : ExportPanel Created on : Jul 18, 2012, 5:37:51 PM Author : Peter
+ * Withers
  */
 public class ExportPanel extends JPanel implements ActionListener {
 
-    ArbilWindowManager arbilWindowManager;
+    PluginDialogHandler arbilWindowManager;
     GedcomExport gedcomExport;
     FieldsPanel fieldsPanel;
     JTabbedPane outerTabbedPane;
 
-    public ExportPanel(ArbilWindowManager arbilWindowManager, GedcomExport gedcomExport, JTabbedPane jTabbedPane) {
+    public ExportPanel(PluginDialogHandler arbilWindowManager, GedcomExport gedcomExport, JTabbedPane jTabbedPane) {
         this.arbilWindowManager = arbilWindowManager;
         this.gedcomExport = gedcomExport;
         this.outerTabbedPane = jTabbedPane;
@@ -46,7 +43,6 @@ public class ExportPanel extends JPanel implements ActionListener {
                 final String queryString = gedcomExport.generateExport(fieldsPanel.getSelectedFieldNames(), fieldsPanel.getSelectedFieldPaths());
                 outerTabbedPane.add("Query Text", new JScrollPane(new JTextArea(queryString)));
                 SwingUtilities.invokeLater(new Thread() {
-
                     @Override
                     public void run() {
 
@@ -86,19 +82,19 @@ public class ExportPanel extends JPanel implements ActionListener {
         }
     }
 
-    static public void main(String[] args) {
-        JFrame jFrame = new JFrame("Fields Panel Test");
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
-//        final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
-//        arbilWindowManager.setSessionStorage(kinSessionStorage);
-        final CollectionExport entityCollection = new CollectionExport();
-        final GedcomExport gedcomExport = new GedcomExport(entityCollection);
-        JTabbedPane jTabbedPane = new JTabbedPane();
-        ExportPanel exportPanel = new ExportPanel(arbilWindowManager, gedcomExport, jTabbedPane);
-        jTabbedPane.add("Import", exportPanel);
-        jFrame.setContentPane(jTabbedPane);
-        jFrame.pack();
-        jFrame.setVisible(true);
-    }
+//    static public void main(String[] args) {
+//        JFrame jFrame = new JFrame("Fields Panel Test");
+//        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        final PluginDialogHandler arbilWindowManager = new ArbilWindowManager();
+////        final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
+////        arbilWindowManager.setSessionStorage(kinSessionStorage);
+//        final CollectionExport entityCollection = new CollectionExport();
+//        final GedcomExport gedcomExport = new GedcomExport(entityCollection);
+//        JTabbedPane jTabbedPane = new JTabbedPane();
+//        ExportPanel exportPanel = new ExportPanel(arbilWindowManager, gedcomExport, jTabbedPane);
+//        jTabbedPane.add("Import", exportPanel);
+//        jFrame.setContentPane(jTabbedPane);
+//        jFrame.pack();
+//        jFrame.setVisible(true);
+//    }
 }
