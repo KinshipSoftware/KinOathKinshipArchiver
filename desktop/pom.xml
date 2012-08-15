@@ -104,7 +104,7 @@
                     </archive>
                 </configuration>
             </plugin>
-<!--       this mac installer plugin kept making a un deletable file breaking subsequent builds
+            <!--       this mac installer plugin kept making a un deletable file breaking subsequent builds
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>osxappbundle-maven-plugin</artifactId>
@@ -147,7 +147,7 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>net.sf.jung</groupId>
             <artifactId>jung-samples</artifactId>
             <version>2.0.1</version>
@@ -172,7 +172,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>arbil</artifactId>
-        <!-- when changing the Arbil version make sure that the JNLP dependencies are also updated -->
+            <!-- when changing the Arbil version make sure that the JNLP dependencies are also updated -->
             <version>2.5.31276-pretesting</version>
         </dependency>
         <dependency>
@@ -180,11 +180,26 @@
             <artifactId>batik-codec</artifactId>
             <version>1.7</version>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.java.net.substance</groupId>
             <artifactId>substance</artifactId>
             <version>6.0</version>
         </dependency>            -->
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>pluginloader</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>kinnate-plugins-export</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>kinnate-plugins-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
