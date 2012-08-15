@@ -7,10 +7,6 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import nl.mpi.kinnate.kindata.DataTypes.RelationType;
-import org.w3c.dom.events.Event;
-import org.w3c.dom.events.EventListener;
-import org.apache.batik.dom.events.DOMMouseEvent;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
@@ -18,6 +14,7 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindocument.RelationLinker;
@@ -25,14 +22,16 @@ import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.SvgElementEditor;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import org.apache.batik.dom.events.DOMMouseEvent;
 import org.w3c.dom.Element;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
 import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGMatrix;
 
 /**
- * Document : MouseListenerSvg
- * Created on : Mar 9, 2011, 3:21:53 PM
- * Author : Peter Withers
+ * Document : MouseListenerSvg Created on : Mar 9, 2011, 3:21:53 PM Author :
+ * Peter Withers
  */
 public class MouseListenerSvg extends MouseInputAdapter implements EventListener {
 
@@ -99,6 +98,10 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void mouseReleased(MouseEvent me) {
+        if (graphPanel.dataStoreSvg.graphData == null) {
+//        if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
+            return;
+        }
 //        System.out.println("mouseReleased: " + me.toString());
         graphPanel.svgCanvas.setCursor(preDragCursor);
         if (mouseActionIsDrag) {
@@ -143,7 +146,6 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 ////        System.out.println("mouseMovedOnScreen:" + e.getXOnScreen() + ":" + e.getYOnScreen());
 //        graphPanel.svgUpdateHandler.updateMouseDot(e.getPoint());
 //    }
-
     @Override
     public void handleEvent(Event evt) {
         if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
