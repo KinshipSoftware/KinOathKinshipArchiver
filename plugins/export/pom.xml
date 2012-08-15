@@ -80,7 +80,7 @@
             <version>6.7.1</version>
         </dependency>    
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>nl.mpi</groupId>
             <artifactId>kinnate-plugins-core</artifactId>
             <version>${project.version}</version>
         </dependency>        
