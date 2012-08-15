@@ -3,7 +3,7 @@ package nl.mpi.pluginloader.ui;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
-import nl.mpi.pluginloader.BasePlugin;
+import nl.mpi.kinnate.plugin.BasePlugin;
 import nl.mpi.pluginloader.PluginManager;
 
 /**

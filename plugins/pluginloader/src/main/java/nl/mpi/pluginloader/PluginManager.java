@@ -1,5 +1,7 @@
 package nl.mpi.pluginloader;
 
+import nl.mpi.kinnate.plugin.BasePlugin;
+
 /**
  * Document : PluginManager
  * Created on : Aug 13, 2012, 5:19:59 PM

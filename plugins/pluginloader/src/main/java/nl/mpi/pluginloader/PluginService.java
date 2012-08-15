@@ -1,5 +1,6 @@
 package nl.mpi.pluginloader;
 
+import nl.mpi.kinnate.plugin.BasePlugin;
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;

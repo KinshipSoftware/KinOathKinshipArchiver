@@ -10,7 +10,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import nl.mpi.pluginloader.BasePlugin;
+import nl.mpi.kinnate.plugin.BasePlugin;
 import nl.mpi.pluginloader.PluginManager;
 import nl.mpi.pluginloader.PluginService;
 
