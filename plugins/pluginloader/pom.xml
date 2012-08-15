@@ -34,7 +34,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>nl.mpi</groupId>
       <artifactId>kinnate-plugins-core</artifactId>
       <version>${project.version}</version>
     </dependency>
