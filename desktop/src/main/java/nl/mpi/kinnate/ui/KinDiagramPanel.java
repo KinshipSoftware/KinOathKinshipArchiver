@@ -21,6 +21,8 @@ import nl.mpi.arbil.data.ArbilDataNodeContainer;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.plugin.KinOathPanelPlugin;
+import nl.mpi.arbil.plugin.PluginException;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
@@ -41,6 +43,7 @@ import nl.mpi.kinnate.kintypestrings.ImportRequiredException;
 import nl.mpi.kinnate.kintypestrings.KinTermCalculator;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
+import nl.mpi.kinnate.plugin.BasePlugin;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
@@ -50,12 +53,9 @@ import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.relationsettings.RelationSettingsPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import nl.mpi.pluginloader.BasePlugin;
-import nl.mpi.pluginloader.KinOathPanelPlugin;
 
 /**
- * Document : KinTypeStringTestPanel
- * Created on : Sep 29, 2010, 12:52:01 PM
+ * Document : KinTypeStringTestPanel Created on : Sep 29, 2010, 12:52:01 PM
  * Author : Peter Withers
  */
 public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePanel, ArbilDataNodeContainer {
@@ -347,7 +347,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         }
         entityIndex = new QueryParser(/* graphPanel.getDiagramUniqueIdentifiers(), */entityCollection);
         kinTypeStringInput.addKeyListener(new KeyListener() {
-
             public void keyTyped(KeyEvent e) {
             }
 
@@ -409,7 +408,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         if (!graphThreadRunning) {
             graphThreadRunning = true;
             new Thread() {
-
                 @Override
                 public void run() {
                     while (graphUpdateRequired) {
@@ -419,7 +417,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                             try {
                                 String[] kinTypeStrings = graphPanel.getKinTypeStrigs();
                                 SwingUtilities.invokeLater(new Runnable() {
-
                                     public void run() {
                                         progressBar.setValue(0);
                                         progressBar.setVisible(true);
@@ -442,7 +439,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //                                    diagramMode = DiagramMode.KinTypeQuery;
                                     final EntityData[] graphNodes = entityIndex.processKinTypeStrings(kinTypeStringProviders, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
                                     SwingUtilities.invokeLater(new Runnable() {
-
                                         public void run() {
                                             progressBar.setIndeterminate(true);
                                         }
@@ -496,7 +492,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         }
                     }
                     SwingUtilities.invokeLater(new Runnable() {
-
                         public void run() {
                             progressBar.setVisible(false);
                         }
@@ -562,10 +557,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTypeStringProviders.add(kinTermGroup);
     }
 
-    public void addPluginPanel(KinOathPanelPlugin kinOathPanelPlugin, boolean isVisible) {
+    public void addPluginPanel(KinOathPanelPlugin kinOathPanelPlugin, boolean isVisible) throws PluginException {
         VisiblePanelSetting panelSetting = graphPanel.dataStoreSvg.getPanelSettingByType(PanelType.PluginPanel);
         if (panelSetting != null) {
-            final JScrollPane uiPanel = kinOathPanelPlugin.getUiPanel();
+            final JScrollPane uiPanel = kinOathPanelPlugin.getUiPanel(dialogHandler, sessionStorage, BugCatcherManager.getBugCatcher());
             uiPanel.setName("Plugin: " + ((BasePlugin) kinOathPanelPlugin).getName());
             if (isVisible) {
                 panelSetting.setPanelShown(true);
@@ -610,7 +605,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             KinDiagramPanel.this.revalidate();
         } else {
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     progressBar.setIndeterminate(true);
                     progressBar.setVisible(true);
@@ -627,7 +621,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             KinDiagramPanel.this.revalidate();
         } else {
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     progressBar.setIndeterminate(false);
                     progressBar.setVisible(false);
