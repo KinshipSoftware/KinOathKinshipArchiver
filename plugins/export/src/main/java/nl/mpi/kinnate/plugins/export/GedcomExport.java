@@ -27,9 +27,8 @@ import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
- * Document : GedcomExport
- * Created on : Jul 3, 2012, 1:16:57 PM
- * Author : Peter Withers
+ * Document : GedcomExport Created on : Jul 3, 2012, 1:16:57 PM Author : Peter
+ * Withers
  */
 public class GedcomExport {
 
@@ -88,7 +87,7 @@ public class GedcomExport {
                 + ")\n";
     }
 
-    private String getGedcomQuery() {
+    public String getGedcomQuery() {
         return getQueryFunctions() + getHeader()
                 + "let $entitySection := for $kinnateNode in collection('nl-mpi-kinnate')/*:Kinnate\n"
                 + getIndividual()
@@ -222,7 +221,6 @@ public class GedcomExport {
         locationSelect.addItem(defaultArbilDirectory.toString());
         File defaultKinOathDirectory = new ArbilSessionStorage().getStorageDirectory();
         for (File currentFile : defaultKinOathDirectory.getParentFile().listFiles(new FileFilter() {
-
             public boolean accept(File pathname) {
                 return pathname.getName().startsWith(".kinoath");
             }
@@ -237,11 +235,9 @@ public class GedcomExport {
         final JButton saveAsButton = new JButton("Save KinOath Export File");
 //        saveAsButton.setEnabled(false);
         saveAsButton.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 HashMap<String, javax.swing.filechooser.FileFilter> fileFilterMap = new HashMap<String, javax.swing.filechooser.FileFilter>(2);
                 fileFilterMap.put("KinOath Export", new javax.swing.filechooser.FileFilter() {
-
                     @Override
                     public boolean accept(File selectedFile) {
                         if (selectedFile.isDirectory()) {
@@ -278,7 +274,6 @@ public class GedcomExport {
 
         runQueryButton.setEnabled(gedcomExport.databaseReady());
         runQueryButton.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 jProgressBar.setIndeterminate(true);
                 resultsText.setVisible(true);
@@ -301,7 +296,6 @@ public class GedcomExport {
 
         JButton recreateButton = new JButton("Create Database");
         recreateButton.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 runQueryButton.setEnabled(false);
                 File importDirectory = null;
@@ -319,7 +313,6 @@ public class GedcomExport {
                     resultsText.setText("recreating database for: " + importDirectory + "\n");
                     final File importDirectoryFinal = importDirectory;
                     new Thread() {
-
                         public void run() {
                             try {
                                 final Object selectedItem = formatSelect.getSelectedItem();

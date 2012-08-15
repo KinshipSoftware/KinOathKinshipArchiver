@@ -52,6 +52,7 @@
                 </executions>
             </plugin>
             <plugin>
+                <!--    mvn assembly:single    -->
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
@@ -92,6 +93,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Kinnate</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>pluginloader</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
