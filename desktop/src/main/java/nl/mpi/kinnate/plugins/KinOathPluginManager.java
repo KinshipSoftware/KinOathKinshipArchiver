@@ -2,18 +2,18 @@ package nl.mpi.kinnate.plugins;
 
 import java.awt.Component;
 import java.util.HashSet;
+import nl.mpi.arbil.plugin.KinOathPanelPlugin;
+import nl.mpi.arbil.plugin.PluginException;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.plugin.BasePlugin;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
-import nl.mpi.pluginloader.BasePlugin;
-import nl.mpi.pluginloader.KinOathPanelPlugin;
 import nl.mpi.pluginloader.PluginManager;
 
 /**
- * Document : KinOathPluginManager
- * Created on : Aug 13, 2012, 5:58:42 PM
- * Author : Peter Withers
+ * Document : KinOathPluginManager Created on : Aug 13, 2012, 5:58:42 PM Author
+ * : Peter Withers
  */
 public class KinOathPluginManager implements PluginManager {
 
@@ -28,7 +28,7 @@ public class KinOathPluginManager implements PluginManager {
         this.parentComponent = parentComponent;
     }
 
-    private void setPluginPanel(KinOathPanelPlugin kinOathPanelPlugin, boolean isVisible) {
+    private void setPluginPanel(KinOathPanelPlugin kinOathPanelPlugin, boolean isVisible) throws PluginException {
         final SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
         if (currentSavePanel instanceof KinDiagramPanel) {
             ((KinDiagramPanel) currentSavePanel).addPluginPanel(kinOathPanelPlugin, isVisible);
@@ -37,8 +37,12 @@ public class KinOathPluginManager implements PluginManager {
 
     public void activatePlugin(BasePlugin kinOathPlugin) {
         if (kinOathPlugin instanceof KinOathPanelPlugin) {
-            setPluginPanel((KinOathPanelPlugin) kinOathPlugin, true);
-            hashSet.add(kinOathPlugin);
+            try {
+                setPluginPanel((KinOathPanelPlugin) kinOathPlugin, true);
+                hashSet.add(kinOathPlugin);
+            } catch (PluginException exception) {
+                dialogHandler.addMessageDialogToQueue("Failed to activate the requested plugin.\n" + exception.getMessage() + "\n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription(), "Enable Plugin Error");
+            }
         } else {
             dialogHandler.addMessageDialogToQueue("No method to activate this type of plugin yet.\n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription(), "Enable Plugin");
         }
@@ -46,8 +50,12 @@ public class KinOathPluginManager implements PluginManager {
 
     public void deactivatePlugin(BasePlugin kinOathPlugin) {
         if (kinOathPlugin instanceof KinOathPanelPlugin) {
-            setPluginPanel((KinOathPanelPlugin) kinOathPlugin, false);
-            hashSet.remove(kinOathPlugin);
+            try {
+                setPluginPanel((KinOathPanelPlugin) kinOathPlugin, false);
+                hashSet.remove(kinOathPlugin);
+            } catch (PluginException exception) {
+                dialogHandler.addMessageDialogToQueue("Failed to deactivate the requested plugin.\n" + exception.getMessage() + "\n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription(), "Enable Plugin Error");
+            }
         } else {
             dialogHandler.addMessageDialogToQueue("No method to deactivate this type of plugin yet.\n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription(), "Enable Plugin");
         }
