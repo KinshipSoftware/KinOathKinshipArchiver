@@ -3,10 +3,12 @@ package nl.mpi.kinnate.plugins.export;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import nl.mpi.arbil.plugin.KinOathPanelPlugin;
+import nl.mpi.arbil.plugin.PluginBugCatcher;
 import nl.mpi.arbil.plugin.PluginDialogHandler;
+import nl.mpi.arbil.plugin.PluginException;
 import nl.mpi.arbil.plugin.PluginSessionStorage;
 import nl.mpi.kinnate.plugin.BasePlugin;
-import nl.mpi.pluginloader.KinOathPanelPlugin;
 
 /**
  * Document : CsvExport Created on : Aug 13, 2012, 6:34:52 PM Author : Peter
@@ -34,7 +36,7 @@ public class CsvExport implements BasePlugin, KinOathPanelPlugin {
         return 0;
     }
 
-    public JScrollPane getUiPanel(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage) {
+    public JScrollPane getUiPanel(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage, PluginBugCatcher bugCatcher) throws PluginException {
         final JPanel pluginPanel = new JPanel();
         pluginPanel.add(new JLabel(this.getDescription()));
         return new JScrollPane(pluginPanel);

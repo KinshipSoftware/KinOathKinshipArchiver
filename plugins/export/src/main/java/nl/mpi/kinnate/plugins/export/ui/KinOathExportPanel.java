@@ -13,10 +13,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import nl.mpi.arbil.plugin.PluginBugCatcher;
 import nl.mpi.arbil.plugin.PluginDialogHandler;
 import nl.mpi.arbil.plugin.PluginSessionStorage;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.kinnate.entityindexer.CollectionExport;
 import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.plugins.export.GedcomExport;
@@ -29,16 +30,18 @@ import nl.mpi.kinnate.plugins.export.GedcomExport;
 public class KinOathExportPanel extends JPanel {
 
     final PluginDialogHandler arbilWindowManager;
+    final PluginBugCatcher bugCatcher;
 //final KinSessionStorage kinSessionStorage;
 
-    public KinOathExportPanel(PluginDialogHandler arbilWindowManagerL, PluginSessionStorage sessionStorage) {
+    public KinOathExportPanel(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage, PluginBugCatcher bugCatcher) {
         super(new BorderLayout());
-        this.arbilWindowManager = arbilWindowManagerL;
+        this.arbilWindowManager = dialogHandler;
+        this.bugCatcher = bugCatcher;
 //        this.kinSessionStorage=kinSessionStorage;
         this.setName("CMDI/IMDI/KMDI Export Tool");
         final JTextArea queryText = new JTextArea();
         final JLabel queryTimeLabel = new JLabel();
-        final CollectionExport entityCollection = new CollectionExport();
+        final CollectionExport entityCollection = new CollectionExport(bugCatcher);
         final GedcomExport gedcomExport = new GedcomExport(entityCollection);
         final JProgressBar jProgressBar = new JProgressBar();
         final String csvOption = "*.csv";
@@ -47,9 +50,9 @@ public class KinOathExportPanel extends JPanel {
         final JComboBox locationSelect = new JComboBox(new String[]{browseOption});
 
         // get the default Arbil storage directory
-        File defaultArbilDirectory = new ArbilSessionStorage().getStorageDirectory();
-        locationSelect.addItem(defaultArbilDirectory.toString());
-        File defaultKinOathDirectory = new ArbilSessionStorage().getStorageDirectory();
+//        File defaultArbilDirectory = new ArbilSessionStorage().getStorageDirectory();
+//        locationSelect.addItem(defaultArbilDirectory.toString());
+        File defaultKinOathDirectory = sessionStorage.getStorageDirectory();
         for (File currentFile : defaultKinOathDirectory.getParentFile().listFiles(new FileFilter() {
             public boolean accept(File pathname) {
                 return pathname.getName().startsWith(".kinoath");
@@ -176,5 +179,8 @@ public class KinOathExportPanel extends JPanel {
         JPanel progressPanel = new JPanel(new BorderLayout());
         progressPanel.add(buttonPanel, BorderLayout.PAGE_START);
         progressPanel.add(jProgressBar, BorderLayout.PAGE_END);
+        this.add(queryText, BorderLayout.PAGE_END);
+        this.add(new JScrollPane(resultsText), BorderLayout.CENTER);
+        this.add(progressPanel, BorderLayout.PAGE_START);
     }
 }

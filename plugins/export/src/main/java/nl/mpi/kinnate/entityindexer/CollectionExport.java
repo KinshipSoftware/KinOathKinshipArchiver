@@ -1,7 +1,8 @@
 package nl.mpi.kinnate.entityindexer;
 
 import java.io.File;
-import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.arbil.plugin.PluginBugCatcher;
+import nl.mpi.arbil.plugin.PluginException;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Close;
@@ -12,17 +13,18 @@ import org.basex.core.cmd.Set;
 import org.basex.core.cmd.XQuery;
 
 /**
- * Document : CollectionExport
- * Created on : Jul 4, 2012, 4:10:42 PM
- * Author : Peter Withers
+ * Document : CollectionExport Created on : Jul 4, 2012, 4:10:42 PM Author :
+ * Peter Withers
  */
 public class CollectionExport implements CollectionExporter {
 
     static Context context = new Context();
     static final Object databaseLock = new Object();
     private final String databaseName = "SimpleExportTemp";
+    final PluginBugCatcher bugCatcher;
 
-    public CollectionExport() {
+    public CollectionExport(PluginBugCatcher bugCatcher) {
+        this.bugCatcher = bugCatcher;
         // make sure the database exists
         try {
             synchronized (databaseLock) {
@@ -35,7 +37,7 @@ public class CollectionExport implements CollectionExporter {
                     new CreateDB(databaseName).execute(context);
                 }
             } catch (BaseXException baseXException2) {
-                BugCatcherManager.getBugCatcher().logError(baseXException2);
+                bugCatcher.logException(new PluginException("failed to create database: " + databaseName + " : " + baseXException2.getMessage()));
             }
         }
     }
