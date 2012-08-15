@@ -3,13 +3,11 @@ package nl.mpi.pluginloader;
 import nl.mpi.kinnate.plugin.BasePlugin;
 
 /**
- * Document : PluginSample
- * Created on : Dec 22, 2011, 3:58:34 PM
- * Author : Peter Withers
+ * Document : PluginSample Created on : Dec 22, 2011, 3:58:34 PM
+ *
+ * @author Peter Withers
  */
 public class PluginSample implements BasePlugin, PluginSettings {
-
-    DiagramConnector diagramConnector;
 
     public String getName() {
         return "Sample Plugin Name";
