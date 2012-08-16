@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.plugin.PluginBugCatcher;
 import nl.mpi.arbil.plugin.PluginDialogHandler;
+import nl.mpi.arbil.plugin.PluginException;
 import nl.mpi.arbil.plugin.PluginSessionStorage;
 import nl.mpi.kinnate.entityindexer.CollectionExport;
 import nl.mpi.kinnate.entityindexer.QueryException;
@@ -32,13 +33,13 @@ public class KinOathExportPanel extends JPanel {
     final PluginDialogHandler arbilWindowManager;
     final PluginBugCatcher bugCatcher;
 
-    public KinOathExportPanel(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage, PluginBugCatcher bugCatcher) {
+    public KinOathExportPanel(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage, final PluginBugCatcher bugCatcher) {
         super(new BorderLayout());
         this.arbilWindowManager = dialogHandler;
         this.bugCatcher = bugCatcher;
         this.setName("CMDI/IMDI/KMDI Export Tool");
         final JLabel queryTimeLabel = new JLabel();
-        final CollectionExport entityCollection = new CollectionExport(bugCatcher);
+        final CollectionExport entityCollection = new CollectionExport(bugCatcher, sessionStorage);
         final GedcomExport gedcomExport = new GedcomExport(entityCollection);
         final JProgressBar jProgressBar = new JProgressBar();
         final String browseOption = "<browse>";
@@ -93,9 +94,11 @@ public class KinOathExportPanel extends JPanel {
                     } catch (IOException exception) {
                         resultsText.setText("Error Saving File.\n");
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Error Saving File");
+                        bugCatcher.logException(new PluginException(exception.getMessage()));
                     } catch (QueryException exception) {
                         resultsText.setText("Error Creating Export.\n");
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Error Creating Export");
+                        bugCatcher.logException(new PluginException(exception.getMessage()));
                     }
                 } else {
                     resultsText.setText("Export file not valid, no export created.\n");
@@ -134,6 +137,7 @@ public class KinOathExportPanel extends JPanel {
                             } catch (QueryException exception) {
                                 resultsText.append("Error creating temporary database: " + exception.getMessage() + "\n");
                                 arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Create Temporary Database");
+                                bugCatcher.logException(new PluginException(exception.getMessage()));
                             }
                             jProgressBar.setIndeterminate(false);
                             saveAsButton.setEnabled(true);

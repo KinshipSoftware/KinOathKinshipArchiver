@@ -3,6 +3,7 @@ package nl.mpi.kinnate.entityindexer;
 import java.io.File;
 import nl.mpi.arbil.plugin.PluginBugCatcher;
 import nl.mpi.arbil.plugin.PluginException;
+import nl.mpi.arbil.plugin.PluginSessionStorage;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Close;
@@ -23,11 +24,12 @@ public class CollectionExport implements CollectionExporter {
     private final String databaseName = "SimpleExportTemp";
     final PluginBugCatcher bugCatcher;
 
-    public CollectionExport(PluginBugCatcher bugCatcher) {
+    public CollectionExport(PluginBugCatcher bugCatcher, PluginSessionStorage sessionStorage) {
         this.bugCatcher = bugCatcher;
         // make sure the database exists
         try {
             synchronized (databaseLock) {
+                new Set("dbpath", new File(sessionStorage.getStorageDirectory(), "BaseXData")).execute(context);
                 new Open(databaseName).execute(context);
                 new Close().execute(context);
             }
