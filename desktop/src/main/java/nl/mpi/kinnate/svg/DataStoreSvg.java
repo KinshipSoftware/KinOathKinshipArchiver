@@ -23,17 +23,14 @@ import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
-import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- * Document : DataStoreSvg
- * Created on : Mar 10, 2011, 8:37:26 AM
- * Author : Peter Withers
+ * Document : DataStoreSvg Created on : Mar 10, 2011, 8:37:26 AM
+ *
+ * @author Peter Withers
  */
 @XmlRootElement(name = "KinDiagramData", namespace = "http://mpi.nl/tla/kin")
 public class DataStoreSvg {
@@ -218,9 +215,11 @@ public class DataStoreSvg {
 
     public VisiblePanelSetting getPanelSettingByType(VisiblePanelSetting.PanelType panelType) {
         VisiblePanelSetting[] visiblePanelsArray = getVisiblePanels();
-        for (VisiblePanelSetting panelSetting : visiblePanelsArray) {
-            if (panelSetting.getPanelType() != null && panelSetting.getPanelType() == panelType) {
-                return panelSetting;
+        if (visiblePanelsArray != null) {
+            for (VisiblePanelSetting panelSetting : visiblePanelsArray) {
+                if (panelSetting.getPanelType() != null && panelSetting.getPanelType() == panelType) {
+                    return panelSetting;
+                }
             }
         }
         return null;
