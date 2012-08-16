@@ -1,7 +1,7 @@
 package nl.mpi.arbil.plugin;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JComponent;
 
 /**
@@ -24,5 +24,5 @@ public interface PluginDialogHandler {
 
     int showDialogBox(String message, String title, int optionType, int messageType, Object[] options, Object initialValue);
 
-    File[] showFileSelectBox(String titleText, boolean directorySelectOnly, boolean multipleSelect, HashMap<String, javax.swing.filechooser.FileFilter> fileFilterMap, DialogueType dialogueType, JComponent customAccessory);
+    File[] showFileSelectBox(String titleText, boolean directorySelectOnly, boolean multipleSelect, Map<String, javax.swing.filechooser.FileFilter> fileFilterMap, DialogueType dialogueType, JComponent customAccessory);
 }
