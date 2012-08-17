@@ -27,9 +27,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Document : EntityBuilder
- * Created on : May 30, 2011, 1:25:05 PM
- * Author : Peter Withers
+ * Document : EntityBuilder Created on : May 30, 2011, 1:25:05 PM
+ *
+ * @ author Peter Withers
  */
 public class EntityDocument {
 
@@ -295,9 +295,14 @@ public class EntityDocument {
         }
     }
 
-    public void appendValueToLast(String valueString) {
+    public void appendValueToLast(String defaultNode, String valueString) throws ImportException {
         System.out.println("appendValueToLast: " + valueString);
-        currentDomNode.setTextContent(currentDomNode.getTextContent() + valueString);
+        if (currentDomNode.equals(metadataNode)) {
+            appendValue(defaultNode, valueString, 1);
+//            throw new ImportException("cannot append into the rood data node: \n\"" + valueString + "\"");
+        } else {
+            currentDomNode.setTextContent(currentDomNode.getTextContent() + valueString);
+        }
     }
 
     public void appendValue(String nodeName, String valueString, int targetLevel) {
