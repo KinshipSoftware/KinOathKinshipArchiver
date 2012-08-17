@@ -23,9 +23,9 @@ import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : EntityImporter
- * Created on : May 30, 2011, 10:28:59 AM
- * Author : Peter Withers
+ * Document : EntityImporter Created on : May 30, 2011, 10:28:59 AM
+ *
+ * @ author Peter Withers
  */
 public class EntityImporter implements GenericImporter {
 
@@ -99,7 +99,6 @@ public class EntityImporter implements GenericImporter {
         final int currentProgressPercent = (int) ((double) currntLineCounter / (double) inputLineCount * 100);
         if (progressBar != null) {
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     progressBar.setValue(currentProgressPercent);
                 }
@@ -111,7 +110,6 @@ public class EntityImporter implements GenericImporter {
         final int currentProgressPercent = (int) ((double) savedCount / (double) documentCount * 100);
         if (progressBar != null) {
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     progressBar.setValue(currentProgressPercent);
                 }
@@ -128,14 +126,17 @@ public class EntityImporter implements GenericImporter {
     }
 
     protected EntityDocument getEntityDocument(ArrayList<URI> createdNodes, String typeString, String idString, ImportTranslator importTranslator) throws ImportException {
-        idString = cleanFileName(idString);
         EntityDocument currentEntity = createdDocuments.get(idString);
         UniqueIdentifier uniqueIdentifier;
         if (currentEntity == null) {
             try {
+                String cleanedIdString = idString;
+                if (idString.startsWith("@") && idString.endsWith("@")) {
+                    cleanedIdString = idString.substring(1, idString.length() - 1);
+                }
                 // if an existing identifier is provided the keep using it
-                uniqueIdentifier = new UniqueIdentifier(idString.substring(1, idString.length() - 1));
-            } catch (IdentifierException exception) {idString = cleanFileName(idString);
+                uniqueIdentifier = new UniqueIdentifier(cleanedIdString);
+            } catch (IdentifierException exception) {
                 // otherwise create a new identifier
                 uniqueIdentifier = new UniqueIdentifier(inputFileMd5Sum + ":" + idString, UniqueIdentifier.IdentifierType.iid);
             }
@@ -162,7 +163,6 @@ public class EntityImporter implements GenericImporter {
         appendToTaskOutput(createdDocuments.size() + " entities imported");
         appendToTaskOutput("Saving imported documents (step 2/4)");
         SwingUtilities.invokeLater(new Runnable() {
-
             public void run() {
                 progressBar.setValue(0);
             }
@@ -185,11 +185,10 @@ public class EntityImporter implements GenericImporter {
         }
     }
 
-    public String cleanFileName(String fileName) {
-        // prevent bad file names being created from the gedcom internal name part
-        return fileName.replaceAll("[^A-z0-9]", "_");
-    }
-
+//    public String cleanFileName(String fileName) {
+//        // prevent bad file names being created from the gedcom internal name part
+//        return fileName.replaceAll("[^A-z0-9]", "_");
+//    }
     public URI[] importFile(File inputFile, String profileId) throws IOException, ImportException {
         inputFileUri = inputFile.toURI();
         calculateFileNameAndFileLength(new FileInputStream(inputFile));
