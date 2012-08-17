@@ -73,6 +73,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         EntityDocument currentEntity = null;
         EntityDocument fileHeaderEntity = null;
         boolean skipFileEntity = false;
+        String currentEntityType = "";
         while ((strLine = bufferedReader.readLine()) != null) {
             if (skipFileEntity) {
                 skipFileEntity = false;
@@ -92,11 +93,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                 boolean lastFieldContinued = false;
                 if (lineStructure.isContinueLineBreak()) {
                     // todo: if the previous field is null this should be caught and handled as an error in the source file                
-                    currentEntity.appendValueToLast("\n" + lineStructure.getLineContents());
+                    currentEntity.appendValueToLast(currentEntityType, "\n" + lineStructure.getLineContents());
                     lastFieldContinued = true;
                 } else if (lineStructure.isContinueLine()) {
                     // todo: if the previous field is null this should be caught and handled as an error in the source file
-                    currentEntity.appendValueToLast(lineStructure.getLineContents());
+                    currentEntity.appendValueToLast(currentEntityType, lineStructure.getLineContents());
                     lastFieldContinued = true;
                 }
                 if (lastFieldContinued == false) {
@@ -114,6 +115,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             }
                             // todo: the type string needs to determine if this is an entity or a metadata file
                             currentEntity = getEntityDocument(createdNodes, typeString, lineStructure.getCurrentID(), importTranslator);
+                            currentEntityType = lineStructure.entityType;
                             if (lineStructure.isFileHeader()) {
                                 fileHeaderEntity = currentEntity;
                                 // because the schema specifies 1:1 of both head and entity we find rather than create the head and entity nodes
