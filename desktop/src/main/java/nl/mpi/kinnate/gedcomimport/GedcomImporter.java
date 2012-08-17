@@ -21,9 +21,9 @@ import nl.mpi.kinnate.kindocument.ImportTranslator;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : GedcomImporter
- * Created on : Aug 24, 2010, 2:40:21 PM
- * Author : Peter Withers
+ * Document : GedcomImporter Created on : Aug 24, 2010, 2:40:21 PM
+ *
+ * @author Peter Withers
  */
 public class GedcomImporter extends EntityImporter implements GenericImporter {
 
@@ -240,11 +240,10 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                         }
                                     }
                                 }
-                                // create the link node when required
+                                // create the socal link node when required from gedcom file format
                                 if (lineStructure.isRelation()) {
                                     // todo: move this into the gedcom line structure class and use lineStructure.getRelationList() to later retrieve the list
 //                                appendToTaskOutput("--> adding social relation");
-                                    RelationType targetRelation = RelationType.other;
                                     // here the following five relation types are mapped to the correct relation types after this the association is cretaed and later the indigiduals are linked with sanguine relations
                                     if (lineStructure.getCurrentName().equals("FAMS") || lineStructure.getCurrentName().equals("FAMC") || lineStructure.getCurrentName().equals("HUSB") || lineStructure.getCurrentName().equals("WIFE") || lineStructure.getCurrentName().equals("CHIL")) {
                                         UniqueIdentifier socialGroupIdentifier;
@@ -261,8 +260,23 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                         }
                                         socialGroupRoleMap.get(socialGroupIdentifier).add(new SocialMemberElement(lineStructure.getCurrentName(), socialGroupMember));
                                     }
+                                    // capture the custom types from .kinoath format export files
+                                    String customType = "";
+                                    RelationType targetRelation = RelationType.other;
+                                    String dcrString = null;
+                                    String currentName = lineStructure.getCurrentName();
+                                    String[] currentNameParts = currentName.split(":");
+                                    if (currentNameParts.length == 3) {
+                                        try {
+                                            targetRelation = RelationType.valueOf(currentNameParts[0]);
+                                            customType = currentNameParts[1];
+                                            dcrString = currentNameParts[2];
+                                        } catch (IllegalArgumentException exception) {
+                                            appendToTaskOutput("Unsupported Relation Type: " + currentName);
+                                        }
+                                    }
                                     // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
-                                    currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, lineStructure.getLineContents(), importTranslator).entityData, targetRelation, null, null, null, lineStructure.getCurrentName());
+                                    currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, lineStructure.getLineContents(), importTranslator).entityData, targetRelation, null, null, dcrString, customType);
                                     notConsumed = false;
                                 }
                                 if (notConsumed) {
