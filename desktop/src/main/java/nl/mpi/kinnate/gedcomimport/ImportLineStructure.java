@@ -5,9 +5,9 @@ import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 
 /**
- * Document : ImportLineStructure
- * Created on : Jul 30, 2012, 9:23:36 AM
- * Author : Peter Withers
+ * Document : ImportLineStructure Created on : Jul 30, 2012, 9:23:36 AM
+ *
+ * @author Peter Withers
  */
 public abstract class ImportLineStructure {
 
@@ -44,7 +44,7 @@ public abstract class ImportLineStructure {
             }
             this.currentName = currentName.trim();
             if (lineContents != null) {
-                this.lineContents = lineContents.trim();
+                this.lineContents = lineContents; //.trim();
             }
         }
     }
