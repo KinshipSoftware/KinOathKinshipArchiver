@@ -288,7 +288,7 @@ public class EntityDocument {
             levelCount++;
             counterNode = counterNode.getParentNode();
         }
-        levelCount = levelCount - 3; // always keep the kinnate.metadata nodes
+        levelCount = levelCount - 2; // always keep the kinnate.metadata nodes
         while (levelCount > nodeLevel) {
             levelCount--;
             currentDomNode = currentDomNode.getParentNode();
