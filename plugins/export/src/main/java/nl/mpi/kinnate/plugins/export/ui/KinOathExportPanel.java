@@ -60,7 +60,6 @@ public class KinOathExportPanel extends JPanel {
                 saveAsButton.setEnabled(false);
                 recreateButton.setEnabled(false);
                 locationSelect.setEnabled(false);
-                jProgressBar.setIndeterminate(true);
                 HashMap<String, javax.swing.filechooser.FileFilter> fileFilterMap = new HashMap<String, javax.swing.filechooser.FileFilter>(2);
                 fileFilterMap.put("KinOath Export", new javax.swing.filechooser.FileFilter() {
                     @Override
@@ -82,7 +81,12 @@ public class KinOathExportPanel extends JPanel {
                 });
                 File[] saveFile = arbilWindowManager.showFileSelectBox("Save KinOath Export File", false, false, fileFilterMap, PluginDialogHandler.DialogueType.save, null);
                 if (saveFile != null) {
+                    jProgressBar.setIndeterminate(true);
                     try {
+                        // add the file suffix if not already there
+                        if (!saveFile[0].getName().toLowerCase().endsWith(".kinoath")) {
+                            saveFile[0] = new File(saveFile[0].getParentFile(), saveFile[0].getName() + ".kinoath");
+                        }
                         resultsText.setText("Generating export contents.\n");
                         final String generateExportResult = gedcomExport.generateExport(gedcomExport.getGedcomQuery());
                         resultsText.setText("Creating export file: " + saveFile.toString() + "\n");
