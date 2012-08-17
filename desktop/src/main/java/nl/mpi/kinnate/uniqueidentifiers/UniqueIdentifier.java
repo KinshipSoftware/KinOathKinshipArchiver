@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlValue;
 import nl.mpi.arbil.data.ArbilField;
 
 /**
- * Document : UniqueIdentifier
- * Created on : Jul 21, 2011, 3:23:17 PM
- * Author : Peter Withers
+ * Document : UniqueIdentifier Created on : Jul 21, 2011, 3:23:17 PM
+ *
+ * @ author Peter Withers
  */
 public class UniqueIdentifier {
 
@@ -46,15 +46,19 @@ public class UniqueIdentifier {
     public UniqueIdentifier(String attributeIdentifier) throws IdentifierException {
         // reconstruct the identifier from an attribte string originally obtained by getAttributeIdentifier
         String[] attributeIdentifierParts = attributeIdentifier.split("\\_");
-        if (attributeIdentifierParts.length == 2) {
-            identifierType = IdentifierType.valueOf(attributeIdentifierParts[0]);
-            identifierString = attributeIdentifierParts[1];
-        } else if (attributeIdentifierParts.length == 3) {
-            identifierType = IdentifierType.valueOf(attributeIdentifierParts[1]);
-            identifierString = attributeIdentifierParts[2];
-        } else {
-            // this allows invalid files to prevent the application from starting
-            throw new IdentifierException("Incorrect identifier format: " + attributeIdentifier);
+        try {
+            if (attributeIdentifierParts.length == 2) {
+                identifierType = IdentifierType.valueOf(attributeIdentifierParts[0]);
+                identifierString = attributeIdentifierParts[1];
+            } else if (attributeIdentifierParts.length == 3) {
+                identifierType = IdentifierType.valueOf(attributeIdentifierParts[1]);
+                identifierString = attributeIdentifierParts[2];
+            } else {
+                // this allows invalid files to prevent the application from starting
+                throw new IdentifierException("Incorrect identifier format: " + attributeIdentifier);
+            }
+        } catch (IllegalArgumentException exception) {
+            throw new IdentifierException("Incorrect identifier IdentifierType: " + attributeIdentifier);
         }
     }
 
