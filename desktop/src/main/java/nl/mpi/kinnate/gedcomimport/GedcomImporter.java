@@ -261,7 +261,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                         socialGroupRoleMap.get(socialGroupIdentifier).add(new SocialMemberElement(lineStructure.getCurrentName(), socialGroupMember));
                                     }
                                     // capture the custom types from .kinoath format export files
-                                    String customType = "";
+                                    String customType = lineStructure.getCurrentName();
                                     RelationType targetRelation = RelationType.other;
                                     String dcrString = null;
                                     String currentName = lineStructure.getCurrentName();
