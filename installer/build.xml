@@ -7,8 +7,8 @@
 -->
 <project name="KinOath" default="scp_to_lux09">
     <target name="setproperties">
-        <property name="kinoath.current.major" value="0"/>
-        <property name="kinoath.current.minor" value="8"/>
+        <property name="kinoath.current.major" value="1"/>
+        <property name="kinoath.current.minor" value="1"/>
         <property name="kinoath.filenameidentifier" value="-pretesting"/>
         <property name="kinoath.application-title" value="KinOath Kinship Archiver (pretesting)"/>
         <property name="kinoath.icon-file-name" value="kinoath${kinoath.filenameidentifier}128x128"/>
@@ -305,6 +305,7 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <!-- it seems less confusing to just upload the same file to both locations <sshexec host="lux09.mpi.nl" username="${lux09.user}" password="${lux09.pw}" command="ln /data/extweb1/docs/TG/j2se/jnlp/kinoath/${JarPrefix}.jnlp /data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath${kinoath.filenameidentifier}.jnlp" verbose="true" /> -->
         <!-- set the required permissions for apache --> 
         <sshexec host="lux09.mpi.nl" username="${lux09.user}" password="${lux09.pw}" command="chmod a+r /data/extweb1/docs/TG/j2se/jnlp/kinoath/kinoath*" verbose="true" />
+        <sshexec host="lux09.mpi.nl" username="${lux09.user}" password="${lux09.pw}" command="chmod a+r /data/extweb1/docs/TG/j2se/jnlp/kinoath/lib/*" verbose="true" />
     </target>
     <target name="maven-jar" depends="updateJnlpAndAppletHtml">
         <!-- clean must be run before updateJnlpAndAppletHtml otherwise the jnlp file gets deleted from the classes before making the jar file -->
