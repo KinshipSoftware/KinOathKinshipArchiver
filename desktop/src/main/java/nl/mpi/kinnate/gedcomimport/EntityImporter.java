@@ -138,7 +138,12 @@ public class EntityImporter implements GenericImporter {
                 uniqueIdentifier = new UniqueIdentifier(cleanedIdString);
             } catch (IdentifierException exception) {
                 // otherwise create a new identifier
-                uniqueIdentifier = new UniqueIdentifier(inputFileMd5Sum + ":" + idString, UniqueIdentifier.IdentifierType.iid);
+                String cleanedIdString = idString;
+                if (idString.startsWith("@") && idString.endsWith("@")) {
+                    // keep the old format so that the import results can be compared with version 1.0 import resutls
+                    cleanedIdString = "_" + idString.substring(1, idString.length() - 1) + "_";
+                }
+                uniqueIdentifier = new UniqueIdentifier(inputFileMd5Sum + ":" + cleanedIdString, UniqueIdentifier.IdentifierType.iid);
             }
             // create a new entity file
             currentEntity = new EntityDocument(getDestinationDirectory(), uniqueIdentifier, typeString, importTranslator, sessionStorage);
