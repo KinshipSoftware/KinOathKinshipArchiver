@@ -3,9 +3,9 @@ package nl.mpi.kinnate.gedcomimport;
 import java.util.ArrayList;
 
 /**
- * Document : GedcomLineStructure
- * Created on : Jul 27, 2012, 6:03:36 PM
- * Author : Peter Withers
+ * Document : GedcomLineStructure Created on : Jul 27, 2012, 6:03:36 PM
+ *
+ * @author Peter Withers
  */
 public class GedcomLineStructure extends ImportLineStructure {
 
@@ -59,6 +59,20 @@ public class GedcomLineStructure extends ImportLineStructure {
         } else {
             entityType = getdomType;
         }
+    }
+
+    @Override
+    public String getProfileForEntityType(String individualTypeProfile, String otherTypeProfile) {
+        if (entityType == null && !isFileHeader) {
+            return individualTypeProfile;
+        } else {
+            return otherTypeProfile;
+        }
+    }
+
+    @Override
+    public String getEscapedLineContents() throws ImportException {
+        return getLineContents().replace("@@", "@");
     }
 
     @Override

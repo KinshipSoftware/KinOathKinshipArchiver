@@ -110,8 +110,20 @@ public abstract class ImportLineStructure {
         return getCurrentField().lineContents;
     }
 
+    public String getEscapedLineContents() throws ImportException {
+        return getLineContents();
+    }
+
     public String getEntityType() {
         return entityType;
+    }
+
+    public String getProfileForEntityType(String individualTypeProfile, String otherTypeProfile) {
+        if (!isFileHeader) {
+            return individualTypeProfile;
+        } else {
+            return otherTypeProfile;
+        }
     }
 
     public boolean isFileHeader() {
