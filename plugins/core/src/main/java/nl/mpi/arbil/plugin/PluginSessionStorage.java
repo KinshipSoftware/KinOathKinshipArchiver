@@ -10,7 +10,13 @@ import java.io.File;
 public interface PluginSessionStorage {
 
     /**
-     * @return Current storage directory used to store all user working files
+     * @return Application storage directory used to store all application
+     * settings
      */
-    public File getStorageDirectory();
+    public File getApplicationStorageDirectory();
+
+    /**
+     * @return Current project directory used to store all users working files
+     */
+    public File getProjectDirectory();
 }
