@@ -1,7 +1,9 @@
 package nl.mpi.pluginloader;
 
 import nl.mpi.arbil.plugin.ActivatablePlugin;
+import nl.mpi.arbil.plugin.PluginDialogHandler;
 import nl.mpi.arbil.plugin.PluginException;
+import nl.mpi.arbil.plugin.PluginSessionStorage;
 import nl.mpi.kinnate.plugin.BasePlugin;
 
 /**
@@ -33,11 +35,11 @@ public class PluginSampleActivate implements BasePlugin, PluginSettings, Activat
         return 2;
     }
 
-    public void activatePlugin() throws PluginException {
+    public void activatePlugin(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage) throws PluginException {
         isActivated = true;
     }
 
-    public void deactivatePlugin() throws PluginException {
+    public void deactivatePlugin(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage) throws PluginException {
         isActivated = false;
     }
 

@@ -16,7 +16,8 @@ import nl.mpi.pluginloader.PluginManager;
 import nl.mpi.pluginloader.PluginService;
 
 /**
- * Document : PluginMenu Created on : Aug 13, 2012, 3:47:55 PM 
+ * Document : PluginMenu Created on : Aug 13, 2012, 3:47:55 PM
+ *
  * @ author Peter Withers
  */
 public class PluginMenu extends JMenu {
@@ -65,7 +66,7 @@ public class PluginMenu extends JMenu {
             public void activatePlugin(BasePlugin kinOathPlugin) {
                 try {
                     if (kinOathPlugin instanceof ActivatablePlugin) {
-                        ((ActivatablePlugin) kinOathPlugin).activatePlugin();
+                        ((ActivatablePlugin) kinOathPlugin).activatePlugin(null, null);
                         jTextArea.setText("activate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
                     } else {
                         jTextArea.setText("non activateable plugin: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
@@ -78,7 +79,7 @@ public class PluginMenu extends JMenu {
             public void deactivatePlugin(BasePlugin kinOathPlugin) {
                 try {
                     if (kinOathPlugin instanceof ActivatablePlugin) {
-                        ((ActivatablePlugin) kinOathPlugin).deactivatePlugin();
+                        ((ActivatablePlugin) kinOathPlugin).deactivatePlugin(null, null);
                         jTextArea.setText("deactivate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
                     } else {
                         jTextArea.setText("non deactivateable plugin: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
