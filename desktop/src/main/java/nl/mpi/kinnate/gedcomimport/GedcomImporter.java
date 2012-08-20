@@ -94,11 +94,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                 boolean lastFieldContinued = false;
                 if (lineStructure.isContinueLineBreak()) {
                     // todo: if the previous field is null this should be caught and handled as an error in the source file                
-                    currentEntity.appendValueToLast(currentEntityType, "\n" + lineStructure.getLineContents());
+                    currentEntity.appendValueToLast(currentEntityType, "\n" + lineStructure.getEscapedLineContents());
                     lastFieldContinued = true;
                 } else if (lineStructure.isContinueLine()) {
                     // todo: if the previous field is null this should be caught and handled as an error in the source file
-                    currentEntity.appendValueToLast(currentEntityType, lineStructure.getLineContents());
+                    currentEntity.appendValueToLast(currentEntityType, lineStructure.getEscapedLineContents());
                     lastFieldContinued = true;
                 }
                 if (lastFieldContinued == false) {
