@@ -281,7 +281,11 @@ public class EntityDocument {
         return valueElement;
     }
 
-    public void assendToLevel(int nodeLevel) {
+    public void assendToLevel(int nodeLevel) throws ImportException {
+        if (nodeLevel < 1) {
+            BugCatcherManager.getBugCatcher().logError(new ImportException("Cannot insert elements outside the CustomData section."));
+            throw new ImportException("Cannot insert elements outside the CustomData section.");
+        }
         int levelCount = 0;
         Node counterNode = currentDomNode;
         while (counterNode != null) {
@@ -305,7 +309,7 @@ public class EntityDocument {
         }
     }
 
-    public void appendValue(String nodeName, String valueString, int targetLevel) {
+    public void appendValue(String nodeName, String valueString, int targetLevel) throws ImportException {
         // this method will create a structured xml file
         // the nodeName will be translated if required in insertNode()
         System.out.println("appendValue: " + nodeName + " : " + valueString + " : " + targetLevel);
