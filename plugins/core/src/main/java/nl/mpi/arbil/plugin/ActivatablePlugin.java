@@ -7,9 +7,9 @@ package nl.mpi.arbil.plugin;
  */
 public interface ActivatablePlugin {
 
-    public void activatePlugin() throws PluginException;
+    public void activatePlugin(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage) throws PluginException;
 
-    public void deactivatePlugin() throws PluginException;
+    public void deactivatePlugin(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage) throws PluginException;
 
     public boolean getIsActivated() throws PluginException;
 }
