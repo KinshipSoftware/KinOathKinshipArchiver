@@ -1,6 +1,5 @@
 package nl.mpi.pluginloader.ui;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import javax.swing.JCheckBoxMenuItem;
@@ -10,14 +9,15 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import nl.mpi.arbil.plugin.ActivatablePlugin;
+import nl.mpi.arbil.plugin.PluginException;
 import nl.mpi.kinnate.plugin.BasePlugin;
 import nl.mpi.pluginloader.PluginManager;
 import nl.mpi.pluginloader.PluginService;
 
 /**
- * Document : PluginMenu
- * Created on : Aug 13, 2012, 3:47:55 PM
- * Author : Peter Withers
+ * Document : PluginMenu Created on : Aug 13, 2012, 3:47:55 PM 
+ * @ author Peter Withers
  */
 public class PluginMenu extends JMenu {
 
@@ -51,21 +51,41 @@ public class PluginMenu extends JMenu {
         JMenuBar jMenuBar = new JMenuBar();
         final JTextArea jTextArea = new JTextArea();
         PluginManager pluginManager = new PluginManager() {
-
-            HashSet<BasePlugin> hashSet = new HashSet<BasePlugin>();
-
             public boolean isActivated(BasePlugin kinOathPlugin) {
-                return hashSet.contains(kinOathPlugin);
+                try {
+                    if (kinOathPlugin instanceof ActivatablePlugin) {
+                        return ((ActivatablePlugin) kinOathPlugin).getIsActivated();
+                    }
+                } catch (PluginException exception) {
+                    System.err.println("error getting plugin state:" + exception.getMessage());
+                }
+                return false;
             }
 
             public void activatePlugin(BasePlugin kinOathPlugin) {
-                hashSet.add(kinOathPlugin);
-                jTextArea.setText("activate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
+                try {
+                    if (kinOathPlugin instanceof ActivatablePlugin) {
+                        ((ActivatablePlugin) kinOathPlugin).activatePlugin();
+                        jTextArea.setText("activate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
+                    } else {
+                        jTextArea.setText("non activateable plugin: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
+                    }
+                } catch (PluginException exception) {
+                    jTextArea.setText("Error activating plugin: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
+                }
             }
 
             public void deactivatePlugin(BasePlugin kinOathPlugin) {
-                hashSet.remove(kinOathPlugin);
-                jTextArea.setText("deactivate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
+                try {
+                    if (kinOathPlugin instanceof ActivatablePlugin) {
+                        ((ActivatablePlugin) kinOathPlugin).deactivatePlugin();
+                        jTextArea.setText("deactivate: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
+                    } else {
+                        jTextArea.setText("non deactivateable plugin: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
+                    }
+                } catch (PluginException exception) {
+                    jTextArea.setText("error deactivating plugin: \n" + kinOathPlugin.getName() + "\n" + kinOathPlugin.getMajorVersionNumber() + "." + kinOathPlugin.getMinorVersionNumber() + "." + kinOathPlugin.getBuildVersionNumber() + "\n" + kinOathPlugin.getDescription());
+                }
             }
         };
         jMenuBar.add(new PluginMenu(PluginService.getInstance(), pluginManager));
