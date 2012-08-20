@@ -123,9 +123,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 // todo: maybe replace this "Gedcom Header" string with the file name of the import file
                                 currentEntity.insertValue("Type", "Imported File Header"); // inserting a value will only add that value once, if the value already exists then no action is taken
                                 if (lineStructure.hasLineContents()) {
-                                    currentEntity.insertValue(lineStructure.getCurrentName(), lineStructure.getLineContents());
+//                                    throw new ImportException("Unexpeted header parameter: " + lineStructure.getCurrentName() + " " + lineStructure.getLineContents());
+                                    // TIP files provide comments in the header and they are adde here
+                                    currentEntity.insertValue(lineStructure.getCurrentName(), lineStructure.getLineContents().trim());
                                 } else {
-                                    currentEntity.appendValue(lineStructure.getCurrentName(), null, lineStructure.getGedcomLevel());
+//                                    currentEntity.appendValue(lineStructure.getCurrentName(), null, lineStructure.getGedcomLevel());
                                 }
                             } else {
                                 fileHeaderEntity.entityData.addRelatedNode(currentEntity.entityData, RelationType.other, null, null, null, "source");
