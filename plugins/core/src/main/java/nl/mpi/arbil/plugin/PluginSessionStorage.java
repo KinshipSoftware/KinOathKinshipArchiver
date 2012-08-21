@@ -13,7 +13,7 @@ public interface PluginSessionStorage {
      * @return Application storage directory used to store all application
      * settings
      */
-    public File getApplicationStorageDirectory();
+    public File getApplicationSettingsDirectory();
 
     /**
      * @return Current project directory used to store all users working files
