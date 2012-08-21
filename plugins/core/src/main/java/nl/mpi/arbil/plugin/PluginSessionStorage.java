@@ -16,7 +16,14 @@ public interface PluginSessionStorage {
     public File getApplicationSettingsDirectory();
 
     /**
-     * @return Current project directory used to store all users working files
+     * @return Current project directory used to store project configuration
+     * files and project directories
      */
     public File getProjectDirectory();
+
+    /**
+     * @return Current project working directory used to store all users working
+     * files
+     */
+    public File getProjectWorkingDirectory();
 }
