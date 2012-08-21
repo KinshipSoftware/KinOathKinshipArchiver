@@ -22,6 +22,7 @@ import org.basex.core.cmd.XQuery;
 
 /**
  * Document : ArbilDatabase Created on : Aug 6, 2012, 11:39:33 AM
+ *
  * @author Peter Withers
  */
 public class ArbilDatabase {
@@ -69,7 +70,21 @@ public class ArbilDatabase {
         }
     }
 
-    private String getQuery() {
+    public String getPopulatedFieldNames() {
+        return "<MetadataFileType>\n"
+                + "<MetadataFileType><displayString>All</displayString></MetadataFileType>\n"
+                + "{\n"
+                + "for $nameString in distinct-values(\n"
+                + "for $entityNode in collection('" + databaseName + "')/descendant-or-self::*\n"
+                + "return $entityNode/name()\n"
+                + ")\n"
+                + "order by $nameString\n"
+                + "return\n"
+                + "<MetadataFileType><pathPart>{$nameString}</pathPart></MetadataFileType>\n"
+                + "}</MetadataFileType>";
+    }
+
+    private String getPopulatedPaths() {
 //        return "for $xpathString in distinct-values(\n"
 //                + "for $entityNode in collection('" + databaseName + "')/*\n"
 //                + "return path($entityNode)\n"
@@ -77,24 +92,26 @@ public class ArbilDatabase {
 //                + "return"
 //                + "$xpathString";
         return "<MetadataFileType>\n"
+                + "<MetadataFileType><displayString>All</displayString></MetadataFileType>\n"
                 + "{\n"
                 + "for $xpathString in distinct-values(\n"
                 + "for $entityNode in collection('" + databaseName + "')/*\n"
                 + "return path($entityNode)\n"
                 + ")\n"
+                + "order by $xpathString\n"
                 + "return\n"
                 + "<MetadataFileType><rootXpath>{$xpathString}</rootXpath></MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
 
-    public MetadataFileType[] getMetadataTypes(MetadataFileType metadataFileType[]) {
+    public MetadataFileType[] getMetadataTypes(MetadataFileType metadataFileType) {
         long startTime = System.currentTimeMillis();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(MetadataFileType.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String queryResult;
             synchronized (databaseLock) {
-                final String queryString = getQuery();
+                final String queryString = getPopulatedFieldNames();
                 System.out.println("queryString: " + queryString);
                 queryResult = new XQuery(queryString).execute(context);
             }

@@ -1,9 +1,9 @@
 package nl.mpi.kinnate.plugins.metadatasearch.ui;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,21 +20,24 @@ import nl.mpi.kinnate.plugins.metadatasearch.db.MetadataFileType;
 
 /**
  * Document : SearchPanel Created on : Jul 31, 2012, 6:34:07 PM
- * @ author Peter Withers
+ *
+ * @author Peter Withers
  */
 public class SearchPanel extends JPanel implements ActionListener {
 
     final private ArbilDatabase arbilDatabase;
     final PluginDialogHandler arbilWindowManager;
     final JPanel lowerPanel;
+    final JFrame jFrame;
 
-    public SearchPanel() {
+    public SearchPanel(JFrame jFrame) {
+        this.jFrame = jFrame;
         arbilWindowManager = new ArbilWindowManager();
         arbilDatabase = new ArbilDatabase(new ArbilSessionStorage(), arbilWindowManager, BugCatcherManager.getBugCatcher());
         this.setLayout(new BorderLayout());
         this.add(new ArbilNodeSearchPanel(null, null, new ArbilNode[0]), BorderLayout.PAGE_END);
         lowerPanel = new JPanel();
-        lowerPanel.setLayout(new BoxLayout(lowerPanel, BoxLayout.PAGE_AXIS));
+        lowerPanel.setLayout(new FlowLayout());
         final JButton createButton = new JButton("create db");
         createButton.setActionCommand("create");
         final JButton optionsButton = new JButton("get options");
@@ -43,14 +46,14 @@ public class SearchPanel extends JPanel implements ActionListener {
         createButton.addActionListener(this);
         lowerPanel.add(createButton);
         lowerPanel.add(optionsButton);
-        this.add(lowerPanel, BorderLayout.PAGE_START);
+        this.add(lowerPanel, BorderLayout.CENTER);
     }
 
     static public void main(String[] args) {
         ArbilNodeSearchColumnComboBox.setSessionStorage(new ArbilSessionStorage());
         JFrame jFrame = new JFrame("Search Panel Test");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jFrame.setContentPane(new SearchPanel());
+        jFrame.setContentPane(new SearchPanel(jFrame));
         jFrame.pack();
         jFrame.setVisible(true);
     }
@@ -68,8 +71,12 @@ public class SearchPanel extends JPanel implements ActionListener {
             System.out.println("run query");
             MetadataFileType[] metadataFileTypes = arbilDatabase.getMetadataTypes(null);
             System.out.println("done");
-            lowerPanel.add(new SearchOptionBox(metadataFileTypes));
+            SearchOptionBox searchOptionBox = new SearchOptionBox(metadataFileTypes);
+            searchOptionBox.addActionListener(this);
+            searchOptionBox.setActionCommand("options");
+            lowerPanel.add(searchOptionBox);
             this.revalidate();
+//            jFrame.pack();
         }
     }
 }

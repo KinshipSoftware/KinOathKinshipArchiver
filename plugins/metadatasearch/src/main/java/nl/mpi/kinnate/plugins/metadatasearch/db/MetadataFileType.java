@@ -4,15 +4,16 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Document : MetadataFileType
- * Created on : Aug 6, 2012, 1:37:47 PM
- * Author : Peter Withers
+ * Document : MetadataFileType Created on : Aug 6, 2012, 1:37:47 PM
+ * @author Peter Withers
  */
 @XmlRootElement(name = "MetadataFileType")
 public class MetadataFileType {
 
     @XmlElement(name = "rootXpath")
-    private String rootXpath;
+    private String rootXpath = null;
+    @XmlElement(name = "pathPart")
+    private String pathPart = null;
     @XmlElement(name = "displayString")
     private String displayString = null;
     @XmlElement(name = "recordCount")
@@ -24,8 +25,9 @@ public class MetadataFileType {
     public MetadataFileType() {
     }
 
-    public MetadataFileType(String rootXpath, String displayString) {
+    public MetadataFileType(String rootXpath, String pathPart, String displayString) {
         this.rootXpath = rootXpath;
+        this.pathPart = pathPart;
         this.displayString = displayString;
     }
 
@@ -36,7 +38,11 @@ public class MetadataFileType {
     @Override
     public String toString() {
         if (displayString == null) {
-            displayString = rootXpath.replaceAll("\"[^\"]*\":", "").replaceAll("\\[\\d*\\]", "");
+            if (rootXpath != null) {
+                displayString = rootXpath.replaceAll("\"[^\"]*\":", "").replaceAll("\\[\\d*\\]", "");
+            } else if (pathPart != null) {
+                displayString = pathPart;
+            }
         }
         return displayString;
     }
