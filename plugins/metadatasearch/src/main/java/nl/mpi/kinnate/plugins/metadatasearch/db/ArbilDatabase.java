@@ -6,9 +6,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
-import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcherManager;
-import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.arbil.plugin.PluginBugCatcher;
+import nl.mpi.arbil.plugin.PluginDialogHandler;
+import nl.mpi.arbil.plugin.PluginException;
+import nl.mpi.arbil.plugin.PluginSessionStorage;
 import nl.mpi.kinnate.entityindexer.QueryException;
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
@@ -20,23 +21,25 @@ import org.basex.core.cmd.Set;
 import org.basex.core.cmd.XQuery;
 
 /**
- * Document : ArbilDatabase
- * Created on : Aug 6, 2012, 11:39:33 AM
- * Author : Peter Withers
+ * Document : ArbilDatabase Created on : Aug 6, 2012, 11:39:33 AM
+ * @author Peter Withers
  */
 public class ArbilDatabase {
 
     static Context context = new Context();
     static final Object databaseLock = new Object();
     private final String databaseName = "ArbilDatabase";
-    final private SessionStorage sessionStorage;
-    final private MessageDialogHandler dialogHandler;
+    final private PluginSessionStorage sessionStorage;
+    final private PluginDialogHandler dialogHandler;
+    final private PluginBugCatcher bugCatcher;
 
-    public ArbilDatabase(SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
+    public ArbilDatabase(PluginSessionStorage sessionStorage, PluginDialogHandler dialogHandler, PluginBugCatcher bugCatcher) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
+        this.bugCatcher = bugCatcher;
         try {
             synchronized (databaseLock) {
+                new Set("dbpath", new File(sessionStorage.getApplicationSettingsDirectory(), "BaseXData")).execute(context);
                 new Open(databaseName).execute(context);
                 new Close().execute(context);
             }
@@ -46,7 +49,7 @@ public class ArbilDatabase {
                     new CreateDB(databaseName).execute(context);
                 }
             } catch (BaseXException baseXException2) {
-                BugCatcherManager.getBugCatcher().logError(baseXException2);
+                bugCatcher.logException(new PluginException(baseXException2.getMessage()));
             }
         }
     }
@@ -57,7 +60,7 @@ public class ArbilDatabase {
             synchronized (databaseLock) {
                 new DropDB(databaseName).execute(context);
                 new Set("CREATEFILTER", suffixFilter).execute(context);
-                final File cacheDirectory = sessionStorage.getCacheDirectory();
+                final File cacheDirectory = sessionStorage.getProjectDirectory();
                 System.out.println("cacheDirectory: " + cacheDirectory);
                 new CreateDB(databaseName, cacheDirectory.toString()).execute(context);
             }
@@ -108,10 +111,10 @@ public class ArbilDatabase {
 //            selectedEntity.appendTempLabel(queryTimeString);
             return foundEntities.getChildMetadataTypes();
         } catch (JAXBException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
+            bugCatcher.logException(new PluginException(exception.getMessage()));
             dialogHandler.addMessageDialogToQueue("Error getting search options", "Search Options");
         } catch (BaseXException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
+            bugCatcher.logException(new PluginException(exception.getMessage()));
             dialogHandler.addMessageDialogToQueue("Error getting search options", "Search Options");
         }
         return new MetadataFileType[]{};

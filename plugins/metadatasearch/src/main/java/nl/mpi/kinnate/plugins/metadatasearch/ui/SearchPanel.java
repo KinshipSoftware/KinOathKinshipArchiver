@@ -8,28 +8,29 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.plugin.PluginDialogHandler;
 import nl.mpi.arbil.ui.ArbilNodeSearchColumnComboBox;
 import nl.mpi.arbil.ui.ArbilNodeSearchPanel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase;
 import nl.mpi.kinnate.plugins.metadatasearch.db.MetadataFileType;
 
 /**
- * Document : SearchPanel
- * Created on : Jul 31, 2012, 6:34:07 PM
- * Author : Peter Withers
+ * Document : SearchPanel Created on : Jul 31, 2012, 6:34:07 PM
+ * @ author Peter Withers
  */
 public class SearchPanel extends JPanel implements ActionListener {
 
     final private ArbilDatabase arbilDatabase;
-    final ArbilWindowManager arbilWindowManager;
+    final PluginDialogHandler arbilWindowManager;
     final JPanel lowerPanel;
 
     public SearchPanel() {
         arbilWindowManager = new ArbilWindowManager();
-        arbilDatabase = new ArbilDatabase(new ArbilSessionStorage(), arbilWindowManager);
+        arbilDatabase = new ArbilDatabase(new ArbilSessionStorage(), arbilWindowManager, BugCatcherManager.getBugCatcher());
         this.setLayout(new BorderLayout());
         this.add(new ArbilNodeSearchPanel(null, null, new ArbilNode[0]), BorderLayout.PAGE_END);
         lowerPanel = new JPanel();
