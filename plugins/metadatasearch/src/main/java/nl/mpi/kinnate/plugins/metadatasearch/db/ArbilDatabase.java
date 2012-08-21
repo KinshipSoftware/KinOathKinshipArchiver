@@ -72,7 +72,7 @@ public class ArbilDatabase {
 
     public String getPopulatedFieldNames() {
         return "<MetadataFileType>\n"
-                + "<MetadataFileType><displayString>All</displayString></MetadataFileType>\n"
+                + "<MetadataFileType><displayString>All Fields</displayString></MetadataFileType>\n"
                 + "{\n"
                 + "for $nameString in distinct-values(\n"
                 + "for $entityNode in collection('" + databaseName + "')/descendant-or-self::*\n"
@@ -92,7 +92,7 @@ public class ArbilDatabase {
 //                + "return"
 //                + "$xpathString";
         return "<MetadataFileType>\n"
-                + "<MetadataFileType><displayString>All</displayString></MetadataFileType>\n"
+                + "<MetadataFileType><displayString>All Types</displayString></MetadataFileType>\n"
                 + "{\n"
                 + "for $xpathString in distinct-values(\n"
                 + "for $entityNode in collection('" + databaseName + "')/*\n"
@@ -104,14 +104,23 @@ public class ArbilDatabase {
                 + "}</MetadataFileType>";
     }
 
-    public MetadataFileType[] getMetadataTypes(MetadataFileType metadataFileType) {
+    public MetadataFileType[] getPathMetadataTypes(MetadataFileType metadataFileType) {
+        final String queryString = getPopulatedPaths();
+        return getMetadataTypes(queryString);
+    }
+
+    public MetadataFileType[] getFieldMetadataTypes(MetadataFileType metadataFileType) {
+        final String queryString = getPopulatedFieldNames();
+        return getMetadataTypes(queryString);
+    }
+
+    private MetadataFileType[] getMetadataTypes(final String queryString) {
         long startTime = System.currentTimeMillis();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(MetadataFileType.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String queryResult;
             synchronized (databaseLock) {
-                final String queryString = getPopulatedFieldNames();
                 System.out.println("queryString: " + queryString);
                 queryResult = new XQuery(queryString).execute(context);
             }

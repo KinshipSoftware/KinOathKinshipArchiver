@@ -69,14 +69,27 @@ public class SearchPanel extends JPanel implements ActionListener {
             }
         } else if ("options".equals(e.getActionCommand())) {
             System.out.println("run query");
-            MetadataFileType[] metadataFileTypes = arbilDatabase.getMetadataTypes(null);
+            MetadataFileType[] metadataPathTypes = arbilDatabase.getPathMetadataTypes(null);
             System.out.println("done");
-            SearchOptionBox searchOptionBox = new SearchOptionBox(metadataFileTypes);
-            searchOptionBox.addActionListener(this);
-            searchOptionBox.setActionCommand("options");
-            lowerPanel.add(searchOptionBox);
-            this.revalidate();
-//            jFrame.pack();
+            addOptionBox(metadataPathTypes, "paths");
+
+            System.out.println("run query");
+            MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
+            System.out.println("done");
+            addOptionBox(metadataFieldTypes, "fields");
+        } else if ("fields".equals(e.getActionCommand())) {
+
+        } else if ("paths".equals(e.getActionCommand())) {
+
         }
+    }
+
+    private void addOptionBox(MetadataFileType[] metadataFileTypes, final String options) {
+        SearchOptionBox searchOptionBox = new SearchOptionBox(metadataFileTypes);
+        searchOptionBox.addActionListener(this);
+        searchOptionBox.setActionCommand(options);
+        lowerPanel.add(searchOptionBox);
+        this.revalidate();
+//            jFrame.pack();
     }
 }
