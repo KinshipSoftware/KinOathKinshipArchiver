@@ -84,6 +84,26 @@ public class ArbilDatabase {
                 + "}</MetadataFileType>";
     }
 
+    private String getMetadataTypes() {
+//        return "for $xpathString in distinct-values(\n"
+//                + "for $entityNode in collection('" + databaseName + "')/*\n"
+//                + "return path($entityNode)\n"
+//                + ")\n"
+//                + "return"
+//                + "$xpathString";
+        return "<MetadataFileType>\n"
+                + "<MetadataFileType><displayString>All Types</displayString></MetadataFileType>\n"
+                + "{\n"
+                + "for $xpathString in distinct-values(\n"
+                + "for $entityNode in collection('" + databaseName + "')/*:CMD/@*:schemaLocation\n"
+                + "return $entityNode\n"
+                + ")\n"
+                + "order by $xpathString\n"
+                + "return\n"
+                + "<MetadataFileType><profileString>{$xpathString}</profileString></MetadataFileType>\n"
+                + "}</MetadataFileType>";
+    }
+
     private String getPopulatedPaths() {
 //        return "for $xpathString in distinct-values(\n"
 //                + "for $entityNode in collection('" + databaseName + "')/*\n"
@@ -111,6 +131,11 @@ public class ArbilDatabase {
 
     public MetadataFileType[] getFieldMetadataTypes(MetadataFileType metadataFileType) {
         final String queryString = getPopulatedFieldNames();
+        return getMetadataTypes(queryString);
+    }
+
+    public MetadataFileType[] getMetadataTypes(MetadataFileType metadataFileType) {
+        final String queryString = getMetadataTypes();
         return getMetadataTypes(queryString);
     }
 

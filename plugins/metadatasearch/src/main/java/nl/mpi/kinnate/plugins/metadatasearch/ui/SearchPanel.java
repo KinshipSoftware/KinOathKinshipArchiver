@@ -29,6 +29,8 @@ public class SearchPanel extends JPanel implements ActionListener {
     final PluginDialogHandler arbilWindowManager;
     final JPanel lowerPanel;
     final JFrame jFrame;
+    final SearchOptionBox searchPathOptionBox;
+    final SearchOptionBox searchFieldOptionBox;
 
     public SearchPanel(JFrame jFrame) {
         this.jFrame = jFrame;
@@ -46,6 +48,18 @@ public class SearchPanel extends JPanel implements ActionListener {
         createButton.addActionListener(this);
         lowerPanel.add(createButton);
         lowerPanel.add(optionsButton);
+
+        searchPathOptionBox = new SearchOptionBox();
+        searchPathOptionBox.addActionListener(this);
+        searchPathOptionBox.setActionCommand("path");
+        lowerPanel.add(searchPathOptionBox);
+
+        searchFieldOptionBox = new SearchOptionBox();
+        searchFieldOptionBox.addActionListener(this);
+        searchFieldOptionBox.setActionCommand("field");
+        lowerPanel.add(searchFieldOptionBox);
+
+
         this.add(lowerPanel, BorderLayout.CENTER);
     }
 
@@ -69,27 +83,16 @@ public class SearchPanel extends JPanel implements ActionListener {
             }
         } else if ("options".equals(e.getActionCommand())) {
             System.out.println("run query");
-            MetadataFileType[] metadataPathTypes = arbilDatabase.getPathMetadataTypes(null);
+            MetadataFileType[] metadataPathTypes = arbilDatabase.getMetadataTypes(null);
             System.out.println("done");
-            addOptionBox(metadataPathTypes, "paths");
+            searchPathOptionBox.setTypes(metadataPathTypes);
 
             System.out.println("run query");
             MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
             System.out.println("done");
-            addOptionBox(metadataFieldTypes, "fields");
+            searchFieldOptionBox.setTypes(metadataFieldTypes);
         } else if ("fields".equals(e.getActionCommand())) {
-
         } else if ("paths".equals(e.getActionCommand())) {
-
         }
-    }
-
-    private void addOptionBox(MetadataFileType[] metadataFileTypes, final String options) {
-        SearchOptionBox searchOptionBox = new SearchOptionBox(metadataFileTypes);
-        searchOptionBox.addActionListener(this);
-        searchOptionBox.setActionCommand(options);
-        lowerPanel.add(searchOptionBox);
-        this.revalidate();
-//            jFrame.pack();
     }
 }
