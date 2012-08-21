@@ -29,7 +29,7 @@ public class CollectionExport implements CollectionExporter {
         // make sure the database exists
         try {
             synchronized (databaseLock) {
-                new Set("dbpath", new File(sessionStorage.getStorageDirectory(), "BaseXData")).execute(context);
+                new Set("dbpath", new File(sessionStorage.getApplicationSettingsDirectory(), "BaseXData")).execute(context);
                 new Open(databaseName).execute(context);
                 new Close().execute(context);
             }

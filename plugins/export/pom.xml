@@ -82,7 +82,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinnate-plugins-core</artifactId>
-            <version>0.0.32679</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>        
     </dependencies>
     <repositories>
