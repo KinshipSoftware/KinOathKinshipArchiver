@@ -21,6 +21,8 @@ public class MetadataFileType {
     private String displayString = null;
     @XmlElement(name = "profileString")
     private String profileString = null;
+    @XmlElement(name = "arbilPathString")
+    private String arbilPathString = null;
     @XmlElement(name = "recordCount")
     private int recordCount = 0;
 //    @XmlElementWrapper(name = "childMetadataTypes")
@@ -44,6 +46,10 @@ public class MetadataFileType {
             return rootXpath.replaceAll("\"[^\"]*\":", "*:").replaceAll("\\[\\d*\\]", "");
         }
         return null;
+    }
+
+    public String getArbilPathString() {
+        return arbilPathString.replaceAll("\"[^\"]*\":", "*:").replaceAll("\\[\\d*\\]", "");
     }
 
     public String getFieldName() {

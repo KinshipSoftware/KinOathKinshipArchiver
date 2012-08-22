@@ -5,9 +5,11 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import nl.mpi.arbil.data.ArbilNode;
@@ -33,7 +35,11 @@ public class SearchPanel extends JPanel implements ActionListener {
     final JFrame jFrame;
     final SearchOptionBox searchPathOptionBox;
     final SearchOptionBox searchFieldOptionBox;
+    final JComboBox searchNegatorOption;
+    final JComboBox searchTypeOption;
+    final JTextField searchText;
     final JProgressBar jProgressBar;
+    final JTextArea resultsTextArea;
 
     public SearchPanel(JFrame jFrame) {
         this.jFrame = jFrame;
@@ -58,9 +64,15 @@ public class SearchPanel extends JPanel implements ActionListener {
         searchFieldOptionBox.setActionCommand("fields");
         criterionPanel.add(searchFieldOptionBox);
 
+        searchNegatorOption = new JComboBox(ArbilDatabase.SearchNegator.values());
+        criterionPanel.add(searchNegatorOption);
+
+        searchTypeOption = new JComboBox(ArbilDatabase.SearchType.values());
+        criterionPanel.add(searchTypeOption);
+
         criterionOuterPanel.add(criterionPanel, BorderLayout.LINE_START);
 
-        JTextField searchText = new JTextField();
+        searchText = new JTextField();
         criterionOuterPanel.add(searchText, BorderLayout.CENTER);
 
         this.add(criterionOuterPanel, BorderLayout.PAGE_START);
@@ -91,7 +103,8 @@ public class SearchPanel extends JPanel implements ActionListener {
         progressPanel.add(searchButtonsPanel, BorderLayout.LINE_END);
 
         centerPanel.add(progressPanel, BorderLayout.PAGE_START);
-        centerPanel.add(new JTextArea(), BorderLayout.CENTER);
+        resultsTextArea = new JTextArea();
+        centerPanel.add(new JScrollPane(resultsTextArea), BorderLayout.CENTER);
 
         this.add(centerPanel, BorderLayout.CENTER);
     }
@@ -115,6 +128,21 @@ public class SearchPanel extends JPanel implements ActionListener {
     private Runnable getRunnable(final String actionCommand) {
         return new Runnable() {
             public void run() {
+                final Object selectedTypeItem = searchPathOptionBox.getSelectedItem();
+                MetadataFileType metadataFileType = null;
+                if (selectedTypeItem instanceof MetadataFileType) {
+                    metadataFileType = (MetadataFileType) selectedTypeItem;
+                }
+                final Object selectedFieldItem = searchFieldOptionBox.getSelectedItem();
+                MetadataFileType metadataFieldType = null;
+                if (selectedFieldItem instanceof MetadataFileType) {
+                    metadataFieldType = (MetadataFileType) selectedFieldItem;
+                }
+
+                ArbilDatabase.SearchNegator searchNegator = ArbilDatabase.SearchNegator.values()[searchNegatorOption.getSelectedIndex()];
+
+                ArbilDatabase.SearchType searchType = ArbilDatabase.SearchType.values()[searchTypeOption.getSelectedIndex()];
+
                 if ("create".equals(actionCommand)) {
                     try {
                         System.out.println("create db");
@@ -123,7 +151,6 @@ public class SearchPanel extends JPanel implements ActionListener {
                     } catch (QueryException exception) {
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Database Error");
                     }
-                } else if ("search".equals(actionCommand)) {
                 } else if ("options".equals(actionCommand)) {
                     System.out.println("run query");
                     MetadataFileType[] metadataPathTypes = arbilDatabase.getMetadataTypes(null);
@@ -134,17 +161,25 @@ public class SearchPanel extends JPanel implements ActionListener {
                     MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
                     System.out.println("done");
                     searchFieldOptionBox.setTypes(metadataFieldTypes);
-                } else if ("fields".equals(actionCommand)) {
                 } else if ("paths".equals(actionCommand)) {
-                    final Object selectedItem = searchPathOptionBox.getSelectedItem();
-                    MetadataFileType metadataFileType = null;
-                    if (selectedItem instanceof MetadataFileType) {
-                        metadataFileType = (MetadataFileType) selectedItem;
-                    }
                     System.out.println("run query");
                     MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(metadataFileType);
                     System.out.println("done");
                     searchFieldOptionBox.setTypes(metadataFieldTypes);
+                } else if ("fields".equals(actionCommand)) {
+                    // todo: get controlled vocabulary of field values for the search text area
+                } else if ("search".equals(actionCommand)) {
+                    System.out.println("run query");
+                    MetadataFileType[] resultTypes = arbilDatabase.getSearchResultMetadataTypes(metadataFileType, metadataFieldType, searchNegator, searchType, searchText.getText());
+                    System.out.println("done");
+                    StringBuilder stringBuilder = new StringBuilder();
+                    if (resultTypes != null) {
+                        for (MetadataFileType resultType : resultTypes) {
+                            stringBuilder.append(resultType.getArbilPathString());
+                            stringBuilder.append("\n");
+                        }
+                    }
+                    resultsTextArea.setText(stringBuilder.toString());
                 }
                 jProgressBar.setIndeterminate(false);
             }

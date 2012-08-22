@@ -34,6 +34,20 @@ public class ArbilDatabase {
     final private PluginDialogHandler dialogHandler;
     final private PluginBugCatcher bugCatcher;
 
+    public enum SearchType {
+
+        contains,
+        equals,
+        like,
+        fuzzy,
+        regex
+    }
+
+    public enum SearchNegator {
+
+        is, not
+    }
+
     public ArbilDatabase(PluginSessionStorage sessionStorage, PluginDialogHandler dialogHandler, PluginBugCatcher bugCatcher) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
@@ -70,17 +84,57 @@ public class ArbilDatabase {
         }
     }
 
-    public String getPopulatedFieldNames(MetadataFileType metadataFileType) {
+    private String getTypeConstraint(MetadataFileType fileType) {
         String typeConstraint = "";
-        if (metadataFileType != null) {
-            final String rootXpath = metadataFileType.getRootXpath();
-            final String profileId = metadataFileType.getProfileIdString();
+        if (fileType != null) {
+            final String rootXpath = fileType.getRootXpath();
+            final String profileId = fileType.getProfileIdString();
             if (rootXpath != null) {
                 typeConstraint = "[count(" + rootXpath + ") > 0]";
             } else if (profileId != null) {
                 typeConstraint = "[*:CMD/@*:schemaLocation contains text '" + profileId + "']/*:CMD/*:Components/*";
             }
         }
+        return typeConstraint;
+    }
+
+    private String getFieldConstraint(MetadataFileType fieldType) {
+        String fieldConstraint = "";
+        if (fieldType != null) {
+            final String fieldNameString = fieldType.getFieldName();
+            if (fieldNameString != null) {
+                fieldConstraint = "[name() = '" + fieldNameString + "']";
+            }
+        }
+        return fieldConstraint;
+    }
+
+    static String escapeBadChars(String inputString) {
+        // our queries use double quotes so single quotes are allowed
+        // todo: could ; cause issues?
+        return inputString.replace("&", "&amp;").replace("\"", "&quot;").replace("'", "&apos;");
+    }
+
+    private String getSearchQuery(MetadataFileType fileType, MetadataFileType fieldType, SearchNegator searchNegator, SearchType searchType, String searchString) {
+        String typeConstraint = getTypeConstraint(fileType);
+        String fieldConstraint = getFieldConstraint(fieldType);
+        // todo: add to query: boolean searchNot, SearchType searchType, String searchString
+        String searchTextConstraint = "[text() = '" + escapeBadChars(searchString) + "']";
+
+        return "<MetadataFileType>\n"
+                + "{\n"
+                + "for $nameString in distinct-values(\n"
+                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*" + fieldConstraint + searchTextConstraint + "\n"
+                + "return concat(base-uri($entityNode), path($entityNode))\n"
+                + ")\n"
+                //                + "order by $nameString\n"
+                + "return\n"
+                + "<MetadataFileType><arbilPathString>{$nameString}</arbilPathString></MetadataFileType>\n"
+                + "}</MetadataFileType>";
+    }
+
+    private String getPopulatedFieldNames(MetadataFileType fileType) {
+        String typeConstraint = getTypeConstraint(fileType);
         return "<MetadataFileType>\n"
                 + "<MetadataFileType><displayString>All Fields</displayString></MetadataFileType>\n"
                 + "{\n"
@@ -140,6 +194,11 @@ public class ArbilDatabase {
                 + "return\n"
                 + "<MetadataFileType><rootXpath>{$xpathString}</rootXpath></MetadataFileType>\n"
                 + "}</MetadataFileType>";
+    }
+
+    public MetadataFileType[] getSearchResultMetadataTypes(MetadataFileType fileType, MetadataFileType fieldType, SearchNegator searchNegator, SearchType searchType, String searchString) {
+        final String queryString = getSearchQuery(fileType, fieldType, searchNegator, searchType, searchString);
+        return getMetadataTypes(queryString);
     }
 
     public MetadataFileType[] getPathMetadataTypes(MetadataFileType metadataFileType) {
