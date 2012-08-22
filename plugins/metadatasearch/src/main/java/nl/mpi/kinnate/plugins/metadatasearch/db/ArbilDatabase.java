@@ -38,9 +38,9 @@ public class ArbilDatabase {
 
         contains,
         equals,
-        like,
+        //        like,
         fuzzy,
-        regex
+//        regex
     }
 
     public enum SearchNegator {
@@ -109,6 +109,35 @@ public class ArbilDatabase {
         return fieldConstraint;
     }
 
+    private String getSearchTextConstraint(SearchNegator searchNegator, SearchType searchType, String searchString) {
+        final String escapedSearchString = escapeBadChars(searchString);
+        String returnString = "";
+        switch (searchType) {
+            case contains:
+                if (escapedSearchString.isEmpty()) {
+                    returnString = "text() = '' or text() != ''";
+                } else {
+                    returnString = "text() contains text '" + escapedSearchString + "'";
+                }
+                break;
+            case equals:
+                returnString = "text() = '" + escapedSearchString + "'";
+                break;
+            case fuzzy:
+                returnString = "text() contains text '" + escapedSearchString + "' using fuzzy";
+                break;
+        }
+        switch (searchNegator) {
+            case is:
+                returnString = "[" + returnString + "]";
+                break;
+            case not:
+                returnString = "[not(" + returnString + ")]";
+                break;
+        }
+        return returnString;
+    }
+
     static String escapeBadChars(String inputString) {
         // our queries use double quotes so single quotes are allowed
         // todo: could ; cause issues?
@@ -119,7 +148,7 @@ public class ArbilDatabase {
         String typeConstraint = getTypeConstraint(fileType);
         String fieldConstraint = getFieldConstraint(fieldType);
         // todo: add to query: boolean searchNot, SearchType searchType, String searchString
-        String searchTextConstraint = "[text() = '" + escapeBadChars(searchString) + "']";
+        String searchTextConstraint = getSearchTextConstraint(searchNegator, searchType, searchString);
 
         return "<MetadataFileType>\n"
                 + "{\n"
