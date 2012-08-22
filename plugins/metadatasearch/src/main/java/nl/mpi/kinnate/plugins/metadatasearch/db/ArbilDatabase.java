@@ -115,7 +115,8 @@ public class ArbilDatabase {
         switch (searchType) {
             case contains:
                 if (escapedSearchString.isEmpty()) {
-                    returnString = "text() = '' or text() != ''";
+                    // when the user has not entered any string then return all, but allow the negator to still be used
+                    returnString = "1=1";
                 } else {
                     returnString = "text() contains text '" + escapedSearchString + "'";
                 }
