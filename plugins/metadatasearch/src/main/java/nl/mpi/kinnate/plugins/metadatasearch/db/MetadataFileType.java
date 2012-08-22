@@ -15,8 +15,8 @@ public class MetadataFileType {
 
     @XmlElement(name = "rootXpath")
     private String rootXpath = null;
-    @XmlElement(name = "pathPart")
-    private String pathPart = null;
+    @XmlElement(name = "fieldName")
+    private String fieldName = null;
     @XmlElement(name = "displayString")
     private String displayString = null;
     @XmlElement(name = "profileString")
@@ -39,20 +39,37 @@ public class MetadataFileType {
         return childMetadataTypes;
     }
 
+    public String getRootXpath() {
+        if (rootXpath != null) {
+            return rootXpath.replaceAll("\"[^\"]*\":", "*:").replaceAll("\\[\\d*\\]", "");
+        }
+        return null;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public String getProfileIdString() {
+        if (profileString != null) {
+            Pattern regexPattern = Pattern.compile(".*(clarin.eu:cr1:p_[0-9]+).*");
+            Matcher matcher = regexPattern.matcher(profileString);
+            while (matcher.find()) {
+                return matcher.group(1);
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         if (displayString == null) {
             if (rootXpath != null) {
                 displayString = rootXpath.replaceAll("\"[^\"]*\":", "").replaceAll("\\[\\d*\\]", "");
-            } else if (pathPart != null) {
-                displayString = pathPart;
+            } else if (fieldName != null) {
+                displayString = fieldName;
             } else if (profileString != null) {
-                Pattern regexPattern = Pattern.compile(".*(clarin.eu:cr1:p_[0-9]+).*");
-                Matcher matcher = regexPattern.matcher(profileString);
-                while (matcher.find()) {
-                    displayString = matcher.group(1);
-                    break;
-                }
+                displayString = getProfileIdString();
             }
         }
         return displayString;

@@ -33,6 +33,7 @@ public class SearchPanel extends JPanel implements ActionListener {
     final JFrame jFrame;
     final SearchOptionBox searchPathOptionBox;
     final SearchOptionBox searchFieldOptionBox;
+    final JProgressBar jProgressBar;
 
     public SearchPanel(JFrame jFrame) {
         this.jFrame = jFrame;
@@ -46,13 +47,15 @@ public class SearchPanel extends JPanel implements ActionListener {
         final JPanel criterionOuterPanel = new JPanel(new BorderLayout());
 
         searchPathOptionBox = new SearchOptionBox();
+        searchPathOptionBox.addItem("Loading");
         searchPathOptionBox.addActionListener(this);
-        searchPathOptionBox.setActionCommand("path");
+        searchPathOptionBox.setActionCommand("paths");
         criterionPanel.add(searchPathOptionBox);
 
         searchFieldOptionBox = new SearchOptionBox();
+        searchFieldOptionBox.addItem("Loading");
         searchFieldOptionBox.addActionListener(this);
-        searchFieldOptionBox.setActionCommand("field");
+        searchFieldOptionBox.setActionCommand("fields");
         criterionPanel.add(searchFieldOptionBox);
 
         criterionOuterPanel.add(criterionPanel, BorderLayout.LINE_START);
@@ -76,11 +79,15 @@ public class SearchPanel extends JPanel implements ActionListener {
         dbButtonsPanel.add(optionsButton);
 
         progressPanel.add(dbButtonsPanel, BorderLayout.LINE_START);
+        jProgressBar = new JProgressBar();
 
-        progressPanel.add(new JProgressBar(), BorderLayout.CENTER);
+        progressPanel.add(jProgressBar, BorderLayout.CENTER);
 
         JPanel searchButtonsPanel = new JPanel();
-        searchButtonsPanel.add(new JButton("Search"));
+        final JButton searchButton = new JButton("Search");
+        searchButton.setActionCommand("search");
+        searchButton.addActionListener(this);
+        searchButtonsPanel.add(searchButton);
         progressPanel.add(searchButtonsPanel, BorderLayout.LINE_END);
 
         centerPanel.add(progressPanel, BorderLayout.PAGE_START);
@@ -99,26 +106,48 @@ public class SearchPanel extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if ("create".equals(e.getActionCommand())) {
-            try {
-                System.out.println("create db");
-                arbilDatabase.createDatabase();
-                System.out.println("done");
-            } catch (QueryException exception) {
-                arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Database Error");
-            }
-        } else if ("options".equals(e.getActionCommand())) {
-            System.out.println("run query");
-            MetadataFileType[] metadataPathTypes = arbilDatabase.getMetadataTypes(null);
-            System.out.println("done");
-            searchPathOptionBox.setTypes(metadataPathTypes);
+        jProgressBar.setIndeterminate(true);
+        final String actionCommand = e.getActionCommand();
+        System.out.println(actionCommand);
+        new Thread(getRunnable(actionCommand)).start();
+    }
 
-            System.out.println("run query");
-            MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
-            System.out.println("done");
-            searchFieldOptionBox.setTypes(metadataFieldTypes);
-        } else if ("fields".equals(e.getActionCommand())) {
-        } else if ("paths".equals(e.getActionCommand())) {
-        }
+    private Runnable getRunnable(final String actionCommand) {
+        return new Runnable() {
+            public void run() {
+                if ("create".equals(actionCommand)) {
+                    try {
+                        System.out.println("create db");
+                        arbilDatabase.createDatabase();
+                        System.out.println("done");
+                    } catch (QueryException exception) {
+                        arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Database Error");
+                    }
+                } else if ("search".equals(actionCommand)) {
+                } else if ("options".equals(actionCommand)) {
+                    System.out.println("run query");
+                    MetadataFileType[] metadataPathTypes = arbilDatabase.getMetadataTypes(null);
+                    System.out.println("done");
+                    searchPathOptionBox.setTypes(metadataPathTypes);
+
+                    System.out.println("run query");
+                    MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
+                    System.out.println("done");
+                    searchFieldOptionBox.setTypes(metadataFieldTypes);
+                } else if ("fields".equals(actionCommand)) {
+                } else if ("paths".equals(actionCommand)) {
+                    final Object selectedItem = searchPathOptionBox.getSelectedItem();
+                    MetadataFileType metadataFileType = null;
+                    if (selectedItem instanceof MetadataFileType) {
+                        metadataFileType = (MetadataFileType) selectedItem;
+                    }
+                    System.out.println("run query");
+                    MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(metadataFileType);
+                    System.out.println("done");
+                    searchFieldOptionBox.setTypes(metadataFieldTypes);
+                }
+                jProgressBar.setIndeterminate(false);
+            }
+        };
     }
 }

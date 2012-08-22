@@ -70,17 +70,27 @@ public class ArbilDatabase {
         }
     }
 
-    public String getPopulatedFieldNames() {
+    public String getPopulatedFieldNames(MetadataFileType metadataFileType) {
+        String typeConstraint = "";
+        if (metadataFileType != null) {
+            final String rootXpath = metadataFileType.getRootXpath();
+            final String profileId = metadataFileType.getProfileIdString();
+            if (rootXpath != null) {
+                typeConstraint = "[count(" + rootXpath + ") > 0]";
+            } else if (profileId != null) {
+                typeConstraint = "[*:CMD/@*:schemaLocation contains text '" + profileId + "']/*:CMD/*:Components/*";
+            }
+        }
         return "<MetadataFileType>\n"
                 + "<MetadataFileType><displayString>All Fields</displayString></MetadataFileType>\n"
                 + "{\n"
                 + "for $nameString in distinct-values(\n"
-                + "for $entityNode in collection('" + databaseName + "')/descendant-or-self::*\n"
+                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*\n"
                 + "return $entityNode/name()\n"
                 + ")\n"
                 + "order by $nameString\n"
                 + "return\n"
-                + "<MetadataFileType><pathPart>{$nameString}</pathPart></MetadataFileType>\n"
+                + "<MetadataFileType><fieldName>{$nameString}</fieldName></MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
 
@@ -138,7 +148,7 @@ public class ArbilDatabase {
     }
 
     public MetadataFileType[] getFieldMetadataTypes(MetadataFileType metadataFileType) {
-        final String queryString = getPopulatedFieldNames();
+        final String queryString = getPopulatedFieldNames(metadataFileType);
         return getMetadataTypes(queryString);
     }
 
