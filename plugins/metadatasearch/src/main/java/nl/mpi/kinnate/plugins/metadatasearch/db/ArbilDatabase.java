@@ -169,7 +169,7 @@ public class ArbilDatabase {
                 + "<MetadataFileType><displayString>All Fields</displayString></MetadataFileType>\n"
                 + "{\n"
                 + "for $nameString in distinct-values(\n"
-                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*\n"
+                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*[count(*) = 0]\n"
                 + "return $entityNode/name()\n"
                 + ")\n"
                 + "order by $nameString\n"
