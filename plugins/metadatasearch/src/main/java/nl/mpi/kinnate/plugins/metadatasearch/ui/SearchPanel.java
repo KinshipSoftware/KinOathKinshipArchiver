@@ -35,7 +35,7 @@ public class SearchPanel extends JPanel implements ActionListener {
     final JFrame jFrame;
     final SearchOptionBox searchPathOptionBox;
     final SearchOptionBox searchFieldOptionBox;
-    final JComboBox searchNegatorOption;
+//    final JComboBox searchNegatorOption;
     final JComboBox searchTypeOption;
     final JTextField searchText;
     final JProgressBar jProgressBar;
@@ -64,10 +64,10 @@ public class SearchPanel extends JPanel implements ActionListener {
         searchFieldOptionBox.setActionCommand("fields");
         criterionPanel.add(searchFieldOptionBox);
 
-        searchNegatorOption = new JComboBox(ArbilDatabase.SearchNegator.values());
-        criterionPanel.add(searchNegatorOption);
+//        searchNegatorOption = new JComboBox(ArbilDatabase.SearchNegator.values());
+//        criterionPanel.add(searchNegatorOption);
 
-        searchTypeOption = new JComboBox(ArbilDatabase.SearchType.values());
+        searchTypeOption = new JComboBox(ArbilDatabase.SearchOption.values());
         criterionPanel.add(searchTypeOption);
 
         criterionOuterPanel.add(criterionPanel, BorderLayout.LINE_START);
@@ -138,10 +138,11 @@ public class SearchPanel extends JPanel implements ActionListener {
                 if (selectedFieldItem instanceof MetadataFileType) {
                     metadataFieldType = (MetadataFileType) selectedFieldItem;
                 }
+                ArbilDatabase.SearchOption searchOption = ArbilDatabase.SearchOption.values()[searchTypeOption.getSelectedIndex()];
 
-                ArbilDatabase.SearchNegator searchNegator = ArbilDatabase.SearchNegator.values()[searchNegatorOption.getSelectedIndex()];
+                ArbilDatabase.SearchNegator searchNegator = searchOption.getSearchNegator();
 
-                ArbilDatabase.SearchType searchType = ArbilDatabase.SearchType.values()[searchTypeOption.getSelectedIndex()];
+                ArbilDatabase.SearchType searchType = searchOption.getSearchType();
 
                 if ("create".equals(actionCommand)) {
                     try {

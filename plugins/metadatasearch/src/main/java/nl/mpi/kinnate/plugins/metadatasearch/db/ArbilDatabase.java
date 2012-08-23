@@ -34,6 +34,37 @@ public class ArbilDatabase {
     final private PluginDialogHandler dialogHandler;
     final private PluginBugCatcher bugCatcher;
 
+    public enum SearchOption {
+
+        contains(SearchType.contains, SearchNegator.is, "Contains"),
+        notcontains(SearchType.contains, SearchNegator.not, "Does not contain"),
+        equals(SearchType.equals, SearchNegator.is, "Equals"),
+        notequals(SearchType.equals, SearchNegator.not, "Does not equal"),
+        fuzzy(SearchType.fuzzy, SearchNegator.is, "Fuzzy match");
+
+        private SearchOption(SearchType searchType, SearchNegator searchNegator, String displayName) {
+            this.searchType = searchType;
+            this.searchNegator = searchNegator;
+            this.displayName = displayName;
+        }
+        final SearchType searchType;
+        final SearchNegator searchNegator;
+        final String displayName;
+
+        public SearchType getSearchType() {
+            return searchType;
+        }
+
+        public SearchNegator getSearchNegator() {
+            return searchNegator;
+        }
+
+        @Override
+        public String toString() {
+            return displayName;
+        }
+    }
+
     public enum SearchType {
 
         contains,
