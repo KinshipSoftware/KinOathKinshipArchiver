@@ -176,6 +176,33 @@ public class ArbilDatabase {
         return inputString.replace("&", "&amp;").replace("\"", "&quot;").replace("'", "&apos;");
     }
 
+    private String getTreeQuery(MetadataFileType treeBranchType) {
+//        String branchConstraint = "//treeBranchType.getFieldName()";
+
+        return "<TreeNode>\n"
+                + "{\n"
+                + "for $nameString in distinct-values(collection('" + databaseName + "')//*:" + treeBranchType.getFieldName() + "\n"
+                //                + "return concat(base-uri($entityNode), path($entityNode))\n"
+                + ")\n"
+                + "order by $nameString\n"
+                + "return\n"
+                + "<TreeNode><DisplayString>{$nameString}</DisplayString></TreeNode>\n"
+                + "}</TreeNode>";
+
+
+        /*
+         for $d in distinct-values(doc("order.xml")//item/@dept)
+         let $items := doc("order.xml")//item[@dept = $d]
+         order by $d
+         return <department code="{$d}">{
+         for $i in $items
+         order by $i/@num
+         return $i
+         }</department>
+
+         */
+    }
+
     private String getSearchQuery(MetadataFileType fileType, MetadataFileType fieldType, SearchNegator searchNegator, SearchType searchType, String searchString) {
         String typeConstraint = getTypeConstraint(fileType);
         String fieldConstraint = getFieldConstraint(fieldType);
@@ -275,6 +302,37 @@ public class ArbilDatabase {
     public MetadataFileType[] getMetadataTypes(MetadataFileType metadataFileType) {
         final String queryString = getMetadataTypes();
         return getMetadataTypes(queryString);
+    }
+
+    public DbTreeNode getTreeData(final MetadataFileType treeBranchType) {
+        final String queryString = getTreeQuery(treeBranchType);
+        long startTime = System.currentTimeMillis();
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(DbTreeNode.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            String queryResult;
+            synchronized (databaseLock) {
+                System.out.println("queryString: " + queryString);
+                queryResult = new XQuery(queryString).execute(context);
+            }
+            System.out.println("queryResult: " + queryResult);
+            DbTreeNode rootTreeNode = (DbTreeNode) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), DbTreeNode.class).getValue();
+            long queryMils = System.currentTimeMillis() - startTime;
+            int resultCount = 0;
+            if (rootTreeNode != null) {
+                resultCount = 1;
+            }
+            String queryTimeString = "Query time: " + queryMils + "ms for " + resultCount + " entities";
+            System.out.println(queryTimeString);
+            return rootTreeNode;
+        } catch (JAXBException exception) {
+            bugCatcher.logException(new PluginException(exception.getMessage()));
+            dialogHandler.addMessageDialogToQueue("Error getting search options", "Search Options");
+        } catch (BaseXException exception) {
+            bugCatcher.logException(new PluginException(exception.getMessage()));
+            dialogHandler.addMessageDialogToQueue("Error getting search options", "Search Options");
+        }
+        return new DbTreeNode();
     }
 
     private MetadataFileType[] getMetadataTypes(final String queryString) {
