@@ -220,6 +220,23 @@ public class ArbilDatabase {
          */
     }
 
+    private String getTreeFieldNames(MetadataFileType fileType) {
+        String typeConstraint = getTypeConstraint(fileType);
+        return "<MetadataFileType>\n"
+                + "{\n"
+                + "for $nameString in distinct-values(\n"
+                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*[count(*) = 0]\n"
+                + "return $entityNode/name()\n"
+                + ")\n"
+                + "order by $nameString\n"
+                + "return\n"
+                + "<MetadataFileType>"
+                + "<fieldName>{$nameString}</fieldName>"
+                + "<recordCount>{count(distinct-values(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text()))}</recordCount>"
+                + "</MetadataFileType>\n"
+                + "}</MetadataFileType>";
+    }
+
     private String getSearchQuery(MetadataFileType fileType, MetadataFileType fieldType, SearchNegator searchNegator, SearchType searchType, String searchString) {
         String typeConstraint = getTypeConstraint(fileType);
         String fieldConstraint = getFieldConstraint(fieldType);
@@ -249,7 +266,10 @@ public class ArbilDatabase {
                 + ")\n"
                 + "order by $nameString\n"
                 + "return\n"
-                + "<MetadataFileType><fieldName>{$nameString}</fieldName></MetadataFileType>\n"
+                + "<MetadataFileType>"
+                + "<fieldName>{$nameString}</fieldName>"
+                + "<recordCount>{count(distinct-values(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text()))}</recordCount>"
+                + "</MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
 
@@ -318,6 +338,11 @@ public class ArbilDatabase {
 
     public MetadataFileType[] getMetadataTypes(MetadataFileType metadataFileType) {
         final String queryString = getMetadataTypes();
+        return getMetadataTypes(queryString);
+    }
+
+    public MetadataFileType[] getTreeFieldTypes(MetadataFileType metadataFileType) {
+        final String queryString = getTreeFieldNames(metadataFileType);
         return getMetadataTypes(queryString);
     }
 

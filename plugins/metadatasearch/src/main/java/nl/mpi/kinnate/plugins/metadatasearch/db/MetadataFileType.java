@@ -78,6 +78,6 @@ public class MetadataFileType {
                 displayString = getProfileIdString();
             }
         }
-        return displayString;
+        return displayString + " (" + recordCount + ")";
     }
 }

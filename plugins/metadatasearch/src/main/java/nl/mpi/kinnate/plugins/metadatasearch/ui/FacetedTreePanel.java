@@ -134,7 +134,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
                     }
                 } else if ("options".equals(actionCommand)) {
                     System.out.println("run query");
-                    metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
+                    metadataFieldTypes = arbilDatabase.getTreeFieldTypes(null);
                     System.out.println("done");
                     for (SearchOptionBox searchOptionBox : searchPathOptionBoxList) {
                         searchOptionBox.setTypes(metadataFieldTypes);
