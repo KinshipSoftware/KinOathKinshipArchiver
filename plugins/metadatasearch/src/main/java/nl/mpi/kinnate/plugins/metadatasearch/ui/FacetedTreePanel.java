@@ -140,15 +140,18 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
                         searchOptionBox.setTypes(metadataFieldTypes);
                     }
                 } else if ("treechange".equals(actionCommand)) {
-                    final Object selectedTypeItem = searchPathOptionBoxList.get(0).getSelectedItem();
-                    MetadataFileType treeBranchType = null;
-                    if (selectedTypeItem instanceof MetadataFileType) {
-                        treeBranchType = (MetadataFileType) selectedTypeItem;
-                        System.out.println("run query");
-                        DbTreeNode rootTreeNode = arbilDatabase.getTreeData(treeBranchType);
-                        resultsTree.setModel(new DefaultTreeModel(rootTreeNode));
-                        System.out.println("done");
+                    ArrayList<MetadataFileType> treeBranchTypeList = new ArrayList<MetadataFileType>();
+                    for (SearchOptionBox searchOptionBox : searchPathOptionBoxList) {
+                        final Object selectedTypeItem = searchOptionBox.getSelectedItem();
+                        if (selectedTypeItem instanceof MetadataFileType) {
+                            treeBranchTypeList.add((MetadataFileType) selectedTypeItem);
+                        }
                     }
+                    System.out.println("run query");
+                    DbTreeNode rootTreeNode = arbilDatabase.getTreeData(treeBranchTypeList);
+                    resultsTree.setModel(new DefaultTreeModel(rootTreeNode));
+                    System.out.println("done");
+
                 } else if ("add".equals(actionCommand)) {
                     final SearchOptionBox treePathOptionBox = new SearchOptionBox();
                     if (metadataFieldTypes == null) {

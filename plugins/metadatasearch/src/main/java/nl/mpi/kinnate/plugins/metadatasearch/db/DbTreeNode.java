@@ -1,6 +1,8 @@
 package nl.mpi.kinnate.plugins.metadatasearch.db;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import javax.swing.tree.TreeNode;
 import javax.xml.bind.annotation.XmlElement;
@@ -18,12 +20,18 @@ public class DbTreeNode implements TreeNode {
     private DbTreeNode[] childTreeNode = new DbTreeNode[0];
     @XmlElement(name = "DisplayString")
     private String displayString = null;
+    private DbTreeNode parentDbTreeNode;
 
     public DbTreeNode[] getChildTreeNode() {
         return childTreeNode;
     }
 
+    public void setParentDbTreeNode(DbTreeNode parentDbTreeNode) {
+        this.parentDbTreeNode = parentDbTreeNode;
+    }
+
     public TreeNode getChildAt(int i) {
+        childTreeNode[i].setParentDbTreeNode(this);
         return childTreeNode[i];
     }
 
@@ -32,7 +40,7 @@ public class DbTreeNode implements TreeNode {
     }
 
     public TreeNode getParent() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return parentDbTreeNode;
     }
 
     public int getIndex(TreeNode tn) {
@@ -40,16 +48,20 @@ public class DbTreeNode implements TreeNode {
     }
 
     public boolean getAllowsChildren() {
-        return true;
+        return childTreeNode != null && childTreeNode.length > 0;
     }
 
     public boolean isLeaf() {
-        return false;
+        return childTreeNode == null && childTreeNode.length == 0;
     }
 
     public Enumeration children() {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        return Arrays.asList(childTreeNode);
+        ArrayList<DbTreeNode> childList = new ArrayList<DbTreeNode>();
+        for (DbTreeNode childNode : childTreeNode) {
+            childNode.setParentDbTreeNode(this);
+            childList.add(childNode);
+        }
+        return Collections.enumeration(childList);
     }
 
     @Override

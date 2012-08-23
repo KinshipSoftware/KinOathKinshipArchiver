@@ -2,6 +2,7 @@ package nl.mpi.kinnate.plugins.metadatasearch.db;
 
 import java.io.File;
 import java.io.StringReader;
+import java.util.ArrayList;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -176,18 +177,34 @@ public class ArbilDatabase {
         return inputString.replace("&", "&amp;").replace("\"", "&quot;").replace("'", "&apos;");
     }
 
-    private String getTreeQuery(MetadataFileType treeBranchType) {
+    private String getTreeSubQuery(ArrayList<MetadataFileType> treeBranchTypeList, String whereClause) {
+        if (!treeBranchTypeList.isEmpty()) {
+            String separatorString = "";
+//            if (whereClause.length() > 0) {
+//                separatorString = ",\n";
+//            }
+//            whereClause = " ";
+            MetadataFileType treeBranchType = treeBranchTypeList.remove(0);
+            String currentFieldName = treeBranchType.getFieldName();
+            return "{\n"
+                    + "for $nameString in distinct-values(collection('" + databaseName + "')//*:" + currentFieldName + "[count(*) = 0]" + whereClause + "\n"
+                    //                + "return concat(base-uri($entityNode), path($entityNode))\n"
+                    + ")\n"
+                    + "order by $nameString\n"
+                    + "return\n"
+                    + "<TreeNode><DisplayString>{$nameString}</DisplayString>\n"
+                    + getTreeSubQuery(treeBranchTypeList, whereClause)
+                    + "</TreeNode>\n}\n";
+        }
+        return "";
+    }
+
+    private String getTreeQuery(ArrayList<MetadataFileType> treeBranchTypeList) {
 //        String branchConstraint = "//treeBranchType.getFieldName()";
 
-        return "<TreeNode>\n"
-                + "{\n"
-                + "for $nameString in distinct-values(collection('" + databaseName + "')//*:" + treeBranchType.getFieldName() + "\n"
-                //                + "return concat(base-uri($entityNode), path($entityNode))\n"
-                + ")\n"
-                + "order by $nameString\n"
-                + "return\n"
-                + "<TreeNode><DisplayString>{$nameString}</DisplayString></TreeNode>\n"
-                + "}</TreeNode>";
+        return "<TreeNode><DisplayString>All</DisplayString>\n"
+                + getTreeSubQuery(treeBranchTypeList, "")
+                + "</TreeNode>";
 
 
         /*
@@ -304,8 +321,8 @@ public class ArbilDatabase {
         return getMetadataTypes(queryString);
     }
 
-    public DbTreeNode getTreeData(final MetadataFileType treeBranchType) {
-        final String queryString = getTreeQuery(treeBranchType);
+    public DbTreeNode getTreeData(final ArrayList<MetadataFileType> treeBranchTypeList) {
+        final String queryString = getTreeQuery(treeBranchTypeList);
         long startTime = System.currentTimeMillis();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(DbTreeNode.class);
