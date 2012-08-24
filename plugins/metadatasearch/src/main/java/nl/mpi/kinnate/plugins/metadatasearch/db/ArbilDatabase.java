@@ -195,8 +195,12 @@ public class ArbilDatabase {
                     + "<TreeNode><DisplayString>{$nameString}</DisplayString>\n"
                     + getTreeSubQuery(treeBranchTypeList, whereClause)
                     + "</TreeNode>\n}\n";
+        } else {
+            return "{for $docURI in distinct-values(for $matchingNode in collection('" + databaseName + "')//*" + whereClause + " return base-uri($matchingNode))\n"
+                    + "return\n"
+                    + "<TreeNode><DisplayString>{$docURI}</DisplayString>\n"
+                    + "</TreeNode>\n}\n";
         }
-        return "";
     }
 
     private String getTreeQuery(ArrayList<MetadataFileType> treeBranchTypeList) {
@@ -293,7 +297,7 @@ public class ArbilDatabase {
                 + "</MetadataFileType>\n"
                 + "},{"
                 + "for $profileString in distinct-values(collection('" + databaseName + "')/*:CMD/@*:schemaLocation)\n"
-//                + "order by $profileString\n"
+                //                + "order by $profileString\n"
                 + "return\n"
                 + "<MetadataFileType>\n"
                 + "<profileString>{$profileString}</profileString>\n"

@@ -52,7 +52,7 @@ public class DbTreeNode implements TreeNode {
     }
 
     public boolean isLeaf() {
-        return childTreeNode == null && childTreeNode.length == 0;
+        return childTreeNode == null || childTreeNode.length == 0;
     }
 
     public Enumeration children() {
