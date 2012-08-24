@@ -224,15 +224,13 @@ public class ArbilDatabase {
         String typeConstraint = getTypeConstraint(fileType);
         return "<MetadataFileType>\n"
                 + "{\n"
-                + "for $nameString in distinct-values(\n"
-                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*[count(*) = 0]\n"
-                + "return $entityNode/name()\n"
+                + "for $nameString in distinct-values(collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*[count(*) = 0]/name()\n"
                 + ")\n"
                 + "order by $nameString\n"
                 + "return\n"
                 + "<MetadataFileType>"
                 + "<fieldName>{$nameString}</fieldName>"
-                + "<RecordCount>{count(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text())}</RecordCount>"
+                + "<RecordCount>{count(distinct-values(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text()))}</RecordCount>"
                 + "</MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
