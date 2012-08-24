@@ -119,10 +119,10 @@ public class ArbilDatabase {
     private String getTypeConstraint(MetadataFileType fileType) {
         String typeConstraint = "";
         if (fileType != null) {
-            final String rootXpath = fileType.getRootXpath();
+            final String imdiType = fileType.getImdiType();
             final String profileId = fileType.getProfileIdString();
-            if (rootXpath != null) {
-                typeConstraint = "[count(" + rootXpath + ") > 0]";
+            if (imdiType != null) {
+                typeConstraint = "[/*:METATRANSCRIPT/count(" + imdiType + ") > 0]";
             } else if (profileId != null) {
                 typeConstraint = "[*:CMD/@*:schemaLocation contains text '" + profileId + "']/*:CMD/*:Components/*";
             }
@@ -232,7 +232,7 @@ public class ArbilDatabase {
                 + "return\n"
                 + "<MetadataFileType>"
                 + "<fieldName>{$nameString}</fieldName>"
-                + "<recordCount>{count(distinct-values(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text()))}</recordCount>"
+                + "<RecordCount>{count(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text())}</RecordCount>"
                 + "</MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
@@ -268,7 +268,7 @@ public class ArbilDatabase {
                 + "return\n"
                 + "<MetadataFileType>"
                 + "<fieldName>{$nameString}</fieldName>"
-                + "<recordCount>{count(distinct-values(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text()))}</recordCount>"
+                + "<RecordCount>{count(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text())}</RecordCount>"
                 + "</MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
@@ -281,23 +281,26 @@ public class ArbilDatabase {
 //                + "return"
 //                + "$xpathString";
         return "<MetadataFileType>\n"
-                + "<MetadataFileType><displayString>All Types</displayString></MetadataFileType>\n"
+                + "<MetadataFileType>\n"
+                + "<displayString>All Types</displayString>\n"
+                + "<RecordCount>{count(collection('ArbilDatabase'))}</RecordCount>\n"
+                + "</MetadataFileType>\n"
                 + "{\n"
-                + "for $xpathString in distinct-values(\n"
-                + "for $entityNode in collection('" + databaseName + "')/*:METATRANSCRIPT/*\n"
-                + "return path($entityNode)\n"
-                + ")\n"
-                + "order by $xpathString\n"
+                + "for $imdiType in distinct-values(collection('ArbilDatabase')/*:METATRANSCRIPT/*/name())\n"
+                + "order by $imdiType\n"
                 + "return\n"
-                + "<MetadataFileType><rootXpath>{$xpathString}</rootXpath></MetadataFileType>\n"
+                + "<MetadataFileType>\n"
+                + "<ImdiType>{$imdiType}</ImdiType>\n"
+                + "<RecordCount>{count(collection('ArbilDatabase')/*:METATRANSCRIPT/*[name()=$imdiType])}</RecordCount>\n"
+                + "</MetadataFileType>\n"
                 + "},{"
-                + "for $xpathString in distinct-values(\n"
-                + "for $entityNode in collection('" + databaseName + "')/*:CMD/@*:schemaLocation\n"
-                + "return $entityNode\n"
-                + ")\n"
-                + "order by $xpathString\n"
+                + "for $profileString in distinct-values(collection('" + databaseName + "')/*:CMD/@*:schemaLocation)\n"
+//                + "order by $profileString\n"
                 + "return\n"
-                + "<MetadataFileType><profileString>{$xpathString}</profileString></MetadataFileType>\n"
+                + "<MetadataFileType>\n"
+                + "<profileString>{$profileString}</profileString>\n"
+                + "<RecordCount>{count(collection('" + databaseName + "')/*:CMD[@*:schemaLocation = $profileString])}</RecordCount>"
+                + "</MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
 

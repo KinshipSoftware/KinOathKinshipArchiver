@@ -13,8 +13,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "MetadataFileType")
 public class MetadataFileType {
 
-    @XmlElement(name = "rootXpath")
-    private String rootXpath = null;
+    @XmlElement(name = "ImdiType")
+    private String imdiType = null;
     @XmlElement(name = "fieldName")
     private String fieldName = null;
     @XmlElement(name = "displayString")
@@ -23,7 +23,7 @@ public class MetadataFileType {
     private String profileString = null;
     @XmlElement(name = "arbilPathString")
     private String arbilPathString = null;
-    @XmlElement(name = "recordCount")
+    @XmlElement(name = "RecordCount")
     private int recordCount = 0;
 //    @XmlElementWrapper(name = "childMetadataTypes")
     @XmlElement(name = "MetadataFileType")
@@ -41,9 +41,9 @@ public class MetadataFileType {
         return childMetadataTypes;
     }
 
-    public String getRootXpath() {
-        if (rootXpath != null) {
-            return rootXpath.replaceAll("\"[^\"]*\":", "*:").replaceAll("\\[\\d*\\]", "");
+    public String getImdiType() {
+        if (imdiType != null) {
+            return imdiType.replaceAll("\"[^\"]*\":", "*:").replaceAll("\\[\\d*\\]", "");
         }
         return null;
     }
@@ -70,8 +70,8 @@ public class MetadataFileType {
     @Override
     public String toString() {
         if (displayString == null) {
-            if (rootXpath != null) {
-                displayString = rootXpath.replaceAll("\"[^\"]*\":", "").replaceAll("\\[\\d*\\]", "");
+            if (imdiType != null) {
+                displayString = imdiType.replaceAll("\"[^\"]*\":", "").replaceAll("\\[\\d*\\]", "");
             } else if (fieldName != null) {
                 displayString = fieldName;
             } else if (profileString != null) {
