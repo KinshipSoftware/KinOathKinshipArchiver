@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.plugins.metadatasearch.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -99,7 +100,16 @@ public class SearchPanel extends JPanel implements ActionListener {
         final String actionCommand = e.getActionCommand();
         System.out.println(actionCommand);
         SearchCriterionPanel eventCriterionPanel = null;
-
+        Object sourceObject = e.getSource();
+        if (sourceObject instanceof SearchOptionBox) {
+            while (sourceObject != null) {
+                sourceObject = ((Component) sourceObject).getParent();
+                if (sourceObject instanceof SearchCriterionPanel) {
+                    eventCriterionPanel = (SearchCriterionPanel) sourceObject;
+                    break;
+                }
+            }
+        }
         new Thread(getRunnable(actionCommand, eventCriterionPanel)).start();
     }
 
