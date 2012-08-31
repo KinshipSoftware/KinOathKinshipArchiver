@@ -25,7 +25,7 @@ public class SearchCriterionPanel extends JPanel {
     final JComboBox searchTypeOption;
     final JTextField searchText;
 
-    public SearchCriterionPanel(ActionListener actionListener) {
+    public SearchCriterionPanel(ActionListener actionListener, MetadataFileType[] metadataPathTypes, MetadataFileType[] metadataFieldTypes) {
         super(new BorderLayout());
         final JPanel criterionPanel = new JPanel();
         criterionPanel.setLayout(new FlowLayout());
@@ -34,13 +34,15 @@ public class SearchCriterionPanel extends JPanel {
 //        criterionPanel.add(searchNegatorOption);
 
         searchPathOptionBox = new SearchOptionBox();
-        searchPathOptionBox.addItem("Loading");
+//        searchPathOptionBox.addItem("Loading");
+        searchPathOptionBox.setTypes(metadataPathTypes);
         searchPathOptionBox.addActionListener(actionListener);
         searchPathOptionBox.setActionCommand("paths");
         criterionPanel.add(searchPathOptionBox);
 
         searchFieldOptionBox = new SearchOptionBox();
-        searchFieldOptionBox.addItem("Loading");
+//        searchFieldOptionBox.addItem("Loading");
+        searchFieldOptionBox.setTypes(metadataFieldTypes);
         searchFieldOptionBox.addActionListener(actionListener);
         searchFieldOptionBox.setActionCommand("fields");
         criterionPanel.add(searchFieldOptionBox);
@@ -83,10 +85,10 @@ public class SearchCriterionPanel extends JPanel {
         return getSearchOption().getSearchType();
     }
 
-    public void setFileOptions(MetadataFileType[] metadataPathTypes) {
-        searchPathOptionBox.setTypes(metadataPathTypes);
-    }
-
+//    public void setFileOptions(MetadataFileType[] metadataPathTypes) {
+//        searchPathOptionBox.setTypes(metadataPathTypes);
+//    }
+//
     public void setFieldOptions(MetadataFileType[] metadataFieldTypes) {
         searchFieldOptionBox.setTypes(metadataFieldTypes);
     }

@@ -36,6 +36,7 @@ public class SearchPanel extends JPanel implements ActionListener {
     final JProgressBar jProgressBar;
     final JTextArea resultsTextArea;
     final ArrayList<SearchCriterionPanel> criterionPanelArray;
+    final JPanel criterionArrayPanel;
 
     public SearchPanel(JFrame jFrame) {
         this.jFrame = jFrame;
@@ -45,13 +46,9 @@ public class SearchPanel extends JPanel implements ActionListener {
         this.add(new ArbilNodeSearchPanel(null, null, new ArbilNode[0]), BorderLayout.PAGE_END);
         criterionPanelArray = new ArrayList<SearchCriterionPanel>();
 
-        final JPanel criterionArrayPanel = new JPanel();
+        criterionArrayPanel = new JPanel();
         criterionArrayPanel.setLayout(new BoxLayout(criterionArrayPanel, BoxLayout.PAGE_AXIS));
-        for (int panelCount = 0; panelCount < 3; panelCount++) {
-            final SearchCriterionPanel searchCriterionPanel = new SearchCriterionPanel(this);
-            criterionPanelArray.add(searchCriterionPanel);
-            criterionArrayPanel.add(searchCriterionPanel);
-        }
+
         this.add(criterionArrayPanel, BorderLayout.PAGE_START);
         JPanel centerPanel = new JPanel(new BorderLayout());
         JPanel progressPanel = new JPanel(new BorderLayout());
@@ -131,10 +128,11 @@ public class SearchPanel extends JPanel implements ActionListener {
                     System.out.println("run query");
                     MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
                     System.out.println("done");
-                    for (SearchCriterionPanel criterionPanel : criterionPanelArray) {
-                        criterionPanel.setFileOptions(metadataPathTypes);
-                        criterionPanel.setFieldOptions(metadataFieldTypes);
-                    }
+
+                    final SearchCriterionPanel searchCriterionPanel = new SearchCriterionPanel(SearchPanel.this, metadataPathTypes, metadataFieldTypes);
+                    criterionPanelArray.add(searchCriterionPanel);
+                    criterionArrayPanel.add(searchCriterionPanel);
+                    SearchPanel.this.revalidate();
                 } else if ("paths".equals(actionCommand)) {
                     System.out.println("run query");
                     MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(eventCriterionPanel.getMetadataFileType());
