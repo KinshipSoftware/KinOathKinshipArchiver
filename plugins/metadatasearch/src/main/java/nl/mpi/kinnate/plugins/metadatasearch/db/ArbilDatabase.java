@@ -192,7 +192,7 @@ public class ArbilDatabase {
                     + ")\n"
                     + "order by $nameString" + levelCount + "\n"
                     + "return\n"
-                    + "<TreeNode><DisplayString>{$nameString" + levelCount + "}</DisplayString>\n"
+                    + "<TreeNode><DisplayString>" + currentFieldName + ": {$nameString" + levelCount + "}</DisplayString>\n"
                     + getTreeSubQuery(treeBranchTypeList, nextWhereClause, levelCount + 1)
                     + "</TreeNode>\n}\n";
         } else {
