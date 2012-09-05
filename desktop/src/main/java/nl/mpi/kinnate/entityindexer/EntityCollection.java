@@ -78,7 +78,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         // make sure the database exists
         try {
             synchronized (databaseLock) {
-                new Set("dbpath", new File(sessionStorage.getStorageDirectory(), "BaseXData")).execute(context);
+                new Set("dbpath", new File(sessionStorage.getApplicationSettingsDirectory(), "BaseXData")).execute(context);
                 new Open(databaseName).execute(context);
                 //context.close();
                 new Close().execute(context);
@@ -114,7 +114,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             synchronized (databaseLock) {
                 new DropDB(databaseName).execute(context);
                 new Set("CREATEFILTER", "*.kmdi").execute(context);
-                new CreateDB(databaseName, sessionStorage.getCacheDirectory().toString()).execute(context);
+                new CreateDB(databaseName, sessionStorage.getProjectWorkingDirectory().toString()).execute(context);
 //            System.out.println("List: " + new List().execute(context));
 //            System.out.println("Find: " + new Find(databaseName).title());
 //            System.out.println("Info: " + new Info().execute(context));
@@ -159,13 +159,24 @@ public class EntityCollection extends DatabaseUpdateHandler {
         return tempDbContext;
     }
 
-    public String performExportQuery(Context tempDbContext, String exportQueryString) throws BaseXException {
+    public String performExportQuery(Context tempDbContext, String exportDatabaseName, String exportQueryString) throws BaseXException {
         if (tempDbContext == null) {
             tempDbContext = context;
         }
+        String returnString = null;
         synchronized (databaseLock) {
-            return new XQuery(exportQueryString).execute(tempDbContext);
+            if (exportDatabaseName != null) {
+                new Close().execute(context);
+                // todo: verify that opeing two database at the same time will not cause issues
+                new Open(exportDatabaseName).execute(tempDbContext);
+            }
+            returnString = new XQuery(exportQueryString).execute(tempDbContext);
+            if (exportDatabaseName != null) {
+                new Close().execute(tempDbContext);
+                new Open(databaseName).execute(context);
+            }
         }
+        return returnString;
     }
     /////////////////// End Export Queries ///////////////////
 
