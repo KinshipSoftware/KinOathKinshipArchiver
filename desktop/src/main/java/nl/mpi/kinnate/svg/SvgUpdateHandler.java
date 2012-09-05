@@ -299,7 +299,7 @@ public class SvgUpdateHandler {
             Point currentPoint = graphPanel.entitySvg.getEntityLocationOffset(currentIdentifier);
             if (currentPoint != null) {
                 if (selectionSize == null) {
-                    selectionSize = new Rectangle(currentPoint.x, currentPoint.y, 0, 0);
+                    selectionSize = new Rectangle(currentPoint.x, currentPoint.y, 1, 1);
                 } else {
                     selectionSize.add(currentPoint);
                 }
@@ -318,30 +318,35 @@ public class SvgUpdateHandler {
 
         Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
         final SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
+        // todo: should this be moved into the svg thread?
         final Rectangle renderRectDocument = getRectOnDocument(renderRectScreen, labelGroupLocatable);
         System.out.println("renderRectDocument: " + renderRectDocument);
 
 //        SVGOMPoint pointOnDocument = getPointOnDocument(new Point(0, 0), labelGroupLocatable);
 //        renderRect.translate((int) pointOnDocument.getX(), (int) pointOnDocument.getY());
         addTestRect(renderRectDocument, 1);
-        if (selectionRect != null && !renderRectDocument.contains(selectionRect)) {
+        if (selectionRect != null && selectionRect != null && !renderRectDocument.contains(selectionRect)) {
             UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
             if (updateManager != null) {
                 updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                     public void run() {
-//                       SVGLocatable diagramGroupLocatable = (SVGLocatable)  graphPanel.doc.getElementById("DiagramGroup");
-                        final double scaleFactor = graphPanel.svgCanvas.getRenderingTransform().getScaleX();
+                        SVGLocatable diagramGroupLocatable = (SVGLocatable) graphPanel.doc.getElementById("DiagramGroup");
+                        final double scaleFactor = diagramGroupLocatable.getScreenCTM().getA();
+//                        final double scaleFactor = graphPanel.svgCanvas.getRenderingTransform().getScaleX();
                         System.out.println("scaleFactor: " + scaleFactor);
                         AffineTransform at = new AffineTransform();
                         final double offsetX = renderRectDocument.getCenterX() - selectionRect.getCenterX();
                         final double offsetY = renderRectDocument.getCenterY() - selectionRect.getCenterY();
                         System.out.println("offset: " + offsetX + ":" + offsetY);
-                        at.translate(scaleFactor, offsetY);
+//                        SVGOMPoint offsetOnScreen = getPointOnDocument(new Point((int) offsetX, (int) offsetY), labelGroupLocatable);
+//                        System.out.println("screen offset: " + offsetOnScreen.getX() + " : " + offsetOnScreen.getY());
+//                        at.translate(offsetOnScreen.getX(), offsetOnScreen.getY());
+                        at.translate((offsetX / 2) * scaleFactor, (offsetY / 2) * scaleFactor);
 //                        at.scale(scaleFactor, scaleFactor);
                         at.concatenate(graphPanel.svgCanvas.getRenderingTransform());
                         graphPanel.svgCanvas.setRenderingTransform(at);
-                        // at.concatenate(diagramGroupLocatable.getTransformToElement(null));
-                        // graphPanel.svgCanvas.setRenderingTransform(at);
+                        //... at.concatenate(diagramGroupLocatable.getTransformToElement(null));
+                        //... graphPanel.svgCanvas.setRenderingTransform(at);
                     }
                 });
             }
@@ -408,6 +413,12 @@ public class SvgUpdateHandler {
         Element etityGroup = graphPanel.doc.getElementById("EntityGroup");
         SVGOMPoint pointOnDocument = getPointOnDocument(screenLocation, (SVGLocatable) etityGroup);
         return new Point((int) pointOnDocument.getX(), (int) pointOnDocument.getY()); // we discard the float precision because the diagram does not need that level of resolution 
+    }
+
+    private SVGOMPoint getPointOnScreen(final Point documentLocation, SVGLocatable targetGroupElement) {
+        SVGOMPoint pointOnDocument = new SVGOMPoint(documentLocation.x, documentLocation.y);
+        SVGMatrix mat = targetGroupElement.getScreenCTM();  // this gives us the element to screen transform
+        return (SVGOMPoint) pointOnDocument.matrixTransform(mat);
     }
 
     private SVGOMPoint getPointOnDocument(final Point screenLocation, SVGLocatable targetGroupElement) {
@@ -760,16 +771,17 @@ public class SvgUpdateHandler {
         };
     }
 
-    private void resizeCanvas(Element svgRoot, Element diagramGroupNode) {
+    private void resizeCanvas(Element svgRoot, Element diagramGroupNode, boolean resetZoom) {
 //        svgRoot.setAttribute("width", "100%");
 //        svgRoot.setAttribute("height", "100%");
 //        diagramGroupNode.setAttribute("transform", null);
-
-        AffineTransform at = new AffineTransform();
-        at.scale(1, 1);
-        at.setToTranslation(1, 1);
-        graphPanel.svgCanvas.setRenderingTransform(at);
-
+        System.out.println("resetZoom: " + resetZoom);
+        if (resetZoom) {
+            AffineTransform at = new AffineTransform();
+            at.scale(1, 1);
+            at.setToTranslation(1, 1);
+            graphPanel.svgCanvas.setRenderingTransform(at);
+        }
         Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
         // set the diagram offset so that no element is less than zero
 //        diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(-graphSize.x) + ", " + Integer.toString(-graphSize.y) + ")");
@@ -838,7 +850,7 @@ public class SvgUpdateHandler {
                         resizeRequired = false;
                         Element svgRoot = graphPanel.doc.getDocumentElement();
                         Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
-                        resizeCanvas(svgRoot, diagramGroupNode);
+                        resizeCanvas(svgRoot, diagramGroupNode, true);
                     }
                 }
             });
@@ -928,7 +940,7 @@ public class SvgUpdateHandler {
                     targetGroup.appendChild(labelText);
                     graphPanel.entitySvg.entityPositions.put(labelId, labelPosition);
                     ((EventTarget) labelText).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
-                    resizeCanvas(graphPanel.doc.getDocumentElement(), graphPanel.doc.getElementById("DiagramGroup"));
+                    resizeCanvas(graphPanel.doc.getDocumentElement(), graphPanel.doc.getElementById("DiagramGroup"), false);
                 }
             });
         }
@@ -994,7 +1006,7 @@ public class SvgUpdateHandler {
                 entityGroupNodeOld.getParentNode().removeChild(entityGroupNodeOld);
             }
             graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel.entitySvg.entityPositions);
-            resizeCanvas(svgRoot, diagramGroupNode);
+            resizeCanvas(svgRoot, diagramGroupNode, true);
 
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
