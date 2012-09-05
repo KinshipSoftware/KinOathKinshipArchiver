@@ -22,9 +22,9 @@ import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- * Document : EntitySvg
- * Created on : Mar 9, 2011, 3:20:56 PM
- * Author : Peter Withers
+ * Document : EntitySvg Created on : Mar 9, 2011, 3:20:56 PM
+ *
+ * @author Peter Withers
  */
 public class EntitySvg {
 
@@ -392,9 +392,13 @@ public class EntitySvg {
     public Point getEntityLocationOffset(UniqueIdentifier entityId) {
 //         this offset is added so that the relation lines meet to the center of the symbols, however the symbols should be updated so that they are centered on 0
         Point returnLoc = entityPositions.get(entityId);
-        int xPos = returnLoc.x + (symbolSize / 2);
-        int yPos = returnLoc.y + (symbolSize / 2);
-        return new Point(xPos, yPos);
+        if (returnLoc != null) {
+            int xPos = returnLoc.x + (symbolSize / 2);
+            int yPos = returnLoc.y + (symbolSize / 2);
+            return new Point(xPos, yPos);
+        } else {
+            return null;
+        }
     }
 
     public Point getEntityLocation(UniqueIdentifier entityId) {
