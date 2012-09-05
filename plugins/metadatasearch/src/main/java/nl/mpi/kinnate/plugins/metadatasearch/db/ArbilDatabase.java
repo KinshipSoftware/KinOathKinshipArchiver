@@ -177,26 +177,26 @@ public class ArbilDatabase {
         return inputString.replace("&", "&amp;").replace("\"", "&quot;").replace("'", "&apos;");
     }
 
-    private String getTreeSubQuery(ArrayList<MetadataFileType> treeBranchTypeList, String whereClause) {
+    private String getTreeSubQuery(ArrayList<MetadataFileType> treeBranchTypeList, String whereClause, int levelCount) {
         if (!treeBranchTypeList.isEmpty()) {
             String separatorString = "";
 //            if (whereClause.length() > 0) {
 //                separatorString = ",\n";
 //            }
-//            whereClause = " ";
             MetadataFileType treeBranchType = treeBranchTypeList.remove(0);
             String currentFieldName = treeBranchType.getFieldName();
+            String nextWhereClause = whereClause + "[//*:" + currentFieldName + " = $nameString" + levelCount + "]";
             return "{\n"
-                    + "for $nameString in distinct-values(collection('" + databaseName + "')//*:" + currentFieldName + "[count(*) = 0]" + whereClause + "\n"
+                    + "for $nameString" + levelCount + " in distinct-values(collection('" + databaseName + "')" + whereClause + "//*:" + currentFieldName + "[count(*) = 0]\n"
                     //                + "return concat(base-uri($entityNode), path($entityNode))\n"
                     + ")\n"
-                    + "order by $nameString\n"
+                    + "order by $nameString" + levelCount + "\n"
                     + "return\n"
-                    + "<TreeNode><DisplayString>{$nameString}</DisplayString>\n"
-                    + getTreeSubQuery(treeBranchTypeList, whereClause)
+                    + "<TreeNode><DisplayString>{$nameString" + levelCount + "}</DisplayString>\n"
+                    + getTreeSubQuery(treeBranchTypeList, nextWhereClause, levelCount + 1)
                     + "</TreeNode>\n}\n";
         } else {
-            return "{for $docURI in distinct-values(for $matchingNode in collection('" + databaseName + "')//*" + whereClause + " return base-uri($matchingNode))\n"
+            return "{for $docURI in distinct-values(for $matchingNode in collection('" + databaseName + "')" + whereClause + " return base-uri($matchingNode))\n"
                     + "return\n"
                     + "<TreeNode><DisplayString>{$docURI}</DisplayString>\n"
                     + "</TreeNode>\n}\n";
@@ -207,7 +207,7 @@ public class ArbilDatabase {
 //        String branchConstraint = "//treeBranchType.getFieldName()";
 
         return "<TreeNode><DisplayString>All</DisplayString>\n"
-                + getTreeSubQuery(treeBranchTypeList, "")
+                + getTreeSubQuery(treeBranchTypeList, "", 0)
                 + "</TreeNode>";
 
 
