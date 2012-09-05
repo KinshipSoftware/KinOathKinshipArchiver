@@ -134,7 +134,7 @@ public class EntityDocument {
         String idString;
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
         idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
-        File subDirectory = new File(sessionStorage.getCacheDirectory(), idString.substring(0, 2));
+        File subDirectory = new File(sessionStorage.getProjectWorkingDirectory(), idString.substring(0, 2));
         subDirectory.mkdir();
         entityFile = new File(subDirectory, idString);
     }
