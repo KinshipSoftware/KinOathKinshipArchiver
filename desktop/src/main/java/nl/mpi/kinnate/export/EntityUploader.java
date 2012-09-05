@@ -90,8 +90,8 @@ public class EntityUploader {
             public void run() {
                 // search file system
                 ModifiedFileSearch modifiedFileSearch = new ModifiedFileSearch();
-                modifiedFileSearch.setSearchType(ModifiedFileSearch.SearchType.kmdi); // todo: change this to kmdi when implemented
-                modifiedFiles = modifiedFileSearch.getModifiedFiles(sessionStorage.getCacheDirectory()).toArray(new File[]{});
+                modifiedFileSearch.setSearchType(ModifiedFileSearch.SearchType.kmdi);
+                modifiedFiles = modifiedFileSearch.getModifiedFiles(sessionStorage.getProjectWorkingDirectory()).toArray(new File[]{});
                 actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
             }
         }.start();
