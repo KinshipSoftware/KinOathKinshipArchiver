@@ -372,7 +372,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
     static public File getDefaultDiagramFile(SessionStorage sessionStorage) {
         if (defaultDiagramTemplate == null) {
-            defaultDiagramTemplate = new File(sessionStorage.getStorageDirectory(), "DefaultKinDiagram.svg");
+            defaultDiagramTemplate = new File(sessionStorage.getProjectDirectory(), "DefaultKinDiagram.svg");
         }
         return defaultDiagramTemplate;
     }
