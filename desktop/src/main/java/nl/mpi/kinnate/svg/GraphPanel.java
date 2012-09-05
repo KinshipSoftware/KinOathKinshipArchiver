@@ -1,7 +1,6 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.BorderLayout;
-import java.awt.Point;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -43,9 +42,9 @@ import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- * Document : GraphPanel
- * Created on : Aug 16, 2010, 5:31:33 PM
- * Author : Peter Withers
+ * Document : GraphPanel Created on : Aug 16, 2010, 5:31:33 PM
+ *
+ * @ author Peter Withers
  */
 public class GraphPanel extends JPanel implements SavePanel {
 
@@ -91,9 +90,9 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.setEnableRotateInteractor(false);
         svgCanvas.setEnableZoomInteractor(false);
         svgCanvas.addMouseWheelListener(new MouseWheelListener() {
-
             public void mouseWheelMoved(MouseWheelEvent e) {
                 if (e.isShiftDown()) {
+                    // todo: this should be done in an SVG thread
                     double scale = 1 - e.getUnitsToScroll() / 10.0;
                     double tx = -e.getX() * (scale - 1);
                     double ty = -e.getY() * (scale - 1);
@@ -346,7 +345,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         selectedGroupId.clear();
         selectedGroupId.addAll(Arrays.asList(uniqueIdentifiers));
         svgUpdateHandler.updateSvgSelectionHighlights();
-        //.. todo: pan the diagram so that the selected are in the center
+        // pan the diagram so that the selected are in the center
+        svgUpdateHandler.panToSelected(uniqueIdentifiers);
 //        mouseListenerSvg.updateSelectionDisplay();
     }
 
@@ -415,11 +415,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void resetZoom() {
-        // todo: this should be moved to the svg update handler and put into a runnable
-        AffineTransform at = new AffineTransform();
-        at.scale(1, 1);
-        at.setToTranslation(1, 1);
-        svgCanvas.setRenderingTransform(at);
+        svgUpdateHandler.requestResize();
     }
 
     public void resetLayout() {
