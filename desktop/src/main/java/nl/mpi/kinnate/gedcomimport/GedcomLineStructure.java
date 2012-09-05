@@ -72,7 +72,7 @@ public class GedcomLineStructure extends ImportLineStructure {
 
     @Override
     public String getEscapedLineContents() throws ImportException {
-        return getLineContents().replace("@@", "@");
+        return getLineContents().replace("@@", "@"); // the testged file does not have any instances of &gt; or &lt; so we do not replace these (.replace("&gt;", ">").replace("&lt;", "<");)
     }
 
     @Override
