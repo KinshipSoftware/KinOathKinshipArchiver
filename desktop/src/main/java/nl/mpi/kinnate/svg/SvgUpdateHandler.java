@@ -306,25 +306,25 @@ public class SvgUpdateHandler {
             }
         }
         final Rectangle selectionRect = selectionSize;
-        if (selectionRect != null) {
-            System.out.println("selectionRect: " + selectionRect.toString());
-            addTestRect(selectionRect, 0);
-        }
+//        if (selectionRect != null) {
+//            System.out.println("selectionRect: " + selectionRect.toString());
+//            addTestRect(selectionRect, 0);
+//        }
         Rectangle renderRectScreen = graphPanel.svgCanvas.getBounds();
 //        System.out.println("getBounds: "+graphPanel.svgCanvas.getBounds().toString());
 //        System.out.println("getRenderRect: "+graphPanel.svgCanvas.getRenderRect().toString());
 //        System.out.println("getVisibleRect: "+graphPanel.svgCanvas.getVisibleRect().toString());
-        System.out.println("renderRectScreen:" + renderRectScreen.toString());
+//        System.out.println("renderRectScreen:" + renderRectScreen.toString());
 
         Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
         final SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
         // todo: should this be moved into the svg thread?
         final Rectangle renderRectDocument = getRectOnDocument(renderRectScreen, labelGroupLocatable);
-        System.out.println("renderRectDocument: " + renderRectDocument);
+//        System.out.println("renderRectDocument: " + renderRectDocument);
 
 //        SVGOMPoint pointOnDocument = getPointOnDocument(new Point(0, 0), labelGroupLocatable);
 //        renderRect.translate((int) pointOnDocument.getX(), (int) pointOnDocument.getY());
-        addTestRect(renderRectDocument, 1);
+//        addTestRect(renderRectDocument, 1);
         if (selectionRect != null && selectionRect != null && !renderRectDocument.contains(selectionRect)) {
             UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
             if (updateManager != null) {
@@ -333,11 +333,11 @@ public class SvgUpdateHandler {
                         SVGLocatable diagramGroupLocatable = (SVGLocatable) graphPanel.doc.getElementById("DiagramGroup");
                         final double scaleFactor = diagramGroupLocatable.getScreenCTM().getA();
 //                        final double scaleFactor = graphPanel.svgCanvas.getRenderingTransform().getScaleX();
-                        System.out.println("scaleFactor: " + scaleFactor);
+//                        System.out.println("scaleFactor: " + scaleFactor);
                         AffineTransform at = new AffineTransform();
                         final double offsetX = renderRectDocument.getCenterX() - selectionRect.getCenterX();
                         final double offsetY = renderRectDocument.getCenterY() - selectionRect.getCenterY();
-                        System.out.println("offset: " + offsetX + ":" + offsetY);
+//                        System.out.println("offset: " + offsetX + ":" + offsetY);
 //                        SVGOMPoint offsetOnScreen = getPointOnDocument(new Point((int) offsetX, (int) offsetY), labelGroupLocatable);
 //                        System.out.println("screen offset: " + offsetOnScreen.getX() + " : " + offsetOnScreen.getY());
 //                        at.translate(offsetOnScreen.getX(), offsetOnScreen.getY());
