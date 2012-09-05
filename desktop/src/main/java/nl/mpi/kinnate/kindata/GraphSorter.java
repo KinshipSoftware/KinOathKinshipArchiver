@@ -12,9 +12,9 @@ import nl.mpi.kinnate.svg.GraphPanelSize;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : GraphData
- * Created on : Sep 11, 2010, 4:51:36 PM
- * Author : Peter Withers
+ * Document : GraphData Created on : Sep 11, 2010, 4:51:36 PM
+ *
+ * @author Peter Withers
  */
 public class GraphSorter {
 
@@ -52,7 +52,7 @@ public class GraphSorter {
             }
         }
         Rectangle rectangle = getGraphSize(entityPositions);
-        Point defaultPosition = new Point(rectangle.width + xPadding, rectangle.height + yPadding);
+        Point defaultPosition = new Point(rectangle.x + rectangle.width + xPadding, rectangle.y + rectangle.height + yPadding);
 //                            Point defaultPosition = new Point(rectangle.width, rectangle.height);
         return new Point(defaultPosition.x, 0);
 //        return new Point(0, 0);
@@ -337,8 +337,8 @@ public class GraphSorter {
         }
         int xOffset = minPostion[0] - xPadding;
         int yOffset = minPostion[1] - yPadding;
-        int graphWidth = maxPostion[0] + xPadding;
-        int graphHeight = maxPostion[1] + yPadding;
+        int graphWidth = maxPostion[0] + xPadding - xOffset;
+        int graphHeight = maxPostion[1] + yPadding - yOffset;
         return new Rectangle(xOffset, yOffset, graphWidth, graphHeight);
     }
 
