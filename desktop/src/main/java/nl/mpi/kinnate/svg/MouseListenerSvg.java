@@ -138,14 +138,15 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         mouseActionIsPopupTrigger = e.isPopupTrigger();
     }
 
-//    @Override
-//    public void mouseMoved(MouseEvent e) {
-//        super.mouseMoved(e);
-////      This is for testing the screen to document transform
-//        System.out.println("mouseMoved:" + e.getX() + ":" + e.getY());
-////        System.out.println("mouseMovedOnScreen:" + e.getXOnScreen() + ":" + e.getYOnScreen());
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        super.mouseMoved(e);
+//      This is for testing the screen to document transform
 //        graphPanel.svgUpdateHandler.updateMouseDot(e.getPoint());
-//    }
+//        final Point entityPointOnDocument = graphPanel.svgUpdateHandler.getEntityPointOnDocument(new Point(e.getX(), e.getY()));
+//        kinDiagramPanel.setStatusBarText("mouseMoved:" + entityPointOnDocument.getX() + ":" + entityPointOnDocument.getY());
+    }
+
     @Override
     public void handleEvent(Event evt) {
         if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
