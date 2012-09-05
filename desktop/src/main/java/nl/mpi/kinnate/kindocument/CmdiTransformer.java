@@ -36,7 +36,7 @@ public class CmdiTransformer {
 
     public URI getXsd(String profileId, boolean forceUpdate) throws KinXsdException {
         String profileFileName = profileId.replace(":", "_");
-        final File profilesDirectory = new File(sessionStorage.getStorageDirectory(), "KmdiProfiles");
+        final File profilesDirectory = new File(sessionStorage.getProjectDirectory(), "KmdiProfiles");
         if (!profilesDirectory.exists()) {
             profilesDirectory.mkdir();
         }
