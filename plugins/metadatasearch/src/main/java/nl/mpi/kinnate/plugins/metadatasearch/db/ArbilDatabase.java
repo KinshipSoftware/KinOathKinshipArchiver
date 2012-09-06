@@ -177,7 +177,7 @@ public class ArbilDatabase {
         return inputString.replace("&", "&amp;").replace("\"", "&quot;").replace("'", "&apos;");
     }
 
-    private String getTreeSubQuery(ArrayList<MetadataFileType> treeBranchTypeList, String whereClause, int levelCount) {
+    private String getTreeSubQuery(ArrayList<MetadataFileType> treeBranchTypeList, String whereClause, String selectClause, int levelCount) {
         if (!treeBranchTypeList.isEmpty()) {
             String separatorString = "";
 //            if (whereClause.length() > 0) {
@@ -186,6 +186,7 @@ public class ArbilDatabase {
             MetadataFileType treeBranchType = treeBranchTypeList.remove(0);
             String currentFieldName = treeBranchType.getFieldName();
             String nextWhereClause = whereClause + "[//*:" + currentFieldName + " = $nameString" + levelCount + "]";
+            String nextSelectClause = selectClause + "//*:" + currentFieldName + "[. = $nameString" + levelCount + "]";
             return "{\n"
                     + "for $nameString" + levelCount + " in distinct-values(collection('" + databaseName + "')" + whereClause + "//*:" + currentFieldName + "[count(*) = 0]\n"
                     //                + "return concat(base-uri($entityNode), path($entityNode))\n"
@@ -193,12 +194,14 @@ public class ArbilDatabase {
                     + "order by $nameString" + levelCount + "\n"
                     + "return\n"
                     + "<TreeNode><DisplayString>" + currentFieldName + ": {$nameString" + levelCount + "}</DisplayString>\n"
-                    + getTreeSubQuery(treeBranchTypeList, nextWhereClause, levelCount + 1)
+                    + getTreeSubQuery(treeBranchTypeList, nextWhereClause, nextSelectClause, levelCount + 1)
                     + "</TreeNode>\n}\n";
         } else {
-            return "{for $docURI in distinct-values(for $matchingNode in collection('" + databaseName + "')" + whereClause + " return base-uri($matchingNode))\n"
+            return "{for $matchingNode in collection('" + databaseName + "')" + selectClause + "\n"
                     + "return\n"
-                    + "<TreeNode><FileUri>{$docURI}</FileUri>\n"
+                    + "<TreeNode>\n"
+                    + "<FileUri>{base-uri($matchingNode)}</FileUri>\n"
+                    + "<FileUriPath>{path($matchingNode)}</FileUriPath>\n"
                     + "</TreeNode>\n}\n";
         }
     }
@@ -207,7 +210,7 @@ public class ArbilDatabase {
 //        String branchConstraint = "//treeBranchType.getFieldName()";
 
         return "<TreeNode><DisplayString>All</DisplayString>\n"
-                + getTreeSubQuery(treeBranchTypeList, "", 0)
+                + getTreeSubQuery(treeBranchTypeList, "", "", 0)
                 + "</TreeNode>";
 
 

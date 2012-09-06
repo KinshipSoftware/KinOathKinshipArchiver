@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.plugins.metadatasearch.db;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,6 +24,8 @@ public class DbTreeNode implements TreeNode {
     private String displayString = null;
     @XmlElement(name = "FileUri")
     private URI fileUri = null;
+    @XmlElement(name = "FileUriPath")
+    private String fileUriPathArray[] = null;
     private DbTreeNode parentDbTreeNode;
 
     public DbTreeNode[] getChildTreeNode() {
@@ -77,7 +80,32 @@ public class DbTreeNode implements TreeNode {
         return "            ";
     }
 
-    public URI getUri() {
-        return fileUri;
+    public URI[] getUri() throws URISyntaxException {
+        ArrayList<URI> uriList = new ArrayList<URI>();
+        if (fileUriPathArray != null) {
+            for (String fileUriPath : fileUriPathArray) {
+                if (!fileUriPath.equals("/")) {
+                    String imdiApiPathPreNumber = fileUriPath.replaceAll("/\"[^\"]*\":", ".").replaceAll("\\[1]", "");//.replaceAll("\\[", "(").replaceAll("\\]", ")");;
+                    String imdiApiPath = "";
+                    for (String pathPart : imdiApiPathPreNumber.split("\\[")) {
+                        String[] innerPathParts = pathPart.split("\\]");
+                        if (innerPathParts.length == 1) {
+                            imdiApiPath = imdiApiPath + innerPathParts[0];
+                        } else if (innerPathParts.length == 2) {
+                            imdiApiPath = imdiApiPath + "(" + (Integer.decode(innerPathParts[0]) - 1) + ")" + innerPathParts[1];
+                        } else {
+                            throw new UnsupportedOperationException();
+                        }
+                    }
+                    uriList.add(new URI(fileUri.getScheme(), fileUri.getUserInfo(), fileUri.getHost(), fileUri.getPort(), fileUri.getPath(), fileUri.getQuery(), imdiApiPath));
+                }
+            }
+            if (uriList.isEmpty()) {
+                uriList.add(fileUri);
+            }
+        }
+
+        return uriList.toArray(
+                new URI[0]);
     }
 }

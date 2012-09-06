@@ -9,6 +9,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,6 +36,7 @@ import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilMimeHashQueue;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase;
 import nl.mpi.kinnate.plugins.metadatasearch.db.MetadataFileType;
@@ -58,7 +60,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
     final JPanel criterionPanel;
     private MetadataFileType[] metadataFieldTypes = null;
 
-    public FacetedTreePanel(JFrame jFrame, final ArbilDataNodeLoader arbilDataNodeLoader) {
+    public FacetedTreePanel(JFrame jFrame, final ArbilDataNodeLoader arbilDataNodeLoader, final MessageDialogHandler dialogHandler) {
         this.jFrame = jFrame;
         arbilWindowManager = new ArbilWindowManager();
         arbilDatabase = new ArbilDatabase(new ArbilSessionStorage(), arbilWindowManager, BugCatcherManager.getBugCatcher());
@@ -117,10 +119,19 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         resultsTree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent tse) {
                 ArrayList<ArbilDataNode> arbilDataNodeList = new ArrayList<ArbilDataNode>();
-                for (TreePath treePath : resultsTree.getSelectionPaths()) {
-                    final URI nodeUri = ((DbTreeNode) treePath.getLastPathComponent()).getUri();
-                    if (nodeUri != null) {
-                        arbilDataNodeList.add(arbilDataNodeLoader.getArbilDataNode(FacetedTreePanel.this, nodeUri));
+                final TreePath[] selectionPaths = resultsTree.getSelectionPaths();
+                if (selectionPaths != null) {
+                    for (TreePath treePath : selectionPaths) {
+                        try {
+                            for (URI nodeUri : ((DbTreeNode) treePath.getLastPathComponent()).getUri()) {
+                                System.out.println("nodeUri: " + nodeUri);
+                                if (nodeUri != null) {
+                                    arbilDataNodeList.add(arbilDataNodeLoader.getArbilDataNode(FacetedTreePanel.this, nodeUri));
+                                }
+                            }
+                        } catch (URISyntaxException exception) {
+                            dialogHandler.addMessageDialogToQueue("Failed to get the URI for the tree selection.", "Show Tree Selection");
+                        }
                     }
                 }
                 arbilTableModel.removeAllArbilDataNodeRows();
@@ -159,7 +170,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
         final ArbilDataNodeLoader arbilDataNodeLoader = new ArbilDataNodeLoader(arbilWindowManager, arbilSessionStorage, new ArbilMimeHashQueue(arbilWindowManager, arbilSessionStorage), new ArbilTreeHelper(arbilSessionStorage, arbilWindowManager));
-        jFrame.setContentPane(new FacetedTreePanel(jFrame, arbilDataNodeLoader));
+        jFrame.setContentPane(new FacetedTreePanel(jFrame, arbilDataNodeLoader, arbilWindowManager));
         jFrame.pack();
         jFrame.setVisible(true);
     }
