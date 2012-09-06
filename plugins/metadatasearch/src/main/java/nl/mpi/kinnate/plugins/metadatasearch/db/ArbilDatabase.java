@@ -199,10 +199,10 @@ public class ArbilDatabase {
         } else {
             return "{for $matchingNode in collection('" + databaseName + "')" + selectClause + "\n"
                     + "return\n"
-                    + "<TreeNode>\n"
+                    + "<MetadataTreeNode>\n"
                     + "<FileUri>{base-uri($matchingNode)}</FileUri>\n"
                     + "<FileUriPath>{path($matchingNode)}</FileUriPath>\n"
-                    + "</TreeNode>\n}\n";
+                    + "</MetadataTreeNode>\n}\n";
         }
     }
 
