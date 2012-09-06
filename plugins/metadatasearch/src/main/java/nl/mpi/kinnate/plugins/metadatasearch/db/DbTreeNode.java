@@ -25,7 +25,7 @@ public class DbTreeNode implements TreeNode {
     @XmlElement(name = "FileUri")
     private URI fileUri = null;
     @XmlElement(name = "FileUriPath")
-    private String fileUriPathArray[] = null;
+    private String fileUriPath = null;
     private DbTreeNode parentDbTreeNode;
 
     public DbTreeNode[] getChildTreeNode() {
@@ -82,30 +82,28 @@ public class DbTreeNode implements TreeNode {
 
     public URI[] getUri() throws URISyntaxException {
         ArrayList<URI> uriList = new ArrayList<URI>();
-        if (fileUriPathArray != null) {
-            for (String fileUriPath : fileUriPathArray) {
-                if (!fileUriPath.equals("/")) {
-                    String imdiApiPathPreNumber = fileUriPath.replaceAll("/\"[^\"]*\":", ".").replaceAll("\\[1]", "");//.replaceAll("\\[", "(").replaceAll("\\]", ")");;
-                    String imdiApiPath = "";
-                    for (String pathPart : imdiApiPathPreNumber.split("\\[")) {
-                        String[] innerPathParts = pathPart.split("\\]");
-                        if (innerPathParts.length == 1) {
-                            imdiApiPath = imdiApiPath + innerPathParts[0];
-                        } else if (innerPathParts.length == 2) {
-                            imdiApiPath = imdiApiPath + "(" + (Integer.decode(innerPathParts[0]) - 1) + ")" + innerPathParts[1];
-                        } else {
-                            throw new UnsupportedOperationException();
-                        }
+        if (fileUriPath != null) {
+//            for (String fileUriPath : fileUriPathArray) {
+            if (!fileUriPath.equals("/")) {
+                String imdiApiPathPreNumber = fileUriPath.replaceAll("/\"[^\"]*\":", ".").replaceAll("\\[1]", "");//.replaceAll("\\[", "(").replaceAll("\\]", ")");;
+                String imdiApiPath = "";
+                for (String pathPart : imdiApiPathPreNumber.split("\\[")) {
+                    String[] innerPathParts = pathPart.split("\\]");
+                    if (innerPathParts.length == 1) {
+                        imdiApiPath = imdiApiPath + innerPathParts[0];
+                    } else if (innerPathParts.length == 2) {
+                        imdiApiPath = imdiApiPath + "(" + (Integer.decode(innerPathParts[0]) - 1) + ")" + innerPathParts[1];
+                    } else {
+                        throw new UnsupportedOperationException();
                     }
-                    uriList.add(new URI(fileUri.getScheme(), fileUri.getUserInfo(), fileUri.getHost(), fileUri.getPort(), fileUri.getPath(), fileUri.getQuery(), imdiApiPath));
                 }
+                uriList.add(new URI(fileUri.getScheme(), fileUri.getUserInfo(), fileUri.getHost(), fileUri.getPort(), fileUri.getPath(), fileUri.getQuery(), imdiApiPath));
             }
+//            }
             if (uriList.isEmpty()) {
                 uriList.add(fileUri);
             }
         }
-
-        return uriList.toArray(
-                new URI[0]);
+        return uriList.toArray(new URI[0]);
     }
 }
