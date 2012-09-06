@@ -4,32 +4,37 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
 import javax.xml.bind.annotation.XmlElement;
 import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeContainer;
+import nl.mpi.arbil.data.ArbilNode;
 
 /**
  * Document : MetadataTreeNode <br> Created on Sep 6, 2012, 3:52:56 PM <br>
  *
  * @author Peter Withers <br>
  */
-public class MetadataTreeNode extends AbstractDbTreeNode {
+public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNodeContainer {
 
     @XmlElement(name = "FileUri")
     private URI fileUri = null;
     @XmlElement(name = "FileUriPath")
     private String fileUriPath = null;
+    ArbilDataNode arbilDataNode = null;
 
     public TreeNode getChildAt(int i) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public int getChildCount() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return 0;
     }
 
     public TreeNode getParent() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return parentDbTreeNode;
     }
 
     public int getIndex(TreeNode tn) {
@@ -37,7 +42,7 @@ public class MetadataTreeNode extends AbstractDbTreeNode {
     }
 
     public boolean getAllowsChildren() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
     public boolean isLeaf() {
@@ -77,13 +82,24 @@ public class MetadataTreeNode extends AbstractDbTreeNode {
 
     @Override
     public String toString() {
-        if (fileUri != null) {
-            return fileUri.toString();
-        }
-        return "            ";
+        return getArbilNode().toString();
+//        if (fileUri != null) {
+//            return fileUri.toString();
+//        }
+//        return "            ";
+    }
+
+    public ImageIcon getIcon() {
+        return getArbilNode().getIcon();
     }
 
     public ArbilDataNode getArbilNode() {
+//        System.out.println("getArbilNode-fileUri: " + fileUri);
+        if (arbilDataNode == null) {
+            arbilDataNode = arbilDataNodeLoader.getArbilDataNode(MetadataTreeNode.this, fileUri);
+//            arbilDataNode.registerContainer(this);
+        }
+        return arbilDataNode;
 //        try {
 //            for (URI nodeUri : ((MetadataTreeNode) treePath.getLastPathComponent()).getUri()) {
 //                System.out.println("nodeUri: " + nodeUri);
@@ -94,6 +110,26 @@ public class MetadataTreeNode extends AbstractDbTreeNode {
 //        } catch (URISyntaxException exception) {
 //            dialogHandler.addMessageDialogToQueue("Failed to get the URI for the tree selection.", "Show Tree Selection");
 //        }
-        return arbilDataNodeLoader.getArbilDataNode(MetadataTreeNode.this, fileUri);
+    }
+
+    public void dataNodeRemoved(ArbilNode dataNode) {
+//        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void dataNodeIconCleared(ArbilNode dataNode) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                defaultTreeModel.nodeChanged(MetadataTreeNode.this);
+                defaultTreeModel.nodeStructureChanged(MetadataTreeNode.this);
+            }
+        });
+    }
+
+    public void dataNodeChildAdded(ArbilNode destination, ArbilNode newChildNode) {
+//        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public boolean isFullyLoadedNodeRequired() {
+        return true;
     }
 }

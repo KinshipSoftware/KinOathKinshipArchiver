@@ -186,7 +186,7 @@ public class ArbilDatabase {
             MetadataFileType treeBranchType = treeBranchTypeList.remove(0);
             String currentFieldName = treeBranchType.getFieldName();
             String nextWhereClause = whereClause + "[//*:" + currentFieldName + " = $nameString" + levelCount + "]";
-            String nextSelectClause = selectClause + "//*:" + currentFieldName + "[. = $nameString" + levelCount + "]";
+            String nextSelectClause = selectClause + "[*:" + currentFieldName + " = $nameString" + levelCount + "]";
             return "{\n"
                     + "for $nameString" + levelCount + " in distinct-values(collection('" + databaseName + "')" + whereClause + "//*:" + currentFieldName + "[count(*) = 0]\n"
                     //                + "return concat(base-uri($entityNode), path($entityNode))\n"
@@ -197,7 +197,7 @@ public class ArbilDatabase {
                     + getTreeSubQuery(treeBranchTypeList, nextWhereClause, nextSelectClause, levelCount + 1)
                     + "</TreeNode>\n}\n";
         } else {
-            return "{for $matchingNode in collection('" + databaseName + "')" + selectClause + "\n"
+            return "{for $matchingNode in collection('" + databaseName + "')//." + selectClause + "\n"
                     + "return\n"
                     + "<MetadataTreeNode>\n"
                     + "<FileUri>{base-uri($matchingNode)}</FileUri>\n"

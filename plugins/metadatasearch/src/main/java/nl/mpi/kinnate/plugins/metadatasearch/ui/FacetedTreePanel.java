@@ -119,6 +119,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         centerPanel.add(progressPanel, BorderLayout.PAGE_START);
         defaultTreeModel = new DefaultTreeModel(new DbTreeNode());
         resultsTree = new JTree(defaultTreeModel);
+        resultsTree.setCellRenderer(new SearchTreeCellRenderer());
         resultsTree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent tse) {
                 ArrayList<ArbilDataNode> arbilDataNodeList = new ArrayList<ArbilDataNode>();
