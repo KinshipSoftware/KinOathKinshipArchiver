@@ -198,7 +198,7 @@ public class ArbilDatabase {
         } else {
             return "{for $docURI in distinct-values(for $matchingNode in collection('" + databaseName + "')" + whereClause + " return base-uri($matchingNode))\n"
                     + "return\n"
-                    + "<TreeNode><DisplayString>{$docURI}</DisplayString>\n"
+                    + "<TreeNode><FileUri>{$docURI}</FileUri>\n"
                     + "</TreeNode>\n}\n";
         }
     }

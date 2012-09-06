@@ -1,5 +1,6 @@
 package nl.mpi.kinnate.plugins.metadatasearch.db;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,6 +21,8 @@ public class DbTreeNode implements TreeNode {
     private DbTreeNode[] childTreeNode = new DbTreeNode[0];
     @XmlElement(name = "DisplayString")
     private String displayString = null;
+    @XmlElement(name = "FileUri")
+    private URI fileUri = null;
     private DbTreeNode parentDbTreeNode;
 
     public DbTreeNode[] getChildTreeNode() {
@@ -66,6 +69,15 @@ public class DbTreeNode implements TreeNode {
 
     @Override
     public String toString() {
-        return displayString;
+        if (displayString != null) {
+            return displayString;
+        } else if (fileUri != null) {
+            return fileUri.toString();
+        }
+        return "            ";
+    }
+
+    public URI getUri() {
+        return fileUri;
     }
 }
