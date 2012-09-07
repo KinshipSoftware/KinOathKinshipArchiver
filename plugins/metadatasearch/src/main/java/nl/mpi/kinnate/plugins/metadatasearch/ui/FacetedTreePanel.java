@@ -54,6 +54,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
     final private JFrame jFrame;
     final private ArrayList<SearchOptionBox> searchPathOptionBoxList;
     final private JProgressBar jProgressBar;
+    private int actionProgressCounter = 0;
     final private JTree resultsTree;
     final private DefaultTreeModel defaultTreeModel;
     final private ArbilTable arbilTable;
@@ -183,7 +184,8 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                jProgressBar.setIndeterminate(true);
+                actionProgressCounter++;
+                jProgressBar.setIndeterminate(actionProgressCounter > 0);
             }
         });
         final String actionCommand = e.getActionCommand();
@@ -264,7 +266,8 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
                 }
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        jProgressBar.setIndeterminate(false);
+                        actionProgressCounter--;
+                        jProgressBar.setIndeterminate(actionProgressCounter > 0);
                     }
                 });
             }
