@@ -20,6 +20,13 @@ public class DbTreeNode extends AbstractDbTreeNode {
     @XmlElement(name = "DisplayString")
     private String displayString = null;
 
+    public DbTreeNode() {
+    }
+
+    public DbTreeNode(String displayString) {
+        this.displayString = displayString;
+    }
+
 //    public DbTreeNode[] getChildTreeNode() {
 //        return childTreeNode;
 //    }
@@ -56,6 +63,7 @@ public class DbTreeNode extends AbstractDbTreeNode {
             childList.add(childNode);
         }
         for (MetadataTreeNode childNode : childMetadataTreeNode) {
+            // todo: sort the metadata child nodes
             childNode.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader);
             childList.add(childNode);
         }

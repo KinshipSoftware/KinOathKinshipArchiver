@@ -95,14 +95,14 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
 
         final JButton createButton = new JButton("create db");
         createButton.setActionCommand("create");
-        final JButton optionsButton = new JButton("get options");
-        optionsButton.setActionCommand("options");
-        optionsButton.addActionListener(this);
+//        final JButton optionsButton = new JButton("reload options");
+//        optionsButton.setActionCommand("options");
+//        optionsButton.addActionListener(this);
         createButton.addActionListener(this);
 
         JPanel dbButtonsPanel = new JPanel();
         dbButtonsPanel.add(createButton);
-        dbButtonsPanel.add(optionsButton);
+//        dbButtonsPanel.add(optionsButton);
 
         progressPanel.add(dbButtonsPanel, BorderLayout.LINE_START);
         jProgressBar = new JProgressBar();
@@ -110,14 +110,14 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         progressPanel.add(jProgressBar, BorderLayout.CENTER);
 
         JPanel searchButtonsPanel = new JPanel();
-        final JButton searchButton = new JButton("Search");
-        searchButton.setActionCommand("search");
-        searchButton.addActionListener(this);
-        searchButtonsPanel.add(searchButton);
+//        final JButton searchButton = new JButton("Search");
+//        searchButton.setActionCommand("search");
+//        searchButton.addActionListener(this);
+//        searchButtonsPanel.add(searchButton);
         progressPanel.add(searchButtonsPanel, BorderLayout.LINE_END);
 
         centerPanel.add(progressPanel, BorderLayout.PAGE_START);
-        defaultTreeModel = new DefaultTreeModel(new DbTreeNode());
+        defaultTreeModel = new DefaultTreeModel(new DbTreeNode("Please select a facet"));
         resultsTree = new JTree(defaultTreeModel);
         resultsTree.setCellRenderer(new SearchTreeCellRenderer());
         resultsTree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -171,9 +171,12 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
         final ArbilDataNodeLoader arbilDataNodeLoader = new ArbilDataNodeLoader(arbilWindowManager, arbilSessionStorage, new ArbilMimeHashQueue(arbilWindowManager, arbilSessionStorage), new ArbilTreeHelper(arbilSessionStorage, arbilWindowManager));
-        jFrame.setContentPane(new FacetedTreePanel(jFrame, arbilDataNodeLoader, arbilWindowManager));
+        final FacetedTreePanel facetedTreePanel = new FacetedTreePanel(jFrame, arbilDataNodeLoader, arbilWindowManager);
+        jFrame.setContentPane(facetedTreePanel);
         jFrame.pack();
         jFrame.setVisible(true);
+        // trigger the facets to load
+        new Thread(facetedTreePanel.getRunnable("options")).start();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -183,7 +186,26 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         new Thread(getRunnable(actionCommand)).start();
     }
 
-    private Runnable getRunnable(final String actionCommand) {
+    private void updateTree() {
+        ArrayList<MetadataFileType> treeBranchTypeList = new ArrayList<MetadataFileType>();
+        for (SearchOptionBox searchOptionBox : searchPathOptionBoxList) {
+            final Object selectedTypeItem = searchOptionBox.getSelectedItem();
+            if (selectedTypeItem instanceof MetadataFileType) {
+                treeBranchTypeList.add((MetadataFileType) selectedTypeItem);
+            }
+        }
+        System.out.println("run query");
+        final DbTreeNode rootTreeNode = arbilDatabase.getTreeData(treeBranchTypeList);
+        rootTreeNode.setParentDbTreeNode(null, defaultTreeModel, arbilDataNodeLoader);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                defaultTreeModel.setRoot(rootTreeNode);
+            }
+        });
+        System.out.println("done");
+    }
+
+    public Runnable getRunnable(final String actionCommand) {
         return new Runnable() {
             public void run() {
                 if ("create".equals(actionCommand)) {
@@ -202,22 +224,8 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
                         searchOptionBox.setTypes(metadataFieldTypes);
                     }
                 } else if ("treechange".equals(actionCommand)) {
-                    ArrayList<MetadataFileType> treeBranchTypeList = new ArrayList<MetadataFileType>();
-                    for (SearchOptionBox searchOptionBox : searchPathOptionBoxList) {
-                        final Object selectedTypeItem = searchOptionBox.getSelectedItem();
-                        if (selectedTypeItem instanceof MetadataFileType) {
-                            treeBranchTypeList.add((MetadataFileType) selectedTypeItem);
-                        }
-                    }
-                    System.out.println("run query");
-                    final DbTreeNode rootTreeNode = arbilDatabase.getTreeData(treeBranchTypeList);
-                    rootTreeNode.setParentDbTreeNode(null, defaultTreeModel, arbilDataNodeLoader);
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            defaultTreeModel.setRoot(rootTreeNode);
-                        }
-                    });
-                    System.out.println("done");
+                    updateTree();
+
                 } else if ("add".equals(actionCommand)) {
                     final SearchOptionBox treePathOptionBox = new SearchOptionBox();
                     if (metadataFieldTypes == null) {
@@ -235,6 +243,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
                             criterionPanel.repaint();
                         }
                     });
+                    updateTree();
                 } else if ("remove".equals(actionCommand)) {
                     if (searchPathOptionBoxList.size() > 0) {
                         final SearchOptionBox searchOptionBox = searchPathOptionBoxList.remove(searchPathOptionBoxList.size() - 1);
@@ -246,6 +255,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
                             }
                         });
                     }
+                    updateTree();
                 }
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
