@@ -177,7 +177,7 @@ public class ArbilDatabase {
         return inputString.replace("&", "&amp;").replace("\"", "&quot;").replace("'", "&apos;");
     }
 
-    private String getTreeSubQuery(ArrayList<MetadataFileType> treeBranchTypeList, String whereClause, String selectClause, int levelCount) {
+    private String getTreeSubQuery(ArrayList<MetadataFileType> treeBranchTypeList, String whereClause, String selectClause, String trailingSelectClause, int levelCount) {
         if (!treeBranchTypeList.isEmpty()) {
             String separatorString = "";
 //            if (whereClause.length() > 0) {
@@ -187,6 +187,7 @@ public class ArbilDatabase {
             String currentFieldName = treeBranchType.getFieldName();
             String nextWhereClause = whereClause + "[//*:" + currentFieldName + " = $nameString" + levelCount + "]";
             String nextSelectClause = selectClause + "[*:" + currentFieldName + " = $nameString" + levelCount + "]";
+            String nextTrailingSelectClause = "[*:" + currentFieldName + " = $nameString" + levelCount + "]";
             return "{\n"
                     + "for $nameString" + levelCount + " in distinct-values(collection('" + databaseName + "')" + whereClause + "//*:" + currentFieldName + "[count(*) = 0]\n"
                     //                + "return concat(base-uri($entityNode), path($entityNode))\n"
@@ -194,10 +195,10 @@ public class ArbilDatabase {
                     + "order by $nameString" + levelCount + "\n"
                     + "return\n"
                     + "<TreeNode><DisplayString>" + currentFieldName + ": {$nameString" + levelCount + "}</DisplayString>\n"
-                    + getTreeSubQuery(treeBranchTypeList, nextWhereClause, nextSelectClause, levelCount + 1)
+                    + getTreeSubQuery(treeBranchTypeList, nextWhereClause, nextSelectClause, nextTrailingSelectClause, levelCount + 1)
                     + "</TreeNode>\n}\n";
         } else {
-            return "{for $matchingNode in collection('" + databaseName + "')//." + selectClause + "\n"
+            return "{for $matchingNode in collection('" + databaseName + "')" + whereClause + "//." + trailingSelectClause + "\n"
                     + "return\n"
                     + "<MetadataTreeNode>\n"
                     + "<FileUri>{base-uri($matchingNode)}</FileUri>\n"
@@ -210,7 +211,7 @@ public class ArbilDatabase {
 //        String branchConstraint = "//treeBranchType.getFieldName()";
 
         return "<TreeNode><DisplayString>All</DisplayString>\n"
-                + getTreeSubQuery(treeBranchTypeList, "", "", 0)
+                + getTreeSubQuery(treeBranchTypeList, "", "", "", 0)
                 + "</TreeNode>";
 
 
