@@ -210,9 +210,13 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
                         }
                     }
                     System.out.println("run query");
-                    DbTreeNode rootTreeNode = arbilDatabase.getTreeData(treeBranchTypeList);
+                    final DbTreeNode rootTreeNode = arbilDatabase.getTreeData(treeBranchTypeList);
                     rootTreeNode.setParentDbTreeNode(null, defaultTreeModel, arbilDataNodeLoader);
-                    resultsTree.setModel(new DefaultTreeModel(rootTreeNode));
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            defaultTreeModel.setRoot(rootTreeNode);
+                        }
+                    });
                     System.out.println("done");
                 } else if ("add".equals(actionCommand)) {
                     final SearchOptionBox treePathOptionBox = new SearchOptionBox();

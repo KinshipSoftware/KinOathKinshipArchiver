@@ -1,8 +1,6 @@
 package nl.mpi.kinnate.plugins.metadatasearch.db;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
@@ -23,8 +21,10 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
     private URI fileUri = null;
     @XmlElement(name = "FileUriPath")
     private String fileUriPath = null;
-    ArbilDataNode arbilDataNode = null;
+    private ArbilDataNode arbilDataNode = null;
+    private ArbilDataNode arbilDomDataNode = null;
     private String imdiApiPath = null;
+    private String labelString = null;
 
     public TreeNode getChildAt(int i) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -60,17 +60,18 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
             return "";
         } else {
             String imdiApiPathPreNumber = fileUriPath.replaceAll("/\"[^\"]*\":", ".").replaceAll("\\[1]", "");//.replaceAll("\\[", "(").replaceAll("\\]", ")");;
-            String imdiApiPath = "";
-            for (String pathPart : imdiApiPathPreNumber.split("\\[")) {
-                String[] innerPathParts = pathPart.split("\\]");
-                if (innerPathParts.length == 1) {
-                    imdiApiPath = imdiApiPath + innerPathParts[0];
-                } else if (innerPathParts.length == 2) {
-                    imdiApiPath = imdiApiPath + "(" + (Integer.decode(innerPathParts[0]) - 1) + ")" + innerPathParts[1];
-                } else {
-                    throw new UnsupportedOperationException();
-                }
-            }
+//            String imdiApiPath = "";
+//            for (String pathPart : imdiApiPathPreNumber.split("\\[")) {
+//                String[] innerPathParts = pathPart.split("\\]");
+//                if (innerPathParts.length == 1) {
+//                    imdiApiPath = imdiApiPath + innerPathParts[0];
+//                } else if (innerPathParts.length == 2) {
+//                    imdiApiPath = imdiApiPath + "(" + (Integer.decode(innerPathParts[0]) - 1) + ")" + innerPathParts[1];
+//                } else {
+//                    throw new UnsupportedOperationException();
+//                }
+//            }
+            String imdiApiPath = imdiApiPathPreNumber.replace("[", "(").replace("]", ")");
             return imdiApiPath;
 //                uriList.add(new URI(fileUri.getScheme(), fileUri.getUserInfo(), fileUri.getHost(), fileUri.getPort(), fileUri.getPath(), fileUri.getQuery(), imdiApiPath));
         }
@@ -79,11 +80,11 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
 
     @Override
     public String toString() {
-        return getArbilNode().toString();
-//        if (fileUri != null) {
-//            return fileUri.toString();
-//        }
-//        return "            ";
+        if (labelString != null) {
+            return labelString;
+        } else {
+            return "            ";
+        }
     }
 
     public ImageIcon getIcon() {
@@ -91,23 +92,41 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
     }
 
     public ArbilDataNode getArbilNode() {
+        boolean nodeNeedsUpdating = false;
 //        System.out.println("getArbilNode-fileUri: " + fileUri);
-        if (arbilDataNode == null) {
-            arbilDataNode = arbilDataNodeLoader.getArbilDataNode(MetadataTreeNode.this, fileUri);
+        if (arbilDomDataNode == null) {
+            arbilDomDataNode = arbilDataNodeLoader.getArbilDataNode(MetadataTreeNode.this, fileUri);
 //            arbilDataNode.registerContainer(this);
+            nodeNeedsUpdating = true;
         }
-        if (!arbilDataNode.isLoading() && imdiApiPath == null) {
+        labelString = arbilDomDataNode.toString();
+        arbilDataNode = arbilDomDataNode;
+        if (!arbilDomDataNode.isLoading()) { // && imdiApiPath == null
             imdiApiPath = getImdiApiPath();
             boolean matchingChildFound = true;
             while (matchingChildFound) {
                 matchingChildFound = false;
+                String lastMatchedImdiApiPath = "";
                 for (ArbilDataNode arbilChildDataNode : arbilDataNode.getChildArray()) {
-                    if (imdiApiPath.startsWith(arbilChildDataNode.getURI().getFragment())) {
+                    String currentImdiApiPath = arbilChildDataNode.getURI().getFragment().replace("(1)", "");
+                    if (imdiApiPath.startsWith(currentImdiApiPath) && lastMatchedImdiApiPath.length() < currentImdiApiPath.length()) {
+                        lastMatchedImdiApiPath = currentImdiApiPath;
                         arbilDataNode = arbilChildDataNode;
+                        labelString = labelString + " / " + arbilChildDataNode.toString();
                         matchingChildFound = true;
                     }
                 }
             }
+        }
+        System.out.println("labelString: " + labelString);
+        if (nodeNeedsUpdating) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    // todo: should we really be triggering this here???? should not the change to the root node have done this
+                    defaultTreeModel.nodeChanged(MetadataTreeNode.this);
+                    defaultTreeModel.nodeStructureChanged(MetadataTreeNode.this);
+                }
+            });
         }
         return arbilDataNode;
 //        try {
@@ -127,10 +146,21 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
     }
 
     public void dataNodeIconCleared(ArbilNode dataNode) {
+        // update the label string and the target data node
+        //System.out.println("dataNodeIconCleared");
+        getArbilNode();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                //System.out.println("run");
                 defaultTreeModel.nodeChanged(MetadataTreeNode.this);
-                defaultTreeModel.nodeStructureChanged(MetadataTreeNode.this);
+                if (parentDbTreeNode != null) {
+                    // update the parent structure so that any sorting of the child nodes can be done
+                    defaultTreeModel.nodeStructureChanged(parentDbTreeNode);
+                    //System.out.println("parent update");
+                } else {
+                    defaultTreeModel.nodeStructureChanged(MetadataTreeNode.this);
+                    //System.out.println("self update");
+                }
             }
         });
     }
