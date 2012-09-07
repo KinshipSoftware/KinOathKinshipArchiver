@@ -143,7 +143,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
 
         arbilTableModel = new ArbilTableModel(null);
         arbilTable = new ArbilTable(arbilTableModel, "FacetedTreeSelectionTable");
-        JSplitPane jSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, centerPanel, arbilTable);
+        JSplitPane jSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, centerPanel, new JScrollPane(arbilTable));
 
         this.add(jSplitPane, BorderLayout.CENTER);
     }
@@ -167,7 +167,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
 
 //        ArbilTableModel.setMessageDialogHandler(new ArbilWindowManager());
 //        ArbilTable.set
-        JFrame jFrame = new JFrame("Search Panel Test");
+        JFrame jFrame = new JFrame("Faceted Tree Panel Test");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
         final ArbilDataNodeLoader arbilDataNodeLoader = new ArbilDataNodeLoader(arbilWindowManager, arbilSessionStorage, new ArbilMimeHashQueue(arbilWindowManager, arbilSessionStorage), new ArbilTreeHelper(arbilSessionStorage, arbilWindowManager));

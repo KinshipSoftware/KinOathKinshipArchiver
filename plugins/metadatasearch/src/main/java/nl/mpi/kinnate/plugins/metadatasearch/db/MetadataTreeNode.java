@@ -24,6 +24,7 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
     @XmlElement(name = "FileUriPath")
     private String fileUriPath = null;
     ArbilDataNode arbilDataNode = null;
+    private String imdiApiPath = null;
 
     public TreeNode getChildAt(int i) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -53,31 +54,27 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private URI[] getUri() throws URISyntaxException {
-        ArrayList<URI> uriList = new ArrayList<URI>();
-        if (fileUriPath != null) {
+    private String getImdiApiPath() {
 //            for (String fileUriPath : fileUriPathArray) {
-            if (!fileUriPath.equals("/")) {
-                String imdiApiPathPreNumber = fileUriPath.replaceAll("/\"[^\"]*\":", ".").replaceAll("\\[1]", "");//.replaceAll("\\[", "(").replaceAll("\\]", ")");;
-                String imdiApiPath = "";
-                for (String pathPart : imdiApiPathPreNumber.split("\\[")) {
-                    String[] innerPathParts = pathPart.split("\\]");
-                    if (innerPathParts.length == 1) {
-                        imdiApiPath = imdiApiPath + innerPathParts[0];
-                    } else if (innerPathParts.length == 2) {
-                        imdiApiPath = imdiApiPath + "(" + (Integer.decode(innerPathParts[0]) - 1) + ")" + innerPathParts[1];
-                    } else {
-                        throw new UnsupportedOperationException();
-                    }
+        if (fileUriPath.equals("/")) {
+            return "";
+        } else {
+            String imdiApiPathPreNumber = fileUriPath.replaceAll("/\"[^\"]*\":", ".").replaceAll("\\[1]", "");//.replaceAll("\\[", "(").replaceAll("\\]", ")");;
+            String imdiApiPath = "";
+            for (String pathPart : imdiApiPathPreNumber.split("\\[")) {
+                String[] innerPathParts = pathPart.split("\\]");
+                if (innerPathParts.length == 1) {
+                    imdiApiPath = imdiApiPath + innerPathParts[0];
+                } else if (innerPathParts.length == 2) {
+                    imdiApiPath = imdiApiPath + "(" + (Integer.decode(innerPathParts[0]) - 1) + ")" + innerPathParts[1];
+                } else {
+                    throw new UnsupportedOperationException();
                 }
-                uriList.add(new URI(fileUri.getScheme(), fileUri.getUserInfo(), fileUri.getHost(), fileUri.getPort(), fileUri.getPath(), fileUri.getQuery(), imdiApiPath));
             }
-//            }
-            if (uriList.isEmpty()) {
-                uriList.add(fileUri);
-            }
+            return imdiApiPath;
+//                uriList.add(new URI(fileUri.getScheme(), fileUri.getUserInfo(), fileUri.getHost(), fileUri.getPort(), fileUri.getPath(), fileUri.getQuery(), imdiApiPath));
         }
-        return uriList.toArray(new URI[0]);
+//            }
     }
 
     @Override
@@ -98,6 +95,19 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
         if (arbilDataNode == null) {
             arbilDataNode = arbilDataNodeLoader.getArbilDataNode(MetadataTreeNode.this, fileUri);
 //            arbilDataNode.registerContainer(this);
+        }
+        if (!arbilDataNode.isLoading() && imdiApiPath == null) {
+            imdiApiPath = getImdiApiPath();
+            boolean matchingChildFound = true;
+            while (matchingChildFound) {
+                matchingChildFound = false;
+                for (ArbilDataNode arbilChildDataNode : arbilDataNode.getChildArray()) {
+                    if (imdiApiPath.startsWith(arbilChildDataNode.getURI().getFragment())) {
+                        arbilDataNode = arbilChildDataNode;
+                        matchingChildFound = true;
+                    }
+                }
+            }
         }
         return arbilDataNode;
 //        try {
