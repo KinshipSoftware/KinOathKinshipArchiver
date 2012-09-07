@@ -74,17 +74,17 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
 
         searchPathOptionBoxList = new ArrayList<SearchOptionBox>();
 
-        final JPanel criterionButtonsPanel = new JPanel();
+        final JPanel criterionButtonsPanel = new JPanel(new BorderLayout());
 
         final JButton addButton = new JButton("+");
         addButton.setActionCommand("add");
         addButton.addActionListener(this);
-        criterionButtonsPanel.add(addButton);
+        criterionButtonsPanel.add(addButton, BorderLayout.PAGE_START);
 
         final JButton removeButton = new JButton("-");
         removeButton.setActionCommand("remove");
         removeButton.addActionListener(this);
-        criterionButtonsPanel.add(removeButton);
+        criterionButtonsPanel.add(removeButton, BorderLayout.PAGE_END);
 
         criterionOuterPanel.add(new JScrollPane(criterionPanel), BorderLayout.CENTER);
         criterionOuterPanel.add(criterionButtonsPanel, BorderLayout.LINE_END);
@@ -93,15 +93,15 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         JPanel centerPanel = new JPanel(new BorderLayout());
         JPanel progressPanel = new JPanel(new BorderLayout());
 
-        final JButton createButton = new JButton("create db");
-        createButton.setActionCommand("create");
+//        final JButton createButton = new JButton("create db");
+//        createButton.setActionCommand("create");
 //        final JButton optionsButton = new JButton("reload options");
 //        optionsButton.setActionCommand("options");
 //        optionsButton.addActionListener(this);
-        createButton.addActionListener(this);
+//        createButton.addActionListener(this);
 
         JPanel dbButtonsPanel = new JPanel();
-        dbButtonsPanel.add(createButton);
+//        dbButtonsPanel.add(createButton);
 //        dbButtonsPanel.add(optionsButton);
 
         progressPanel.add(dbButtonsPanel, BorderLayout.LINE_START);
@@ -117,7 +117,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         progressPanel.add(searchButtonsPanel, BorderLayout.LINE_END);
 
         centerPanel.add(progressPanel, BorderLayout.PAGE_START);
-        defaultTreeModel = new DefaultTreeModel(new DbTreeNode("Please select a facet"));
+        defaultTreeModel = new DefaultTreeModel(new DbTreeNode("Please add or select a facet"));
         resultsTree = new JTree(defaultTreeModel);
         resultsTree.setCellRenderer(new SearchTreeCellRenderer());
         resultsTree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -176,11 +176,16 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         jFrame.pack();
         jFrame.setVisible(true);
         // trigger the facets to load
+//        new Thread(facetedTreePanel.getRunnable("add")).start();
         new Thread(facetedTreePanel.getRunnable("options")).start();
     }
 
     public void actionPerformed(ActionEvent e) {
-        jProgressBar.setIndeterminate(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                jProgressBar.setIndeterminate(true);
+            }
+        });
         final String actionCommand = e.getActionCommand();
         System.out.println(actionCommand);
         new Thread(getRunnable(actionCommand)).start();

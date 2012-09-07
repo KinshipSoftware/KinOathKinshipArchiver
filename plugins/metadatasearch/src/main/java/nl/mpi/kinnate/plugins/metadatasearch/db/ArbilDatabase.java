@@ -230,9 +230,11 @@ public class ArbilDatabase {
 
     private String getTreeFieldNames(MetadataFileType fileType) {
         String typeConstraint = getTypeConstraint(fileType);
+        String noChildClause = "[count(*) = 0]";
+        String hasTextClause = "[text() != '']";
         return "<MetadataFileType>\n"
                 + "{\n"
-                + "for $nameString in distinct-values(collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*[count(*) = 0]/name()\n"
+                + "for $nameString in distinct-values(collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*" + noChildClause + hasTextClause + "/name()\n"
                 + ")\n"
                 + "order by $nameString\n"
                 + "return\n"

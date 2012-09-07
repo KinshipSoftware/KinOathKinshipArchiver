@@ -108,7 +108,13 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
                 matchingChildFound = false;
                 String lastMatchedImdiApiPath = "";
                 for (ArbilDataNode arbilChildDataNode : arbilDataNode.getChildArray()) {
-                    String currentImdiApiPath = arbilChildDataNode.getURI().getFragment().replace("(1)", "");
+                    String fragmentString = arbilChildDataNode.getURI().getFragment();
+                    String currentImdiApiPath;
+                    if (fragmentString != null) {
+                        currentImdiApiPath = fragmentString.replace("(1)", "");
+                    } else {
+                        currentImdiApiPath = "";
+                    }
                     if (imdiApiPath.startsWith(currentImdiApiPath) && lastMatchedImdiApiPath.length() < currentImdiApiPath.length()) {
                         lastMatchedImdiApiPath = currentImdiApiPath;
                         arbilDataNode = arbilChildDataNode;
@@ -117,14 +123,14 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
                     }
                 }
             }
+            System.out.println("labelString: " + labelString);
         }
-        System.out.println("labelString: " + labelString);
         if (nodeNeedsUpdating) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     // todo: should we really be triggering this here???? should not the change to the root node have done this
                     defaultTreeModel.nodeChanged(MetadataTreeNode.this);
-                    defaultTreeModel.nodeStructureChanged(MetadataTreeNode.this);
+//                    defaultTreeModel.nodeStructureChanged(MetadataTreeNode.this);
                 }
             });
         }
@@ -153,14 +159,14 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
             public void run() {
                 //System.out.println("run");
                 defaultTreeModel.nodeChanged(MetadataTreeNode.this);
-                if (parentDbTreeNode != null) {
-                    // update the parent structure so that any sorting of the child nodes can be done
-                    defaultTreeModel.nodeStructureChanged(parentDbTreeNode);
-                    //System.out.println("parent update");
-                } else {
-                    defaultTreeModel.nodeStructureChanged(MetadataTreeNode.this);
-                    //System.out.println("self update");
-                }
+//                if (parentDbTreeNode != null) {
+//                    // update the parent structure so that any sorting of the child nodes can be done
+//                    defaultTreeModel.nodeStructureChanged(parentDbTreeNode);
+//                    //System.out.println("parent update");
+//                } else {
+//                    defaultTreeModel.nodeStructureChanged(MetadataTreeNode.this);
+//                    //System.out.println("self update");
+//                }
             }
         });
     }
