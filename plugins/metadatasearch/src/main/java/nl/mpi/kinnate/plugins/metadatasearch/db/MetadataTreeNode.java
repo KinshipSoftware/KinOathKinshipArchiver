@@ -31,6 +31,7 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
     }
 
     public int getChildCount() {
+        // todo: metadta nodes will be able to be expanded to show the entire arbil node and children
         return 0;
     }
 
@@ -95,7 +96,7 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
         boolean nodeNeedsUpdating = false;
 //        System.out.println("getArbilNode-fileUri: " + fileUri);
         if (arbilDomDataNode == null) {
-            arbilDomDataNode = arbilDataNodeLoader.getArbilDataNode(MetadataTreeNode.this, fileUri);
+            arbilDomDataNode = (ArbilDataNode) arbilDataNodeLoader.getPluginArbilDataNode(MetadataTreeNode.this, fileUri);
 //            arbilDataNode.registerContainer(this);
             nodeNeedsUpdating = true;
         }

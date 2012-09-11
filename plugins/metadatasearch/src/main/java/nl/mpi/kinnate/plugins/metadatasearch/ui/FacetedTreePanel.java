@@ -26,6 +26,7 @@ import nl.mpi.arbil.ArbilVersion;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.plugin.PluginArbilDataNodeLoader;
 import nl.mpi.arbil.plugin.PluginDialogHandler;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
@@ -34,7 +35,6 @@ import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilMimeHashQueue;
 import nl.mpi.arbil.util.BugCatcherManager;
-import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase;
 import nl.mpi.kinnate.plugins.metadatasearch.db.DbTreeNode;
@@ -50,8 +50,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
 
     final private ArbilDatabase arbilDatabase;
     final private PluginDialogHandler arbilWindowManager;
-    final private ArbilDataNodeLoader arbilDataNodeLoader;
-    final private JFrame jFrame;
+    final private PluginArbilDataNodeLoader arbilDataNodeLoader;
     final private ArrayList<SearchOptionBox> searchPathOptionBoxList;
     final private JProgressBar jProgressBar;
     private int actionProgressCounter = 0;
@@ -62,9 +61,8 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
     final private JPanel criterionPanel;
     private MetadataFileType[] metadataFieldTypes = null;
 
-    public FacetedTreePanel(JFrame jFrame, final ArbilDataNodeLoader arbilDataNodeLoader, final MessageDialogHandler dialogHandler) {
+    public FacetedTreePanel(final PluginArbilDataNodeLoader arbilDataNodeLoader, final PluginDialogHandler dialogHandler) {
         this.arbilDataNodeLoader = arbilDataNodeLoader;
-        this.jFrame = jFrame;
         arbilWindowManager = new ArbilWindowManager();
         arbilDatabase = new ArbilDatabase(new ArbilSessionStorage(), arbilWindowManager, BugCatcherManager.getBugCatcher());
         this.setLayout(new BorderLayout());
@@ -172,7 +170,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
         final ArbilDataNodeLoader arbilDataNodeLoader = new ArbilDataNodeLoader(arbilWindowManager, arbilSessionStorage, new ArbilMimeHashQueue(arbilWindowManager, arbilSessionStorage), new ArbilTreeHelper(arbilSessionStorage, arbilWindowManager));
-        final FacetedTreePanel facetedTreePanel = new FacetedTreePanel(jFrame, arbilDataNodeLoader, arbilWindowManager);
+        final FacetedTreePanel facetedTreePanel = new FacetedTreePanel(arbilDataNodeLoader, arbilWindowManager);
         jFrame.setContentPane(facetedTreePanel);
         jFrame.pack();
         jFrame.setVisible(true);

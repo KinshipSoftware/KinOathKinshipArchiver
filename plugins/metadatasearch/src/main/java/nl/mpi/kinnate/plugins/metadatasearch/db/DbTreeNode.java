@@ -19,6 +19,7 @@ public class DbTreeNode extends AbstractDbTreeNode {
     private MetadataTreeNode[] childMetadataTreeNode = new MetadataTreeNode[0];
     @XmlElement(name = "DisplayString")
     private String displayString = null;
+    private int maxChildrenToShow = 100;
 
     public DbTreeNode() {
     }
@@ -37,7 +38,15 @@ public class DbTreeNode extends AbstractDbTreeNode {
     }
 
     public int getChildCount() {
-        return childTreeNode.length + childMetadataTreeNode.length;
+        if (canShowAllChildren()) {
+            return childTreeNode.length + childMetadataTreeNode.length;
+        } else {
+            return 1;
+        }
+    }
+
+    private boolean canShowAllChildren() {
+        return childTreeNode.length + childMetadataTreeNode.length < maxChildrenToShow;
     }
 
     public TreeNode getParent() {
@@ -58,14 +67,20 @@ public class DbTreeNode extends AbstractDbTreeNode {
 
     private ArrayList<AbstractDbTreeNode> getChildList() {
         ArrayList<AbstractDbTreeNode> childList = new ArrayList<AbstractDbTreeNode>();
-        for (DbTreeNode childNode : childTreeNode) {
-            childNode.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader);
-            childList.add(childNode);
-        }
-        for (MetadataTreeNode childNode : childMetadataTreeNode) {
-            // todo: sort the metadata child nodes
-            childNode.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader);
-            childList.add(childNode);
+        if (!canShowAllChildren()) {
+            // todo: this should be done in the db query not here
+//            childList.clear();
+            childList.add(new DbTreeNode("<more than " + maxChildrenToShow + " results, please add more facets>"));
+        } else {
+            for (DbTreeNode childNode : childTreeNode) {
+                childNode.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader);
+                childList.add(childNode);
+            }
+            for (MetadataTreeNode childNode : childMetadataTreeNode) {
+                // todo: sort the metadata child nodes
+                childNode.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader);
+                childList.add(childNode);
+            }
         }
         return childList;
     }
