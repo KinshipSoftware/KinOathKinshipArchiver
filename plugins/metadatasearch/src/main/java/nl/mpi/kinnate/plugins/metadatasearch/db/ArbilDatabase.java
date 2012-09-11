@@ -360,7 +360,7 @@ public class ArbilDatabase {
             joinStringBuilder.append(parameterCounter);
             queryStringBuilder.append("let $set");
             queryStringBuilder.append(parameterCounter);
-            queryStringBuilder.append(" := \n");
+            queryStringBuilder.append(" := ");
             parameterCounter++;
             queryStringBuilder.append(getSearchQuery(searchParameters));
         }

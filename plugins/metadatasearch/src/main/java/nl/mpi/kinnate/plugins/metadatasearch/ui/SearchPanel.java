@@ -14,10 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.plugin.PluginDialogHandler;
-import nl.mpi.arbil.ui.ArbilNodeSearchColumnComboBox;
-import nl.mpi.arbil.ui.ArbilNodeSearchPanel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
@@ -48,7 +45,8 @@ public class SearchPanel extends JPanel implements ActionListener {
         arbilWindowManager = new ArbilWindowManager();
         arbilDatabase = new ArbilDatabase(new ArbilSessionStorage(), arbilWindowManager, BugCatcherManager.getBugCatcher());
         this.setLayout(new BorderLayout());
-        this.add(new ArbilNodeSearchPanel(null, null, new ArbilNode[0]), BorderLayout.PAGE_END);
+//        ArbilNodeSearchColumnComboBox.setSessionStorage(new ArbilSessionStorage());
+//        this.add(new ArbilNodeSearchPanel(null, null, new ArbilNode[0]), BorderLayout.PAGE_END);
         criterionPanelArray = new ArrayList<SearchCriterionPanel>();
 
         criterionArrayPanel = new JPanel();
@@ -100,7 +98,6 @@ public class SearchPanel extends JPanel implements ActionListener {
     }
 
     static public void main(String[] args) {
-        ArbilNodeSearchColumnComboBox.setSessionStorage(new ArbilSessionStorage());
         JFrame jFrame = new JFrame("Search Panel Test");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         SearchPanel searchPanel = new SearchPanel();
