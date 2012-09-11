@@ -2,6 +2,7 @@ package nl.mpi.kinnate.plugins.metadatasearch.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase;
 import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase.CriterionJoinType;
 import nl.mpi.kinnate.plugins.metadatasearch.db.MetadataFileType;
+import nl.mpi.kinnate.plugins.metadatasearch.db.SearchParameters;
 
 /**
  * Document : SearchPanel Created on : Jul 31, 2012, 6:34:07 PM
@@ -33,12 +35,14 @@ import nl.mpi.kinnate.plugins.metadatasearch.db.MetadataFileType;
 public class SearchPanel extends JPanel implements ActionListener {
 
     final private ArbilDatabase arbilDatabase;
-    final PluginDialogHandler arbilWindowManager;
-    final JProgressBar jProgressBar;
-    final JTextArea resultsTextArea;
-    final ArrayList<SearchCriterionPanel> criterionPanelArray;
-    final JPanel criterionArrayPanel;
-    final JComboBox criterionJoinComboBox;
+    final private PluginDialogHandler arbilWindowManager;
+    final private JProgressBar jProgressBar;
+    final private JTextArea resultsTextArea;
+    final private ArrayList<SearchCriterionPanel> criterionPanelArray;
+    final private JPanel criterionArrayPanel;
+    final private JComboBox criterionJoinComboBox;
+    private MetadataFileType[] metadataPathTypes;
+    private MetadataFileType[] metadataFieldTypes;
 
     public SearchPanel() {
         arbilWindowManager = new ArbilWindowManager();
@@ -56,12 +60,20 @@ public class SearchPanel extends JPanel implements ActionListener {
 
         final JButton createButton = new JButton("create db");
         createButton.setActionCommand("create");
-        final JButton optionsButton = new JButton("get options");
+        final JButton optionsButton = new JButton("update options");
         optionsButton.setActionCommand("options");
         optionsButton.addActionListener(this);
         createButton.addActionListener(this);
 
         JPanel dbButtonsPanel = new JPanel();
+
+        JButton addExtraButton = new JButton("+");
+        addExtraButton.setToolTipText("Add another criterion");
+        addExtraButton.setActionCommand("add");
+        addExtraButton.addActionListener(this);
+        addExtraButton.setPreferredSize(new Dimension(addExtraButton.getPreferredSize().height, addExtraButton.getPreferredSize().height));
+        dbButtonsPanel.add(addExtraButton);
+
         dbButtonsPanel.add(createButton);
         dbButtonsPanel.add(optionsButton);
 
@@ -105,13 +117,13 @@ public class SearchPanel extends JPanel implements ActionListener {
         SearchCriterionPanel eventCriterionPanel = null;
         Object sourceObject = e.getSource();
 //        if (sourceObject instanceof SearchOptionBox) {
-            while (sourceObject != null) {
-                sourceObject = ((Component) sourceObject).getParent();
-                if (sourceObject instanceof SearchCriterionPanel) {
-                    eventCriterionPanel = (SearchCriterionPanel) sourceObject;
-                    break;
-                }
+        while (sourceObject != null) {
+            sourceObject = ((Component) sourceObject).getParent();
+            if (sourceObject instanceof SearchCriterionPanel) {
+                eventCriterionPanel = (SearchCriterionPanel) sourceObject;
+                break;
             }
+        }
 //        }
         new Thread(getRunnable(actionCommand, eventCriterionPanel)).start();
     }
@@ -127,18 +139,24 @@ public class SearchPanel extends JPanel implements ActionListener {
                     } catch (QueryException exception) {
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Database Error");
                     }
+                } else if ("options".equals(actionCommand)) {
+                    // todo: when a database update occurs these queries should be run again and the UI updated
+//                    metadataPathTypes = arbilDatabase.getMetadataTypes(null);
+//                    metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
                 } else if ("remove".equals(actionCommand)) {
                     criterionPanelArray.remove(eventCriterionPanel);
                     criterionArrayPanel.remove(eventCriterionPanel);
                     SearchPanel.this.revalidate();
                 } else if ("add".equals(actionCommand)) {
-                    System.out.println("run query");
-                    MetadataFileType[] metadataPathTypes = arbilDatabase.getMetadataTypes(null);
-                    System.out.println("done");
-                    System.out.println("run query");
-                    MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
-                    System.out.println("done");
-                    // todo: store the types so a query is not required each time
+                    // store the types so a query is not required each time
+                    if (metadataFieldTypes == null || metadataPathTypes == null) {
+                        System.out.println("run query");
+                        metadataPathTypes = arbilDatabase.getMetadataTypes(null);
+                        System.out.println("done");
+                        System.out.println("run query");
+                        metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
+                        System.out.println("done");
+                    }
                     final SearchCriterionPanel searchCriterionPanel = new SearchCriterionPanel(SearchPanel.this, metadataPathTypes, metadataFieldTypes, criterionPanelArray.size());
                     criterionPanelArray.add(searchCriterionPanel);
                     criterionArrayPanel.add(searchCriterionPanel);
@@ -152,7 +170,12 @@ public class SearchPanel extends JPanel implements ActionListener {
                     // todo: get controlled vocabulary of field values for the search text area
                 } else if ("search".equals(actionCommand)) {
                     System.out.println("run query");
-                    MetadataFileType[] resultTypes = arbilDatabase.getSearchResultMetadataTypes(eventCriterionPanel.getMetadataFileType(), eventCriterionPanel.getMetadataFieldType(), eventCriterionPanel.getSearchNegator(), eventCriterionPanel.getSearchType(), eventCriterionPanel.getSearchText());
+                    final CriterionJoinType criterionJoinType = (CriterionJoinType) criterionJoinComboBox.getSelectedItem();
+                    ArrayList<SearchParameters> searchParametersList = new ArrayList<SearchParameters>();
+                    for (SearchCriterionPanel eventCriterionPanel : criterionPanelArray) {
+                        searchParametersList.add(new SearchParameters(eventCriterionPanel.getMetadataFileType(), eventCriterionPanel.getMetadataFieldType(), eventCriterionPanel.getSearchNegator(), eventCriterionPanel.getSearchType(), eventCriterionPanel.getSearchText()));
+                    }
+                    MetadataFileType[] resultTypes = arbilDatabase.getSearchResultMetadataTypes(criterionJoinType, searchParametersList);
                     System.out.println("done");
                     StringBuilder stringBuilder = new StringBuilder();
                     if (resultTypes != null) {

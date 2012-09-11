@@ -260,22 +260,19 @@ public class ArbilDatabase {
                 + "}</MetadataFileType>";
     }
 
-    private String getSearchQuery(MetadataFileType fileType, MetadataFileType fieldType, SearchNegator searchNegator, SearchType searchType, String searchString) {
-        String typeConstraint = getTypeConstraint(fileType);
-        String fieldConstraint = getFieldConstraint(fieldType);
+    private String getSearchQuery(SearchParameters searchParameters) {
+        String typeConstraint = getTypeConstraint(searchParameters.fileType);
+        String fieldConstraint = getFieldConstraint(searchParameters.fieldType);
         // todo: add to query: boolean searchNot, SearchType searchType, String searchString
-        String searchTextConstraint = getSearchTextConstraint(searchNegator, searchType, searchString);
+        String searchTextConstraint = getSearchTextConstraint(searchParameters.searchNegator, searchParameters.searchType, searchParameters.searchString);
 
-        return "<MetadataFileType>\n"
-                + "{\n"
-                + "for $nameString in distinct-values(\n"
+        return "for $nameString in distinct-values(\n"
                 + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*" + fieldConstraint + searchTextConstraint + "\n"
                 + "return concat(base-uri($entityNode), path($entityNode))\n"
                 + ")\n"
                 //                + "order by $nameString\n"
                 + "return\n"
-                + "<MetadataFileType><arbilPathString>{$nameString}</arbilPathString></MetadataFileType>\n"
-                + "}</MetadataFileType>";
+                + "<MetadataFileType><arbilPathString>{$nameString}</arbilPathString></MetadataFileType>\n";
     }
 
     private String getPopulatedFieldNames(MetadataFileType fileType) {
@@ -347,9 +344,30 @@ public class ArbilDatabase {
                 + "}</MetadataFileType>";
     }
 
-    public MetadataFileType[] getSearchResultMetadataTypes(MetadataFileType fileType, MetadataFileType fieldType, SearchNegator searchNegator, SearchType searchType, String searchString) {
-        final String queryString = getSearchQuery(fileType, fieldType, searchNegator, searchType, searchString);
-        return getMetadataTypes(queryString);
+    public MetadataFileType[] getSearchResultMetadataTypes(CriterionJoinType criterionJoinType, ArrayList<SearchParameters> searchParametersList) {
+        StringBuilder queryStringBuilder = new StringBuilder();
+        StringBuilder joinStringBuilder = new StringBuilder();
+        int parameterCounter = 0;
+        for (SearchParameters searchParameters : searchParametersList) {
+            if (queryStringBuilder.length() > 0) {
+                joinStringBuilder.append(" ");
+                joinStringBuilder.append(criterionJoinType.name());
+                joinStringBuilder.append(" ");
+            } else {
+                joinStringBuilder.append("return <MetadataFileType>{");
+            }
+            joinStringBuilder.append("$set");
+            joinStringBuilder.append(parameterCounter);
+            queryStringBuilder.append("let $set");
+            queryStringBuilder.append(parameterCounter);
+            queryStringBuilder.append(" := \n");
+            parameterCounter++;
+            queryStringBuilder.append(getSearchQuery(searchParameters));
+        }
+        joinStringBuilder.append("}</MetadataFileType>");
+        queryStringBuilder.append(joinStringBuilder);
+        final MetadataFileType[] metadataTypesString = getMetadataTypes(queryStringBuilder.toString());
+        return metadataTypesString;
     }
 
     public MetadataFileType[] getPathMetadataTypes(MetadataFileType metadataFileType) {

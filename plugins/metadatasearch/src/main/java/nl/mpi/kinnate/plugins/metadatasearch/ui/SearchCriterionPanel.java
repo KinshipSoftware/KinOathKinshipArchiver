@@ -32,19 +32,21 @@ public class SearchCriterionPanel extends JPanel {
         final JPanel criterionPanel = new JPanel();
         criterionPanel.setLayout(new FlowLayout());
 
-        if (shownCriterionCount > 0) {
+//        if (shownCriterionCount > 0) {
             JButton removeButton = new JButton("-");
+            removeButton.setToolTipText("Remove this criterion");
             removeButton.setActionCommand("remove");
             removeButton.addActionListener(actionListener);
             removeButton.setPreferredSize(new Dimension(removeButton.getPreferredSize().height, removeButton.getPreferredSize().height));
             criterionPanel.add(removeButton);
-        } else {
-            JButton addExtraButton = new JButton("+");
-            addExtraButton.setActionCommand("add");
-            addExtraButton.addActionListener(actionListener);
-            addExtraButton.setPreferredSize(new Dimension(addExtraButton.getPreferredSize().height, addExtraButton.getPreferredSize().height));
-            criterionPanel.add(addExtraButton);
-        }
+//        } else {
+//            JButton addExtraButton = new JButton("+");
+//            addExtraButton.setToolTipText("Add another criterion");
+//            addExtraButton.setActionCommand("add");
+//            addExtraButton.addActionListener(actionListener);
+//            addExtraButton.setPreferredSize(new Dimension(addExtraButton.getPreferredSize().height, addExtraButton.getPreferredSize().height));
+//            criterionPanel.add(addExtraButton);
+//        }
 //        searchNegatorOption = new JComboBox(ArbilDatabase.SearchNegator.values());
 //        criterionPanel.add(searchNegatorOption);
 
