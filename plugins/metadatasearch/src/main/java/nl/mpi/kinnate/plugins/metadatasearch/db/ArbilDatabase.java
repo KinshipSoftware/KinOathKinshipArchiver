@@ -80,6 +80,21 @@ public class ArbilDatabase {
         is, not
     }
 
+    public enum CriterionJoinType {
+
+        union("Union"), intersect("Interesection"); //, except("Difference");
+        final private String displayName;
+
+        private CriterionJoinType(String displayName) {
+            this.displayName = displayName;
+        }
+
+        @Override
+        public String toString() {
+            return displayName;
+        }
+    }
+
     public ArbilDatabase(PluginSessionStorage sessionStorage, PluginDialogHandler dialogHandler, PluginBugCatcher bugCatcher) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;

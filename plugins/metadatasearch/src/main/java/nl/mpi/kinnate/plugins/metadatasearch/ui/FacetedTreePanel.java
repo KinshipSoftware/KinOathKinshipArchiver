@@ -92,15 +92,15 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         JPanel centerPanel = new JPanel(new BorderLayout());
         JPanel progressPanel = new JPanel(new BorderLayout());
 
-//        final JButton createButton = new JButton("create db");
-//        createButton.setActionCommand("create");
+        final JButton createButton = new JButton("create db");
+        createButton.setActionCommand("create");
 //        final JButton optionsButton = new JButton("reload options");
 //        optionsButton.setActionCommand("options");
 //        optionsButton.addActionListener(this);
-//        createButton.addActionListener(this);
+        createButton.addActionListener(this);
 
         JPanel dbButtonsPanel = new JPanel();
-//        dbButtonsPanel.add(createButton);
+        dbButtonsPanel.add(createButton);
 //        dbButtonsPanel.add(optionsButton);
 
         progressPanel.add(dbButtonsPanel, BorderLayout.LINE_START);

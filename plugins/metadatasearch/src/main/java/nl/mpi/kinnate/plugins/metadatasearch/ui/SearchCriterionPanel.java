@@ -1,8 +1,10 @@
 package nl.mpi.kinnate.plugins.metadatasearch.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -25,11 +27,24 @@ public class SearchCriterionPanel extends JPanel {
     final JComboBox searchTypeOption;
     final JTextField searchText;
 
-    public SearchCriterionPanel(ActionListener actionListener, MetadataFileType[] metadataPathTypes, MetadataFileType[] metadataFieldTypes) {
+    public SearchCriterionPanel(ActionListener actionListener, MetadataFileType[] metadataPathTypes, MetadataFileType[] metadataFieldTypes, int shownCriterionCount) {
         super(new BorderLayout());
         final JPanel criterionPanel = new JPanel();
         criterionPanel.setLayout(new FlowLayout());
 
+        if (shownCriterionCount > 0) {
+            JButton removeButton = new JButton("-");
+            removeButton.setActionCommand("remove");
+            removeButton.addActionListener(actionListener);
+            removeButton.setPreferredSize(new Dimension(removeButton.getPreferredSize().height, removeButton.getPreferredSize().height));
+            criterionPanel.add(removeButton);
+        } else {
+            JButton addExtraButton = new JButton("+");
+            addExtraButton.setActionCommand("add");
+            addExtraButton.addActionListener(actionListener);
+            addExtraButton.setPreferredSize(new Dimension(addExtraButton.getPreferredSize().height, addExtraButton.getPreferredSize().height));
+            criterionPanel.add(addExtraButton);
+        }
 //        searchNegatorOption = new JComboBox(ArbilDatabase.SearchNegator.values());
 //        criterionPanel.add(searchNegatorOption);
 

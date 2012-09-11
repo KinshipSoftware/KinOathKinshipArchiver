@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -21,6 +22,7 @@ import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase;
+import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase.CriterionJoinType;
 import nl.mpi.kinnate.plugins.metadatasearch.db.MetadataFileType;
 
 /**
@@ -32,14 +34,13 @@ public class SearchPanel extends JPanel implements ActionListener {
 
     final private ArbilDatabase arbilDatabase;
     final PluginDialogHandler arbilWindowManager;
-    final JFrame jFrame;
     final JProgressBar jProgressBar;
     final JTextArea resultsTextArea;
     final ArrayList<SearchCriterionPanel> criterionPanelArray;
     final JPanel criterionArrayPanel;
+    final JComboBox criterionJoinComboBox;
 
-    public SearchPanel(JFrame jFrame) {
-        this.jFrame = jFrame;
+    public SearchPanel() {
         arbilWindowManager = new ArbilWindowManager();
         arbilDatabase = new ArbilDatabase(new ArbilSessionStorage(), arbilWindowManager, BugCatcherManager.getBugCatcher());
         this.setLayout(new BorderLayout());
@@ -70,6 +71,9 @@ public class SearchPanel extends JPanel implements ActionListener {
         progressPanel.add(jProgressBar, BorderLayout.CENTER);
 
         JPanel searchButtonsPanel = new JPanel();
+        criterionJoinComboBox = new JComboBox(CriterionJoinType.values());
+        criterionJoinComboBox.setSelectedItem(CriterionJoinType.intersect);
+        searchButtonsPanel.add(criterionJoinComboBox);
         final JButton searchButton = new JButton("Search");
         searchButton.setActionCommand("search");
         searchButton.addActionListener(this);
@@ -87,9 +91,11 @@ public class SearchPanel extends JPanel implements ActionListener {
         ArbilNodeSearchColumnComboBox.setSessionStorage(new ArbilSessionStorage());
         JFrame jFrame = new JFrame("Search Panel Test");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jFrame.setContentPane(new SearchPanel(jFrame));
+        SearchPanel searchPanel = new SearchPanel();
+        jFrame.setContentPane(searchPanel);
         jFrame.pack();
         jFrame.setVisible(true);
+        new Thread(searchPanel.getRunnable("add", null)).start();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -98,7 +104,7 @@ public class SearchPanel extends JPanel implements ActionListener {
         System.out.println(actionCommand);
         SearchCriterionPanel eventCriterionPanel = null;
         Object sourceObject = e.getSource();
-        if (sourceObject instanceof SearchOptionBox) {
+//        if (sourceObject instanceof SearchOptionBox) {
             while (sourceObject != null) {
                 sourceObject = ((Component) sourceObject).getParent();
                 if (sourceObject instanceof SearchCriterionPanel) {
@@ -106,7 +112,7 @@ public class SearchPanel extends JPanel implements ActionListener {
                     break;
                 }
             }
-        }
+//        }
         new Thread(getRunnable(actionCommand, eventCriterionPanel)).start();
     }
 
@@ -121,15 +127,19 @@ public class SearchPanel extends JPanel implements ActionListener {
                     } catch (QueryException exception) {
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Database Error");
                     }
-                } else if ("options".equals(actionCommand)) {
+                } else if ("remove".equals(actionCommand)) {
+                    criterionPanelArray.remove(eventCriterionPanel);
+                    criterionArrayPanel.remove(eventCriterionPanel);
+                    SearchPanel.this.revalidate();
+                } else if ("add".equals(actionCommand)) {
                     System.out.println("run query");
                     MetadataFileType[] metadataPathTypes = arbilDatabase.getMetadataTypes(null);
                     System.out.println("done");
                     System.out.println("run query");
                     MetadataFileType[] metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
                     System.out.println("done");
-
-                    final SearchCriterionPanel searchCriterionPanel = new SearchCriterionPanel(SearchPanel.this, metadataPathTypes, metadataFieldTypes);
+                    // todo: store the types so a query is not required each time
+                    final SearchCriterionPanel searchCriterionPanel = new SearchCriterionPanel(SearchPanel.this, metadataPathTypes, metadataFieldTypes, criterionPanelArray.size());
                     criterionPanelArray.add(searchCriterionPanel);
                     criterionArrayPanel.add(searchCriterionPanel);
                     SearchPanel.this.revalidate();
