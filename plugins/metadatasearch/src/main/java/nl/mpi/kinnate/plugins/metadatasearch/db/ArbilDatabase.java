@@ -318,15 +318,30 @@ public class ArbilDatabase {
         return "<MetadataFileType>\n"
                 + "<MetadataFileType><displayString>All Fields</displayString></MetadataFileType>\n"
                 + "{\n"
-                + "for $nameString in distinct-values(\n"
-                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*[count(*) = 0]\n"
-                + "return $entityNode/name()\n"
-                + ")\n"
-                + "order by $nameString\n"
+                //                + "for $nameString in distinct-values(\n"
+                //                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*[count(*) = 0]\n"
+                //                + "return $entityNode/name()\n"
+                //                + ")\n"
+                //                + "order by $nameString\n"
+                //                + "return\n"
+                //                + "<MetadataFileType>"
+                //                + "<fieldName>{$nameString}</fieldName>"
+                //                + "<RecordCount>{count(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text())}</RecordCount>"
+                //                + "</MetadataFileType>\n"
+                /*
+                 * optimised this query 2012-10-17
+                 * the query above takes:
+                 * 66932.06 ms
+                 * the query below takes:
+                 * 12.39 ms (varies per run)
+                 */
+                + "for $facetEntry in index:facets('ArbilDatabase', 'flat')//element[entry/text() != '']\n"
                 + "return\n"
-                + "<MetadataFileType>"
-                + "<fieldName>{$nameString}</fieldName>"
-                + "<RecordCount>{count(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text())}</RecordCount>"
+                + "<MetadataFileType>\n"
+                + "<fieldName>{string($facetEntry/@name)}</fieldName>\n"
+                //                + "<RecordCount>{string($facetEntry/@count)}</RecordCount>\n"
+                //                + "<ValueCount>{count($facetEntry/entry)}</ValueCount>\n"
+                + "<RecordCount>{count($facetEntry/entry)}</RecordCount>\n"
                 + "</MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
