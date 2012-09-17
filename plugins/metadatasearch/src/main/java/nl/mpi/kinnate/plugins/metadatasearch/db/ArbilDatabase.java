@@ -276,24 +276,41 @@ public class ArbilDatabase {
     }
 
     private String getTreeFieldNames(MetadataFileType fileType, boolean fastQuery) {
-        String countClause;
-        if (fastQuery) {
-            countClause = "";
-        } else {
-            countClause = "<RecordCount>{count(distinct-values(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text()))}</RecordCount>";
-        }
-        String typeConstraint = getTypeConstraint(fileType);
-        String noChildClause = "[count(*) = 0]";
-        String hasTextClause = "[text() != '']";
+//        String countClause;
+//        if (fastQuery) {
+//            countClause = "";
+//        } else {
+//            countClause = "<RecordCount>{count(distinct-values(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text()))}</RecordCount>";
+//        }
+//        String typeConstraint = getTypeConstraint(fileType);
+//        String noChildClause = "[count(*) = 0]";
+//        String hasTextClause = "[text() != '']";
         return "<MetadataFileType>\n"
                 + "{\n"
-                + "for $nameString in distinct-values(collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*" + noChildClause + hasTextClause + "/name()\n"
-                + ")\n"
-                + "order by $nameString\n"
+//                + "for $nameString in distinct-values(collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*" + noChildClause + hasTextClause + "/name()\n"
+//                + ")\n"
+//                + "order by $nameString\n"
+//                + "return\n"
+//                + "<MetadataFileType>"
+//                + "<fieldName>{$nameString}</fieldName>"
+//                + countClause
+//                + "</MetadataFileType>\n"
+                /*
+                 * optimised this query 2012-10-17
+                 * the fast version of query above takes:
+                 * 2586.19 ms
+                 * the slow version of query above takes:
+                 * 48998.5 ms
+                 * the query below takes:
+                 * 9.82 ms (varies per run)
+                 */
+                + "for $facetEntry in index:facets('ArbilDatabase', 'flat')//element[entry/text() != '']\n"
                 + "return\n"
-                + "<MetadataFileType>"
-                + "<fieldName>{$nameString}</fieldName>"
-                + countClause
+                + "<MetadataFileType>\n"
+                + "<fieldName>{string($facetEntry/@name)}</fieldName>\n"
+                //                + "<RecordCount>{string($facetEntry/@count)}</RecordCount>\n"
+                //                + "<ValueCount>{count($facetEntry/entry)}</ValueCount>\n"
+                + "<RecordCount>{count($facetEntry/entry)}</RecordCount>\n"
                 + "</MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
