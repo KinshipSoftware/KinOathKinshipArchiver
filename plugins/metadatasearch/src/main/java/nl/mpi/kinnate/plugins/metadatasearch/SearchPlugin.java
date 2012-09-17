@@ -8,6 +8,7 @@ import nl.mpi.arbil.plugin.PluginDialogHandler;
 import nl.mpi.arbil.plugin.PluginException;
 import nl.mpi.arbil.plugin.PluginSessionStorage;
 import nl.mpi.kinnate.plugin.BasePlugin;
+import nl.mpi.kinnate.plugins.metadatasearch.ui.SearchPanel;
 
 /**
  * Document : SearchPlugin <br> Created on Sep 10, 2012, 5:14:23 PM <br>
@@ -37,6 +38,8 @@ public class SearchPlugin implements BasePlugin, ArbilWindowPlugin {
     }
 
     public JPanel getUiPanel(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage, PluginBugCatcher bugCatcher, PluginArbilDataNodeLoader arbilDataNodeLoader) throws PluginException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        SearchPanel searchPanel = new SearchPanel();
+        searchPanel.initOptions();
+        return searchPanel;
     }
 }

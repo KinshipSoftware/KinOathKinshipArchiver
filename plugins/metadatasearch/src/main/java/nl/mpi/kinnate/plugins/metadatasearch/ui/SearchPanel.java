@@ -151,7 +151,7 @@ public class SearchPanel extends JPanel implements ActionListener {
         jFrame.setContentPane(searchPanel);
         jFrame.pack();
         jFrame.setVisible(true);
-        new Thread(searchPanel.getRunnable("add", null)).start();
+        searchPanel.initOptions();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -170,6 +170,10 @@ public class SearchPanel extends JPanel implements ActionListener {
         }
 //        }
         new Thread(getRunnable(actionCommand, eventCriterionPanel)).start();
+    }
+
+    public void initOptions() {
+        new Thread(getRunnable("add", null)).start();
     }
 
     private Runnable getRunnable(final String actionCommand, final SearchCriterionPanel eventCriterionPanel) {
