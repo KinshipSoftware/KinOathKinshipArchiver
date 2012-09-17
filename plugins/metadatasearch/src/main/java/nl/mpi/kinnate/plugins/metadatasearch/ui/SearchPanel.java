@@ -13,15 +13,28 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JSplitPane;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import nl.mpi.arbil.ArbilDesktopInjector;
+import nl.mpi.arbil.ArbilVersion;
+import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.plugin.PluginDialogHandler;
+import nl.mpi.arbil.ui.ArbilTable;
+import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
+import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase;
 import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase.CriterionJoinType;
+import nl.mpi.kinnate.plugins.metadatasearch.db.DbTreeNode;
 import nl.mpi.kinnate.plugins.metadatasearch.db.MetadataFileType;
+import nl.mpi.kinnate.plugins.metadatasearch.db.MetadataTreeNode;
 import nl.mpi.kinnate.plugins.metadatasearch.db.SearchParameters;
 
 /**
@@ -34,12 +47,16 @@ public class SearchPanel extends JPanel implements ActionListener {
     final private ArbilDatabase arbilDatabase;
     final private PluginDialogHandler arbilWindowManager;
     final private JProgressBar jProgressBar;
-    final private JTextArea resultsTextArea;
+//    final private JTextArea resultsTextArea;
     final private ArrayList<SearchCriterionPanel> criterionPanelArray;
     final private JPanel criterionArrayPanel;
     final private JComboBox criterionJoinComboBox;
     private MetadataFileType[] metadataPathTypes;
     private MetadataFileType[] metadataFieldTypes;
+    final private JTree resultsTree;
+    final private DefaultTreeModel defaultTreeModel;
+    final private ArbilTable arbilTable;
+    final private ArbilTableModel arbilTableModel;
 
     public SearchPanel() {
         arbilWindowManager = new ArbilWindowManager();
@@ -91,13 +108,43 @@ public class SearchPanel extends JPanel implements ActionListener {
         progressPanel.add(searchButtonsPanel, BorderLayout.LINE_END);
 
         centerPanel.add(progressPanel, BorderLayout.PAGE_START);
-        resultsTextArea = new JTextArea();
-        centerPanel.add(new JScrollPane(resultsTextArea), BorderLayout.CENTER);
+//        resultsTextArea = new JTextArea();
+//        centerPanel.add(new JScrollPane(resultsTextArea), BorderLayout.CENTER);
+
+        defaultTreeModel = new DefaultTreeModel(new DbTreeNode("Please add or select a facet"));
+        resultsTree = new JTree(defaultTreeModel);
+        resultsTree.setCellRenderer(new SearchTreeCellRenderer());
+        resultsTree.addTreeSelectionListener(new TreeSelectionListener() {
+            public void valueChanged(TreeSelectionEvent tse) {
+                ArrayList<ArbilDataNode> arbilDataNodeList = new ArrayList<ArbilDataNode>();
+                final TreePath[] selectionPaths = resultsTree.getSelectionPaths();
+                if (selectionPaths != null) {
+                    for (TreePath treePath : selectionPaths) {
+                        final Object lastPathComponent = treePath.getLastPathComponent();
+                        if (lastPathComponent instanceof MetadataTreeNode) {
+                            final ArbilDataNode arbilNode = ((MetadataTreeNode) lastPathComponent).getArbilNode();
+                            if (arbilNode != null) {
+                                arbilDataNodeList.add(arbilNode);
+                            }
+                        }
+                    }
+                }
+                arbilTableModel.removeAllArbilDataNodeRows();
+                arbilTableModel.addArbilDataNodes(arbilDataNodeList.toArray(new ArbilDataNode[0]));
+            }
+        });
+        centerPanel.add(new JScrollPane(resultsTree), BorderLayout.CENTER);
+
+        arbilTableModel = new ArbilTableModel(null);
+        arbilTable = new ArbilTable(arbilTableModel, "FacetedTreeSelectionTable");
+        JSplitPane jSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, centerPanel, new JScrollPane(arbilTable));
 
         this.add(centerPanel, BorderLayout.CENTER);
     }
 
     static public void main(String[] args) {
+        final ArbilDesktopInjector injector = new ArbilDesktopInjector();
+        injector.injectHandlers(new ApplicationVersionManager(new ArbilVersion()));
         JFrame jFrame = new JFrame("Search Panel Test");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         SearchPanel searchPanel = new SearchPanel();
@@ -173,15 +220,25 @@ public class SearchPanel extends JPanel implements ActionListener {
                         searchParametersList.add(new SearchParameters(eventCriterionPanel.getMetadataFileType(), eventCriterionPanel.getMetadataFieldType(), eventCriterionPanel.getSearchNegator(), eventCriterionPanel.getSearchType(), eventCriterionPanel.getSearchText()));
                     }
                     MetadataFileType[] resultTypes = arbilDatabase.getSearchResultMetadataTypes(criterionJoinType, searchParametersList);
+
+//                    System.out.println("run query");
+//        final DbTreeNode rootTreeNode = arbilDatabase.getTreeData(treeBranchTypeList);
+//        rootTreeNode.setParentDbTreeNode(null, defaultTreeModel, arbilDataNodeLoader);
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                defaultTreeModel.setRoot(rootTreeNode);
+//            }
+//        });
                     System.out.println("done");
-                    StringBuilder stringBuilder = new StringBuilder();
-                    if (resultTypes != null) {
-                        for (MetadataFileType resultType : resultTypes) {
-                            stringBuilder.append(resultType.getArbilPathString());
-                            stringBuilder.append("\n");
-                        }
-                    }
-                    resultsTextArea.setText(stringBuilder.toString());
+//                    System.out.println("done");
+//                    StringBuilder stringBuilder = new StringBuilder();
+//                    if (resultTypes != null) {
+//                        for (MetadataFileType resultType : resultTypes) {
+//                            stringBuilder.append(resultType.getArbilPathString());
+//                            stringBuilder.append("\n");
+//                        }
+//                    }
+//                    resultsTextArea.setText(stringBuilder.toString());
                 }
                 jProgressBar.setIndeterminate(false);
             }

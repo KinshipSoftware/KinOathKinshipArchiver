@@ -192,6 +192,11 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
     }
 
     private void updateTree() {
+        System.out.println("updateTree");
+        if (metadataFieldTypes == null) {
+            System.out.println("metadataFieldTypes not loaded yet");
+            return;
+        }
         ArrayList<MetadataFileType> treeBranchTypeList = new ArrayList<MetadataFileType>();
         for (SearchOptionBox searchOptionBox : searchPathOptionBoxList) {
             final Object selectedTypeItem = searchOptionBox.getSelectedItem();
@@ -211,8 +216,10 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
     }
 
     public Runnable getRunnable(final String actionCommand) {
+        System.out.println("getRunnable: " + actionCommand);
         return new Runnable() {
             public void run() {
+                System.out.println("run: " + actionCommand);
                 if ("create".equals(actionCommand)) {
                     try {
                         System.out.println("create db");
@@ -222,15 +229,20 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Database Error");
                     }
                 } else if ("options".equals(actionCommand)) {
-                    System.out.println("run query");
-                    metadataFieldTypes = arbilDatabase.getTreeFieldTypes(null);
-                    System.out.println("done");
+                    System.out.println("run fast options query");
+                    metadataFieldTypes = arbilDatabase.getTreeFieldTypes(null, true);
+                    System.out.println("done fast options query");
+                    for (SearchOptionBox searchOptionBox : searchPathOptionBoxList) {
+                        searchOptionBox.setTypes(metadataFieldTypes);
+                    }
+                    System.out.println("run detailed options query");
+                    metadataFieldTypes = arbilDatabase.getTreeFieldTypes(null, false);
+                    System.out.println("done detailed options query");
                     for (SearchOptionBox searchOptionBox : searchPathOptionBoxList) {
                         searchOptionBox.setTypes(metadataFieldTypes);
                     }
                 } else if ("treechange".equals(actionCommand)) {
                     updateTree();
-
                 } else if ("add".equals(actionCommand)) {
                     final SearchOptionBox treePathOptionBox = new SearchOptionBox();
                     if (metadataFieldTypes == null) {

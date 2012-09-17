@@ -120,11 +120,17 @@ public class ArbilDatabase {
         String suffixFilter = "*.*mdi";
         try {
             synchronized (databaseLock) {
+//    System.out.print(new InfoDB().execute(context));
+//    new DropIndex("text").execute(context);
+//    new DropIndex("attribute").execute(context);
+//    new DropIndex("fulltext").execute(context);
                 new DropDB(databaseName).execute(context);
                 new Set("CREATEFILTER", suffixFilter).execute(context);
                 final File cacheDirectory = sessionStorage.getProjectDirectory();
                 System.out.println("cacheDirectory: " + cacheDirectory);
                 new CreateDB(databaseName, cacheDirectory.toString()).execute(context);
+//                System.out.println("Create full text index");
+//                new CreateIndex("fulltext").execute(context); // note that the indexes appear to be created by default, so this step might be redundant
             }
         } catch (BaseXException exception) {
             throw new QueryException(exception.getMessage());
@@ -191,8 +197,29 @@ public class ArbilDatabase {
         // todo: could ; cause issues?
         return inputString.replace("&", "&amp;").replace("\"", "&quot;").replace("'", "&apos;");
     }
+    /*
+     * let $elementSet0 := for $nameString0 in collection('ArbilDatabase')//*:Address[count(*) = 0] order by $nameString0 return $nameString0
+     let $elementSet1 := for $nameString0 in collection('ArbilDatabase')//*:Region[count(*) = 0] order by $nameString0 return $nameString0
+     return
+     <TreeNode><DisplayString>All</DisplayString>
+     {
+     for $nameString0 in distinct-values($elementSet0/text())
+     return
+     <TreeNode><DisplayString>Address: {$nameString0}</DisplayString>
+     {
+     let $intersectionSet0 := $elementSet1[root()//*:Address = $nameString0]
+     for $nameString1 in distinct-values($intersectionSet0/text())
+     return
+     <TreeNode><DisplayString>Region: {$nameString1}</DisplayString>
+     </TreeNode>
+     }
+     </TreeNode>
+     }
+     </TreeNode>
+     * */
 
     private String getTreeSubQuery(ArrayList<MetadataFileType> treeBranchTypeList, String whereClause, String selectClause, String trailingSelectClause, int levelCount) {
+        final int maxMetadataFileCount = 100;
         if (!treeBranchTypeList.isEmpty()) {
             String separatorString = "";
 //            if (whereClause.length() > 0) {
@@ -213,12 +240,17 @@ public class ArbilDatabase {
                     + getTreeSubQuery(treeBranchTypeList, nextWhereClause, nextSelectClause, nextTrailingSelectClause, levelCount + 1)
                     + "</TreeNode>\n}\n";
         } else {
-            return "{for $matchingNode in collection('" + databaseName + "')" + whereClause + "//." + trailingSelectClause + "\n"
+            return "{"
+                    //                    + " if (count(collection('" + databaseName + "')" + whereClause + "//.[count(*) = 0][text() != '']" + trailingSelectClause + ") < " + maxMetadataFileCount + ") then\n"
+                    + "for $matchingNode in collection('" + databaseName + "')" + whereClause + "//." + trailingSelectClause + "\n"
                     + "return\n"
                     + "<MetadataTreeNode>\n"
                     + "<FileUri>{base-uri($matchingNode)}</FileUri>\n"
                     + "<FileUriPath>{path($matchingNode)}</FileUriPath>\n"
-                    + "</MetadataTreeNode>\n}\n";
+                    + "</MetadataTreeNode>\n"
+                    //                    + "else \n"
+                    //                    + "<DisplayString>&gt;more than " + maxMetadataFileCount + " results, please add more facets&lt;</DisplayString>"
+                    + "\n}\n";
         }
     }
 
@@ -243,7 +275,13 @@ public class ArbilDatabase {
          */
     }
 
-    private String getTreeFieldNames(MetadataFileType fileType) {
+    private String getTreeFieldNames(MetadataFileType fileType, boolean fastQuery) {
+        String countClause;
+        if (fastQuery) {
+            countClause = "";
+        } else {
+            countClause = "<RecordCount>{count(distinct-values(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text()))}</RecordCount>";
+        }
         String typeConstraint = getTypeConstraint(fileType);
         String noChildClause = "[count(*) = 0]";
         String hasTextClause = "[text() != '']";
@@ -255,7 +293,7 @@ public class ArbilDatabase {
                 + "return\n"
                 + "<MetadataFileType>"
                 + "<fieldName>{$nameString}</fieldName>"
-                + "<RecordCount>{count(distinct-values(collection('ArbilDatabase')/descendant-or-self::*[name() = $nameString]/text()))}</RecordCount>"
+                + countClause
                 + "</MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
@@ -385,13 +423,22 @@ public class ArbilDatabase {
         return getMetadataTypes(queryString);
     }
 
-    public MetadataFileType[] getTreeFieldTypes(MetadataFileType metadataFileType) {
-        final String queryString = getTreeFieldNames(metadataFileType);
+    public MetadataFileType[] getTreeFieldTypes(MetadataFileType metadataFileType, boolean fastQuery) {
+        final String queryString = getTreeFieldNames(metadataFileType, fastQuery);
         return getMetadataTypes(queryString);
     }
 
+//    public DbTreeNode getSearchTreeData() {
+//        final String queryString = getTreeQuery(treeBranchTypeList);
+//        return getDbTreeNode(queryString);
+//    }
+
     public DbTreeNode getTreeData(final ArrayList<MetadataFileType> treeBranchTypeList) {
         final String queryString = getTreeQuery(treeBranchTypeList);
+        return getDbTreeNode(queryString);
+    }
+
+    private DbTreeNode getDbTreeNode(String queryString) {
         long startTime = System.currentTimeMillis();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(DbTreeNode.class);
