@@ -344,21 +344,43 @@ public class ArbilDatabase {
                 + "<RecordCount>{count(collection('ArbilDatabase'))}</RecordCount>\n"
                 + "</MetadataFileType>\n"
                 + "{\n"
-                + "for $imdiType in distinct-values(collection('ArbilDatabase')/*:METATRANSCRIPT/*/name())\n"
-                + "order by $imdiType\n"
+                //                + "for $imdiType in distinct-values(collection('ArbilDatabase')/*:METATRANSCRIPT/*/name())\n"
+                //                + "order by $imdiType\n"
+                //                + "return\n"
+                //                + "<MetadataFileType>\n"
+                //                + "<ImdiType>{$imdiType}</ImdiType>\n"
+                //                + "<RecordCount>{count(collection('ArbilDatabase')/*:METATRANSCRIPT/*[name()=$imdiType])}</RecordCount>\n"
+                //                + "</MetadataFileType>\n"
+                //                + "},{"
+                //                + "for $profileString in distinct-values(collection('" + databaseName + "')/*:CMD/@*:schemaLocation)\n"
+                //                //                + "order by $profileString\n"
+                //                + "return\n"
+                //                + "<MetadataFileType>\n"
+                //                + "<profileString>{$profileString}</profileString>\n"
+                //                + "<RecordCount>{count(collection('" + databaseName + "')/*:CMD[@*:schemaLocation = $profileString])}</RecordCount>"
+                //                + "</MetadataFileType>\n"
+                /*
+                 * optimised this query 2012-10-17
+                 * the query above takes:
+                 * 5014.03 ms
+                 * the query below takes:
+                 * 11.8 ms (varies per run)
+                 */
+                + "for $profileInfo in index:facets('ArbilDatabase')/document-node/element[@name='METATRANSCRIPT']/element[@name!='History']\n"
                 + "return\n"
                 + "<MetadataFileType>\n"
-                + "<ImdiType>{$imdiType}</ImdiType>\n"
-                + "<RecordCount>{count(collection('ArbilDatabase')/*:METATRANSCRIPT/*[name()=$imdiType])}</RecordCount>\n"
-                + "</MetadataFileType>\n"
+                + "<fieldName>{string($profileInfo/@name)}</fieldName>\n"
+                + "<RecordCount>{string($profileInfo/@count)}</RecordCount>\n"
+                + "</MetadataFileType>"
                 + "},{"
-                + "for $profileString in distinct-values(collection('" + databaseName + "')/*:CMD/@*:schemaLocation)\n"
-                //                + "order by $profileString\n"
+                + "for $profileInfo in index:facets('ArbilDatabase')/document-node/element[@name='CMD']/element[@name='Header']/element[@name='MdProfile']/text/entry\n"
                 + "return\n"
                 + "<MetadataFileType>\n"
-                + "<profileString>{$profileString}</profileString>\n"
-                + "<RecordCount>{count(collection('" + databaseName + "')/*:CMD[@*:schemaLocation = $profileString])}</RecordCount>"
+                + "<fieldName>{string($profileInfo)}</fieldName>\n"
+                + "<RecordCount>{string($profileInfo/@count)}</RecordCount>\n"
+                //                + "<ValueCount>{count($profileInfo/entry)}</ValueCount>\n"
                 + "</MetadataFileType>\n"
+                //                + "},{"
                 + "}</MetadataFileType>";
     }
 
@@ -432,7 +454,6 @@ public class ArbilDatabase {
 //        final String queryString = getTreeQuery(treeBranchTypeList);
 //        return getDbTreeNode(queryString);
 //    }
-
     public DbTreeNode getTreeData(final ArrayList<MetadataFileType> treeBranchTypeList) {
         final String queryString = getTreeQuery(treeBranchTypeList);
         return getDbTreeNode(queryString);
