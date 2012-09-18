@@ -82,9 +82,9 @@ public class SearchPanel extends JPanel implements ActionListener {
 
         final JButton createButton = new JButton("create db");
         createButton.setActionCommand("create");
-        final JButton optionsButton = new JButton("update options");
-        optionsButton.setActionCommand("options");
-        optionsButton.addActionListener(this);
+//        final JButton optionsButton = new JButton("update options");
+//        optionsButton.setActionCommand("options");
+//        optionsButton.addActionListener(this);
         createButton.addActionListener(this);
 
         JPanel dbButtonsPanel = new JPanel();
@@ -97,7 +97,7 @@ public class SearchPanel extends JPanel implements ActionListener {
         dbButtonsPanel.add(addExtraButton);
 
         dbButtonsPanel.add(createButton);
-        dbButtonsPanel.add(optionsButton);
+//        dbButtonsPanel.add(optionsButton);
 
         progressPanel.add(dbButtonsPanel, BorderLayout.LINE_START);
         jProgressBar = new JProgressBar();
@@ -120,6 +120,7 @@ public class SearchPanel extends JPanel implements ActionListener {
 
         defaultTreeModel = new DefaultTreeModel(new DbTreeNode("Please add or select a facet"));
         resultsTree = new JTree(defaultTreeModel);
+        resultsTree.setRootVisible(false);
         resultsTree.setCellRenderer(new SearchTreeCellRenderer());
         resultsTree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent tse) {
@@ -140,12 +141,12 @@ public class SearchPanel extends JPanel implements ActionListener {
                 arbilTableModel.addArbilDataNodes(arbilDataNodeList.toArray(new ArbilDataNode[0]));
             }
         });
-        centerPanel.add(new JScrollPane(resultsTree), BorderLayout.CENTER);
 
         arbilTableModel = new ArbilTableModel(null);
         arbilTable = new ArbilTable(arbilTableModel, "FacetedTreeSelectionTable");
-        JSplitPane jSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, centerPanel, new JScrollPane(arbilTable));
+        JSplitPane jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(resultsTree), new JScrollPane(arbilTable));
 
+        centerPanel.add(jSplitPane, BorderLayout.CENTER);
         this.add(centerPanel, BorderLayout.CENTER);
     }
 
@@ -197,7 +198,7 @@ public class SearchPanel extends JPanel implements ActionListener {
                     } catch (QueryException exception) {
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Database Error");
                     }
-                } else if ("options".equals(actionCommand)) {
+//                } else if ("options".equals(actionCommand)) {
                     // todo: when a database update occurs these queries should be run again and the UI updated
 //                    metadataPathTypes = arbilDatabase.getMetadataTypes(null);
 //                    metadataFieldTypes = arbilDatabase.getFieldMetadataTypes(null);
