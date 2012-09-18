@@ -276,6 +276,7 @@ public class ArbilDatabase {
     }
 
     private String getTreeFieldNames(MetadataFileType fileType, boolean fastQuery) {
+        // todo: note that this does not filter the sub lists. While this loss is worth the speed gain, it may be possible to filter based on the same file type or similar.
 //        String countClause;
 //        if (fastQuery) {
 //            countClause = "";
