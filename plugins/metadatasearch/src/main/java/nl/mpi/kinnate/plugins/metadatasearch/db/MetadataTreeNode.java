@@ -60,7 +60,10 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
         if (fileUriPath.equals("/")) {
             return "";
         } else {
+            // this version seems to work for 6.7.1 version of basex
             String imdiApiPathPreNumber = fileUriPath.replaceAll("/\"[^\"]*\":", ".").replaceAll("\\[1]", "");//.replaceAll("\\[", "(").replaceAll("\\]", ")");;
+            // this version seems to work for 7.3.1 version of basex
+            imdiApiPathPreNumber = imdiApiPathPreNumber.replaceAll("/Q[^\\}]*\\}", ".").replaceAll("\\[1]", "");
 //            String imdiApiPath = "";
 //            for (String pathPart : imdiApiPathPreNumber.split("\\[")) {
 //                String[] innerPathParts = pathPart.split("\\]");
@@ -72,8 +75,8 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
 //                    throw new UnsupportedOperationException();
 //                }
 //            }
-            String imdiApiPath = imdiApiPathPreNumber.replace("[", "(").replace("]", ")");
-            return imdiApiPath;
+            String imdiApiPathReturnValue = imdiApiPathPreNumber.replace("[", "(").replace("]", ")");
+            return imdiApiPathReturnValue;
 //                uriList.add(new URI(fileUri.getScheme(), fileUri.getUserInfo(), fileUri.getHost(), fileUri.getPort(), fileUri.getPath(), fileUri.getQuery(), imdiApiPath));
         }
 //            }
