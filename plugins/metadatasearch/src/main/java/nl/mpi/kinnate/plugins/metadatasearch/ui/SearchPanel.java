@@ -15,6 +15,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
@@ -22,12 +23,16 @@ import javax.swing.tree.TreePath;
 import nl.mpi.arbil.ArbilDesktopInjector;
 import nl.mpi.arbil.ArbilVersion;
 import nl.mpi.arbil.data.ArbilDataNode;
+import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.plugin.PluginArbilDataNodeLoader;
 import nl.mpi.arbil.plugin.PluginDialogHandler;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.arbil.util.ArbilMimeHashQueue;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.QueryException;
 import nl.mpi.kinnate.plugins.metadatasearch.db.ArbilDatabase;
@@ -45,7 +50,6 @@ import nl.mpi.kinnate.plugins.metadatasearch.db.SearchParameters;
 public class SearchPanel extends JPanel implements ActionListener {
 
     final private ArbilDatabase arbilDatabase;
-    final private PluginDialogHandler arbilWindowManager;
     final private JProgressBar jProgressBar;
 //    final private JTextArea resultsTextArea;
     final private ArrayList<SearchCriterionPanel> criterionPanelArray;
@@ -57,9 +61,12 @@ public class SearchPanel extends JPanel implements ActionListener {
     final private DefaultTreeModel defaultTreeModel;
     final private ArbilTable arbilTable;
     final private ArbilTableModel arbilTableModel;
+    final private PluginArbilDataNodeLoader arbilDataNodeLoader;
+    final private PluginDialogHandler arbilWindowManager;
 
-    public SearchPanel() {
-        arbilWindowManager = new ArbilWindowManager();
+    public SearchPanel(final PluginArbilDataNodeLoader arbilDataNodeLoader, final PluginDialogHandler dialogHandler) {
+        this.arbilDataNodeLoader = arbilDataNodeLoader;
+        this.arbilWindowManager = dialogHandler;
         arbilDatabase = new ArbilDatabase(new ArbilSessionStorage(), arbilWindowManager, BugCatcherManager.getBugCatcher());
         this.setLayout(new BorderLayout());
 //        ArbilNodeSearchColumnComboBox.setSessionStorage(new ArbilSessionStorage());
@@ -147,7 +154,10 @@ public class SearchPanel extends JPanel implements ActionListener {
         injector.injectHandlers(new ApplicationVersionManager(new ArbilVersion()));
         JFrame jFrame = new JFrame("Search Panel Test");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        SearchPanel searchPanel = new SearchPanel();
+        final ArbilSessionStorage arbilSessionStorage = new ArbilSessionStorage(); // todo: this is should use the same session storage as the injector but it is either not clear how to get it or it is not possible without changes
+        final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
+        final ArbilDataNodeLoader arbilDataNodeLoader = new ArbilDataNodeLoader(arbilWindowManager, arbilSessionStorage, new ArbilMimeHashQueue(arbilWindowManager, arbilSessionStorage), new ArbilTreeHelper(arbilSessionStorage, arbilWindowManager));
+        SearchPanel searchPanel = new SearchPanel(arbilDataNodeLoader, arbilWindowManager);
         jFrame.setContentPane(searchPanel);
         jFrame.pack();
         jFrame.setVisible(true);
@@ -223,16 +233,16 @@ public class SearchPanel extends JPanel implements ActionListener {
                     for (SearchCriterionPanel eventCriterionPanel : criterionPanelArray) {
                         searchParametersList.add(new SearchParameters(eventCriterionPanel.getMetadataFileType(), eventCriterionPanel.getMetadataFieldType(), eventCriterionPanel.getSearchNegator(), eventCriterionPanel.getSearchType(), eventCriterionPanel.getSearchText()));
                     }
-                    MetadataFileType[] resultTypes = arbilDatabase.getSearchResultMetadataTypes(criterionJoinType, searchParametersList);
+                    final DbTreeNode rootTreeNode = arbilDatabase.getSearchResult(criterionJoinType, searchParametersList);
 
-//                    System.out.println("run query");
+                    System.out.println("run query");
 //        final DbTreeNode rootTreeNode = arbilDatabase.getTreeData(treeBranchTypeList);
-//        rootTreeNode.setParentDbTreeNode(null, defaultTreeModel, arbilDataNodeLoader);
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                defaultTreeModel.setRoot(rootTreeNode);
-//            }
-//        });
+                    rootTreeNode.setParentDbTreeNode(null, defaultTreeModel, arbilDataNodeLoader, arbilDatabase);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            defaultTreeModel.setRoot(rootTreeNode);
+                        }
+                    });
                     System.out.println("done");
 //                    System.out.println("done");
 //                    StringBuilder stringBuilder = new StringBuilder();

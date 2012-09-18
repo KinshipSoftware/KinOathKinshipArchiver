@@ -63,7 +63,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
 
     public FacetedTreePanel(final PluginArbilDataNodeLoader arbilDataNodeLoader, final PluginDialogHandler dialogHandler) {
         this.arbilDataNodeLoader = arbilDataNodeLoader;
-        arbilWindowManager = new ArbilWindowManager();
+        arbilWindowManager = dialogHandler;
         arbilDatabase = new ArbilDatabase(new ArbilSessionStorage(), arbilWindowManager, BugCatcherManager.getBugCatcher());
         this.setLayout(new BorderLayout());
         criterionPanel = new JPanel();
@@ -206,7 +206,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
         }
         System.out.println("run query");
         final DbTreeNode rootTreeNode = arbilDatabase.getTreeData(treeBranchTypeList);
-        rootTreeNode.setParentDbTreeNode(null, defaultTreeModel, arbilDataNodeLoader);
+        rootTreeNode.setParentDbTreeNode(null, defaultTreeModel, arbilDataNodeLoader, arbilDatabase);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 defaultTreeModel.setRoot(rootTreeNode);

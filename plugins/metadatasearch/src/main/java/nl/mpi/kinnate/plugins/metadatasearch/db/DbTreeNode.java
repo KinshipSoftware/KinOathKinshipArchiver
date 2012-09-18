@@ -33,7 +33,7 @@ public class DbTreeNode extends AbstractDbTreeNode {
 //    }
     public TreeNode getChildAt(int i) {
         final AbstractDbTreeNode selectedChild = getChildList().get(i);
-        selectedChild.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader);
+        selectedChild.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader, arbilDatabase);
         return selectedChild;
     }
 
@@ -73,12 +73,12 @@ public class DbTreeNode extends AbstractDbTreeNode {
             childList.add(new DbTreeNode("<more than " + maxChildrenToShow + " results, please add more facets>"));
         } else {
             for (DbTreeNode childNode : childTreeNode) {
-                childNode.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader);
+                childNode.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader, arbilDatabase);
                 childList.add(childNode);
             }
             for (MetadataTreeNode childNode : childMetadataTreeNode) {
                 // todo: sort the metadata child nodes
-                childNode.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader);
+                childNode.setParentDbTreeNode(this, defaultTreeModel, arbilDataNodeLoader, arbilDatabase);
                 childList.add(childNode);
             }
         }

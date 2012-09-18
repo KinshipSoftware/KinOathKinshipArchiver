@@ -116,6 +116,10 @@ public class ArbilDatabase {
         }
     }
 
+    public File getDatabaseProjectDirectory(String projectDatabaseName) {
+        return sessionStorage.getProjectWorkingDirectory();
+    }
+
     public void createDatabase() throws QueryException {
         String suffixFilter = "*.*mdi";
         try {
@@ -126,7 +130,7 @@ public class ArbilDatabase {
 //    new DropIndex("fulltext").execute(context);
                 new DropDB(databaseName).execute(context);
                 new Set("CREATEFILTER", suffixFilter).execute(context);
-                final File cacheDirectory = sessionStorage.getProjectDirectory();
+                final File cacheDirectory = getDatabaseProjectDirectory(databaseName);
                 System.out.println("cacheDirectory: " + cacheDirectory);
                 new CreateDB(databaseName, cacheDirectory.toString()).execute(context);
 //                System.out.println("Create full text index");
@@ -288,14 +292,14 @@ public class ArbilDatabase {
 //        String hasTextClause = "[text() != '']";
         return "<MetadataFileType>\n"
                 + "{\n"
-//                + "for $nameString in distinct-values(collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*" + noChildClause + hasTextClause + "/name()\n"
-//                + ")\n"
-//                + "order by $nameString\n"
-//                + "return\n"
-//                + "<MetadataFileType>"
-//                + "<fieldName>{$nameString}</fieldName>"
-//                + countClause
-//                + "</MetadataFileType>\n"
+                //                + "for $nameString in distinct-values(collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*" + noChildClause + hasTextClause + "/name()\n"
+                //                + ")\n"
+                //                + "order by $nameString\n"
+                //                + "return\n"
+                //                + "<MetadataFileType>"
+                //                + "<fieldName>{$nameString}</fieldName>"
+                //                + countClause
+                //                + "</MetadataFileType>\n"
                 /*
                  * optimised this query 2012-10-17
                  * the fast version of query above takes:
@@ -322,13 +326,18 @@ public class ArbilDatabase {
         // todo: add to query: boolean searchNot, SearchType searchType, String searchString
         String searchTextConstraint = getSearchTextConstraint(searchParameters.searchNegator, searchParameters.searchType, searchParameters.searchString);
 
-        return "for $nameString in distinct-values(\n"
-                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*" + fieldConstraint + searchTextConstraint + "\n"
-                + "return concat(base-uri($entityNode), path($entityNode))\n"
-                + ")\n"
-                //                + "order by $nameString\n"
+        return //"for $nameString in distinct-values(\n"
+                "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*" + fieldConstraint + searchTextConstraint + "\n"
                 + "return\n"
-                + "<MetadataFileType><arbilPathString>{$nameString}</arbilPathString></MetadataFileType>\n";
+                + "<MetadataTreeNode>\n"
+                + "<FileUri>{base-uri($entityNode)}</FileUri>\n"
+                + "<FileUriPath>{path($entityNode)}</FileUriPath>\n"
+                + "</MetadataTreeNode>\n";
+//                + "return concat(base-uri($entityNode), path($entityNode))\n"
+//                + ")\n"
+        //                + "order by $nameString\n"
+//                + "return\n"
+//                + "<MetadataTreeNode><arbilPathString>{$nameString}</arbilPathString></MetadataTreeNode>\n";
     }
 
     private String getPopulatedFieldNames(MetadataFileType fileType) {
@@ -437,7 +446,7 @@ public class ArbilDatabase {
                 + "}</MetadataFileType>";
     }
 
-    public MetadataFileType[] getSearchResultMetadataTypes(CriterionJoinType criterionJoinType, ArrayList<SearchParameters> searchParametersList) {
+    public DbTreeNode getSearchResult(CriterionJoinType criterionJoinType, ArrayList<SearchParameters> searchParametersList) {
         StringBuilder queryStringBuilder = new StringBuilder();
         StringBuilder joinStringBuilder = new StringBuilder();
         int parameterCounter = 0;
@@ -447,7 +456,7 @@ public class ArbilDatabase {
                 joinStringBuilder.append(criterionJoinType.name());
                 joinStringBuilder.append(" ");
             } else {
-                joinStringBuilder.append("return <MetadataFileType>{");
+                joinStringBuilder.append("return <TreeNode>{");
             }
             joinStringBuilder.append("$set");
             joinStringBuilder.append(parameterCounter);
@@ -457,9 +466,9 @@ public class ArbilDatabase {
             parameterCounter++;
             queryStringBuilder.append(getSearchQuery(searchParameters));
         }
-        joinStringBuilder.append("}</MetadataFileType>");
+        joinStringBuilder.append("}</TreeNode>");
         queryStringBuilder.append(joinStringBuilder);
-        final MetadataFileType[] metadataTypesString = getMetadataTypes(queryStringBuilder.toString());
+        final DbTreeNode metadataTypesString = getDbTreeNode(queryStringBuilder.toString());
         return metadataTypesString;
     }
 

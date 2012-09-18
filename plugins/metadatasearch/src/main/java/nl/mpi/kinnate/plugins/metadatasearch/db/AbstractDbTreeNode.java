@@ -14,10 +14,12 @@ abstract public class AbstractDbTreeNode implements TreeNode {
     protected DbTreeNode parentDbTreeNode = null;
     protected DefaultTreeModel defaultTreeModel = null;
     protected PluginArbilDataNodeLoader arbilDataNodeLoader;
+    protected ArbilDatabase arbilDatabase;
 
-    public void setParentDbTreeNode(DbTreeNode parentDbTreeNode, DefaultTreeModel defaultTreeModel, PluginArbilDataNodeLoader arbilDataNodeLoader) {
+    public void setParentDbTreeNode(DbTreeNode parentDbTreeNode, DefaultTreeModel defaultTreeModel, PluginArbilDataNodeLoader arbilDataNodeLoader, ArbilDatabase arbilDatabase) {
         this.parentDbTreeNode = parentDbTreeNode;
         this.defaultTreeModel = defaultTreeModel;
         this.arbilDataNodeLoader = arbilDataNodeLoader;
+        this.arbilDatabase = arbilDatabase;
     }
 }

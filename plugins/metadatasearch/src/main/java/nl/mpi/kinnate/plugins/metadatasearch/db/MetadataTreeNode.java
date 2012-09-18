@@ -96,7 +96,15 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
         boolean nodeNeedsUpdating = false;
 //        System.out.println("getArbilNode-fileUri: " + fileUri);
         if (arbilDomDataNode == null) {
-            arbilDomDataNode = (ArbilDataNode) arbilDataNodeLoader.getPluginArbilDataNode(MetadataTreeNode.this, fileUri);
+            URI fileDbNameUri = fileUri;
+            if (fileUri.getScheme() == null) {
+                final String[] splitPath = fileUri.getPath().split("/", 2);
+                String databaseName = splitPath[0];
+                String uriPath = splitPath[1];
+                URI projectUri = arbilDatabase.getDatabaseProjectDirectory(databaseName).toURI();
+                fileDbNameUri = projectUri.resolve(uriPath);
+            }
+            arbilDomDataNode = (ArbilDataNode) arbilDataNodeLoader.getPluginArbilDataNode(MetadataTreeNode.this, fileDbNameUri);
 //            arbilDataNode.registerContainer(this);
             nodeNeedsUpdating = true;
         }
