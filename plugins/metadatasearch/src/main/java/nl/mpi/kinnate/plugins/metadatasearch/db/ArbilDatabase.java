@@ -160,7 +160,7 @@ public class ArbilDatabase {
         if (fieldType != null) {
             final String fieldNameString = fieldType.getFieldName();
             if (fieldNameString != null) {
-                fieldConstraint = "[name() = '" + fieldNameString + "']";
+                fieldConstraint = "name() = '" + fieldNameString + "'";
             }
         }
         return fieldConstraint;
@@ -187,10 +187,10 @@ public class ArbilDatabase {
         }
         switch (searchNegator) {
             case is:
-                returnString = "[" + returnString + "]";
+//                returnString = returnString;
                 break;
             case not:
-                returnString = "[not(" + returnString + ")]";
+                returnString = "not(" + returnString + ")";
                 break;
         }
         return returnString;
@@ -320,19 +320,25 @@ public class ArbilDatabase {
                 + "}</MetadataFileType>";
     }
 
-    private String getSearchQuery(SearchParameters searchParameters) {
+    private String getSearchFieldConstraint(SearchParameters searchParameters) {
+        String fieldConstraint = getFieldConstraint(searchParameters.fieldType);
+        String searchTextConstraint = getSearchTextConstraint(searchParameters.searchNegator, searchParameters.searchType, searchParameters.searchString);
+        return fieldConstraint + searchTextConstraint;
+    }
+
+    private String getSearchConstraint(SearchParameters searchParameters) {
         String typeConstraint = getTypeConstraint(searchParameters.fileType);
         String fieldConstraint = getFieldConstraint(searchParameters.fieldType);
         // todo: add to query: boolean searchNot, SearchType searchType, String searchString
         String searchTextConstraint = getSearchTextConstraint(searchParameters.searchNegator, searchParameters.searchType, searchParameters.searchString);
 
         return //"for $nameString in distinct-values(\n"
-                "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*" + fieldConstraint + searchTextConstraint + "\n"
-                + "return\n"
-                + "<MetadataTreeNode>\n"
-                + "<FileUri>{base-uri($entityNode)}</FileUri>\n"
-                + "<FileUriPath>{path($entityNode)}</FileUriPath>\n"
-                + "</MetadataTreeNode>\n";
+                "collection('" + databaseName + "')[" + typeConstraint + "//" + fieldConstraint + searchTextConstraint + "]\n";
+//                + "return\n"
+//                + "<MetadataTreeNode>\n"
+//                + "<FileUri>{base-uri($entityNode)}</FileUri>\n"
+//                + "<FileUriPath>{path($entityNode)}</FileUriPath>\n"
+//                + "</MetadataTreeNode>\n";
 //                + "return concat(base-uri($entityNode), path($entityNode))\n"
 //                + ")\n"
         //                + "order by $nameString\n"
@@ -448,15 +454,60 @@ public class ArbilDatabase {
 
     public DbTreeNode getSearchResult(CriterionJoinType criterionJoinType, ArrayList<SearchParameters> searchParametersList) {
         StringBuilder queryStringBuilder = new StringBuilder();
-        StringBuilder joinStringBuilder = new StringBuilder();
+        queryStringBuilder.append("<TreeNode>{\n");
         int parameterCounter = 0;
         for (SearchParameters searchParameters : searchParametersList) {
+            queryStringBuilder.append("let $documentSet");
+            queryStringBuilder.append(parameterCounter);
+            queryStringBuilder.append(" := ");
+            parameterCounter++;
+            queryStringBuilder.append(getSearchConstraint(searchParameters));
+        }
+        queryStringBuilder.append("let $returnSet := $documentSet0");
+        for (int setCount = 1; setCount < parameterCounter; setCount++) {
+            queryStringBuilder.append(" ");
+            queryStringBuilder.append(criterionJoinType.name());
+            queryStringBuilder.append(" $documentSet");
+            queryStringBuilder.append(setCount);
+        }
+        queryStringBuilder.append("\n"
+                + "for $documentNode in $returnSet\n"
+                + "return\n"
+                + "<MetadataTreeNode>\n"
+                + "<FileUri>{base-uri($documentNode)}</FileUri>\n"
+                + "{\n"
+                + "for $entityNode in $documentNode//*[");
+        boolean firstConstraint = true;
+        for (SearchParameters searchParameters : searchParametersList) {
+            if (firstConstraint) {
+                firstConstraint = false;
+            } else {
+                queryStringBuilder.append(" or ");
+            }
+            queryStringBuilder.append(getSearchFieldConstraint(searchParameters));
+        }
+        queryStringBuilder.append("]\n"
+                + "return <FileUriPath>{path($entityNode)}</FileUriPath>\n"
+                + "}</MetadataTreeNode>\n"
+                + "}</TreeNode>\n");
+        final DbTreeNode metadataTypesString = getDbTreeNode(queryStringBuilder.toString());
+        return metadataTypesString;
+    }
+
+    public DbTreeNode getSearchResultX(CriterionJoinType criterionJoinType, ArrayList<SearchParameters> searchParametersList) {
+        StringBuilder queryStringBuilder = new StringBuilder();
+        StringBuilder joinStringBuilder = new StringBuilder();
+        StringBuilder fieldStringBuilder = new StringBuilder();
+        int parameterCounter = 0;
+        for (SearchParameters searchParameters : searchParametersList) {
+            fieldStringBuilder.append(getSearchFieldConstraint(searchParameters));
             if (queryStringBuilder.length() > 0) {
+                fieldStringBuilder.append(" or ");
                 joinStringBuilder.append(" ");
                 joinStringBuilder.append(criterionJoinType.name());
                 joinStringBuilder.append(" ");
             } else {
-                joinStringBuilder.append("return <TreeNode>{");
+                joinStringBuilder.append("let $returnSet := ");
             }
             joinStringBuilder.append("$set");
             joinStringBuilder.append(parameterCounter);
@@ -464,10 +515,21 @@ public class ArbilDatabase {
             queryStringBuilder.append(parameterCounter);
             queryStringBuilder.append(" := ");
             parameterCounter++;
-            queryStringBuilder.append(getSearchQuery(searchParameters));
+            queryStringBuilder.append(getSearchConstraint(searchParameters));
         }
-        joinStringBuilder.append("}</TreeNode>");
         queryStringBuilder.append(joinStringBuilder);
+        queryStringBuilder.append("return <TreeNode>{"
+                + "for $documentNode in $returnSet\n"
+                + "return\n"
+                + "<MetadataTreeNode>\n"
+                + "<FileUri>{base-uri($entityNode)}</FileUri>\n"
+                + "for $entityNode in $documentNode//*");
+        queryStringBuilder.append(fieldStringBuilder.toString());
+        queryStringBuilder.append("\n"
+                + "return <FileUriPath>{path($entityNode)}</FileUriPath>\n"
+                + "</MetadataTreeNode>\n"
+                + "}</TreeNode>");
+
         final DbTreeNode metadataTypesString = getDbTreeNode(queryStringBuilder.toString());
         return metadataTypesString;
     }
