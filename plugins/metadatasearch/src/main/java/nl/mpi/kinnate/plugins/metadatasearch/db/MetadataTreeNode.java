@@ -135,7 +135,7 @@ public class MetadataTreeNode extends AbstractDbTreeNode implements ArbilDataNod
                     }
                 }
             }
-            System.out.println("labelString: " + labelString);
+//            System.out.println("labelString: " + labelString);
         }
         if (nodeNeedsUpdating) {
             SwingUtilities.invokeLater(new Runnable() {

@@ -63,6 +63,7 @@ public class SearchPanel extends JPanel implements ActionListener {
     final private ArbilTableModel arbilTableModel;
     final private PluginArbilDataNodeLoader arbilDataNodeLoader;
     final private PluginDialogHandler arbilWindowManager;
+    private int actionProgressCounter = 0;
 
     public SearchPanel(final PluginArbilDataNodeLoader arbilDataNodeLoader, final PluginDialogHandler dialogHandler) {
         this.arbilDataNodeLoader = arbilDataNodeLoader;
@@ -166,7 +167,12 @@ public class SearchPanel extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        jProgressBar.setIndeterminate(true);
+        actionProgressCounter++;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                jProgressBar.setIndeterminate(actionProgressCounter > 0);
+            }
+        });
         final String actionCommand = e.getActionCommand();
         System.out.println(actionCommand);
         SearchCriterionPanel eventCriterionPanel = null;
@@ -184,12 +190,19 @@ public class SearchPanel extends JPanel implements ActionListener {
     }
 
     public void initOptions() {
+        actionProgressCounter++;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                jProgressBar.setIndeterminate(actionProgressCounter > 0);
+            }
+        });
         new Thread(getRunnable("add", null)).start();
     }
 
     private Runnable getRunnable(final String actionCommand, final SearchCriterionPanel eventCriterionPanel) {
         return new Runnable() {
             public void run() {
+//                System.out.println("actionProgressCounter: " + actionProgressCounter);
                 if ("create".equals(actionCommand)) {
                     try {
                         System.out.println("create db");
@@ -197,6 +210,7 @@ public class SearchPanel extends JPanel implements ActionListener {
                         System.out.println("done");
                     } catch (QueryException exception) {
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Database Error");
+                        exception.printStackTrace();
                     }
 //                } else if ("options".equals(actionCommand)) {
                     // todo: when a database update occurs these queries should be run again and the UI updated
@@ -255,7 +269,13 @@ public class SearchPanel extends JPanel implements ActionListener {
 //                    }
 //                    resultsTextArea.setText(stringBuilder.toString());
                 }
-                jProgressBar.setIndeterminate(false);
+                actionProgressCounter--;
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+//                        System.out.println("progress done: " + actionProgressCounter);
+                        jProgressBar.setIndeterminate(actionProgressCounter > 0);
+                    }
+                });
             }
         };
     }

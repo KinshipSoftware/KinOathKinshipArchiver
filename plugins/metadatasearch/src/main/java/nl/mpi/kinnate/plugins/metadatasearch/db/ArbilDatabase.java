@@ -368,13 +368,14 @@ public class ArbilDatabase {
                  * the query below takes:
                  * 12.39 ms (varies per run)
                  */
-                + "for $facetEntry in index:facets('ArbilDatabase', 'flat')//element[entry/text() != '']\n"
+                + "for $facetEntry in index:facets('ArbilDatabase')//element[text/@type = 'text']\n"
+                + "order by $facetEntry/@name\n"
                 + "return\n"
                 + "<MetadataFileType>\n"
                 + "<fieldName>{string($facetEntry/@name)}</fieldName>\n"
                 //                + "<RecordCount>{string($facetEntry/@count)}</RecordCount>\n"
                 //                + "<ValueCount>{count($facetEntry/entry)}</ValueCount>\n"
-                + "<RecordCount>{count($facetEntry/entry)}</RecordCount>\n"
+                + "<RecordCount>{string($facetEntry/text/@count)}</RecordCount>\n"
                 + "</MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
@@ -494,45 +495,45 @@ public class ArbilDatabase {
         return metadataTypesString;
     }
 
-    public DbTreeNode getSearchResultX(CriterionJoinType criterionJoinType, ArrayList<SearchParameters> searchParametersList) {
-        StringBuilder queryStringBuilder = new StringBuilder();
-        StringBuilder joinStringBuilder = new StringBuilder();
-        StringBuilder fieldStringBuilder = new StringBuilder();
-        int parameterCounter = 0;
-        for (SearchParameters searchParameters : searchParametersList) {
-            fieldStringBuilder.append(getSearchFieldConstraint(searchParameters));
-            if (queryStringBuilder.length() > 0) {
-                fieldStringBuilder.append(" or ");
-                joinStringBuilder.append(" ");
-                joinStringBuilder.append(criterionJoinType.name());
-                joinStringBuilder.append(" ");
-            } else {
-                joinStringBuilder.append("let $returnSet := ");
-            }
-            joinStringBuilder.append("$set");
-            joinStringBuilder.append(parameterCounter);
-            queryStringBuilder.append("let $set");
-            queryStringBuilder.append(parameterCounter);
-            queryStringBuilder.append(" := ");
-            parameterCounter++;
-            queryStringBuilder.append(getSearchConstraint(searchParameters));
-        }
-        queryStringBuilder.append(joinStringBuilder);
-        queryStringBuilder.append("return <TreeNode>{"
-                + "for $documentNode in $returnSet\n"
-                + "return\n"
-                + "<MetadataTreeNode>\n"
-                + "<FileUri>{base-uri($entityNode)}</FileUri>\n"
-                + "for $entityNode in $documentNode//*");
-        queryStringBuilder.append(fieldStringBuilder.toString());
-        queryStringBuilder.append("\n"
-                + "return <FileUriPath>{path($entityNode)}</FileUriPath>\n"
-                + "</MetadataTreeNode>\n"
-                + "}</TreeNode>");
-
-        final DbTreeNode metadataTypesString = getDbTreeNode(queryStringBuilder.toString());
-        return metadataTypesString;
-    }
+//    public DbTreeNode getSearchResultX(CriterionJoinType criterionJoinType, ArrayList<SearchParameters> searchParametersList) {
+//        StringBuilder queryStringBuilder = new StringBuilder();
+//        StringBuilder joinStringBuilder = new StringBuilder();
+//        StringBuilder fieldStringBuilder = new StringBuilder();
+//        int parameterCounter = 0;
+//        for (SearchParameters searchParameters : searchParametersList) {
+//            fieldStringBuilder.append(getSearchFieldConstraint(searchParameters));
+//            if (queryStringBuilder.length() > 0) {
+//                fieldStringBuilder.append(" or ");
+//                joinStringBuilder.append(" ");
+//                joinStringBuilder.append(criterionJoinType.name());
+//                joinStringBuilder.append(" ");
+//            } else {
+//                joinStringBuilder.append("let $returnSet := ");
+//            }
+//            joinStringBuilder.append("$set");
+//            joinStringBuilder.append(parameterCounter);
+//            queryStringBuilder.append("let $set");
+//            queryStringBuilder.append(parameterCounter);
+//            queryStringBuilder.append(" := ");
+//            parameterCounter++;
+//            queryStringBuilder.append(getSearchConstraint(searchParameters));
+//        }
+//        queryStringBuilder.append(joinStringBuilder);
+//        queryStringBuilder.append("return <TreeNode>{"
+//                + "for $documentNode in $returnSet\n"
+//                + "return\n"
+//                + "<MetadataTreeNode>\n"
+//                + "<FileUri>{base-uri($entityNode)}</FileUri>\n"
+//                + "for $entityNode in $documentNode//*");
+//        queryStringBuilder.append(fieldStringBuilder.toString());
+//        queryStringBuilder.append("\n"
+//                + "return <FileUriPath>{path($entityNode)}</FileUriPath>\n"
+//                + "</MetadataTreeNode>\n"
+//                + "}</TreeNode>");
+//
+//        final DbTreeNode metadataTypesString = getDbTreeNode(queryStringBuilder.toString());
+//        return metadataTypesString;
+//    }
 
     public MetadataFileType[] getPathMetadataTypes(MetadataFileType metadataFileType) {
         final String queryString = getPopulatedPaths();

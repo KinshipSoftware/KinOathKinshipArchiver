@@ -180,9 +180,9 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        actionProgressCounter++;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                actionProgressCounter++;
                 jProgressBar.setIndeterminate(actionProgressCounter > 0);
             }
         });
@@ -227,6 +227,7 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
                         System.out.println("done");
                     } catch (QueryException exception) {
                         arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Database Error");
+                        exception.printStackTrace();
                     }
                 } else if ("options".equals(actionCommand)) {
                     System.out.println("run fast options query");
@@ -274,9 +275,9 @@ public class FacetedTreePanel extends JPanel implements ActionListener {
                     }
                     updateTree();
                 }
+                actionProgressCounter--;
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        actionProgressCounter--;
                         jProgressBar.setIndeterminate(actionProgressCounter > 0);
                     }
                 });
