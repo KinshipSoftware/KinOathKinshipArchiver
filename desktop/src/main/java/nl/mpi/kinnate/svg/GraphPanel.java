@@ -30,6 +30,7 @@ import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.MetadataPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import org.apache.batik.bridge.UpdateManager;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.util.SAXIOException;
@@ -90,20 +91,27 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.setEnableRotateInteractor(false);
         svgCanvas.setEnableZoomInteractor(false);
         svgCanvas.addMouseWheelListener(new MouseWheelListener() {
-            public void mouseWheelMoved(MouseWheelEvent e) {
+            public void mouseWheelMoved(final MouseWheelEvent e) {
                 if (e.isShiftDown()) {
-                    // todo: this should be done in an SVG thread
-                    double scale = 1 - e.getUnitsToScroll() / 10.0;
-                    double tx = -e.getX() * (scale - 1);
-                    double ty = -e.getY() * (scale - 1);
-//                System.out.println("scale: " + scale);
-//                System.out.println("scale: " + svgCanvas.getRenderingTransform().getScaleX());
-                    if (scale > 1 || svgCanvas.getRenderingTransform().getScaleX() > 0.01) {
-                        AffineTransform at = new AffineTransform();
-                        at.translate(tx, ty);
-                        at.scale(scale, scale);
-                        at.concatenate(svgCanvas.getRenderingTransform());
-                        svgCanvas.setRenderingTransform(at);
+                    UpdateManager updateManager = svgCanvas.getUpdateManager();
+                    if (updateManager != null) {
+                        updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                            public void run() {
+                                double scale = 1 - e.getUnitsToScroll() / 10.0;
+                                double tx = -e.getX() * (scale - 1);
+                                double ty = -e.getY() * (scale - 1);
+//                                System.out.println("scale: " + scale);
+//                                System.out.println("scale: " + svgCanvas.getRenderingTransform().getScaleX());
+                                AffineTransform at = new AffineTransform();
+                                at.translate(tx, ty);
+                                at.scale(scale, scale);
+                                at.concatenate(svgCanvas.getRenderingTransform());
+//                                System.out.println("new scale: " + at.getScaleX());
+                                if (at.getScaleX() > 0.1) {
+                                    svgCanvas.setRenderingTransform(at);
+                                }
+                            }
+                        });
                     }
                 } else {
                     //  add a ToolTip or StatusBar to give hints "Hold shift + mouse wheel to zoom"
