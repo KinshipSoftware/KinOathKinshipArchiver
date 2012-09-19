@@ -805,27 +805,33 @@ public class SvgUpdateHandler {
 
         svgRoot.removeAttribute("width");
         svgRoot.removeAttribute("height");
-
-        svgRoot.setAttribute("viewBox", (graphSize.x - 5) + " " + (graphSize.y - 5) + " " + (graphSize.width + 10) + " " + (graphSize.height + 10));
+        final Rectangle panelBounds = graphPanel.svgCanvas.getBounds();
+        final int horizontalGap = panelBounds.width - graphSize.width;
+        final int verticalGap = panelBounds.height - graphSize.height;
+        int emptyBorder = (horizontalGap < verticalGap) ? horizontalGap : verticalGap;
+        if (emptyBorder < 0) {
+            emptyBorder = 0;
+        }
+        svgRoot.setAttribute("viewBox", (graphSize.x - 5 - emptyBorder) + " " + (graphSize.y - 5 - emptyBorder) + " " + (graphSize.width + 10 + emptyBorder * 2) + " " + (graphSize.height + 10 + emptyBorder * 2));
         if (graphPanel.dataStoreSvg.showDiagramBorder) {
             // draw a grey rectangle to show the diagram bounds
             Element pageBorderNode = graphPanel.doc.getElementById("PageBorder");
             if (pageBorderNode == null) {
                 pageBorderNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
                 pageBorderNode.setAttribute("id", "PageBorder");
-                pageBorderNode.setAttribute("x", Float.toString(graphSize.x + 2));
-                pageBorderNode.setAttribute("y", Float.toString(graphSize.y + 2));
-                pageBorderNode.setAttribute("width", Float.toString(graphSize.width - 4));
-                pageBorderNode.setAttribute("height", Float.toString(graphSize.height - 4));
+                pageBorderNode.setAttribute("x", Float.toString(graphSize.x + 2 - emptyBorder));
+                pageBorderNode.setAttribute("y", Float.toString(graphSize.y + 2 - emptyBorder));
+                pageBorderNode.setAttribute("width", Float.toString(graphSize.width - 4 + emptyBorder * 2));
+                pageBorderNode.setAttribute("height", Float.toString(graphSize.height - 4 + emptyBorder * 2));
                 pageBorderNode.setAttribute("fill", "none");
                 pageBorderNode.setAttribute("stroke-width", "2");
                 pageBorderNode.setAttribute("stroke", "grey");
                 diagramGroupNode.appendChild(pageBorderNode);
             } else {
-                pageBorderNode.setAttribute("x", Float.toString(graphSize.x + 2));
-                pageBorderNode.setAttribute("y", Float.toString(graphSize.y + 2));
-                pageBorderNode.setAttribute("width", Float.toString(graphSize.width - 4));
-                pageBorderNode.setAttribute("height", Float.toString(graphSize.height - 4));
+                pageBorderNode.setAttribute("x", Float.toString(graphSize.x + 2 - emptyBorder));
+                pageBorderNode.setAttribute("y", Float.toString(graphSize.y + 2 - emptyBorder));
+                pageBorderNode.setAttribute("width", Float.toString(graphSize.width - 4 + emptyBorder * 2));
+                pageBorderNode.setAttribute("height", Float.toString(graphSize.height - 4 + emptyBorder * 2));
             }
             // end draw a grey rectangle to show the diagram bounds
         } else {
