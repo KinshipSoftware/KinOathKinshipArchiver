@@ -160,7 +160,7 @@ public class ArbilDatabase {
         if (fieldType != null) {
             final String fieldNameString = fieldType.getFieldName();
             if (fieldNameString != null) {
-                fieldConstraint = "name() = '" + fieldNameString + "'";
+                fieldConstraint = "name() = '" + fieldNameString + "'"; 
             }
         }
         return fieldConstraint;
@@ -321,14 +321,14 @@ public class ArbilDatabase {
     }
 
     private String getSearchFieldConstraint(SearchParameters searchParameters) {
-        String fieldConstraint = getFieldConstraint(searchParameters.fieldType);
+        String fieldConstraint = getFieldConstraint(searchParameters.fieldType);// todo: this needs an 'and' but only when both are required
         String searchTextConstraint = getSearchTextConstraint(searchParameters.searchNegator, searchParameters.searchType, searchParameters.searchString);
         return fieldConstraint + searchTextConstraint;
     }
 
     private String getSearchConstraint(SearchParameters searchParameters) {
         String typeConstraint = getTypeConstraint(searchParameters.fileType);
-        String fieldConstraint = getFieldConstraint(searchParameters.fieldType);
+        String fieldConstraint = getFieldConstraint(searchParameters.fieldType);// todo: this needs an 'and' but only when both are required
         // todo: add to query: boolean searchNot, SearchType searchType, String searchString
         String searchTextConstraint = getSearchTextConstraint(searchParameters.searchNegator, searchParameters.searchType, searchParameters.searchString);
 
@@ -348,9 +348,11 @@ public class ArbilDatabase {
 
     private String getPopulatedFieldNames(MetadataFileType fileType) {
         String typeConstraint = getTypeConstraint(fileType);
-        return "<MetadataFileType>\n"
-                + "<MetadataFileType><displayString>All Fields</displayString></MetadataFileType>\n"
-                + "{\n"
+        return  "let $allFieldNames := index:facets('ArbilDatabase')//element[text/@type = 'text']\n"
+                + "return <MetadataFileType>\n"
+                + "<MetadataFileType><displayString>All Fields</displayString>"
+//                + "<RecordCount>{sum($allFieldNames/text/@count)}</RecordCount>\n"
+                + "</MetadataFileType>\n"
                 //                + "for $nameString in distinct-values(\n"
                 //                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*[count(*) = 0]\n"
                 //                + "return $entityNode/name()\n"
@@ -368,14 +370,16 @@ public class ArbilDatabase {
                  * the query below takes:
                  * 12.39 ms (varies per run)
                  */
-                + "for $facetEntry in index:facets('ArbilDatabase')//element[text/@type = 'text']\n"
-                + "order by $facetEntry/@name\n"
+                + "{\nfor $facetEntry in $allFieldNames\n"
+                + "let $nameString := $facetEntry/@name\n"
+                + "group by $nameString\n"
+                + "order by $nameString\n"
                 + "return\n"
                 + "<MetadataFileType>\n"
-                + "<fieldName>{string($facetEntry/@name)}</fieldName>\n"
+                + "<fieldName>{$nameString}</fieldName>\n"
                 //                + "<RecordCount>{string($facetEntry/@count)}</RecordCount>\n"
                 //                + "<ValueCount>{count($facetEntry/entry)}</ValueCount>\n"
-                + "<RecordCount>{string($facetEntry/text/@count)}</RecordCount>\n"
+                + "<RecordCount>{sum($facetEntry/text/@count)}</RecordCount>\n"
                 + "</MetadataFileType>\n"
                 + "}</MetadataFileType>";
     }
