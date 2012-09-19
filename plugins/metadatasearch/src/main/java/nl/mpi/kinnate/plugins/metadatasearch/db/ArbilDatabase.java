@@ -160,7 +160,7 @@ public class ArbilDatabase {
         if (fieldType != null) {
             final String fieldNameString = fieldType.getFieldName();
             if (fieldNameString != null) {
-                fieldConstraint = "name() = '" + fieldNameString + "'"; 
+                fieldConstraint = "name() = '" + fieldNameString + "' and "; 
             }
         }
         return fieldConstraint;
@@ -321,14 +321,14 @@ public class ArbilDatabase {
     }
 
     private String getSearchFieldConstraint(SearchParameters searchParameters) {
-        String fieldConstraint = getFieldConstraint(searchParameters.fieldType);// todo: this needs an 'and' but only when both are required
+        String fieldConstraint = getFieldConstraint(searchParameters.fieldType);
         String searchTextConstraint = getSearchTextConstraint(searchParameters.searchNegator, searchParameters.searchType, searchParameters.searchString);
         return fieldConstraint + searchTextConstraint;
     }
 
     private String getSearchConstraint(SearchParameters searchParameters) {
         String typeConstraint = getTypeConstraint(searchParameters.fileType);
-        String fieldConstraint = getFieldConstraint(searchParameters.fieldType);// todo: this needs an 'and' but only when both are required
+        String fieldConstraint = getFieldConstraint(searchParameters.fieldType);
         // todo: add to query: boolean searchNot, SearchType searchType, String searchString
         String searchTextConstraint = getSearchTextConstraint(searchParameters.searchNegator, searchParameters.searchType, searchParameters.searchString);
 
