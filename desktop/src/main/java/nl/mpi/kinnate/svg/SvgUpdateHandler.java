@@ -805,9 +805,10 @@ public class SvgUpdateHandler {
 
         svgRoot.removeAttribute("width");
         svgRoot.removeAttribute("height");
+        final int maxAutoScale = 2;
         final Rectangle panelBounds = graphPanel.svgCanvas.getBounds();
-        final int horizontalGap = panelBounds.width - graphSize.width;
-        final int verticalGap = panelBounds.height - graphSize.height;
+        final int horizontalGap = panelBounds.width / maxAutoScale - graphSize.width;
+        final int verticalGap = panelBounds.height / maxAutoScale - graphSize.height;
         int emptyBorder = (horizontalGap < verticalGap) ? horizontalGap : verticalGap;
         if (emptyBorder < 0) {
             emptyBorder = 0;
