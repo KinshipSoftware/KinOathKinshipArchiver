@@ -4,9 +4,9 @@ import java.awt.Point;
 import java.util.HashSet;
 
 /**
- * Document : LineLookUpTable
- * Created on : Sep 30, 2011, 3:24:55 PM
- * Author : Peter Withers
+ * Document : LineLookUpTable Created on : Sep 30, 2011, 3:24:55 PM
+ *
+ * @author Peter Withers
  */
 public class LineLookUpTable {
 
@@ -24,11 +24,18 @@ public class LineLookUpTable {
     }
 
     private boolean intersects(Point[] horizontalLine, Point[] verticalLine) {
-        boolean startsBefore = horizontalLine[0].x <= verticalLine[0].x;
-        boolean endsBefore = horizontalLine[1].x <= verticalLine[0].x;
-        boolean startsAbove = verticalLine[0].y <= horizontalLine[0].y;
-        boolean endsAbove = verticalLine[1].y <= horizontalLine[0].y;
-        return (startsBefore != endsBefore && startsAbove != endsAbove);
+        Point[] horizontalLineDirected;
+        if (horizontalLine[0].x < horizontalLine[1].x) {
+            horizontalLineDirected = horizontalLine;
+        } else {
+            horizontalLineDirected = new Point[]{horizontalLine[1], horizontalLine[0]};
+        }
+        boolean startsBefore = horizontalLineDirected[0].x < verticalLine[0].x;
+        boolean endsBefore = horizontalLineDirected[1].x <= verticalLine[0].x;
+        boolean startsAbove = verticalLine[0].y < horizontalLineDirected[0].y;
+        boolean endsAbove = verticalLine[1].y < horizontalLineDirected[0].y;
+        final boolean intersectsResult = startsBefore != endsBefore && startsAbove != endsAbove;
+        return (intersectsResult);
     }
 
     private boolean overlaps(Point[] lineA, Point[] lineB) {
