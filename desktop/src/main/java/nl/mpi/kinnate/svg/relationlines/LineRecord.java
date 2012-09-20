@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Document : LineRecord
- * Created on : Jun 29, 2012, 2:19:43 PM
- * Author : Peter Withers
+ * Document : LineRecord Created on : Jun 29, 2012, 2:19:43 PM
+ *
+ * @author Peter Withers
  */
 public class LineRecord {
 
@@ -149,11 +149,30 @@ public class LineRecord {
             startPoint.setLocation(startPoint.x - distance, startPoint.y);
             endPoint.setLocation(endPoint.x - distance, endPoint.y);
         } else {
-            startPoint.setLocation(startPoint.x, startPoint.y - distance);
-            endPoint.setLocation(endPoint.x, endPoint.y - distance);
+            final Point movedStartPoint = new Point(startPoint.x, startPoint.y - distance);
+            final Point movedEndPoint = new Point(endPoint.x, endPoint.y - distance);
+            // only shift previous/next if it is a horizontal line
+            // find and update all points before this one that are in the exact location
+            Point oldStartPoint = new Point(startPoint);
+            for (int linePartPrev = linePart; linePartPrev > 0; linePartPrev--) {
+                if (oldStartPoint.equals(this.pointsList.get(linePartPrev))) {
+                    this.pointsList.get(linePartPrev).setLocation(movedStartPoint);
+                    System.out.println("linePartPrev: " + linePartPrev);
+                } else {
+                    break;
+                }
+            }
+            // find and update all points after this one that are in the exact location
+            Point oldEndPoint = new Point(endPoint);
+            for (int linePartNext = linePart + 1; linePartNext < this.pointsList.size() - 1; linePartNext++) {
+                if (oldEndPoint.equals(this.pointsList.get(linePartNext))) {
+                    this.pointsList.get(linePartNext).setLocation(movedEndPoint);
+                    System.out.println("linePartNext: " + linePartNext);
+                } else {
+                    break;
+                }
+            }
         }
-//        this.pointsList.set(linePart, new Point(startPoint.x, startPoint.y - 3));
-//        this.pointsList.set(linePart + 1, new Point(endPoint.x, endPoint.y - 3));
     }
 
     public void sortLoops() {
