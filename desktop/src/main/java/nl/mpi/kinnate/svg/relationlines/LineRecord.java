@@ -157,7 +157,7 @@ public class LineRecord {
             for (int linePartPrev = linePart; linePartPrev > 0; linePartPrev--) {
                 if (oldStartPoint.equals(this.pointsList.get(linePartPrev))) {
                     this.pointsList.get(linePartPrev).setLocation(movedStartPoint);
-                    System.out.println("linePartPrev: " + linePartPrev);
+//                    System.out.println("linePartPrev: " + linePartPrev);
                 } else {
                     break;
                 }
@@ -165,9 +165,11 @@ public class LineRecord {
             // find and update all points after this one that are in the exact location
             Point oldEndPoint = new Point(endPoint);
             for (int linePartNext = linePart + 1; linePartNext < this.pointsList.size() - 1; linePartNext++) {
+//                System.out.println("linePartNext: " + linePartNext);
+//                System.out.println(this.pointsList.get(linePartNext));
                 if (oldEndPoint.equals(this.pointsList.get(linePartNext))) {
                     this.pointsList.get(linePartNext).setLocation(movedEndPoint);
-                    System.out.println("linePartNext: " + linePartNext);
+//                    System.out.println("moved");
                 } else {
                     break;
                 }
