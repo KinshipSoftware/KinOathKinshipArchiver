@@ -23,13 +23,25 @@ public class LineLookUpTable {
     public void getOverlapsOtherLine() {
     }
 
-    private boolean intersects(Point[] horizontalLine, Point[] verticalLine) {
-        Point[] horizontalLineDirected;
-        if (horizontalLine[0].x < horizontalLine[1].x) {
-            horizontalLineDirected = horizontalLine;
+    protected Point[] getLineDirected(Point[] undirectedLine) {
+        // this method is not intended to handle diagonal lines
+        Point[] lineDirected;
+        if (undirectedLine[0].y == undirectedLine[1].y) {
+            if (undirectedLine[0].x <= undirectedLine[1].x) {
+                lineDirected = undirectedLine;
+            } else {
+                lineDirected = new Point[]{undirectedLine[1], undirectedLine[0]};
+            }
+        } else if (undirectedLine[0].y <= undirectedLine[1].y) {
+            lineDirected = undirectedLine;
         } else {
-            horizontalLineDirected = new Point[]{horizontalLine[1], horizontalLine[0]};
+            lineDirected = new Point[]{undirectedLine[1], undirectedLine[0]};
         }
+        return lineDirected;
+    }
+
+    protected boolean intersects(Point[] horizontalLine, Point[] verticalLine) {
+        Point[] horizontalLineDirected = getLineDirected(horizontalLine);
         boolean startsBefore = horizontalLineDirected[0].x < verticalLine[0].x;
         boolean endsBefore = horizontalLineDirected[1].x <= verticalLine[0].x;
         boolean startsAbove = verticalLine[0].y < horizontalLineDirected[0].y;
@@ -38,20 +50,22 @@ public class LineLookUpTable {
         return (intersectsResult);
     }
 
-    private boolean overlaps(Point[] lineA, Point[] lineB) {
-        boolean verticalMatch = lineA[0].x == lineB[0].x && lineA[0].x == lineB[1].x && lineA[0].x == lineA[1].x;
-        boolean horizontalMatch = lineA[0].y == lineB[0].y && lineA[0].y == lineB[1].y && lineA[0].y == lineA[1].y;
+    protected boolean overlaps(Point[] lineA, Point[] lineB) {
+        Point[] lineDirectedA = getLineDirected(lineA);
+        Point[] lineDirectedB = getLineDirected(lineB);
+        boolean verticalMatch = lineDirectedA[0].x == lineDirectedB[0].x && lineDirectedA[0].x == lineDirectedB[1].x && lineDirectedA[0].x == lineDirectedA[1].x;
+        boolean horizontalMatch = lineDirectedA[0].y == lineDirectedB[0].y && lineDirectedA[0].y == lineDirectedB[1].y && lineDirectedA[0].y == lineDirectedA[1].y;
         // horizontalMatch
-        int startA = lineA[0].x;
-        int startB = lineB[0].x;
-        int endA = lineA[1].x;
-        int endB = lineB[1].x;
+        int startA = lineDirectedA[0].x;
+        int startB = lineDirectedB[0].x;
+        int endA = lineDirectedA[1].x;
+        int endB = lineDirectedB[1].x;
         if (verticalMatch) {
             // verticalMatch
-            startA = lineA[0].y;
-            startB = lineB[0].y;
-            endA = lineA[1].y;
-            endB = lineB[1].y;
+            startA = lineDirectedA[0].y;
+            startB = lineDirectedB[0].y;
+            endA = lineDirectedA[1].y;
+            endB = lineDirectedB[1].y;
         }
         boolean zeroLength = startA == endA || startB == endB;
         if (zeroLength) {
@@ -61,21 +75,21 @@ public class LineLookUpTable {
         if (horizontalMatch || verticalMatch) {
             // is lineA within lineB
             // is lineB within lineA
-            if (startA <= startB && startA >= endB) {
+            if (startA <= startB && startA > endB) {
 //                System.out.print(horizontalMatch + "||" + verticalMatch);
-//                System.out.print("x");
+//                System.out.println(" x");
                 return true;
-            } else if (startA >= startB && startA <= endB) {
+            } else if (startA >= startB && startA < endB) {
 //                System.out.print(horizontalMatch + "||" + verticalMatch);
-//                System.out.print("y");
+//                System.out.println(" y");
                 return true;
-            } else if (startB <= startA && startB >= endA) {
+            } else if (startB <= startA && startB > endA) {
 //                System.out.print(horizontalMatch + "||" + verticalMatch);
-//                System.out.print("z");
+//                System.out.println(" z");
                 return true;
-            } else if (startB >= startA && startB <= endA) {
+            } else if (startB >= startA && startB < endA) {
 //                System.out.print(horizontalMatch + "||" + verticalMatch);
-//                System.out.print("w");
+//                System.out.println(" w");
                 return true;
             }
         }
@@ -147,7 +161,7 @@ public class LineLookUpTable {
         }
     }
 
-//    private Point[] getIntersections(LineRecord localLineRecord) {
+//    protected Point[] getIntersections(LineRecord localLineRecord) {
 //        HashSet<Point> intersectionPoints = new HashSet<Point>();
 //        for (LineRecord lineRecord : lineRecords) {
 //            int currentHorizontal = lineRecord.getFirstHorizontal();
