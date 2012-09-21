@@ -468,7 +468,6 @@ public class EntitySvg {
                 updatedPositionY = (float) (updatedPositionY + shiftYscaled);
             }
 //            System.out.println("updatedPosition: " + updatedPositionX + " : " + updatedPositionY + " : " + shiftX + " : " + shiftY);
-            // todo: at this point check if this moved entity is over another, if it is then shift on the x axis
             if (snapToGrid) {
                 double updatedSnapPositionX = Math.round(updatedPositionX / 50) * 50; // limit movement to the grid
                 updatedPositionX = (float) updatedSnapPositionX;
@@ -482,7 +481,26 @@ public class EntitySvg {
                     updatedPositionY = (int) updatedPositionY;
                 }
             }
-
+            // check if the moved entity is over another, if it is then shift on the x axis
+            boolean collisionFound = true;
+            while (collisionFound) {
+                collisionFound = false;
+                for (Point currentEntity : entityPositions.values()) {
+                    if (!currentEntity.equals(entityPosition)) {
+                        if (updatedPositionY > currentEntity.y - EntitySvg.symbolSize && updatedPositionY < currentEntity.y + EntitySvg.symbolSize) {
+                            if (updatedPositionX > currentEntity.x - EntitySvg.symbolSize && updatedPositionX <= currentEntity.x) {
+//                                System.out.println("shift left");
+                                collisionFound = true;
+                                updatedPositionX = currentEntity.x - EntitySvg.symbolSize;
+                            } else if (updatedPositionX < currentEntity.x + EntitySvg.symbolSize && updatedPositionX >= currentEntity.x) {
+//                                System.out.println("shift right");
+                                collisionFound = true;
+                                updatedPositionX = currentEntity.x + EntitySvg.symbolSize;
+                            }
+                        }
+                    }
+                }
+            }
 //            AffineTransform at = new AffineTransform();
 //            at.translate(updatedPositionX, updatedPositionY);
 ////                at.scale(scale, scale);
