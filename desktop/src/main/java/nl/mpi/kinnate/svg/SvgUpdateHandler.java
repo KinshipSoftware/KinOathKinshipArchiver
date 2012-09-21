@@ -845,10 +845,10 @@ public class SvgUpdateHandler {
 
     public void requestResize() {
         resizeRequired = true;
-        updateCanvasSize();
+        updateCanvasSize(true);
     }
 
-    public void updateCanvasSize() {
+    public void updateCanvasSize(final boolean resetZoom) {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
@@ -857,7 +857,7 @@ public class SvgUpdateHandler {
                         resizeRequired = false;
                         Element svgRoot = graphPanel.doc.getDocumentElement();
                         Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
-                        resizeCanvas(svgRoot, diagramGroupNode, true);
+                        resizeCanvas(svgRoot, diagramGroupNode, resetZoom);
                     }
                 }
             });
