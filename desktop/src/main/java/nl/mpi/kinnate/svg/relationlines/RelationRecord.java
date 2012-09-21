@@ -255,8 +255,9 @@ public class RelationRecord {
                 if (averageParentPassed != null) {
                     throw new UnsupportedOperationException();
                 }
-                egoYmid = egoY - midSpacing;
-                alterYmid = alterY - midSpacing;
+                // push the sibling line down a bit
+                egoYmid = egoY - midSpacing + 10;
+                alterYmid = alterY - midSpacing + 10;
                 centerX = (egoY < alterY) ? alterX : egoX;
                 centerX = (egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
@@ -265,6 +266,7 @@ public class RelationRecord {
                     throw new UnsupportedOperationException();
                 }
 //                float unionMid = (egoY > alterY) ? egoY : alterY;
+                // make the union line lower than the parents but above the mid line
                 egoYmid = egoY + 30;
                 alterYmid = alterY + 30;
                 centerX = (egoY < alterY) ? egoX : alterX;
