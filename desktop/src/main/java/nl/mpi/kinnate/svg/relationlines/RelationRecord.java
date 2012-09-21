@@ -299,7 +299,8 @@ public class RelationRecord {
             float lowerParentLineY = averageParent.y + midSpacing + 10;
 
             if (egoY >= averageParent.y + vSpacing) {
-                initialPointsList.add(new Point((int) averageParentX, (int) egoYmid));
+                initialPointsList.add(new Point((int) egoX, (int) lowerParentLineY));
+                initialPointsList.add(new Point((int) averageParentX, (int) lowerParentLineY));
                 initialPointsList.add(new Point((int) averageParentX, (int) alterYmid));
             } else {
                 initialPointsList.add(new Point((int) centerParentX, (int) egoYmid));
