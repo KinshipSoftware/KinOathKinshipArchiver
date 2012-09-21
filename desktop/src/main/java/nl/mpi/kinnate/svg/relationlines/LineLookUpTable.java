@@ -2,6 +2,7 @@ package nl.mpi.kinnate.svg.relationlines;
 
 import java.awt.Point;
 import java.util.HashSet;
+import nl.mpi.kinnate.svg.EntitySvg;
 
 /**
  * Document : LineLookUpTable Created on : Sep 30, 2011, 3:24:55 PM
@@ -38,6 +39,20 @@ public class LineLookUpTable {
             lineDirected = new Point[]{undirectedLine[1], undirectedLine[0]};
         }
         return lineDirected;
+    }
+
+    protected boolean intersectsPoint(Point entityPoint, Point[] relationLine) {
+        System.out.println("entityPoint:" + entityPoint);
+        System.out.println("segment: " + relationLine[0] + relationLine[1]);
+        boolean startsBefore = relationLine[0].x <= entityPoint.x + EntitySvg.symbolSize;
+        boolean endsBefore = relationLine[1].x <= entityPoint.x;
+        boolean startsAbove = relationLine[0].y <= entityPoint.y + EntitySvg.symbolSize;
+        boolean endsAbove = relationLine[1].y <= entityPoint.y;
+        final boolean intersectsResult = startsBefore != endsBefore && startsAbove != endsAbove;
+        System.out.println("startsBefore: " + startsBefore);
+        System.out.println("endsBefore: " + endsBefore);
+        System.out.println("intersectsResult: " + intersectsResult);
+        return (intersectsResult);
     }
 
     protected boolean intersects(Point[] horizontalLine, Point[] verticalLine) {
@@ -96,6 +111,33 @@ public class LineLookUpTable {
         return false;
     }
     boolean excludeFirstLastSegments = true;
+
+    public void separateLinesOverlappingEntities(Point[] allEntityLocations) {
+        int offset = 0;
+        if (excludeFirstLastSegments) {
+            offset = 1;
+        }
+        LineRecord[] lineRecordArray = lineRecords.toArray(new LineRecord[0]);
+        for (int lineRecordCount = 0; lineRecordCount < lineRecordArray.length; lineRecordCount++) {
+//            System.out.print("lineRecordCount: "+lineRecordCount);
+            LineRecord lineRecordOuter = lineRecordArray[lineRecordCount];
+            for (int currentIndexA = 0 + offset; currentIndexA <= lineRecordOuter.getLastSegment() - offset; currentIndexA++) {
+                Point[] currentSegmentA = lineRecordOuter.getSegment(currentIndexA);
+                System.out.print("[" + lineRecordCount + ":" + currentIndexA + "]");
+                for (Point entityLocation : allEntityLocations) {
+                    System.out.println("entityLocation:" + entityLocation);
+                    if (intersectsPoint(entityLocation, currentSegmentA)) {
+                        System.out.print(" intersects,");
+//                    System.out.print("[" + entityLocation + "]");
+                        lineRecordOuter.moveAside(currentIndexA, 6);
+                    } else {
+//                        System.out.print(",");
+                    }
+                }
+            }
+            System.out.println("");
+        }
+    }
 
     public void separateOverlappingLines() {
         int offset = 0;
