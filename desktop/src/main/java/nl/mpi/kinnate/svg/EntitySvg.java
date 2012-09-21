@@ -29,8 +29,8 @@ import org.w3c.dom.svg.SVGDocument;
 public class EntitySvg {
 
     protected HashMap<UniqueIdentifier, Point> entityPositions = new HashMap<UniqueIdentifier, Point>();
-    private int symbolSize = 15;
-    static protected int strokeWidth = 2;
+    static final public int symbolSize = 15;
+    static final protected int strokeWidth = 2;
     private MessageDialogHandler dialogHandler;
 
     public EntitySvg(MessageDialogHandler dialogHandler) {
@@ -468,6 +468,7 @@ public class EntitySvg {
                 updatedPositionY = (float) (updatedPositionY + shiftYscaled);
             }
 //            System.out.println("updatedPosition: " + updatedPositionX + " : " + updatedPositionY + " : " + shiftX + " : " + shiftY);
+            // todo: at this point check if this moved entity is over another, if it is then shift on the x axis
             if (snapToGrid) {
                 double updatedSnapPositionX = Math.round(updatedPositionX / 50) * 50; // limit movement to the grid
                 updatedPositionX = (float) updatedSnapPositionX;
