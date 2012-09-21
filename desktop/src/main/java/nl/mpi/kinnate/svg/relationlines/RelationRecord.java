@@ -12,9 +12,9 @@ import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : RelationRecord
- * Created on : Jun 29, 2012, 2:18:15 PM
- * Author : Peter Withers
+ * Document : RelationRecord Created on : Jun 29, 2012, 2:18:15 PM
+ *
+ * @author Peter Withers
  */
 public class RelationRecord {
 
@@ -227,7 +227,7 @@ public class RelationRecord {
                     // todo: this is filtering out the parent location for non ancestor relations, but it would be more efficient to no get the parent location unless required
                     averageParent = averageParentPassed;
                 }
-                egoYmid = egoY - midSpacing;
+                egoYmid = egoY - midSpacing + 10;
                 alterYmid = averageParent.y + 30;
 //                alterYmid = alterY + midSpacing;
 //                egoYmid = alterYmid + 30;
@@ -256,8 +256,8 @@ public class RelationRecord {
                     throw new UnsupportedOperationException();
                 }
                 // push the sibling line down a bit
-                egoYmid = egoY - midSpacing + 10;
-                alterYmid = alterY - midSpacing + 10;
+                egoYmid = egoY - midSpacing + 16;
+                alterYmid = alterY - midSpacing + 16;
                 centerX = (egoY < alterY) ? alterX : egoX;
                 centerX = (egoX == alterX) ? centerX - midSpacing : centerX;
                 break;
@@ -275,8 +275,8 @@ public class RelationRecord {
 //            case affiliation:
 //            case none:
             default:
-                egoYmid = egoY;
-                alterYmid = alterY;
+                egoYmid = egoY + 10;
+                alterYmid = alterY + 10;
                 break;
         }
 //        if (alterY == egoY) {
