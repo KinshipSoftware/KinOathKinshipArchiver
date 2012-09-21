@@ -42,16 +42,16 @@ public class LineLookUpTable {
     }
 
     protected boolean intersectsPoint(Point entityPoint, Point[] relationLine) {
-        System.out.println("entityPoint:" + entityPoint);
-        System.out.println("segment: " + relationLine[0] + relationLine[1]);
+//        System.out.println("entityPoint:" + entityPoint);
+//        System.out.println("segment: " + relationLine[0] + relationLine[1]);
         boolean startsBefore = relationLine[0].x <= entityPoint.x + EntitySvg.symbolSize;
         boolean endsBefore = relationLine[1].x <= entityPoint.x;
         boolean startsAbove = relationLine[0].y <= entityPoint.y + EntitySvg.symbolSize;
         boolean endsAbove = relationLine[1].y <= entityPoint.y;
         final boolean intersectsResult = startsBefore != endsBefore && startsAbove != endsAbove;
-        System.out.println("startsBefore: " + startsBefore);
-        System.out.println("endsBefore: " + endsBefore);
-        System.out.println("intersectsResult: " + intersectsResult);
+//        System.out.println("startsBefore: " + startsBefore);
+//        System.out.println("endsBefore: " + endsBefore);
+//        System.out.println("intersectsResult: " + intersectsResult);
         return (intersectsResult);
     }
 
@@ -123,11 +123,11 @@ public class LineLookUpTable {
             LineRecord lineRecordOuter = lineRecordArray[lineRecordCount];
             for (int currentIndexA = 0 + offset; currentIndexA <= lineRecordOuter.getLastSegment() - offset; currentIndexA++) {
                 Point[] currentSegmentA = lineRecordOuter.getSegment(currentIndexA);
-                System.out.print("[" + lineRecordCount + ":" + currentIndexA + "]");
+//                System.out.print("[" + lineRecordCount + ":" + currentIndexA + "]");
                 for (Point entityLocation : allEntityLocations) {
-                    System.out.println("entityLocation:" + entityLocation);
+//                    System.out.println("entityLocation:" + entityLocation);
                     if (intersectsPoint(entityLocation, currentSegmentA)) {
-                        System.out.print(" intersects,");
+//                        System.out.print(" intersects,");
 //                    System.out.print("[" + entityLocation + "]");
                         lineRecordOuter.moveAside(currentIndexA, 6);
                     } else {
@@ -135,7 +135,7 @@ public class LineLookUpTable {
                     }
                 }
             }
-            System.out.println("");
+//            System.out.println("");
         }
     }
 
