@@ -145,9 +145,13 @@ public class LineRecord {
     public void moveAside(int linePart, int distance) {
         Point startPoint = this.pointsList.get(linePart);
         Point endPoint = this.pointsList.get(linePart + 1);
+//        System.out.println("line parts: " + this.pointsList.size());
         if (startPoint.x == endPoint.x) {
-            startPoint.setLocation(startPoint.x - distance, startPoint.y);
-            endPoint.setLocation(endPoint.x - distance, endPoint.y);
+            if (linePart > 1) { // never horizontally move the first segment from above its entity
+//                System.out.println("linePart: " + linePart);
+                startPoint.setLocation(startPoint.x - distance, startPoint.y);
+                endPoint.setLocation(endPoint.x - distance, endPoint.y);
+            }
         } else {
             final Point movedStartPoint = new Point(startPoint.x, startPoint.y - distance);
             final Point movedEndPoint = new Point(endPoint.x, endPoint.y - distance);
