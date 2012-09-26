@@ -1,7 +1,5 @@
 package nl.mpi.kinnate.gedcomimport;
 
-import nl.mpi.kinnate.kindocument.EntityDocument;
-import nl.mpi.kinnate.kindocument.ImportTranslator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,11 +10,13 @@ import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
+import nl.mpi.kinnate.kindocument.EntityDocument;
+import nl.mpi.kinnate.kindocument.ImportTranslator;
 
 /**
- *  Document   : CsvImporter
- *  Created on : May 30, 2011, 10:29:24 AM
- *  Author     : Peter Withers
+ * Document : CsvImporter Created on : May 30, 2011, 10:29:24 AM
+ *
+ * @author Peter Withers
  */
 public class CsvImporter extends EntityImporter implements GenericImporter {
 
@@ -134,6 +134,24 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 
     @Override
     public URI[] importFile(InputStreamReader inputStreamReader, String profileId) {
+        // output some text to explain which columns to use for parent,child,spouse,sibling etc and for Gender dateofbirth etc
+        appendToTaskOutput("The first column 'ID' must contain a unique integer for each line.");
+        appendToTaskOutput("");
+        appendToTaskOutput("Recommended data columns are:");
+        appendToTaskOutput("Name");
+        appendToTaskOutput("Gender");
+        appendToTaskOutput("DateOfBirth");
+        appendToTaskOutput("DateOfDeath");
+        appendToTaskOutput("");
+//        appendToTaskOutput("Recommended relation fields are:");
+//        appendToTaskOutput("ParentID");
+        appendToTaskOutput("Recognised relation columns are:");
+        appendToTaskOutput("Spouses<number>-ID");
+        appendToTaskOutput("Parents<number>-ID");
+        appendToTaskOutput("Children<number>-ID");
+        appendToTaskOutput("");
+        appendToTaskOutput("Any other columns will be added to the kindata but not automatically used in the subsequent diagrams.");
+        appendToTaskOutput("");
         ArrayList<URI> createdNodes = new ArrayList<URI>();
         try {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
