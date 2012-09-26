@@ -9,7 +9,7 @@
     <groupId>nl.mpi</groupId>
     <artifactId>kinnate-plugins-export</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0-SNAPSHOT</version>
     <name>Export Plugin</name>
     <url>http://maven.apache.org</url>
     <build>
@@ -81,8 +81,8 @@
         </dependency>    
         <dependency>
             <groupId>nl.mpi</groupId>
-            <artifactId>kinnate-plugins-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>plugins-core</artifactId>
+            <version>0.0.33011</version>
         </dependency>        
     </dependencies>
     <repositories>

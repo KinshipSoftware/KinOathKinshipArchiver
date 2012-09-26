@@ -227,21 +227,16 @@ http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
         <input message="Please enter the latsoftware password:" addproperty="latsoftware.pw">
             <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
         </input>
-        <signjar keystore="${pathToMpiTrunk}cert/mpi.keystore"
-                 alias="latsoftware's max-planck-gesellschaft id" storepass="${latsoftware.pw}">
+        <signjar keystore="../../../cert/mpi.keystore"
+                 alias="lat-mpg" storepass="${latsoftware.pw}">
             <path>
                 <fileset dir="${OUTPUTDIR}/lib" includes="**/*.jar" />
             </path>
         </signjar>
         <signjar jar="${OUTPUTDIR}/${DistJarName}"
-                 keystore="${pathToMpiTrunk}cert/mpi.keystore"
-                 alias="latsoftware's max-planck-gesellschaft id" storepass="${latsoftware.pw}" />
+                 keystore="../../../cert/mpi.keystore"
+                 alias="lat-mpg" storepass="${latsoftware.pw}" />
     </target>
-   <!-- <target name="image" depends="setproperties">
-        <signjar jar="${OUTPUTDIR}/lib/typecheck-1.5.16185.jar"
-        keystore="${SRCDIR}/../../../trunk/cert/mpi.keystore"
-        alias="latsoftware's max-planck-gesellschaft id" storepass="koekoek" />
-    </target> -->
     <target name="GetTracTodoList" depends="getsvnversion, GetLoginData">
 <!--        todo: add another file for the rss feed of completed tasks-->        
         <property name="TodoListFile" value="${OUTPUTDIR}/distribution/kinoath${kinoath.filenameidentifier}_${kinoath.current.major}.${kinoath.current.minor}-${kinoath.current.revision}_todo.csv"/>

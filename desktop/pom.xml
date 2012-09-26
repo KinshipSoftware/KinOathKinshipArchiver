@@ -9,7 +9,7 @@
     <groupId>nl.mpi</groupId>
     <artifactId>Kinnate</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <name>Kinnate</name>
     <url>http://maven.apache.org</url>
     <build>
@@ -52,7 +52,7 @@
                                 <jarResource>
                                     <groupId>nl.mpi</groupId>
                                     <artifactId>Kinnate</artifactId>
-                                    <version>1.0-SNAPSHOT</version>
+                                    <version>1.1-SNAPSHOT</version>
                                     <mainClass>nl.mpi.kinnate.MainFrame</mainClass>
                                 </jarResource>
                             </jarResources>
@@ -173,7 +173,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>arbil</artifactId>
             <!-- when changing the Arbil version make sure that the JNLP dependencies are also updated -->
-            <version>2.5.31276-pretesting</version>
+            <version>2.5.33290-pretesting</version>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
@@ -188,17 +188,17 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>pluginloader</artifactId>
-            <version>${project.version}</version>
+            <version>0.0.33291</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinnate-plugins-export</artifactId>
-            <version>${project.version}</version>
+            <version>0.0.32730</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
-            <artifactId>kinnate-plugins-core</artifactId>
-            <version>${project.version}</version>
+            <artifactId>plugins-core</artifactId>
+            <version>0.0.33011</version>
         </dependency>
     </dependencies>
     <repositories>
