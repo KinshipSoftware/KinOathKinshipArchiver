@@ -4,12 +4,24 @@
 
     <groupId>nl.mpi</groupId>
     <artifactId>pluginloader</artifactId>
-    <version>0.0-SNAPSHOT</version>
+    <!--    Either use the snapshot version of manually enter the current build number. 
+    The build number is only required when depending on the output in other projects or building to the server.-->
+    <version>${plugin.majorVersion}.${plugin.minorVersion}-${plugin.branch}-SNAPSHOT</version>
+    <!--<version>${plugin.majorVersion}.${plugin.minorVersion}.33366-${plugin.branch}</version>-->
     <packaging>jar</packaging>
 
     <name>pluginloader</name>
     <url>http://maven.apache.org</url>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>                
+                <includes>
+                    <include>**/version.properties</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -20,10 +32,34 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-svn-revision-number-plugin</groupId>
+                <artifactId>maven-svn-revision-number-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <entries>
+                        <entry>
+                            <path>${basedir}/src/main</path>
+                            <!-- this will populate "plugin.version.revision" -->
+                            <prefix>plugin.version</prefix>
+                        </entry>
+                    </entries>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <plugin.majorVersion>0</plugin.majorVersion>
+        <plugin.minorVersion>0</plugin.minorVersion>
+        <plugin.branch>pretesting</plugin.branch>
     </properties>
     <dependencies>
         <dependency>
@@ -35,7 +71,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>plugins-core</artifactId>
-            <version>0.0.33366-pretesting</version>
+            <version>0.0.33379-pretesting</version>
         </dependency>
     </dependencies>
     <repositories>
