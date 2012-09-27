@@ -15,12 +15,9 @@ public class AbstractBasePluginTest extends TestCase {
      */
     public void testGetArtifactVersion() {
         System.out.println("getArtifactVersion");
-        // this tests that the correct build number is specified in the pom.xml based on the current svn version
-        // either the correct build number or a snapshot version are valid
-        String errorMessage = "The maven version does not match either the snapshot nor the current svn build number.\n The pom.xml must be updated, please use either the correct build number or a snapshot version.";
         try {
             AbstractBasePlugin abstractBasePlugin = new AbstractBasePluginImpl();
-            assertTrue(errorMessage, abstractBasePlugin.isMavenVersionCorrect());
+            assertTrue(abstractBasePlugin.isMavenVersionCorrect());
         } catch (PluginException exception) {
             fail(exception.getMessage());
         }

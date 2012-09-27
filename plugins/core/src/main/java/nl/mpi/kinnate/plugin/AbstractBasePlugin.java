@@ -71,7 +71,10 @@ public abstract class AbstractBasePlugin implements BasePlugin {
         return descriptionString;
     }
 
-    public boolean isMavenVersionCorrect() {
+    public boolean isMavenVersionCorrect() throws PluginException {
+        // this tests that the correct build number is specified in the pom.xml based on the current svn version
+        // either the correct build number or a snapshot version are valid
+        String errorMessage = "The maven version does not match either the snapshot nor the current svn build number.\n The pom.xml must be updated, please use either the correct build number or a snapshot version.";
         String svnVersion = getMajorVersionNumber() + "." + getMinorVersionNumber() + "." + getBuildVersionNumber() + "-";
         System.out.println("svnVersion: " + svnVersion + " ... ");
         String snapshotVersion = getMajorVersionNumber() + "." + getMinorVersionNumber() + "-";
@@ -79,9 +82,17 @@ public abstract class AbstractBasePlugin implements BasePlugin {
         String mavenBuildVersion = getArtifactVersion();
         System.out.println("mavenBuildVersion: " + mavenBuildVersion);
         if (mavenBuildVersion.endsWith("-SNAPSHOT")) {
-            return mavenBuildVersion.startsWith(snapshotVersion);
+            if (mavenBuildVersion.startsWith(snapshotVersion)) {
+                return true;
+            } else {
+                throw new PluginException(errorMessage);
+            }
         } else {
-            return mavenBuildVersion.startsWith(svnVersion);
+            if (mavenBuildVersion.startsWith(svnVersion)) {
+                return true;
+            } else {
+                throw new PluginException(errorMessage);
+            }
         }
     }
 }
