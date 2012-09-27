@@ -82,18 +82,6 @@
 	    <scope>test</scope>
 	</dependency>
     </dependencies>
-    <repositories>
-	<repository>
-	    <id>MPI</id>
-	    <name>MPI LAT Repository</name>
-	    <url>http://lux15.mpi.nl/nexus/content/groups/public/</url>
-	</repository>
-	<repository>
-	    <id>basex</id>
-	    <name>BaseX Maven Repository</name>
-	    <url>http://files.basex.org/maven</url>
-	</repository>
-    </repositories>
     
     <!-- TODO: If we make a parent pom for the plugins, move this distribution management over to the parent -->
     
