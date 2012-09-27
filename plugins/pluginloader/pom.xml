@@ -71,7 +71,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>plugins-core</artifactId>
-            <version>0.0.33379-pretesting</version>
+            <version>0.0.33389-pretesting</version>
         </dependency>
     </dependencies>
     <repositories>
