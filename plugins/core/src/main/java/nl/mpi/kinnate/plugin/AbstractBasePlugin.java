@@ -70,4 +70,18 @@ public abstract class AbstractBasePlugin implements BasePlugin {
     public String getDescription() {
         return descriptionString;
     }
+
+    public boolean isMavenVersionCorrect() {
+        String svnVersion = getMajorVersionNumber() + "." + getMinorVersionNumber() + "." + getBuildVersionNumber() + "-";
+        System.out.println("svnVersion: " + svnVersion + " ... ");
+        String snapshotVersion = getMajorVersionNumber() + "." + getMinorVersionNumber() + "-";
+        System.out.println("snapshotVersion: " + snapshotVersion + " ... " + "-SNAPSHOT");
+        String mavenBuildVersion = getArtifactVersion();
+        System.out.println("mavenBuildVersion: " + mavenBuildVersion);
+        if (mavenBuildVersion.endsWith("-SNAPSHOT")) {
+            return mavenBuildVersion.startsWith(snapshotVersion);
+        } else {
+            return mavenBuildVersion.startsWith(svnVersion);
+        }
+    }
 }
