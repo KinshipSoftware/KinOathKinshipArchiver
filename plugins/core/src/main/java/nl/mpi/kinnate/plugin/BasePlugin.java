@@ -1,9 +1,9 @@
 package nl.mpi.kinnate.plugin;
 
 /**
- * Document : KinOathPlugin
- * Created on : Dec 20, 2011, 2:49:57 PM
- * Author : Peter Withers
+ * Document : KinOathPlugin Created on : Dec 20, 2011, 2:49:57 PM
+ *
+ * @author Peter Withers
  */
 public interface BasePlugin {
 
