@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>nl.mpi</groupId>
@@ -10,46 +10,51 @@
     <name>pluginloader</name>
     <url>http://maven.apache.org</url>
     <build>
-	<plugins>
-	    <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-compiler-plugin</artifactId>
-		<version>2.3.2</version>
-		<configuration>
-		    <source>1.5</source>
-		    <target>1.5</target>
-		</configuration>
-	    </plugin>
-	</plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
     <properties>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
-	<dependency>
-	    <groupId>junit</groupId>
-	    <artifactId>junit</artifactId>
-	    <version>3.8.1</version>
-	    <scope>test</scope>
-	</dependency>
-	<dependency>
-	    <groupId>nl.mpi</groupId>
-	    <artifactId>plugins-core</artifactId>
-	    <version>0.0.33011</version>
-	</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>plugins-core</artifactId>
+            <version>0.0.33366-pretesting</version>
+        </dependency>
     </dependencies>
-
+    <repositories>
+        <repository>
+            <id>MPI</id>
+            <name>MPI LAT Repository</name>
+            <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
     <distributionManagement>
-	<snapshotRepository>
-	    <id>MPI-Snapshots</id>
-	    <url>https://lux15.mpi.nl/nexus/content/repositories/MPI-Snapshots</url>
-	</snapshotRepository>
-	<repository>
-	    <id>MPI</id>
-	    <name>MPI Repository</name>
-	    <url>https://lux15.mpi.nl/nexus/content/repositories/MPI</url>
-	</repository>
+        <snapshotRepository>
+            <id>MPI-Snapshots</id>
+            <url>https://lux15.mpi.nl/nexus/content/repositories/MPI-Snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>MPI</id>
+            <name>MPI Repository</name>
+            <url>https://lux15.mpi.nl/nexus/content/repositories/MPI</url>
+        </repository>
     </distributionManagement>
 
 </project>
