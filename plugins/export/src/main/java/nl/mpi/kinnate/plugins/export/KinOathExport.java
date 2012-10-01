@@ -6,33 +6,18 @@ import nl.mpi.arbil.plugin.PluginBugCatcher;
 import nl.mpi.arbil.plugin.PluginDialogHandler;
 import nl.mpi.arbil.plugin.PluginException;
 import nl.mpi.arbil.plugin.PluginSessionStorage;
-import nl.mpi.kinnate.plugin.BasePlugin;
+import nl.mpi.kinnate.plugin.AbstractBasePlugin;
 import nl.mpi.kinnate.plugins.export.ui.KinOathExportPanel;
 
 /**
- * Document : KinOathExport Created on : Aug 13, 2012, 6:35:12 PM Author : Peter
- * Withers
+ * Document : KinOathExport Created on : Aug 13, 2012, 6:35:12 PM
+ *
+ * @author Peter Withers
  */
-public class KinOathExport implements BasePlugin, KinOathPanelPlugin {
+public class KinOathExport extends AbstractBasePlugin implements KinOathPanelPlugin {
 
-    public String getDescription() {
-        return "Creates a single KinOath file which contains all fields and relations of all entities via a temp database.";
-    }
-
-    public String getName() {
-        return "KinOath Single File Export";
-    }
-
-    public int getBuildVersionNumber() {
-        return 0;
-    }
-
-    public int getMajorVersionNumber() {
-        return 0;
-    }
-
-    public int getMinorVersionNumber() {
-        return 0;
+    public KinOathExport() throws PluginException {
+        super("KinOath Single File Export", "Creates a single KinOath file which contains all fields and relations of all entities via a temp database.", "nl.mpi.kinnate.plugins.export");
     }
 
     public JScrollPane getUiPanel(PluginDialogHandler dialogHandler, PluginSessionStorage sessionStorage, PluginBugCatcher bugCatcher) throws PluginException {
