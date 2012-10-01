@@ -36,6 +36,8 @@ public abstract class AbstractBasePlugin implements BasePlugin {
             artifactVersionString = properties.getProperty("plugin.projectVersion");
         } catch (IOException ex) {
             throw new PluginException("Version properties could not be read!");
+        } catch (NumberFormatException exception) {
+            throw new PluginException("Version numbers could not be parsed!");
         }
     }
 
