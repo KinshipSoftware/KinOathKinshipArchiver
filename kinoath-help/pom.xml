@@ -2,22 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.mpi</groupId>
-    <artifactId>arbil-help</artifactId>
+    <artifactId>kinoath-help</artifactId>
     <packaging>jar</packaging>
     <!--    Either use the snapshot version of manually enter the current build number. 
     The build number is only required when depending on the output in other projects or building to the server.-->
-    <version>${arbil.help.majorVersion}.${arbil.help.minorVersion}-${arbil.help.branch}-SNAPSHOT</version>
-    <!--<version>${arbil.help.majorVersion}.${arbil.help.minorVersion}.33408-${arbil.help.branch}</version>-->
-    <name>Arbil Help</name>
+    <version>${help.majorVersion}.${help.minorVersion}-${help.branch}-SNAPSHOT</version>
+    <!--<version>${help.majorVersion}.${help.minorVersion}.33408-${help.branch}</version>-->
+    <name>KinOath Help</name>
     <organization> 
 	<name>The Language Archive</name> 
 	<url>http://tla.mpi.nl/tools/tla-tools</url>
     </organization>
     
     <properties>
-	<arbil.help.majorVersion>2</arbil.help.majorVersion>
-	<arbil.help.minorVersion>5</arbil.help.minorVersion>
-	<arbil.help.branch>pretesting</arbil.help.branch>
+	<help.majorVersion>1</help.majorVersion>
+	<help.minorVersion>1</help.minorVersion>
+	<help.branch>pretesting</help.branch>
 	
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<output.jarname>${project.build.finalName}</output.jarname>
@@ -25,7 +25,7 @@
 
 	<output.help.directory.base>${basedir}/target/generated-resources/help</output.help.directory.base>
 	<output.help.directory.result>${output.help.directory.base}/</output.help.directory.result>
-	<resources.help.directory>${basedir}/target/classes/nl/mpi/arbil/resources/html/help</resources.help.directory>
+	<resources.help.directory>${basedir}/target/classes/nl/mpi/kinoath/resources/html/help</resources.help.directory>
     </properties>
     
     <build>
@@ -117,8 +117,7 @@
 			    <outputDir>${resources.help.directory}</outputDir>  output to resources directory 
 			    <stylesheet>${basedir}/src/main/docbook/helptoc.xsl</stylesheet>
 			    <includes>
-				<include>arbil-imdi/arbil-imdi.html</include>
-				<include>arbil-cmdi/arbil-cmdi.html</include>
+				<include>index.html</include>
 			    </includes>
 			    <fileMappers>
 				<!-- Map arbil.html -> arbil.xml --> 
@@ -136,8 +135,7 @@
 				<include>**/*.html</include>
 			    </includes>
 			    <excludes>
-				<exclude>**/arbil-imdi.html</exclude>
-				<exclude>**/arbil-cmdi.html</exclude>
+				<exclude>**/index.html</exclude>
 			    </excludes>
 			</transformationSet>
 		    </transformationSets>
