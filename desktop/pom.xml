@@ -24,7 +24,7 @@
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>1</application.minorVersion> 
         <application.branch>pretesting</application.branch> 
-        <application.title>Kinnate (pretesting)</application.title>
+        <application.title>KinOath Kinship Archiver (pretesting)</application.title>
         <output.directory>${project.build.directory}</output.directory>
     </properties>
     <build>
