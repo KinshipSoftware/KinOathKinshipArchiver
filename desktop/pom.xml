@@ -1,24 +1,32 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <properties>
-        <output.directory>${project.build.directory}</output.directory>
-        <output.jarname>${project.build.finalName}</output.jarname>
-        <application.majorVersion>1</application.majorVersion> 
-        <application.minorVersion>1</application.minorVersion> 
-        <application.branch>pretesting</application.branch> 
-        <application.title>Arbil (pretesting)</application.title>
-    </properties>
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.mpi</groupId>
-    <artifactId>Kinnate</artifactId>
+    <artifactId>kinnate</artifactId>
     <packaging>jar</packaging>
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
     <version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>
-    <!--<version>${application.majorVersion}.${application.minorVersion}.33366-${application.branch}</version>-->
+    <!--<version>${application.majorVersion}.${application.minorVersion}.33502-${application.branch}</version>-->
     <name>Kinnate</name>
     <url>http://maven.apache.org</url>
+    <organization> 
+        <name>The Language Archive</name> 
+        <url>http://tla.mpi.nl/tools/tla-tools</url>
+    </organization>
+    <scm>
+        <developerConnection>scm:svn:https://svn.mpi.nl/LAT/Kinnate/trunk/desktop</developerConnection>
+        <url>https://trac.mpi.nl/wiki/KinOath</url>
+    </scm>
+    <properties>
+        <output.jarname>${project.build.finalName}</output.jarname>
+        <application.majorVersion>1</application.majorVersion> 
+        <application.minorVersion>1</application.minorVersion> 
+        <application.branch>pretesting</application.branch> 
+        <application.title>Kinnate (pretesting)</application.title>
+        <output.directory>${project.build.directory}</output.directory>
+    </properties>
     <build>
         <resources>
             <resource>
@@ -117,7 +125,7 @@
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
-                        <phase>package</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
@@ -126,6 +134,7 @@
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
+                            <excludeArtifactIds>junit</excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
