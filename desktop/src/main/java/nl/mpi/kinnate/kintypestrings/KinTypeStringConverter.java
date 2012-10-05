@@ -255,6 +255,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                         parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation, "Label text");
                                     }
                                     if (parentDataNodes.isEmpty()) {
+                                       // todo:  Ticket #1807 Correct errors in the generation of freeform kintype string diagrams
                                         generateNeededEntities(null, labelStringsParser, parentDataNodes, currentReferenceKinType, currentGraphDataNodeSet, kinTypeModifier, fullKinTypeString, egoDataNodeList, namedEntitiesMap, allEntitiesSet);
                                     } else {
                                         for (EntityData currentParentNode : parentDataNodes.toArray(new EntityData[]{})) { // todo: this is probably incorrect since there may be more relation/symbol types to create
@@ -368,6 +369,7 @@ public class KinTypeStringConverter extends GraphSorter {
                     }
                 }
             } else {
+                // todo: Ticket #1807 Correct errors in the generation of freeform kintype string diagrams
                 // there are no parents so check for existing entities in the current set that match
                 for (EntityData existingEntity : currentGraphDataNodeSet) {
                     if (currentReferenceKinType.matchesEgonessAndSymbol(existingEntity, kinTypeModifier)) {
