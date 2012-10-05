@@ -41,6 +41,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
     private JTextArea resultsArea = new JTextArea();
     private JCheckBox graphSelectionCheckBox;
     private JCheckBox expandByKinTypeCheckBox;
+    private JCheckBox diagramSelectionCheckBox;
     private JTextField kinTypeStringTextArea;
     private JTextField searchField;
     private JProgressBar progressBar;
@@ -147,8 +148,10 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 kinDiagramPanel.drawGraph();
             }
         });
+        diagramSelectionCheckBox = new JCheckBox("Replace search with diagram selection", false);
         // todo: link this selection when checked
-        // optionsPanel.add(new JCheckBox("Link to graph selection to this tree", false));
+        // todo: consider if this spring graph action is best in the search tree or the diagram tree and enable it
+//        optionsPanel.add(diagramSelectionCheckBox);
         if (entityIdentifiers == null) {
             searchPanel.add(searchButton, BorderLayout.PAGE_END);
         }
