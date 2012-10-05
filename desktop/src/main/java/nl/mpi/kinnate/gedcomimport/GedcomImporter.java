@@ -192,9 +192,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                             } catch (ParseException exception) {
                                                 System.out.println(exception.getMessage());
                                                 appendToTaskOutput("Failed to parse date: " + strLine);
+                                                appendToTaskOutput("The date data will been imported anyway and can be corrected manually later.");
                                             } catch (EntityDateException exception) {
                                                 System.out.println(exception.getMessage());
                                                 appendToTaskOutput("Failed to parse date: " + strLine + " " + exception.getMessage());
+                                                appendToTaskOutput("The date data will been imported anyway and can be corrected manually later.");
                                             }
                                         }
                                     }
