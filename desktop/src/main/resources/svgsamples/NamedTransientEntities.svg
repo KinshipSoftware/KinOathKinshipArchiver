@@ -1,413 +1,476 @@
-<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="text/ecmascript" width="1000" zoomAndPan="magnify" contentStyleType="text/css" height="500" preserveAspectRatio="xMidYMid meet" version="1.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:kin="http://mpi.nl/tla/kin"
+     contentScriptType="text/ecmascript"
+     zoomAndPan="magnify"
+     contentStyleType="text/css"
+     viewBox="-5 -205 1010 510"
+     preserveAspectRatio="xMidYMid meet"
+     version="1.0">
   <defs id="KinSymbols">
-    <g id="circle">
-      <circle stroke-width="2" r="6" cx="7.5" cy="7.5" stroke="black"/>
-    </g>
-    <g id="square">
-      <rect x="2" width="11" stroke-width="2" height="11" y="2" stroke="black"/>
-    </g>
-    <g id="square-45">
-      <rect x="2" y="2" transform="rotate(-45 7 7)" width="11" height="11" stroke="black" stroke-width="2"/>
-    </g>
-    <g id="rhombus">
-      <rect x="2" y="2" transform="scale(1,0.5), rotate(-45 7 7)" width="11" height="11" stroke="black" stroke-width="2"/>
-    </g>
-    <g id="union">
-      <rect fill="white" x="0" width="15" height="15" y="0" stroke="none"/>
-      <line y2="2" stroke-width="5" x1="0" x2="15" stroke="black" y1="2"/>
-      <line y2="13" stroke-width="5" x1="0" x2="15" stroke="black" y1="13"/>
-    </g>
-    <g id="triangle">
-      <polygon stroke-width="2" points="7,1 1,12 14,12" stroke="black"/>
-    </g>
-    <g id="triangle-270">
-      <polygon stroke-width="2" points="7,1 1,12 14,12" transform="rotate(-90 7 7)" stroke="black"/>
-    </g>
-    <g id="triangle-180" transform="rotate(180 7 7)">
-      <polygon stroke-width="2" points="7,1 1,12 14,12" stroke="black"/>
-    </g>
-    <g id="triangle-90" transform="rotate(90 7 7)">
-      <polygon stroke-width="2" points="7,1 1,12 14,12" stroke="black"/>
-    </g>
-    <g id="cross">
-      <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
-    </g>
-    <g id="error">
-      <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="red"/>
-    </g>
-    <g id="blackmarker">
-      <circle fill="black" r="3" cx="15" cy="0" stroke="none"/>
-    </g>
-    <g id="blackstrikethrough">
-      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="black"/>
-    </g>
-    <g id="orangemarker">
-      <circle fill="orange" r="3" cx="15" cy="0" stroke="none"/>
-    </g>
-    <g id="orangestrikethrough">
-      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="orange"/>
-    </g>
-    <g id="cyanmarker">
-      <circle fill="cyan" r="3" cx="15" cy="0" stroke="none"/>
-    </g>
-    <g id="cyanstrikethrough">
-      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="cyan"/>
-    </g>
-    <g id="purplemarker">
-      <circle fill="purple" r="3" cx="15" cy="0" stroke="none"/>
-    </g>
-    <g id="purplestrikethrough">
-      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="purple"/>
-    </g>
-    <g id="redmarker">
-      <circle fill="red" r="3" cx="15" cy="0" stroke="none"/>
-    </g>
-    <g id="redstrikethrough">
-      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="red"/>
-    </g>
-    <g id="greenmarker">
-      <circle fill="green" r="3" cx="15" cy="0" stroke="none"/>
-    </g>
-    <g id="greenstrikethrough">
-      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="green"/>
-    </g>
-    <g id="bluemarker">
-      <circle fill="blue" r="3" cx="15" cy="0" stroke="none"/>
-    </g>
-    <g id="bluestrikethrough">
-      <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="blue"/>
-    </g>
+      <g id="circle">
+         <circle r="6" stroke-width="2" cx="7.5" cy="7.5" stroke="black"/>
+      </g>
+      <g id="square">
+         <rect x="2"
+               width="11"
+               y="2"
+               height="11"
+               stroke-width="2"
+               stroke="black"/>
+      </g>
+      <g id="square-45">
+         <rect x="2"
+               y="2"
+               transform="rotate(-45 7 7)"
+               width="11"
+               height="11"
+               stroke="black"
+               stroke-width="2"/>
+      </g>
+      <g id="rhombus">
+         <rect x="2"
+               y="2"
+               transform="scale(1,0.5), rotate(-45 7 7)"
+               width="11"
+               height="11"
+               stroke="black"
+               stroke-width="2"/>
+      </g>
+      <g id="union">
+         <rect fill="white"
+               x="0"
+               width="15"
+               y="0"
+               height="15"
+               stroke="none"/>
+         <line y2="2"
+               stroke-width="5"
+               x1="0"
+               x2="15"
+               y1="2"
+               stroke="black"/>
+         <line y2="13"
+               stroke-width="5"
+               x1="0"
+               x2="15"
+               y1="13"
+               stroke="black"/>
+      </g>
+      <g id="triangle">
+         <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+      </g>
+      <g id="triangle-270">
+         <polygon stroke-width="2"
+                  points="7,1 1,12 14,12"
+                  transform="rotate(-90 7 7)"
+                  stroke="black"/>
+      </g>
+      <g id="triangle-180" transform="rotate(180 7 7)">
+         <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+      </g>
+      <g id="triangle-90" transform="rotate(90 7 7)">
+         <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+      </g>
+      <g id="cross">
+         <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="black"/>
+      </g>
+      <g id="error">
+         <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="red"/>
+      </g>
+      <g id="blackmarker">
+         <circle fill="black" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="blackstrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="black"/>
+      </g>
+      <g id="orangemarker">
+         <circle fill="orange" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="orangestrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="orange"/>
+      </g>
+      <g id="cyanmarker">
+         <circle fill="cyan" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="cyanstrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="cyan"/>
+      </g>
+      <g id="purplemarker">
+         <circle fill="purple" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="purplestrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="purple"/>
+      </g>
+      <g id="redmarker">
+         <circle fill="red" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="redstrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="red"/>
+      </g>
+      <g id="greenmarker">
+         <circle fill="green" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="greenstrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="green"/>
+      </g>
+      <g id="bluemarker">
+         <circle fill="blue" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="bluestrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="blue"/>
+      </g>
   </defs>
-  <g id="DiagramGroup" transform="translate(0, 200)">
-    <g id="GraphicsGroup"/>
-    <g id="RelationGroup">
-      <g id="relation0">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_bbb855fb227782762767382389dbb848" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_dd2456a94c961265742ac04895a8e4df"/>
-        <defs>
-          <polyline fill="none" id="relation0Line" stroke-width="2" points="807,7 807,-43 807,-43 807,-63 807,-63 807,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
+  <g id="DiagramGroup">
+    
+    
+    
+    
+      <rect x="2.0"
+            y="-198.0"
+            fill="none"
+            width="996.0"
+            id="PageBorder"
+            height="496.0"
+            stroke="grey"
+            stroke-width="2"/>
+      <g id="GraphicsGroup"/>
+      <g id="RelationGroup">
+         <g id="relation0">
+            <defs>
+               <path fill="none"
+                     id="relation0Line"
+                     stroke-width="2"
+                     d="M 807,7 L 807,-33 807,-33 807,-33 807,-63 807,-63 807,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation0Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation0Line"/>
+         </g>
+         <g id="relation1">
+            <defs>
+               <path fill="none"
+                     id="relation1Line"
+                     stroke-width="2"
+                     d="M 407,7 L 407,-33 407,-33 407,-33 407,-63 407,-63 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation1Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation1Line"/>
+         </g>
+         <g id="relation4">
+            <defs>
+               <path fill="none"
+                     id="relation4Line"
+                     stroke-width="2"
+                     d="M 407,7 L 407,37 207,37 207,37 207,37 207,7 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation4Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation4Line"/>
+         </g>
+         <g id="relation5">
+            <defs>
+               <path fill="none"
+                     id="relation5Line"
+                     stroke-width="2"
+                     d="M 457,207 L 457,167 457,167 457,167 457,137 457,137 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation5Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation5Line"/>
+         </g>
+         <g id="relation2">
+            <defs>
+               <path fill="none"
+                     id="relation2Line"
+                     stroke-width="2"
+                     d="M 507,-93 L 507,-63 307,-63 307,-63 307,-63 307,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation2Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation2Line"/>
+         </g>
+         <g id="relation6">
+            <defs>
+               <path fill="none"
+                     id="relation6Line"
+                     stroke-width="2"
+                     d="M 307,107 L 307,137 607,137 607,137 607,137 607,107 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation6Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation6Line"/>
+         </g>
+         <g id="relation7">
+            <defs>
+               <path fill="none"
+                     id="relation7Line"
+                     stroke-width="2"
+                     d="M 607,107 L 607,67 607,67 607,67 607,37 607,37 607,7 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation7Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation7Line"/>
+         </g>
+         <g id="relation3">
+            <defs>
+               <path fill="none"
+                     id="relation3Line"
+                     stroke-width="2"
+                     d="M 307,107 L 307,67 307,67 307,67 307,37 307,37 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation3Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation3Line"/>
+         </g>
       </g>
-      <g id="relation1">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_22c449ec281b2badc2d38e30cd0bb056" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_5163467c0d5b7587ea7947dea35ee0c4"/>
-        <defs>
-          <polyline fill="none" id="relation1Line" stroke-width="2" points="407,7 407,-43 407,-43 407,-63 507,-63 507,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
+      <g id="EntityGroup">
+         <g id="tid_bbb855fb227782762767382389dbb848"
+            kin:kintype="Em"
+            transform="translate(800, 0)"
+            kin:path="">
+            <use fill="black"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">John</text>
+         </g>
+         <g id="tid_7e2f049592385f972c71ccc3eb79b2b1"
+            kin:kintype="EfMMF"
+            transform="translate(300, -100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Nathan</text>
+         </g>
+         <g id="tid_5163467c0d5b7587ea7947dea35ee0c4"
+            kin:kintype="EfMMM"
+            transform="translate(500, -100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Dorris</text>
+         </g>
+         <g id="tid_5092b8112213988add85e67db3913936"
+            kin:kintype="EfMF"
+            transform="translate(200, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jamie</text>
+         </g>
+         <g id="tid_4036ac2468e94c679f40b5d8cfbeac52"
+            kin:kintype="Ef"
+            transform="translate(450, 200)"
+            kin:path="">
+            <use fill="black"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane</text>
+         </g>
+         <g id="tid_dd2456a94c961265742ac04895a8e4df"
+            kin:kintype="EmM"
+            transform="translate(800, -100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Janet</text>
+         </g>
+         <g id="tid_be2a2cea82d6777d6c68b8ee8ea95b99"
+            kin:kintype="EfF"
+            transform="translate(600, 100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jonathan</text>
+         </g>
+         <g id="tid_14660a5c79084e81176c166d5623cdc8"
+            kin:kintype="EfFF"
+            transform="translate(600, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Clarence</text>
+         </g>
+         <g id="tid_97f10e8259e8645f3be7eac38be097e7"
+            kin:kintype="EfM"
+            transform="translate(300, 100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Joyce</text>
+         </g>
+         <g id="tid_22c449ec281b2badc2d38e30cd0bb056"
+            kin:kintype="EfMM"
+            transform="translate(400, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Betty</text>
+         </g>
       </g>
-      <g id="relation2">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_22c449ec281b2badc2d38e30cd0bb056" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_7e2f049592385f972c71ccc3eb79b2b1"/>
-        <defs>
-          <polyline fill="none" id="relation2Line" stroke-width="2" points="407,7 407,-43 407,-43 407,-63 307,-63 307,-93 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
-      </g>
-      <g id="relation3">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_4036ac2468e94c679f40b5d8cfbeac52" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_be2a2cea82d6777d6c68b8ee8ea95b99"/>
-        <defs>
-          <polyline fill="none" id="relation3Line" stroke-width="2" points="457,207 457,157 457,157 457,137 607,137 607,107 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
-      </g>
-      <g id="relation4">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_be2a2cea82d6777d6c68b8ee8ea95b99" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_14660a5c79084e81176c166d5623cdc8"/>
-        <defs>
-          <polyline fill="none" id="relation4Line" stroke-width="2" points="607,107 607,57 607,57 607,37 607,37 607,7 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
-      </g>
-      <g id="relation5">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_97f10e8259e8645f3be7eac38be097e7" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_22c449ec281b2badc2d38e30cd0bb056"/>
-        <defs>
-          <polyline fill="none" id="relation5Line" stroke-width="2" points="307,107 307,57 307,57 307,37 407,37 407,7 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
-      </g>
-      <g id="relation6">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_97f10e8259e8645f3be7eac38be097e7" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_5092b8112213988add85e67db3913936"/>
-        <defs>
-          <polyline fill="none" id="relation6Line" stroke-width="2" points="307,107 307,57 307,57 307,37 207,37 207,7 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
-      </g>
-      <g id="relation7">
-        <kin:RelationEntities xmlns:kin="kin" kin:ego="tid_4036ac2468e94c679f40b5d8cfbeac52" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="tid_97f10e8259e8645f3be7eac38be097e7"/>
-        <defs>
-          <polyline fill="none" id="relation7Line" stroke-width="2" points="457,207 457,157 457,157 457,137 307,137 307,107 " stroke="grey"/>
-        </defs>
-        <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
-      </g>
-    </g>
-    <g id="EntityGroup">
-      <g id="tid_dd2456a94c961265742ac04895a8e4df" kin:kintype="EmM" transform="translate(800.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Janet</text>
-      </g>
-      <g id="tid_5163467c0d5b7587ea7947dea35ee0c4" kin:kintype="EfMMM" transform="translate(500.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Dorris</text>
-      </g>
-      <g id="tid_7e2f049592385f972c71ccc3eb79b2b1" kin:kintype="EfMMF" transform="translate(300.0, -100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Nathan</text>
-      </g>
-      <g id="tid_be2a2cea82d6777d6c68b8ee8ea95b99" kin:kintype="EfF" transform="translate(600.0, 100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jonathan</text>
-      </g>
-      <g id="tid_22c449ec281b2badc2d38e30cd0bb056" kin:kintype="EfMM" transform="translate(400.0, 0.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Betty</text>
-      </g>
-      <g id="tid_14660a5c79084e81176c166d5623cdc8" kin:kintype="EfFF" transform="translate(600.0, 0.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Clarence</text>
-      </g>
-      <g id="tid_5092b8112213988add85e67db3913936" kin:kintype="EfMF" transform="translate(200.0, 0.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jamie</text>
-      </g>
-      <g id="tid_4036ac2468e94c679f40b5d8cfbeac52" kin:kintype="Ef" transform="translate(450.0, 200.0)" kin:path="">
-        <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Jane</text>
-      </g>
-      <g id="tid_97f10e8259e8645f3be7eac38be097e7" kin:kintype="EfM" transform="translate(300.0, 100.0)" kin:path="">
-        <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Joyce</text>
-      </g>
-      <g id="tid_bbb855fb227782762767382389dbb848" kin:kintype="Em" transform="translate(800.0, 0.0)" kin:path="">
-        <use fill="black" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-        <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">John</text>
-      </g>
-    </g>
-    <g id="LabelsGroup"/>
-    <rect x="2.0" y="-198.0" fill="none" width="996.0" id="PageBorder" height="496.0" stroke="grey" stroke-width="2"/>
-  </g>
-  <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
-    <kin:KinTypeString>Ef:Jane</kin:KinTypeString>
-    <kin:KinTypeString>EfM:Joyce</kin:KinTypeString>
-    <kin:KinTypeString>EfF:Jonathan</kin:KinTypeString>
-    <kin:KinTypeString>EfMF:Jamie</kin:KinTypeString>
-    <kin:KinTypeString>EfFF:Clarence</kin:KinTypeString>
-    <kin:KinTypeString>EfMM:Betty</kin:KinTypeString>
-    <kin:KinTypeString>EfMMF:Nathan</kin:KinTypeString>
-    <kin:KinTypeString>EfMMM:Dorris</kin:KinTypeString>
-    <kin:KinTypeString>Em:John</kin:KinTypeString>
-    <kin:KinTypeString>EmM:Janet</kin:KinTypeString>
-    <kin:IndexParameters>
-      <kin:DateOfBirthFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfBirth"/>
-      </kin:DateOfBirthFields>
-      <kin:DateOfDeathFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfDeath"/>
-      </kin:DateOfDeathFields>
-      <kin:LabelFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:INDI/*:NAME/*:NAME"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:INDI/*:NAME"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Type"/>
-      </kin:LabelFields>
-      <kin:SymbolFieldsFields>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Male']" kin:Value="triangle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Female']" kin:Value="circle"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='']" kin:Value="square"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:DateOfDeath!='']" kin:Value="blackstrikethrough"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='Xx']" kin:Value="redstrikethrough"/>
-        <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='xY']" kin:Value="redstrikethrough"/>
-      </kin:SymbolFieldsFields>
-    </kin:IndexParameters>
-    <SelectedProfiles>
-      <kin:Profile kin:ProfileName="Individual" kin:ProfileId="clarin.eu:cr1:p_1320657629627"/>
-      <kin:Profile kin:ProfileName="Chromosome_Example" kin:ProfileId="clarin.eu:cr1:p_1332345811038"/>
-      <kin:Profile kin:ProfileName="Gedcom_Entity" kin:ProfileId="clarin.eu:cr1:p_1332345811039"/>
-    </SelectedProfiles>
-    <kin:ShowLabels>true</kin:ShowLabels>
-    <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
-    <kin:ShowIdLabels>false</kin:ShowIdLabels>
-    <kin:ShowDateLabels>false</kin:ShowDateLabels>
-    <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
-    <kin:SnapToGrid>true</kin:SnapToGrid>
-    <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
-    <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
-    <kin:HighlightRelationLines>true</kin:HighlightRelationLines>
-    <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
-    <kin:EntityData>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">dd2456a94c961265742ac04895a8e4df</kin:Identifier>
-        <kin:KinType>EmM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth/>
-        <kin:DateOfDeath/>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Janet</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">bbb855fb227782762767382389dbb848</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">5163467c0d5b7587ea7947dea35ee0c4</kin:Identifier>
-        <kin:KinType>EfMMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth/>
-        <kin:DateOfDeath/>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Dorris</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">22c449ec281b2badc2d38e30cd0bb056</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">7e2f049592385f972c71ccc3eb79b2b1</kin:Identifier>
-        <kin:KinType>EfMMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth/>
-        <kin:DateOfDeath/>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Nathan</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">22c449ec281b2badc2d38e30cd0bb056</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">be2a2cea82d6777d6c68b8ee8ea95b99</kin:Identifier>
-        <kin:KinType>EfF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth/>
-        <kin:DateOfDeath/>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Jonathan</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">4036ac2468e94c679f40b5d8cfbeac52</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">14660a5c79084e81176c166d5623cdc8</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">22c449ec281b2badc2d38e30cd0bb056</kin:Identifier>
-        <kin:KinType>EfMM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth/>
-        <kin:DateOfDeath/>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Betty</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">97f10e8259e8645f3be7eac38be097e7</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">7e2f049592385f972c71ccc3eb79b2b1</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">5163467c0d5b7587ea7947dea35ee0c4</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">14660a5c79084e81176c166d5623cdc8</kin:Identifier>
-        <kin:KinType>EfFF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth/>
-        <kin:DateOfDeath/>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Clarence</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">be2a2cea82d6777d6c68b8ee8ea95b99</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">5092b8112213988add85e67db3913936</kin:Identifier>
-        <kin:KinType>EfMF</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth/>
-        <kin:DateOfDeath/>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Jamie</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">97f10e8259e8645f3be7eac38be097e7</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">4036ac2468e94c679f40b5d8cfbeac52</kin:Identifier>
-        <kin:KinType>Ef</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth/>
-        <kin:DateOfDeath/>
-        <kin:Ego>true</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Jane</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">97f10e8259e8645f3be7eac38be097e7</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">be2a2cea82d6777d6c68b8ee8ea95b99</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">97f10e8259e8645f3be7eac38be097e7</kin:Identifier>
-        <kin:KinType>EfM</kin:KinType>
-        <kin:Symbol>circle</kin:Symbol>
-        <kin:DateOfBirth/>
-        <kin:DateOfDeath/>
-        <kin:Ego>false</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>Joyce</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="descendant">
-            <kin:Identifier kin:type="tid">4036ac2468e94c679f40b5d8cfbeac52</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">5092b8112213988add85e67db3913936</kin:Identifier>
-          </kin:Relation>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">22c449ec281b2badc2d38e30cd0bb056</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-      <kin:Entity>
-        <kin:Identifier kin:type="tid">bbb855fb227782762767382389dbb848</kin:Identifier>
-        <kin:KinType>Em</kin:KinType>
-        <kin:Symbol>triangle</kin:Symbol>
-        <kin:DateOfBirth/>
-        <kin:DateOfDeath/>
-        <kin:Ego>true</kin:Ego>
-        <kin:Visible>true</kin:Visible>
-        <kin:Label>John</kin:Label>
-        <kin:Relations>
-          <kin:Relation kin:Type="ancestor">
-            <kin:Identifier kin:type="tid">dd2456a94c961265742ac04895a8e4df</kin:Identifier>
-          </kin:Relation>
-        </kin:Relations>
-      </kin:Entity>
-    </kin:EntityData>
-    <kin:DiagramMode>FreeForm</kin:DiagramMode>
-    <kin:DiagramPanel kin:type="DiagramTree" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="ExportPanel" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="EntitySearch" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="KinTerms" kin:show="false" kin:width="150"/>
-    <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="true" kin:width="150"/>
-    <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150"/>
-  </kin:KinDiagramData>
+      <g id="LabelsGroup"/>
+   </g>
+  
+   <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+      <kin:KinTypeString>Ef:Jane</kin:KinTypeString>
+      <kin:KinTypeString>EfM:Joyce</kin:KinTypeString>
+      <kin:KinTypeString>EfF:Jonathan</kin:KinTypeString>
+      <kin:KinTypeString>EfMF:Jamie</kin:KinTypeString>
+      <kin:KinTypeString>EfFF:Clarence</kin:KinTypeString>
+      <kin:KinTypeString>EfMM:Betty</kin:KinTypeString>
+      <kin:KinTypeString>EfMMF:Nathan</kin:KinTypeString>
+      <kin:KinTypeString>EfMMM:Dorris</kin:KinTypeString>
+      <kin:KinTypeString>Em:John</kin:KinTypeString>
+      <kin:KinTypeString>EmM:Janet</kin:KinTypeString>
+      <kin:IndexParameters>
+         <kin:DateOfBirthFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfBirth"/>
+         </kin:DateOfBirthFields>
+         <kin:DateOfDeathFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfDeath"/>
+         </kin:DateOfDeathFields>
+         <kin:LabelFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:INDI/*:NAME/*:NAME"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:INDI/*:NAME"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Type"/>
+         </kin:LabelFields>
+         <kin:SymbolFieldsFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Male']"
+                              kin:Value="triangle"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Female']"
+                              kin:Value="circle"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='']" kin:Value="square"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:DateOfDeath!='']"
+                              kin:Value="blackstrikethrough"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='Xx']"
+                              kin:Value="redstrikethrough"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='xY']"
+                              kin:Value="redstrikethrough"/>
+         </kin:SymbolFieldsFields>
+      </kin:IndexParameters>
+      <SelectedProfiles>
+         <kin:Profile kin:ProfileName="Individual"
+                      kin:ProfileId="clarin.eu:cr1:p_1320657629627"/>
+         <kin:Profile kin:ProfileName="Chromosome_Example"
+                      kin:ProfileId="clarin.eu:cr1:p_1332345811038"/>
+         <kin:Profile kin:ProfileName="Gedcom_Entity"
+                      kin:ProfileId="clarin.eu:cr1:p_1332345811039"/>
+      </SelectedProfiles>
+      <kin:ShowLabels>true</kin:ShowLabels>
+      <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
+      <kin:ShowIdLabels>false</kin:ShowIdLabels>
+      <kin:ShowDateLabels>false</kin:ShowDateLabels>
+      <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
+      <kin:SnapToGrid>true</kin:SnapToGrid>
+      <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
+      <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
+      <kin:HighlightRelationLines>true</kin:HighlightRelationLines>
+      <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
+      <kin:DiagramMode>FreeForm</kin:DiagramMode>
+      <kin:DiagramPanel kin:type="DiagramTree" kin:show="false" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="ExportPanel" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="PluginPanel" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="KinTerms" kin:show="false" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="EntitySearch" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="true" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+   </kin:KinDiagramData>
 </svg>
