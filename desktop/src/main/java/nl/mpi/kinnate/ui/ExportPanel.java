@@ -16,6 +16,7 @@ public class ExportPanel extends JPanel {
 
     public ExportPanel() {
         // todo: complete this panel
+        // Ticket #1330 Add an export panel for more control over the exported data and enable output file updates when the diagram changes.
         this.setLayout(new BorderLayout());
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(new JTextField("Export Filename"), BorderLayout.CENTER);
