@@ -26,4 +26,6 @@ public class KinSessionStorage extends ArbilSessionStorage {
     protected String[] getAppDirectoryAlternatives() {
         return new String[]{".kinoath-" + new KinOathVersion().currentMajor + "-" + new KinOathVersion().currentMinor};
     }
+    // todo: remove ArbilWorkingFiles from the working files path and use KinshipData or such like
+    
 }
