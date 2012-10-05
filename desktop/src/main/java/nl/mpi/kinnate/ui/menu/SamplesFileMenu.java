@@ -11,9 +11,9 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- * Document : RecentFileMenu
- * Created on : Apr 15, 2011, 11:30:39 AM
- * Author : Peter Withers
+ * Document : RecentFileMenu Created on : Apr 15, 2011, 11:30:39 AM
+ *
+ * @author Peter Withers
  */
 public class SamplesFileMenu extends JMenu implements ActionListener {
 
@@ -25,7 +25,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
         this.dialogHandler = dialogHandler;
         addSampleToMenu("Freeform Diagram Syntax", "FreeformDiagramSyntax.svg");
         addSampleToMenu("Query Diagram Syntax", "QueryDiagramSyntax.svg");
-        addSampleToMenu("Application Overview", "ApplicationOverview.svg");
+//        addSampleToMenu("Application Overview", "ApplicationOverview.svg");
         addSampleToMenu("Hawaiian Kin Terms", "HawaiianKinTerms.svg");
         addSampleToMenu("Japanese Kin Terms", "JapaneseKinTerms.svg");
 //        addSampleToMenu("Japanese Kin Terms (simplified)", "JapaneseKinTermsStyle1.svg");
@@ -40,6 +40,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
         addSampleToMenu("Charles II of Spain", "Charles_II_of_Spain.svg");
 //        addSampleToMenu("Imported Data Query Example (ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/)", "QueryExample.svg");
         addSampleToMenu("Haemophilia in European Royalty", "HaemophiliaEuropeanRoyalty.svg");
+//        addSampleToMenu("Bengkala Sample Diagram", "Bengkala.svg");
 //        addSampleToMenu("Imported Entities (600)", "600ImportedEntities.svg");
 //        addSampleToMenu("R Usage of the Entity Server", "R-ServerUsage.svg");
     }
