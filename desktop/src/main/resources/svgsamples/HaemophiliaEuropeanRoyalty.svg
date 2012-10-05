@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:kin="http://mpi.nl/tla/kin" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="text/ecmascript" width="3100" zoomAndPan="magnify" contentStyleType="text/css" height="700" preserveAspectRatio="xMidYMid meet" version="1.0">
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:kin="http://mpi.nl/tla/kin"
+     contentScriptType="text/ecmascript"
+     zoomAndPan="magnify"
+     contentStyleType="text/css"
+     viewBox="-805 -455 3110 710"
+     preserveAspectRatio="xMidYMid meet"
+     version="1.0">
     <defs id="KinSymbols">
         <g id="blank">
             <circle fill="none" r="14" cx="15.5" cy="15.5" stroke="none"/>
@@ -8,33 +16,71 @@
             <circle r="6" stroke-width="2" cx="7.5" cy="7.5" stroke="black"/>
         </g>
         <g id="square">
-            <rect x="2" width="11" y="2" height="11" stroke-width="2" stroke="black"/>
+            <rect x="2"
+               width="11"
+               stroke-width="2"
+               height="11"
+               y="2"
+               stroke="black"/>
         </g>
         <g id="square-45">
-            <rect x="2" y="2" transform="rotate(-45 7 7)" width="11" height="11" stroke="black" stroke-width="2"/>
+            <rect x="2"
+               y="2"
+               transform="rotate(-45 7 7)"
+               width="11"
+               height="11"
+               stroke="black"
+               stroke-width="2"/>
         </g>
         <g id="rhombus">
-            <rect x="2" y="2" transform="scale(1,0.5), rotate(-45 7 7)" width="11" height="11" stroke="black" stroke-width="2"/>
+            <rect x="2"
+               y="2"
+               transform="scale(1,0.5), rotate(-45 7 7)"
+               width="11"
+               height="11"
+               stroke="black"
+               stroke-width="2"/>
         </g>
         <g id="union">
-            <rect fill="white" x="0" width="15" y="0" height="15" stroke="none"/>
-            <line y2="2" stroke-width="5" x1="0" x2="15" y1="2" stroke="black"/>
-            <line y2="13" stroke-width="5" x1="0" x2="15" y1="13" stroke="black"/>
+            <rect fill="white"
+               x="0"
+               width="15"
+               height="15"
+               y="0"
+               stroke="none"/>
+            <line y2="2"
+               stroke-width="5"
+               x1="0"
+               x2="15"
+               stroke="black"
+               y1="2"/>
+            <line y2="13"
+               stroke-width="5"
+               x1="0"
+               x2="15"
+               stroke="black"
+               y1="13"/>
         </g>
         <g id="triangle">
-            <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+            <polygon stroke-width="2" points="7,1 1,12 14,12" stroke="black"/>
         </g>
         <g id="triangle-270">
-            <polygon stroke-width="2" points="7,1 1,12 14,12" transform="rotate(-90 7 7)" stroke="black"/>
+            <polygon stroke-width="2"
+                  points="7,1 1,12 14,12"
+                  transform="rotate(-90 7 7)"
+                  stroke="black"/>
         </g>
         <g id="triangle-180" transform="rotate(180 7 7)">
-            <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+            <polygon stroke-width="2" points="7,1 1,12 14,12" stroke="black"/>
         </g>
         <g id="triangle-90" transform="rotate(90 7 7)">
-            <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+            <polygon stroke-width="2" points="7,1 1,12 14,12" stroke="black"/>
         </g>
         <g id="error">
-            <polyline fill="none" stroke-width="2" points="-8,-8 22,22 7,7 -8,22 22,-8 -8,-8 -8,22 22,22 22,-8" stroke="red"/>
+            <polyline fill="none"
+                   stroke-width="2"
+                   points="-8,-8 22,22 7,7 -8,22 22,-8 -8,-8 -8,22 22,22 22,-8"
+                   stroke="red"/>
         </g>
         <g id="blackmarker">
             <circle fill="black" r="3" cx="15" cy="0" stroke="none"/>
@@ -43,7 +89,10 @@
             <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="black"/>
         </g>
         <g id="blackcross">
-            <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="black"/>
+            <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="black"/>
         </g>
         <g id="orangemarker">
             <circle fill="orange" r="3" cx="15" cy="0" stroke="none"/>
@@ -52,7 +101,10 @@
             <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="orange"/>
         </g>
         <g id="orangecross">
-            <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="orange"/>
+            <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="orange"/>
         </g>
         <g id="cyanmarker">
             <circle fill="cyan" r="3" cx="15" cy="0" stroke="none"/>
@@ -61,7 +113,10 @@
             <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="cyan"/>
         </g>
         <g id="cyancross">
-            <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="cyan"/>
+            <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="cyan"/>
         </g>
         <g id="purplemarker">
             <circle fill="purple" r="3" cx="15" cy="0" stroke="none"/>
@@ -70,7 +125,10 @@
             <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="purple"/>
         </g>
         <g id="purplecross">
-            <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="purple"/>
+            <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="purple"/>
         </g>
         <g id="redmarker">
             <circle fill="red" r="3" cx="15" cy="0" stroke="none"/>
@@ -79,7 +137,10 @@
             <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="red"/>
         </g>
         <g id="redcross">
-            <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="red"/>
+            <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="red"/>
         </g>
         <g id="greenmarker">
             <circle fill="green" r="3" cx="15" cy="0" stroke="none"/>
@@ -88,7 +149,10 @@
             <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="green"/>
         </g>
         <g id="greencross">
-            <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="green"/>
+            <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="green"/>
         </g>
         <g id="bluemarker">
             <circle fill="blue" r="3" cx="15" cy="0" stroke="none"/>
@@ -97,558 +161,1452 @@
             <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="blue"/>
         </g>
         <g id="bluecross">
-            <polyline fill="none" stroke-width="2" points="0,0 14,14 7,7 0,14 14,0" stroke="blue"/>
+            <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="blue"/>
         </g>
     </defs>
-    <g id="DiagramGroup" transform="translate(800, 450)">
+    <g id="DiagramGroup">
     
     
     
     
-        <rect x="-798.0" y="-448.0" fill="none" width="3096.0" id="PageBorder" height="696.0" stroke="grey" stroke-width="2"/>
-        <g id="GraphicsGroup"/>
-        <g id="RelationGroup">
-            <g id="relation0">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_f236828d50909413df16564a9c44ba10" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_2cf36745e277a718028035c9547243d8"/>
-                <defs>
-                    <polyline fill="none" id="relation0Line" stroke-width="2" points="207,7 207,-43 307,-43 307,-63 307,-63 307,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation0Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation0Line"/>
-            </g>
-            <g id="relation1">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_5e6b6b2dbaa03bf4544a255deecec69a" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_49c88dd77a2264b6aa613021e236eb84"/>
-                <defs>
-                    <polyline fill="none" id="relation1Line" stroke-width="2" points="857,7 857,-43 857,-43 857,-63 857,-63 857,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation1Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation1Line"/>
-            </g>
-            <g id="relation2">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_15cfe4ec699efd384eb3892d68164be4" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_87b8650d6336994f9f24654fdb214c71"/>
-                <defs>
-                    <polyline fill="none" id="relation2Line" stroke-width="2" points="-193,-193 -193,-243 557,-243 557,-263 557,-263 557,-293 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation2Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation2Line"/>
-            </g>
-            <g id="relation3">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_6ef08317358fc7605bba50ba947c5fa1" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_d573d6fdbe6bc99b0dee7584a73f1c4c"/>
-                <defs>
-                    <polyline fill="none" id="relation3Line" stroke-width="2" points="1207,-93 1207,-143 1307,-143 1307,-163 1307,-163 1307,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation3Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation3Line"/>
-            </g>
-            <g id="relation4">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_b79466e3fda68b430682cf359d3e989f" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_6ef08317358fc7605bba50ba947c5fa1"/>
-                <defs>
-                    <polyline fill="none" id="relation4Line" stroke-width="2" points="1107,7 1107,-43 1207,-43 1207,-63 1207,-63 1207,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation4Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation4Line"/>
-            </g>
-            <g id="relation5">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_3dcede17c537c1aa8d74ba0a4badf972" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_6ef08317358fc7605bba50ba947c5fa1"/>
-                <defs>
-                    <polyline fill="none" id="relation5Line" stroke-width="2" points="1457,7 1457,-43 1207,-43 1207,-63 1207,-63 1207,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation5Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation5Line"/>
-            </g>
-            <g id="relation6">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_d0e1f42101710cd32d6ae07940f3169e" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_6ef08317358fc7605bba50ba947c5fa1"/>
-                <defs>
-                    <polyline fill="none" id="relation6Line" stroke-width="2" points="1607,7 1607,-43 1207,-43 1207,-63 1207,-63 1207,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation6Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation6Line"/>
-            </g>
-            <g id="relation7">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_92724995a7618cec9cff9c8d177b0b5a" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_6ef08317358fc7605bba50ba947c5fa1"/>
-                <defs>
-                    <polyline fill="none" id="relation7Line" stroke-width="2" points="1807,7 1807,-43 1207,-43 1207,-63 1207,-63 1207,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation7Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation7Line"/>
-            </g>
-            <g id="relation8">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_f270191b00089852dc552275213190fb" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_6ef08317358fc7605bba50ba947c5fa1"/>
-                <defs>
-                    <polyline fill="none" id="relation8Line" stroke-width="2" points="1957,7 1957,-43 1207,-43 1207,-63 1207,-63 1207,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation8Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation8Line"/>
-            </g>
-            <g id="relation9">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_38fe23e9e9198f80ec2bea370315527d" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_6ef08317358fc7605bba50ba947c5fa1"/>
-                <defs>
-                    <polyline fill="none" id="relation9Line" stroke-width="2" points="2107,7 2107,-43 1207,-43 1207,-63 1207,-63 1207,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation9Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation9Line"/>
-            </g>
-            <g id="relation10">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_d5699b66a887d30bb18939c592c88d62" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_6ef08317358fc7605bba50ba947c5fa1"/>
-                <defs>
-                    <polyline fill="none" id="relation10Line" stroke-width="2" points="1307,7 1307,-43 1207,-43 1207,-63 1207,-63 1207,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation10Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation10Line"/>
-            </g>
-            <g id="relation11">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_7b59019be9dc376171a1ebaf6080225a" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_d573d6fdbe6bc99b0dee7584a73f1c4c"/>
-                <defs>
-                    <polyline fill="none" id="relation11Line" stroke-width="2" points="1707,-93 1707,-143 1307,-143 1307,-163 1307,-163 1307,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation11Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation11Line"/>
-            </g>
-            <g id="relation12">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_076ea3ded22a12f1dddf4bee9d9f5cd2" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_d573d6fdbe6bc99b0dee7584a73f1c4c"/>
-                <defs>
-                    <polyline fill="none" id="relation12Line" stroke-width="2" points="1407,-93 1407,-143 1307,-143 1307,-163 1307,-163 1307,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation12Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation12Line"/>
-            </g>
-            <g id="relation13">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_8719d4e8c7f5f343aa17007ee4ad4c59" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_d573d6fdbe6bc99b0dee7584a73f1c4c"/>
-                <defs>
-                    <polyline fill="none" id="relation13Line" stroke-width="2" points="1557,-93 1557,-143 1307,-143 1307,-163 1307,-163 1307,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation13Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation13Line"/>
-            </g>
-            <g id="relation14">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_d573d6fdbe6bc99b0dee7584a73f1c4c" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_87b8650d6336994f9f24654fdb214c71"/>
-                <defs>
-                    <polyline fill="none" id="relation14Line" stroke-width="2" points="1307,-193 1307,-243 557,-243 557,-263 557,-263 557,-293 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation14Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation14Line"/>
-            </g>
-            <g id="relation15">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_76a8b10d50c99d531a226f479ca8c3d0" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_2cf36745e277a718028035c9547243d8"/>
-                <defs>
-                    <polyline fill="none" id="relation15Line" stroke-width="2" points="-43,7 -43,-43 307,-43 307,-63 307,-63 307,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation15Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation15Line"/>
-            </g>
-            <g id="relation16">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_1abe7dabd1c70628f07963e95f9eb0f3" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_c7be01fab14a0b39a944cfbc7b1af370"/>
-                <defs>
-                    <polyline fill="none" id="relation16Line" stroke-width="2" points="607,7 607,-43 507,-43 507,-63 507,-63 507,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation16Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation16Line"/>
-            </g>
-            <g id="relation17">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_439671a86d8cf7ef7b64603d17c045c6" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_67530193a6b8b2c0a1033446c23b55fe"/>
-                <defs>
-                    <polyline fill="none" id="relation17Line" stroke-width="2" points="-393,-93 -393,-143 407,-143 407,-163 407,-163 407,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation17Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation17Line"/>
-            </g>
-            <g id="relation18">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_04c5146f7a9f5602148fe498a2719272" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_87b8650d6336994f9f24654fdb214c71"/>
-                <defs>
-                    <polyline fill="none" id="relation18Line" stroke-width="2" points="7,-193 7,-243 557,-243 557,-263 557,-263 557,-293 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation18Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation18Line"/>
-            </g>
-            <g id="relation19">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_01af3ba990cdf7c5fb99c99663310fb5" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_c7be01fab14a0b39a944cfbc7b1af370"/>
-                <defs>
-                    <polyline fill="none" id="relation19Line" stroke-width="2" points="407,7 407,-43 507,-43 507,-63 507,-63 507,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation19Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation19Line"/>
-            </g>
-            <g id="relation20">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_ac0255ad17cb3b3f7ceef79a562c98fa" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_2cf36745e277a718028035c9547243d8"/>
-                <defs>
-                    <polyline fill="none" id="relation20Line" stroke-width="2" points="-593,7 -593,-43 307,-43 307,-63 307,-63 307,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation20Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation20Line"/>
-            </g>
-            <g id="relation21">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_42b0e40a5d3ed02b29c62a3df8d29482" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_67530193a6b8b2c0a1033446c23b55fe"/>
-                <defs>
-                    <polyline fill="none" id="relation21Line" stroke-width="2" points="-43,-93 -43,-143 407,-143 407,-163 407,-163 407,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation21Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation21Line"/>
-            </g>
-            <g id="relation22">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_a8a378106e81dd1a9358709ed2140d9a" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_67530193a6b8b2c0a1033446c23b55fe"/>
-                <defs>
-                    <polyline fill="none" id="relation22Line" stroke-width="2" points="707,-93 707,-143 407,-143 407,-163 407,-163 407,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation22Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation22Line"/>
-            </g>
-            <g id="relation23">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_49c88dd77a2264b6aa613021e236eb84" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_72fd2eb4dded4353125894161fcfc8dc"/>
-                <defs>
-                    <polyline fill="none" id="relation23Line" stroke-width="2" points="857,-93 857,-143 857,-143 857,-163 857,-163 857,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation23Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation23Line"/>
-            </g>
-            <g id="relation24">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_8b561f64886573a2b5164f687dd02a24" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_49c88dd77a2264b6aa613021e236eb84"/>
-                <defs>
-                    <polyline fill="none" id="relation24Line" stroke-width="2" points="757,7 757,-43 857,-43 857,-63 857,-63 857,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation24Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation24Line"/>
-            </g>
-            <g id="relation25">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_f165b998134ee9c87fcf7f77afcdcb30" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_49c88dd77a2264b6aa613021e236eb84"/>
-                <defs>
-                    <polyline fill="none" id="relation25Line" stroke-width="2" points="957,7 957,-43 857,-43 857,-63 857,-63 857,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation25Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation25Line"/>
-            </g>
-            <g id="relation26">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_7b00f979e251465c17088bf0d19a06aa" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_67530193a6b8b2c0a1033446c23b55fe"/>
-                <defs>
-                    <polyline fill="none" id="relation26Line" stroke-width="2" points="-243,-93 -243,-143 407,-143 407,-163 407,-163 407,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation26Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation26Line"/>
-            </g>
-            <g id="relation27">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_2cf36745e277a718028035c9547243d8" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_67530193a6b8b2c0a1033446c23b55fe"/>
-                <defs>
-                    <polyline fill="none" id="relation27Line" stroke-width="2" points="307,-93 307,-143 407,-143 407,-163 407,-163 407,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation27Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation27Line"/>
-            </g>
-            <g id="relation28">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_c7be01fab14a0b39a944cfbc7b1af370" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_67530193a6b8b2c0a1033446c23b55fe"/>
-                <defs>
-                    <polyline fill="none" id="relation28Line" stroke-width="2" points="507,-93 507,-143 407,-143 407,-163 407,-163 407,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation28Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation28Line"/>
-            </g>
-            <g id="relation29">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_7b6fba6d2514f5ea6a2c0133f6481faf" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_67530193a6b8b2c0a1033446c23b55fe"/>
-                <defs>
-                    <polyline fill="none" id="relation29Line" stroke-width="2" points="157,-93 157,-143 407,-143 407,-163 407,-163 407,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation29Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation29Line"/>
-            </g>
-            <g id="relation30">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_67530193a6b8b2c0a1033446c23b55fe" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_87b8650d6336994f9f24654fdb214c71"/>
-                <defs>
-                    <polyline fill="none" id="relation30Line" stroke-width="2" points="407,-193 407,-243 557,-243 557,-263 557,-263 557,-293 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation30Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation30Line"/>
-            </g>
-            <g id="relation31">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_980067ddf26ec47693a733a733c02694" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_2cf36745e277a718028035c9547243d8"/>
-                <defs>
-                    <polyline fill="none" id="relation31Line" stroke-width="2" points="-243,7 -243,-43 307,-43 307,-63 307,-63 307,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation31Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation31Line"/>
-            </g>
-            <g id="relation32">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_ed611b28b31aaec4c49801aab67955c5" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_87b8650d6336994f9f24654fdb214c71"/>
-                <defs>
-                    <polyline fill="none" id="relation32Line" stroke-width="2" points="1107,-193 1107,-243 557,-243 557,-263 557,-263 557,-293 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation32Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation32Line"/>
-            </g>
-            <g id="relation33">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_2297e359f40a11761ca4a82b4d49f5a0" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_c7be01fab14a0b39a944cfbc7b1af370"/>
-                <defs>
-                    <polyline fill="none" id="relation33Line" stroke-width="2" points="507,7 507,-43 507,-43 507,-63 507,-63 507,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation33Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation33Line"/>
-            </g>
-            <g id="relation34">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_55158ffef1ef49fb5e03dcc7c97e856b" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_87b8650d6336994f9f24654fdb214c71"/>
-                <defs>
-                    <polyline fill="none" id="relation34Line" stroke-width="2" points="207,-193 207,-243 557,-243 557,-263 557,-263 557,-293 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation34Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation34Line"/>
-            </g>
-            <g id="relation35">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_cfeb646cc3dff46971e79f0c3b0a853f" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_87b8650d6336994f9f24654fdb214c71"/>
-                <defs>
-                    <polyline fill="none" id="relation35Line" stroke-width="2" points="-393,-193 -393,-243 557,-243 557,-263 557,-263 557,-293 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation35Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation35Line"/>
-            </g>
-            <g id="relation36">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_cefe73aa656fef02c994ac13ec32e453" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_87b8650d6336994f9f24654fdb214c71"/>
-                <defs>
-                    <polyline fill="none" id="relation36Line" stroke-width="2" points="607,-193 607,-243 557,-243 557,-263 557,-263 557,-293 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation36Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation36Line"/>
-            </g>
-            <g id="relation37">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_72fd2eb4dded4353125894161fcfc8dc" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_87b8650d6336994f9f24654fdb214c71"/>
-                <defs>
-                    <polyline fill="none" id="relation37Line" stroke-width="2" points="857,-193 857,-243 557,-243 557,-263 557,-263 557,-293 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation37Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation37Line"/>
-            </g>
-            <g id="relation38">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_61f27021af082a3ae385fa409ae578ad" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_2cf36745e277a718028035c9547243d8"/>
-                <defs>
-                    <polyline fill="none" id="relation38Line" stroke-width="2" points="-393,7 -393,-43 307,-43 307,-63 307,-63 307,-93 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation38Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation38Line"/>
-            </g>
-            <g id="relation39">
-                <kin:RelationEntities xmlns:kin="kin" kin:ego="iid_7efe2ede2b0df488c46bc7d6f8b11779" kin:curveLineOrientation="horizontal" kin:relationType="ancestor" kin:alter="iid_72fd2eb4dded4353125894161fcfc8dc"/>
-                <defs>
-                    <polyline fill="none" id="relation39Line" stroke-width="2" points="1057,-93 1057,-143 857,-143 857,-163 857,-163 857,-193 " stroke="grey"/>
-                </defs>
-                <use xlink:actuate="onLoad" xlink:type="simple" id="relation39Lineuse" xlink:show="embed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#relation39Line"/>
-            </g>
+        <rect x="-798.0"
+            y="-448.0"
+            fill="none"
+            width="3096.0"
+            id="PageBorder"
+            height="696.0"
+            stroke="grey"
+            stroke-width="2"/>
+        
+        
+        
+        
+      <g id="GraphicsGroup"/>
+      <g id="RelationGroup">
+         <g id="relation0">
+            <defs>
+               <path fill="none"
+                     id="relation0Line"
+                     stroke-width="2"
+                     d="M -393,7 L -393,-33 -393,-33 307,-33 307,-63 307,-63 307,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation0Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation0Line"/>
+         </g>
+         <g id="relation9">
+            <defs>
+               <path fill="none"
+                     id="relation9Line"
+                     stroke-width="2"
+                     d="M 407,7 L 407,-33 407,-33 507,-33 507,-63 507,-63 507,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation9Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation9Line"/>
+         </g>
+         <g id="relation36">
+            <defs>
+               <path fill="none"
+                     id="relation36Line"
+                     stroke-width="2"
+                     d="M 1107,7 L 1107,-33 1107,-33 1207,-33 1207,-63 1207,-63 1207,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation36Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation36Line"/>
+         </g>
+         <g id="relation13">
+            <defs>
+               <path fill="none"
+                     id="relation13Line"
+                     stroke-width="2"
+                     d="M -243,-93 L -243,-133 -243,-133 407,-133 407,-163 407,-163 407,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation13Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation13Line"/>
+         </g>
+         <g id="relation2">
+            <defs>
+               <path fill="none"
+                     id="relation2Line"
+                     stroke-width="2"
+                     d="M -393,-93 L -393,-133 -393,-133 407,-133 407,-163 407,-163 407,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation2Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation2Line"/>
+         </g>
+         <g id="relation28">
+            <defs>
+               <path fill="none"
+                     id="relation28Line"
+                     stroke-width="2"
+                     d="M 1207,-93 L 1207,-133 1207,-133 1307,-133 1307,-163 1307,-163 1307,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation28Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation28Line"/>
+         </g>
+         <g id="relation8">
+            <defs>
+               <path fill="none"
+                     id="relation8Line"
+                     stroke-width="2"
+                     d="M 607,7 L 607,-33 607,-33 507,-33 507,-63 507,-63 507,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation8Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation8Line"/>
+         </g>
+         <g id="relation11">
+            <defs>
+               <path fill="none"
+                     id="relation11Line"
+                     stroke-width="2"
+                     d="M 857,7 L 857,-33 857,-33 857,-33 857,-63 857,-63 857,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation11Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation11Line"/>
+         </g>
+         <g id="relation15">
+            <defs>
+               <path fill="none"
+                     id="relation15Line"
+                     stroke-width="2"
+                     d="M 507,-93 L 507,-133 507,-133 407,-133 407,-163 407,-163 407,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation15Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation15Line"/>
+         </g>
+         <g id="relation37">
+            <defs>
+               <path fill="none"
+                     id="relation37Line"
+                     stroke-width="2"
+                     d="M 857,-93 L 857,-133 857,-133 857,-133 857,-163 857,-163 857,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation37Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation37Line"/>
+         </g>
+         <g id="relation26">
+            <defs>
+               <path fill="none"
+                     id="relation26Line"
+                     stroke-width="2"
+                     d="M 1307,-193 L 1307,-233 1307,-233 557,-233 557,-263 557,-263 557,-293 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation26Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation26Line"/>
+         </g>
+         <g id="relation17">
+            <defs>
+               <path fill="none"
+                     id="relation17Line"
+                     stroke-width="2"
+                     d="M 157,-93 L 157,-133 157,-133 407,-133 407,-163 407,-163 407,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation17Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation17Line"/>
+         </g>
+         <g id="relation34">
+            <defs>
+               <path fill="none"
+                     id="relation34Line"
+                     stroke-width="2"
+                     d="M 857,-193 L 857,-233 857,-233 557,-233 557,-263 557,-263 557,-293 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation34Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation34Line"/>
+         </g>
+         <g id="relation16">
+            <defs>
+               <path fill="none"
+                     id="relation16Line"
+                     stroke-width="2"
+                     d="M -43,-93 L -43,-133 -43,-133 407,-133 407,-163 407,-163 407,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation16Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation16Line"/>
+         </g>
+         <g id="relation27">
+            <defs>
+               <path fill="none"
+                     id="relation27Line"
+                     stroke-width="2"
+                     d="M 1707,-93 L 1707,-133 1707,-133 1307,-133 1307,-163 1307,-163 1307,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation27Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation27Line"/>
+         </g>
+         <g id="relation20">
+            <defs>
+               <path fill="none"
+                     id="relation20Line"
+                     stroke-width="2"
+                     d="M 207,7 L 207,-33 207,-33 307,-33 307,-63 307,-63 307,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation20Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation20Line"/>
+         </g>
+         <g id="relation21">
+            <defs>
+               <path fill="none"
+                     id="relation21Line"
+                     stroke-width="2"
+                     d="M -43,7 L -43,-33 -43,-33 307,-33 307,-63 307,-63 307,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation21Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation21Line"/>
+         </g>
+         <g id="relation33">
+            <defs>
+               <path fill="none"
+                     id="relation33Line"
+                     stroke-width="2"
+                     d="M 207,-193 L 207,-233 207,-233 557,-233 557,-263 557,-263 557,-293 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation33Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation33Line"/>
+         </g>
+         <g id="relation12">
+            <defs>
+               <path fill="none"
+                     id="relation12Line"
+                     stroke-width="2"
+                     d="M -243,7 L -243,-33 -243,-33 307,-33 307,-63 307,-63 307,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation12Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation12Line"/>
+         </g>
+         <g id="relation25">
+            <defs>
+               <path fill="none"
+                     id="relation25Line"
+                     stroke-width="2"
+                     d="M 507,7 L 507,-33 507,-33 507,-33 507,-63 507,-63 507,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation25Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation25Line"/>
+         </g>
+         <g id="relation38">
+            <defs>
+               <path fill="none"
+                     id="relation38Line"
+                     stroke-width="2"
+                     d="M 757,7 L 757,-33 757,-33 857,-33 857,-63 857,-63 857,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation38Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation38Line"/>
+         </g>
+         <g id="relation5">
+            <defs>
+               <path fill="none"
+                     id="relation5Line"
+                     stroke-width="2"
+                     d="M 1307,7 L 1307,-33 1307,-33 1207,-33 1207,-63 1207,-63 1207,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation5Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation5Line"/>
+         </g>
+         <g id="relation10">
+            <defs>
+               <path fill="none"
+                     id="relation10Line"
+                     stroke-width="2"
+                     d="M 1107,-193 L 1107,-233 1107,-233 557,-233 557,-263 557,-263 557,-293 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation10Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation10Line"/>
+         </g>
+         <g id="relation19">
+            <defs>
+               <path fill="none"
+                     id="relation19Line"
+                     stroke-width="2"
+                     d="M 407,-193 L 407,-233 407,-233 557,-233 557,-263 557,-263 557,-293 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation19Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation19Line"/>
+         </g>
+         <g id="relation30">
+            <defs>
+               <path fill="none"
+                     id="relation30Line"
+                     stroke-width="2"
+                     d="M 1557,-93 L 1557,-133 1557,-133 1307,-133 1307,-163 1307,-163 1307,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation30Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation30Line"/>
+         </g>
+         <g id="relation1">
+            <defs>
+               <path fill="none"
+                     id="relation1Line"
+                     stroke-width="2"
+                     d="M 2107,7 L 2107,-33 2107,-33 1207,-33 1207,-63 1207,-63 1207,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation1Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation1Line"/>
+         </g>
+         <g id="relation39">
+            <defs>
+               <path fill="none"
+                     id="relation39Line"
+                     stroke-width="2"
+                     d="M 1957,7 L 1957,-33 1957,-33 1207,-33 1207,-63 1207,-63 1207,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation39Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation39Line"/>
+         </g>
+         <g id="relation31">
+            <defs>
+               <path fill="none"
+                     id="relation31Line"
+                     stroke-width="2"
+                     d="M -193,-193 L -193,-233 -193,-233 557,-233 557,-263 557,-263 557,-293 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation31Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation31Line"/>
+         </g>
+         <g id="relation24">
+            <defs>
+               <path fill="none"
+                     id="relation24Line"
+                     stroke-width="2"
+                     d="M 1457,7 L 1457,-33 1457,-33 1207,-33 1207,-63 1207,-63 1207,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation24Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation24Line"/>
+         </g>
+         <g id="relation6">
+            <defs>
+               <path fill="none"
+                     id="relation6Line"
+                     stroke-width="2"
+                     d="M 957,7 L 957,-33 957,-33 857,-33 857,-63 857,-63 857,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation6Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation6Line"/>
+         </g>
+         <g id="relation23">
+            <defs>
+               <path fill="none"
+                     id="relation23Line"
+                     stroke-width="2"
+                     d="M 1607,7 L 1607,-33 1607,-33 1207,-33 1207,-63 1207,-63 1207,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation23Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation23Line"/>
+         </g>
+         <g id="relation32">
+            <defs>
+               <path fill="none"
+                     id="relation32Line"
+                     stroke-width="2"
+                     d="M 7,-193 L 7,-233 7,-233 557,-233 557,-263 557,-263 557,-293 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation32Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation32Line"/>
+         </g>
+         <g id="relation3">
+            <defs>
+               <path fill="none"
+                     id="relation3Line"
+                     stroke-width="2"
+                     d="M 1057,-93 L 1057,-133 1057,-133 857,-133 857,-163 857,-163 857,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation3Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation3Line"/>
+         </g>
+         <g id="relation22">
+            <defs>
+               <path fill="none"
+                     id="relation22Line"
+                     stroke-width="2"
+                     d="M 1807,7 L 1807,-33 1807,-33 1207,-33 1207,-63 1207,-63 1207,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation22Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation22Line"/>
+         </g>
+         <g id="relation4">
+            <defs>
+               <path fill="none"
+                     id="relation4Line"
+                     stroke-width="2"
+                     d="M 607,-193 L 607,-233 607,-233 557,-233 557,-263 557,-263 557,-293 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation4Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation4Line"/>
+         </g>
+         <g id="relation35">
+            <defs>
+               <path fill="none"
+                     id="relation35Line"
+                     stroke-width="2"
+                     d="M -593,7 L -593,-33 -593,-33 307,-33 307,-63 307,-63 307,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation35Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation35Line"/>
+         </g>
+         <g id="relation14">
+            <defs>
+               <path fill="none"
+                     id="relation14Line"
+                     stroke-width="2"
+                     d="M 307,-93 L 307,-133 307,-133 407,-133 407,-163 407,-163 407,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation14Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation14Line"/>
+         </g>
+         <g id="relation29">
+            <defs>
+               <path fill="none"
+                     id="relation29Line"
+                     stroke-width="2"
+                     d="M 1407,-93 L 1407,-133 1407,-133 1307,-133 1307,-163 1307,-163 1307,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation29Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation29Line"/>
+         </g>
+         <g id="relation7">
+            <defs>
+               <path fill="none"
+                     id="relation7Line"
+                     stroke-width="2"
+                     d="M -393,-193 L -393,-233 -393,-233 557,-233 557,-263 557,-263 557,-293 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation7Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation7Line"/>
+         </g>
+         <g id="relation18">
+            <defs>
+               <path fill="none"
+                     id="relation18Line"
+                     stroke-width="2"
+                     d="M 707,-93 L 707,-133 707,-133 407,-133 407,-163 407,-163 407,-193 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation18Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation18Line"/>
+         </g>
+      </g>
+      <g id="EntityGroup">
+         <g id="iid_61f27021af082a3ae385fa409ae578ad"
+            kin:kintype=""
+            transform="translate(-400, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/61/61f27021af082a3ae385fa409ae578ad.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Tatiana Nicholovna //</text>
+         </g>
+         <g id="iid_38fe23e9e9198f80ec2bea370315527d"
+            kin:kintype=""
+            transform="translate(2100, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/38/38fe23e9e9198f80ec2bea370315527d.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Christina //</text>
+         </g>
+         <g id="iid_439671a86d8cf7ef7b64603d17c045c6"
+            kin:kintype=""
+            transform="translate(-400, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/43/439671a86d8cf7ef7b64603d17c045c6.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Elizabeth "Ella" //</text>
+         </g>
+         <g id="iid_7efe2ede2b0df488c46bc7d6f8b11779"
+            kin:kintype=""
+            transform="translate(1050, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/7e/7efe2ede2b0df488c46bc7d6f8b11779.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles Edward //</text>
+         </g>
+         <g id="iid_cefe73aa656fef02c994ac13ec32e453"
+            kin:kintype=""
+            transform="translate(600, -200)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/ce/cefe73aa656fef02c994ac13ec32e453.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alfred Ernest Albert//</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">XY</text>
+         </g>
+         <g id="iid_d5699b66a887d30bb18939c592c88d62"
+            kin:kintype=""
+            transform="translate(1300, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/d5/d5699b66a887d30bb18939c592c88d62.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Gonzalo  //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">xY</text>
+         </g>
+         <g id="iid_f165b998134ee9c87fcf7f77afcdcb30"
+            kin:kintype=""
+            transform="translate(950, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/f1/f165b998134ee9c87fcf7f77afcdcb30.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Son_2  //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">xY</text>
+         </g>
+         <g id="iid_cfeb646cc3dff46971e79f0c3b0a853f"
+            kin:kintype=""
+            transform="translate(-400, -200)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/cf/cfeb646cc3dff46971e79f0c3b0a853f.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Victoria Adelaide Mary//</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">XC</text>
+         </g>
+         <g id="iid_1abe7dabd1c70628f07963e95f9eb0f3"
+            kin:kintype=""
+            transform="translate(600, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/1a/1abe7dabd1c70628f07963e95f9eb0f3.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Henry  //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">xY</text>
+         </g>
+         <g id="iid_01af3ba990cdf7c5fb99c99663310fb5"
+            kin:kintype=""
+            transform="translate(400, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/01/01af3ba990cdf7c5fb99c99663310fb5.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Waldemar  //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">xY</text>
+         </g>
+         <g id="iid_ed611b28b31aaec4c49801aab67955c5"
+            kin:kintype=""
+            transform="translate(1100, -200)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/ed/ed611b28b31aaec4c49801aab67955c5.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Helena Augusta Victoria//</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">XX?</text>
+         </g>
+         <g id="iid_5e6b6b2dbaa03bf4544a255deecec69a"
+            kin:kintype=""
+            transform="translate(850, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/5e/5e6b6b2dbaa03bf4544a255deecec69a.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">May Cambridge //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">XX</text>
+         </g>
+         <g id="iid_980067ddf26ec47693a733a733c02694"
+            kin:kintype=""
+            transform="translate(-250, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/98/980067ddf26ec47693a733a733c02694.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alexis Nicolaievich /Romanov/</text>
+         </g>
+         <g id="iid_67530193a6b8b2c0a1033446c23b55fe"
+            kin:kintype=""
+            transform="translate(400, -200)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/67/67530193a6b8b2c0a1033446c23b55fe.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alice Maud Mary//</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">Xx</text>
+         </g>
+         <g id="iid_f236828d50909413df16564a9c44ba10"
+            kin:kintype=""
+            transform="translate(200, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/f2/f236828d50909413df16564a9c44ba10.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Olga Nicholovna /Romanov/</text>
+         </g>
+         <g id="iid_76a8b10d50c99d531a226f479ca8c3d0"
+            kin:kintype=""
+            transform="translate(-50, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/76/76a8b10d50c99d531a226f479ca8c3d0.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Anastasia Nicholovna /Romanov/</text>
+         </g>
+         <g id="iid_92724995a7618cec9cff9c8d177b0b5a"
+            kin:kintype=""
+            transform="translate(1800, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/92/92724995a7618cec9cff9c8d177b0b5a.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Beatrice  //</text>
+         </g>
+         <g id="iid_d0e1f42101710cd32d6ae07940f3169e"
+            kin:kintype=""
+            transform="translate(1600, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/d0/d0e1f42101710cd32d6ae07940f3169e.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Don Juan of_Spain//</text>
+         </g>
+         <g id="iid_3dcede17c537c1aa8d74ba0a4badf972"
+            kin:kintype=""
+            transform="translate(1450, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/3d/3dcede17c537c1aa8d74ba0a4badf972.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Don Jamie //</text>
+         </g>
+         <g id="iid_c7be01fab14a0b39a944cfbc7b1af370"
+            kin:kintype=""
+            transform="translate(500, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/c7/c7be01fab14a0b39a944cfbc7b1af370.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Irene of_Hesse //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">Xx</text>
+         </g>
+         <g id="iid_d573d6fdbe6bc99b0dee7584a73f1c4c"
+            kin:kintype=""
+            transform="translate(1300, -200)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/d5/d573d6fdbe6bc99b0dee7584a73f1c4c.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Beatrice Mary Victoria//</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">Xx</text>
+         </g>
+         <g id="iid_87b8650d6336994f9f24654fdb214c71"
+            kin:kintype=""
+            transform="translate(550, -300)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/87/87b8650d6336994f9f24654fdb214c71.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Victoria  /Hanover/</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">Xx</text>
+         </g>
+         <g id="iid_2cf36745e277a718028035c9547243d8"
+            kin:kintype=""
+            transform="translate(300, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/2c/2cf36745e277a718028035c9547243d8.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alexandra Fedorovna "Alix"//</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">Xx</text>
+         </g>
+         <g id="iid_a8a378106e81dd1a9358709ed2140d9a"
+            kin:kintype=""
+            transform="translate(700, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/a8/a8a378106e81dd1a9358709ed2140d9a.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Frederick  //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">xY</text>
+         </g>
+         <g id="iid_7b00f979e251465c17088bf0d19a06aa"
+            kin:kintype=""
+            transform="translate(-250, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/7b/7b00f979e251465c17088bf0d19a06aa.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Victoria Alberta of_Hesse//</text>
+         </g>
+         <g id="iid_b79466e3fda68b430682cf359d3e989f"
+            kin:kintype=""
+            transform="translate(1100, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/b7/b79466e3fda68b430682cf359d3e989f.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alphonso of_Cavadonga //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">xY</text>
+         </g>
+         <g id="iid_15cfe4ec699efd384eb3892d68164be4"
+            kin:kintype=""
+            transform="translate(-200, -200)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/15/15cfe4ec699efd384eb3892d68164be4.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Edward_VII  /Wettin/</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">XY</text>
+         </g>
+         <g id="iid_076ea3ded22a12f1dddf4bee9d9f5cd2"
+            kin:kintype=""
+            transform="translate(1400, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/07/076ea3ded22a12f1dddf4bee9d9f5cd2.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Leopold  //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">xY</text>
+         </g>
+         <g id="iid_8719d4e8c7f5f343aa17007ee4ad4c59"
+            kin:kintype=""
+            transform="translate(1550, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/87/8719d4e8c7f5f343aa17007ee4ad4c59.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#purplemarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maurice  //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">xY?</text>
+         </g>
+         <g id="iid_2297e359f40a11761ca4a82b4d49f5a0"
+            kin:kintype=""
+            transform="translate(500, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/22/2297e359f40a11761ca4a82b4d49f5a0.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Child_#3  //</text>
+         </g>
+         <g id="iid_42b0e40a5d3ed02b29c62a3df8d29482"
+            kin:kintype=""
+            transform="translate(-50, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/42/42b0e40a5d3ed02b29c62a3df8d29482.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ernest Louis of_Hesse//</text>
+         </g>
+         <g id="iid_7b6fba6d2514f5ea6a2c0133f6481faf"
+            kin:kintype=""
+            transform="translate(150, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/7b/7b6fba6d2514f5ea6a2c0133f6481faf.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Mary "May" //</text>
+         </g>
+         <g id="iid_ac0255ad17cb3b3f7ceef79a562c98fa"
+            kin:kintype=""
+            transform="translate(-600, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/ac/ac0255ad17cb3b3f7ceef79a562c98fa.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Nicholovna /Romanov/</text>
+         </g>
+         <g id="iid_49c88dd77a2264b6aa613021e236eb84"
+            kin:kintype=""
+            transform="translate(850, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/49/49c88dd77a2264b6aa613021e236eb84.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alice of_Athlone //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">Xx</text>
+         </g>
+         <g id="iid_72fd2eb4dded4353125894161fcfc8dc"
+            kin:kintype=""
+            transform="translate(850, -200)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/72/72fd2eb4dded4353125894161fcfc8dc.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Leopold George Duncan//</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">xY</text>
+         </g>
+         <g id="iid_04c5146f7a9f5602148fe498a2719272"
+            kin:kintype=""
+            transform="translate(0, -200)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/04/04c5146f7a9f5602148fe498a2719272.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Louise Caroline Alberta//</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">XX?</text>
+         </g>
+         <g id="iid_8b561f64886573a2b5164f687dd02a24"
+            kin:kintype=""
+            transform="translate(750, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/8b/8b561f64886573a2b5164f687dd02a24.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Rupert  //</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">xY</text>
+         </g>
+         <g id="iid_55158ffef1ef49fb5e03dcc7c97e856b"
+            kin:kintype=""
+            transform="translate(200, -200)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/55/55158ffef1ef49fb5e03dcc7c97e856b.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Arthur William Patrick//</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">XY</text>
+         </g>
+         <g id="iid_6ef08317358fc7605bba50ba947c5fa1"
+            kin:kintype=""
+            transform="translate(1200, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/6e/6ef08317358fc7605bba50ba947c5fa1.kmdi">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <use fill="white"
+                 xlink:href="#redmarker"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Victoria Eugenie "Ena"//</text>
+            <text x="22.5"
+                  fill="black"
+                  font-size="14"
+                  stroke-width="0"
+                  y="15">Xx</text>
+         </g>
+         <g id="iid_f270191b00089852dc552275213190fb"
+            kin:kintype=""
+            transform="translate(1950, 0)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/f2/f270191b00089852dc552275213190fb.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">James  //</text>
+         </g>
+         <g id="iid_7b59019be9dc376171a1ebaf6080225a"
+            kin:kintype=""
+            transform="translate(1700, -100)"
+            kin:path="file:/Users/petwit2/.kinoath-1-1/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/7b/7b59019be9dc376171a1ebaf6080225a.kmdi">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alexander of_Carisbrooke //</text>
+         </g>
+      </g>
+      <g id="LabelsGroup">
+            <text fill="#000000"
+               id="gid_e26a0fad-20d1-428c-8d95-d4f7e6383725"
+               font-size="28"
+               stroke-width="0"
+               transform="translate(400.0, -350.0)">Haemophilia in European royalty</text>
+            <text fill="#000000"
+               id="gid_fa00b4bb-d2e5-49a7-bd2b-83fdc4e1c98d"
+               font-size="28"
+               stroke-width="0"
+               transform="translate(300.0, 150.0)">chromosome data sourced from: http://en.wikipedia.org/wiki/Haemophilia_in_European_royalty</text>
         </g>
-        <g id="EntityGroup">
-            <g id="iid_f236828d50909413df16564a9c44ba10" kin:kintype="" transform="translate(200.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/f2/f236828d50909413df16564a9c44ba10.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Olga Nicholovna /Romanov/</text>
-            </g>
-            <g id="iid_5e6b6b2dbaa03bf4544a255deecec69a" kin:kintype="" transform="translate(850.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/5e/5e6b6b2dbaa03bf4544a255deecec69a.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">May Cambridge //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">XX</text>
-            </g>
-            <g id="iid_15cfe4ec699efd384eb3892d68164be4" kin:kintype="" transform="translate(-200.0, -200.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/15/15cfe4ec699efd384eb3892d68164be4.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Edward_VII  /Wettin/</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">XY</text>
-            </g>
-            <g id="iid_6ef08317358fc7605bba50ba947c5fa1" kin:kintype="" transform="translate(1200.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/6e/6ef08317358fc7605bba50ba947c5fa1.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Victoria Eugenie "Ena"//</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Xx</text>
-            </g>
-            <g id="iid_d573d6fdbe6bc99b0dee7584a73f1c4c" kin:kintype="" transform="translate(1300.0, -200.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/d5/d573d6fdbe6bc99b0dee7584a73f1c4c.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Beatrice Mary Victoria//</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Xx</text>
-            </g>
-            <g id="iid_76a8b10d50c99d531a226f479ca8c3d0" kin:kintype="" transform="translate(-50.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/76/76a8b10d50c99d531a226f479ca8c3d0.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Anastasia Nicholovna /Romanov/</text>
-            </g>
-            <g id="iid_92724995a7618cec9cff9c8d177b0b5a" kin:kintype="" transform="translate(1800.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/92/92724995a7618cec9cff9c8d177b0b5a.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Beatrice  //</text>
-            </g>
-            <g id="iid_1abe7dabd1c70628f07963e95f9eb0f3" kin:kintype="" transform="translate(600.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/1a/1abe7dabd1c70628f07963e95f9eb0f3.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Henry  //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">xY</text>
-            </g>
-            <g id="iid_439671a86d8cf7ef7b64603d17c045c6" kin:kintype="" transform="translate(-400.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/43/439671a86d8cf7ef7b64603d17c045c6.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Elizabeth "Ella" //</text>
-            </g>
-            <g id="iid_38fe23e9e9198f80ec2bea370315527d" kin:kintype="" transform="translate(2100.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/38/38fe23e9e9198f80ec2bea370315527d.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Christina //</text>
-            </g>
-            <g id="iid_04c5146f7a9f5602148fe498a2719272" kin:kintype="" transform="translate(0.0, -200.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/04/04c5146f7a9f5602148fe498a2719272.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Louise Caroline Alberta//</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">XX?</text>
-            </g>
-            <g id="iid_01af3ba990cdf7c5fb99c99663310fb5" kin:kintype="" transform="translate(400.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/01/01af3ba990cdf7c5fb99c99663310fb5.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Waldemar  //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">xY</text>
-            </g>
-            <g id="iid_ac0255ad17cb3b3f7ceef79a562c98fa" kin:kintype="" transform="translate(-600.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/ac/ac0255ad17cb3b3f7ceef79a562c98fa.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maria Nicholovna /Romanov/</text>
-            </g>
-            <g id="iid_42b0e40a5d3ed02b29c62a3df8d29482" kin:kintype="" transform="translate(-50.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/42/42b0e40a5d3ed02b29c62a3df8d29482.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Ernest Louis of_Hesse//</text>
-            </g>
-            <g id="iid_a8a378106e81dd1a9358709ed2140d9a" kin:kintype="" transform="translate(700.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/a8/a8a378106e81dd1a9358709ed2140d9a.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Frederick  //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">xY</text>
-            </g>
-            <g id="iid_49c88dd77a2264b6aa613021e236eb84" kin:kintype="" transform="translate(850.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/49/49c88dd77a2264b6aa613021e236eb84.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alice of_Athlone //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Xx</text>
-            </g>
-            <g id="iid_d0e1f42101710cd32d6ae07940f3169e" kin:kintype="" transform="translate(1600.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/d0/d0e1f42101710cd32d6ae07940f3169e.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Don Juan of_Spain//</text>
-            </g>
-            <g id="iid_076ea3ded22a12f1dddf4bee9d9f5cd2" kin:kintype="" transform="translate(1400.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/07/076ea3ded22a12f1dddf4bee9d9f5cd2.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Leopold  //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">xY</text>
-            </g>
-            <g id="iid_b79466e3fda68b430682cf359d3e989f" kin:kintype="" transform="translate(1100.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/b7/b79466e3fda68b430682cf359d3e989f.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alphonso of_Cavadonga //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">xY</text>
-            </g>
-            <g id="iid_67530193a6b8b2c0a1033446c23b55fe" kin:kintype="" transform="translate(400.0, -200.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/67/67530193a6b8b2c0a1033446c23b55fe.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alice Maud Mary//</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Xx</text>
-            </g>
-            <g id="iid_980067ddf26ec47693a733a733c02694" kin:kintype="" transform="translate(-250.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/98/980067ddf26ec47693a733a733c02694.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alexis Nicolaievich /Romanov/</text>
-            </g>
-            <g id="iid_f165b998134ee9c87fcf7f77afcdcb30" kin:kintype="" transform="translate(950.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/f1/f165b998134ee9c87fcf7f77afcdcb30.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Son_2  //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">xY</text>
-            </g>
-            <g id="iid_ed611b28b31aaec4c49801aab67955c5" kin:kintype="" transform="translate(1100.0, -200.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/ed/ed611b28b31aaec4c49801aab67955c5.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Helena Augusta Victoria//</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">XX?</text>
-            </g>
-            <g id="iid_c7be01fab14a0b39a944cfbc7b1af370" kin:kintype="" transform="translate(500.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/c7/c7be01fab14a0b39a944cfbc7b1af370.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Irene of_Hesse //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Xx</text>
-            </g>
-            <g id="iid_55158ffef1ef49fb5e03dcc7c97e856b" kin:kintype="" transform="translate(200.0, -200.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/55/55158ffef1ef49fb5e03dcc7c97e856b.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Arthur William Patrick//</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">XY</text>
-            </g>
-            <g id="iid_87b8650d6336994f9f24654fdb214c71" kin:kintype="" transform="translate(550.0, -300.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/87/87b8650d6336994f9f24654fdb214c71.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Victoria  /Hanover/</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Xx</text>
-            </g>
-            <g id="iid_8719d4e8c7f5f343aa17007ee4ad4c59" kin:kintype="" transform="translate(1550.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/87/8719d4e8c7f5f343aa17007ee4ad4c59.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#purplemarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Maurice  //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">xY?</text>
-            </g>
-            <g id="iid_7b00f979e251465c17088bf0d19a06aa" kin:kintype="" transform="translate(-250.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/7b/7b00f979e251465c17088bf0d19a06aa.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Victoria Alberta of_Hesse//</text>
-            </g>
-            <g id="iid_cefe73aa656fef02c994ac13ec32e453" kin:kintype="" transform="translate(600.0, -200.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/ce/cefe73aa656fef02c994ac13ec32e453.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alfred Ernest Albert//</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">XY</text>
-            </g>
-            <g id="iid_8b561f64886573a2b5164f687dd02a24" kin:kintype="" transform="translate(750.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/8b/8b561f64886573a2b5164f687dd02a24.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Rupert  //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">xY</text>
-            </g>
-            <g id="iid_cfeb646cc3dff46971e79f0c3b0a853f" kin:kintype="" transform="translate(-400.0, -200.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/cf/cfeb646cc3dff46971e79f0c3b0a853f.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Victoria Adelaide Mary//</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">XC</text>
-            </g>
-            <g id="iid_61f27021af082a3ae385fa409ae578ad" kin:kintype="" transform="translate(-400.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/61/61f27021af082a3ae385fa409ae578ad.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Tatiana Nicholovna //</text>
-            </g>
-            <g id="iid_72fd2eb4dded4353125894161fcfc8dc" kin:kintype="" transform="translate(850.0, -200.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/72/72fd2eb4dded4353125894161fcfc8dc.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Leopold George Duncan//</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">xY</text>
-            </g>
-            <g id="iid_7b6fba6d2514f5ea6a2c0133f6481faf" kin:kintype="" transform="translate(150.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/7b/7b6fba6d2514f5ea6a2c0133f6481faf.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Mary "May" //</text>
-            </g>
-            <g id="iid_2cf36745e277a718028035c9547243d8" kin:kintype="" transform="translate(300.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/2c/2cf36745e277a718028035c9547243d8.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#circle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alexandra Fedorovna "Alix"//</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">Xx</text>
-            </g>
-            <g id="iid_7efe2ede2b0df488c46bc7d6f8b11779" kin:kintype="" transform="translate(1050.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/7e/7efe2ede2b0df488c46bc7d6f8b11779.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Charles Edward //</text>
-            </g>
-            <g id="iid_2297e359f40a11761ca4a82b4d49f5a0" kin:kintype="" transform="translate(500.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/22/2297e359f40a11761ca4a82b4d49f5a0.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Child_#3  //</text>
-            </g>
-            <g id="iid_7b59019be9dc376171a1ebaf6080225a" kin:kintype="" transform="translate(1700.0, -100.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/7b/7b59019be9dc376171a1ebaf6080225a.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Alexander of_Carisbrooke //</text>
-            </g>
-            <g id="iid_d5699b66a887d30bb18939c592c88d62" kin:kintype="" transform="translate(1300.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/d5/d5699b66a887d30bb18939c592c88d62.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#redmarker" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Gonzalo  //</text>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="15">xY</text>
-            </g>
-            <g id="iid_3dcede17c537c1aa8d74ba0a4badf972" kin:kintype="" transform="translate(1450.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/3d/3dcede17c537c1aa8d74ba0a4badf972.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">Don Jamie //</text>
-            </g>
-            <g id="iid_f270191b00089852dc552275213190fb" kin:kintype="" transform="translate(1950.0, 0.0)" kin:path="file:/Users/petwit/.kinoath-0-0/ArbilWorkingFiles/0d2b0647c4d212bbd854132cac00b5fc/f2/f270191b00089852dc552275213190fb.kmdi">
-                <use fill="white" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#triangle" xlink:type="simple" xlink:actuate="onLoad" stroke="black" xlink:show="embed" stroke-width="2"/>
-                <text x="22.5" fill="black" font-size="14" stroke-width="0" y="0">James  //</text>
-            </g>
-        </g>
-        <g id="LabelsGroup">
-            <text fill="#000000" stroke-width="0" font-size="28" id="gid_e26a0fad-20d1-428c-8d95-d4f7e6383725" transform="translate(400.0, -350.0)">Haemophilia in European royalty</text>
-            <text fill="#000000" stroke-width="0" font-size="28" id="gid_fa00b4bb-d2e5-49a7-bd2b-83fdc4e1c98d" transform="translate(300.0, 150.0)">chromosome data sourced from: http://en.wikipedia.org/wiki/Haemophilia_in_European_royalty</text>
-        </g>
-    </g>
+   </g>
   
-    <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
-        <kin:KinTypeString>@ShowMessageIfNotFound[Maria Cristina of_Austria] "This diagram requires the 'European Royalty' sample data to be imported." jar:///gedcomsamples/royal92.ged</kin:KinTypeString>
-        <kin:KinTypeString>x[Chromosome==Xx]C</kin:KinTypeString>
-        <kin:KinTypeString>x[Chromosome==xY]C</kin:KinTypeString>
-        <kin:KinTypeString>x[Chromosome==xY?]C</kin:KinTypeString>
-        <kin:IndexParameters>
-            <kin:DateOfBirthFields>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfBirth"/>
-            </kin:DateOfBirthFields>
-            <kin:DateOfDeathFields>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfDeath"/>
-            </kin:DateOfDeathFields>
-            <kin:LabelFields>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Type"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Chromosome"/>
-            </kin:LabelFields>
-            <kin:SymbolFieldsFields>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Male']" kin:Value="triangle"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Female']" kin:Value="circle"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='']" kin:Value="square"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='Xx']" kin:Value="redmarker"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='xY']" kin:Value="redmarker"/>
-                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='xY?']" kin:Value="purplemarker"/>
-            </kin:SymbolFieldsFields>
-        </kin:IndexParameters>
-        <SelectedProfiles>
-            <kin:Profile kin:ProfileName="Individual" kin:ProfileId="clarin.eu:cr1:p_1320657629627"/>
-            <kin:Profile kin:ProfileName="Chromosome_Example" kin:ProfileId="clarin.eu:cr1:p_1332345811038"/>
-        </SelectedProfiles>
-        <kin:ShowLabels>true</kin:ShowLabels>
-        <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
-        <kin:ShowIdLabels>false</kin:ShowIdLabels>
-        <kin:ShowDateLabels>false</kin:ShowDateLabels>
-        <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
-        <kin:SnapToGrid>true</kin:SnapToGrid>
-        <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
-        <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
-        <kin:HighlightRelationLines>true</kin:HighlightRelationLines>
-        <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
-        <kin:DiagramMode>KinTypeQuery</kin:DiagramMode>
-        <kin:DiagramPanel kin:type="EntitySearch" kin:show="true" kin:width="150"/>
-        <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150"/>
-        <kin:DiagramPanel kin:type="DiagramTree" kin:show="true" kin:width="150"/>
-        <kin:DiagramPanel kin:type="KinTerms" kin:show="false" kin:width="150"/>
-        <kin:DiagramPanel kin:type="ExportPanel" kin:show="false" kin:width="150"/>
-        <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150"/>
-        <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="true" kin:width="150"/>
-    </kin:KinDiagramData>
+    
+   <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+      <kin:KinTypeString>@ShowMessageIfNotFound[Maria Cristina of_Austria] "This diagram requires the 'European Royalty' sample data to be imported." jar:///gedcomsamples/royal92.ged</kin:KinTypeString>
+      <kin:KinTypeString>x[Chromosome==Xx]C</kin:KinTypeString>
+      <kin:KinTypeString>x[Chromosome==xY]C</kin:KinTypeString>
+      <kin:KinTypeString>x[Chromosome==xY?]C</kin:KinTypeString>
+      <kin:IndexParameters>
+         <kin:DateOfBirthFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfBirth"/>
+         </kin:DateOfBirthFields>
+         <kin:DateOfDeathFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfDeath"/>
+         </kin:DateOfDeathFields>
+         <kin:LabelFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Type"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Chromosome"/>
+         </kin:LabelFields>
+         <kin:SymbolFieldsFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Male']"
+                              kin:Value="triangle"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Female']"
+                              kin:Value="circle"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='']" kin:Value="square"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='Xx']"
+                              kin:Value="redmarker"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='xY']"
+                              kin:Value="redmarker"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='xY?']"
+                              kin:Value="purplemarker"/>
+         </kin:SymbolFieldsFields>
+      </kin:IndexParameters>
+      <SelectedProfiles>
+         <kin:Profile kin:ProfileName="Individual"
+                      kin:ProfileId="clarin.eu:cr1:p_1320657629627"/>
+         <kin:Profile kin:ProfileName="Chromosome_Example"
+                      kin:ProfileId="clarin.eu:cr1:p_1332345811038"/>
+      </SelectedProfiles>
+      <kin:ShowLabels>true</kin:ShowLabels>
+      <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
+      <kin:ShowIdLabels>false</kin:ShowIdLabels>
+      <kin:ShowDateLabels>false</kin:ShowDateLabels>
+      <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
+      <kin:SnapToGrid>true</kin:SnapToGrid>
+      <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
+      <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
+      <kin:HighlightRelationLines>true</kin:HighlightRelationLines>
+      <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
+      <kin:DiagramMode>KinTypeQuery</kin:DiagramMode>
+      <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="true" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="EntitySearch" kin:show="true" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="PluginPanel" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="DiagramTree" kin:show="true" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="ExportPanel" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="KinTerms" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+   </kin:KinDiagramData>
 </svg>
