@@ -443,13 +443,13 @@ public class EntitySvg {
         double shiftXscaled;
         double shiftYscaled;
         if (entitySymbol != null) {
-            boolean allowYshift = entitySymbol.getLocalName().equals("text");
-            if (allRealtionsSelected) {
-                // if all the visible relations are selected then allow y shift
-                allowYshift = true;
-            }
+            boolean allowYshift = true; //entitySymbol.getLocalName().equals("text");
+//            if (allRealtionsSelected) {
+//                 if all the visible relations are selected then allow y shift
+//                allowYshift = true;
+//            }
             // todo: Ticket #1064 when the zig zag lines are done the y shift can be allowed
-            allowYshift = true;
+//            allowYshift = true;
             AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
             scaleFactor = affineTransform.getScaleX(); // the drawing should be proportional so only using X is adequate here
             shiftXscaled = shiftXfloat / scaleFactor;
