@@ -83,6 +83,7 @@ public class QuerySectionParser {
                     }
                 }
             }
+            // todo: this causes issues by concatonating messages eg query and error messages, should remove boolean foundKinType, String errorMessage from this class
             parserHighlight = parserHighlight.addHighlight(ParserHighlight.ParserHighlightType.Query, highlightPosition, highlightMessage);
         }
         return consumableString;
