@@ -151,6 +151,7 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
 //                        }
 //                    }
                             if (isHorizontalEndPoint) {
+                                // todo: add cache and update (on change) of the tree nodes
                                 staticTreeNodesArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
                             }
                         }
