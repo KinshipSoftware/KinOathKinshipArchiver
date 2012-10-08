@@ -430,8 +430,12 @@ public class GraphPanel extends JPanel implements SavePanel {
         // this requires that the entity data is loaded by recalculating the diagram at least once
         entitySvg = new EntitySvg(dialogHandler);
         dataStoreSvg.graphData.setEntitys(dataStoreSvg.graphData.getDataNodes());
-        dataStoreSvg.graphData.placeAllNodes(entitySvg.entityPositions);
-        drawNodes();
+        try {
+            dataStoreSvg.graphData.placeAllNodes(entitySvg.entityPositions);
+            drawNodes();
+        } catch (GraphSorter.UnsortablePointsException exception) {
+            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
+        }
     }
 
     public UniqueIdentifier[] getDiagramUniqueIdentifiers() {

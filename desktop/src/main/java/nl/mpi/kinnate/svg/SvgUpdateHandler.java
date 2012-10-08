@@ -9,6 +9,7 @@ import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
@@ -585,6 +586,7 @@ public class SvgUpdateHandler {
         AffineTransform at = new AffineTransform();
         at.translate(updateDragNodeXLocal, updateDragNodeYLocal);
         at.concatenate(graphPanel.svgCanvas.getRenderingTransform());
+        // System.out.println("offset: " + at.getTranslateX());
         graphPanel.svgCanvas.setRenderingTransform(at);
     }
 
@@ -945,7 +947,7 @@ public class SvgUpdateHandler {
                     System.out.println("transformAttribute:" + transformAttribute);
                     labelText.setAttribute("transform", transformAttribute);
                     targetGroup.appendChild(labelText);
-                    graphPanel.entitySvg.entityPositions.put(labelId, labelPosition);
+                    graphPanel.entitySvg.entityPositions.put(labelId, new Point(labelPosition));
                     ((EventTarget) labelText).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
                     resizeCanvas(graphPanel.doc.getDocumentElement(), graphPanel.doc.getElementById("DiagramGroup"), false);
                 }
@@ -1059,6 +1061,8 @@ public class SvgUpdateHandler {
             dialogHandler.addMessageDialogToQueue(exception.getMessage(), "SVG Error");
         } catch (OldFormatException exception) {
             dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
+        } catch (GraphSorter.UnsortablePointsException exception) {
+            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
         }
         // todo: this repaint might not resolve all cases of redraw issues
         graphPanel.svgCanvas.repaint(); // make sure no remnants are left over after the last redraw

@@ -30,6 +30,13 @@ public class GraphSorter {
 //    , int hSpacing, int vSpacing
 //
 
+    public class UnsortablePointsException extends Exception {
+
+        public UnsortablePointsException(String string) {
+            super(string);
+        }
+    }
+
     public void setPadding(GraphPanelSize graphPanelSize) {
         xPadding = graphPanelSize.getHorizontalSpacing();
         yPadding = graphPanelSize.getVerticalSpacing();
@@ -40,7 +47,7 @@ public class GraphSorter {
             preferredLocations = new HashMap<UniqueIdentifier, Point>();
         }
         for (UniqueIdentifier uniqueIdentifier : egoIdentifierArray) {
-            preferredLocations.put(uniqueIdentifier, defaultLocation);
+            preferredLocations.put(uniqueIdentifier, new Point(defaultLocation));
         }
     }
 
@@ -115,12 +122,19 @@ public class GraphSorter {
             Collections.sort(couldBeNextTo);
         }
 
-        private boolean positionIsFree(UniqueIdentifier currentIdentifier, Point targetPosition, HashMap<UniqueIdentifier, Point> entityPositions) {
+        private boolean positionIsFree(UniqueIdentifier currentIdentifier, Point targetPosition, HashMap<UniqueIdentifier, Point> entityPositions) throws UnsortablePointsException {
             int useCount = 0;
+            int pointUseCount = 0;
             for (Point currentPosition : entityPositions.values()) {
+                if (targetPosition == currentPosition) {
+                    pointUseCount++;
+                }
                 if (currentPosition.x == targetPosition.x && currentPosition.y == targetPosition.y) {
                     useCount++;
                 }
+            }
+            if (pointUseCount >= 1) {
+                throw new UnsortablePointsException("The same point instance was found " + pointUseCount + " times.");
             }
             if (useCount == 0) {
                 return true;
@@ -138,7 +152,7 @@ public class GraphSorter {
             return false;
         }
 
-        protected Point getPosition(HashMap<UniqueIdentifier, Point> entityPositions) {
+        protected Point getPosition(HashMap<UniqueIdentifier, Point> entityPositions) throws UnsortablePointsException {
 //            System.out.println("getPosition: " + selfEntityId.getAttributeIdentifier());
             addLabel("Sorting:" + sortCounter++); // for testing only
             calculatedPosition = entityPositions.get(selfEntityId);
@@ -261,7 +275,7 @@ public class GraphSorter {
             return calculatedPosition;
         }
 
-        protected void getRelatedPositions(HashMap<UniqueIdentifier, Point> entityPositions) {
+        protected void getRelatedPositions(HashMap<UniqueIdentifier, Point> entityPositions) throws UnsortablePointsException {
             ArrayList<SortingEntity> allRelations = new ArrayList<SortingEntity>();
             allRelations.addAll(mustBeBelow);
             allRelations.add(this);
@@ -342,7 +356,7 @@ public class GraphSorter {
         return new Rectangle(xOffset, yOffset, graphWidth, graphHeight);
     }
 
-    public void placeAllNodes(HashMap<UniqueIdentifier, Point> entityPositions) {
+    public void placeAllNodes(HashMap<UniqueIdentifier, Point> entityPositions) throws UnsortablePointsException {
         // make a has table of all entites
         // find the first ego node
         // place it and all its immediate relatives onto the graph, each time checking that the space is free
