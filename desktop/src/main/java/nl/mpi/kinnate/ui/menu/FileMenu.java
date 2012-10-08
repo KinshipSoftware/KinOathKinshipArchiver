@@ -66,10 +66,10 @@ public class FileMenu extends javax.swing.JMenu {
 //        importCsvFile = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
-        jMenu3 = new DocumentNewMenu(diagramWindowManager);
+        jMenu3 = new DocumentNewMenu(diagramWindowManager, parentComponent);
         openDiagram = new javax.swing.JMenuItem();
-        recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage);
-        jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler);
+        recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage, parentComponent);
+        jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         entityUploadMenuItem = new javax.swing.JMenuItem();
@@ -263,9 +263,13 @@ public class FileMenu extends javax.swing.JMenu {
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {
         final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, true, getSvgFileFilter(), MessageDialogHandler.DialogueType.open, null);
+        final Dimension parentSize = parentComponent.getSize();
+        final Point parentLocation = parentComponent.getLocation();
+        int offset = 10;
+        final Rectangle windowRectangle = new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
-                diagramWindowManager.openDiagram(selectedFile.getName(), selectedFile.toURI(), true);
+                diagramWindowManager.openDiagram(selectedFile.getName(), selectedFile.toURI(), true, windowRectangle);
             }
         }
     }
@@ -485,7 +489,7 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void entityUploadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        diagramWindowManager.openEntityUploadPanel();
+        diagramWindowManager.openEntityUploadPanel(null);
     }
 
     private void saveAsDefaultMenuItemActionPerformed(java.awt.event.ActionEvent evt) {

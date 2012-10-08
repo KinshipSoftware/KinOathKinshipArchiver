@@ -1,5 +1,9 @@
 package nl.mpi.kinnate.ui.menu;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
@@ -17,12 +21,14 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class SamplesFileMenu extends JMenu implements ActionListener {
 
-    private AbstractDiagramManager diagramWindowManager;
-    private MessageDialogHandler dialogHandler;
+    private final AbstractDiagramManager diagramWindowManager;
+    private final MessageDialogHandler dialogHandler;
+    private final Component parentComponent;
 
-    public SamplesFileMenu(AbstractDiagramManager diagramWindowManager, MessageDialogHandler dialogHandler) {
+    public SamplesFileMenu(AbstractDiagramManager diagramWindowManager, MessageDialogHandler dialogHandler, Component parentComponent) {
         this.diagramWindowManager = diagramWindowManager;
         this.dialogHandler = dialogHandler;
+        this.parentComponent = parentComponent;
         addSampleToMenu("Freeform Diagram Syntax", "FreeformDiagramSyntax.svg");
         addSampleToMenu("Query Diagram Syntax", "QueryDiagramSyntax.svg");
 //        addSampleToMenu("Application Overview", "ApplicationOverview.svg");
@@ -40,7 +46,7 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
         addSampleToMenu("Charles II of Spain", "Charles_II_of_Spain.svg");
 //        addSampleToMenu("Imported Data Query Example (ANTONIO DE PAULA PESSOA DE /FIGUEIREDO/)", "QueryExample.svg");
         addSampleToMenu("Haemophilia in European Royalty", "HaemophiliaEuropeanRoyalty.svg");
-//        addSampleToMenu("Bengkala Sample Diagram", "Bengkala.svg");
+// todo:      addSampleToMenu("Bengkala Sample Diagram", "Bengkala.svg");
 //        addSampleToMenu("Imported Entities (600)", "600ImportedEntities.svg");
 //        addSampleToMenu("R Usage of the Entity Server", "R-ServerUsage.svg");
     }
@@ -58,7 +64,11 @@ public class SamplesFileMenu extends JMenu implements ActionListener {
             final URI sampleFile = new URI(e.getActionCommand());
             if (e.getSource() instanceof JMenuItem) {
                 String sampleName = ((JMenuItem) e.getSource()).getText();
-                diagramWindowManager.openDiagram(sampleName, sampleFile, false);
+                final Dimension parentSize = parentComponent.getSize();
+                final Point parentLocation = parentComponent.getLocation();
+                int offset = 10;
+                final Rectangle windowRectangle = new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset);
+                diagramWindowManager.openDiagram(sampleName, sampleFile, false, windowRectangle);
             }
         } catch (URISyntaxException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);

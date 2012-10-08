@@ -1,5 +1,9 @@
 package nl.mpi.kinnate.ui.menu;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -16,21 +20,22 @@ import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- *  Document   : RecentFileMenu
- *  Created on : Apr 15, 2011, 11:30:39 AM
- *  Author     : Peter Withers
+ * Document : RecentFileMenu Created on : Apr 15, 2011, 11:30:39 AM
+ *
+ * @author Peter Withers
  */
 public class RecentFileMenu extends JMenu implements ActionListener {
 
-    AbstractDiagramManager diagramWindowManager;
-    private SessionStorage sessionStorage;
+    private final AbstractDiagramManager diagramWindowManager;
+    private final SessionStorage sessionStorage;
+    private final Component parentComponent;
 
-    public RecentFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage) {
+    public RecentFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, Component parentComponent) {
         this.diagramWindowManager = diagramWindowManager;
         this.sessionStorage = sessionStorage;
+        this.parentComponent = parentComponent;
         this.setText("Open Recent Diagram");
         this.addMenuListener(new MenuListener() {
-
             public void menuCanceled(MenuEvent evt) {
             }
 
@@ -111,7 +116,11 @@ public class RecentFileMenu extends JMenu implements ActionListener {
 //                final int startIndex = actionString.lastIndexOf('/');
 //                final String recentName = actionString.substring(startIndex + 1);
             final String recentName = recentFile.getName();
-            diagramWindowManager.openDiagram(recentName, recentFile.toURI(), true);
+            final Dimension parentSize = parentComponent.getSize();
+            final Point parentLocation = parentComponent.getLocation();
+            int offset = 10;
+            final Rectangle windowRectangle = new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset);
+            diagramWindowManager.openDiagram(recentName, recentFile.toURI(), true, windowRectangle);
 //            } catch (URISyntaxException exception) {
 //                bugCatcher.logError(exception);
 //                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
