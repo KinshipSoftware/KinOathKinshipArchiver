@@ -52,7 +52,7 @@ public class HelpMenu extends JMenu {
         helpMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    diagramWindowManager.createDiagramWindow("Internal Help", new KinOathHelp());
+                    diagramWindowManager.createDiagramWindow("Internal Help", new KinOathHelp(), null);
                 } catch (IOException ex) {
                     dialogHandler.addMessageDialogToQueue("Could not start the help system:\n" + ex.getMessage(), "Internal Help");
                     BugCatcherManager.getBugCatcher().logError(ex);

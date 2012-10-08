@@ -2,6 +2,7 @@ package nl.mpi.kinnate.ui.window;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
@@ -14,9 +15,9 @@ import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
- *  Document   : DiagramWindowManager
- *  Created on : Dec 1, 2011, 4:03:01 PM
- *  Author     : Peter Withers
+ * Document : DiagramWindowManager Created on : Dec 1, 2011, 4:03:01 PM
+ *
+ * @author Peter Withers
  */
 public class LayeredDiagramManager extends AbstractDiagramManager {
 
@@ -32,11 +33,11 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
 
     @Override
     public void createApplicationWindow() {
-        this.mainFrame = createDiagramWindow(getSavePanelTitle(getSavePanelIndex(null)), mainPanel);
+        this.mainFrame = createDiagramWindow(getSavePanelTitle(getSavePanelIndex(null)), mainPanel, null);
     }
 
     @Override
-    public Component createDiagramContainer(Component diagramComponent) {
+    public Component createDiagramContainer(Component diagramComponent, Rectangle preferredSizeLocation) {
         String diagramTitle = diagramComponent.getName();
         titleMap.put(diagramComponent, diagramTitle);
         diagramArray.add(diagramComponent);

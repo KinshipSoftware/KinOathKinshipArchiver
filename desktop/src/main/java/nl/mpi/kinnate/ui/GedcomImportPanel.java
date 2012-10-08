@@ -90,7 +90,7 @@ public class GedcomImportPanel extends JPanel {
                     } else {
                         kinDiagramPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, abstractDiagramManager);
                         kinDiagramPanel.setName("Imported Entities");
-                        abstractDiagramManager.createDiagramContainer(kinDiagramPanel);
+                        abstractDiagramManager.createDiagramContainer(kinDiagramPanel, null);
                     }
                     final HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>();
                     for (HashSet<UniqueIdentifier> identifiers : gedcomImporter.getCreatedNodeIds().values()) {
@@ -242,7 +242,7 @@ public class GedcomImportPanel extends JPanel {
                                                         xsdChecker.setDividerLocation(0.5);
                                                         if (errorPanel == null) {
                                                             xsdChecker.setName("XSD Error on Import");
-                                                            errorPanel = abstractDiagramManager.createDiagramContainer(xsdChecker);
+                                                            errorPanel = abstractDiagramManager.createDiagramContainer(xsdChecker, null);
                                                         } else {
                                                             abstractDiagramManager.createDiagramSubPanel("XSD Error on Import", xsdChecker, errorPanel);
                                                         }

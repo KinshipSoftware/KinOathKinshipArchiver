@@ -2,6 +2,7 @@ package nl.mpi.kinnate.ui.window;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -30,9 +31,9 @@ import nl.mpi.kinnate.ui.menu.MainMenuBar;
 import nl.mpi.kinnate.ui.menu.RecentFileMenu;
 
 /**
- * Document : AbstractDiagramManager
- * Created on : Dec 6, 2011, 12:28:56 PM
- * Author : Peter Withers
+ * Document : AbstractDiagramManager Created on : Dec 6, 2011, 12:28:56 PM
+ *
+ * @author Peter Withers
  */
 public abstract class AbstractDiagramManager {
 
@@ -55,7 +56,7 @@ public abstract class AbstractDiagramManager {
 
     abstract public void createApplicationWindow();
 
-    public JFrame createDiagramWindow(String diagramTitle, Component diagramComponent) {
+    public JFrame createDiagramWindow(String diagramTitle, Component diagramComponent, Rectangle preferredSizeLocation) {
         JFrame diagramFame;
         if (diagramComponent instanceof SavePanel) {
             diagramFame = new SavePanelFrame((SavePanel) diagramComponent);
@@ -73,12 +74,15 @@ public abstract class AbstractDiagramManager {
         setWindowIcon(diagramFame);
         diagramFame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         diagramFame.addWindowListener(new WindowAdapter() {
-
             @Override
             public void windowClosing(WindowEvent e) {
                 closeWindowAction((JFrame) e.getWindow());
             }
         });
+        if (preferredSizeLocation != null) {
+            diagramFame.setLocation(preferredSizeLocation.x, preferredSizeLocation.y);
+            diagramFame.setPreferredSize(preferredSizeLocation.getSize());
+        }
 //        diagramFame.doLayout();
         diagramFame.pack();
         diagramFame.setVisible(true);
@@ -101,7 +105,7 @@ public abstract class AbstractDiagramManager {
         }
     }
 
-    abstract public Component createDiagramContainer(Component diagramComponent);
+    abstract public Component createDiagramContainer(Component diagramComponent, Rectangle preferredSizeLocation);
 
     public JDialog createDialogueContainer(Component diagramComponent, Component parentComponent) {
         String diagramTitle = diagramComponent.getName();
@@ -115,21 +119,21 @@ public abstract class AbstractDiagramManager {
 
     abstract public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel);
 
-    public void newDiagram() {
+    public void newDiagram(Rectangle preferredSizeLocation) {
         URI defaultDiagramUri = null;
         if (KinDiagramPanel.getDefaultDiagramFile(sessionStorage).exists()) {
             defaultDiagramUri = KinDiagramPanel.getDefaultDiagramFile(sessionStorage).toURI();
         }
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, this);
         egoSelectionTestPanel.setName("Unsaved Default Diagram");
-        createDiagramContainer(egoSelectionTestPanel);
+        createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
         egoSelectionTestPanel.loadAllTrees();
     }
 
     public void newDiagram(DocumentNewMenu.DocumentType documentType) {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, this);
         egoSelectionTestPanel.setName("Unsaved " + documentType.getDisplayName());
-        createDiagramContainer(egoSelectionTestPanel);
+        createDiagramContainer(egoSelectionTestPanel, null);
         egoSelectionTestPanel.loadAllTrees();
     }
 
@@ -141,7 +145,7 @@ public abstract class AbstractDiagramManager {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, this);
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         egoSelectionTestPanel.setName(diagramTitle);
-        createDiagramContainer(egoSelectionTestPanel);
+        createDiagramContainer(egoSelectionTestPanel, null);
         egoSelectionTestPanel.loadAllTrees();
     }
 
@@ -173,7 +177,7 @@ public abstract class AbstractDiagramManager {
         if (entityUploadPanel == null) {
             entityUploadPanel = new EntityUploadPanel(sessionStorage, entityCollection, dialogHandler);
             entityUploadPanel.setName("Entity Upload");
-            createDiagramContainer(entityUploadPanel);
+            createDiagramContainer(entityUploadPanel, null);
         }
         setSelectedDiagram(entityUploadPanel);
 //        JDialog uploadDialog = new JDialog(this, "Entity Upload", true);
@@ -270,7 +274,6 @@ public abstract class AbstractDiagramManager {
         // todo: make sure the file has the svg suffix
         JFileChooser fc = new JFileChooser();
         fc.addChoosableFileFilter(new FileFilter() {
-
             @Override
             public boolean accept(File file) {
                 if (file.isDirectory()) {

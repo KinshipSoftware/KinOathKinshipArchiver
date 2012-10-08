@@ -1,6 +1,9 @@
 package nl.mpi.kinnate.ui.menu;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,9 +22,9 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import org.apache.batik.transcoder.TranscoderException;
 
 /**
- * Document : FileMenu
- * Created on : Dec 1, 2011, 4:04:06 PM
- * Author : Peter Withers
+ * Document : FileMenu Created on : Dec 1, 2011, 4:04:06 PM
+ *
+ * @author Peter Withers
  */
 public class FileMenu extends javax.swing.JMenu {
 
@@ -85,7 +88,6 @@ public class FileMenu extends javax.swing.JMenu {
 
         this.setText("File");
         this.addMenuListener(new javax.swing.event.MenuListener() {
-
             public void menuSelected(javax.swing.event.MenuEvent evt) {
                 fileMenuMenuSelected(evt);
             }
@@ -97,7 +99,6 @@ public class FileMenu extends javax.swing.JMenu {
             }
         });
         this.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fileMenuActionPerformed(evt);
             }
@@ -106,7 +107,6 @@ public class FileMenu extends javax.swing.JMenu {
         newDiagramMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         newDiagramMenuItem.setText("New (default diagram)");
         newDiagramMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newDiagramMenuItemActionPerformed(evt);
             }
@@ -120,7 +120,6 @@ public class FileMenu extends javax.swing.JMenu {
         openDiagram.setText("Open Diagram");
         openDiagram.setActionCommand("open");
         openDiagram.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openDiagramActionPerformed(evt);
             }
@@ -137,7 +136,6 @@ public class FileMenu extends javax.swing.JMenu {
 
         importGedcomFile.setText("Import Gedcom / CSV / TIP File");
         importGedcomFile.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 importGedcomFileActionPerformed(evt);
             }
@@ -158,7 +156,6 @@ public class FileMenu extends javax.swing.JMenu {
 
         importGedcomUrl.setText("Import Gedcom Samples (from internet)");
         importGedcomUrl.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 importGedcomUrlActionPerformed(evt);
             }
@@ -170,7 +167,6 @@ public class FileMenu extends javax.swing.JMenu {
 
         entityUploadMenuItem.setText("Entity Upload");
         entityUploadMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 entityUploadMenuItemActionPerformed(evt);
             }
@@ -182,7 +178,6 @@ public class FileMenu extends javax.swing.JMenu {
         saveDiagram.setText("Save");
         saveDiagram.setActionCommand("save");
         saveDiagram.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveDiagramActionPerformed(evt);
             }
@@ -193,7 +188,6 @@ public class FileMenu extends javax.swing.JMenu {
         saveDiagramAs.setText("Save As");
         saveDiagramAs.setActionCommand("saveas");
         saveDiagramAs.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveDiagramAsActionPerformed(evt);
             }
@@ -202,7 +196,6 @@ public class FileMenu extends javax.swing.JMenu {
 
         savePdfMenuItem.setText("Export as PDF/JPEG/PNG/TIFF");
         savePdfMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 savePdfMenuItemActionPerformed(evt);
             }
@@ -211,7 +204,6 @@ public class FileMenu extends javax.swing.JMenu {
 
         exportToR.setText("Export for R / SPSS");
         exportToR.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exportToRActionPerformed(evt);
             }
@@ -221,7 +213,6 @@ public class FileMenu extends javax.swing.JMenu {
         closeTabMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
         closeTabMenuItem.setText("Close");
         closeTabMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeTabMenuItemActionPerformed(evt);
             }
@@ -231,7 +222,6 @@ public class FileMenu extends javax.swing.JMenu {
 
         saveAsDefaultMenuItem.setText("Save as Default Diagram");
         saveAsDefaultMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveAsDefaultMenuItemActionPerformed(evt);
             }
@@ -242,7 +232,6 @@ public class FileMenu extends javax.swing.JMenu {
         exitApplication.setText("Exit");
         exitApplication.setActionCommand("exit");
         exitApplication.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitApplicationActionPerformed(evt);
             }
@@ -257,7 +246,6 @@ public class FileMenu extends javax.swing.JMenu {
         HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
         for (final String[] currentType : new String[][]{{"Kinship Diagram (SVG format)", ".svg"}}) { // "Scalable Vector Graphics (SVG)";
             fileFilterMap.put(currentType[0], new FileFilter() {
-
                 @Override
                 public boolean accept(File selectedFile) {
                     final String extensionLowerCase = currentType[1].toLowerCase();
@@ -354,13 +342,15 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void newDiagramMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        diagramWindowManager.newDiagram();
+        final Dimension parentSize = parentComponent.getSize();
+        final Point parentLocation = parentComponent.getLocation();
+        int offset = 10;
+        diagramWindowManager.newDiagram(new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset));
     }
 
     private void importGedcomFileActionPerformed(java.awt.event.ActionEvent evt) {
         HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
         fileFilterMap.put("importfiles", new FileFilter() {
-
             @Override
             public boolean accept(File selectedFile) {
                 if (selectedFile.isDirectory()) {
@@ -471,7 +461,6 @@ public class FileMenu extends javax.swing.JMenu {
         HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
         for (final String[] currentType : new String[][]{{"Data Frame Tab-separated Values", ".tab"}}) { // "Data Frame (CSV)"
             fileFilterMap.put(currentType[0], new FileFilter() {
-
                 @Override
                 public boolean accept(File selectedFile) {
                     final String extensionLowerCase = currentType[1].toLowerCase();

@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.ui.window;
 
 import java.awt.Component;
+import java.awt.Rectangle;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
@@ -9,9 +10,9 @@ import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 
 /**
- *  Document   : DiagramWindowManager
- *  Created on : Dec 1, 2011, 4:03:01 PM
- *  Author     : Peter Withers
+ * Document : DiagramWindowManager Created on : Dec 1, 2011, 4:03:01 PM
+ *
+ * @author Peter Withers
  */
 public class TabbedDiagramManager extends AbstractDiagramManager {
 
@@ -24,11 +25,11 @@ public class TabbedDiagramManager extends AbstractDiagramManager {
 
     @Override
     public void createApplicationWindow() {
-        createDiagramWindow("", jTabbedPane1);
+        createDiagramWindow("", jTabbedPane1, null);
     }
 
     @Override
-    public Component createDiagramContainer(Component diagramComponent) {
+    public Component createDiagramContainer(Component diagramComponent, Rectangle preferredSizeLocation) {
         String diagramTitle = diagramComponent.getName();
         jTabbedPane1.add(diagramTitle, diagramComponent);
         jTabbedPane1.setSelectedComponent(diagramComponent);
@@ -38,7 +39,7 @@ public class TabbedDiagramManager extends AbstractDiagramManager {
     @Override
     public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel) {
         diagramComponent.setName(diagramTitle);
-        createDiagramContainer(diagramComponent);
+        createDiagramContainer(diagramComponent, null);
     }
 
     @Override
