@@ -42,6 +42,10 @@ public class GraphSorter {
         yPadding = graphPanelSize.getVerticalSpacing();
     }
 
+    public void clearPreferredEntityLocations() {
+        preferredLocations = new HashMap<UniqueIdentifier, Point>();
+    }
+
     public void setPreferredEntityLocation(UniqueIdentifier[] egoIdentifierArray, Point defaultLocation) {
         if (preferredLocations == null) {
             preferredLocations = new HashMap<UniqueIdentifier, Point>();

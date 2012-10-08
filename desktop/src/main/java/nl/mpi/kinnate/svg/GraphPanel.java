@@ -429,6 +429,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     public void resetLayout() {
         // this requires that the entity data is loaded by recalculating the diagram at least once
         entitySvg = new EntitySvg(dialogHandler);
+        dataStoreSvg.graphData.clearPreferredEntityLocations();
         dataStoreSvg.graphData.setEntitys(dataStoreSvg.graphData.getDataNodes());
         try {
             dataStoreSvg.graphData.placeAllNodes(entitySvg.entityPositions);
