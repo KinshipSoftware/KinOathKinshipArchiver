@@ -6,7 +6,7 @@
         <output.jarname>${project.build.finalName}</output.jarname>
         <plugin.majorVersion>0</plugin.majorVersion>
         <plugin.minorVersion>0</plugin.minorVersion>
-        <plugin.branch>stable/plugin.branch>
+        <plugin.branch>stable</plugin.branch>
     </properties>
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.mpi</groupId>
