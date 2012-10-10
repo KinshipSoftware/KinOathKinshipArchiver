@@ -7,13 +7,17 @@
     <!--    Either use the snapshot version of manually enter the current build number. 
     The build number is only required when depending on the output in other projects or building to the server.-->
     <version>${plugin.majorVersion}.${plugin.minorVersion}-${plugin.branch}-SNAPSHOT</version>
-    <!--<version>${plugin.majorVersion}.${plugin.minorVersion}.33389-${plugin.branch}</version>-->
+    <!--<version>${plugin.majorVersion}.${plugin.minorVersion}.33422-${plugin.branch}</version>-->
     <packaging>jar</packaging>
 
     <name>metedata-search</name>
     <url>http://maven.apache.org</url>
     <build>
         <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>                
+            </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>                
@@ -58,8 +62,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <plugin.majorVersion>0</plugin.majorVersion> 
- 	<plugin.minorVersion>0</plugin.minorVersion> 
- 	<plugin.branch>pretesting</plugin.branch> 
+        <plugin.minorVersion>0</plugin.minorVersion> 
+        <plugin.branch>pretesting</plugin.branch> 
     </properties>
 
     <dependencies>
