@@ -27,23 +27,23 @@ public class PluginMenu extends JMenu {
     public PluginMenu(PluginService pluginService, PluginManager pluginManager, boolean hideIfNoPluginsFound) {
         super("Plugins");
         this.pluginService = pluginService;
-        try {
-            Iterator<BasePlugin> pluginIterator = pluginService.getPlugins();
-            boolean hasPlugins = false;
-            while (pluginIterator.hasNext()) {
+        Iterator<BasePlugin> pluginIterator = pluginService.getPlugins();
+        boolean hasPlugins = false;
+        while (pluginIterator.hasNext()) {
+            try {
                 hasPlugins = true;
                 final BasePlugin kinOathPlugin = pluginIterator.next();
                 System.out.println("Plugin: " + kinOathPlugin.getName());
                 JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(new PluginMenuAction(pluginManager, kinOathPlugin));
                 menuItem.setSelected(pluginManager.isActivated(kinOathPlugin));
                 this.add(menuItem);
+            } catch (ServiceConfigurationError serviceError) {
+                this.add(new JLabel("<failed to load plugin>"));
             }
-            if (!hasPlugins) {
-                this.add(new JLabel("<no plugins found>"));
-                this.setVisible(!hideIfNoPluginsFound);
-            }
-        } catch (ServiceConfigurationError serviceError) {
-            this.add(new JLabel("<failed to load any plugins>"));
+        }
+        if (!hasPlugins) {
+            this.add(new JLabel("<no plugins found>"));
+            this.setVisible(!hideIfNoPluginsFound);
         }
     }
 
