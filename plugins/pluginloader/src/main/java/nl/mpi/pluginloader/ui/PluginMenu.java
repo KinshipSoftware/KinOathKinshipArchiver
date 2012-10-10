@@ -24,7 +24,7 @@ public class PluginMenu extends JMenu {
 
     final PluginService pluginService;
 
-    public PluginMenu(PluginService pluginService, PluginManager pluginManager) {
+    public PluginMenu(PluginService pluginService, PluginManager pluginManager, boolean hideIfNoPluginsFound) {
         super("Plugins");
         this.pluginService = pluginService;
         try {
@@ -40,6 +40,7 @@ public class PluginMenu extends JMenu {
             }
             if (!hasPlugins) {
                 this.add(new JLabel("<no plugins found>"));
+                this.setVisible(!hideIfNoPluginsFound);
             }
         } catch (ServiceConfigurationError serviceError) {
             this.add(new JLabel("<failed to load any plugins>"));
@@ -89,7 +90,7 @@ public class PluginMenu extends JMenu {
                 }
             }
         };
-        jMenuBar.add(new PluginMenu(PluginService.getInstance(), pluginManager));
+        jMenuBar.add(new PluginMenu(PluginService.getInstance(), pluginManager, true));
         jFrame.setJMenuBar(jMenuBar);
         jFrame.setContentPane(new JScrollPane(jTextArea));
         jFrame.pack();
