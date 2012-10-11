@@ -46,6 +46,7 @@ public class SvgUpdateHandler {
     private int updateDragRelationX = 0;
     private int updateDragRelationY = 0;
     private float[][] dragRemainders = null;
+    private float dragScale;
     private boolean resizeRequired = false;
     protected RelationDragHandle relationDragHandle = null;
     private HashSet<UniqueIdentifier> highlightedIdentifiers = new HashSet<UniqueIdentifier>();
@@ -643,6 +644,8 @@ public class SvgUpdateHandler {
         }
         synchronized (SvgUpdateHandler.this) {
             dragRemainders = tempRemainders;
+            SVGMatrix draggedElementScreenMatrix = ((SVGLocatable) graphPanel.doc.getDocumentElement()).getScreenCTM();
+            dragScale = draggedElementScreenMatrix.getA(); // the drawing is proportional so only using X is adequate here              
         }
     }
 
@@ -708,11 +711,12 @@ public class SvgUpdateHandler {
                                 }
                             }
                             int dragCounter = 0;
+                            // todo: concurent modification issue here
                             for (UniqueIdentifier entityId : graphPanel.selectedGroupId) {
                                 // store the remainder after snap for re use on each update
                                 synchronized (SvgUpdateHandler.this) {
                                     if (dragRemainders.length > dragCounter) {
-                                        dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, allRealtionsSelected);
+                                        dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, dragScale, allRealtionsSelected);
                                     }
                                 }
                                 dragCounter++;
