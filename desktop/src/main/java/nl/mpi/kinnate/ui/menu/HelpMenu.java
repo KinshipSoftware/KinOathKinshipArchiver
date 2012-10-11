@@ -2,6 +2,7 @@ package nl.mpi.kinnate.ui.menu;
 
 import java.io.IOException;
 import java.net.URI;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
@@ -23,6 +24,8 @@ import org.xml.sax.SAXException;
  * @author Peter Withers
  */
 public class HelpMenu extends JMenu {
+
+    JFrame helpWindow = null;
 
     public HelpMenu(final AbstractDiagramManager diagramWindowManager, final ArbilWindowManager dialogHandler, final SessionStorage sessionStorage, final ApplicationVersionManager versionManager) {
         this.setText("Help");
@@ -52,7 +55,12 @@ public class HelpMenu extends JMenu {
         helpMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    diagramWindowManager.createDiagramWindow("Internal Help", new KinOathHelp(), null);
+                    if (helpWindow == null) {
+                        helpWindow = diagramWindowManager.createHelpWindow("Internal Help", new KinOathHelp(), null);
+                    } else {
+                        helpWindow.setVisible(true);
+                        helpWindow.toFront();
+                    }
                 } catch (IOException ex) {
                     dialogHandler.addMessageDialogToQueue("Could not start the help system:\n" + ex.getMessage(), "Internal Help");
                     BugCatcherManager.getBugCatcher().logError(ex);
