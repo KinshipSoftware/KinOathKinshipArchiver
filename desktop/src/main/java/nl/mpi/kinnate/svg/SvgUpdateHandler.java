@@ -143,12 +143,13 @@ public class SvgUpdateHandler {
                 // add highlights for relation lines that would be created by the user action
                 float dragNodeX = localRelationDragHandle.getTranslatedX(localDragNodeX);
                 float dragNodeY = localRelationDragHandle.getTranslatedY(localDragNodeY);
-
+                boolean entityConnection = false;
                 localRelationDragHandle.targetIdentifier = graphPanel.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30, graphPanel.selectedGroupId);
                 if (localRelationDragHandle.targetIdentifier != null) {
                     Point closestEntityPoint = graphPanel.entitySvg.getEntityLocationOffset(localRelationDragHandle.targetIdentifier);
                     dragNodeX = closestEntityPoint.x;
                     dragNodeY = closestEntityPoint.y;
+                    entityConnection = true;
                 }
 
                 Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
@@ -216,9 +217,16 @@ public class SvgUpdateHandler {
                 Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
                 symbolNode.setAttribute("cx", Float.toString(dragNodeX));
                 symbolNode.setAttribute("cy", Float.toString(dragNodeY));
-                symbolNode.setAttribute("r", "5");
-                symbolNode.setAttribute("fill", localRelationDragHandle.getRelationColour());
-                symbolNode.setAttribute("stroke", "none");
+                if (entityConnection) {
+                    symbolNode.setAttribute("r", "20");
+                    symbolNode.setAttribute("fill", "none");
+                    symbolNode.setAttribute("stroke", localRelationDragHandle.getRelationColour());
+                    symbolNode.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+                } else {
+                    symbolNode.setAttribute("r", "5");
+                    symbolNode.setAttribute("fill", localRelationDragHandle.getRelationColour());
+                    symbolNode.setAttribute("stroke", "none");
+                }
                 relationHighlightGroup.appendChild(symbolNode);
             }
         }
@@ -586,7 +594,7 @@ public class SvgUpdateHandler {
         AffineTransform at = new AffineTransform();
         at.translate(updateDragNodeXLocal, updateDragNodeYLocal);
         at.concatenate(graphPanel.svgCanvas.getRenderingTransform());
-        // System.out.println("offset: " + at.getTranslateX());
+//        System.out.println("offset: " + at.getTranslateX());
         graphPanel.svgCanvas.setRenderingTransform(at);
     }
 
