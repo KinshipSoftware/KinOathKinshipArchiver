@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>nl.mpi</groupId>
+    <artifactId>plugins.parent</artifactId>
+    <name>plugins_parent</name>
+    <packaging>pom</packaging>
+    <version>1.0</version>
+    <description>Parent pom for the plugins</description>
+    <modules>
+        <module>core</module>
+        <module>pluginloader</module>
+        <module>sampleplugins</module>
+        <module>export</module>
+        <module>metadatasearch</module>    
+    </modules>
+
+    <!--    <scm>
+        <developerConnection>scm:svn:https://svn.mpi.nl/LAT/Kinnate/trunk/</developerConnection>
+        <url>https://trac.mpi.nl/wiki/KinOath</url>
+    </scm>-->
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+</project>
+
