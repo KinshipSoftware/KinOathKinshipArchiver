@@ -26,7 +26,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 
     @Override
     public boolean canImport(String inputFileString) {
-        return (inputFileString.toLowerCase().endsWith(".csv"));
+        return (inputFileString.toLowerCase().endsWith(".csv") || inputFileString.toLowerCase().endsWith(".txt"));
     }
 
     @Deprecated
@@ -168,6 +168,8 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
             importTranslator.addTranslationEntry("Gender", "1", "Gender", "Male");
             importTranslator.addTranslationEntry("Gender", "f", "Gender", "Female");
             importTranslator.addTranslationEntry("Gender", "m", "Gender", "Male");
+            importTranslator.addTranslationEntry("Sex", "m", "Gender", "Male");
+            importTranslator.addTranslationEntry("Sex", "f", "Gender", "Female");
 
             importTranslator.addTranslationEntry("Date_of_Birth", null, "DateOfBirth", null);
             importTranslator.addTranslationEntry("Date_of_Death", null, "DateOfDeath", null);
@@ -176,14 +178,14 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
             for (int columnCounter = 0; columnCounter < allHeadings.size(); columnCounter++) {
                 String titleString = allHeadings.get(columnCounter);
                 if (titleString.equals("")) {
-                    appendToTaskOutput("Error: No title found for at least one column. Inserting \"Untitled\" as the column name.");
+                    appendToTaskOutput("Error: No title found for column. Inserting \"Untitled\" as the column name.");
                     allHeadings.set(columnCounter, "Untitled");
                 } else {
                     if (titleString.matches("$0-9.*")) {
-                        appendToTaskOutput("Error: Column title " + titleString + " starts with a number.");
+                        appendToTaskOutput("Error: Column title \"" + titleString + "\" starts with a number.");
                     }
                     if (!titleString.matches("[a-zA-Z0-9]+")) {
-                        appendToTaskOutput("Error: Column title " + titleString + " contains invalid characters. Punctuation and white space are not allowed.");
+                        appendToTaskOutput("Error: Column title \"" + titleString + "\" contains invalid characters. Punctuation and white space are not allowed (so that the data is compatable with XML and other applications).");
                     }
                 }
             }
