@@ -14,9 +14,9 @@ import javax.swing.SwingUtilities;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 
 /**
- * Document : HidePane
- * Created on : Mar 11, 2011, 9:03:55 AM
- * Author : Peter Withers
+ * Document : HidePane Created on : Mar 11, 2011, 9:03:55 AM
+ *
+ * @author Peter Withers
  */
 public class HidePane extends JPanel {
 
@@ -77,7 +77,6 @@ public class HidePane extends JPanel {
         this.add(tabbedPane, BorderLayout.CENTER);
 //        this.add(contentComponent, labelStringLocal);
         separatorBar.addMouseMotionListener(new MouseMotionAdapter() {
-
             @Override
             public void mouseDragged(MouseEvent e) {
                 // todo: check the max space and prevent oversizing
@@ -145,7 +144,6 @@ public class HidePane extends JPanel {
             }
         });
         separatorBar.addMouseListener(new java.awt.event.MouseAdapter() {
-
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
@@ -192,21 +190,27 @@ public class HidePane extends JPanel {
     }
 
     public void addTab(final String tabString, final Component tabComponent) {
-        int insertIndex = 0;
-        for (int tabCounter = 0; tabCounter < tabbedPane.getTabCount(); tabCounter++) {
-            if (tabString.compareToIgnoreCase(tabbedPane.getTitleAt(tabCounter)) < 0) {
-                break;
-            }
-            insertIndex++;
-        }
-        final int insertIndexFinal = insertIndex;
         if (SwingUtilities.isEventDispatchThread()) {
-            tabbedPane.insertTab(tabString, null, tabComponent, tabString, insertIndexFinal);
+            int insertIndex = 0;
+            for (int tabCounter = 0; tabCounter < tabbedPane.getTabCount(); tabCounter++) {
+                if (tabString.compareToIgnoreCase(tabbedPane.getTitleAt(tabCounter)) < 0) {
+                    break;
+                }
+                insertIndex++;
+            }
+            tabbedPane.insertTab(tabString, null, tabComponent, tabString, insertIndex);
         } else {
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
-                    tabbedPane.insertTab(tabString, null, tabComponent, tabString, insertIndexFinal);
+                    // there was what appeared to be a threading issue here where the index number "insertIndexFinal" is out of date so this loop has been moved into the swing thread
+                    int insertIndex = 0;
+                    for (int tabCounter = 0; tabCounter < tabbedPane.getTabCount(); tabCounter++) {
+                        if (tabString.compareToIgnoreCase(tabbedPane.getTitleAt(tabCounter)) < 0) {
+                            break;
+                        }
+                        insertIndex++;
+                    }
+                    tabbedPane.insertTab(tabString, null, tabComponent, tabString, insertIndex);
                 }
             });
         }
@@ -217,7 +221,6 @@ public class HidePane extends JPanel {
             addTabInner(panelSetting, tabString, tabComponent);
         } else {
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     addTabInner(panelSetting, tabString, tabComponent);
                 }
@@ -256,7 +259,6 @@ public class HidePane extends JPanel {
             }
         } else {
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     if (tabbedPane.indexOfComponent(component) > -1) {
                         tabbedPane.setSelectedComponent(component);
@@ -272,7 +274,6 @@ public class HidePane extends JPanel {
             this.setVisible(tabbedPane.getComponentCount() > 0);
         } else {
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     tabbedPane.remove(comp);
                     HidePane.this.setVisible(tabbedPane.getComponentCount() > 0);
@@ -289,7 +290,6 @@ public class HidePane extends JPanel {
             this.setVisible(tabbedPane.getComponentCount() > 0);
         } else {
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     for (Component currentPanel : panelSetting.getTargetPanels()) {
                         tabbedPane.remove(currentPanel);
@@ -306,7 +306,6 @@ public class HidePane extends JPanel {
             setHiddeStatePrivate();
         } else {
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     setHiddeStatePrivate();
                 }
