@@ -1,7 +1,6 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -431,7 +430,7 @@ public class EntitySvg {
 //        }
 //    }
 
-    public float[] moveEntity(GraphPanel graphPanel, UniqueIdentifier entityId, float shiftXfloat, float shiftYfloat, boolean snapToGrid, boolean allRealtionsSelected) {
+    public float[] moveEntity(GraphPanel graphPanel, UniqueIdentifier entityId, float shiftXfloat, float shiftYfloat, boolean snapToGrid, double scaleFactor, boolean allRealtionsSelected) {
         Element entitySymbol = graphPanel.doc.getElementById(entityId.getAttributeIdentifier());
         Element highlightGroup = null;
         if (entityId.isGraphicsIdentifier()) {
@@ -439,35 +438,19 @@ public class EntitySvg {
         }
         float remainderAfterSnapX = 0;
         float remainderAfterSnapY = 0;
-        double scaleFactor = 1;
         double shiftXscaled;
         double shiftYscaled;
         if (entitySymbol != null) {
             boolean allowYshift = true; //entitySymbol.getLocalName().equals("text");
-//            if (allRealtionsSelected) {
-//                 if all the visible relations are selected then allow y shift
-//                allowYshift = true;
-//            }
-            // todo: Ticket #1064 when the zig zag lines are done the y shift can be allowed
-//            allowYshift = true;
-            AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
-            scaleFactor = affineTransform.getScaleX(); // the drawing should be proportional so only using X is adequate here
-            shiftXscaled = shiftXfloat / scaleFactor;
-            shiftYscaled = shiftYfloat / scaleFactor;
-////            sVGMatrix.setE(sVGMatrix.getE() + shiftX);
-////            sVGMatrix.setE(sVGMatrix.getF() + shiftY);
-////            System.out.println("shiftX: " + shiftX);
-//            float updatedPositionX = sVGMatrix.getE() + shiftX;
-//            float updatedPositionY = sVGMatrix.getF();
-
+            shiftXscaled = shiftXfloat * scaleFactor;
+            shiftYscaled = shiftYfloat * scaleFactor;
             Point entityPosition = entityPositions.get(entityId);
             float updatedPositionX = (float) (entityPosition.x + shiftXscaled);
             float updatedPositionY = entityPosition.y;
-
             if (allowYshift) {
                 updatedPositionY = (float) (updatedPositionY + shiftYscaled);
             }
-//            System.out.println("updatedPosition: " + updatedPositionX + " : " + updatedPositionY + " : " + shiftX + " : " + shiftY);
+//            System.out.println("updatedPositionX: " + updatedPositionX + " shiftXscaled: " + shiftXscaled + " shiftXfloat: " + shiftXfloat + " scaleFactor: " + scaleFactor);
             if (snapToGrid) {
                 double updatedSnapPositionX = Math.round(updatedPositionX / 50) * 50; // limit movement to the grid
                 updatedPositionX = (float) updatedSnapPositionX;
