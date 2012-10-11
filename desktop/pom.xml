@@ -41,7 +41,7 @@
                 </includes> 
             </resource> 
         </resources>
-        <plugins>
+        <plugins>           
             <plugin> 
                 <groupId>com.google.code.maven-svn-revision-number-plugin</groupId> 
                 <artifactId>maven-svn-revision-number-plugin</artifactId> 
@@ -117,6 +117,7 @@
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
             <plugin>
@@ -238,18 +239,13 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>pluginloader</artifactId>
-            <version>0.0.33392-pretesting</version>
+            <version>0.0.33669-pretesting</version>
         </dependency>
         <!-- <dependency>
         <groupId>nl.mpi</groupId>
         <artifactId>kinnate-plugins-export</artifactId>
         <version>0.0.32730</version>
         </dependency>-->
-        <dependency>
-            <groupId>nl.mpi</groupId>
-            <artifactId>plugins-core</artifactId>
-            <version>0.0.33389-pretesting</version>
-        </dependency>
     </dependencies>
     <repositories>
         <repository>
