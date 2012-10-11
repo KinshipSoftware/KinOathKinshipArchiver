@@ -26,6 +26,7 @@ import org.apache.batik.dom.events.DOMMouseEvent;
 import org.w3c.dom.Element;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
+import org.w3c.dom.svg.SVGElement;
 import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGMatrix;
 
@@ -64,6 +65,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void mouseDragged(MouseEvent me) {
+        // todo: this shold probably be put into the svg canvas thread
         if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
             graphPanel.svgUpdateHandler.updateDragRelation(me.getPoint().x, me.getPoint().y);
         } else {
@@ -145,6 +147,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 //        graphPanel.svgUpdateHandler.updateMouseDot(e.getPoint());
 //        final Point entityPointOnDocument = graphPanel.svgUpdateHandler.getEntityPointOnDocument(new Point(e.getX(), e.getY()));
 //        kinDiagramPanel.setStatusBarText("mouseMoved:" + entityPointOnDocument.getX() + ":" + entityPointOnDocument.getY());
+//        System.out.println("mouseMoved:" + e.getX() + ":" + e.getY());
     }
 
     @Override
@@ -164,23 +167,24 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         final String targetIdString = currentDraggedElement.getAttribute("target");
         if ((targetIdString != null && targetIdString.length() > 0) || (handleTypeString != null && handleTypeString.length() > 0)) {
             if (evt instanceof DOMMouseEvent) {
-                Element entityGroup = graphPanel.doc.getElementById("EntityGroup");
-                SVGMatrix entityGroupMatrix = ((SVGLocatable) entityGroup).getCTM();
-                SVGMatrix entityMatrix = ((SVGLocatable) currentDraggedElement).getCTM();
-                float xTranslate = entityMatrix.getE() - entityGroupMatrix.getE(); // because the target of the drag location is within the diagram translation we must subtract it here
-                float yTranslate = entityMatrix.getF() - entityGroupMatrix.getF();
-                AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
+                // the entity group is no longer offset so we no longer need to subtract the entity group position here
+                SVGMatrix draggedElementScreenMatrix = ((SVGLocatable) currentDraggedElement).getScreenCTM();
+                SVGMatrix draggedElementMatrix = graphPanel.doc.getRootElement().getTransformToElement((SVGElement) currentDraggedElement);
+                float scaleFactor = draggedElementScreenMatrix.inverse().getA(); // the drawing is proportional so only using X is adequate here
+                float xTranslate = draggedElementMatrix.getE();
+                float yTranslate = draggedElementMatrix.getF();
+//                AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
                 if (targetIdString != null && targetIdString.length() > 0) {
                     graphPanel.svgUpdateHandler.relationDragHandle =
                             new GraphicsDragHandle(
                             graphPanel.doc.getElementById(targetIdString),
                             currentDraggedElement,
                             (Element) currentDraggedElement.getParentNode().getFirstChild(), // this assumes that the rect is the first element in the highlight
-                            Float.valueOf(currentDraggedElement.getAttribute("cx")), // + xTranslate,
-                            Float.valueOf(currentDraggedElement.getAttribute("cy")), // + yTranslate,
+                            Float.valueOf(currentDraggedElement.getAttribute("cx")) - xTranslate,
+                            Float.valueOf(currentDraggedElement.getAttribute("cy")) - yTranslate,
                             ((DOMMouseEvent) evt).getClientX(),
                             ((DOMMouseEvent) evt).getClientY(),
-                            affineTransform.getScaleX() // the drawing should be proportional so only using X is adequate here
+                            scaleFactor
                             );
                 } else {
                     RelationTypeDefinition customTypeDefinition = null;
@@ -202,11 +206,11 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                             new RelationDragHandle(
                             customTypeDefinition,
                             relationType,
-                            Float.valueOf(currentDraggedElement.getAttribute("cx")) + xTranslate,
-                            Float.valueOf(currentDraggedElement.getAttribute("cy")) + yTranslate,
+                            Float.valueOf(currentDraggedElement.getAttribute("cx")) - xTranslate,
+                            Float.valueOf(currentDraggedElement.getAttribute("cy")) - yTranslate,
                             ((DOMMouseEvent) evt).getClientX(),
                             ((DOMMouseEvent) evt).getClientY(),
-                            affineTransform.getScaleX() // the drawing should be proportional so only using X is adequate here
+                            scaleFactor
                             );
                 }
             }
