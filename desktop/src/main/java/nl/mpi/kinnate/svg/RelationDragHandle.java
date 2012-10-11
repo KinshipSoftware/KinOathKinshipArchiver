@@ -7,9 +7,9 @@ import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : RelationDragHandle
- * Created on : Sep 6, 2011, 1:45:49 PM
- * Author : Peter Withers
+ * Document : RelationDragHandle Created on : Sep 6, 2011, 1:45:49 PM
+ *
+ * @author Peter Withers
  */
 public class RelationDragHandle {
 
@@ -36,11 +36,11 @@ public class RelationDragHandle {
     }
 
     protected float getTranslatedX(float localDragNodeX) {
-        return elementStartX + (localDragNodeX - mouseStartX) / diagramScaleFactor;
+        return elementStartX + (localDragNodeX - mouseStartX) * diagramScaleFactor;
     }
 
     protected float getTranslatedY(float localDragNodeY) {
-        return elementStartY + (localDragNodeY - mouseStartY) / diagramScaleFactor;
+        return elementStartY + (localDragNodeY - mouseStartY) * diagramScaleFactor;
     }
 
     public RelationType getRelationType() {
