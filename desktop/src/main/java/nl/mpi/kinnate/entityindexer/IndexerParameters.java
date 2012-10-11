@@ -4,9 +4,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * Document : IndexParameters
- * Created on : Feb 14, 2011, 11:47:34 AM
- * Author : Peter Withers
+ * Document : IndexParameters Created on : Feb 14, 2011, 11:47:34 AM
+ *
+ * @author Peter Withers
  */
 public class IndexerParameters {
 
@@ -24,7 +24,8 @@ public class IndexerParameters {
     @XmlElement(name = "LabelFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam labelFields = new IndexerParam(new String[][]{
                 {"*:Kinnate/*:CustomData/*:Type"},
-                {"*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"}
+                {"*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"},
+                {"*:Kinnate/*:CustomData/*[ends-with(local-name(), 'name')]"}
             });
     @XmlElement(name = "SymbolFieldsFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam symbolFieldsFields = new IndexerParam(new String[][]{
