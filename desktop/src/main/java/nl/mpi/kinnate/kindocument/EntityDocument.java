@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
 /**
  * Document : EntityBuilder Created on : May 30, 2011, 1:25:05 PM
  *
- * @ author Peter Withers
+ * @author Peter Withers
  */
 public class EntityDocument {
 
@@ -237,7 +237,7 @@ public class EntityDocument {
         }
     }
 
-    public void insertValue(String nodeName, String valueString) {
+    public void insertValue(String nodeName, String valueString) throws ImportException {
         // this method will create a flat xml file and reuse any existing nodes of the target name
         ImportTranslator.TranslationElement translationElement = importTranslator.translate(nodeName, valueString);
 
@@ -257,9 +257,13 @@ public class EntityDocument {
             }
             currentNode = currentNode.getNextSibling();
         }
-        Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /* "cmd:" + */ translationElement.fieldName);
-        valueElement.setTextContent(translationElement.fieldValue);
-        metadataNode.appendChild(valueElement);
+        try {
+            Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /* "cmd:" + */ translationElement.fieldName);
+            valueElement.setTextContent(translationElement.fieldValue);
+            metadataNode.appendChild(valueElement);
+        } catch (DOMException exception) {
+            throw new ImportException("Cannot create node: " + exception.getMessage());
+        }
     }
 
     private void importNode(Node foreignNode) {
@@ -350,6 +354,8 @@ public class EntityDocument {
             arbilDataNodeService.bumpHistory(this.getFile());
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
+            // the property "com.sun.xml.internal.bind.namespacePrefixMapper" seems to be questionable, more research should be done before using this
+            // marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", new KinNamespacePrefixMapper());
             marshaller.marshal(entityData, kinnateNode);
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
