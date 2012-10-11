@@ -55,7 +55,7 @@ public abstract class AbstractDiagramManager {
     }
 
     abstract public void createApplicationWindow();
-    
+
     public JFrame createDiagramWindow(String diagramTitle, Component diagramComponent, Rectangle preferredSizeLocation) {
         JFrame diagramFame;
         if (diagramComponent instanceof SavePanel) {
@@ -84,6 +84,34 @@ public abstract class AbstractDiagramManager {
             diagramFame.setPreferredSize(preferredSizeLocation.getSize());
         }
 //        diagramFame.doLayout();
+        diagramFame.pack();
+        diagramFame.setVisible(true);
+        return diagramFame;
+    }
+
+    public JFrame createHelpWindow(String diagramTitle, Component diagramComponent, Rectangle preferredSizeLocation) {
+        JFrame diagramFame;
+        if (diagramComponent instanceof SavePanel) {
+            diagramFame = new SavePanelFrame((SavePanel) diagramComponent);
+        } else {
+            diagramFame = new JFrame();
+        }
+        setWindowTitle(diagramFame, diagramTitle);
+        if (diagramComponent != null) {
+            diagramFame.setContentPane((Container) diagramComponent);
+        }
+        setWindowIcon(diagramFame);
+        diagramFame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        diagramFame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                ((JFrame) e.getWindow()).setVisible(false);
+            }
+        });
+        if (preferredSizeLocation != null) {
+            diagramFame.setLocation(preferredSizeLocation.x, preferredSizeLocation.y);
+            diagramFame.setPreferredSize(preferredSizeLocation.getSize());
+        }
         diagramFame.pack();
         diagramFame.setVisible(true);
         return diagramFame;
@@ -130,7 +158,7 @@ public abstract class AbstractDiagramManager {
         egoSelectionTestPanel.loadAllTrees();
     }
 
-    public void newDiagram(DocumentNewMenu.DocumentType documentType,Rectangle preferredSizeLocation) {
+    public void newDiagram(DocumentNewMenu.DocumentType documentType, Rectangle preferredSizeLocation) {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, this);
         egoSelectionTestPanel.setName("Unsaved " + documentType.getDisplayName());
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
