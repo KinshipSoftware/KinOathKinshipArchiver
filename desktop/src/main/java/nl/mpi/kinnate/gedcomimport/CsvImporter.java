@@ -21,13 +21,31 @@ import nl.mpi.kinnate.kindocument.ImportTranslator;
  */
 public class CsvImporter extends EntityImporter implements GenericImporter {
 
+    enum SeparatorType {
+
+        tab, csv
+    }
+    private SeparatorType separatorType;
+
     public CsvImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
         super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage);
     }
 
     @Override
     public boolean canImport(String inputFileString) {
-        return (inputFileString.toLowerCase().endsWith(".csv") || inputFileString.toLowerCase().endsWith(".txt"));
+        if (inputFileString.toLowerCase().endsWith(".csv")) {
+            separatorType = SeparatorType.csv;
+            return true;
+        }
+        if (inputFileString.toLowerCase().endsWith(".txt")) {
+            separatorType = SeparatorType.tab;
+            return true;
+        }
+        if (inputFileString.toLowerCase().endsWith(".tab")) {
+            separatorType = SeparatorType.tab;
+            return true;
+        }
+        return false;
     }
 
     @Deprecated
@@ -79,15 +97,15 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         }
     }
 
-    protected ArrayList<String> getFieldsForLineExcludingComments(BufferedReader bufferedReader /* , char fieldSeparator */) throws IOException {
+    protected ArrayList<String> getFieldsForLineExcludingComments(BufferedReader bufferedReader, char fieldSeparator) throws IOException {
         ArrayList<String> fieldsForLine = null;
         while (fieldsForLine == null || (fieldsForLine.size() > 0 && fieldsForLine.get(0).startsWith("*"))) {
-            fieldsForLine = getFieldsForLine(bufferedReader);
+            fieldsForLine = getFieldsForLine(bufferedReader, fieldSeparator);
         }
         return fieldsForLine;
     }
 
-    protected ArrayList<String> getFieldsForLine(BufferedReader bufferedReader /* , char fieldSeparator */) throws IOException {
+    protected ArrayList<String> getFieldsForLine(BufferedReader bufferedReader, char fieldSeparator) throws IOException {
         ArrayList<String> lineFields = new ArrayList<String>();
         StringBuilder stringBuilder = new StringBuilder();
         try {
@@ -130,9 +148,11 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                         break;
                     case ',':
                     case '\t':
-                        lineFields.add(stringBuilder.toString());
-                        stringBuilder = new StringBuilder();
-                        break;
+                        if (fieldSeparator == readChar) {
+                            lineFields.add(stringBuilder.toString());
+                            stringBuilder = new StringBuilder();
+                            break;
+                        }
                     default:
                         stringBuilder.append((char) readChar);
                 }
@@ -155,6 +175,18 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 
     @Override
     public URI[] importFile(InputStreamReader inputStreamReader, String profileId) {
+        char fieldSeparator;
+        switch (separatorType) {
+            case csv:
+                appendToTaskOutput("reading file as comma separated values.");
+                fieldSeparator = ',';
+                break;
+            default:
+                appendToTaskOutput("reading file as tab separated values.");
+                fieldSeparator = '\t';
+                break;
+        }
+        appendToTaskOutput("");
         // output some text to explain which columns to use for parent,child,spouse,sibling etc and for Gender dateofbirth etc
         appendToTaskOutput("If a column called 'ID' exists it will be used as the identifier for each line.");
         appendToTaskOutput("If the ID column contains the same value twice, then the preceding entity will be updated/appended to.");
@@ -211,7 +243,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
             importTranslator.addTranslationEntry("Date_of_Birth", null, "DateOfBirth", null);
             importTranslator.addTranslationEntry("Date_of_Death", null, "DateOfDeath", null);
 
-            ArrayList<String> allHeadings = getFieldsForLineExcludingComments(bufferedReader /* , fieldSeparator */);
+            ArrayList<String> allHeadings = getFieldsForLineExcludingComments(bufferedReader, fieldSeparator);
             for (int columnCounter = 0; columnCounter < allHeadings.size(); columnCounter++) {
                 String titleString = allHeadings.get(columnCounter);
                 if (titleString.equals("")) {
@@ -251,7 +283,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                 boolean firstLineIdZero = true;
                 while (continueReading) {
                     lineCounter++;
-                    ArrayList<String> lineFields = getFieldsForLineExcludingComments(bufferedReader);
+                    ArrayList<String> lineFields = getFieldsForLineExcludingComments(bufferedReader, fieldSeparator);
                     continueReading = lineFields.size() > 0;
                     EntityDocument currentEntity = null;
                     EntityDocument relatedEntity = null;
