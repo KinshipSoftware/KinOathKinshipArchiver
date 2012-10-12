@@ -88,14 +88,14 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                 switch (readChar) {
                     case '\n':
                     case '\r':
+                        if (stringBuilder.length() > 0) {
+                            lineFields.add(stringBuilder.toString());
+                        }
                         if (lineFields.isEmpty()) {
                             // if this is the first chars on the line then we can continue looking for more data
                             break;
                         }
                     case -1:
-                        if (stringBuilder.length() > 0) {
-                            lineFields.add(stringBuilder.toString());
-                        }
                         return lineFields;
                     case '"':
                         boolean insideQuotes = true;
@@ -151,6 +151,8 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         appendToTaskOutput("If a column called 'ID' exists it will be used as the identifier for each line.");
         appendToTaskOutput("If the ID column contains the same value twice, then the preceding entity will be updated/appended to.");
         appendToTaskOutput("If the ID column contains a UniqueIdentifier already in the project then that entity will be updated/appended to.");
+        appendToTaskOutput("");
+        appendToTaskOutput("Lines starting with * will be treated as comments and ignored.");
         appendToTaskOutput("");
         appendToTaskOutput("Recommended data columns are:");
         appendToTaskOutput("Name");
@@ -227,10 +229,10 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                     if (headingLowerCase.equals("id")) {
                         idColumn = headingCounter;
                     }
-                    if (Arrays.binarySearch(unionColumns, headingLowerCase) != -1) {
+                    if (Arrays.binarySearch(unionColumns, headingLowerCase) > -1) {
                         unionColumnIndexes.add(headingCounter);
                     }
-                    if (Arrays.binarySearch(parentColumns, headingLowerCase) != -1) {
+                    if (Arrays.binarySearch(parentColumns, headingLowerCase) > -1) {
                         parentColumnIndexs.add(headingCounter);
                     }
                 }
@@ -244,18 +246,22 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                     if (idColumn == -1) {
                         recordID = Integer.toString(lineCounter);
                     } else {
-                        recordID = allHeadings.get(idColumn);
+                        if (idColumn < lineFields.size()) {
+                            recordID = lineFields.get(idColumn);
+                        } else {
+                            appendToTaskOutput("Error: No ID value for line " + lineCounter);
+                            recordID = "-1";
+                        }
                     }
                     currentEntity = getEntityDocument(createdNodes, profileId, recordID, importTranslator);
 
                     String relatedEntityPrefix = null;
-                    int valueCount = 0;
                     for (int fieldCounter = 0; fieldCounter < lineFields.size(); fieldCounter++) {
                         String entityField = lineFields.get(fieldCounter);
 //                            String cleanValue = cleanCsvString(entityLineString);
                         String headingString;
-                        if (allHeadings.size() > valueCount) {
-                            headingString = allHeadings.get(valueCount);
+                        if (allHeadings.size() > fieldCounter) {
+                            headingString = allHeadings.get(fieldCounter);
                         } else {
                             headingString = "-unnamed-field-";
                             appendToTaskOutput("Warning more values than headers, using " + headingString + " for value: " + entityField);
@@ -290,7 +296,6 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 //                                    appendToTaskOutput("Setting value: " + allHeadings.get(valueCount) + " : " + cleanValue);
                             }
                         }
-                        valueCount++;
                     }
 //                        if (maxImportCount-- < 0) {
 //                            appendToTaskOutput(importTextArea, "Aborting import due to max testing limit");
