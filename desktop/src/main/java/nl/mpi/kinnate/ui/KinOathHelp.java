@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 public class KinOathHelp extends HelpViewerPanel {
 
     public final static String KMDI_HELPSET = "KMDI";
-    private final static String KMDI_HELP_RESOURCE_BASE = "/nl/mpi/kinnate/resources/html/help/kinoath/";
+    private final static String KMDI_HELP_RESOURCE_BASE = "/nl/mpi/kinoath/resources/html/help/kinoath/";
     private final static HelpResourceSet KMDI_HELP_SET = new HelpResourceSet(KMDI_HELPSET, KinOathHelp.class, KMDI_HELP_RESOURCE_BASE, KMDI_HELP_RESOURCE_BASE + "kinoath.xml");
     private static KinOathHelp singleInstance = null;
 
