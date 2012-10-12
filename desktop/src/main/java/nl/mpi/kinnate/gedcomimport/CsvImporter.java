@@ -181,6 +181,8 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         appendToTaskOutput("");
         appendToTaskOutput("Any other columns will be added to the kindata but not automatically used in the subsequent diagrams.");
         appendToTaskOutput("");
+        appendToTaskOutput("If the ID field exists and any row contains the text ID then the headers are replaced with current row values (for PUCK txt files).");
+        appendToTaskOutput("");
         ArrayList<URI> createdNodes = new ArrayList<URI>();
         try {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -269,6 +271,14 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                         }
                         if (idColumn == fieldCounter) {
                             // exclude the ID field from the entity data
+
+                            // if the ID field contains the string ID then replace all the headers with the current lines fields and continue reading the file with the new fields
+                            if (entityField.toLowerCase().equals("id")) {
+                                unionColumnIndexes.clear();
+                                parentColumnIndexs.clear();
+                                allHeadings = lineFields;
+                                break;
+                            }
                         } else if (unionColumnIndexes.contains(fieldCounter)) {
                             relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
                             currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.union, null, null, null, null);
