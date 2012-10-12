@@ -94,7 +94,18 @@ public class GraphSorter {
         }
 
         public int compareTo(SortingEntity o) {
-            return this.entityData.getDateOfBirth().compareTo(o.entityData.getDateOfBirth());
+            final EntityDate dateOfBirth = this.entityData.getDateOfBirth();
+            final EntityDate dateOfBirth1 = o.entityData.getDateOfBirth();
+            if (dateOfBirth == null && dateOfBirth1 == null) {
+                return 0;
+            }
+            if (dateOfBirth == null) {
+                return -1;
+            }
+            if (dateOfBirth1 == null) {
+                return 1;
+            }
+            return dateOfBirth.compareTo(dateOfBirth1);
         }
 
         // for testing only
@@ -165,9 +176,10 @@ public class GraphSorter {
                     // note that this does not set the position and the result can be null
                     Point nextAbovePos = entityPositions.get(sortingEntity.selfEntityId);
                     // this should not be called until all parents have locations set, hence nextAbovePos should never be null
-                    if (calculatedPosition == null) {
+                    if (calculatedPosition == null && nextAbovePos != null) {
                         // calculate the parent average position
                         float averageX = 0;
+                        // nextAbovePos has been observed being null here after importing a CSV from Halle
                         int maxParentY = nextAbovePos.y;
                         for (SortingEntity sortingEntityInner : mustBeBelow) {
                             final Point parentPosition = entityPositions.get(sortingEntityInner.selfEntityId);
