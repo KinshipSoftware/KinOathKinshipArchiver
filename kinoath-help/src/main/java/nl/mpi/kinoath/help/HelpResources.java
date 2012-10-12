@@ -11,7 +11,7 @@ import nl.mpi.kinnate.plugin.AbstractBasePlugin;
  */
 public class HelpResources extends AbstractBasePlugin {
 
-    public final static String HELP_RESOURCE_BASE = "/nl/mpi/kinoath/resources/html/help/";
+    public final static String HELP_RESOURCE_BASE = "/nl/mpi/kinoath/resources/html/help/kinoath/";
     public final static String HELP_INDEX_XML = HELP_RESOURCE_BASE + "kinoath.xml";
 
     public HelpResources() throws PluginException {
