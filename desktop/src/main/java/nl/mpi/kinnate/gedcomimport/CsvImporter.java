@@ -71,6 +71,14 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 //        }
 //        return fieldSeparator;
 //    }
+    private boolean isAnExcludedId(String idString, boolean firstLineIdZero) {
+        if (firstLineIdZero) {
+            return false;
+        } else {
+            return !"0".equals(idString);
+        }
+    }
+
     protected ArrayList<String> getFieldsForLineExcludingComments(BufferedReader bufferedReader /* , char fieldSeparator */) throws IOException {
         ArrayList<String> fieldsForLine = null;
         while (fieldsForLine == null || (fieldsForLine.size() > 0 && fieldsForLine.get(0).startsWith("*"))) {
@@ -182,6 +190,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         appendToTaskOutput("Any other columns will be added to the kindata but not automatically used in the subsequent diagrams.");
         appendToTaskOutput("");
         appendToTaskOutput("If the ID field exists and any row contains the text ID then the headers are replaced with current row values (for PUCK txt files).");
+        appendToTaskOutput("If the first record does not start at zero then all relations to the ID of zero will be ignored.");
         appendToTaskOutput("");
         ArrayList<URI> createdNodes = new ArrayList<URI>();
         try {
@@ -239,6 +248,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                         parentColumnIndexs.add(headingCounter);
                     }
                 }
+                boolean firstLineIdZero = true;
                 while (continueReading) {
                     lineCounter++;
                     ArrayList<String> lineFields = getFieldsForLineExcludingComments(bufferedReader);
@@ -255,6 +265,10 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                             appendToTaskOutput("Error: No ID value for line " + lineCounter);
                             recordID = "-1";
                         }
+                    }
+                    if (lineCounter == 0) {
+                        // only test the first line for ID zero
+                        firstLineIdZero = recordID.equals("0");
                     }
                     currentEntity = getEntityDocument(createdNodes, profileId, recordID, importTranslator);
 
@@ -280,24 +294,34 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
                                 break;
                             }
                         } else if (unionColumnIndexes.contains(fieldCounter)) {
-                            relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
-                            currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.union, null, null, null, null);
-                        } else if (parentColumnIndexs.contains(fieldCounter)) {
-                            relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
-                            currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.ancestor, null, null, null, null);
-                        } else { //if (entityField.length() > 0) { // there is no need to exclude empty fields the user might wish to insert data later
-                            if (headingString.matches("Spouses[\\d]*-ID")) {
+                            if (isAnExcludedId(entityField, firstLineIdZero)) {
                                 relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
                                 currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.union, null, null, null, null);
-                                relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
-                            } else if (headingString.matches("Parents[\\d]*-ID")) {
+                            }
+                        } else if (parentColumnIndexs.contains(fieldCounter)) {
+                            if (isAnExcludedId(entityField, firstLineIdZero)) {
                                 relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
                                 currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.ancestor, null, null, null, null);
-                                relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
+                            }
+                        } else { //if (entityField.length() > 0) { // there is no need to exclude empty fields the user might wish to insert data later
+                            if (headingString.matches("Spouses[\\d]*-ID")) {
+                                if (isAnExcludedId(entityField, firstLineIdZero)) {
+                                    relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
+                                    currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.union, null, null, null, null);
+                                    relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
+                                }
+                            } else if (headingString.matches("Parents[\\d]*-ID")) {
+                                if (isAnExcludedId(entityField, firstLineIdZero)) {
+                                    relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
+                                    currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.ancestor, null, null, null, null);
+                                    relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
+                                }
                             } else if (headingString.matches("Children[\\d]*-ID")) {
-                                relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
-                                currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.descendant, null, null, null, null);
-                                relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
+                                if (isAnExcludedId(entityField, firstLineIdZero)) {
+                                    relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
+                                    currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.descendant, null, null, null, null);
+                                    relatedEntityPrefix = headingString.substring(0, headingString.length() - "ID".length());
+                                }
                             } else if (relatedEntityPrefix != null && headingString.startsWith(relatedEntityPrefix)) {
                                 relatedEntity.insertValue(headingString.substring(relatedEntityPrefix.length()), entityField);
 //                                    appendToTaskOutput("Setting value in related entity: " + allHeadings.get(valueCount) + " : " + cleanValue);
