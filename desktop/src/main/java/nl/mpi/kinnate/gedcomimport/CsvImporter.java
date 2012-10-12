@@ -195,6 +195,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
             importTranslator.addTranslationEntry("Gender", "m", "Gender", "Male");
             importTranslator.addTranslationEntry("Sex", "m", "Gender", "Male");
             importTranslator.addTranslationEntry("Sex", "f", "Gender", "Female");
+            importTranslator.addTranslationEntry("Sex", "h", "Gender", "Male");
 
             importTranslator.addTranslationEntry("Date_of_Birth", null, "DateOfBirth", null);
             importTranslator.addTranslationEntry("Date_of_Death", null, "DateOfDeath", null);
