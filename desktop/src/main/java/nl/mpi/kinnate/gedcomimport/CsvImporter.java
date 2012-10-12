@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -70,6 +71,14 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 //        }
 //        return fieldSeparator;
 //    }
+    protected ArrayList<String> getFieldsForLineExcludingComments(BufferedReader bufferedReader /* , char fieldSeparator */) throws IOException {
+        ArrayList<String> fieldsForLine = null;
+        while (fieldsForLine == null || (fieldsForLine.size() > 0 && fieldsForLine.get(0).startsWith("*"))) {
+            fieldsForLine = getFieldsForLine(bufferedReader);
+        }
+        return fieldsForLine;
+    }
+
     protected ArrayList<String> getFieldsForLine(BufferedReader bufferedReader /* , char fieldSeparator */) throws IOException {
         ArrayList<String> lineFields = new ArrayList<String>();
         StringBuilder stringBuilder = new StringBuilder();
@@ -139,7 +148,9 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
     @Override
     public URI[] importFile(InputStreamReader inputStreamReader, String profileId) {
         // output some text to explain which columns to use for parent,child,spouse,sibling etc and for Gender dateofbirth etc
-        appendToTaskOutput("The first column 'ID' must contain a unique integer for each line.");
+        appendToTaskOutput("If a column called 'ID' exists it will be used as the identifier for each line.");
+        appendToTaskOutput("If the ID column contains the same value twice, then the preceding entity will be updated/appended to.");
+        appendToTaskOutput("If the ID column contains a UniqueIdentifier already in the project then that entity will be updated/appended to.");
         appendToTaskOutput("");
         appendToTaskOutput("Recommended data columns are:");
         appendToTaskOutput("Name");
@@ -147,9 +158,21 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         appendToTaskOutput("DateOfBirth");
         appendToTaskOutput("DateOfDeath");
         appendToTaskOutput("");
+        // todo:  #2394 In CSV import add support for ID column in any location and check that if a unique identifier is supplied that will preserve/add to an existing individual. Also add info text to explain the use of this in the CSV text output.
 //        appendToTaskOutput("Recommended relation fields are:");
 //        appendToTaskOutput("ParentID");
+        appendToTaskOutput("Relation columns must map to the values in the ID column.");
         appendToTaskOutput("Recognised relation columns are:");
+        String[] unionColumns = new String[]{"spouse", "union"};
+        for (String nameString : unionColumns) {
+            appendToTaskOutput(nameString);
+        }
+        String[] parentColumns = new String[]{"parent", "father", "mother"};
+        for (String nameString : parentColumns) {
+            appendToTaskOutput(nameString);
+        }
+        appendToTaskOutput("");
+        appendToTaskOutput("Additional supported relation columns are:");
         appendToTaskOutput("Spouses<number>-ID");
         appendToTaskOutput("Parents<number>-ID");
         appendToTaskOutput("Children<number>-ID");
@@ -174,18 +197,18 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
             importTranslator.addTranslationEntry("Date_of_Birth", null, "DateOfBirth", null);
             importTranslator.addTranslationEntry("Date_of_Death", null, "DateOfDeath", null);
 
-            ArrayList<String> allHeadings = getFieldsForLine(bufferedReader /* , fieldSeparator */);
+            ArrayList<String> allHeadings = getFieldsForLineExcludingComments(bufferedReader /* , fieldSeparator */);
             for (int columnCounter = 0; columnCounter < allHeadings.size(); columnCounter++) {
                 String titleString = allHeadings.get(columnCounter);
                 if (titleString.equals("")) {
-                    appendToTaskOutput("Error: No title found for column. Inserting \"Untitled\" as the column name.");
+                    appendToTaskOutput("Warning: No title found for column. Inserting \"Untitled\" as the column name.");
                     allHeadings.set(columnCounter, "Untitled");
                 } else {
                     if (titleString.matches("$0-9.*")) {
-                        appendToTaskOutput("Error: Column title \"" + titleString + "\" starts with a number.");
+                        appendToTaskOutput("Warning: Column title \"" + titleString + "\" starts with a number.");
                     }
                     if (!titleString.matches("[a-zA-Z0-9]+")) {
-                        appendToTaskOutput("Error: Column title \"" + titleString + "\" contains invalid characters. Punctuation and white space are not allowed (so that the data is compatable with XML and other applications).");
+                        appendToTaskOutput("Warning: Column title \"" + titleString + "\" contains invalid characters. Punctuation and white space are not allowed (so that the data is compatable with XML and other applications).");
                     }
                 }
             }
@@ -195,25 +218,57 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
 //            String headingLine = bufferedReader.readLine();
             try {
                 boolean continueReading = true;
+                int lineCounter = -1;
+                int idColumn = -1;
+                ArrayList<Integer> unionColumnIndexes = new ArrayList<Integer>();
+                ArrayList<Integer> parentColumnIndexs = new ArrayList<Integer>();
+                for (int headingCounter = 0; headingCounter < allHeadings.size(); headingCounter++) {
+                    final String headingLowerCase = allHeadings.get(headingCounter).toLowerCase();
+                    if (headingLowerCase.equals("id")) {
+                        idColumn = headingCounter;
+                    }
+                    if (Arrays.binarySearch(unionColumns, headingLowerCase) != -1) {
+                        unionColumnIndexes.add(headingCounter);
+                    }
+                    if (Arrays.binarySearch(parentColumns, headingLowerCase) != -1) {
+                        parentColumnIndexs.add(headingCounter);
+                    }
+                }
                 while (continueReading) {
-                    ArrayList<String> lineFields = getFieldsForLine(bufferedReader);
+                    lineCounter++;
+                    ArrayList<String> lineFields = getFieldsForLineExcludingComments(bufferedReader);
                     continueReading = lineFields.size() > 0;
                     EntityDocument currentEntity = null;
                     EntityDocument relatedEntity = null;
+                    String recordID;
+                    if (idColumn == -1) {
+                        recordID = Integer.toString(lineCounter);
+                    } else {
+                        recordID = allHeadings.get(idColumn);
+                    }
+                    currentEntity = getEntityDocument(createdNodes, profileId, recordID, importTranslator);
+
                     String relatedEntityPrefix = null;
                     int valueCount = 0;
-                    for (String entityField : lineFields) {
+                    for (int fieldCounter = 0; fieldCounter < lineFields.size(); fieldCounter++) {
+                        String entityField = lineFields.get(fieldCounter);
 //                            String cleanValue = cleanCsvString(entityLineString);
                         String headingString;
                         if (allHeadings.size() > valueCount) {
                             headingString = allHeadings.get(valueCount);
                         } else {
                             headingString = "-unnamed-field-";
-                            appendToTaskOutput("Warning " + headingString + " for value: " + entityField);
+                            appendToTaskOutput("Warning more values than headers, using " + headingString + " for value: " + entityField);
                         }
-                        if (currentEntity == null) {
-                            currentEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
-                        } else if (entityField.length() > 0) {
+                        if (idColumn == fieldCounter) {
+                            // exclude the ID field from the entity data
+                        } else if (unionColumnIndexes.contains(fieldCounter)) {
+                            relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
+                            currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.union, null, null, null, null);
+                        } else if (parentColumnIndexs.contains(fieldCounter)) {
+                            relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
+                            currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.ancestor, null, null, null, null);
+                        } else { //if (entityField.length() > 0) { // there is no need to exclude empty fields the user might wish to insert data later
                             if (headingString.matches("Spouses[\\d]*-ID")) {
                                 relatedEntity = getEntityDocument(createdNodes, profileId, entityField, importTranslator);
                                 currentEntity.entityData.addRelatedNode(relatedEntity.entityData, RelationType.union, null, null, null, null);
