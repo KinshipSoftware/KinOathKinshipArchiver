@@ -430,14 +430,13 @@ public class EntitySvg {
 //        }
 //    }
 
-    public float[] moveEntity(GraphPanel graphPanel, UniqueIdentifier entityId, float shiftXfloat, float shiftYfloat, boolean snapToGrid, double scaleFactor, boolean allRealtionsSelected) {
+    public float[] moveEntity(GraphPanel graphPanel, UniqueIdentifier entityId, float shiftXfloat, float remainderAfterSnapX, float shiftYfloat, float remainderAfterSnapY, boolean snapToGrid, double scaleFactor, boolean allRealtionsSelected) {
+//        System.out.println("X: " + shiftXfloat + " Y: " + shiftYfloat + " scale: " + scaleFactor);
         Element entitySymbol = graphPanel.doc.getElementById(entityId.getAttributeIdentifier());
         Element highlightGroup = null;
         if (entityId.isGraphicsIdentifier()) {
             highlightGroup = graphPanel.doc.getElementById("highlight_" + entityId.getAttributeIdentifier());
         }
-        float remainderAfterSnapX = 0;
-        float remainderAfterSnapY = 0;
         double shiftXscaled;
         double shiftYscaled;
         if (entitySymbol != null) {
@@ -445,17 +444,18 @@ public class EntitySvg {
             shiftXscaled = shiftXfloat * scaleFactor;
             shiftYscaled = shiftYfloat * scaleFactor;
             Point entityPosition = entityPositions.get(entityId);
-            float updatedPositionX = (float) (entityPosition.x + shiftXscaled);
+            float updatedPositionX = (float) (entityPosition.x + shiftXscaled + remainderAfterSnapX);
             float updatedPositionY = entityPosition.y;
             if (allowYshift) {
-                updatedPositionY = (float) (updatedPositionY + shiftYscaled);
+                updatedPositionY = (float) (updatedPositionY + shiftYscaled + remainderAfterSnapY);
             }
-//            System.out.println("updatedPositionX: " + updatedPositionX + " shiftXscaled: " + shiftXscaled + " shiftXfloat: " + shiftXfloat + " scaleFactor: " + scaleFactor);
             if (snapToGrid) {
                 double updatedSnapPositionX = Math.round(updatedPositionX / 50) * 50; // limit movement to the grid
+                remainderAfterSnapX = updatedPositionX - (float) updatedSnapPositionX;
                 updatedPositionX = (float) updatedSnapPositionX;
                 if (allowYshift) {
-                    float updatedSnapPositionY = Math.round(updatedPositionY / 50) * 50; // limit movement to the grid                    
+                    float updatedSnapPositionY = Math.round(updatedPositionY / 50) * 50; // limit movement to the grid    
+                    remainderAfterSnapY = updatedPositionY - (float) updatedSnapPositionY;
                     updatedPositionY = updatedSnapPositionY;
                 }
             } else {
@@ -503,13 +503,7 @@ public class EntitySvg {
             if (highlightGroup != null) {
                 highlightGroup.setAttribute("transform", translateString);
             }
-            float distanceXmoved = ((float) ((updatedPositionX - entityPosition.x) * scaleFactor));
-            float distanceYmoved = ((float) ((updatedPositionY - entityPosition.y) * scaleFactor));
-            remainderAfterSnapX = shiftXfloat - distanceXmoved;
-            remainderAfterSnapY = shiftYfloat - distanceYmoved;
-//            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(sVGMatrix.getE() + shiftX) + ", " + (sVGMatrix.getF() + shiftY) + ")");
         }
-//        System.out.println("remainderAfterSnap: " + remainderAfterSnap);
         return new float[]{remainderAfterSnapX, remainderAfterSnapY};
     }
 
