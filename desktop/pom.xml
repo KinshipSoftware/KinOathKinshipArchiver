@@ -249,7 +249,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.1.33726-pretesting</version>
+            <version>1.1.33727-pretesting</version>
         </dependency>
     </dependencies>
     <repositories>
