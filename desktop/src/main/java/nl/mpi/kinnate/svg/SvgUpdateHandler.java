@@ -442,6 +442,7 @@ public class SvgUpdateHandler {
         SVGOMPoint pointOnScreen = new SVGOMPoint(screenRectangle.x, screenRectangle.y);
         SVGOMPoint sizeOnScreen = new SVGOMPoint(screenRectangle.width, screenRectangle.height);
         SVGMatrix mat = targetGroupElement.getScreenCTM();  // this gives us the element to screen transform
+        // todo: mat can be null
         mat = mat.inverse();                                // this converts that into the screen to element transform
         SVGPoint pointOnDocument = pointOnScreen.matrixTransform(mat);
         // the diagram keeps the x and y scale equal so we can just use getA here
@@ -644,8 +645,9 @@ public class SvgUpdateHandler {
         }
         synchronized (SvgUpdateHandler.this) {
             dragRemainders = tempRemainders;
-            SVGMatrix draggedElementScreenMatrix = ((SVGLocatable) graphPanel.doc.getDocumentElement()).getScreenCTM();
-            dragScale = draggedElementScreenMatrix.getA(); // the drawing is proportional so only using X is adequate here              
+//            Element entityGroup = graphPanel.doc.getElementById("EntityGroup");
+            SVGMatrix draggedElementScreenMatrix = ((SVGLocatable) graphPanel.doc.getDocumentElement()).getScreenCTM().inverse();
+            dragScale = draggedElementScreenMatrix.getA(); // the drawing is proportional so only using X is adequate here         
         }
     }
 
@@ -711,12 +713,13 @@ public class SvgUpdateHandler {
                                 }
                             }
                             int dragCounter = 0;
-                            // todo: concurent modification issue here
+                            // todo: concurent modification issue here in graphPanel.selectedGroupId when debugging
                             for (UniqueIdentifier entityId : graphPanel.selectedGroupId) {
                                 // store the remainder after snap for re use on each update
                                 synchronized (SvgUpdateHandler.this) {
                                     if (dragRemainders.length > dragCounter) {
-                                        dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, dragScale, allRealtionsSelected);
+//                                        System.out.println("drag remainder: " + updateDragNodeXInner + " : " + dragRemainders[dragCounter][0]);
+                                        dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner, dragRemainders[dragCounter][0], updateDragNodeYInner, dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, dragScale, allRealtionsSelected);
                                     }
                                 }
                                 dragCounter++;
