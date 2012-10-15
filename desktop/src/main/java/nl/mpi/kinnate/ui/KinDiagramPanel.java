@@ -721,6 +721,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //        return kinTermHidePane.isHidden();
 //    }
     public EntityData[] getGraphEntities() {
+        if (graphPanel.dataStoreSvg.graphData == null) {
+            // when the diagram has not yet been loaded the graphData will be null
+            return new EntityData[0];
+        }
         return graphPanel.dataStoreSvg.graphData.getDataNodes();
     }
 
