@@ -7,9 +7,9 @@ import nl.mpi.kinnate.kindata.EntityDate;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : LabelStringsParser
- *  Created on : Jun 28, 2011, 11:30:00 AM
- *  Author     : Peter Withers
+ * Document : LabelStringsParser Created on : Jun 28, 2011, 11:30:00 AM
+ *
+ * @author Peter Withers
  */
 public class LabelStringsParser {
 
@@ -78,7 +78,7 @@ public class LabelStringsParser {
 
                 // todo: document and give examples of how these user defined identifiers work and that if the #0-9 type is not provided then the entire label string is used as the identifier
                 labelsStrings = inputStringParts[1].split(";");
-                if (labelsStrings[0].matches("^#[0-9]*")) {
+                if (labelsStrings.length > 0 && labelsStrings[0].matches("^#[0-9]*")) {
                     // use the user defined number to identify the entity
                     uidString = labelsStrings[0];
                     uniqueIdentifier = new UniqueIdentifier("id:" + uidString, UniqueIdentifier.IdentifierType.tid);
