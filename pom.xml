@@ -12,8 +12,6 @@
     <modules>
         <module>desktop</module>
         <module>kinoath-help</module>
-        <module>plugins-core</module>
-        <module>rest</module>
     </modules>
 
     <scm>
