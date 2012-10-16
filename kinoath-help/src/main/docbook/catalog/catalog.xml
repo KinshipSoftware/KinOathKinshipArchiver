@@ -1,0 +1,7 @@
+<!-- Catalog file for transformation of docbook output to help resources -->
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <system systemId="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" uri="./xhtml1-transitional.dtd"/>
+    <system systemId="http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent" uri="./xhtml-lat1.ent"/>
+    <system systemId="http://www.w3.org/TR/xhtml1/DTD/xhtml-symbol.ent" uri="./xhtml-symbol.ent"/>
+    <system systemId="http://www.w3.org/TR/xhtml1/DTD/xhtml-special.ent" uri="./xhtml-special.ent"/>
+</catalog>

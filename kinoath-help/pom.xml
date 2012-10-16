@@ -1,0 +1,203 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>nl.mpi</groupId>
+    <artifactId>kinoath-help</artifactId>
+    <packaging>jar</packaging>
+    <!--    Either use the snapshot version of manually enter the current build number. 
+    The build number is only required when depending on the output in other projects or building to the server.-->
+    <version>${help.majorVersion}.${help.minorVersion}-${help.branch}-SNAPSHOT</version>
+    <!--<version>${help.majorVersion}.${help.minorVersion}.33726-${help.branch}</version>-->
+    <name>KinOath Help</name>
+    <organization> 
+	<name>The Language Archive</name> 
+	<url>http://tla.mpi.nl/tools/tla-tools</url>
+    </organization>
+    
+    <properties>
+	<help.majorVersion>1</help.majorVersion>
+	<help.minorVersion>1</help.minorVersion>
+	<help.branch>pretesting</help.branch>
+	
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<output.jarname>${project.build.finalName}</output.jarname>
+	<output.directory>${project.build.directory}</output.directory>
+
+	<output.help.directory.base>${basedir}/target/generated-resources/help</output.help.directory.base>
+	<output.help.directory.result>${output.help.directory.base}/</output.help.directory.result>
+	<resources.help.directory>${basedir}/target/classes/nl/mpi/kinoath/resources/html/help</resources.help.directory>
+    </properties>
+    
+    <build>
+	<resources>
+	    <resource>
+		<directory>src/main/resources</directory>
+		<filtering>false</filtering>
+	    </resource>
+	    <resource>
+		<directory>src/main/resources</directory>
+		<filtering>true</filtering>
+		<includes>
+		    <include>**/version.properties</include>
+		</includes>
+	    </resource>
+	</resources>
+	<plugins>
+	    <plugin>
+		<groupId>com.google.code.maven-svn-revision-number-plugin</groupId>
+		<artifactId>maven-svn-revision-number-plugin</artifactId>
+		<version>1.7</version>
+		<executions>
+		    <execution>
+			<goals>
+			    <goal>revision</goal>
+			</goals>
+		    </execution>
+		</executions>
+		<configuration>
+		    <entries>
+			<entry>
+			    <path>${basedir}</path>
+			    <!-- this will populate "plugin.version.revision" etc -->
+			    <prefix>plugin.version</prefix>
+			</entry>
+		    </entries>
+		</configuration>
+	    </plugin>
+	    <!-- Plugin to create HTML form DocBook sources --> 
+	    <plugin>
+		<groupId>com.agilejava.docbkx</groupId>
+		<artifactId>docbkx-maven-plugin</artifactId>
+		<version>2.0.14</version>
+		<dependencies>
+		    <dependency>
+			<groupId>org.docbook</groupId>
+			<artifactId>docbook-xml</artifactId>
+			<version>4.4</version>
+			<scope>runtime</scope>
+		    </dependency>
+		</dependencies>
+		<executions>
+		    <execution>
+			<goals>
+			    <goal>generate-xhtml</goal>
+			</goals>
+			<phase>generate-resources</phase>
+		    </execution>
+		</executions>
+		<configuration>
+		    <chunkedOutput>true</chunkedOutput>
+		    <sourceDirectory>${basedir}/src/main/docbook</sourceDirectory>
+		    <targetDirectory>${output.help.directory.base}</targetDirectory>
+		    <imgSrcPath>../</imgSrcPath>
+		    <xhtmlCustomization>${basedir}/src/main/docbook/mydocbook2xhtml.xsl</xhtmlCustomization>
+		</configuration>
+	    </plugin>
+	    <!-- Plugin to create index XML from DocBook HTML --> 
+	    <plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>xml-maven-plugin</artifactId>
+		<version>1.0</version>
+		<executions>
+		    <execution>
+			<goals>
+			    <goal>transform</goal>
+			</goals>
+			<phase>generate-resources</phase>
+		    </execution>
+		</executions>
+		<configuration>
+		    <catalogs>
+			<catalog>${basedir}/src/main/docbook/catalog/catalog.xml</catalog>
+		    </catalogs>
+		    <transformationSets>
+			<!-- Transform the index xhtml to an XML that's easy to process --> 
+			<transformationSet>
+			    <dir>${output.help.directory.result}</dir>
+			    <outputDir>${resources.help.directory}</outputDir>  output to resources directory 
+			    <stylesheet>${basedir}/src/main/docbook/helptoc.xsl</stylesheet>
+			    <includes>
+				<include>kinoath/kinoath.html</include>
+			    </includes>
+			    <fileMappers>
+				<!-- Map arbil.html -> arbil.xml --> 
+				<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+				    <targetExtension>.xml</targetExtension>
+				</fileMapper>
+			    </fileMappers>
+			</transformationSet>
+			<!-- Strip everything but body from other html files --> 
+			<transformationSet>
+			    <dir>${output.help.directory.result}</dir>
+			    <outputDir>${resources.help.directory}</outputDir>  output to resources directory 
+			    <stylesheet>${basedir}/src/main/docbook/extractbody.xsl</stylesheet>
+			    <includes>
+				<include>**/*.html</include>
+			    </includes>
+			    <excludes>
+				<exclude>**/index.html</exclude>
+			    </excludes>
+			</transformationSet>
+		    </transformationSets>
+		</configuration>
+	    </plugin>
+	    <plugin>
+		<groupId>nl.mpi</groupId>
+		<artifactId>imgscalr-maven-plugin</artifactId>
+		<version>1.0</version>
+		<executions>
+		    <execution>
+			<phase>generate-resources</phase>
+			<goals>
+			    <goal>scale</goal>
+			</goals>
+		    </execution>
+		</executions>
+		<configuration>
+		    <files>
+			<directory>${basedir}/src/main/docbook/images</directory>
+			<includes>
+			    <!--We don't want any other file types (e.g. svg) because Swing won't support them--> 
+			    <include>%regex[(?i).*\.jpg$]</include>
+			    <include>%regex[(?i).*\.png$]</include>
+			</includes>
+		    </files>
+		    <outputDirectory>${resources.help.directory}/images</outputDirectory>
+		    <targetWidth>400</targetWidth>
+		</configuration>
+	    </plugin>		    
+	</plugins>
+    </build>
+    <dependencies>
+	<dependency>
+	    <groupId>${project.groupId}</groupId>
+	    <artifactId>plugins-core</artifactId>
+	    <version>0.0.33389-pretesting</version>
+	</dependency>
+	<dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <version>4.6</version>
+	    <scope>test</scope>
+	</dependency>
+    </dependencies>
+    <repositories>
+	<repository>
+	    <id>MPI</id>
+	    <name>MPI LAT Repository</name>
+	    <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
+	</repository>
+    </repositories>
+    
+    <distributionManagement>
+	<snapshotRepository>
+	    <id>MPI-Snapshots</id>
+	    <url>https://lux15.mpi.nl/nexus/content/repositories/MPI-Snapshots</url>
+	</snapshotRepository>
+	<repository>
+	    <id>MPI</id>
+	    <name>MPI Repository</name>
+	    <url>https://lux15.mpi.nl/nexus/content/repositories/MPI</url>
+	</repository>
+    </distributionManagement>
+</project>

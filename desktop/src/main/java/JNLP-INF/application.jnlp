@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.5+" codebase="http://www.mpi.nl/tg/j2se/jnlp/kinoath/" href="kinoath-testing.jnlp">
+    <information>
+        <title>KinOath (testing)</title>
+        <icon href="http://www.mpi.nl/tg/j2se/jnlp/kinoath/kinoath-testing128x128.png" kind="default" />
+        <icon href="http://www.mpi.nl/tg/j2se/jnlp/kinoath/kinoath-testing128x128.png" kind="splash" />
+        <offline-allowed/>
+        <shortcut online="false">
+            <!--<desktop /> the desktop icon on windows has some display issues-->
+            <!--<menu submenu="Language Archiving Tools" />-->
+        </shortcut>
+        <vendor>Max Planck Institute for Psycholinguistics</vendor>
+        <homepage href="http://www.lat-mpi.eu/tools/imdi/kinoath/"/>
+        <description>KinOath is a kinship application with the primary goal of connecting kinship data with archived data, such as audio, video or written resources while also being closely integrated with the archive software such as Arbil. Beyond this primary goal it is designed to be flexible and culturally nonspecific, such that culturally different social structures can equally be represented. Kin type strings are used throughout the application for constructing and searching data sets. The representation of kin terms is also integrated into the application allowing comparative diagrams of kin terms. Graphical representation of the data is an important part of the application and the diagrams produced are intended to very flexible and of publishable quality. http://www.lat-mpi.eu/tools/imdi/kinoath/</description>
+        <description kind="short">KinOath is a kinship application that is flexible, culturally nonspecific and produces diagrams of publishable quality.</description>
+        <!-- this extension causes the arbil application icon to be displayed on all imdi files which is confusing to users, so it has been removed
+        <association extensions="IMDI imdi" mime-type="application/IMDI"/>
+        -->
+    </information>
+    <security>
+        <all-permissions/>
+    </security>
+    <update check="timeout" policy="always"/>
+    <resources>
+        <java max-heap-size="1073741824" version="1.5+"/>
+        <jar href="kinoath-testing-0-0-26381.jar" main="true" download="eager"/>
+        <jar href="lib/arbil-2.3-SNAPSHOT.jar" download="eager"/>
+        <jar href="lib/batik-css-1.7.jar" download="eager"/>
+        <jar href="lib/batik-svg-dom-1.7.jar" download="eager"/>
+        <jar href="lib/colt-1.2.0.jar" download="eager"/>
+        <jar href="lib/fop-0.94.jar" download="eager"/>
+        <jar href="lib/jung-samples-2.0.1.jar" download="eager"/>
+        <jar href="lib/serializer-2.7.1.jar" download="eager"/>
+        <jar href="lib/xml-apis-1.3.04.jar" download="eager"/>
+        <jar href="lib/avalon-framework-api-4.3.1.jar" download="eager"/>
+        <jar href="lib/batik-dom-1.7.jar" download="eager"/>
+        <jar href="lib/batik-svggen-1.7.jar" download="eager"/>
+        <jar href="lib/commons-beanutils-1.8.0.jar" download="eager"/>
+        <jar href="lib/handle-6.1.jar" download="eager"/>
+        <jar href="lib/jung-visualization-2.0.1.jar" download="eager"/>
+        <jar href="lib/slcshttps-0.2.jar" download="eager"/>
+        <jar href="lib/xml-apis-ext-1.3.04.jar" download="eager"/>
+        <jar href="lib/avalon-framework-impl-4.3.1.jar" download="eager"/>
+        <jar href="lib/batik-ext-1.7.jar" download="eager"/>
+        <jar href="lib/batik-swing-1.7.jar" download="eager"/>
+        <jar href="lib/commons-digester-2.0.jar" download="eager"/>
+        <jar href="lib/imdi-api-1.1.2.jar" download="eager"/>
+        <jar href="lib/junit-3.8.1.jar" download="eager"/>
+        <jar href="lib/stax-api-1.0.1.jar" download="eager"/>
+        <jar href="lib/xmlbeans-2.4.0.jar" download="eager"/>
+        <jar href="lib/basex-6.7.1.jar" download="eager"/>
+        <jar href="lib/batik-gui-util-1.7.jar" download="eager"/>
+        <jar href="lib/batik-transcoder-1.7.jar" download="eager"/>
+        <jar href="lib/commons-io-1.1.jar" download="eager"/>
+        <jar href="lib/jung-algorithms-2.0.1.jar" download="eager"/>
+        <jar href="lib/log4j-1.2.16.jar" download="eager"/>
+        <jar href="lib/typechecker-1.6.4.jar" download="eager"/>
+        <jar href="lib/xmlgraphics-commons-1.2.jar" download="eager"/>
+        <jar href="lib/batik-anim-1.7.jar" download="eager"/>
+        <jar href="lib/batik-gvt-1.7.jar" download="eager"/>
+        <jar href="lib/batik-util-1.7.jar" download="eager"/>
+        <jar href="lib/commons-logging-1.0.4.jar" download="eager"/>
+        <jar href="lib/jung-api-2.0.1.jar" download="eager"/>
+        <jar href="lib/mpi-util-1.0.0.jar" download="eager"/>
+        <jar href="lib/wstx-asl-3.2.6.jar" download="eager"/>
+        <jar href="lib/batik-awt-util-1.7.jar" download="eager"/>
+        <jar href="lib/batik-parser-1.7.jar" download="eager"/>
+        <jar href="lib/batik-xml-1.7.jar" download="eager"/>
+        <jar href="lib/concurrent-1.3.4.jar" download="eager"/>
+        <jar href="lib/jung-graph-impl-2.0.1.jar" download="eager"/>
+        <jar href="lib/saxon-8.7.jar" download="eager"/>
+        <jar href="lib/xalan-2.7.1.jar" download="eager"/>
+        <jar href="lib/batik-bridge-1.7.jar" download="eager"/>
+        <jar href="lib/batik-script-1.7.jar" download="eager"/>
+        <jar href="lib/collections-generic-4.01.jar" download="eager"/>
+        <jar href="lib/corpusstructure-api-1.7.3.jar" download="eager"/>
+        <jar href="lib/jung-io-2.0.1.jar" download="eager"/>
+        <jar href="lib/saxon-dom-8.7.jar" download="eager"/>
+        <jar href="lib/xercesImpl-2.9.0.jar" download="eager"/>
+        <!-- these prperties are now set in the main class<property name="apple.laf.useScreenMenuBar" value="true"/>
+        <property name="apple.awt.graphics.UseQuartz" value="true"/>
+        <property name="sun.swing.enableImprovedDragGesture" value="true"/>-->
+        <property name="nl.mpi.kinoath.webstartUpdateUrl" value="http://www.mpi.nl/tg/j2se/jnlp/kinoath/kinoath-testing.jnlp"/>
+    </resources>
+    <application-desc main-class="nl.mpi.kinnate.ui.MainFrame">
+      <!--<argument>-update_via_javaws</argument>-->
+    </application-desc>
+</jnlp>

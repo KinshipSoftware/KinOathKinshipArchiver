@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ann="http://www.clarin.eu">
+    <xs:element name="Gedcom">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Name" type="xs:string" ann:displaypriority="1"/>
+                <xs:element name="DATE" type="xs:string"/>
+                <xs:element name="InternalName" type="xs:string" ann:displaypriority="2"/>
+                <xs:element name="Type" type="xs:string" ann:displaypriority="3"/>
+                <xs:element name="PHON" type="xs:string"/>
+                <xs:element name="SEX" type="xs:string"/>
+                <xs:element name="Recipient" type="xs:string" />
+                <xs:element name="House" type="xs:string" />
+                <xs:element name="Street" type="xs:string" />
+                <xs:element name="Town" type="xs:string" />
+                <xs:element name="County" type="xs:string" minOccurs="0" />
+                <xs:element name="PostCode" type="xs:string" />
+                <xs:element name="SOUR" type="xs:string" />
+                <xs:element name="CORP" type="xs:string" />
+                <xs:element name="ADDR" type="xs:string" />
+                <xs:element name="ADR1" type="xs:string" />
+                <xs:element name="ADR2" type="xs:string" />
+                <xs:element name="CITY" type="xs:string" />
+                <xs:element name="STAE" type="xs:string" />
+                <xs:element name="POST" type="xs:string" />
+                <xs:element name="CTRY" type="xs:string" />
+                <xs:element name="PHON" type="xs:string" />
+                <xs:element name="DATA" type="xs:string" />
+                <xs:element name="COPR" type="xs:string" />
+                <xs:element name="SUBM" type="xs:string" />
+                <xs:element name="SUBN" type="xs:string" />
+                <xs:element name="DEST" type="xs:string" />
+                <xs:element name="TIME" type="xs:string" />
+                <xs:element name="VERS" type="xs:string" />
+                <xs:element name="FILE" type="xs:string" />
+                <xs:element name="GEDC" type="xs:string" />
+                <xs:element name="VERS" type="xs:string" />
+                <xs:element name="FORM" type="xs:string" />
+                <xs:element name="LANG" type="xs:string" />
+                <xs:element name="CHAR" type="xs:string" />
+                <xs:element name="NOTE" type="xs:string" />
+                <xs:element name="Country">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="FR" />
+                            <xs:enumeration value="DE" />
+                            <xs:enumeration value="ES" />
+                            <xs:enumeration value="UK" />
+                            <xs:enumeration value="US" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="Relation" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Link" type="xs:string" ann:displaypriority="1"/>
+                            <xs:element name="Type" type="xs:string" />
+                            <xs:element name="TargetName" type="xs:string" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+

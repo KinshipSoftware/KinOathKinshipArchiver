@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:dcr="http://www.isocat.org/ns/dcr"
+           xmlns:ann="http://www.clarin.eu"
+           xmlns:cmd="http://www.clarin.eu/cmd/"
+           targetNamespace="http://www.clarin.eu/cmd/"
+           elementFormDefault="qualified">
+    <xs:complexType name="UniqueIdentifier">
+        <xs:sequence>
+            <xs:choice minOccurs="1" maxOccurs="1">
+                <xs:element name="LocalIdentifier"/>
+                <xs:element name="PersistantIdentifier"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Kinnate">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Entity">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="UniqueIdentifier" type="cmd:UniqueIdentifier" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="Name" ann:displaypriority="1" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="DOB" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="Gender">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="male" ann:label="Male"/>
+                                        <xs:enumeration value="female" ann:label="Female"/>
+                                        <xs:enumeration value="unknown" ann:label="Unknown"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="Permissions">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="public" ann:label="public"/>
+                                        <xs:enumeration value="private" ann:label="private"/>
+                                        <xs:enumeration value="anonymised" ann:label="anonymised"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+<!--                            <xs:element name="ResourceLink" minOccurs="1" maxOccurs="1"/>-->
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Relation" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Link" type="xs:string" ann:displaypriority="1"/>
+                            <xs:element name="UniqueIdentifier" type="cmd:UniqueIdentifier" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="Type" type="xs:string"/>
+                            <xs:element name="TargetName" type="xs:string"/>
+                            <xs:element name="Permissions">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="public" ann:label="public"/>
+                                        <xs:enumeration value="private" ann:label="private"/>
+                                        <xs:enumeration value="anonymised" ann:label="anonymised"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="CorpusLink" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="CMDVersion" fixed="1.1" use="required"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+
