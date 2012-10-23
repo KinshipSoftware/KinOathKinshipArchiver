@@ -68,7 +68,7 @@ public class GedcomExport {
 
     public String getGedcomQuery() {
         return getQueryFunctions() + getHeader()
-                + "let $entitySection := for $kinnateNode in collection('nl-mpi-kinnate')/*:Kinnate\n"
+                + "let $entitySection := for $kinnateNode in collection('" + entityCollection.getDatabaseName() + "')/*:Kinnate\n"
                 + getIndividual()
                 + "return concat($headerString, string-join($entitySection))\n";
     }
