@@ -15,12 +15,16 @@
     <packaging>jar</packaging>
     <!--    Either use the snapshot version of manually enter the current build number. 
     The build number is only required when depending on the output in other projects or building to the server.-->
-    <version>${plugin.majorVersion}.${plugin.minorVersion}-${plugin.branch}-SNAPSHOT</version>
-    <!--<version>${plugin.majorVersion}.${plugin.minorVersion}.32730-${plugin.branch}</version>-->
+    <!--<version>${plugin.majorVersion}.${plugin.minorVersion}-${plugin.branch}-SNAPSHOT</version>-->
+    <version>${plugin.majorVersion}.${plugin.minorVersion}.33435-${plugin.branch}</version>
     <name>Export Plugin</name>
     <url>http://maven.apache.org</url>
     <build>
         <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>                
@@ -119,7 +123,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>plugins-core</artifactId>
-            <version>0.0.33389-pretesting</version>
+            <version>0.0.33656-pretesting</version>
         </dependency>        
     </dependencies>
     <repositories>
