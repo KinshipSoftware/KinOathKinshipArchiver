@@ -241,16 +241,21 @@
             <artifactId>pluginloader</artifactId>
             <version>0.0.33669-pretesting</version>
         </dependency>
-        <!-- <dependency>
-        <groupId>nl.mpi</groupId>
-        <artifactId>kinnate-plugins-export</artifactId>
-        <version>0.0.32730</version>
-        </dependency>-->
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>kinnate-plugins-export</artifactId>
+            <version>0.0.33435-pretesting</version>
+        </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
             <version>1.1.33727-pretesting</version>
         </dependency>
+        <!--        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>sampleplugins</artifactId>
+            <version>0.0.33654-pretesting</version>
+        </dependency>-->
     </dependencies>
     <repositories>
         <repository>
