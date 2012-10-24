@@ -92,31 +92,35 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.setEnableZoomInteractor(false);
         svgCanvas.addMouseWheelListener(new MouseWheelListener() {
             public void mouseWheelMoved(final MouseWheelEvent e) {
-                if (e.isShiftDown()) {
-                    UpdateManager updateManager = svgCanvas.getUpdateManager();
-                    if (updateManager != null) {
-                        updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
-                            public void run() {
-                                double scale = 1 - e.getUnitsToScroll() / 10.0;
-                                double tx = -e.getX() * (scale - 1);
-                                double ty = -e.getY() * (scale - 1);
+                UpdateManager updateManager = svgCanvas.getUpdateManager();
+                if (updateManager != null) {
+                    updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                        public void run() {
+                            double scale = 1 - e.getUnitsToScroll() / 10.0;
+                            double tx = -e.getX() * (scale - 1);
+                            double ty = -e.getY() * (scale - 1);
 //                                System.out.println("scale: " + scale);
 //                                System.out.println("scale: " + svgCanvas.getRenderingTransform().getScaleX());
-                                AffineTransform at = new AffineTransform();
+                            AffineTransform at = new AffineTransform();
+                            if (e.isAltDown()) {
                                 at.translate(tx, ty);
                                 at.scale(scale, scale);
-                                at.concatenate(svgCanvas.getRenderingTransform());
-//                                System.out.println("new scale: " + at.getScaleX());
-                                if (at.getScaleX() > 0.1) {
-                                    svgCanvas.setRenderingTransform(at);
-                                }
+                            } else if (e.isShiftDown()) {
+                                at.translate(tx, 0);
+                            } else {
+                                at.translate(0, ty);
                             }
-                        });
-                    }
-                } else {
-                    //  add a ToolTip or StatusBar to give hints "Hold shift + mouse wheel to zoom"
-                    GraphPanel.this.kinDiagramPanel.setStatusBarText("hint: Hold shift + mouse wheel to zoom");
+                            at.concatenate(svgCanvas.getRenderingTransform());
+//                                System.out.println("new scale: " + at.getScaleX());
+                            if (at.getScaleX() > 0.1) {
+                                svgCanvas.setRenderingTransform(at);
+                            }
+                        }
+                    });
                 }
+                e.consume();
+                //  show a ToolTip or StatusBar to give hints "Hold modifier + mouse wheel to zoom"
+                GraphPanel.this.kinDiagramPanel.setStatusBarText("hint: alt + mouse wheel to zoom; shift + mouse wheel to pan; mouse wheel to scroll.");
             }
         });
 //        svgCanvas.setEnableResetTransformInteractor(true);
