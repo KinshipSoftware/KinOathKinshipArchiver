@@ -150,8 +150,11 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <mainClass>nl.mpi.kinnate.ui.MainFrame</mainClass>
-                            <classpathPrefix>lib/</classpathPrefix>
+                            <classpathPrefix>lib/</classpathPrefix>                            
                         </manifest>
+                        <manifestEntries>
+                            <Class-Path>plugins/</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
@@ -241,11 +244,11 @@
             <artifactId>pluginloader</artifactId>
             <version>0.0.33672-stable</version>
         </dependency>
-        <!-- <dependency>
-        <groupId>nl.mpi</groupId>
-        <artifactId>kinnate-plugins-export</artifactId>
-        <version>0.0.32730</version>
-        </dependency>-->
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>kinnate-plugins-export</artifactId>
+            <version>0.0.33905-pretesting</version>
+        </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>

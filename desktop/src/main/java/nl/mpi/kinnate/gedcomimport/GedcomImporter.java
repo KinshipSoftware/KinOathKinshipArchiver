@@ -107,6 +107,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             appendToTaskOutput("End of file found");
                         } else {
                             // set the profile from the entity type
+                            // todo: this profile setting is failing because entities are created via links from other entities without the required information 
                             String typeString = lineStructure.getProfileForEntityType(profileId, ProfileRecord.getDefaultImportProfile().profileId);
                             currentEntity = getEntityDocument(createdNodes, typeString, lineStructure.getCurrentID(), importTranslator);
                             currentEntityType = lineStructure.entityType;
@@ -261,19 +262,21 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                         socialGroupRoleMap.get(socialGroupIdentifier).add(new SocialMemberElement(lineStructure.getCurrentName(), socialGroupMember));
                                     }
                                     // capture the custom types from .kinoath format export files
-                                    String customType = lineStructure.getCurrentName();
-                                    RelationType targetRelation = RelationType.other;
-                                    String dcrString = null;
                                     String currentName = lineStructure.getCurrentName();
+                                    String customType = null;
+                                    String dcrString = null;
+                                    RelationType targetRelation = RelationType.other;
                                     String[] currentNameParts = currentName.split(":");
-                                    if (currentNameParts.length == 3) {
-                                        try {
+                                    try {
+                                        if (currentNameParts.length > 0) {
                                             targetRelation = RelationType.valueOf(currentNameParts[0]);
-                                            customType = currentNameParts[1];
-                                            dcrString = currentNameParts[2];
-                                        } catch (IllegalArgumentException exception) {
-                                            appendToTaskOutput("Unsupported Relation Type: " + currentName);
                                         }
+                                    } catch (IllegalArgumentException exception) {
+                                        appendToTaskOutput("Unsupported Relation Type: " + currentName);
+                                    }
+                                    if (currentNameParts.length == 3) {
+                                        customType = currentNameParts[1];
+                                        dcrString = currentNameParts[2];
                                     }
                                     // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
                                     currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, lineStructure.getLineContents(), importTranslator).entityData, targetRelation, null, null, dcrString, customType);

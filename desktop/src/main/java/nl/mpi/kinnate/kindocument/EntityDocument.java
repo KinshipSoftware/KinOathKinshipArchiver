@@ -279,6 +279,26 @@ public class EntityDocument {
     public Node insertNode(String nodeName, String valueString) {
         ImportTranslator.TranslationElement translationElement = importTranslator.translate(nodeName, valueString);
         System.out.println("nodeName: " + translationElement.fieldName + " : " + translationElement.fieldValue);
+        // start: reuse existing nodes if possible
+        // if valueString is not empty then we should look for existing nodes at the current level, if the name matches and it is empty then reuse the node rather than adding a new one
+        if (!valueString.isEmpty()) {
+            Node currentNode = currentDomNode.getFirstChild();
+            while (currentNode != null) {
+                if (translationElement.fieldName.equals(currentNode.getLocalName())) {
+                    if (currentNode.getTextContent() == null || currentNode.getTextContent().length() == 0) {
+                        // put the value into this node
+                        currentNode.setTextContent(translationElement.fieldValue);
+                        return currentNode;
+                    }
+                    if (currentNode.getTextContent().equals(translationElement.fieldValue)) {
+                        // if the value already exists then do not add again
+                        return currentNode;
+                    }
+                }
+                currentNode = currentNode.getNextSibling();
+            }
+        }
+        // end: reuse existing nodes if possible
         Node valueElement = metadataDom.createElementNS("http://www.clarin.eu/cmd/", /* "cmd:" + */ translationElement.fieldName);
         valueElement.setTextContent(translationElement.fieldValue);
         currentDomNode.appendChild(valueElement);
