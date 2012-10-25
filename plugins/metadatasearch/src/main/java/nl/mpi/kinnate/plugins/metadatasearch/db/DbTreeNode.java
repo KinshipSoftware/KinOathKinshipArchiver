@@ -82,6 +82,9 @@ public class DbTreeNode extends AbstractDbTreeNode {
                 childList.add(childNode);
             }
         }
+//        if (childList.isEmpty()) {
+//            childList.add(new DbTreeNode("<no results found>"));
+//        }
         return childList;
     }
 

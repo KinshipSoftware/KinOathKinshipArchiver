@@ -6,8 +6,8 @@
     <artifactId>metedata-search</artifactId>
     <!--    Either use the snapshot version of manually enter the current build number. 
     The build number is only required when depending on the output in other projects or building to the server.-->
-    <version>${plugin.majorVersion}.${plugin.minorVersion}-${plugin.branch}-SNAPSHOT</version>
-    <!--<version>${plugin.majorVersion}.${plugin.minorVersion}.33422-${plugin.branch}</version>-->
+    <!--<version>${plugin.majorVersion}.${plugin.minorVersion}-${plugin.branch}-SNAPSHOT</version>-->
+    <version>${plugin.majorVersion}.${plugin.minorVersion}.33422-${plugin.branch}</version>
     <packaging>jar</packaging>
 
     <name>metedata-search</name>
@@ -86,7 +86,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>plugins-core</artifactId>
-            <version>0.0.33421-pretesting</version>
+            <version>0.0.33656-pretesting</version>
         </dependency>
         <dependency>
             <groupId>org.basex</groupId>

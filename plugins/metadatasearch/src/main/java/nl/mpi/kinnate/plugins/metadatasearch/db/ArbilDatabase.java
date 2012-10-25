@@ -160,7 +160,7 @@ public class ArbilDatabase {
         if (fieldType != null) {
             final String fieldNameString = fieldType.getFieldName();
             if (fieldNameString != null) {
-                fieldConstraint = "name() = '" + fieldNameString + "' and "; 
+                fieldConstraint = "name() = '" + fieldNameString + "' and ";
             }
         }
         return fieldConstraint;
@@ -348,10 +348,10 @@ public class ArbilDatabase {
 
     private String getPopulatedFieldNames(MetadataFileType fileType) {
         String typeConstraint = getTypeConstraint(fileType);
-        return  "let $allFieldNames := index:facets('ArbilDatabase')//element[text/@type = 'text']\n"
+        return "let $allFieldNames := index:facets('ArbilDatabase')//element[text/@type = 'text']\n"
                 + "return <MetadataFileType>\n"
                 + "<MetadataFileType><displayString>All Fields</displayString>"
-//                + "<RecordCount>{sum($allFieldNames/text/@count)}</RecordCount>\n"
+                //                + "<RecordCount>{sum($allFieldNames/text/@count)}</RecordCount>\n"
                 + "</MetadataFileType>\n"
                 //                + "for $nameString in distinct-values(\n"
                 //                + "for $entityNode in collection('" + databaseName + "')" + typeConstraint + "/descendant-or-self::*[count(*) = 0]\n"
@@ -481,6 +481,29 @@ public class ArbilDatabase {
                 + "<MetadataTreeNode>\n"
                 + "<FileUri>{base-uri($documentNode)}</FileUri>\n"
                 + "{\n"
+                /*
+                 * This query currently takes 18348.54 ms
+                 * the loop over the return set takes 15000 ms or so
+                 * With two search values and union it takes 13810.04ms
+                 * With two search values and union and one field name specified it takes 9086.76ms
+                 * 
+                 */
+                /*
+                 * 15041
+                 * <TreeNode>{
+                 for $fieldNode in collection('ArbilDatabase')//.[(text() contains text 'pu6') or (name() = 'Name' and text() contains text 'pu8')]
+                 let $documentFile := base-uri($fieldNode)
+                 group by $documentFile
+                 return
+                 <MetadataTreeNode>
+                 <FileUri>{$documentFile}</FileUri>
+                 {
+                 for $entityNode in $fieldNode
+                 return <FileUriPath>{path($entityNode)}</FileUriPath>
+                 }
+                 </MetadataTreeNode>
+                 }</TreeNode>
+                 */
                 + "for $entityNode in $documentNode//*[");
         boolean firstConstraint = true;
         for (SearchParameters searchParameters : searchParametersList) {
@@ -538,7 +561,6 @@ public class ArbilDatabase {
 //        final DbTreeNode metadataTypesString = getDbTreeNode(queryStringBuilder.toString());
 //        return metadataTypesString;
 //    }
-
     public MetadataFileType[] getPathMetadataTypes(MetadataFileType metadataFileType) {
         final String queryString = getPopulatedPaths();
         return getMetadataTypes(queryString);
