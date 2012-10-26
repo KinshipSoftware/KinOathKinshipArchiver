@@ -152,9 +152,6 @@
                             <mainClass>nl.mpi.kinnate.ui.MainFrame</mainClass>
                             <classpathPrefix>lib/</classpathPrefix>                            
                         </manifest>
-                        <manifestEntries>
-                            <Class-Path>plugins/</Class-Path>
-                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
