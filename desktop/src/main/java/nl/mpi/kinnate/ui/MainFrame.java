@@ -47,7 +47,7 @@ public class MainFrame extends javax.swing.JFrame {
                 final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
                 final KinnateArbilInjector injector = new KinnateArbilInjector();
                 injector.injectHandlers(versionManager);
-                AbstractDiagramManager abstractDiagramManager;
+                final AbstractDiagramManager abstractDiagramManager;
 
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
@@ -59,14 +59,19 @@ public class MainFrame extends javax.swing.JFrame {
                 ////////////////////////////////////////
                 // check for old data directories 1-0 and offer the user to export all the old data and import into the new version IF no entities exist in the new version, the user can always use the export plugin at a later date
                 // start handle any migration requirements
-                File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration();
-                if (oldAppExportFile != null) {
-                    try {
-                        abstractDiagramManager.openImportPanel(oldAppExportFile, null);
-                    } catch (ImportException exception1) {
-                        injector.getWindowManager().addMessageDialogToQueue(exception1.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import File");
+                new Thread() {
+                    @Override
+                    public void run() {
+                        File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration();
+                        if (oldAppExportFile != null) {
+                            try {
+                                abstractDiagramManager.openImportPanel(oldAppExportFile, null);
+                            } catch (ImportException exception1) {
+                                injector.getWindowManager().addMessageDialogToQueue(exception1.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import File");
+                            }
+                        }
                     }
-                }
+                }.start();
                 // end handle any migration requirements
                 ////////////////////////////////////////
 
