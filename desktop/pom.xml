@@ -9,7 +9,7 @@
     The build number is only required when depending on the output in other projects or building to the server.-->
     <version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.33502-${application.branch}</version>-->
-    <name>Kinnate</name>
+    <name>KinOath 1-2</name>
     <url>http://maven.apache.org</url>
     <organization> 
         <name>The Language Archive</name> 
@@ -22,7 +22,7 @@
     <properties>
         <output.jarname>${project.build.finalName}</output.jarname>
         <application.majorVersion>1</application.majorVersion> 
-        <application.minorVersion>1</application.minorVersion> 
+        <application.minorVersion>2</application.minorVersion> 
         <application.branch>pretesting</application.branch> 
         <application.title>KinOath Kinship Archiver (pretesting)</application.title>
         <output.directory>${project.build.directory}</output.directory>
@@ -239,13 +239,13 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>pluginloader</artifactId>
-            <version>0.1.33990-pretesting</version>
+            <version>0.1.34202-pretesting</version>
         </dependency>
-<!--        <dependency>
+        <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinnate-plugins-export</artifactId>
-            <version>0.0.33986-pretesting</version>
-        </dependency>-->
+            <version>0.2.34241-pretesting</version>
+        </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
@@ -255,6 +255,11 @@
             <groupId>nl.mpi</groupId>
             <artifactId>sampleplugins</artifactId>
             <version>0.0.33654-pretesting</version>
+        </dependency>-->
+<!--        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>arbil-commons</artifactId>
+            <version>0.2.34219-pretesting</version>
         </dependency>-->
     </dependencies>
     <repositories>

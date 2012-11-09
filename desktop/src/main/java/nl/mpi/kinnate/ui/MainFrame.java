@@ -1,9 +1,13 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.Rectangle;
+import java.io.File;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.KinnateArbilInjector;
+import nl.mpi.kinnate.gedcomimport.ImportException;
+import nl.mpi.kinnate.plugins.export.MigrationWizard;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
 
@@ -48,10 +52,24 @@ public class MainFrame extends javax.swing.JFrame {
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
                 abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), injector.getSessionStorage(), injector.getDataNodeLoader(), injector.getTreeHelper(), injector.getEntityCollection());
-                abstractDiagramManager.newDiagram(new Rectangle(0,0,640, 480));
+                abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480));
                 abstractDiagramManager.createApplicationWindow();
-
+                
                 injector.getWindowManager().setMessagesCanBeShown(true);
+                ////////////////////////////////////////
+                // check for old data directories 1-0 and offer the user to export all the old data and import into the new version IF no entities exist in the new version, the user can always use the export plugin at a later date
+                // start handle any migration requirements
+                File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration();
+                if (oldAppExportFile != null) {
+                    try {
+                        abstractDiagramManager.openImportPanel(oldAppExportFile, null);
+                    } catch (ImportException exception1) {
+                        injector.getWindowManager().addMessageDialogToQueue(exception1.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import File");
+                    }
+                }
+                // end handle any migration requirements
+                ////////////////////////////////////////
+
 //	if (arbilMenuBar.checkNewVersionAtStartCheckBoxMenuItem.isSelected()) {
                 // todo: Ticket #1066 add the check for updates and check now menu items
                 versionManager.checkForUpdate();
