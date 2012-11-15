@@ -228,6 +228,16 @@
             <artifactId>arbil</artifactId>
             <!-- when changing the Arbil version make sure that the JNLP dependencies are also updated -->
             <version>2.5.33430-pretesting</version>
+<exclusions>
+        <exclusion>  
+          <groupId>nl.mpi</groupId>
+          <artifactId>arbil-help</artifactId>
+        </exclusion>
+        <exclusion> 
+          <groupId>nl.mpi</groupId>
+          <artifactId>plugins-core</artifactId>
+        </exclusion>
+      </exclusions> 
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
