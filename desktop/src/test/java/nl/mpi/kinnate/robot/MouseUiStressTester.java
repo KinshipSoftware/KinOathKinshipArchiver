@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
@@ -36,6 +37,7 @@ public class MouseUiStressTester {
         applicationCenterX = diagramComponent.getX() + diagramComponent.getWidth() / 2;
         applicationCenterY = diagramComponent.getY() + diagramComponent.getHeight() / 2;
         robot = new Robot();
+        diagramComponent.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     public void openContextMenu() {
@@ -76,6 +78,17 @@ public class MouseUiStressTester {
         robot.delay(200);
     }
 
+    public void useAddRelationMenu() {
+        robot.mouseMove(applicationCenterX + 20, applicationCenterY + 110);
+        robot.delay(200);
+        robot.mouseMove(applicationCenterX + 270, applicationCenterY + 130);
+        robot.delay(200);
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.delay(200);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+        robot.delay(200);
+    }
+
     public void dragDiagramAcross(int xDistance, int yDistance) {
         final int startX = applicationCenterX - xDistance / 2;
         final int startY = applicationCenterY - yDistance / 2;
@@ -93,8 +106,19 @@ public class MouseUiStressTester {
         robot.delay(200);
     }
 
-    public void waitForEntityAddProcess() {
+    public void waitForEntityProcess() {
         robot.delay(2000);
+    }
+
+    public void selectAll() {
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.delay(200);
+        robot.keyPress(KeyEvent.VK_A);
+        robot.delay(200);
+        robot.keyRelease(KeyEvent.VK_A);
+        robot.delay(200);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        robot.delay(200);
     }
 
     static public void main(String[] args) {
@@ -105,7 +129,7 @@ public class MouseUiStressTester {
                 public void run() {
                     mouseUiStressTester.openContextMenu();
                     mouseUiStressTester.useAddMenu();
-                    mouseUiStressTester.waitForEntityAddProcess();
+                    mouseUiStressTester.waitForEntityProcess();
                     mouseUiStressTester.dragDiagramAcross(100, 100);
                     mouseUiStressTester.dragDiagramAcross(100, 100);
                     mouseUiStressTester.dragDiagramAcross(100, 100);
@@ -115,8 +139,13 @@ public class MouseUiStressTester {
                     for (int entityCount = 0; entityCount < 10000; entityCount++) {
                         mouseUiStressTester.openContextMenu();
                         mouseUiStressTester.useAddMenu();
-                        mouseUiStressTester.waitForEntityAddProcess();
+                        mouseUiStressTester.waitForEntityProcess();
                         mouseUiStressTester.dragDiagramAcross(-10, 0);
+                        // add a relation to all entities
+                        mouseUiStressTester.selectAll();
+                        mouseUiStressTester.openContextMenu();
+                        mouseUiStressTester.useAddRelationMenu();
+                        mouseUiStressTester.waitForEntityProcess();
                     }
                 }
             }.start();
