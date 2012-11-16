@@ -76,11 +76,18 @@ public class MouseUiStressTester {
         robot.delay(200);
     }
 
-    public void dragDiagramAcross() {
-        robot.mouseMove(applicationCenterX + 100, applicationCenterY);
+    public void dragDiagramAcross(int xDistance, int yDistance) {
+        final int startX = applicationCenterX - xDistance / 2;
+        final int startY = applicationCenterY - yDistance / 2;
+        robot.mouseMove(startX, startY);
+        robot.delay(200);
         robot.mousePress(InputEvent.BUTTON1_MASK);
         robot.delay(200);
-        robot.mouseMove(applicationCenterX, applicationCenterY);
+        for (int divisorValue = 0; divisorValue < 100; divisorValue++) {
+//        for (int dragPos = -distance; dragPos < distance; dragPos += 10) {
+//            robot.mouseMove(applicationCenterX + dragPos, applicationCenterY + dragPos);
+            robot.mouseMove(startX + xDistance / 100 * divisorValue, startY + xDistance / 100 * divisorValue);
+        }
         robot.delay(200);
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
         robot.delay(200);
@@ -99,7 +106,18 @@ public class MouseUiStressTester {
                     mouseUiStressTester.openContextMenu();
                     mouseUiStressTester.useAddMenu();
                     mouseUiStressTester.waitForEntityAddProcess();
-                    mouseUiStressTester.dragDiagramAcross();
+                    mouseUiStressTester.dragDiagramAcross(100, 100);
+                    mouseUiStressTester.dragDiagramAcross(100, 100);
+                    mouseUiStressTester.dragDiagramAcross(100, 100);
+                    mouseUiStressTester.dragDiagramAcross(100, 100);
+                    mouseUiStressTester.dragDiagramAcross(100, 100);
+                    mouseUiStressTester.dragDiagramAcross(100, 100);
+                    for (int entityCount = 0; entityCount < 10000; entityCount++) {
+                        mouseUiStressTester.openContextMenu();
+                        mouseUiStressTester.useAddMenu();
+                        mouseUiStressTester.waitForEntityAddProcess();
+                        mouseUiStressTester.dragDiagramAcross(-10, 0);
+                    }
                 }
             }.start();
         } catch (AWTException exception) {
