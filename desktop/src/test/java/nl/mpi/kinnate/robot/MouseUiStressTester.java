@@ -21,9 +21,9 @@ public class MouseUiStressTester {
     final private JFrame diagramComponent;
     final private int applicationCenterX;
     final private int applicationCenterY;
-    private Robot robot;
+    final private Robot robot;
 
-    public MouseUiStressTester() {
+    public MouseUiStressTester() throws AWTException {
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
         final KinnateArbilInjector injector = new KinnateArbilInjector();
         injector.injectHandlers(versionManager);
@@ -35,11 +35,7 @@ public class MouseUiStressTester {
         diagramComponent = (JFrame) abstractDiagramManager.getAllDiagrams()[0];
         applicationCenterX = diagramComponent.getX() + diagramComponent.getWidth() / 2;
         applicationCenterY = diagramComponent.getY() + diagramComponent.getHeight() / 2;
-        try {
-            robot = new Robot();
-        } catch (AWTException exception) {
-            System.out.println("Failed to start robot: " + exception.getMessage());
-        }
+        robot = new Robot();
     }
 
     public void openContextMenu() {
@@ -95,15 +91,19 @@ public class MouseUiStressTester {
     }
 
     static public void main(String[] args) {
-        final MouseUiStressTester mouseUiStressTester = new MouseUiStressTester();
-        new Thread() {
-            @Override
-            public void run() {
-                mouseUiStressTester.openContextMenu();
-                mouseUiStressTester.useAddMenu();
-                mouseUiStressTester.waitForEntityAddProcess();
-                mouseUiStressTester.dragDiagramAcross();
-            }
-        }.start();
+        try {
+            final MouseUiStressTester mouseUiStressTester = new MouseUiStressTester();
+            new Thread() {
+                @Override
+                public void run() {
+                    mouseUiStressTester.openContextMenu();
+                    mouseUiStressTester.useAddMenu();
+                    mouseUiStressTester.waitForEntityAddProcess();
+                    mouseUiStressTester.dragDiagramAcross();
+                }
+            }.start();
+        } catch (AWTException exception) {
+            System.out.println("Failed to start robot: " + exception.getMessage());
+        }
     }
 }
