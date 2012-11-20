@@ -9,7 +9,7 @@
     The build number is only required when depending on the output in other projects or building to the server.-->
     <!--<version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>-->
     <version>${application.majorVersion}.${application.minorVersion}.34295-${application.branch}</version>
-    <name>Kinnate</name>
+    <name>Kinnate 1-1</name>
     <url>http://maven.apache.org</url>
     <organization> 
         <name>The Language Archive</name> 
@@ -23,8 +23,8 @@
         <output.jarname>${project.build.finalName}</output.jarname>
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>1</application.minorVersion> 
-        <application.branch>testing</application.branch> 
-        <application.title>KinOath Kinship Archiver (testing)</application.title>
+        <application.branch>stable</application.branch> 
+        <application.title>KinOath Kinship Archiver</application.title>
         <output.directory>${project.build.directory}</output.directory>
     </properties>
     <build>
@@ -228,16 +228,16 @@
             <artifactId>arbil</artifactId>
             <!-- when changing the Arbil version make sure that the JNLP dependencies are also updated -->
             <version>2.5.33430-pretesting</version>
-<exclusions>
-        <exclusion>  
-          <groupId>nl.mpi</groupId>
-          <artifactId>arbil-help</artifactId>
-        </exclusion>
-        <exclusion> 
-          <groupId>nl.mpi</groupId>
-          <artifactId>plugins-core</artifactId>
-        </exclusion>
-      </exclusions> 
+            <exclusions>
+                <exclusion>  
+                    <groupId>nl.mpi</groupId>
+                    <artifactId>arbil-help</artifactId>
+                </exclusion>
+                <exclusion> 
+                    <groupId>nl.mpi</groupId>
+                    <artifactId>plugins-core</artifactId>
+                </exclusion>
+            </exclusions> 
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
@@ -252,17 +252,17 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>pluginloader</artifactId>
-            <version>0.0.33672-stable</version>
+            <version>0.1.34174-stable</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinnate-plugins-export</artifactId>
-            <version>0.2.34286-testing</version>
+            <version>0.2.34382-stable</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.1.33800-testing</version>
+            <version>1.1.33726-stable</version>
         </dependency>
     </dependencies>
     <repositories>

@@ -1,6 +1,7 @@
 package nl.mpi.kinnate.ui.menu;
 
 import java.awt.Component;
+import java.net.URL;
 import javax.swing.JMenuBar;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -24,7 +25,7 @@ public class MainMenuBar extends JMenuBar {
         this.add(new KinTermsMenu(abstractDiagramManager, parentComponent));
         this.add(new ArchiveMenu(abstractDiagramManager, parentComponent));
         this.add(new DiagramPanelsMenu(abstractDiagramManager, parentComponent));
-        this.add(new PluginMenu(PluginService.getInstance(), new KinOathPluginManager(abstractDiagramManager, dialogHandler, parentComponent), false));
+        this.add(new PluginMenu(new PluginService(new URL[0]), new KinOathPluginManager(abstractDiagramManager, dialogHandler, parentComponent), false));
         this.add(new WindowMenu(abstractDiagramManager, parentComponent));
         this.add(new HelpMenu(abstractDiagramManager, dialogHandler, sessionStorage, versionManager));
     }
