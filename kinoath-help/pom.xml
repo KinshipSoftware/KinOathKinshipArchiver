@@ -170,9 +170,9 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>nl.mpi</groupId>
             <artifactId>plugins-core</artifactId>
-            <version>1.0.34174-stable</version>
+            <version>1.0.34524-stable</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
