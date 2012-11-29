@@ -172,7 +172,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>plugins-core</artifactId>
-            <version>0.0.33672-stable</version>
+            <version>1.0.34174-stable</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

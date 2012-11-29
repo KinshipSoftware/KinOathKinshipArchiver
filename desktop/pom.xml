@@ -8,7 +8,7 @@
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
     <!--<version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>-->
-    <version>${application.majorVersion}.${application.minorVersion}.34295-${application.branch}</version>
+    <version>${application.majorVersion}.${application.minorVersion}.34385-${application.branch}</version>
     <name>Kinnate 1-1</name>
     <url>http://maven.apache.org</url>
     <organization> 
@@ -56,7 +56,7 @@
                 <configuration> 
                     <entries> 
                         <entry> 
-                            <path>${basedir}/src/main</path> 
+                            <path>${basedir}/src</path> 
                             <!-- this will populate "application.version.revision" --> 
                             <prefix>application.version</prefix> 
                         </entry> 
@@ -252,7 +252,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>pluginloader</artifactId>
-            <version>0.1.34174-stable</version>
+            <version>1.0.34174-stable</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
