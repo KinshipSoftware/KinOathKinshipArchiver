@@ -252,7 +252,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>pluginloader</artifactId>
-            <version>1.0.34174-stable</version>
+            <version>1.0.33990-stable</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
