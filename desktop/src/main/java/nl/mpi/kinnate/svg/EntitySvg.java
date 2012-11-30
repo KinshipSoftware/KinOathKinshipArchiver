@@ -444,24 +444,22 @@ public class EntitySvg {
             shiftXscaled = shiftXfloat * scaleFactor;
             shiftYscaled = shiftYfloat * scaleFactor;
             Point entityPosition = entityPositions.get(entityId);
-            float updatedPositionX = (float) (entityPosition.x + shiftXscaled + remainderAfterSnapX);
-            float updatedPositionY = entityPosition.y;
-            if (allowYshift) {
-                updatedPositionY = (float) (updatedPositionY + shiftYscaled + remainderAfterSnapY);
-            }
+            final float updatedPositionX = entityPosition.x + (float) shiftXscaled + remainderAfterSnapX;
+            final float updatedPositionY = entityPosition.y + (float) shiftYscaled + remainderAfterSnapY;
+            int snappedPositionX;
+            int snappedPositionY = entityPosition.y;
+//            if (allowYshift) {
+//                snappedPositionY = (int) (updatedPositionY + shiftYscaled);
+//            }
             if (snapToGrid) {
-                double updatedSnapPositionX = Math.round(updatedPositionX / 50) * 50; // limit movement to the grid
-                remainderAfterSnapX = updatedPositionX - (float) updatedSnapPositionX;
-                updatedPositionX = (float) updatedSnapPositionX;
+                snappedPositionX = Math.round(updatedPositionX / 50) * 50; // limit movement to the grid
                 if (allowYshift) {
-                    float updatedSnapPositionY = Math.round(updatedPositionY / 50) * 50; // limit movement to the grid    
-                    remainderAfterSnapY = updatedPositionY - (float) updatedSnapPositionY;
-                    updatedPositionY = updatedSnapPositionY;
+                    snappedPositionY = Math.round(updatedPositionY / 50) * 50; // limit movement to the grid                        
                 }
             } else {
-                updatedPositionX = (int) updatedPositionX;  // prevent uncorrectable but visible variations in the position of entities to each other
+                snappedPositionX = Math.round(updatedPositionX);  // prevent uncorrectable but visible variations in the position of entities to each other
                 if (allowYshift) {
-                    updatedPositionY = (int) updatedPositionY;
+                    snappedPositionY = Math.round(updatedPositionY);
                 }
             }
             // check if the moved entity is over another, if it is then shift on the x axis
@@ -469,18 +467,24 @@ public class EntitySvg {
             while (collisionFound) {
                 collisionFound = false;
                 for (Point currentEntity : entityPositions.values()) {
-                    if (!currentEntity.equals(entityPosition)) {
-                        if (updatedPositionY > currentEntity.y - EntitySvg.symbolSize && updatedPositionY < currentEntity.y + EntitySvg.symbolSize) {
-                            if (updatedPositionX > currentEntity.x - EntitySvg.symbolSize && updatedPositionX <= currentEntity.x) {
-//                                System.out.println("shift left");
-                                collisionFound = true;
-                                updatedPositionX = currentEntity.x - EntitySvg.symbolSize;
-                            } else if (updatedPositionX < currentEntity.x + EntitySvg.symbolSize && updatedPositionX >= currentEntity.x) {
-//                                System.out.println("shift right");
-                                collisionFound = true;
-                                updatedPositionX = currentEntity.x + EntitySvg.symbolSize;
-                            }
+                    if (currentEntity != entityPosition) { // if looped over the point is not the point that is being moved
+                        if (currentEntity.distance(snappedPositionX, snappedPositionY) < EntitySvg.symbolSize) {
+                            collisionFound = true;
+                            // keep it simple and only shift left, so that a loop of bouncing left and right cannot occur
+                            snappedPositionX = snappedPositionX - EntitySvg.symbolSize;
                         }
+//                        // if the Y axis overlaps then check the X axis
+//                        if (updatedPositionY > currentEntity.y - EntitySvg.symbolSize && updatedPositionY < currentEntity.y + EntitySvg.symbolSize) {
+//                            if (updatedPositionX > currentEntity.x - EntitySvg.symbolSize && updatedPositionX <= currentEntity.x) {
+////                                System.out.println("shift left");
+//                                collisionFound = true;
+//                                snappedPositionX = currentEntity.x - EntitySvg.symbolSize;
+//                            } else if (updatedPositionX < currentEntity.x + EntitySvg.symbolSize && updatedPositionX >= currentEntity.x) {
+////                                System.out.println("shift right");
+//                                collisionFound = true;
+//                                snappedPositionX = currentEntity.x + EntitySvg.symbolSize;
+//                            }
+//                        }
                     }
                 }
             }
@@ -495,14 +499,16 @@ public class EntitySvg {
 //            entityPositions.put(entityId, new float[]{(float) at.getTranslateX(), (float) at.getTranslateY()});
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(at.getTranslateX()) + ", " + String.valueOf(at.getTranslateY()) + ")");
             // store the changed location as a preferred location
-            final Point updatedLocationPoint = new Point((int) updatedPositionX, (int) updatedPositionY);
+            final Point updatedLocationPoint = new Point((int) snappedPositionX, (int) snappedPositionY);
             entityPositions.put(entityId, updatedLocationPoint);
             graphPanel.dataStoreSvg.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{entityId}, updatedLocationPoint);
-            final String translateString = "translate(" + String.valueOf(updatedPositionX) + ", " + String.valueOf(updatedPositionY) + ")";
+            final String translateString = "translate(" + String.valueOf(updatedLocationPoint.x) + ", " + String.valueOf(updatedLocationPoint.y) + ")";
             ((Element) entitySymbol).setAttribute("transform", translateString);
             if (highlightGroup != null) {
                 highlightGroup.setAttribute("transform", translateString);
             }
+            remainderAfterSnapX = updatedPositionX - updatedLocationPoint.x;
+            remainderAfterSnapY = updatedPositionY - updatedLocationPoint.y;
         }
         return new float[]{remainderAfterSnapX, remainderAfterSnapY};
     }
