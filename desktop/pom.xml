@@ -20,6 +20,8 @@
         <url>https://trac.mpi.nl/wiki/KinOath</url>
     </scm>
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <netbeans.hint.license>gpl20</netbeans.hint.license>
         <output.jarname>${project.build.finalName}</output.jarname>
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>2</application.minorVersion> 
@@ -56,7 +58,7 @@
                 <configuration> 
                     <entries> 
                         <entry> 
-                            <path>${basedir}/src/main</path> 
+                            <path>${basedir}/src</path> 
                             <!-- this will populate "application.version.revision" --> 
                             <prefix>application.version</prefix> 
                         </entry> 
@@ -223,8 +225,8 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>arbil</artifactId>
-            <!-- when changing the Arbil version make sure that the JNLP dependencies are also updated -->
-            <version>2.5.33430-pretesting</version>
+            <!--when changing the Arbil version make sure that the JNLP dependencies are also updated--> 
+            <version>2.5.33992-pretesting</version>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
@@ -256,11 +258,11 @@
             <artifactId>sampleplugins</artifactId>
             <version>0.0.33654-pretesting</version>
         </dependency>-->
-<!--        <dependency>
+        <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>arbil-commons</artifactId>
             <version>0.2.34219-pretesting</version>
-        </dependency>-->
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
