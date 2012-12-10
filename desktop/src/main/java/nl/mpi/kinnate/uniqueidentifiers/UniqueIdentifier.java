@@ -1,11 +1,13 @@
 package nl.mpi.kinnate.uniqueidentifiers;
 
+import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 import nl.mpi.arbil.data.ArbilField;
+import nl.mpi.arbil.plugin.PluginSessionStorage;
 
 /**
  * Document : UniqueIdentifier Created on : Jul 21, 2011, 3:23:17 PM
@@ -138,5 +140,9 @@ public class UniqueIdentifier {
     @Override
     public String toString() {
         throw new UnsupportedOperationException();
+    }
+
+    public File getFileInProject(PluginSessionStorage sessionStorage) {
+        return new File(new File(sessionStorage.getProjectWorkingDirectory(), identifierString.substring(0, 3)), identifierString + ".kmdi");
     }
 }
