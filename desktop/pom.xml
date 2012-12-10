@@ -9,7 +9,12 @@
     The build number is only required when depending on the output in other projects or building to the server.-->
     <version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.33502-${application.branch}</version>-->
-    <name>KinOath 1-2</name>
+    <name>KinOath 1.2</name>
+    <parent>
+        <groupId>nl.mpi</groupId>
+        <artifactId>kinoath-parent</artifactId>
+        <version>1.0</version>
+    </parent> 
     <url>http://maven.apache.org</url>
     <organization> 
         <name>The Language Archive</name> 
@@ -20,8 +25,6 @@
         <url>https://trac.mpi.nl/wiki/KinOath</url>
     </scm>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <netbeans.hint.license>gpl20</netbeans.hint.license>
         <output.jarname>${project.build.finalName}</output.jarname>
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>2</application.minorVersion> 
@@ -65,6 +68,47 @@
                     </entries> 
                 </configuration> 
             </plugin>
+            <plugin>
+                <!--                                		 
+		    License plugin checks for presence of license header in all source files (with some exceptions, see excludes below).
+		    You can use this plugin to actually insert or fix the license headers by running maven with the following goal:
+
+		    mvn license:format
+
+                    For more info, see <http://mathieu.carbou.free.fr/p/maven-license-plugin/>.
+                -->
+            <groupId>com.mycila.maven-license-plugin</groupId>
+            <artifactId>maven-license-plugin</artifactId>
+            <version>1.9.0</version> 
+            <configuration>
+                <header>${project.parent.basedir}/license-header.txt</header>
+                <strictCheck>false</strictCheck>
+                <properties>
+                    <year>${application.license.copyrightYear}</year>
+                    <organization>${project.organization.name}</organization>
+                </properties>
+                <mapping>
+                    <svg>XML_STYLE</svg>
+                    <imdi>XML_STYLE</imdi>
+                    <cmdi>XML_STYLE</cmdi>
+                </mapping>
+                <excludes>
+                    <exclude>nbactions.xml</exclude>
+                    <exclude>nb-configuration.xml</exclude>
+                    <exclude>**/*.txt</exclude>
+                    <exclude>**/*.icns</exclude>
+                    <exclude>**/*.php</exclude>
+                    <exclude>installer/**</exclude>
+                </excludes>
+            </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>check</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
 <!--            <plugin> this plugin seems not to be properly supported
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>deb-maven-plugin</artifactId>
