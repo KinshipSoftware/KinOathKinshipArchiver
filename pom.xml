@@ -4,18 +4,22 @@
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.mpi</groupId>
-    <artifactId>kinoath.parent</artifactId>
-    <name>kinoath_parent</name>
+    <artifactId>kinoath-parent</artifactId>
+    <name>KinOath Parent 1.2</name>
     <packaging>pom</packaging>
     <version>1.0</version>
     <description>Parent pom for KinOath Kinship Archiver</description>
     <modules>
         <module>desktop</module>
         <module>kinoath-help</module>
-        <module>plugins-core</module>
-        <module>rest</module>
+        <!--        <module>rest</module>-->
     </modules>
 
+    <organization> 
+        <name>Max Planck Institute for Psycholinguistics</name> 
+        <url>http://tla.mpi.nl/tools/tla-tools</url>
+    </organization>
+    
     <scm>
         <developerConnection>scm:svn:https://svn.mpi.nl/LAT/Kinnate/trunk/</developerConnection>
         <url>https://trac.mpi.nl/wiki/KinOath</url>
@@ -23,25 +27,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<!--        <netbeans.hint.license>http://www.gnu.org/licenses/gpl-2.0.html</netbeans.hint.license>-->
+        <!--<netbeans.hint.license>http://www.gnu.org/licenses/gpl-2.0.html</netbeans.hint.license>-->
+        <netbeans.hint.license>gpl20</netbeans.hint.license>
     </properties>
-<!--    <plugins>
-        <plugin>
-            <groupId>com.mycila.maven-license-plugin</groupId>
-            <artifactId>maven-license-plugin</artifactId>
-            <configuration>
-                <header>license/header.txt</header>
-            </configuration>
-            <executions>
-                <execution>
-                    <phase>test</phase>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>-->
+        
     <reporting>
         <plugins>
             <plugin>
@@ -57,37 +46,68 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8.1</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.1</version>
                 <configuration>
                     <findbugsXmlOutput>True</findbugsXmlOutput>
                     <threshold>Normal</threshold>
                     <effort>Min</effort>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>javancss-maven-plugin</artifactId>
-            </plugin>
         </plugins>
     </reporting>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    
+    <repositories>
+        <repository>
+            <id>MPI</id>
+            <name>MPI LAT Repository</name>
+            <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>MPI</id>
+            <name>MPI LAT Repository</name>
+            <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>mc-release</id>
+            <name>Local Maven repository of releases</name>
+            <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    
+    <distributionManagement>
+        <snapshotRepository>
+            <id>MPI-Snapshots</id>
+            <url>https://lux15.mpi.nl/nexus/content/repositories/MPI-Snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>MPI</id>
+            <name>MPI Repository</name>
+            <url>https://lux15.mpi.nl/nexus/content/repositories/MPI</url>
+        </repository>
+    </distributionManagement>
 </project>
-
