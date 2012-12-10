@@ -15,9 +15,9 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Document;
 
 /**
- *  Document   : RelationLinker
- *  Created on : Apr 12, 2011, 1:45:01 PM
- *  Author     : Peter Withers
+ * Created on : Apr 12, 2011, 1:45:01 PM 
+ * 
+ * @author Peter Withers
  */
 public class RelationLinker extends DocumentLoader {
 

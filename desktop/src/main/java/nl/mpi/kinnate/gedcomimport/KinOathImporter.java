@@ -7,9 +7,9 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
 
 /**
- * Document : KinOathImporter
  * Created on : Aug 10, 2012, 3:44:51 PM
- * Author : Peter Withers
+ *
+ * @author Peter Withers
  */
 public class KinOathImporter extends GedcomImporter {
 

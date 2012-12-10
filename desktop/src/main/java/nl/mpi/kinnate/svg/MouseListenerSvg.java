@@ -3,7 +3,6 @@ package nl.mpi.kinnate.svg;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +45,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     private UniqueIdentifier entityToToggle = null;
     private HashMap<UniqueIdentifier, SvgElementEditor> shownGraphicsEditors;
     private MessageDialogHandler dialogHandler;
-    private SessionStorage sessionStorage;
+    final private SessionStorage sessionStorage;
     private EntityCollection entityCollection;
 
     public enum ActionCode {
@@ -184,8 +183,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                             Float.valueOf(currentDraggedElement.getAttribute("cy")) - yTranslate,
                             ((DOMMouseEvent) evt).getClientX(),
                             ((DOMMouseEvent) evt).getClientY(),
-                            scaleFactor
-                            );
+                            scaleFactor);
                 } else {
                     RelationTypeDefinition customTypeDefinition = null;
                     DataTypes.RelationType relationType = null;
@@ -210,8 +208,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                             Float.valueOf(currentDraggedElement.getAttribute("cy")) - yTranslate,
                             ((DOMMouseEvent) evt).getClientX(),
                             ((DOMMouseEvent) evt).getClientY(),
-                            scaleFactor
-                            );
+                            scaleFactor);
                 }
             }
         } else {

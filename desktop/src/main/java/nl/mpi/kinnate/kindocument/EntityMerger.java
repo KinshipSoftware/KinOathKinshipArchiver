@@ -12,9 +12,9 @@ import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : EntityMerger
  * Created on : Aug 29, 2011, 3:47:29 PM
- * Author : Peter Withers
+ *
+ * @author Peter Withers
  */
 public class EntityMerger extends DocumentLoader {
 

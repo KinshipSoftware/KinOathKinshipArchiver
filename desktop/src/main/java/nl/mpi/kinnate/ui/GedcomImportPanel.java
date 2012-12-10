@@ -40,9 +40,9 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : GedcomImportPanel
  * Created on : Mar 14, 2011, 8:38:36 AM
- * Author : Peter Withers
+ *
+ * @author Peter Withers
  */
 public class GedcomImportPanel extends JPanel {
 
@@ -80,7 +80,6 @@ public class GedcomImportPanel extends JPanel {
             return "No data was imported, nothing to show in the graph.";
         } else {
             closeButton.addActionListener(new ActionListener() {
-
                 public void actionPerformed(ActionEvent e) {
                     final SavePanel currentSavePanel = abstractDiagramManager.getCurrentSavePanel(parentComponent);
                     KinDiagramPanel kinDiagramPanel;
@@ -169,7 +168,6 @@ public class GedcomImportPanel extends JPanel {
             GedcomImportPanel.this.add(topOuterPanel, BorderLayout.PAGE_START);
 
             startButton.addActionListener(new ActionListener() {
-
                 public void actionPerformed(ActionEvent e) {
                     cancelButton.setEnabled(false);
                     startButton.setEnabled(false);
@@ -178,7 +176,6 @@ public class GedcomImportPanel extends JPanel {
                     profileSelectBox.setEnabled(false);
                     final String profileId = ((ProfileRecord) profileSelectBox.getSelectedItem()).profileId;
                     new Thread() {
-
                         @Override
                         public void run() {
                             try {
@@ -219,7 +216,6 @@ public class GedcomImportPanel extends JPanel {
                                     importTextArea.setCaretPosition(importTextArea.getText().length());
                                     final int maxProgress = treeNodesArray.length + 1;
                                     SwingUtilities.invokeLater(new Runnable() {
-
                                         public void run() {
                                             progressBar.setValue(0);
                                             progressBar.setMaximum(maxProgress);
@@ -227,14 +223,12 @@ public class GedcomImportPanel extends JPanel {
                                     });
                                     for (final URI currentNodeUri : treeNodesArray) {
                                         SwingUtilities.invokeLater(new Runnable() {
-
                                             public void run() {
                                                 progressBar.setValue(progressBar.getValue() + 1);
                                             }
                                         });
                                         if (maxXsdErrorToShow > 0) {
                                             SwingUtilities.invokeLater(new Runnable() {
-
                                                 public void run() {
                                                     XsdChecker xsdChecker = new XsdChecker();
                                                     if (xsdChecker.simpleCheck(new File(currentNodeUri)) != null) {
@@ -262,7 +256,6 @@ public class GedcomImportPanel extends JPanel {
                                     importTextArea.append("Skipping check XML of imported data  (step 3/4)\n");
                                 }
                                 SwingUtilities.invokeLater(new Runnable() {
-
                                     public void run() {
                                         progressBar.setIndeterminate(true);
                                     }
@@ -289,7 +282,6 @@ public class GedcomImportPanel extends JPanel {
             });
         }
         cancelButton.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 dialoguePanel.dispose();
             }
