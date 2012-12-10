@@ -39,7 +39,7 @@ public class EntityImporter implements GenericImporter {
     protected HashMap<String, HashSet<UniqueIdentifier>> createdNodeIds;
     HashMap<String, EntityDocument> createdDocuments = new HashMap<String, EntityDocument>();
 //    private MetadataBuilder metadataBuilder;
-    private SessionStorage sessionStorage;
+    final private SessionStorage sessionStorage;
 
     public EntityImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
         overwriteExisting = overwriteExistingLocal;
@@ -146,7 +146,7 @@ public class EntityImporter implements GenericImporter {
                 uniqueIdentifier = new UniqueIdentifier(inputFileMd5Sum + ":" + cleanedIdString, UniqueIdentifier.IdentifierType.iid);
             }
             // create a new entity file
-            currentEntity = new EntityDocument(getDestinationDirectory(), uniqueIdentifier, typeString, importTranslator, sessionStorage);
+            currentEntity = new EntityDocument(/* getDestinationDirectory(),*/uniqueIdentifier, typeString, importTranslator, sessionStorage);
 //            appendToTaskOutput("created: " + currentEntity.getFilePath());
             createdNodes.add(currentEntity.getFile().toURI());
             createdDocuments.put(idString, currentEntity);

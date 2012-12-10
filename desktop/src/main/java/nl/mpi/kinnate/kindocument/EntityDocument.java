@@ -44,7 +44,7 @@ public class EntityDocument {
     public static String defaultGedcomType = "clarin.eu:cr1:p_1332345811039"; //todo: make this user definable
     // todo: add some xsd files to the jar file so that the user can work off line from the start and to make sure that the user does not need to wait for ages on the first entity added
     // todo:. when the menu requests a new node it should show the progress bar before making the request
-    private SessionStorage sessionStorage;
+    final private SessionStorage sessionStorage;
 
     public EntityDocument(ImportTranslator importTranslator, SessionStorage sessionStorage) {
         this.importTranslator = importTranslator;
@@ -98,7 +98,7 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(File destinationDirectory, UniqueIdentifier uniqueIdentifier, String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
+    public EntityDocument(UniqueIdentifier uniqueIdentifier, String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
         String idString;
@@ -107,10 +107,13 @@ public class EntityDocument {
 //            idString = nameString;
 //            entityFile = new File(destinationDirectory, nameString + ".kmdi");
 //        } else {
-        idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
-        File subDirectory = new File(destinationDirectory, idString.substring(0, 2));
+//        idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
+//        File subDirectory = new File(sessionStorage.getProjectWorkingDirectory(), idString.substring(0, 2));
+//        subDirectory.mkdir();
+//        entityFile = new File(subDirectory, idString);
+        entityFile = uniqueIdentifier.getFileInProject(sessionStorage);
+        File subDirectory = entityFile.getParentFile();
         subDirectory.mkdir();
-        entityFile = new File(subDirectory, idString);
 //        }
         try {
             // construct the metadata file
@@ -134,9 +137,10 @@ public class EntityDocument {
         String idString;
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
         idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
-        File subDirectory = new File(sessionStorage.getProjectWorkingDirectory(), idString.substring(0, 2));
-        subDirectory.mkdir();
-        entityFile = new File(subDirectory, idString);
+        //File subDirectory = new File(sessionStorage.getProjectWorkingDirectory(), idString.substring(0, 2));
+//        subDirectory.mkdir();
+        entityFile = entityData.getUniqueIdentifier().getFileInProject(sessionStorage);;
+        //new File(subDirectory, idString);
     }
 
     private void setDomNodesFromExistingFile() throws ImportException {
