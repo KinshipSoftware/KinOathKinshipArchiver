@@ -31,6 +31,8 @@
         <application.branch>pretesting</application.branch> 
         <application.title>KinOath Kinship Archiver (pretesting)</application.title>
         <output.directory>${project.build.directory}</output.directory>
+        <maven.build.timestamp.format>EEE MMM dd HH:mm:ss z yyyy</maven.build.timestamp.format><!--"Mon Dec 10 14:37:33 CET 2012"-->
+        <application.build-date>${maven.build.timestamp}</application.build-date>                
     </properties>
     <build>
         <resources>
