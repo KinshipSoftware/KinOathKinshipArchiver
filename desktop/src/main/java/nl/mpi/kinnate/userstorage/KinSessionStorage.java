@@ -1,20 +1,28 @@
 package nl.mpi.kinnate.userstorage;
 
+import java.io.File;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
+import nl.mpi.kinnate.projects.ProjectRecord;
 
 /**
- *  Document   : KinSessionStorage
- *  Created on : Dec 9, 2011, 10:20:43 AM
- *  Author     : Peter Withers
+ * Created on : Dec 9, 2011, 10:20:43 AM
+ *
+ * @author : Peter Withers
  */
-public class KinSessionStorage extends ArbilSessionStorage {
+public class KinSessionStorage extends ArbilSessionStorage /* CommonsSessionStorage */ {
 
-    private ApplicationVersionManager versionManager;
+    final private ApplicationVersionManager versionManager;
+    private ProjectRecord projectRecord = null;
 
     public KinSessionStorage(ApplicationVersionManager versionManager) {
         this.versionManager = versionManager;
+    }
+
+    public void setProjectRecord(ProjectRecord projectRecord) {
+        this.projectRecord = projectRecord;
+        getProjectWorkingDirectory().mkdir();
     }
 
     // The major, minor version numbers will change the working directory name so that each minor version requires
@@ -27,5 +35,20 @@ public class KinSessionStorage extends ArbilSessionStorage {
         return new String[]{".kinoath-" + new KinOathVersion().currentMajor + "-" + new KinOathVersion().currentMinor};
     }
     // todo: remove ArbilWorkingFiles from the working files path and use KinshipData or such like
-    
+
+    @Override
+    public File getProjectDirectory() {
+        if (projectRecord == null) {
+            return super.getProjectDirectory();
+        }
+        return projectRecord.getProjectDirectory();
+    }
+
+    @Override
+    public File getProjectWorkingDirectory() {
+        if (projectRecord == null) {
+            return super.getProjectWorkingDirectory();
+        }
+        return new File(projectRecord.getProjectDirectory(), "KinDataFiles");
+    }
 }

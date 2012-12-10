@@ -46,6 +46,7 @@ public class FileMenu extends javax.swing.JMenu {
     private javax.swing.JMenuItem newDiagramMenuItem;
     private javax.swing.JMenuItem openDiagram;
     private RecentFileMenu recentFileMenu;
+    private ProjectFileMenu projectFileMenu;
     private javax.swing.JMenuItem saveAsDefaultMenuItem;
     private javax.swing.JMenuItem saveDiagram;
     private javax.swing.JMenuItem saveDiagramAs;
@@ -69,6 +70,7 @@ public class FileMenu extends javax.swing.JMenu {
         jMenu3 = new DocumentNewMenu(diagramWindowManager, parentComponent);
         openDiagram = new javax.swing.JMenuItem();
         recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage, parentComponent);
+        projectFileMenu = new ProjectFileMenu(diagramWindowManager, sessionStorage, parentComponent);
         jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
@@ -128,6 +130,7 @@ public class FileMenu extends javax.swing.JMenu {
 
 
         this.add(recentFileMenu);
+        this.add(projectFileMenu);
 
         jMenu1.setText("Open Sample Diagram");
         this.add(jMenu1);
