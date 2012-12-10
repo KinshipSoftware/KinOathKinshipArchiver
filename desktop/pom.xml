@@ -20,10 +20,11 @@
         <url>https://trac.mpi.nl/wiki/KinOath</url>
     </scm>
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <output.jarname>${project.build.finalName}</output.jarname>
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>1</application.minorVersion> 
-        <application.branch>stable</application.branch> 
+        <application.branch>testing</application.branch> 
         <application.title>KinOath Kinship Archiver</application.title>
         <output.directory>${project.build.directory}</output.directory>
     </properties>
