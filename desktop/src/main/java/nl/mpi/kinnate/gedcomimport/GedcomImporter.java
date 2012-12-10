@@ -260,27 +260,29 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                             socialGroupRoleMap.put(socialGroupIdentifier, new ArrayList<SocialMemberElement>());
                                         }
                                         socialGroupRoleMap.get(socialGroupIdentifier).add(new SocialMemberElement(lineStructure.getCurrentName(), socialGroupMember));
-                                    }
-                                    // capture the custom types from .kinoath format export files
-                                    String currentName = lineStructure.getCurrentName();
-                                    String customType = null;
-                                    String dcrString = null;
-                                    RelationType targetRelation = RelationType.other;
-                                    String[] currentNameParts = currentName.split(":");
-                                    try {
-                                        if (currentNameParts.length > 0) {
-                                            targetRelation = RelationType.valueOf(currentNameParts[0]);
+                                        notConsumed = false;
+                                    } else {
+                                        // capture the custom types from .kinoath format export files
+                                        String currentName = lineStructure.getCurrentName();
+                                        String customType = null;
+                                        String dcrString = null;
+                                        RelationType targetRelation = RelationType.other;
+                                        String[] currentNameParts = currentName.split(":");
+                                        try {
+                                            if (currentNameParts.length > 0) {
+                                                targetRelation = RelationType.valueOf(currentNameParts[0]);
+                                            }
+                                        } catch (IllegalArgumentException exception) {
+                                            appendToTaskOutput("Unsupported Relation Type: " + currentName);
                                         }
-                                    } catch (IllegalArgumentException exception) {
-                                        appendToTaskOutput("Unsupported Relation Type: " + currentName);
+                                        if (currentNameParts.length == 3) {
+                                            customType = currentNameParts[1];
+                                            dcrString = currentNameParts[2];
+                                        }
+                                        // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
+                                        currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, lineStructure.getLineContents(), importTranslator).entityData, targetRelation, null, null, dcrString, customType);
+                                        notConsumed = false;
                                     }
-                                    if (currentNameParts.length == 3) {
-                                        customType = currentNameParts[1];
-                                        dcrString = currentNameParts[2];
-                                    }
-                                    // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
-                                    currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, lineStructure.getLineContents(), importTranslator).entityData, targetRelation, null, null, dcrString, customType);
-                                    notConsumed = false;
                                 }
                                 if (notConsumed) {
                                     // any unprocessed elements should now be added as they are into the metadata
