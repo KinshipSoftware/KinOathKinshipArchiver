@@ -176,7 +176,7 @@ public class QueryBuilder {
                 + this.getLabelsClause(indexParameters, "root($entityNode)/")
                 + this.getDatesClause(indexParameters, "root($entityNode)/")
                 + this.getSymbolClause(indexParameters, "root($entityNode)/")
-                + "insert nodes <kin:Path xmlns:kin=\"http://mpi.nl/tla/kin\">{base-uri($entityNode)}</kin:Path> after $copyNode/*:Identifier\n" // when using a basex version younger than 6.62 the "after" fails re attributes: after $copyNode/*:Identifier" maybe copy is failing to keep the namespace, for earlier version the following can be used "into $copyNode"
+                + "insert nodes <kin:Path xmlns:kin=\"http://mpi.nl/tla/kin\">{fn:substring-after(base-uri($entityNode), '/')}</kin:Path> after $copyNode/*:Identifier\n" // when using a basex version younger than 6.62 the "after" fails re attributes: after $copyNode/*:Identifier" maybe copy is failing to keep the namespace, for earlier version the following can be used "into $copyNode"
                 // todo: test if "insert after" take longer than "insert into"
                 + ")\n"
                 + "return $copyNode\n";
@@ -226,7 +226,7 @@ public class QueryBuilder {
 
     public String getEntityPath(UniqueIdentifier uniqueIdentifier) {
         return "let $identifierNode := collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n"
-                + "return base-uri($identifierNode)";
+                + "return fn:substring-after(base-uri($identifierNode), '/')";
     }
 //    public String getEntityPaths(UniqueIdentifier[] uniqueIdentifier) {
 //        StringBuilder builder = new StringBuilder();
