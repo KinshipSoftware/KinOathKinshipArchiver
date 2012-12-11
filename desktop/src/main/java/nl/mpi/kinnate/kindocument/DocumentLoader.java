@@ -93,6 +93,6 @@ public class DocumentLoader {
     protected void deleteFromDataBase(EntityDocument entityDocument) throws IOException {
         ArbilDataNodeService arbilDataNodeService = new ArbilDataNodeService(null, null, null, null, null);
         arbilDataNodeService.bumpHistory(entityDocument.getFile());
-        entityCollection.deleteFromDatabase(entityDocument.getFile().toURI());
+        entityCollection.deleteFromDatabase(entityDocument.getUniqueIdentifier());
     }
 }
