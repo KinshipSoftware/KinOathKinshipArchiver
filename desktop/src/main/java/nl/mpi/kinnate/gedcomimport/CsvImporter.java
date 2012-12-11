@@ -13,6 +13,7 @@ import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
  * Document : CsvImporter Created on : May 30, 2011, 10:29:24 AM
@@ -177,7 +178,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
     }
 
     @Override
-    public URI[] importFile(InputStreamReader inputStreamReader, String profileId) {
+    public UniqueIdentifier[] importFile(InputStreamReader inputStreamReader, String profileId) {
         char fieldSeparator;
         switch (separatorType) {
             case csv:
@@ -227,7 +228,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         appendToTaskOutput("If the ID field exists and any row contains the text ID then the headers are replaced with current row values (for PUCK txt files).");
         appendToTaskOutput("If the first record does not start at zero then all relations to the ID of zero will be ignored.");
         appendToTaskOutput("");
-        ArrayList<URI> createdNodes = new ArrayList<URI>();
+        ArrayList<UniqueIdentifier> createdNodes = new ArrayList<UniqueIdentifier>();
         try {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 //            char fieldSeparator = detectFieldDelimiter(bufferedReader);
@@ -380,6 +381,6 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
             BugCatcherManager.getBugCatcher().logError(exception);
             appendToTaskOutput("Error: " + exception.getMessage());
         }
-        return createdNodes.toArray(new URI[]{});
+        return createdNodes.toArray(new UniqueIdentifier[]{});
     }
 }

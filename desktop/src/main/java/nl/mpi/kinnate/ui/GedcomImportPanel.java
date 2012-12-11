@@ -201,27 +201,27 @@ public class GedcomImportPanel extends JPanel {
                                     importTextArea.append("No importers found for this file\n");
                                     return;
                                 }
-                                URI[] treeNodesArray;
+                                UniqueIdentifier[] importedIdentifierArray;
                                 importTextArea.append("Importing the kinship data (step 1/4)\n");
                                 importTextArea.setCaretPosition(importTextArea.getText().length());
                                 if (importFileString != null) {
-                                    treeNodesArray = genericImporter.importFile(importFileString, profileId);
+                                    importedIdentifierArray = genericImporter.importFile(importFileString, profileId);
                                 } else {
-                                    treeNodesArray = genericImporter.importFile(importFile, profileId);
+                                    importedIdentifierArray = genericImporter.importFile(importFile, profileId);
                                 }
                                 boolean checkFilesAfterImport = validateImportedXml.isSelected();
-                                if (treeNodesArray != null && checkFilesAfterImport) {
+                                if (importedIdentifierArray != null && checkFilesAfterImport) {
                                     int maxXsdErrorToShow = 3;
                                     importTextArea.append("Checking XML of imported data  (step 3/4)\n");
                                     importTextArea.setCaretPosition(importTextArea.getText().length());
-                                    final int maxProgress = treeNodesArray.length + 1;
+                                    final int maxProgress = importedIdentifierArray.length + 1;
                                     SwingUtilities.invokeLater(new Runnable() {
                                         public void run() {
                                             progressBar.setValue(0);
                                             progressBar.setMaximum(maxProgress);
                                         }
                                     });
-                                    for (final URI currentNodeUri : treeNodesArray) {
+                                    for (final UniqueIdentifier currentUniqueIdentifier : importedIdentifierArray) {
                                         SwingUtilities.invokeLater(new Runnable() {
                                             public void run() {
                                                 progressBar.setValue(progressBar.getValue() + 1);
@@ -231,8 +231,8 @@ public class GedcomImportPanel extends JPanel {
                                             SwingUtilities.invokeLater(new Runnable() {
                                                 public void run() {
                                                     XsdChecker xsdChecker = new XsdChecker();
-                                                    if (xsdChecker.simpleCheck(new File(currentNodeUri)) != null) {
-                                                        xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentNodeUri));
+                                                    if (xsdChecker.simpleCheck(new File(currentUniqueIdentifier.getFileInProject(sessionStorage).toURI())) != null) {
+                                                        xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentUniqueIdentifier.getFileInProject(sessionStorage).toURI()));
                                                         xsdChecker.setDividerLocation(0.5);
                                                         if (errorPanel == null) {
                                                             xsdChecker.setName("XSD Error on Import");
@@ -263,7 +263,7 @@ public class GedcomImportPanel extends JPanel {
                                 // todo: it might be more efficient to only update the new files
                                 importTextArea.append("Starting update of entity database (step 4/4)\n");
                                 importTextArea.setCaretPosition(importTextArea.getText().length());
-                                entityCollection.updateDatabase(treeNodesArray, progressBar);
+                                entityCollection.updateDatabase(importedIdentifierArray, progressBar);
                                 importTextArea.append("Import complete" + "\n");
                                 importTextArea.setCaretPosition(importTextArea.getText().length());
 //                            System.out.println("added the imported files to the database");

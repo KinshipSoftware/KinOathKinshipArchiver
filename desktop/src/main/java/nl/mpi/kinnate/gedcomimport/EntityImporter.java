@@ -125,7 +125,7 @@ public class EntityImporter implements GenericImporter {
         return destinationDirectory;
     }
 
-    protected EntityDocument getEntityDocument(ArrayList<URI> createdNodes, String typeString, String idString, ImportTranslator importTranslator) throws ImportException {
+    protected EntityDocument getEntityDocument(ArrayList<UniqueIdentifier> createdNodes, String typeString, String idString, ImportTranslator importTranslator) throws ImportException {
         EntityDocument currentEntity = createdDocuments.get(idString);
         UniqueIdentifier uniqueIdentifier;
         if (currentEntity == null) {
@@ -148,7 +148,7 @@ public class EntityImporter implements GenericImporter {
             // create a new entity file
             currentEntity = new EntityDocument(/* getDestinationDirectory(),*/uniqueIdentifier, typeString, importTranslator, sessionStorage);
 //            appendToTaskOutput("created: " + currentEntity.getFilePath());
-            createdNodes.add(currentEntity.getFile().toURI());
+            createdNodes.add(currentEntity.getUniqueIdentifier());
             createdDocuments.put(idString, currentEntity);
         }
         if (typeString != null) {
@@ -194,13 +194,13 @@ public class EntityImporter implements GenericImporter {
 //        // prevent bad file names being created from the gedcom internal name part
 //        return fileName.replaceAll("[^A-z0-9]", "_");
 //    }
-    public URI[] importFile(File inputFile, String profileId) throws IOException, ImportException {
+    public UniqueIdentifier[] importFile(File inputFile, String profileId) throws IOException, ImportException {
         inputFileUri = inputFile.toURI();
         calculateFileNameAndFileLength(new FileInputStream(inputFile));
         return importFile(new InputStreamReader(new FileInputStream(inputFile)), profileId);
     }
 
-    public URI[] importFile(String testFileString, String profileId) throws IOException, ImportException {
+    public UniqueIdentifier[] importFile(String testFileString, String profileId) throws IOException, ImportException {
         try {
             inputFileUri = getClass().getResource(testFileString).toURI();
         } catch (URISyntaxException exception) {
@@ -211,7 +211,7 @@ public class EntityImporter implements GenericImporter {
         return importFile(new InputStreamReader(getClass().getResourceAsStream(testFileString)), profileId);
     }
 
-    public URI[] importFile(InputStreamReader inputStreamReader, String profileId) throws IOException, ImportException {
+    public UniqueIdentifier[] importFile(InputStreamReader inputStreamReader, String profileId) throws IOException, ImportException {
         throw new UnsupportedOperationException("Not supported");
     }
 

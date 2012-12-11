@@ -62,8 +62,8 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
     }
 
     @Override
-    public URI[] importFile(InputStreamReader inputStreamReader, String profileId) throws IOException, ImportException {
-        ArrayList<URI> createdNodes = new ArrayList<URI>();
+    public UniqueIdentifier[] importFile(InputStreamReader inputStreamReader, String profileId) throws IOException, ImportException {
+        ArrayList<UniqueIdentifier> createdNodes = new ArrayList<UniqueIdentifier>();
         HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>> socialGroupRoleMap = new HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>>(); // GroupID: @XX@, RoleType: WIFE HUSB CHIL, EntityData
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -324,6 +324,6 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         }
         // add the header to all entities
         saveAllDocuments();
-        return createdNodes.toArray(new URI[]{});
+        return createdNodes.toArray(new UniqueIdentifier[]{});
     }
 }
