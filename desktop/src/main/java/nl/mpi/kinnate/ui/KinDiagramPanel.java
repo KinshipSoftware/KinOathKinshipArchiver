@@ -791,7 +791,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     redrawRequired = true;
                 }
                 if (dataBaseRequiresUpdate) {
-                    entityCollection.updateDatabase(arbilDataNode.getURI());
+                    entityCollection.updateDatabase(arbilDataNode.getURI(), registeredArbilDataNode.get(arbilDataNode));
                     graphPanel.getIndexParameters().valuesChanged = true;
                 }
             }
