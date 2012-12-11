@@ -6,9 +6,9 @@ import nl.mpi.kinnate.kintypestrings.QueryTerm;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : QueryBuilder
  * Created on : Mar 23, 2011, 3:32:23 PM
- * Author : Peter Withers
+ *
+ * @author Peter Withers
  */
 public class QueryBuilder {
 
@@ -217,6 +217,11 @@ public class QueryBuilder {
 //        return "for $entityNode in collection('nl-mpi-kinnate')//*:UniqueIdentifier[. = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]/ancestor::*:Kinnate\n"
 //                + "where 0 = ($entityNode/(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = " + asSequenceString(excludeUniqueIdentifiers) + ")\n"
 //                + getEntityQueryReturn(uniqueIdentifier, indexParameters);
+    }
+
+    public String getDeleteQuery(UniqueIdentifier uniqueIdentifier) {
+        return "delete node for $identifierNode in collection('nl-mpi-kinnate')/*:Kinnate[*:Entity/*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]"
+                + "return $identifierNode";
     }
 
     public String getEntityPath(UniqueIdentifier uniqueIdentifier) {
