@@ -30,7 +30,6 @@ import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : KinDragTransferHandler
  * Created on : Wed Feb 02 11:17:40 CET 2011
  *
  * @author Peter.Withers@mpi.nl
@@ -40,10 +39,10 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     private ArbilNode[] selectedNodes;
     private DataFlavor dataFlavor = new DataFlavor(ArbilNode[].class, "ArbilObject");
     private DataFlavor[] dataFlavors = new DataFlavor[]{dataFlavor, DataFlavor.stringFlavor};
-    private KinDiagramPanel kinDiagramPanel;
+    final private KinDiagramPanel kinDiagramPanel;
     private EntityData targetEntity = null;
-    private SessionStorage sessionStorage;
-    private EntityCollection entityCollection;
+    final private SessionStorage sessionStorage;
+    final private EntityCollection entityCollection;
 
     public KinDragTransferHandler(KinDiagramPanel kinDiagramPanel, SessionStorage sessionStorage, EntityCollection entityCollection) {
         this.kinDiagramPanel = kinDiagramPanel;
@@ -216,7 +215,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             for (EntityDocument entityDocument : entityDocumentList) {
                 entityDocument.saveDocument();
                 URI addedEntityUri = entityDocument.getFile().toURI();
-                entityCollection.updateDatabase(addedEntityUri);
+                entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
                 kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()}, defaultLocation);
             }
             return true;
@@ -261,7 +260,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             attachMetadata(entityDocument.entityData);
             entityDocument.saveDocument();
             URI addedEntityUri = entityDocument.getFile().toURI();
-            entityCollection.updateDatabase(addedEntityUri);
+            entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
             kinDiagramPanel.entityRelationsChanged(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()});
             return true;
         } catch (ImportException exception) {

@@ -31,9 +31,9 @@ import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : GraphPanelContextMenu
  * Created on : Feb 18, 2011, 11:51:00 AM
- * Author : Peter Withers
+ *
+ * @author Peter Withers
  */
 public class GraphPanelContextMenu extends JPopupMenu implements ActionListener {
 
@@ -63,13 +63,11 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         this.dataNodeLoader = dataNodeLoaderL;
         if (egoSelectionPanelLocal != null) {
             final ActionListener addMenuActionListener = new java.awt.event.ActionListener() {
-
                 public void actionPerformed(final java.awt.event.ActionEvent evt) {
                     if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
                         return;
                     }
                     new Thread() {
-
                         @Override
                         public void run() {
                             // node type will be used to determine the schema used from the diagram options
@@ -79,7 +77,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                                 EntityDocument entityDocument = new EntityDocument(nodeType, new ImportTranslator(true), sessionStorage);
                                 entityDocument.saveDocument();
                                 URI addedEntityUri = entityDocument.getFile().toURI();
-                                entityCollection.updateDatabase(addedEntityUri);
+                                entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
                                 kinDiagramPanel.addRequiredNodes(new UniqueIdentifier[]{entityDocument.getUniqueIdentifier()}, GraphPanelContextMenu.this.eventLocation);
                             } catch (ImportException exception) {
                                 kinDiagramPanel.clearProgressBar();
@@ -93,7 +91,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
             addEntityMenu = new JMenu("Add");
             addEntityMenu.addMenuListener(new MenuListener() {
-
                 public void menuSelected(MenuEvent e) {
                     addEntityMenu.removeAll();
                     for (ProfileRecord profileRecord : graphPanelLocal.dataStoreSvg.selectedProfiles) {
@@ -128,7 +125,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
             deleteMenu = new JMenuItem("Delete");
             deleteMenu.addActionListener(new java.awt.event.ActionListener() {
-
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     kinDiagramPanel.showProgressBar();
                     int entityCount = 0;
@@ -172,7 +168,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
             mergeEntitiesMenu = new JMenuItem("Merge Selected Entities");
             mergeEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
-
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     String messageString = "The selected entites will be merged,\nAll relations will be preserved and " + (selectedIdentifiers.length - 1) + " entities will be deleted.\nOnly the data of the initialy selected entity will be kept:\n\"";
                     for (String labelString : graphPanel.getEntityForElementId(selectedIdentifiers[0]).getLabel()) {
@@ -198,7 +193,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
             duplicateEntitiesMenu = new JMenuItem("Duplicate Selected Entities");
             duplicateEntitiesMenu.addActionListener(new java.awt.event.ActionListener() {
-
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     kinDiagramPanel.showProgressBar();
                     try {
@@ -219,7 +213,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 JMenuItem addRelationEntityMenuItem = new JMenuItem(relationType.name());
                 addRelationEntityMenuItem.setActionCommand(relationType.name());
                 addRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         kinDiagramPanel.showProgressBar();
                         try {
@@ -244,7 +237,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             JMenuItem removeRelationEntityMenuItem = new JMenuItem(actionString);
             removeRelationEntityMenuItem.setActionCommand(actionString);
             removeRelationEntityMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     kinDiagramPanel.showProgressBar();
                     try {
@@ -262,7 +254,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         }
         setAsEgoMenuItem = new JMenuItem("Set as Ego (list will be cleared)");
         setAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kinDiagramPanel.setEgoNodes(selectedIdentifiers); // getSelectedUriArray(),
             }
@@ -270,7 +261,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         this.add(setAsEgoMenuItem);
         addAsEgoMenuItem = new JMenuItem("Add to ego list");
         addAsEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kinDiagramPanel.addEgoNodes(selectedIdentifiers); //getSelectedUriArray(),
             }
@@ -278,7 +268,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         this.add(addAsEgoMenuItem);
         removeEgoMenuItem = new JMenuItem("Remove from ego list");
         removeEgoMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kinDiagramPanel.removeEgoNodes(selectedIdentifiers);
             }
@@ -288,7 +277,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
         addAsRequiredMenuItem = new JMenuItem("Keep on diagram");
         addAsRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kinDiagramPanel.addRequiredNodes(selectedIdentifiers, null); //getSelectedUriArray(),
             }
@@ -296,7 +284,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         this.add(addAsRequiredMenuItem);
         removeRequiredMenuItem = new JMenuItem("Release from diagram");
         removeRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kinDiagramPanel.removeRequiredNodes(selectedIdentifiers);
             }
@@ -306,7 +293,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
         JMenuItem resetZoomMenuItem = new JMenuItem("Reset Zoom");
         resetZoomMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 graphPanel.resetZoom();
             }
@@ -315,7 +301,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 
         JMenuItem resetLayoutMenuItem = new JMenuItem("Reset Layout");
         resetLayoutMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
                     return;
@@ -328,7 +313,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         JMenuItem searchEntityServiceMenuItem = new JMenuItem("Search Entity Service");
         searchEntityServiceMenuItem.setToolTipText("Search the entity database for entities matching the current kin terms and populate he diagram with the results");
         searchEntityServiceMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // todo: Search the entity database for entities matching the current kin terms and populate he diagram with the results
             }
@@ -340,7 +324,6 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         saveFileMenuItem.setText("Save All Data Changes");
         saveFileMenuItem.setEnabled(false);
         saveFileMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kinDiagramPanel.showProgressBar();
                 try {

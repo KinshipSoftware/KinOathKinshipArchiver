@@ -14,13 +14,13 @@ import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- *  Document   : DocumentLoader
- *  Created on : Sep 28, 2011, 2:21:15 PM
- *  Author     : Peter Withers
+ * Created on : Sep 28, 2011, 2:21:15 PM
+ *
+ * @author Peter Withers
  */
 public class DocumentLoader {
 
-    protected SessionStorage sessionStorage;
+    final protected SessionStorage sessionStorage;
     private MessageDialogHandler dialogHandler;
     protected HashMap<UniqueIdentifier, EntityDocument> entityMap = new HashMap<UniqueIdentifier, EntityDocument>();
     private EntityCollection entityCollection;
@@ -32,14 +32,14 @@ public class DocumentLoader {
     }
 
     protected EntityDocument getEntityDocument(UniqueIdentifier selectedIdentifier) throws ImportException, URISyntaxException {
-        EntityDocument entityDocument = new EntityDocument(new URI(new EntityCollection(sessionStorage, dialogHandler).getEntityPath(selectedIdentifier)), new ImportTranslator(true), sessionStorage);
+        EntityDocument entityDocument = new EntityDocument(new URI(entityCollection.getEntityPath(selectedIdentifier)), new ImportTranslator(true), sessionStorage);
 //        System.out.println("Loaded 1: " + entityDocument.entityData.getUniqueIdentifier().getAttributeIdentifier());
         entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
         for (EntityRelation entityRelation : entityDocument.entityData.getAllRelations()) {
             EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
             if (relatedDocument == null) {
                 // get the path from the database
-                final URI entityUri = new URI(new EntityCollection(sessionStorage, dialogHandler).getEntityPath(entityRelation.alterUniqueIdentifier));
+                final URI entityUri = new URI(entityCollection.getEntityPath(entityRelation.alterUniqueIdentifier));
                 relatedDocument = new EntityDocument(entityUri, new ImportTranslator(true), sessionStorage);
 //                System.out.println("Loaded 2: " + entityRelation.alterUniqueIdentifier.getAttributeIdentifier());
                 entityMap.put(entityRelation.alterUniqueIdentifier, relatedDocument);
@@ -86,7 +86,7 @@ public class DocumentLoader {
     protected void saveAllDocuments() throws ImportException {
         for (EntityDocument entityDocument : entityMap.values()) {
             entityDocument.saveDocument();
-            entityCollection.updateDatabase(entityDocument.getFile().toURI());
+            entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
         }
     }
 
