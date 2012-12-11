@@ -220,8 +220,8 @@ public class QueryBuilder {
     }
 
     public String getDeleteQuery(UniqueIdentifier uniqueIdentifier) {
-        return "delete node for $identifierNode in collection('nl-mpi-kinnate')/*:Kinnate[*:Entity/*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]"
-                + "return $identifierNode";
+        return "for $identifierNode in collection('nl-mpi-kinnate')/*:Kinnate[*:Entity/*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]"
+                + "return db:delete('nl-mpi-kinnate', fn:substring-after(base-uri($identifierNode), '/'))";
     }
 
     public String getEntityPath(UniqueIdentifier uniqueIdentifier) {
