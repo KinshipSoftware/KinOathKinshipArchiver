@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  */
 public class EntityDocument {
 
-    File entityFile = null;
+    final File entityFile;
     Document metadataDom = null;
     Node kinnateNode = null;
     Element metadataNode = null;
@@ -49,13 +49,13 @@ public class EntityDocument {
     public EntityDocument(ImportTranslator importTranslator, SessionStorage sessionStorage) {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
-        assignIdentiferAndFile();
+        entityFile = assignIdentiferAndFile();
     }
 
     public EntityDocument(String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
-        assignIdentiferAndFile();
+        entityFile = assignIdentiferAndFile();
         try {
             // construct the metadata file
             System.out.println("constructing the xsl file");
@@ -79,7 +79,7 @@ public class EntityDocument {
     public EntityDocument(EntityDocument entityDocumentToCopy, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
-        assignIdentiferAndFile();
+        entityFile = assignIdentiferAndFile();
         try {
             // load the document that needs to be copied so that it can be saved into the new location
             metadataDom = ArbilComponentBuilder.getDocument(entityDocumentToCopy.entityFile.toURI());
@@ -101,20 +101,10 @@ public class EntityDocument {
     public EntityDocument(UniqueIdentifier uniqueIdentifier, String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
-        String idString;
         entityData = new EntityData(uniqueIdentifier);
-//        if (nameString != null) {
-//            idString = nameString;
-//            entityFile = new File(destinationDirectory, nameString + ".kmdi");
-//        } else {
-//        idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
-//        File subDirectory = new File(sessionStorage.getProjectWorkingDirectory(), idString.substring(0, 2));
-//        subDirectory.mkdir();
-//        entityFile = new File(subDirectory, idString);
         entityFile = uniqueIdentifier.getFileInProject(sessionStorage);
         File subDirectory = entityFile.getParentFile();
         subDirectory.mkdir();
-//        }
         try {
             // construct the metadata file
             URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false);
@@ -133,14 +123,12 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    private void assignIdentiferAndFile() {
-        String idString;
+    private File assignIdentiferAndFile() {
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
-        idString = entityData.getUniqueIdentifier().getQueryIdentifier() + ".kmdi";
-        //File subDirectory = new File(sessionStorage.getProjectWorkingDirectory(), idString.substring(0, 2));
-//        subDirectory.mkdir();
-        entityFile = entityData.getUniqueIdentifier().getFileInProject(sessionStorage);;
-        //new File(subDirectory, idString);
+        final File fileInProject = entityData.getUniqueIdentifier().getFileInProject(sessionStorage);
+        File subDirectory = fileInProject.getParentFile();
+        subDirectory.mkdir();
+        return fileInProject;
     }
 
     private void setDomNodesFromExistingFile() throws ImportException {
