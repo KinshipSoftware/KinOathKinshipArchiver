@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
@@ -48,8 +47,8 @@ import org.basex.core.cmd.Set;
 import org.basex.core.cmd.XQuery;
 import org.basex.query.QueryException;
 import org.basex.query.QueryProcessor;
-import org.basex.query.item.Item;
 import org.basex.query.iter.Iter;
+import org.basex.query.value.item.Item;
 
 /**
  * Created on : Feb 15, 2011, 5:37:06 PM
@@ -206,7 +205,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 // add requires a url other wise it appends the working path when using base-uri in a query
                 // add requires the parent directory otherwise it adds the file name to the root and appends the working path when using base-uri in a query
                 // add appears not to have been tested by anybody, I am not sure if I like basex now, but the following works
-                new Add(urlString, null, urlString.replaceFirst("[^/]*$", "")).execute(context);
+                new Add(urlString.replaceFirst("[^/]*$", ""), urlString).execute(context);
             }
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
@@ -232,7 +231,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Add File To DB");
         }
     }
-
+    
     public void updateDatabase(final UniqueIdentifier[] updatedFileArray, final JProgressBar progressBar) {
         try {
             if (progressBar != null) {
@@ -339,10 +338,6 @@ public class EntityCollection extends DatabaseUpdateHandler {
             }
             searchResults.statusMessage = "found " + searchResults.resultCount + " records";
         } catch (QueryException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-            searchResults.statusMessage = exception.getMessage();
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Perform Query");
-        } catch (IOException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Perform Query");
