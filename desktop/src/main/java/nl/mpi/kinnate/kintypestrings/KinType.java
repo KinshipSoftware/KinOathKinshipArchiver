@@ -133,8 +133,8 @@ public class KinType implements Comparable<KinType> {
         if (o == null) {
             return -1;
         }
-        if (codeString.length() > o.codeString.length()) {
-            return -1;
+        if (codeString.length() != o.codeString.length()) {
+            return o.codeString.length() - codeString.length();
         }
         return codeString.compareToIgnoreCase(o.codeString);
     }
