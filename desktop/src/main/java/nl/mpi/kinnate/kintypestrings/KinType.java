@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.kintypestrings;
 
@@ -25,9 +25,9 @@ import nl.mpi.kinnate.kindata.EntityData.SymbolType;
 import nl.mpi.kinnate.kindata.EntityRelation;
 
 /**
- *  Document   : KinType
- *  Created on : Jun 28, 2011, 11:31:35 AM
- *  Author     : Peter Withers
+ * Document : KinType Created on : Jun 28, 2011, 11:31:35 AM
+ *
+ * @author Peter Withers
  */
 public class KinType implements Comparable<KinType> {
 
@@ -150,8 +150,8 @@ public class KinType implements Comparable<KinType> {
         if (o == null) {
             return -1;
         }
-        if (codeString.length() > o.codeString.length()) {
-            return -1;
+        if (codeString.length() != o.codeString.length()) {
+            return o.codeString.length() - codeString.length();
         }
         return codeString.compareToIgnoreCase(o.codeString);
     }
