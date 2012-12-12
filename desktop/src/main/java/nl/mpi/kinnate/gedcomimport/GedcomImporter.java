@@ -1,3 +1,20 @@
+/**
+ * Copyright (C) 2012 The Language Archive
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package nl.mpi.kinnate.gedcomimport;
 
 import java.io.BufferedReader;
@@ -260,8 +277,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                             socialGroupRoleMap.put(socialGroupIdentifier, new ArrayList<SocialMemberElement>());
                                         }
                                         socialGroupRoleMap.get(socialGroupIdentifier).add(new SocialMemberElement(lineStructure.getCurrentName(), socialGroupMember));
+                                        // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
+                                        currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, lineStructure.getLineContents(), importTranslator).entityData, RelationType.other, null, null, null, lineStructure.getCurrentName());
                                         notConsumed = false;
                                     } else {
+                                        // todo: check this change
                                         // capture the custom types from .kinoath format export files
                                         String currentName = lineStructure.getCurrentName();
                                         String customType = null;
@@ -279,7 +299,6 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                             customType = currentNameParts[1];
                                             dcrString = currentNameParts[2];
                                         }
-                                        // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
                                         currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, lineStructure.getLineContents(), importTranslator).entityData, targetRelation, null, null, dcrString, customType);
                                         notConsumed = false;
                                     }
