@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg;
 
@@ -99,6 +99,37 @@ public class EntitySvg {
         Element defsNode = doc.createElementNS(svgNameSpace, "defs");
         defsNode.setAttribute("id", "KinSymbols");
 
+        // add the start line marker
+        Element startMarker = doc.createElementNS(svgNameSpace, "marker");
+        startMarker.setAttribute("id", "StartMarker");
+        startMarker.setAttribute("orient", "auto");
+        startMarker.setAttribute("viewBox", "0 0 12 12");
+        startMarker.setAttribute("refX", "-11");
+        startMarker.setAttribute("refY", "6");
+        startMarker.setAttribute("markerWidth", "3");
+        startMarker.setAttribute("markerHeight", "3");
+        Element startMarkerNode = doc.createElementNS(svgNameSpace, "circle");
+        startMarkerNode.setAttribute("cx", "6");
+        startMarkerNode.setAttribute("cy", "6");
+        startMarkerNode.setAttribute("r", "5");
+        startMarker.appendChild(startMarkerNode);
+        defsNode.appendChild(startMarker);
+        svgRoot.appendChild(defsNode);
+        // add the end line marker
+        Element endMarker = doc.createElementNS(svgNameSpace, "marker");
+        endMarker.setAttribute("id", "EndMarker");
+        endMarker.setAttribute("viewBox", "0 0 10 10");
+        endMarker.setAttribute("refX", Integer.toString(symbolSize + 4));
+        endMarker.setAttribute("refY", "5");
+        endMarker.setAttribute("markerUnits", "strokeWidth");
+        endMarker.setAttribute("markerWidth", "4");
+        endMarker.setAttribute("markerHeight", "3");
+        endMarker.setAttribute("orient", "auto");
+        Element endMarkerNode = doc.createElementNS(svgNameSpace, "path");
+        endMarkerNode.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
+        endMarker.appendChild(endMarkerNode);
+        defsNode.appendChild(endMarker);
+        svgRoot.appendChild(defsNode);
         // add the blank symbol
         Element blankGroup = doc.createElementNS(svgNameSpace, "g");
         blankGroup.setAttribute("id", "blank");
