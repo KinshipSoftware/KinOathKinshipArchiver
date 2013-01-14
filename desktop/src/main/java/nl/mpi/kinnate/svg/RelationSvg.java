@@ -1,7 +1,25 @@
+/**
+ * Copyright (C) 2012 The Language Archive
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package nl.mpi.kinnate.svg;
 
 import java.util.ArrayList;
 import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
 import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -11,9 +29,9 @@ import org.w3c.dom.Text;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- * Document : RelationSvg
  * Created on : Mar 9, 2011, 3:21:16 PM
- * Author : Peter Withers
+ *
+ * @author Peter Withers
  */
 public class RelationSvg {
 
@@ -25,6 +43,19 @@ public class RelationSvg {
 
     private void addUseNode(SVGDocument doc, String svgNameSpace, Element targetGroup, String targetDefId) {
         String useNodeId = targetDefId + "use";
+        // todo: look into this ConcurrentModificationException
+        /*
+         ava.util.ConcurrentModificationException
+         at java.util.AbstractList$Itr.checkForComodification(AbstractList.java:372)
+         at java.util.AbstractList$Itr.remove(AbstractList.java:357)
+         at org.apache.batik.dom.AbstractDocument.getChildElementById(AbstractDocument.java:485)
+         at org.apache.batik.dom.AbstractDocument.getElementById(AbstractDocument.java:451)
+         at nl.mpi.kinnate.svg.RelationSvg.addUseNode(RelationSvg.java:28)
+         at nl.mpi.kinnate.svg.RelationSvg.updateRelationLines(RelationSvg.java:204)
+         at nl.mpi.kinnate.svg.SvgUpdateHandler$6.run(SvgUpdateHandler.java:740)
+         at org.apache.batik.util.RunnableQueue.run(RunnableQueue.java:237)
+         at java.lang.Thread.run(Thread.java:680)
+         */
         Node useNodeOld = doc.getElementById(useNodeId);
         if (useNodeOld != null) {
             useNodeOld.getParentNode().removeChild(useNodeOld);
@@ -101,6 +132,13 @@ public class RelationSvg {
             }
             linkLine.setAttribute("stroke-width", Integer.toString(relationRecord.lineWidth));
             linkLine.setAttribute("id", relationRecord.lineIdString);
+            if (relationRecord.directedRelation.equals(DataTypes.RelationType.towards)) {
+                linkLine.setAttribute("marker-start", "url(#StartMarker)");
+            }
+//            linkLine.setAttribute("marker-mid", "url(#StartMarker)");
+            if (relationRecord.directedRelation.equals(DataTypes.RelationType.from)) {
+                linkLine.setAttribute("marker-end", "url(#EndMarker)");
+            }
             defsNode.appendChild(linkLine);
             addedRelationLine = true;
 
