@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui.relationsettings;
 
@@ -33,9 +33,9 @@ import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.ui.kintypeeditor.CheckBoxModel;
 
 /**
- * Document : RelationTypesTableModel
  * Created on : Jan 2, 2012, 2:05:08 PM
- * Author : Peter Withers
+ *
+ * @author Peter Withers
  */
 public class RelationTypesTableModel extends AbstractTableModel implements ActionListener, CheckBoxModel {
 
@@ -111,7 +111,12 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 case 2:
                     ArrayList<String> valuesList = new ArrayList<String>();
                     for (DataTypes.RelationType relationType : kinType.getRelationType()) {
-                        valuesList.add(relationType.name());
+                        DataTypes.RelationType oppositeRelationType = DataTypes.getOpposingRelationType(relationType);
+                        if (relationType.equals(oppositeRelationType)) {
+                            valuesList.add(relationType.name());
+                        } else {
+                            valuesList.add(relationType.name() + " (" + oppositeRelationType.name() + ")");
+                        }
                     }
                     return valuesList;
                 case 3:
@@ -162,7 +167,8 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             case 2:
                 ArrayList<DataTypes.RelationType> relationTypeList = new ArrayList<RelationType>();
                 for (String stringValue : valuesList) {
-                    relationTypeList.add(DataTypes.RelationType.valueOf(stringValue));
+                    // in java 1.7 JCombobox might support generics, in wich case we can remove this split by using the DataTypes.RelationType as elements in the combobox
+                    relationTypeList.add(DataTypes.RelationType.valueOf(stringValue.split(" ")[0]));
                 }
                 setValueAt(relationTypeList.toArray(new DataTypes.RelationType[]{}), rowIndex, columnIndex);
                 break;
