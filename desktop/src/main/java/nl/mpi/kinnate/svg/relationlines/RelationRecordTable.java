@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg.relationlines;
 
@@ -31,9 +31,9 @@ import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : RelationRecordTable
  * Created on : Jun 29, 2012, 7:11:48 PM
- * Author : Peter Withers
+ *
+ * @author Peter Withers
  */
 public class RelationRecordTable {
 
@@ -48,11 +48,20 @@ public class RelationRecordTable {
         EntityData rightEntity;
         if (entityRelation.getRelationType() == DataTypes.RelationType.descendant) {
             // make sure the ancestral relations are unidirectional
-            directedRelation = DataTypes.RelationType.ancestor;
+            directedRelation = DataTypes.getOpposingRelationType(entityRelation.getRelationType());
             leftEntity = entityRelation.getAlterNode();
             rightEntity = entityData;
         } else if (entityRelation.getRelationType() == DataTypes.RelationType.ancestor) {
             // make sure the ancestral relations are unidirectional
+            leftEntity = entityData;
+            rightEntity = entityRelation.getAlterNode();
+        } else if (entityRelation.getRelationType() == DataTypes.RelationType.from) {
+            // make sure the directed relations are unidirectional
+            directedRelation = DataTypes.getOpposingRelationType(entityRelation.getRelationType());
+            leftEntity = entityRelation.getAlterNode();
+            rightEntity = entityData;
+        } else if (entityRelation.getRelationType() == DataTypes.RelationType.towards) {
+            // make sure the directed relations are unidirectional
             leftEntity = entityData;
             rightEntity = entityRelation.getAlterNode();
         } else if (entityData.getUniqueIdentifier().getQueryIdentifier().compareTo(entityRelation.getAlterNode().getUniqueIdentifier().getQueryIdentifier()) > 0) {
