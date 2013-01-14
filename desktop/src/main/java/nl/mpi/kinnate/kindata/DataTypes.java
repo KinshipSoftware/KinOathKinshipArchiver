@@ -29,7 +29,7 @@ public class DataTypes {
         // todo: replace affiliation, resource, collector, metadata, none  for OTHER..
         // maybe keep the: kinterm, curve1, curve2, none
         // sibling, ancestor, descendant, union, kin_term, custom_type1, custom_type2, none
-        sibling, ancestor, descendant, union, kinterm, other, undirected, from, towards
+        sibling, ancestor, descendant, union, kinterm, other, undirected, directedin, directedout
         //, horizontalCurve, gedcom,/* probably remove the items after this */ custom, affiliation, resource, collector, metadata, none // todo: should metadata relations use the same link type as jpg files?
 // modify the kin type definitions to allow multi select for symbols and relation types eg P could be squ or cir and tri
         // and add additional option after divider with <all> that toggles all selections
@@ -54,10 +54,10 @@ public class DataTypes {
                 return DataTypes.RelationType.descendant;
             case descendant:
                 return DataTypes.RelationType.ancestor;
-            case from:
-                return DataTypes.RelationType.towards;
-            case towards:
-                return DataTypes.RelationType.from;
+            case directedin:
+                return DataTypes.RelationType.directedout;
+            case directedout:
+                return DataTypes.RelationType.directedin;
         }
         return relationType;
     }

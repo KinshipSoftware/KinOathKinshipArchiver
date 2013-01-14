@@ -55,12 +55,12 @@ public class RelationRecordTable {
             // make sure the ancestral relations are unidirectional
             leftEntity = entityData;
             rightEntity = entityRelation.getAlterNode();
-        } else if (entityRelation.getRelationType() == DataTypes.RelationType.from) {
+        } else if (entityRelation.getRelationType() == DataTypes.RelationType.directedin) {
             // make sure the directed relations are unidirectional
             directedRelation = DataTypes.getOpposingRelationType(entityRelation.getRelationType());
             leftEntity = entityRelation.getAlterNode();
             rightEntity = entityData;
-        } else if (entityRelation.getRelationType() == DataTypes.RelationType.towards) {
+        } else if (entityRelation.getRelationType() == DataTypes.RelationType.directedout) {
             // make sure the directed relations are unidirectional
             leftEntity = entityData;
             rightEntity = entityRelation.getAlterNode();
