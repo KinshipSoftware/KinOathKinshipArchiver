@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg.relationlines;
 
@@ -52,6 +52,7 @@ public class RelationRecord {
     public int relationLineIndex;
     public LineRecord lineRecord; // todo: remove this 
     private String curveLinePoints = null; // todo: remove this 
+//    private boolean lineDirectionReversed = false; // sometimes a line is reversed so that any label is not shown upside down, but this must be known when rendering directed lines with line end markers
 
     public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, Point egoPoint, Point alterPoint, Point averageParentPassed) throws OldFormatException {
         lineRecord = setPolylinePointsAttribute(lineIdString, relationType, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y, averageParentPassed);
@@ -339,21 +340,33 @@ public class RelationRecord {
 
         return new LineRecord(groupName, lineIdString, initialPointsList);
     }
+//    /*
+//     * When rendering directed lines with line end markers in must be known if the line has been reversed.
+//     * Lines might be reversed so that any label is not shown upside down.
+//     */
+//
+//    public boolean isLineDirectionReversed() {
+//        return lineDirectionReversed;
+//    }
 
     private String setPathPointsAttribute(RelationTypeDefinition.CurveLineOrientation curveLineOrientation, float hSpacing, float vSpacing, float egoX, float egoY, float alterX, float alterY) {
         float fromBezX;
         float fromBezY;
         float toBezX;
         float toBezY;
-        if ((egoX > alterX && egoY < alterY) || (egoX > alterX && egoY > alterY)) {
-            // prevent the label on the line from rendering upside down
-            float tempX = alterX;
-            float tempY = alterY;
-            alterX = egoX;
-            alterY = egoY;
-            egoX = tempX;
-            egoY = tempY;
-        }
+        // reversing the line causes havoc with the directed relations so we will need to find a better way to prevent labels rendering upsidedown
+//        if ((egoX > alterX && egoY < alterY) || (egoX > alterX && egoY > alterY)) {
+//            // prevent the label on the line from rendering upside down
+//            float tempX = alterX;
+//            float tempY = alterY;
+//            alterX = egoX;
+//            alterY = egoY;
+//            egoX = tempX;
+//            egoY = tempY;
+//            lineDirectionReversed = true;
+//        } else {
+//            lineDirectionReversed = false;
+//        }
         // todo: if this line is too straight then add a curve by tweeking the handles
         if (curveLineOrientation == RelationTypeDefinition.CurveLineOrientation.vertical) {
             fromBezX = egoX;
