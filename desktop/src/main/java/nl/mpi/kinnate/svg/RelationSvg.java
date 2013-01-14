@@ -134,6 +134,11 @@ public class RelationSvg {
             linkLine.setAttribute("id", relationRecord.lineIdString);
             // begin line markers code
             if (relationRecord.directedRelation.equals(DataTypes.RelationType.directedout)) {
+                int lineMarkerOffset = EntitySvg.symbolSize * 2 - relationRecord.lineWidth * 9;
+                if (lineMarkerOffset < 0) {
+                    lineMarkerOffset = 0;
+                }
+//                System.out.println("lineMarkerOffset: " + lineMarkerOffset);
                 // add the start line marker
                 Element startMarker = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "marker");
                 final String startMarkerId = relationRecord.lineIdString + "StartMarker";
@@ -141,7 +146,7 @@ public class RelationSvg {
                 startMarker.setAttribute("fill", linkLine.getAttribute("stroke"));
                 startMarker.setAttribute("orient", "auto");
                 startMarker.setAttribute("viewBox", "0 0 12 12");
-                startMarker.setAttribute("refX", "-11");
+                startMarker.setAttribute("refX", Integer.toString(-lineMarkerOffset));
                 startMarker.setAttribute("refY", "6");
                 startMarker.setAttribute("markerWidth", "3");
                 startMarker.setAttribute("markerHeight", "3");
@@ -149,14 +154,13 @@ public class RelationSvg {
                 startMarkerNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + "StartMarker");
                 startMarker.appendChild(startMarkerNode);
                 defsNode.appendChild(startMarker);
-                linkLine.setAttribute("marker-start", "url(#" + startMarkerId + ")");
                 // add the end line marker
                 Element endMarker = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "marker");
                 final String endMarkerId = relationRecord.lineIdString + "EndMarker";
                 endMarker.setAttribute("id", endMarkerId);
                 endMarker.setAttribute("fill", linkLine.getAttribute("stroke"));
                 endMarker.setAttribute("viewBox", "0 0 10 10");
-                endMarker.setAttribute("refX", Integer.toString(EntitySvg.symbolSize + 4));
+                endMarker.setAttribute("refX", Integer.toString(lineMarkerOffset + 10));
                 endMarker.setAttribute("refY", "5");
                 endMarker.setAttribute("markerUnits", "strokeWidth");
                 endMarker.setAttribute("markerWidth", "4");
@@ -166,7 +170,13 @@ public class RelationSvg {
                 endMarkerNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + "EndMarker");
                 endMarker.appendChild(endMarkerNode);
                 defsNode.appendChild(endMarker);
+//                if (relationRecord.isLineDirectionReversed()) {
+//                    linkLine.setAttribute("marker-end", "url(#" + startMarkerId + ")");
+//                    linkLine.setAttribute("marker-start", "url(#" + endMarkerId + ")");
+//                } else {
+                linkLine.setAttribute("marker-start", "url(#" + startMarkerId + ")");
                 linkLine.setAttribute("marker-end", "url(#" + endMarkerId + ")");
+//                }
             }
 //            linkLine.setAttribute("marker-mid", "url(#StartMarker)");
             if (relationRecord.directedRelation.equals(DataTypes.RelationType.directedin)) {
