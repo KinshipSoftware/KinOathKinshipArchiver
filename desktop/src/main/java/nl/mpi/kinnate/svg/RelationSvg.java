@@ -133,7 +133,7 @@ public class RelationSvg {
             linkLine.setAttribute("stroke-width", Integer.toString(relationRecord.lineWidth));
             linkLine.setAttribute("id", relationRecord.lineIdString);
             // begin line markers code
-            if (relationRecord.directedRelation.equals(DataTypes.RelationType.towards)) {
+            if (relationRecord.directedRelation.equals(DataTypes.RelationType.directedout)) {
                 // add the start line marker
                 Element startMarker = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "marker");
                 final String startMarkerId = relationRecord.lineIdString + "StartMarker";
@@ -169,7 +169,7 @@ public class RelationSvg {
                 linkLine.setAttribute("marker-end", "url(#" + endMarkerId + ")");
             }
 //            linkLine.setAttribute("marker-mid", "url(#StartMarker)");
-            if (relationRecord.directedRelation.equals(DataTypes.RelationType.from)) {
+            if (relationRecord.directedRelation.equals(DataTypes.RelationType.directedin)) {
                 throw new UnsupportedOperationException("Directed relations should be drawn in one direction.");
             }
             // end line markers code
