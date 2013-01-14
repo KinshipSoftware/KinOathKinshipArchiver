@@ -96,40 +96,25 @@ public class EntitySvg {
 
     public int insertSymbols(SVGDocument doc, String svgNameSpace) {
         Element svgRoot = doc.getDocumentElement();
-        Element defsNode = doc.createElementNS(svgNameSpace, "defs");
-        defsNode.setAttribute("id", "KinSymbols");
+        Element lineMarkerDefsNode = doc.createElementNS(svgNameSpace, "defs");
+        lineMarkerDefsNode.setAttribute("id", "LineMarkerSymbols");
 
         // add the start line marker
-        Element startMarker = doc.createElementNS(svgNameSpace, "marker");
+        Element startMarker = doc.createElementNS(svgNameSpace, "circle");
         startMarker.setAttribute("id", "StartMarker");
-        startMarker.setAttribute("orient", "auto");
-        startMarker.setAttribute("viewBox", "0 0 12 12");
-        startMarker.setAttribute("refX", "-11");
-        startMarker.setAttribute("refY", "6");
-        startMarker.setAttribute("markerWidth", "3");
-        startMarker.setAttribute("markerHeight", "3");
-        Element startMarkerNode = doc.createElementNS(svgNameSpace, "circle");
-        startMarkerNode.setAttribute("cx", "6");
-        startMarkerNode.setAttribute("cy", "6");
-        startMarkerNode.setAttribute("r", "5");
-        startMarker.appendChild(startMarkerNode);
-        defsNode.appendChild(startMarker);
-        svgRoot.appendChild(defsNode);
+        startMarker.setAttribute("cx", "6");
+        startMarker.setAttribute("cy", "6");
+        startMarker.setAttribute("r", "5");
+        lineMarkerDefsNode.appendChild(startMarker);
         // add the end line marker
-        Element endMarker = doc.createElementNS(svgNameSpace, "marker");
+        Element endMarker = doc.createElementNS(svgNameSpace, "path");
         endMarker.setAttribute("id", "EndMarker");
-        endMarker.setAttribute("viewBox", "0 0 10 10");
-        endMarker.setAttribute("refX", Integer.toString(symbolSize + 4));
-        endMarker.setAttribute("refY", "5");
-        endMarker.setAttribute("markerUnits", "strokeWidth");
-        endMarker.setAttribute("markerWidth", "4");
-        endMarker.setAttribute("markerHeight", "3");
-        endMarker.setAttribute("orient", "auto");
-        Element endMarkerNode = doc.createElementNS(svgNameSpace, "path");
-        endMarkerNode.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
-        endMarker.appendChild(endMarkerNode);
-        defsNode.appendChild(endMarker);
-        svgRoot.appendChild(defsNode);
+        endMarker.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
+        lineMarkerDefsNode.appendChild(endMarker);
+        svgRoot.appendChild(lineMarkerDefsNode);
+
+        Element defsNode = doc.createElementNS(svgNameSpace, "defs");
+        defsNode.setAttribute("id", "KinSymbols");
         // add the blank symbol
         Element blankGroup = doc.createElementNS(svgNameSpace, "g");
         blankGroup.setAttribute("id", "blank");
@@ -168,7 +153,6 @@ public class EntitySvg {
         squareNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
         squareGroup.appendChild(squareNode);
         defsNode.appendChild(squareGroup);
-        svgRoot.appendChild(defsNode);
 
         // add the square symbol
         Element squareGroup45 = doc.createElementNS(svgNameSpace, "g");
@@ -183,7 +167,6 @@ public class EntitySvg {
         squareNode45.setAttribute("stroke-width", Integer.toString(strokeWidth));
         squareGroup45.appendChild(squareNode45);
         defsNode.appendChild(squareGroup45);
-        svgRoot.appendChild(defsNode);
 
         // add the rhombus symbol
         Element rhombusGroup = doc.createElementNS(svgNameSpace, "g");
@@ -198,7 +181,6 @@ public class EntitySvg {
         rhombusNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
         rhombusGroup.appendChild(rhombusNode);
         defsNode.appendChild(rhombusGroup);
-        svgRoot.appendChild(defsNode);
 
 //        // add the rhombus symbol
 //        Element rhombusGroup90 = doc.createElementNS(svgNameSpace, "g");
@@ -213,7 +195,6 @@ public class EntitySvg {
 //        rhombusNode90.setAttribute("stroke-width", Integer.toString(strokeWidth));
 //        rhombusGroup90.appendChild(rhombusNode90);
 //        defsNode.appendChild(rhombusGroup90);
-//        svgRoot.appendChild(defsNode);
 
         // add the union symbol
         Element unionGroup = doc.createElementNS(svgNameSpace, "g");
@@ -244,7 +225,6 @@ public class EntitySvg {
         unionGroup.appendChild(upperNode);
         unionGroup.appendChild(lowerNode);
         defsNode.appendChild(unionGroup);
-        svgRoot.appendChild(defsNode);
 
         // add the triangle symbol
         Element triangleGroup = doc.createElementNS(svgNameSpace, "g");
@@ -259,7 +239,6 @@ public class EntitySvg {
         triangleNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
         triangleGroup.appendChild(triangleNode);
         defsNode.appendChild(triangleGroup);
-        svgRoot.appendChild(defsNode);
 
         // add the triangle symbol
         Element triangleGroup1 = doc.createElementNS(svgNameSpace, "g");
@@ -273,7 +252,6 @@ public class EntitySvg {
         triangleNode1.setAttribute("stroke-width", Integer.toString(strokeWidth));
         triangleGroup1.appendChild(triangleNode1);
         defsNode.appendChild(triangleGroup1);
-        svgRoot.appendChild(defsNode);
 
         // add the triangle symbol
         Element triangleGroup2 = doc.createElementNS(svgNameSpace, "g");
@@ -287,7 +265,6 @@ public class EntitySvg {
         triangleNode2.setAttribute("stroke-width", Integer.toString(strokeWidth));
         triangleGroup2.appendChild(triangleNode2);
         defsNode.appendChild(triangleGroup2);
-        svgRoot.appendChild(defsNode);
 
         // add the triangle symbol
         Element triangleGroup3 = doc.createElementNS(svgNameSpace, "g");
@@ -301,7 +278,6 @@ public class EntitySvg {
         triangleNode3.setAttribute("stroke-width", Integer.toString(strokeWidth));
         triangleGroup3.appendChild(triangleNode3);
         defsNode.appendChild(triangleGroup3);
-        svgRoot.appendChild(defsNode);
 
 //        // add the equals symbol
 //        Element equalsGroup = doc.createElementNS(svgNameSpace, "g");
@@ -316,7 +292,6 @@ public class EntitySvg {
 //        equalsNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
 //        equalsGroup.appendChild(equalsNode);
 //        defsNode.appendChild(equalsGroup);
-//        svgRoot.appendChild(defsNode);
 
         // add the error symbol
         Element noneGroup = doc.createElementNS(svgNameSpace, "g");
@@ -336,7 +311,6 @@ public class EntitySvg {
         noneNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
         noneGroup.appendChild(noneNode);
         defsNode.appendChild(noneGroup);
-        svgRoot.appendChild(defsNode);
 
         for (String markerColour : new String[]{"black", "orange", "cyan", "purple", "red", "green", "blue"}) {// todo: add a few more colours
             // add the marker symbols
@@ -376,8 +350,8 @@ public class EntitySvg {
             crossNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
             crossGroup.appendChild(crossNode);
             defsNode.appendChild(crossGroup);
-            svgRoot.appendChild(defsNode);
         }
+        svgRoot.appendChild(defsNode);
         return symbolSize;
     }
 
