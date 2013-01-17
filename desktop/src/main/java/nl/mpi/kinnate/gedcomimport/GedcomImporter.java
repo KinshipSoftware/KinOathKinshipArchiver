@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -64,6 +65,18 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
         EntityData memberEntity;
     }
 
+    class FamGroupElement {
+
+        public FamGroupElement(String typeString, EntityDocument famEntity, EntityDocument memberEntity) {
+            this.typeString = typeString;
+            this.famEntity = famEntity;
+            this.memberEntity = memberEntity;
+        }
+        final String typeString;
+        final EntityDocument famEntity;
+        final EntityDocument memberEntity;
+    }
+
     protected ImportTranslator getImportTranslator() {
         ImportTranslator importTranslator = new ImportTranslator(true);
         // todo: add the translator values if required
@@ -80,14 +93,16 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
 
     @Override
     public UniqueIdentifier[] importFile(InputStreamReader inputStreamReader, String profileId) throws IOException, ImportException {
-        ArrayList<UniqueIdentifier> createdNodes = new ArrayList<UniqueIdentifier>();
+        HashSet<UniqueIdentifier> createdNodes = new HashSet<UniqueIdentifier>();
         HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>> socialGroupRoleMap = new HashMap<UniqueIdentifier, ArrayList<SocialMemberElement>>(); // GroupID: @XX@, RoleType: WIFE HUSB CHIL, EntityData
+        ArrayList<FamGroupElement> famGroupList = new ArrayList<FamGroupElement>();
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
         ImportTranslator importTranslator = getImportTranslator();
 
         String strLine;
         ArrayList<String> gedcomLevelStrings = new ArrayList<String>();
+        ArrayList<EntityDocument> documentsToDeleteIfNoFieldsAdded = new ArrayList<EntityDocument>();
         EntityDocument currentEntity = null;
         EntityDocument fileHeaderEntity = null;
         boolean skipFileEntity = false;
@@ -145,6 +160,9 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                 fileHeaderEntity.entityData.addRelatedNode(currentEntity.entityData, RelationType.other, null, null, null, "source");
                                 if (lineStructure.getEntityType() != null) {
                                     currentEntity.insertValue("Type", lineStructure.getEntityType());
+                                }
+                                if (lineStructure.getDeleteIfNoFeildsAdded()) {
+                                    documentsToDeleteIfNoFieldsAdded.add(currentEntity);
                                 }
                                 if (lineStructure.hasLineContents()) {
                                     currentEntity.insertValue(lineStructure.getCurrentName(), lineStructure.getLineContents());
@@ -276,9 +294,11 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                         if (!socialGroupRoleMap.containsKey(socialGroupIdentifier)) {
                                             socialGroupRoleMap.put(socialGroupIdentifier, new ArrayList<SocialMemberElement>());
                                         }
+                                        // store all the sanguine relations to link later
                                         socialGroupRoleMap.get(socialGroupIdentifier).add(new SocialMemberElement(lineStructure.getCurrentName(), socialGroupMember));
                                         // the fam relations to consist of associations with implied sanuine links to the related entities, these sangine relations are handled later when all members are known
-                                        currentEntity.entityData.addRelatedNode(getEntityDocument(createdNodes, profileId, lineStructure.getLineContents(), importTranslator).entityData, RelationType.other, null, null, null, lineStructure.getCurrentName());
+                                        // store all the family object relations to add later or not depending on adequate fields being added
+                                        famGroupList.add(new FamGroupElement(lineStructure.getCurrentName(), currentEntity, getEntityDocument(createdNodes, profileId, lineStructure.getLineContents(), importTranslator)));
                                         notConsumed = false;
                                     } else {
                                         // todo: check this change
@@ -341,7 +361,43 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                 }
             }
         }
-        // add the header to all entities
+        for (FamGroupElement famGroupElement : famGroupList) {
+            EntityDocument famGroup = null;
+            if (documentsToDeleteIfNoFieldsAdded.contains(famGroupElement.famEntity)) {
+                famGroup = famGroupElement.famEntity;
+            } else if (documentsToDeleteIfNoFieldsAdded.contains(famGroupElement.memberEntity)) {
+                famGroup = famGroupElement.memberEntity;
+            }
+            if (famGroup == null || famGroup.getAddedFieldCount() > 1) {
+                // keep the fam groups that have information in them
+                famGroupElement.famEntity.entityData.addRelatedNode(famGroupElement.memberEntity.entityData, RelationType.other, null, null, null, famGroupElement.typeString);
+            } else {
+                // discard any family group that does not contain any fields
+                fileHeaderEntity.entityData.removeRelationsWithNode(famGroup.entityData);
+                famGroup.entityData.removeRelationsWithNode(fileHeaderEntity.entityData);
+                deleteEntityDocument(famGroup);
+                createdNodes.remove(famGroup.getUniqueIdentifier());
+            }
+        }
+
+//        for (EntityDocument deleteableDocument : documentsToDeleteIfNoFieldsAdded) {
+//            // delete any documents (fam groups) that are flagged and do not have any fields added
+//            if (deleteableDocument.getAddedFieldCounter() < 1) {
+//                for (EntityRelation entityRelation : deleteableDocument.entityData.getAllRelations()) {
+//
+////                        protected HashMap<String, HashSet<UniqueIdentifier>> createdNodeIds;
+////    HashMap<String, EntityDocument> createdDocuments = new HashMap<String, EntityDocument>();
+//
+//
+//                    EntityDocument relatedDocument = createdDocuments.get(createdNodeIds.(entityRelation.alterUniqueIdentifier));
+////                    if (relatedDocument == null) {
+//                    // remove the relation
+//                    deleteableDocument.entityData.removeRelationsWithNode(relatedDocument.entityData);
+//                    relatedDocument.entityData.removeRelationsWithNode(deleteableDocument.entityData);
+////                    }
+//                }
+//            }
+//        }
         saveAllDocuments();
         return createdNodes.toArray(new UniqueIdentifier[]{});
     }

@@ -61,6 +61,7 @@ public class GedcomLineStructure extends ImportLineStructure {
             entityType = "Gedcom Note";
         } else if (getdomType.equals("FAM")) {
             entityType = "Gedcom Family Group";
+            deleteIfNoFeildsAdded = true;
         } else if (getdomType.equals("INDI")) {
             // do not set a type for individuals
         } else if (getdomType.equals("OBJE")) {

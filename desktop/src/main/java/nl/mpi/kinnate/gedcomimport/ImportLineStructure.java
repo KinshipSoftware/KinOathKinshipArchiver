@@ -32,6 +32,7 @@ public abstract class ImportLineStructure {
     String currentID = null;
     String entityType = null;
     boolean isFileHeader = false;
+    boolean deleteIfNoFeildsAdded = false;
     boolean incompleteLine = false;
     private int currentFieldIndex = 0;
 
@@ -161,6 +162,10 @@ public abstract class ImportLineStructure {
 
     public boolean isIncompleteLine() {
         return incompleteLine;
+    }
+
+    public boolean getDeleteIfNoFeildsAdded() {
+        return deleteIfNoFeildsAdded;
     }
 
     abstract boolean isRelation();

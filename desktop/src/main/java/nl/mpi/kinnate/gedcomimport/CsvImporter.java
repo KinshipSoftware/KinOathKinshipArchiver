@@ -1,28 +1,28 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.gedcomimport;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -245,7 +245,7 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
         appendToTaskOutput("If the ID field exists and any row contains the text ID then the headers are replaced with current row values (for PUCK txt files).");
         appendToTaskOutput("If the first record does not start at zero then all relations to the ID of zero will be ignored.");
         appendToTaskOutput("");
-        ArrayList<UniqueIdentifier> createdNodes = new ArrayList<UniqueIdentifier>();
+        HashSet<UniqueIdentifier> createdNodes = new HashSet<UniqueIdentifier>();
         try {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 //            char fieldSeparator = detectFieldDelimiter(bufferedReader);
