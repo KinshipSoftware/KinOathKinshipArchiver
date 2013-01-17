@@ -308,12 +308,17 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                         String dcrString = null;
                                         RelationType targetRelation = RelationType.other;
                                         String[] currentNameParts = currentName.split(":");
-                                        try {
-                                            if (currentNameParts.length > 0) {
+                                        if (currentNameParts.length > 0) {
+                                            try {
                                                 targetRelation = RelationType.valueOf(currentNameParts[0]);
+                                            } catch (IllegalArgumentException exception) {
+                                                if (currentNameParts.length == 3) {
+                                                    // if there are three parts then the file should be an export from kinoath, in which case we presumably should support all types
+                                                    appendToTaskOutput("Unsupported Relation Type: " + currentName);
+                                                }
+                                                targetRelation = RelationType.other;
+                                                customType = currentNameParts[0];
                                             }
-                                        } catch (IllegalArgumentException exception) {
-                                            appendToTaskOutput("Unsupported Relation Type: " + currentName);
                                         }
                                         if (currentNameParts.length == 3) {
                                             customType = currentNameParts[1];
@@ -361,6 +366,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                 }
             }
         }
+        int omittedFamGroupCount = 0;
         for (FamGroupElement famGroupElement : famGroupList) {
             EntityDocument famGroup = null;
             if (documentsToDeleteIfNoFieldsAdded.contains(famGroupElement.famEntity)) {
@@ -377,8 +383,10 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                 famGroup.entityData.removeRelationsWithNode(fileHeaderEntity.entityData);
                 deleteEntityDocument(famGroup);
                 createdNodes.remove(famGroup.getUniqueIdentifier());
+                omittedFamGroupCount++;
             }
         }
+        appendToTaskOutput("Omitted " + omittedFamGroupCount + " FAM groups that contained no field data (all relations have been preserved)");
 
 //        for (EntityDocument deleteableDocument : documentsToDeleteIfNoFieldsAdded) {
 //            // delete any documents (fam groups) that are flagged and do not have any fields added
