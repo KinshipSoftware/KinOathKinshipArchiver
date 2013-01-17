@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.gedcomimport;
 
@@ -26,9 +26,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -142,7 +142,27 @@ public class EntityImporter implements GenericImporter {
         return destinationDirectory;
     }
 
-    protected EntityDocument getEntityDocument(ArrayList<UniqueIdentifier> createdNodes, String typeString, String idString, ImportTranslator importTranslator) throws ImportException {
+    protected void deleteEntityDocument(EntityDocument entityDocument) throws ImportException {
+        if (entityDocument.entityData.getAllRelations().length > 0) {
+            throw new ImportException("Cannot delete entity that has still has relations.");
+        }
+        String entityKey = null;
+        for (Map.Entry<String, EntityDocument> entry : createdDocuments.entrySet()) {
+            if (entry.getValue().equals(entityDocument)) {
+                entityKey = entry.getKey();
+                break;
+            }
+        }
+        if (entityKey != null) {
+            createdDocuments.remove(entityKey);
+            for (HashSet<UniqueIdentifier> identifierSet : createdNodeIds.values()) {
+                identifierSet.remove(entityDocument.getUniqueIdentifier());
+            }
+            entityDocument.getFile().delete();
+        }
+    }
+
+    protected EntityDocument getEntityDocument(HashSet<UniqueIdentifier> createdNodes, String typeString, String idString, ImportTranslator importTranslator) throws ImportException {
         EntityDocument currentEntity = createdDocuments.get(idString);
         UniqueIdentifier uniqueIdentifier;
         if (currentEntity == null) {
