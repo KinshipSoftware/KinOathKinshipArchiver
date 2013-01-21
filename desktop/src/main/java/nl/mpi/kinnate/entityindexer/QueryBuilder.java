@@ -1,3 +1,20 @@
+/**
+ * Copyright (C) 2012 The Language Archive
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package nl.mpi.kinnate.entityindexer;
 
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -100,7 +117,12 @@ public class QueryBuilder {
 
     public String getSymbolClause(IndexerParameters indexParameters, String docRootVar) {
         StringBuilder stringBuilder = new StringBuilder();
+        boolean notFirst = false;
         for (ParameterElement currentEntry : indexParameters.symbolFieldsFields.getValues()) {
+            if (notFirst) {
+                stringBuilder.append(",\n");
+            }
+            notFirst = true;
             String trimmedXpath = currentEntry.getXpathString().substring("*:Kinnate".length());
             stringBuilder.append("if (exists(");
             stringBuilder.append(docRootVar);
@@ -109,7 +131,7 @@ public class QueryBuilder {
             stringBuilder.append("insert node <kin:Symbol xmlns:kin=\"http://mpi.nl/tla/kin\">");
             stringBuilder.append(currentEntry.getSelectedValue());
             stringBuilder.append("</kin:Symbol> after $copyNode/*:Identifier "); // into $copyNode
-            stringBuilder.append("else (),\n");
+            stringBuilder.append("else ()");
         }
         return stringBuilder.toString();
     }
@@ -176,7 +198,8 @@ public class QueryBuilder {
                 + this.getLabelsClause(indexParameters, "root($entityNode)/")
                 + this.getDatesClause(indexParameters, "root($entityNode)/")
                 + this.getSymbolClause(indexParameters, "root($entityNode)/")
-                + "insert nodes <kin:Path xmlns:kin=\"http://mpi.nl/tla/kin\">{fn:substring-after(base-uri($entityNode), '/')}</kin:Path> after $copyNode/*:Identifier\n" // when using a basex version younger than 6.62 the "after" fails re attributes: after $copyNode/*:Identifier" maybe copy is failing to keep the namespace, for earlier version the following can be used "into $copyNode"
+                // replaced the use of path by the ID get path in project method, which alows reindexing and would make the query a little faster
+                //                + "insert nodes <kin:Path xmlns:kin=\"http://mpi.nl/tla/kin\">{fn:substring-after(base-uri($entityNode), '/')}</kin:Path> after $copyNode/*:Identifier\n" // when using a basex version younger than 6.62 the "after" fails re attributes: after $copyNode/*:Identifier" maybe copy is failing to keep the namespace, for earlier version the following can be used "into $copyNode"
                 // todo: test if "insert after" take longer than "insert into"
                 + ")\n"
                 + "return $copyNode\n";
@@ -224,9 +247,10 @@ public class QueryBuilder {
                 + "return db:delete('nl-mpi-kinnate', fn:substring-after(base-uri($identifierNode), '/'))";
     }
 
-    public String getEntityPath(UniqueIdentifier uniqueIdentifier) {
+    public String getEntityPath(String projectName, String projectPathString, UniqueIdentifier uniqueIdentifier) {
+        // replaced the path stored in the entity by ID get path in project method, which alows reindexing and would make the query a little faster
         return "let $identifierNode := collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n"
-                + "return fn:substring-after(base-uri($identifierNode), '/')";
+                + "return replace(replace(base-uri($identifierNode),'" + projectName + "/file:','file:'),'" + projectName + "/','file://" + projectPathString + "/')";
     }
 //    public String getEntityPaths(UniqueIdentifier[] uniqueIdentifier) {
 //        StringBuilder builder = new StringBuilder();

@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.entityindexer;
 
@@ -73,7 +73,7 @@ import org.basex.query.value.item.Item;
  * @author Peter Withers
  */
 public class EntityCollection extends DatabaseUpdateHandler {
-    
+
     final private SessionStorage sessionStorage;
     final private MessageDialogHandler dialogHandler;
     final private String databaseName; // = "nl-mpi-kinnate";
@@ -81,14 +81,14 @@ public class EntityCollection extends DatabaseUpdateHandler {
     final static Context context = new Context();
     final static Object databaseLock = new Object();
     final private String dbErrorMessage = "Could not perform the required query, not all data might be shown at this point.\nSee the log file via the help menu for more details.";
-    
+
     public class SearchResults {
-        
+
         public String[] resultsPathArray;
         public String statusMessage;
         public int resultCount = 0;
     }
-    
+
     public EntityCollection(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, ProjectRecord projectRecord) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
@@ -124,10 +124,11 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //        }
 //    }
     // see comments below
-    @Deprecated
-    protected void createDatabase() {
-        // this continues to cause the inserted data to be non updateable without creating duplicates
-        // todo: if this is required then we will need to walk the working directory and add each file via addFileToDB
+    public void recreateDatabase() throws EntityServiceException {
+        /* 
+         * this was depricated due to inserted data being non updateable without creating duplicates, 
+         * however we can use it again now that paths are not used to delete records but instead the identifier is used.
+         * */
         try {
 //            System.out.println("List: " + new List().execute(context));
             synchronized (databaseLock) {
@@ -147,7 +148,9 @@ public class EntityCollection extends DatabaseUpdateHandler {
             }
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
+            throw new EntityServiceException(baseXException.getMessage());
         }
+        updateOccured();
     }
 
     /////////////////// Export Queries ///////////////////
@@ -158,13 +161,13 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
         return tempDbContext;
     }
-    
+
     public void dropExportDatabase(Context tempDbContext, String exportDatabaseName) throws BaseXException {
         synchronized (databaseLock) {
             new DropDB(exportDatabaseName).execute(tempDbContext);
         }
     }
-    
+
     public Context createExportDatabase(File directoryOfInputFiles, String suffixFilter, String exportDatabaseName) throws BaseXException {
         if (suffixFilter == null) {
             suffixFilter = "*.kmdi";
@@ -177,7 +180,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
         return tempDbContext;
     }
-    
+
     public String performExportQuery(Context tempDbContext, String exportDatabaseName, String exportQueryString) throws BaseXException {
         if (tempDbContext == null) {
             tempDbContext = context;
@@ -209,7 +212,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             BugCatcherManager.getBugCatcher().logError(baseXException);
         }
     }
-    
+
     private void addFileToDB(URI updatedDataUrl, UniqueIdentifier updatedFileIdentifier) {
         // the document might be in any location, so the url must be used to add to the DB, but the ID must be used to remove the old DB entries, so that old records will removed including duplicates
         String urlString = updatedDataUrl.toASCIIString();
@@ -230,7 +233,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Add File To DB");
         }
     }
-    
+
     public void deleteFromDatabase(UniqueIdentifier updatedFileIdentifier) {
         try {
             synchronized (databaseLock) {
@@ -248,7 +251,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Add File To DB");
         }
     }
-    
+
     public void updateDatabase(final UniqueIdentifier[] updatedFileArray, final JProgressBar progressBar) {
         try {
             if (progressBar != null) {
@@ -296,7 +299,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Update Database");
         }
     }
-    
+
     public void updateDatabase(URI updatedFile, UniqueIdentifier updatedFileIdentifier) {
         // it would appear that a re adding a file does not remove the old entries so for now we will dump and recreate the entire database
         // update, this has been updated and adding directories as a collection breaks the update and delete methods in basex so we now do each document individualy
@@ -326,16 +329,16 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //        String queryString = "distinct-values(collection('nl-mpi-kinnate')/Kinnate/Relation/Type/text())";
 //        return performQuery(queryString);
 //    }
-    public SearchResults searchByName(String namePartString) {
-        String queryString = "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + namePartString + "\") return base-uri($doc)";
-        return performQuery(queryString);
-    }
-    
+//    public SearchResults searchByName(String namePartString) {
+//        String queryString = "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + namePartString + "\") return base-uri($doc)";
+//        return performQuery(queryString);
+//    }
+
     public SearchResults searchForLocalEntites() {
         String queryString = "for $doc in collection('nl-mpi-kinnate') where exists(/*:Kinnate/*:Entity/*:Identifier/@*:type=\"lid\") return base-uri($doc)";
         return performQuery(queryString);
     }
-    
+
     private SearchResults performQuery(String queryString) {
         SearchResults searchResults = new SearchResults();
         ArrayList<String> resultPaths = new ArrayList<String>();
@@ -363,7 +366,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //        searchResults.statusMessage = searchResults.statusMessage + "\n query: " + queryString;
         return searchResults;
     }
-    
+
     public UniqueIdentifier[] getEntityIdByTerm(KinTypeElement queryTerms) {
         // todo: add a query cache or determine that the xml database does the job of caching adequately (p.s. basex appears to cache the queries adequately)
         UniqueIdentifier[] returnArray = new UniqueIdentifier[]{};
@@ -405,20 +408,20 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
         return returnArray;
     }
-    
+
     public EntityData[] getEntityByEndPoint(DataTypes.RelationType relationType, IndexerParameters indexParameters) {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityByEndPointQuery(relationType, indexParameters);
         System.out.println("getEntityByEndPoint:" + query1String);
         return getEntityByQuery(query1String, indexParameters);
     }
-    
+
     public EntityData[] getEntityByKeyWord(String keyWords, IndexerParameters indexParameters) {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityByKeyWordQuery(keyWords, indexParameters);
         return getEntityByQuery(query1String, indexParameters);
     }
-    
+
     private EntityData[] getEntityByQuery(String query1String, IndexerParameters indexParameters) {
         long startTime = System.currentTimeMillis();
         System.out.println("query1String: " + query1String);
@@ -450,7 +453,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
         return new EntityData[]{};
     }
-    
+
     public EntityData[] getEntityWithRelations(UniqueIdentifier uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
         // todo: probably needs to be updated.
         long startTime = System.currentTimeMillis();
@@ -480,7 +483,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
         return new EntityData[]{}; //(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
     }
-    
+
     public void runDeleteQuery(UniqueIdentifier uniqueIdentifier) {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getDeleteQuery(uniqueIdentifier);
@@ -498,10 +501,10 @@ public class EntityCollection extends DatabaseUpdateHandler {
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Run Delete Query");
         }
     }
-    
+
     public String getEntityPath(UniqueIdentifier uniqueIdentifier) {
         QueryBuilder queryBuilder = new QueryBuilder();
-        String query1String = queryBuilder.getEntityPath(uniqueIdentifier);
+        String query1String = queryBuilder.getEntityPath(databaseName, sessionStorage.getProjectWorkingDirectory().toString(), uniqueIdentifier);
 //        System.out.println("query1String: " + query1String);
         try {
             long startQueryTime = System.currentTimeMillis();
@@ -518,7 +521,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
         return null;
     }
-    
+
     public EntityData getEntity(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
 //        long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
@@ -556,7 +559,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
         return new EntityData(uniqueIdentifier, new String[]{"Error loading data", "view log for details"});
     }
-    
+
     static public void main(String[] args) {
         JFrame jFrame = new JFrame("Test Query Window");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -629,16 +632,16 @@ public class EntityCollection extends DatabaseUpdateHandler {
             public void actionPerformed(ActionEvent e) {
                 resultsText.setText("recreating database");
 //                new EntityCollection().dropDatabase();
-//                try {
-                entityCollection.createDatabase();
-                resultsText.setText("done\n");
-//                } catch (URISyntaxException exception) {
-//                    resultsText.append(exception.getMessage());
-//                }
+                try {
+                    entityCollection.recreateDatabase();
+                    resultsText.setText("done\n");
+                } catch (EntityServiceException exception) {
+                    resultsText.append(exception.getMessage());
+                }
                 resultsText.setVisible(true);
             }
         });
-        
+
         JPanel jPanel = new JPanel(new BorderLayout());
         jPanel.add(queryText, BorderLayout.CENTER);
         jPanel.add(resultsText, BorderLayout.PAGE_END);
