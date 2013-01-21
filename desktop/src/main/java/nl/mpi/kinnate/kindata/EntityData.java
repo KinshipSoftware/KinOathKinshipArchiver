@@ -45,8 +45,8 @@ public class EntityData {
     private UniqueIdentifier uniqueIdentifier;
     @XmlElement(name = "CustomIdentifier", namespace = "http://mpi.nl/tla/kin")
     public String customIdentifier;
-    @XmlElement(name = "Path", namespace = "http://mpi.nl/tla/kin")
-    private String entityPath;
+//    @XmlElement(name = "Path", namespace = "http://mpi.nl/tla/kin")
+//    private String entityPath;
     @XmlElement(name = "KinType", namespace = "http://mpi.nl/tla/kin")
     private String[] kinTypeArray = new String[]{};
     @XmlElement(name = "KinTerm", namespace = "http://mpi.nl/tla/kin")
@@ -105,7 +105,7 @@ public class EntityData {
     public EntityData(LabelStringsParser labelStringsParser, EntityData parentEntity, String kinTypeStringLocal, SymbolType symbolIndex, boolean isEgoLocal) {
         // this is used to enable transient entities to have the same identifier on each redraw and on loading a saved document, otherwise the entity positions on the graph get lost
         uniqueIdentifier = labelStringsParser.getUniqueIdentifier(parentEntity, kinTypeStringLocal, symbolIndex);
-        entityPath = null;
+//        entityPath = null;
         kinTypeArray = new String[]{kinTypeStringLocal};
         symbolNames = new String[]{symbolIndex.name()};
         labelStringArray = labelStringsParser.labelsStrings;
@@ -118,7 +118,7 @@ public class EntityData {
     public EntityData(UniqueIdentifier uniqueIdentifierLocal, String[] errorMessage) {
         // this is used only to return error messages from a query that fails to get an entity and to prevent that query being hit again
         uniqueIdentifier = uniqueIdentifierLocal;
-        entityPath = null;
+//        entityPath = null;
         symbolNames = new String[]{SymbolType.error.name()};
         labelStringArray = errorMessage;
         isEgo = false;
@@ -127,7 +127,7 @@ public class EntityData {
     // begin code used for importing gedcom and other file types
     public EntityData(UniqueIdentifier uniqueIdentifierLocal) {
         uniqueIdentifier = uniqueIdentifierLocal;
-        entityPath = null;
+//        entityPath = null;
         symbolNames = new String[]{};
         labelStringArray = null;
         isEgo = false;
@@ -175,9 +175,9 @@ public class EntityData {
         return dateOfDeath;
     }
 
-    public String getEntityPath() {
-        return entityPath;
-    }
+//    public String getEntityPath() {
+//        return entityPath;
+//    }
 
     public void addKinTypeString(String kinTypeString) {
         ArrayList<String> tempList = new ArrayList<String>(Arrays.asList(kinTypeArray));
