@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -35,13 +35,14 @@ import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.ui.ImageBoxRenderer;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
- * Document : MetadataPanel
  * Created on : Oct 13, 2011, 5:06:28 PM
- * Author : Peter Withers
+ *
+ * @author Peter Withers
  */
 public class MetadataPanel extends JPanel {
 
@@ -58,9 +59,11 @@ public class MetadataPanel extends JPanel {
     //private DateEditorPanel dateEditorPanel;
     private ArbilDataNodeLoader dataNodeLoader;
     private ContainerNode rootNode;
+    private EntityCollection entityCollection;
 
-    public MetadataPanel(GraphPanel graphPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer) {
+    public MetadataPanel(GraphPanel graphPanel, EntityCollection entityCollection, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer) {
         this.arbilTree = new ArbilTree();
+        this.entityCollection = entityCollection;
         rootNode = new ContainerNode("links", null, new ArbilNode[]{});
         arbilTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode)));
         this.kinTableModel = new ArbilTableModel(imageBoxRenderer);
@@ -106,7 +109,7 @@ public class MetadataPanel extends JPanel {
     }
 
     public void addEntityDataNode(KinDiagramPanel kinDiagramPanel, EntityData entityData) {
-        String entityPath = entityData.getEntityPath();
+        String entityPath = entityCollection.getEntityPath(entityData.getUniqueIdentifier());
         System.out.println("entity path: " + entityPath);
         boolean metadataFileMissing = false;
         if (entityPath != null && entityPath.length() > 0) {
