@@ -411,20 +411,20 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        }
 //        return false;
 //    }
-    public String getPathForElementId(UniqueIdentifier elementId) {
-//        NamedNodeMap namedNodeMap = doc.getElementById(elementId).getAttributes();
-//        for (int attributeCounter = 0; attributeCounter < namedNodeMap.getLength(); attributeCounter++) {
-//            System.out.println(namedNodeMap.item(attributeCounter).getNodeName());
-//            System.out.println(namedNodeMap.item(attributeCounter).getNamespaceURI());
-//            System.out.println(namedNodeMap.item(attributeCounter).getNodeValue());
+//    public String getPathForElementId(UniqueIdentifier elementId) {
+////        NamedNodeMap namedNodeMap = doc.getElementById(elementId).getAttributes();
+////        for (int attributeCounter = 0; attributeCounter < namedNodeMap.getLength(); attributeCounter++) {
+////            System.out.println(namedNodeMap.item(attributeCounter).getNodeName());
+////            System.out.println(namedNodeMap.item(attributeCounter).getNamespaceURI());
+////            System.out.println(namedNodeMap.item(attributeCounter).getNodeValue());
+////        }
+//        Element entityElement = doc.getElementById(elementId.getAttributeIdentifier());
+//        if (entityElement == null) {
+//            return null;
+//        } else {
+//            return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path");
 //        }
-        Element entityElement = doc.getElementById(elementId.getAttributeIdentifier());
-        if (entityElement == null) {
-            return null;
-        } else {
-            return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path");
-        }
-    }
+//    }
 
     public String getKinTypeForElementId(UniqueIdentifier elementId) {
         Element entityElement = doc.getElementById(elementId.getAttributeIdentifier());

@@ -553,7 +553,7 @@ public class EntitySvg {
     protected Element createEntitySymbol(GraphPanel graphPanel, EntityData currentNode) {
         Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
         groupNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier());
-        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
+//        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
         // the kin type strings are stored here so that on selection in the graph the add kin term panel can be pre populatedwith the kin type strings of the selection
         groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
 //        counterTest++;
