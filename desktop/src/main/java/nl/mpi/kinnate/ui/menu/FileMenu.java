@@ -1,3 +1,20 @@
+/**
+ * Copyright (C) 2012 The Language Archive
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package nl.mpi.kinnate.ui.menu;
 
 import java.awt.Component;
@@ -46,7 +63,8 @@ public class FileMenu extends javax.swing.JMenu {
     private javax.swing.JMenuItem newDiagramMenuItem;
     private javax.swing.JMenuItem openDiagram;
     private RecentFileMenu recentFileMenu;
-    private ProjectFileMenu projectFileMenu;
+    private javax.swing.JMenuItem projectOpenMenu;
+    private ProjectFileMenu projectRecentMenu;
     private javax.swing.JMenuItem saveAsDefaultMenuItem;
     private javax.swing.JMenuItem saveDiagram;
     private javax.swing.JMenuItem saveDiagramAs;
@@ -70,7 +88,8 @@ public class FileMenu extends javax.swing.JMenu {
         jMenu3 = new DocumentNewMenu(diagramWindowManager, parentComponent);
         openDiagram = new javax.swing.JMenuItem();
         recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage, parentComponent);
-        projectFileMenu = new ProjectFileMenu(diagramWindowManager, sessionStorage, parentComponent);
+        projectOpenMenu = new javax.swing.JMenuItem();
+        projectRecentMenu = new ProjectFileMenu(diagramWindowManager, sessionStorage, parentComponent);
         jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
@@ -130,10 +149,17 @@ public class FileMenu extends javax.swing.JMenu {
 
 
         this.add(recentFileMenu);
-        this.add(projectFileMenu);
 
         jMenu1.setText("Open Sample Diagram");
         this.add(jMenu1);
+
+        this.add(new javax.swing.JPopupMenu.Separator());
+        projectOpenMenu.setText("Open Project");
+        projectOpenMenu.setActionCommand("browse");
+        projectOpenMenu.addActionListener(projectRecentMenu);
+        this.add(projectOpenMenu);
+
+        this.add(projectRecentMenu);
 
         this.add(jSeparator1);
 

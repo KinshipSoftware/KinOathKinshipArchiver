@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui.menu;
 
@@ -51,7 +51,7 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
         this.diagramWindowManager = diagramWindowManager;
         this.sessionStorage = sessionStorage;
         this.parentComponent = parentComponent;
-        this.setText("Open Project");
+        this.setText("Open Recent Project");
         this.addMenuListener(new MenuListener() {
             public void menuCanceled(MenuEvent evt) {
             }
@@ -96,7 +96,7 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
     private void setupMenu() {
         this.removeAll();
         try {
-            String[] recentProjectFileArray = sessionStorage.loadStringArray("RecentKinProjects");
+            String[] recentProjectFileArray = /* move this to the project manager */ sessionStorage.loadStringArray("RecentKinProjects");
             if (recentProjectFileArray != null) {
                 for (int currentIndex = recentProjectFileArray.length - 1; currentIndex >= 0; currentIndex--) {
                     String currentFilePath = recentProjectFileArray[currentIndex];
@@ -119,9 +119,11 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if ("Clear List".equals(e.getActionCommand())) {
+        if ("browse".equals(e.getActionCommand())) {
+            System.out.println("browse for project");
+        } else if ("Clear List".equals(e.getActionCommand())) {
             try {
-                sessionStorage.saveStringArray("RecentKinProjects", new String[]{});
+                /* move this to the project manager */ sessionStorage.saveStringArray("RecentKinProjects", new String[]{});
             } catch (IOException exception) {
                 BugCatcherManager.getBugCatcher().logError(exception);
             }

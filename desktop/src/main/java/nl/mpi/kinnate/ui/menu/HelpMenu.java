@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui.menu;
 
@@ -22,6 +22,7 @@ import java.net.URI;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JProgressBar;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.arbil.ArbilVersion;
@@ -31,6 +32,8 @@ import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.ui.KinOathHelp;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import org.xml.sax.SAXException;
@@ -44,7 +47,7 @@ public class HelpMenu extends JMenu {
 
     JFrame helpWindow = null;
 
-    public HelpMenu(final AbstractDiagramManager diagramWindowManager, final ArbilWindowManager dialogHandler, final SessionStorage sessionStorage, final ApplicationVersionManager versionManager) {
+    public HelpMenu(final AbstractDiagramManager diagramWindowManager, final ArbilWindowManager dialogHandler, final SessionStorage sessionStorage, final EntityCollection entityCollection, final ApplicationVersionManager versionManager) {
         this.setText("Help");
         JMenuItem aboutMenuItem = new JMenuItem("About");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -136,6 +139,29 @@ public class HelpMenu extends JMenu {
             }
         });
         this.add(viewErrorLogMenuItem);
+
+        JMenuItem reindexFilesMenuItem = new JMenuItem("Reindex all files");
+        reindexFilesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (dialogHandler.showConfirmDialogBox("This will reindex all files in the project,\nthis may take some time, do you want to proceed?", "Reindex All Files")) {
+                    new Thread(new Runnable() {
+                        public void run() {
+                            try {
+                                JProgressBar progressBar = new JProgressBar();
+//                                progressBar.setString("reindexing all files");
+//                                progressBar.setIndeterminate(true);
+                                entityCollection.recreateDatabase();
+                                dialogHandler.addMessageDialogToQueue("Reindexing complete.", "Reindex All Files");
+                            } catch (EntityServiceException exception) {
+                                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Database Error");
+                            }
+                        }
+                    }).start();
+                }
+            }
+        });
+        this.add(reindexFilesMenuItem);
+
         JMenuItem checkForUpdatesMenuItem = new JMenuItem("Check for Updates");
         checkForUpdatesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

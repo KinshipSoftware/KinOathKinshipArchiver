@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui.menu;
 
@@ -26,6 +26,7 @@ import javax.swing.JMenuBar;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.plugins.KinOathPluginManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.pluginloader.PluginService;
@@ -38,7 +39,7 @@ import nl.mpi.pluginloader.ui.PluginMenu;
  */
 public class MainMenuBar extends JMenuBar {
 
-    public MainMenuBar(AbstractDiagramManager abstractDiagramManager, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ApplicationVersionManager versionManager, Component parentComponent) {
+    public MainMenuBar(AbstractDiagramManager abstractDiagramManager, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, final EntityCollection entityCollection, ApplicationVersionManager versionManager, Component parentComponent) {
         this.add(new FileMenu(abstractDiagramManager, sessionStorage, dialogHandler, parentComponent));
         this.add(new EditMenu(abstractDiagramManager, parentComponent));
         this.add(new DiagramOptionsMenu(abstractDiagramManager, parentComponent));
@@ -71,6 +72,6 @@ public class MainMenuBar extends JMenuBar {
         }
         this.add(new PluginMenu(new PluginService(pluginUlrs.toArray(new URL[0])), new KinOathPluginManager(abstractDiagramManager, dialogHandler, parentComponent), false));
         this.add(new WindowMenu(abstractDiagramManager, parentComponent));
-        this.add(new HelpMenu(abstractDiagramManager, dialogHandler, sessionStorage, versionManager));
+        this.add(new HelpMenu(abstractDiagramManager, dialogHandler, sessionStorage, entityCollection, versionManager));
     }
 }
