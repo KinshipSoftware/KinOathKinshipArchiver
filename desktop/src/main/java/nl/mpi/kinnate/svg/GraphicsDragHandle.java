@@ -32,6 +32,7 @@ public class GraphicsDragHandle extends RelationDragHandle {
     protected Element highlightRectElement;
     private String xAttribute;
     private String yAttribute;
+    private boolean isCenteredElement = false;
 
     public GraphicsDragHandle(Element graphicsElement, Element highlightElement, Element highlightRectElement, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) {
         super(null, null, elementStartX, elementStartY, mouseStartX, mouseStartY, diagramScaleFactor);
@@ -41,12 +42,14 @@ public class GraphicsDragHandle extends RelationDragHandle {
 
         String elementType = graphicsElement.getTagName();
         if (elementType.equals("circle")) {
+            isCenteredElement = true;
             xAttribute = "r";
             yAttribute = null;
         } else if (elementType.equals("rect")) {
             xAttribute = "width";
             yAttribute = "height";
         } else if (elementType.equals("ellipse")) {
+            isCenteredElement = true;
             xAttribute = "rx";
             yAttribute = "ry";
         }
@@ -65,18 +68,23 @@ public class GraphicsDragHandle extends RelationDragHandle {
         if (dragNodeY < paddingDistance + minSize) {
             dragNodeY = paddingDistance + minSize;
         }
-        int highlightRectMultiplier = 1;
         graphicsElement.setAttribute(xAttribute, Float.toString(dragNodeX - paddingDistance));
         if (yAttribute != null) {
-            highlightRectMultiplier = 1;
             graphicsElement.setAttribute(yAttribute, Float.toString(dragNodeY - paddingDistance));
         } else {
             dragNodeY = dragNodeX;
         }
+        if (isCenteredElement) {
+            highlightRectElement.setAttribute("x", Float.toString(-(dragNodeX)));
+            highlightRectElement.setAttribute("y", Float.toString(-(dragNodeY)));
 
+            highlightRectElement.setAttribute("width", Float.toString(dragNodeX * 2) + paddingDistance);
+            highlightRectElement.setAttribute("height", Float.toString(dragNodeY * 2) + paddingDistance);
+        } else {
+            highlightRectElement.setAttribute("width", Float.toString((dragNodeX + paddingDistance)));
+            highlightRectElement.setAttribute("height", Float.toString((dragNodeY + paddingDistance)));
+        }
         highlightElement.setAttribute("cx", Float.toString(dragNodeX));
         highlightElement.setAttribute("cy", Float.toString(dragNodeY));
-        highlightRectElement.setAttribute("width", Float.toString((dragNodeX + paddingDistance) * highlightRectMultiplier));
-        highlightRectElement.setAttribute("height", Float.toString((dragNodeY + paddingDistance) * highlightRectMultiplier));
     }
 }
