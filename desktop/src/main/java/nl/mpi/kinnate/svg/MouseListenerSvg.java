@@ -196,8 +196,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                             graphPanel.doc.getElementById(targetIdString),
                             currentDraggedElement,
                             (Element) currentDraggedElement.getParentNode().getFirstChild(), // this assumes that the rect is the first element in the highlight
-                            Float.valueOf(currentDraggedElement.getAttribute("cx")) - xTranslate,
-                            Float.valueOf(currentDraggedElement.getAttribute("cy")) - yTranslate,
+                            Float.valueOf(currentDraggedElement.getAttribute("cx")),
+                            Float.valueOf(currentDraggedElement.getAttribute("cy")),
                             ((DOMMouseEvent) evt).getClientX(),
                             ((DOMMouseEvent) evt).getClientY(),
                             scaleFactor);

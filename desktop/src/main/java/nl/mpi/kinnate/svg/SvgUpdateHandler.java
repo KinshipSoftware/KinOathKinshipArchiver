@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg;
 
@@ -69,6 +69,7 @@ public class SvgUpdateHandler {
     private HashSet<UniqueIdentifier> highlightedIdentifiers = new HashSet<UniqueIdentifier>();
     public RelationRecordTable relationRecords;
     private boolean oldFormatWarningShown = false;
+    private int paddingDistance = 20;
 
     public enum GraphicsTypes {
 
@@ -156,7 +157,7 @@ public class SvgUpdateHandler {
         RelationDragHandle localRelationDragHandle = relationDragHandle;
         if (localRelationDragHandle != null) {
             if (localRelationDragHandle instanceof GraphicsDragHandle) {
-                ((GraphicsDragHandle) localRelationDragHandle).updatedElement(localDragNodeX, localDragNodeY);
+                ((GraphicsDragHandle) localRelationDragHandle).updatedElement(localDragNodeX, localDragNodeY, paddingDistance);
             } else {
                 // add highlights for relation lines that would be created by the user action
                 float dragNodeX = localRelationDragHandle.getTranslatedX(localDragNodeX);
@@ -537,7 +538,6 @@ public class SvgUpdateHandler {
                                     ((EventTarget) highlightGroupNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
                                     highlightGroupNode.setAttribute("id", "highlight_" + uniqueIdentifier.getAttributeIdentifier());
                                     Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
-                                    int paddingDistance = 20;
                                     symbolNode.setAttribute("x", Float.toString(bbox.getX() - paddingDistance));
                                     symbolNode.setAttribute("y", Float.toString(bbox.getY() - paddingDistance));
                                     symbolNode.setAttribute("width", Float.toString(bbox.getWidth() + paddingDistance * 2));
@@ -577,7 +577,7 @@ public class SvgUpdateHandler {
 //                                                }
                                     // make sure the rect is added before the drag handles, otherwise the rect can block the mouse actions
                                     highlightGroupNode.appendChild(symbolNode);
-                                    if (((Element) selectedGroup).getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path").length() > 0) {
+                                    if (!uniqueIdentifier.isTransientIdentifier() && !uniqueIdentifier.isGraphicsIdentifier()) {
                                         addRelationDragHandles(graphPanel.dataStoreSvg.getRelationTypeDefinitions(), highlightGroupNode, bbox, paddingDistance);
                                     } else {
                                         if (uniqueIdentifier.isGraphicsIdentifier()) {

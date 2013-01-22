@@ -40,9 +40,9 @@ public class RelationDragHandle {
     protected UniqueIdentifier targetIdentifier = null;
 
     public RelationDragHandle(RelationTypeDefinition customTypeDefinition, DataTypes.RelationType relationType, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) {
-        if (relationType == null) {
-            throw new UnsupportedOperationException("relationType must be specified in RelationDragHandle");
-        }
+//        if (relationType == null) {
+//            throw new UnsupportedOperationException("relationType must be specified in RelationDragHandle");
+//        }
         this.customTypeDefinition = customTypeDefinition;
         this.relationType = relationType;
         this.elementStartX = elementStartX;

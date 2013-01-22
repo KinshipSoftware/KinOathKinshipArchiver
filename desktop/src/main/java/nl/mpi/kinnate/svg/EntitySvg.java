@@ -385,17 +385,19 @@ public class EntitySvg {
         double closestDistance = -1;
         UniqueIdentifier closestIdentifier = null;
         for (Entry<UniqueIdentifier, Point> currentEntry : entityPositions.entrySet()) {
-            if (!excludeIdentifiers.contains(currentEntry.getKey())) {
-                float hDistance = locationArray[0] - currentEntry.getValue().x;
-                float vDistance = locationArray[1] - currentEntry.getValue().y;
-                double entityDistance = Math.sqrt(hDistance * hDistance + vDistance * vDistance);
-                if (closestIdentifier == null) {
-                    closestDistance = entityDistance;
-                    closestIdentifier = currentEntry.getKey();
-                }
-                if (entityDistance < closestDistance) {
-                    closestDistance = entityDistance;
-                    closestIdentifier = currentEntry.getKey();
+            if (!currentEntry.getKey().isGraphicsIdentifier()) {
+                if (!excludeIdentifiers.contains(currentEntry.getKey())) {
+                    float hDistance = locationArray[0] - currentEntry.getValue().x;
+                    float vDistance = locationArray[1] - currentEntry.getValue().y;
+                    double entityDistance = Math.sqrt(hDistance * hDistance + vDistance * vDistance);
+                    if (closestIdentifier == null) {
+                        closestDistance = entityDistance;
+                        closestIdentifier = currentEntry.getKey();
+                    }
+                    if (entityDistance < closestDistance) {
+                        closestDistance = entityDistance;
+                        closestIdentifier = currentEntry.getKey();
+                    }
                 }
             }
         }
