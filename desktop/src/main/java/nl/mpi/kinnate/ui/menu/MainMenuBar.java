@@ -72,6 +72,6 @@ public class MainMenuBar extends JMenuBar {
         }
         this.add(new PluginMenu(new PluginService(pluginUlrs.toArray(new URL[0])), new KinOathPluginManager(abstractDiagramManager, dialogHandler, parentComponent), false));
         this.add(new WindowMenu(abstractDiagramManager, parentComponent));
-        this.add(new HelpMenu(abstractDiagramManager, dialogHandler, sessionStorage, entityCollection, versionManager));
+        this.add(new HelpMenu(abstractDiagramManager, dialogHandler, sessionStorage, entityCollection, versionManager, parentComponent));
     }
 }

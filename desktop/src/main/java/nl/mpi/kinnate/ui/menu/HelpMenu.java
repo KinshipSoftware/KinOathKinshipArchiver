@@ -17,6 +17,7 @@
  */
 package nl.mpi.kinnate.ui.menu;
 
+import java.awt.Component;
 import java.io.IOException;
 import java.net.URI;
 import javax.swing.JFrame;
@@ -32,8 +33,10 @@ import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
+import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.KinOathHelp;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import org.xml.sax.SAXException;
@@ -47,7 +50,7 @@ public class HelpMenu extends JMenu {
 
     JFrame helpWindow = null;
 
-    public HelpMenu(final AbstractDiagramManager diagramWindowManager, final ArbilWindowManager dialogHandler, final SessionStorage sessionStorage, final EntityCollection entityCollection, final ApplicationVersionManager versionManager) {
+    public HelpMenu(final AbstractDiagramManager diagramWindowManager, final ArbilWindowManager dialogHandler, final SessionStorage sessionStorage, final EntityCollection entityCollection, final ApplicationVersionManager versionManager, final Component parentComponent) {
         this.setText("Help");
         JMenuItem aboutMenuItem = new JMenuItem("About");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -146,7 +149,11 @@ public class HelpMenu extends JMenu {
                 if (dialogHandler.showConfirmDialogBox("This will reindex all files in the project,\nthis may take some time, do you want to proceed?", "Reindex All Files")) {
                     new Thread(new Runnable() {
                         public void run() {
+                            SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
                             try {
+                                if (currentSavePanel instanceof KinDiagramPanel) {
+                                    ((KinDiagramPanel) currentSavePanel).showProgressBar();
+                                }
                                 JProgressBar progressBar = new JProgressBar();
 //                                progressBar.setString("reindexing all files");
 //                                progressBar.setIndeterminate(true);
@@ -154,6 +161,9 @@ public class HelpMenu extends JMenu {
                                 dialogHandler.addMessageDialogToQueue("Reindexing complete.", "Reindex All Files");
                             } catch (EntityServiceException exception) {
                                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Database Error");
+                            }
+                            if (currentSavePanel instanceof KinDiagramPanel) {
+                                ((KinDiagramPanel) currentSavePanel).clearProgressBar();
                             }
                         }
                     }).start();
