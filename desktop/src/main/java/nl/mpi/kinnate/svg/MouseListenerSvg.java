@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg;
 
@@ -135,18 +135,26 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         checkSelectionClearRequired(me);
         mouseActionOnNode = false;
         if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
-            if (graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier != null) {
-                try {
-                    // if a relation has been set by this drag action then it is created here.
-                    final RelationType relationType = DataTypes.getOpposingRelationType(graphPanel.svgUpdateHandler.relationDragHandle.getRelationType());
-                    UniqueIdentifier[] changedIdentifiers = new RelationLinker(sessionStorage, dialogHandler, entityCollection).linkEntities(graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType, graphPanel.svgUpdateHandler.relationDragHandle.getDataCategory(), graphPanel.svgUpdateHandler.relationDragHandle.getDisplayName());
-                    kinDiagramPanel.entityRelationsChanged(changedIdentifiers);
-                } catch (ImportException exception) {
-                    dialogHandler.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
+            new Thread(new Runnable() {
+                public void run() {
+
+                    System.out.println("Showing progrtess bar");
+                    if (graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier != null) {
+                        kinDiagramPanel.showProgressBar();
+                        try {
+                            // if a relation has been set by this drag action then it is created here.
+                            final RelationType relationType = DataTypes.getOpposingRelationType(graphPanel.svgUpdateHandler.relationDragHandle.getRelationType());
+                            UniqueIdentifier[] changedIdentifiers = new RelationLinker(sessionStorage, dialogHandler, entityCollection).linkEntities(graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType, graphPanel.svgUpdateHandler.relationDragHandle.getDataCategory(), graphPanel.svgUpdateHandler.relationDragHandle.getDisplayName());
+                            kinDiagramPanel.entityRelationsChanged(changedIdentifiers);
+                        } catch (ImportException exception) {
+                            dialogHandler.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
+                        }
+                        kinDiagramPanel.clearProgressBar();
+                    }
+                    graphPanel.svgUpdateHandler.relationDragHandle = null;
+                    updateSelectionDisplay();
                 }
-            }
-            graphPanel.svgUpdateHandler.relationDragHandle = null;
-            updateSelectionDisplay();
+            }).start();
         }
     }
 
