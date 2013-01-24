@@ -91,6 +91,7 @@ public class RelationRecordTable {
             if (!skipSiblingRelation) {
                 doneRelations.add(compoundIdentifier);
                 String lineColour = entityRelation.lineColour;
+                String labelString = null;
                 RelationTypeDefinition.CurveLineOrientation curveLineOrientation = RelationTypeDefinition.CurveLineOrientation.horizontal;
                 int lineDash = 0;
                 if (lineColour == null) {
@@ -100,11 +101,19 @@ public class RelationRecordTable {
                             lineWidth = relationTypeDefinition.getLineWidth();
                             curveLineOrientation = relationTypeDefinition.getCurveLineOrientation();
                             lineDash = relationTypeDefinition.getLineDash();
+                            labelString = relationTypeDefinition.getDisplayName();
                             break;
                         }
                     }
                 }
-                RelationRecord relationRecord = new RelationRecord(groupId, graphPanel, this.size(), leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, entityRelation.labelString, hSpacing, vSpacing);
+                if (entityRelation.labelString != null) {
+                    if (labelString == null) {
+                        labelString = entityRelation.labelString;
+                    } else {
+                        labelString = labelString + " : " + entityRelation.labelString;
+                    }
+                }
+                RelationRecord relationRecord = new RelationRecord(groupId, graphPanel, this.size(), leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, labelString, hSpacing, vSpacing);
                 recordStore.put(relationRecord.lineIdString, relationRecord);
             }
         }
