@@ -100,6 +100,15 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
         return dataStoreSvg.getRelationTypeDefinitions().length + 1;
     }
 
+    public String getRelationTypeLabel(DataTypes.RelationType relationType) {
+        DataTypes.RelationType oppositeRelationType = DataTypes.getOpposingRelationType(relationType);
+        if (relationType.equals(oppositeRelationType)) {
+            return relationType.name();
+        } else {
+            return relationType.name() + " (" + oppositeRelationType.name() + ")";
+        }
+    }
+
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (rowIndex < dataStoreSvg.getRelationTypeDefinitions().length) {
             RelationTypeDefinition kinType = dataStoreSvg.getRelationTypeDefinitions()[rowIndex];
@@ -110,12 +119,11 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                     return kinType.getDataCategory();
                 case 2:
                     ArrayList<String> valuesList = new ArrayList<String>();
-                    for (DataTypes.RelationType relationType : kinType.getRelationType()) {
-                        DataTypes.RelationType oppositeRelationType = DataTypes.getOpposingRelationType(relationType);
-                        if (relationType.equals(oppositeRelationType)) {
-                            valuesList.add(relationType.name());
-                        } else {
-                            valuesList.add(relationType.name() + " (" + oppositeRelationType.name() + ")");
+                    if (kinType.getRelationType() == null) {
+                        return null;
+                    } else {
+                        for (DataTypes.RelationType relationType : kinType.getRelationType()) {
+                            valuesList.add(getRelationTypeLabel(relationType));
                         }
                     }
                     return valuesList;
@@ -150,7 +158,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
                 throw new UnsupportedOperationException("Not a list row type");
             case 2:
                 for (DataTypes.RelationType relationType : DataTypes.RelationType.values()) {
-                    valuesList.add(relationType.name());
+                    valuesList.add(getRelationTypeLabel(relationType));
                 }
                 break;
             default:
@@ -209,7 +217,11 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             lineDash = kinType.getLineDash();
             curveLineOrientation = kinType.getCurveLineOrientation();
         }
-        String stringValue = aValue.toString();
+        String stringValue = "";
+        if (aValue != null) {
+            // when the <all> option in relation types is selected aValue will be null
+            stringValue = aValue.toString();
+        }
         switch (columnIndex) {
             case 0:
                 displayName = stringValue;
