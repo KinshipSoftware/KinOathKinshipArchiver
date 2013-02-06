@@ -36,7 +36,9 @@ import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.ui.ImageBoxRenderer;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -48,7 +50,7 @@ import nl.mpi.kinnate.ui.menu.TableMenu;
  * @author Peter Withers
  */
 public class MetadataPanel extends JPanel {
-
+    
     private ArbilTree arbilTree;
 //    JScrollPane tableScrollPane;
     private ArbilTableModel kinTableModel;
@@ -63,8 +65,8 @@ public class MetadataPanel extends JPanel {
     private ArbilDataNodeLoader dataNodeLoader;
     private ContainerNode rootNode;
     private EntityCollection entityCollection;
-
-    public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer) {
+    
+    public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer, final SessionStorage sessionStorage, final MessageDialogHandler dialogHandler) {
         this.arbilTree = new ArbilTree();
         this.entityCollection = entityCollection;
         rootNode = new ContainerNode("links", null, new ArbilNode[]{});
@@ -77,13 +79,13 @@ public class MetadataPanel extends JPanel {
             // checkPopup is used to replace the Arbil context menu, as a result this override needs to copy other things that are done in the super class. So it would be better in the future to make the menu more formally addable to the table. 
             @Override
             public void checkPopup(java.awt.event.MouseEvent evt, boolean checkSelection) {
-                java.awt.Point p = evt.getPoint();
-                int clickedRow = rowAtPoint(p);
-                int clickedColumn = columnAtPoint(p);
                 if (evt.isPopupTrigger()) {
+                    java.awt.Point p = evt.getPoint();
+                    int clickedRow = rowAtPoint(p);
+                    int clickedColumn = columnAtPoint(p);
                     // set the clicked cell selected
                     boolean clickedRowAlreadySelected = isRowSelected(clickedRow);
-
+                    
                     if (checkSelection && !evt.isShiftDown() && !evt.isControlDown()) {
                         // if it is the right mouse button and there is already a selection then do not proceed in changing the selection
                         if (!(((evt.isPopupTrigger() /* evt.getButton() == MouseEvent.BUTTON3 || evt.isMetaDown() */) && clickedRowAlreadySelected))) {
@@ -102,7 +104,7 @@ public class MetadataPanel extends JPanel {
                         }
                     }
                 }
-
+                
                 if (evt.isPopupTrigger() /* evt.getButton() == MouseEvent.BUTTON3 || evt.isMetaDown() */) {
 //                    targetTable = (JTable) evt.getComponent();
 //                    System.out.println("set the current table");
@@ -110,9 +112,8 @@ public class MetadataPanel extends JPanel {
                     TableCellEditor tableCellEditor = this.getCellEditor();
                     if (tableCellEditor != null) {
                         tableCellEditor.stopCellEditing();
-                    }
-                    ArbilTableCell arbilTableCell = kinTableModel.getTableCellAt(clickedRow, clickedColumn);
-                    new TableMenu(entityCollection, arbilTableCell.getContent()).show(this, evt.getX(), evt.getY());
+                    }                    
+                    new TableMenu(sessionStorage, dialogHandler, entityCollection, getSelectedRowsFromTable(), getSelectedFields()).show(this, evt.getX(), evt.getY());
 //                    new TableContextMenu(this).show(evt.getX(), evt.getY());
                     //new OldContextMenu().showTreePopup(evt.getSource(), evt.getX(), evt.getY());
                 }
@@ -127,7 +128,7 @@ public class MetadataPanel extends JPanel {
         this.arbilTree.setCustomPreviewTable(archiveTable);
         kinTable.setTransferHandler(tableCellDragHandler);
         kinTable.setDragEnabled(true);
-
+        
         this.editorHidePane = editorHidePane;
         this.setLayout(new BorderLayout());
         kinTableScrollPane = new JScrollPane(kinTable);
@@ -135,13 +136,13 @@ public class MetadataPanel extends JPanel {
         this.add(archiveTableScrollPane, BorderLayout.CENTER);
         this.add(arbilTree, BorderLayout.LINE_START);
     }
-
+    
     public void removeAllEditors() {
         while (!elementEditors.isEmpty()) {
             editorHidePane.removeTab(elementEditors.remove(0));
         }
     }
-
+    
     public void removeAllArbilDataNodeRows() {
         kinTableModel.removeAllArbilDataNodeRows();
         archiveTableModel.removeAllArbilDataNodeRows();
@@ -153,13 +154,13 @@ public class MetadataPanel extends JPanel {
         }
         metadataNodes.clear();
     }
-
+    
     public void addArbilDataNode(ArbilDataNode arbilDataNode) {
         archiveTableModel.addSingleArbilDataNode(arbilDataNode);
         archiveRootNodes.clear(); // do not show the tree for archive tree selections
         metadataNodes.add(arbilDataNode);
     }
-
+    
     public void addEntityDataNode(KinDiagramPanel kinDiagramPanel, EntityData entityData) {
         String entityPath = entityCollection.getEntityPath(entityData.getUniqueIdentifier());
         System.out.println("entity path: " + entityPath);
@@ -204,11 +205,11 @@ public class MetadataPanel extends JPanel {
         editorHidePane.addTab(labelString, elementEditor);
         elementEditors.add(elementEditor);
     }
-
+    
     public void removeTab(Component elementEditor) {
         editorHidePane.removeTab(elementEditor);
     }
-
+    
     public void updateEditorPane() {
         // todo: add only imdi nodes to the tree and the root node of them
         // todo: maybe have a table for entities and one for achive metdata

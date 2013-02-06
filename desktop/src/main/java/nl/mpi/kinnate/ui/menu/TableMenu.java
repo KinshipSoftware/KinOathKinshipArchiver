@@ -18,42 +18,52 @@
 package nl.mpi.kinnate.ui.menu;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilField;
+import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.gedcomimport.ImportException;
+import nl.mpi.kinnate.kindocument.EntityDocument;
+import nl.mpi.kinnate.kindocument.ImportTranslator;
 
 /**
  * Created on : Feb 6, 2013, 3:16:43 PM
  *
  * @author Peter Withers <peter.withers@mpi.nl>
  */
-public class TableMenu extends JPopupMenu {
+public class TableMenu extends JPopupMenu implements ActionListener {
 
-    private final ArbilField arbilField;
-    private final ArbilDataNode arbilDataNode;
+    final private SessionStorage sessionStorage;
+    final private MessageDialogHandler dialogHandler;
+    private final ArbilField[] arbilFields;
+    private final ArbilDataNode[] arbilDataNodes;
     private final EntityCollection entityCollection;
+    final String deleteCommand = "delete";
+    final String addCustomCommand = "addcustom";
+    final String addCommand = "addknown";
 
-    public TableMenu(EntityCollection entityCollection, Object cellContents) {
-        System.out.println("cellContents:" + cellContents.getClass());
+    public TableMenu(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNode[] arbilDataNodes, ArbilField[] arbilFields) {
+//        System.out.println("cellContents:" + cellContents.getClass());
+        this.sessionStorage = sessionStorage;
+        this.dialogHandler = dialogHandler;
         this.entityCollection = entityCollection;
-        if (cellContents instanceof ArbilDataNode) {
-            arbilDataNode = (ArbilDataNode) cellContents;
-            arbilField = null;
+        this.arbilDataNodes = arbilDataNodes;
+        this.arbilFields = arbilFields;
+        if (arbilDataNodes != null && arbilDataNodes.length > 0) {
             getAddMenu();
-        } else if (cellContents instanceof ArbilField) {
-            arbilField = (ArbilField) cellContents;
-            arbilDataNode = null;
-            getAddMenu();
-            this.add(getDeleteMenuItem(arbilField));
-        } else {
-            arbilField = null;
-            arbilDataNode = null;
+        }
+        if (arbilFields != null && arbilFields.length > 0) {
+            this.add(getDeleteMenuItem(arbilFields));
         }
     }
-    
+
     private void getAddMenu() {
         int addedCounter = 0;
         JMenu addMenu = new JMenu("Add");
@@ -63,24 +73,61 @@ public class TableMenu extends JPopupMenu {
                 addMenu = new JMenu("Add (" + fieldName.substring(0, 1) + ")");
                 addedCounter = 0;
             }
-            addMenu.add(new JMenuItem(fieldName));
+            final JMenuItem addMenuItem = new JMenuItem(fieldName);
+            addMenuItem.setActionCommand(addCommand + fieldName);
+            addMenuItem.addActionListener(this);
+            addMenu.add(addMenuItem);
             addedCounter++;
         }
         this.add(addMenu);
-        this.add(new JMenuItem("Add <custom field>"));
+        final JMenuItem addCustomMenuItem = new JMenuItem("Add <custom field>");
+        addCustomMenuItem.setActionCommand(addCustomCommand);
+        addCustomMenuItem.addActionListener(this);
+        this.add(addCustomMenuItem);
     }
 
-    private JMenuItem getDeleteMenuItem(ArbilField arbilField) {
-        return new JMenuItem("Delete Field \"" + arbilField.getTranslateFieldName() + "\"");
+    private JMenuItem getDeleteMenuItem(ArbilField[] arbilFields) {
+        String deleteFieldLabel;
+        if (arbilFields.length == 1) {
+            deleteFieldLabel = "Delete Field \"" + arbilFields[0].getTranslateFieldName() + "\"";
+        } else {
+            deleteFieldLabel = "Delete  " + arbilFields.length + " Field(s)";
+        }
+        final JMenuItem deleteMenuItem = new JMenuItem(deleteFieldLabel);
+        deleteMenuItem.setActionCommand(deleteCommand);
+        deleteMenuItem.addActionListener(this);
+        return deleteMenuItem;
     }
 
     @Override
     public void show(Component cmpnt, int i, int i1) {
-        if (arbilField == null && arbilDataNode == null) {
+        if ((arbilDataNodes != null && arbilDataNodes.length > 0) || (arbilFields != null && arbilFields.length > 0)) {
             // do not show when there are no menu items 
-            return;
+            super.show(cmpnt, i, i1);
         }
-        super.show(cmpnt, i, i1);
+    }
 
+    public void actionPerformed(ActionEvent ae) {
+        final String actionCommand = ae.getActionCommand();
+        try {
+            if (actionCommand.equals(deleteCommand)) {
+//                EntityDocument entityDocument = new EntityDocument(arbilDataNode.getURI(), new ImportTranslator(true), sessionStorage);
+////                entityDocument.
+//
+//                entityDocument.saveDocument();
+            } else if (actionCommand.startsWith(addCommand)) {
+                for (ArbilDataNode arbilDataNode : arbilDataNodes) {
+                    EntityDocument entityDocument = new EntityDocument(arbilDataNode.getURI(), new ImportTranslator(true), sessionStorage);
+                    entityDocument.insertValue(actionCommand.substring(addCommand.length()), "");
+                    entityDocument.saveDocument();
+                    arbilDataNode.reloadNode();
+                }
+            } else if (actionCommand.equals(addCustomCommand)) {
+//                String userInput = dialogHandler.
+            }
+        } catch (ImportException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Add/Remove Fields");
+        }
     }
 }
