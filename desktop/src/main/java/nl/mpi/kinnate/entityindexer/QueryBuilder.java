@@ -268,6 +268,10 @@ public class QueryBuilder {
 //                + "<String>base-uri($identifierNode)</String>,"
 //                + "$identifierNode";
 //    }
+    public String getAllFieldNamesQuery() {
+        return "for $facetEntry in index:facets('nl-mpi-kinnate')/document-node/element/element[@name='CustomData']/element/@name\n"
+                + "order by $facetEntry\n return data($facetEntry)";
+    }
 
     public String getEntityQuery(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
         return "for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n" //                + getEntityQueryReturn(uniqueIdentifier, indexParameters);

@@ -24,11 +24,13 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.table.TableCellEditor;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
+import nl.mpi.arbil.data.ArbilTableCell;
 import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
@@ -38,6 +40,7 @@ import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.ui.menu.TableMenu;
 
 /**
  * Created on : Oct 13, 2011, 5:06:28 PM
@@ -61,7 +64,7 @@ public class MetadataPanel extends JPanel {
     private ContainerNode rootNode;
     private EntityCollection entityCollection;
 
-    public MetadataPanel(GraphPanel graphPanel, EntityCollection entityCollection, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer) {
+    public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer) {
         this.arbilTree = new ArbilTree();
         this.entityCollection = entityCollection;
         rootNode = new ContainerNode("links", null, new ArbilNode[]{});
@@ -70,8 +73,57 @@ public class MetadataPanel extends JPanel {
         this.archiveTableModel = new ArbilTableModel(imageBoxRenderer);
         this.dataNodeLoader = dataNodeLoader;
         //dateEditorPanel = new DateEditorPanel();
-        ArbilTable kinTable = new ArbilTable(kinTableModel, "Selected Nodes");
-        ArbilTable archiveTable = new ArbilTable(archiveTableModel, "Selected Nodes");
+        ArbilTable kinTable = new ArbilTable(kinTableModel, "Selected Nodes") {
+            // checkPopup is used to replace the Arbil context menu, as a result this override needs to copy other things that are done in the super class. So it would be better in the future to make the menu more formally addable to the table. 
+            @Override
+            public void checkPopup(java.awt.event.MouseEvent evt, boolean checkSelection) {
+                java.awt.Point p = evt.getPoint();
+                int clickedRow = rowAtPoint(p);
+                int clickedColumn = columnAtPoint(p);
+                if (evt.isPopupTrigger()) {
+                    // set the clicked cell selected
+                    boolean clickedRowAlreadySelected = isRowSelected(clickedRow);
+
+                    if (checkSelection && !evt.isShiftDown() && !evt.isControlDown()) {
+                        // if it is the right mouse button and there is already a selection then do not proceed in changing the selection
+                        if (!(((evt.isPopupTrigger() /* evt.getButton() == MouseEvent.BUTTON3 || evt.isMetaDown() */) && clickedRowAlreadySelected))) {
+                            if (clickedRow > -1 & clickedRow > -1) {
+                                // if the modifier keys are down then leave the selection alone for the sake of more normal behaviour
+                                getSelectionModel().clearSelection();
+                                // make sure the clicked cell is selected
+//                        System.out.println("clickedRow: " + clickedRow + " clickedRow: " + clickedRow);
+//                        getSelectionModel().addSelectionInterval(clickedRow, clickedRow);
+//                        getColumnModel().getSelectionModel().addSelectionInterval(clickedColumn, clickedColumn);
+                                changeSelection(clickedRow, clickedColumn, false, evt.isShiftDown());
+                                // make sure the clicked cell is the lead selection
+//                    getSelectionModel().setLeadSelectionIndex(rowIndex);
+//                    getColumnModel().getSelectionModel().setLeadSelectionIndex(colIndex);
+                            }
+                        }
+                    }
+                }
+
+                if (evt.isPopupTrigger() /* evt.getButton() == MouseEvent.BUTTON3 || evt.isMetaDown() */) {
+//                    targetTable = (JTable) evt.getComponent();
+//                    System.out.println("set the current table");
+
+                    TableCellEditor tableCellEditor = this.getCellEditor();
+                    if (tableCellEditor != null) {
+                        tableCellEditor.stopCellEditing();
+                    }
+                    ArbilTableCell arbilTableCell = kinTableModel.getTableCellAt(clickedRow, clickedColumn);
+                    new TableMenu(entityCollection, arbilTableCell.getContent()).show(this, evt.getX(), evt.getY());
+//                    new TableContextMenu(this).show(evt.getX(), evt.getY());
+                    //new OldContextMenu().showTreePopup(evt.getSource(), evt.getX(), evt.getY());
+                }
+            }
+        };
+        ArbilTable archiveTable = new ArbilTable(archiveTableModel, "Selected Nodes") {
+//            @Override
+//            public void checkPopup(MouseEvent evt, boolean checkSelection) {
+////                super.checkPopup(evt, checkSelection);
+//            }
+        };
         this.arbilTree.setCustomPreviewTable(archiveTable);
         kinTable.setTransferHandler(tableCellDragHandler);
         kinTable.setDragEnabled(true);

@@ -333,7 +333,6 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //        String queryString = "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + namePartString + "\") return base-uri($doc)";
 //        return performQuery(queryString);
 //    }
-
     public SearchResults searchForLocalEntites() {
         String queryString = "for $doc in collection('nl-mpi-kinnate') where exists(/*:Kinnate/*:Entity/*:Identifier/@*:type=\"lid\") return base-uri($doc)";
         return performQuery(queryString);
@@ -520,6 +519,21 @@ public class EntityCollection extends DatabaseUpdateHandler {
             dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity Path");
         }
         return null;
+    }
+
+    public String[] getAllFieldNames() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        final String allFieldNamesQuery = queryBuilder.getAllFieldNamesQuery();
+        String queryResult = "";
+        try {
+            synchronized (databaseLock) {
+                queryResult = new XQuery(allFieldNamesQuery).execute(context);
+            }
+        } catch (BaseXException exception) {
+            BugCatcherManager.getBugCatcher().logError(allFieldNamesQuery + "\n" + queryResult, exception);
+            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Field Names");
+        }
+        return queryResult.split(" ");
     }
 
     public EntityData getEntity(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
