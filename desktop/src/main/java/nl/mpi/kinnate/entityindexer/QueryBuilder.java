@@ -270,7 +270,7 @@ public class QueryBuilder {
 //    }
     public String getAllFieldNamesQuery() {
         return "for $facetEntry in index:facets('nl-mpi-kinnate')/document-node/element/element[@name='CustomData']/element/@name\n"
-                + "order by $facetEntry\n return data($facetEntry)";
+                + "order by lower-case($facetEntry)\n return data($facetEntry)";
     }
 
     public String getEntityQuery(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
