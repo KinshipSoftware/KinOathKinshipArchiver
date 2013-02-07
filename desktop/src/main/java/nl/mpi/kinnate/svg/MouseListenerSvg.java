@@ -95,7 +95,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     // we check and clear the selection here on the drag because on mouse down it is not known if an svg element was the target of the click
                     checkSelectionClearRequired(me);
                     if (!mouseActionOnNode) {
-                        // draw selection rectangle
+                        // draw selection rectangle                        
                         if (startRectangleSelectPoint == null) {
                             startRectangleSelectPoint = me.getPoint();
                         }
@@ -174,6 +174,9 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
+            return;
+        }
         mouseActionIsDrag = false;
         mouseActionIsPopupTrigger = e.isPopupTrigger();
     }
