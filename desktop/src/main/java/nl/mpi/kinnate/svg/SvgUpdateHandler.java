@@ -668,6 +668,68 @@ public class SvgUpdateHandler {
         }
     }
 
+    protected void removeSelectionRect() {
+        UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
+                    Element selectionBorderNode = graphPanel.doc.getElementById("drag_select_highlight");
+                    labelGroup.removeChild(selectionBorderNode);
+                }
+            });
+        }
+    }
+
+    protected void drawSelectionRect(final Point startLocation, final Point currentLocation) {
+        UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    Element labelGroup = graphPanel.doc.getElementById("LabelsGroup");
+                    SVGOMPoint startOnDocument = getPointOnDocument(startLocation, (SVGLocatable) labelGroup);
+                    SVGOMPoint currentOnDocument = getPointOnDocument(currentLocation, (SVGLocatable) labelGroup);
+                    Element selectionBorderNode = graphPanel.doc.getElementById("drag_select_highlight");
+                    float highlightX = startOnDocument.getX();
+                    float highlightY = startOnDocument.getY();
+                    float highlightWidth = currentOnDocument.getX();
+                    float highlightHeight = currentOnDocument.getY();
+                    if (highlightX > highlightWidth) {
+                        float tempValue = highlightWidth;
+                        highlightWidth = highlightX;
+                        highlightX = tempValue;
+                    }
+                    if (highlightY > highlightHeight) {
+                        float tempValue = highlightHeight;
+                        highlightHeight = highlightY;
+                        highlightY = tempValue;
+                    }
+                    highlightHeight = highlightHeight - highlightY;
+                    highlightWidth = highlightWidth - highlightX;
+                    if (selectionBorderNode == null) {
+                        selectionBorderNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
+                        selectionBorderNode.setAttribute("id", "drag_select_highlight");
+                        selectionBorderNode.setAttribute("fill", "none");
+                        selectionBorderNode.setAttribute("x", Float.toString(highlightX));
+                        selectionBorderNode.setAttribute("y", Float.toString(highlightY));
+                        selectionBorderNode.setAttribute("width", Float.toString(highlightWidth));
+                        selectionBorderNode.setAttribute("height", Float.toString(highlightHeight));
+                        selectionBorderNode.setAttribute("stroke-width", "1");
+                        selectionBorderNode.setAttribute("stroke", "blue");
+//                        selectionBorderNode.setAttribute("stroke-dasharray", "6");
+//                        selectionBorderNode.setAttribute("stroke-dashoffset", "0");
+                        labelGroup.appendChild(selectionBorderNode);
+                    }
+                    selectionBorderNode.setAttribute("x", Float.toString(highlightX));
+                    selectionBorderNode.setAttribute("y", Float.toString(highlightY));
+                    selectionBorderNode.setAttribute("width", Float.toString(highlightWidth));
+                    selectionBorderNode.setAttribute("height", Float.toString(highlightHeight));
+                    System.out.println("pageBorderNode:" + selectionBorderNode);
+                }
+            });
+        }
+    }
+
     protected void updateDragNode(int updateDragNodeXLocal, int updateDragNodeYLocal) {
         resizeRequired = true;
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
