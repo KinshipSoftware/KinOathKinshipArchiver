@@ -152,8 +152,8 @@ public class TableMenu extends JPopupMenu implements ActionListener {
     private void performDeleteFields() throws ImportException {
         for (ArbilField arbilField : arbilFields) {
             EntityDocument entityDocument = getEntityDocument(arbilField.getParentDataNode());
-            // the EntityDocument does not handle nested nodes at this stage and users cannot create nested nodes with the possible exception of some imports, but this needs to be verified
-            String tagName = arbilField.getFullXmlPath().replaceAll("\\(\\d*?\\)$", "").substring(".Kinnate.CustomData.".length());
+            // the EntityDocument does not handle nested nodes at this stage and users cannot create nested nodes with the possible exception of some imports, it would be best to remove the sub nodes capability from the import since this is not supported elsewhere in the application.
+            String tagName = arbilField.getFullXmlPath().replaceAll("\\(\\d*?\\)", "").substring(".Kinnate.CustomData.".length());
             entityDocument.removeValue(tagName, arbilField.getFieldValue());
         }
     }
