@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -29,9 +29,8 @@ import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : KinTree
- * Created on : Aug 25, 2011, 11:44:11 AM
- * Author : Peter Withers
+ * Created on : Aug 25, 2011, 11:44:11 AM 
+ * @author Peter Withers
  */
 public class KinTree extends ArbilTree {
 
@@ -65,7 +64,7 @@ public class KinTree extends ArbilTree {
                 // set the graph selection
 //                if (kinTreeNode.getEntityData() != null) { // todo: why do we care if the entity data is null or not? I think kinTreeNode object has changed and the null test is no longer required
                 identifierList.add(kinTreeNode.getUniqueIdentifier());
-                graphPanel.metadataPanel.addEntityDataNode(kinDiagramPanel, ((KinTreeNode) arbilNode).getEntityData());
+                graphPanel.metadataPanel.addEntityDataNode(((KinTreeNode) arbilNode).getEntityData());
 //                }
             }
         }

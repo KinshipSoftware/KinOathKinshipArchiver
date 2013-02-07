@@ -20,6 +20,7 @@ package nl.mpi.kinnate.ui.menu;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -33,6 +34,7 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
+import nl.mpi.kinnate.ui.KinDiagramPanel;
 
 /**
  * Created on : Feb 6, 2013, 3:16:43 PM
@@ -46,15 +48,17 @@ public class TableMenu extends JPopupMenu implements ActionListener {
     private final ArbilField[] arbilFields;
     private final ArbilDataNode[] arbilDataNodes;
     private final EntityCollection entityCollection;
+    private final KinDiagramPanel kinDiagramPanel;
     final String deleteCommand = "delete";
     final String addCustomCommand = "addcustom";
     final String addCommand = "addknown";
 
-    public TableMenu(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNode[] arbilDataNodes, ArbilField[] arbilFields) {
+    public TableMenu(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, ArbilDataNode[] arbilDataNodes, ArbilField[] arbilFields) {
 //        System.out.println("cellContents:" + cellContents.getClass());
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.entityCollection = entityCollection;
+        this.kinDiagramPanel = kinDiagramPanel;
         this.arbilDataNodes = arbilDataNodes;
         this.arbilFields = arbilFields;
         if (arbilDataNodes != null && arbilDataNodes.length > 0) {
@@ -110,38 +114,72 @@ public class TableMenu extends JPopupMenu implements ActionListener {
 
     public void actionPerformed(ActionEvent ae) {
         final String actionCommand = ae.getActionCommand();
-        try {
-            if (actionCommand.equals(deleteCommand)) {
-//                EntityDocument entityDocument = new EntityDocument(arbilDataNode.getURI(), new ImportTranslator(true), sessionStorage);
-                // todo
-////                entityDocument.
-//
-//                entityDocument.saveDocument();
-            } else if (actionCommand.startsWith(addCommand)) {
-                performAddField(actionCommand.substring(addCommand.length()));
+        new Thread() {
+            @Override
+            public void run() {
+                // node type will be used to determine the schema used from the diagram options
+                kinDiagramPanel.showProgressBar();
+                try {
+                    if (actionCommand.equals(deleteCommand)) {
+                        performDeleteFields();
+                    } else if (actionCommand.startsWith(addCommand)) {
+                        performAddField(actionCommand.substring(addCommand.length()));
 
-            } else if (actionCommand.equals(addCustomCommand)) {
-                String userInput = null;
-                do {
-                    userInput = JOptionPane.showInputDialog(TableMenu.this, "only alphanumeric characters are recommended", "Add Custom Field", JOptionPane.PLAIN_MESSAGE);
-                } while (userInput != null && (userInput.length() < 1 /*|| userInput.matches(".*[: \t].*") */));
-                if (userInput != null) {
-                    performAddField(userInput);
+                    } else if (actionCommand.equals(addCustomCommand)) {
+                        String userInput = null;
+                        do {
+                            userInput = JOptionPane.showInputDialog(TableMenu.this, "only alphanumeric characters are recommended", "Add Custom Field", JOptionPane.PLAIN_MESSAGE);
+                        } while (userInput != null && (userInput.length() < 1 /*|| userInput.matches(".*[: \t].*") */));
+                        if (userInput != null) {
+                            performAddField(userInput);
+                        }
+                    }
+                } catch (ImportException exception) {
+                    BugCatcherManager.getBugCatcher().logError(exception);
+                    dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Add/Remove Fields");
                 }
+                try {
+                    saveAllDocuments();
+                } catch (ImportException exception) {
+                    BugCatcherManager.getBugCatcher().logError(exception);
+                    dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Add/Remove Fields");
+                }
+                kinDiagramPanel.clearProgressBar();
             }
-        } catch (ImportException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Add/Remove Fields");
+        }.start();
+    }
+
+    private void performDeleteFields() throws ImportException {
+        for (ArbilField arbilField : arbilFields) {
+            EntityDocument entityDocument = getEntityDocument(arbilField.getParentDataNode());
+            // the EntityDocument does not handle nested nodes at this stage and users cannot create nested nodes with the possible exception of some imports, but this needs to be verified
+            String tagName = arbilField.getFullXmlPath().replaceAll("\\(\\d*?\\)$", "").substring(".Kinnate.CustomData.".length());
+            entityDocument.removeValue(tagName, arbilField.getFieldValue());
         }
     }
 
     private void performAddField(String validatedFieldName) throws ImportException {
         for (ArbilDataNode arbilDataNode : arbilDataNodes) {
-            EntityDocument entityDocument = new EntityDocument(arbilDataNode.getURI(), new ImportTranslator(true), sessionStorage);
+            EntityDocument entityDocument = getEntityDocument(arbilDataNode);
             entityDocument.insertValue(validatedFieldName, "");
+        }
+    }
+    HashMap<ArbilDataNode, EntityDocument> documentMap = new HashMap<ArbilDataNode, EntityDocument>();
+
+    private EntityDocument getEntityDocument(ArbilDataNode arbilDataNode) throws ImportException {
+        if (!documentMap.containsKey(arbilDataNode)) {
+            documentMap.put(arbilDataNode, new EntityDocument(arbilDataNode.getURI(), new ImportTranslator(true), sessionStorage));
+        }
+        return documentMap.get(arbilDataNode);
+    }
+
+    private void saveAllDocuments() throws ImportException {
+        for (EntityDocument entityDocument : documentMap.values()) {
             entityDocument.saveDocument();
-            arbilDataNode.reloadNode();
             entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
+        }
+        for (ArbilDataNode arbilDataNode : documentMap.keySet()) {
+            arbilDataNode.reloadNode();
         }
     }
 }

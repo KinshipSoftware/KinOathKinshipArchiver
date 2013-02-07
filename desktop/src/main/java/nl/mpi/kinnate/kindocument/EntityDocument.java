@@ -246,6 +246,21 @@ public class EntityDocument {
         }
     }
 
+    public void removeValue(String nodeName, String valueString) throws ImportException {
+        System.out.println("removeField");
+        System.out.println("nodeName: " + nodeName);
+        System.out.println(" valueString: " + valueString);
+        NodeList nodeList = metadataNode.getElementsByTagName(nodeName);
+        for (int nodeCounter = 0; nodeCounter < nodeList.getLength(); nodeCounter++) {
+            Node currentNode = nodeList.item(nodeCounter);
+            if (currentNode.getTextContent().equals(valueString)) {
+                metadataNode.removeChild(currentNode);
+                return;
+            }
+        }
+        throw new ImportException("Cannot find value to remove: " + nodeName + " = " + valueString);
+    }
+
     public void insertValue(String nodeName, String valueString) throws ImportException {
         // this method will create a flat xml file and reuse any existing nodes of the target name
         ImportTranslator.TranslationElement translationElement = importTranslator.translate(nodeName, valueString);
@@ -392,6 +407,7 @@ public class EntityDocument {
             Marshaller marshaller = jaxbContext.createMarshaller();
             // the property "com.sun.xml.internal.bind.namespacePrefixMapper" seems to be questionable, more research should be done before using this
             // marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", new KinNamespacePrefixMapper());
+            // todo: remove all entity nodes before adding the new one, otherwise if this opbect gets saved twice there will be two entity nodes
             marshaller.marshal(entityData, kinnateNode);
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);

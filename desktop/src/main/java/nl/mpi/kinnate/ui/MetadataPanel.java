@@ -63,11 +63,13 @@ public class MetadataPanel extends JPanel {
     private ArrayList<SvgElementEditor> elementEditors = new ArrayList<SvgElementEditor>();
     //private DateEditorPanel dateEditorPanel;
     private ArbilDataNodeLoader dataNodeLoader;
+    private final KinDiagramPanel kinDiagramPanel;
     private ContainerNode rootNode;
     private EntityCollection entityCollection;
     
-    public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer, final SessionStorage sessionStorage, final MessageDialogHandler dialogHandler) {
+    public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, final KinDiagramPanel kinDiagramPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer, final SessionStorage sessionStorage, final MessageDialogHandler dialogHandler) {
         this.arbilTree = new ArbilTree();
+        this.kinDiagramPanel = kinDiagramPanel;
         this.entityCollection = entityCollection;
         rootNode = new ContainerNode("links", null, new ArbilNode[]{});
         arbilTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode)));
@@ -113,7 +115,7 @@ public class MetadataPanel extends JPanel {
                     if (tableCellEditor != null) {
                         tableCellEditor.stopCellEditing();
                     }                    
-                    new TableMenu(sessionStorage, dialogHandler, entityCollection, getSelectedRowsFromTable(), getSelectedFields()).show(this, evt.getX(), evt.getY());
+                    new TableMenu(sessionStorage, dialogHandler, entityCollection, kinDiagramPanel, getSelectedRowsFromTable(), getSelectedFields()).show(this, evt.getX(), evt.getY());
 //                    new TableContextMenu(this).show(evt.getX(), evt.getY());
                     //new OldContextMenu().showTreePopup(evt.getSource(), evt.getX(), evt.getY());
                 }
@@ -161,7 +163,7 @@ public class MetadataPanel extends JPanel {
         metadataNodes.add(arbilDataNode);
     }
     
-    public void addEntityDataNode(KinDiagramPanel kinDiagramPanel, EntityData entityData) {
+    public void addEntityDataNode(EntityData entityData) {
         String entityPath = entityCollection.getEntityPath(entityData.getUniqueIdentifier());
         System.out.println("entity path: " + entityPath);
         boolean metadataFileMissing = false;
