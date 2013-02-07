@@ -70,6 +70,7 @@ public class SvgUpdateHandler {
     public RelationRecordTable relationRecords;
     private boolean oldFormatWarningShown = false;
     private int paddingDistance = 20;
+    private Rectangle dragSelectionRectOnDocument = null;
 
     public enum GraphicsTypes {
 
@@ -668,7 +669,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    protected void removeSelectionRect() {
+    protected Rectangle removeSelectionRect() {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
@@ -679,6 +680,7 @@ public class SvgUpdateHandler {
                 }
             });
         }
+        return dragSelectionRectOnDocument;
     }
 
     protected void drawSelectionRect(final Point startLocation, final Point currentLocation) {
@@ -706,6 +708,7 @@ public class SvgUpdateHandler {
                     }
                     highlightHeight = highlightHeight - highlightY;
                     highlightWidth = highlightWidth - highlightX;
+                    dragSelectionRectOnDocument = new Rectangle((int) highlightX, (int) highlightY, (int) highlightWidth, (int) highlightHeight);
                     if (selectionBorderNode == null) {
                         selectionBorderNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "rect");
                         selectionBorderNode.setAttribute("id", "drag_select_highlight");
