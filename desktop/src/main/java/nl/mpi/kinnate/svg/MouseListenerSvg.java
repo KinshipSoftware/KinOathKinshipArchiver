@@ -19,6 +19,7 @@ package nl.mpi.kinnate.svg;
 
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -134,11 +135,6 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             graphPanel.svgUpdateHandler.updateCanvasSize(false);
         }
         startDragPoint = null;
-        if (startRectangleSelectPoint != null) {
-            startRectangleSelectPoint = null;
-            graphPanel.svgUpdateHandler.removeSelectionRect();
-            // todo: update the entity selection on the drag selection rectangle
-        }
         if (!mouseActionIsDrag && entityToToggle != null) {
             // toggle the highlight
             graphPanel.selectedGroupId.remove(entityToToggle);
@@ -146,6 +142,13 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             updateSelectionDisplay();
         }
         checkSelectionClearRequired(me);
+        if (startRectangleSelectPoint != null) {
+            startRectangleSelectPoint = null;
+            Rectangle dragSelectionRectOnDocument = graphPanel.svgUpdateHandler.removeSelectionRect();
+            // update the entity selection based on the drag selection rectangle
+            graphPanel.selectedGroupId.addAll(graphPanel.entitySvg.getEntitiesWithinRect(dragSelectionRectOnDocument));
+            updateSelectionDisplay();
+        }
         mouseActionOnNode = false;
         if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
             new Thread(new Runnable() {
