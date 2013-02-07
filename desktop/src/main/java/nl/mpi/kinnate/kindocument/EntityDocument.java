@@ -247,9 +247,6 @@ public class EntityDocument {
     }
 
     public void removeValue(String nodeName, String valueString) throws ImportException {
-        System.out.println("removeField");
-        System.out.println("nodeName: " + nodeName);
-        System.out.println(" valueString: " + valueString);
         NodeList nodeList = metadataNode.getElementsByTagName(nodeName);
         for (int nodeCounter = 0; nodeCounter < nodeList.getLength(); nodeCounter++) {
             Node currentNode = nodeList.item(nodeCounter);
