@@ -255,6 +255,40 @@ public class EntityDocument {
                 return;
             }
         }
+        // look for nested nodes that match the requested imdi paths
+        Element currentNode = metadataNode;
+        String consumableString = nodeName;
+        while (consumableString.length() > 0 && currentNode != null) {
+            int separatorIndex = consumableString.indexOf(".");
+            String pathPart;
+            if (separatorIndex >= 0) {
+                pathPart = consumableString.substring(0, separatorIndex);
+                consumableString = consumableString.substring(separatorIndex + 1);
+            } else {
+                pathPart = consumableString;
+                consumableString = "";
+            }
+            int nodeIndex = 0;
+            int numberStartIndex = pathPart.indexOf("(");
+            if (numberStartIndex >= 0) {
+                String intergerPart = pathPart.substring(numberStartIndex + 1, pathPart.length() - 1);
+                pathPart = pathPart.substring(0, numberStartIndex);
+                nodeIndex = Integer.decode(intergerPart);
+            }
+            NodeList subNodeList = currentNode.getElementsByTagName(pathPart);
+            if (consumableString.length() > 0) {
+                currentNode = (Element) subNodeList.item(nodeIndex);
+            } else {
+                // this is the last path component so here should be the node to remove
+                for (int nodeCounter = 0; nodeCounter < subNodeList.getLength(); nodeCounter++) {
+                    Node targetNode = subNodeList.item(nodeCounter);
+                    if (targetNode.getTextContent().equals(valueString)) {
+                        currentNode.removeChild(targetNode);
+                        return;
+                    }
+                }
+            }
+        }
         throw new ImportException("Cannot find value to remove: " + nodeName + " = " + valueString);
     }
 
