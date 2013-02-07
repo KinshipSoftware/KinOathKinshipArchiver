@@ -18,10 +18,12 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
@@ -422,6 +424,16 @@ public class EntitySvg {
         } else {
             return null;
         }
+    }
+
+    public List<UniqueIdentifier> getEntitiesWithinRect(Rectangle rectangle) {
+        ArrayList<UniqueIdentifier> selectedIdentifiers = new ArrayList<UniqueIdentifier>();
+        for (Entry<UniqueIdentifier, Point> entry : entityPositions.entrySet()) {
+            if (rectangle.contains(entry.getValue())) {
+                selectedIdentifiers.add(entry.getKey());
+            }
+        }
+        return selectedIdentifiers;
     }
 
     public Point getEntityLocation(UniqueIdentifier entityId) {
