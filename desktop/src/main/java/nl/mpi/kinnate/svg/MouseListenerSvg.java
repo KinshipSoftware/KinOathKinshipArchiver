@@ -56,6 +56,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     private KinDiagramPanel kinDiagramPanel;
     private GraphPanel graphPanel;
     private Point startDragPoint = null;
+    private Point startRectangleSelectPoint = null;
     private boolean mouseActionOnNode = false;
     private boolean mouseActionIsPopupTrigger = false;
     private boolean mouseActionIsDrag = false;
@@ -87,15 +88,22 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         } else {
             if (startDragPoint != null) {
 //            System.out.println("mouseDragged: " + me.toString());
-                if (graphPanel.selectedGroupId.size() > 0) {
-                    checkSelectionClearRequired(me);
-                }
-                if (graphPanel.selectedGroupId.size() > 0) {
-                    graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                    // limit the drag to the distance draged not the location
-                    graphPanel.svgUpdateHandler.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
-                } else {
+                if (me.getButton() == MouseEvent.BUTTON2) {
                     graphPanel.svgUpdateHandler.dragCanvas(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
+                } else if (me.getButton() == MouseEvent.BUTTON1) {
+                    // we check and clear the selection here on the drag because on mouse down it is not known if an svg element was the target of the click
+                    checkSelectionClearRequired(me);
+                    if (!mouseActionOnNode) {
+                        // draw selection rectangle
+                        if (startRectangleSelectPoint == null) {
+                            startRectangleSelectPoint = me.getPoint();
+                        }
+                        graphPanel.svgUpdateHandler.drawSelectionRect(new Point(startRectangleSelectPoint.x, startRectangleSelectPoint.y), new Point(me.getPoint().x, me.getPoint().y));
+                    } else if (graphPanel.selectedGroupId.size() > 0) {
+                        graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                        // limit the drag to the distance draged not the location
+                        graphPanel.svgUpdateHandler.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
+                    }
                 }
                 mouseActionIsDrag = true;
             } else {
@@ -126,6 +134,11 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             graphPanel.svgUpdateHandler.updateCanvasSize(false);
         }
         startDragPoint = null;
+        if (startRectangleSelectPoint != null) {
+            startRectangleSelectPoint = null;
+            graphPanel.svgUpdateHandler.removeSelectionRect();
+            // todo: update the entity selection on the drag selection rectangle
+        }
         if (!mouseActionIsDrag && entityToToggle != null) {
             // toggle the highlight
             graphPanel.selectedGroupId.remove(entityToToggle);
@@ -137,8 +150,6 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
             new Thread(new Runnable() {
                 public void run() {
-
-                    System.out.println("Showing progrtess bar");
                     if (graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier != null) {
                         kinDiagramPanel.showProgressBar();
                         try {
@@ -181,8 +192,12 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         }
         mouseActionOnNode = true;
         boolean shiftDown = false;
+//        boolean mouseDownButton1 = false;
         if (evt instanceof DOMMouseEvent) {
             shiftDown = ((DOMMouseEvent) evt).getShiftKey();
+            // todo: it seems that DOMMouseEvent does not map to MouseEvent.BUTTON1, so it is unknown how this will behave on various platforms
+//            mouseDownButton1 = ((DOMMouseEvent) evt).getButton() == MouseEvent.BUTTON1; 
+//            System.out.println("button: "+((DOMMouseEvent) evt).getButton());
         }
         System.out.println("dom mouse event: " + evt.getCurrentTarget());
         Element currentDraggedElement = ((Element) evt.getCurrentTarget());
@@ -236,7 +251,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                             scaleFactor);
                 }
             }
-        } else {
+        } else /* if (mouseDownButton1) */ {
             final String attributeString = currentDraggedElement.getAttribute("id");
             try {
                 UniqueIdentifier entityIdentifier = new UniqueIdentifier(attributeString);
@@ -286,7 +301,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     EntityData currentSelectedEntity = graphPanel.getEntityForElementId(currentSelectedId);
                     if (currentSelectedEntity != null) {
                         selectedEntities.add(currentSelectedEntity);
-                        graphPanel.metadataPanel.addEntityDataNode(kinDiagramPanel, currentSelectedEntity);
+                        graphPanel.metadataPanel.addEntityDataNode(currentSelectedEntity);
                     }
                 }
             }
