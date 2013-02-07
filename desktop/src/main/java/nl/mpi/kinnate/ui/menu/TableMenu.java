@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilField;
@@ -112,22 +113,35 @@ public class TableMenu extends JPopupMenu implements ActionListener {
         try {
             if (actionCommand.equals(deleteCommand)) {
 //                EntityDocument entityDocument = new EntityDocument(arbilDataNode.getURI(), new ImportTranslator(true), sessionStorage);
+                // todo
 ////                entityDocument.
 //
 //                entityDocument.saveDocument();
             } else if (actionCommand.startsWith(addCommand)) {
-                for (ArbilDataNode arbilDataNode : arbilDataNodes) {
-                    EntityDocument entityDocument = new EntityDocument(arbilDataNode.getURI(), new ImportTranslator(true), sessionStorage);
-                    entityDocument.insertValue(actionCommand.substring(addCommand.length()), "");
-                    entityDocument.saveDocument();
-                    arbilDataNode.reloadNode();
-                }
+                performAddField(actionCommand.substring(addCommand.length()));
+
             } else if (actionCommand.equals(addCustomCommand)) {
-//                String userInput = dialogHandler.
+                String userInput = null;
+                do {
+                    userInput = JOptionPane.showInputDialog(TableMenu.this, "only alphanumeric characters are recommended", "Add Custom Field", JOptionPane.PLAIN_MESSAGE);
+                } while (userInput != null && (userInput.length() < 1 /*|| userInput.matches(".*[: \t].*") */));
+                if (userInput != null) {
+                    performAddField(userInput);
+                }
             }
         } catch (ImportException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
             dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Add/Remove Fields");
+        }
+    }
+
+    private void performAddField(String validatedFieldName) throws ImportException {
+        for (ArbilDataNode arbilDataNode : arbilDataNodes) {
+            EntityDocument entityDocument = new EntityDocument(arbilDataNode.getURI(), new ImportTranslator(true), sessionStorage);
+            entityDocument.insertValue(validatedFieldName, "");
+            entityDocument.saveDocument();
+            arbilDataNode.reloadNode();
+            entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
         }
     }
 }
