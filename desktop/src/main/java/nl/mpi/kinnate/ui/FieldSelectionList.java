@@ -18,8 +18,11 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -59,8 +62,9 @@ public class FieldSelectionList extends JPanel {
     private void populateSelectionList() {
         paddingPanel.setLayout(new BoxLayout(paddingPanel, BoxLayout.PAGE_AXIS));
         paddingPanel.removeAll();
-        for (ParameterElement parameterElement : indexerParam.getValues()) {
-            JTextField fieldPathLabel = new JTextField(parameterElement.getXpathString());
+        for (final ParameterElement parameterElement : indexerParam.getValues()) {
+            final JTextField fieldPathLabel = new JTextField(parameterElement.getXpathString());
+            fieldPathLabel.setBackground(paddingPanel.getBackground());
             JPanel fieldPanel = new JPanel();
             fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.LINE_AXIS));
             fieldPanel.add(fieldPathLabel);
@@ -74,7 +78,9 @@ public class FieldSelectionList extends JPanel {
                     fieldPanel.add(valueSelect);
                     valueSelect.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
-                            indexerParam.setValue(evt.getActionCommand(), ((JComboBox) evt.getSource()).getSelectedItem().toString());
+                            parameterElement.setSelectedValue(((JComboBox) evt.getSource()).getSelectedItem().toString());
+                            indexerParam.setChangedFlag();
+//                            indexerParam.setValue(evt.getActionCommand(), ((JComboBox) evt.getSource()).getSelectedItem().toString());
                             populateSelectionList();
                             revalidate();
                             savePanel.updateGraph();
@@ -86,6 +92,21 @@ public class FieldSelectionList extends JPanel {
                     fieldPanel.add(valueField);
                 }
             }
+            fieldPathLabel.addFocusListener(new FocusListener() {
+                public void focusGained(FocusEvent fe) {
+                    fieldPathLabel.setBackground(Color.WHITE);
+                }
+
+                public void focusLost(FocusEvent fe) {
+                    parameterElement.setXpathString(fieldPathLabel.getText());
+                    fieldPathLabel.setBackground(paddingPanel.getBackground());
+                    indexerParam.setChangedFlag();
+                    populateSelectionList();
+                    revalidate();
+                    savePanel.updateGraph();
+                    savePanel.requiresSave();
+                }
+            });
             JButton removeButton = new JButton("x");
             removeButton.setToolTipText("delete item");
             int removeButtonSize = removeButton.getFontMetrics(removeButton.getFont()).getHeight();
@@ -93,7 +114,7 @@ public class FieldSelectionList extends JPanel {
             removeButton.setActionCommand(parameterElement.getXpathString());
             removeButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    indexerParam.removeValue(evt.getActionCommand());
+                    indexerParam.removeValue(parameterElement);
                     populateSelectionList();
                     revalidate();
                     savePanel.updateGraph();
