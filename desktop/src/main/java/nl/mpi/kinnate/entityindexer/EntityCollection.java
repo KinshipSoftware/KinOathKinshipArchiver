@@ -566,12 +566,11 @@ public class EntityCollection extends DatabaseUpdateHandler {
         } catch (JAXBException exception) {
             // this is where the symptom of duplicate ids has been seen, but it should have been resolved by the delete query replacing the DELETE command
             BugCatcherManager.getBugCatcher().logError(query1String + "\n" + queryResult, exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity");
+            return new EntityData(uniqueIdentifier, new String[]{"Error loading the entity data", "view log for details"});
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(query1String + "\n" + queryResult, exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity");
+            return new EntityData(uniqueIdentifier, new String[]{"Error in db query", "view log for details"});
         }
-        return new EntityData(uniqueIdentifier, new String[]{"Error loading data", "view log for details"});
     }
 
     static public void main(String[] args) {
