@@ -105,6 +105,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
         if (relationType.equals(oppositeRelationType)) {
             return relationType.name();
         } else {
+            // todo: refs #2743 adding a custom sanguin milk relation withexisting parents fails with messy unions being shown
             return relationType.name() + " (" + oppositeRelationType.name() + ")";
         }
     }
