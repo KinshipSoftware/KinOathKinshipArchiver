@@ -30,15 +30,16 @@ import javax.swing.tree.DefaultTreeModel;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
-import nl.mpi.arbil.data.ArbilTableCell;
 import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.ui.ArbilTable;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilTree;
+import nl.mpi.arbil.ui.ArbilTreeController;
 import nl.mpi.arbil.ui.ImageBoxRenderer;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.arbil.util.TreeHelper;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -50,7 +51,7 @@ import nl.mpi.kinnate.ui.menu.TableMenu;
  * @author Peter Withers
  */
 public class MetadataPanel extends JPanel {
-    
+
     private ArbilTree arbilTree;
 //    JScrollPane tableScrollPane;
     private ArbilTableModel kinTableModel;
@@ -66,12 +67,12 @@ public class MetadataPanel extends JPanel {
     private final KinDiagramPanel kinDiagramPanel;
     private ContainerNode rootNode;
     private EntityCollection entityCollection;
-    
-    public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, final KinDiagramPanel kinDiagramPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer, final SessionStorage sessionStorage, final MessageDialogHandler dialogHandler) {
-        this.arbilTree = new ArbilTree();
+
+    public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, final KinDiagramPanel kinDiagramPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer, final SessionStorage sessionStorage, final MessageDialogHandler dialogHandler, ArbilTreeController treeController, TreeHelper treeHelper) {
+        this.arbilTree = new ArbilTree(treeController, treeHelper, dialogHandler);
         this.kinDiagramPanel = kinDiagramPanel;
         this.entityCollection = entityCollection;
-        rootNode = new ContainerNode("links", null, new ArbilNode[]{});
+        rootNode = new ContainerNode(null, "links", null, new ArbilNode[]{});
         arbilTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode)));
         this.kinTableModel = new ArbilTableModel(imageBoxRenderer);
         this.archiveTableModel = new ArbilTableModel(imageBoxRenderer);
@@ -87,7 +88,7 @@ public class MetadataPanel extends JPanel {
                     int clickedColumn = columnAtPoint(p);
                     // set the clicked cell selected
                     boolean clickedRowAlreadySelected = isRowSelected(clickedRow);
-                    
+
                     if (checkSelection && !evt.isShiftDown() && !evt.isControlDown()) {
                         // if it is the right mouse button and there is already a selection then do not proceed in changing the selection
                         if (!(((evt.isPopupTrigger() /* evt.getButton() == MouseEvent.BUTTON3 || evt.isMetaDown() */) && clickedRowAlreadySelected))) {
@@ -106,7 +107,7 @@ public class MetadataPanel extends JPanel {
                         }
                     }
                 }
-                
+
                 if (evt.isPopupTrigger() /* evt.getButton() == MouseEvent.BUTTON3 || evt.isMetaDown() */) {
 //                    targetTable = (JTable) evt.getComponent();
 //                    System.out.println("set the current table");
@@ -114,7 +115,7 @@ public class MetadataPanel extends JPanel {
                     TableCellEditor tableCellEditor = this.getCellEditor();
                     if (tableCellEditor != null) {
                         tableCellEditor.stopCellEditing();
-                    }                    
+                    }
                     new TableMenu(sessionStorage, dialogHandler, entityCollection, kinDiagramPanel, getSelectedRowsFromTable(), getSelectedFields()).show(this, evt.getX(), evt.getY());
 //                    new TableContextMenu(this).show(evt.getX(), evt.getY());
                     //new OldContextMenu().showTreePopup(evt.getSource(), evt.getX(), evt.getY());
@@ -130,7 +131,7 @@ public class MetadataPanel extends JPanel {
         this.arbilTree.setCustomPreviewTable(archiveTable);
         kinTable.setTransferHandler(tableCellDragHandler);
         kinTable.setDragEnabled(true);
-        
+
         this.editorHidePane = editorHidePane;
         this.setLayout(new BorderLayout());
         kinTableScrollPane = new JScrollPane(kinTable);
@@ -138,13 +139,13 @@ public class MetadataPanel extends JPanel {
         this.add(archiveTableScrollPane, BorderLayout.CENTER);
         this.add(arbilTree, BorderLayout.LINE_START);
     }
-    
+
     public void removeAllEditors() {
         while (!elementEditors.isEmpty()) {
             editorHidePane.removeTab(elementEditors.remove(0));
         }
     }
-    
+
     public void removeAllArbilDataNodeRows() {
         kinTableModel.removeAllArbilDataNodeRows();
         archiveTableModel.removeAllArbilDataNodeRows();
@@ -156,13 +157,13 @@ public class MetadataPanel extends JPanel {
         }
         metadataNodes.clear();
     }
-    
+
     public void addArbilDataNode(ArbilDataNode arbilDataNode) {
         archiveTableModel.addSingleArbilDataNode(arbilDataNode);
         archiveRootNodes.clear(); // do not show the tree for archive tree selections
         metadataNodes.add(arbilDataNode);
     }
-    
+
     public void addEntityDataNode(EntityData entityData) {
         String entityPath = entityCollection.getEntityPath(entityData.getUniqueIdentifier());
         System.out.println("entity path: " + entityPath);
@@ -207,11 +208,11 @@ public class MetadataPanel extends JPanel {
         editorHidePane.addTab(labelString, elementEditor);
         elementEditors.add(elementEditor);
     }
-    
+
     public void removeTab(Component elementEditor) {
         editorHidePane.removeTab(elementEditor);
     }
-    
+
     public void updateEditorPane() {
         // todo: add only imdi nodes to the tree and the root node of them
         // todo: maybe have a table for entities and one for achive metdata

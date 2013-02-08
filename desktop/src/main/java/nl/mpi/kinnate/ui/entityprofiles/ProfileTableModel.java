@@ -1,30 +1,29 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui.entityprofiles;
 
 import javax.swing.table.AbstractTableModel;
-import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile;
 import nl.mpi.kinnate.kindocument.ProfileManager;
 
 /**
- * Document : ProfileTableModel
- * Created on : Jan 19, 2012, 4:57:20 PM
- * Author : Peter Withers
+ * Document : ProfileTableModel Created on : Jan 19, 2012, 4:57:20 PM
+ *
+ * @author Peter Withers
  */
 public class ProfileTableModel extends AbstractTableModel {
 
@@ -70,7 +69,7 @@ public class ProfileTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if (columnIndex == 4) {
-            final CmdiProfile selectedProfile = profileManager.getProfileAt(rowIndex);
+            final nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile selectedProfile = profileManager.getProfileAt(rowIndex);
             if (aValue.equals(true)) {
                 profileManager.addProfileSelection(selectedProfile.id, selectedProfile.name);
             } else {
@@ -80,7 +79,7 @@ public class ProfileTableModel extends AbstractTableModel {
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        final CmdiProfile selectedProfile = profileManager.getProfileAt(rowIndex);
+        final nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile selectedProfile = profileManager.getProfileAt(rowIndex);
         switch (columnIndex) {
             case 0:
                 return selectedProfile.name;

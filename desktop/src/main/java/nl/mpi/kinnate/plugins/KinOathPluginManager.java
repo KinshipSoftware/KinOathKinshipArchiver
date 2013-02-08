@@ -19,11 +19,11 @@ package nl.mpi.kinnate.plugins;
 
 import java.awt.Component;
 import java.util.HashSet;
-import nl.mpi.arbil.plugin.KinOathPanelPlugin;
-import nl.mpi.arbil.plugin.PluginException;
 import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.flap.module.BaseModule;
+import nl.mpi.flap.plugin.KinOathPanelPlugin;
+import nl.mpi.flap.plugin.PluginException;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.plugin.BasePlugin;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.pluginloader.PluginManager;
@@ -37,7 +37,7 @@ public class KinOathPluginManager implements PluginManager {
     final private AbstractDiagramManager diagramWindowManager;
     final private ArbilWindowManager dialogHandler;
     final private Component parentComponent;
-    final private HashSet<BasePlugin> hashSet = new HashSet<BasePlugin>();
+    final private HashSet<BaseModule> hashSet = new HashSet<BaseModule>();
 
     public KinOathPluginManager(AbstractDiagramManager diagramWindowManager, ArbilWindowManager dialogHandler, Component parentComponent) {
         this.diagramWindowManager = diagramWindowManager;
@@ -52,7 +52,7 @@ public class KinOathPluginManager implements PluginManager {
         }
     }
 
-    public void activatePlugin(BasePlugin kinOathPlugin) {
+    public void activatePlugin(BaseModule kinOathPlugin) {
         if (kinOathPlugin instanceof KinOathPanelPlugin) {
             try {
                 setPluginPanel((KinOathPanelPlugin) kinOathPlugin, true);
@@ -65,7 +65,7 @@ public class KinOathPluginManager implements PluginManager {
         }
     }
 
-    public void deactivatePlugin(BasePlugin kinOathPlugin) {
+    public void deactivatePlugin(BaseModule kinOathPlugin) {
         if (kinOathPlugin instanceof KinOathPanelPlugin) {
             try {
                 setPluginPanel((KinOathPanelPlugin) kinOathPlugin, false);
@@ -78,7 +78,7 @@ public class KinOathPluginManager implements PluginManager {
         }
     }
 
-    public boolean isActivated(BasePlugin kinOathPlugin) {
+    public boolean isActivated(BaseModule kinOathPlugin) {
         return hashSet.contains(kinOathPlugin);
     }
 }

@@ -31,7 +31,7 @@ public class ProjectNode extends ContainerNode {
     EntityCollection entityCollection;
 
     public ProjectNode(EntityCollection entityCollection, String labelString) {
-        super(labelString, null, new ContainerNode[]{new ContainerNode("loading...", null, new ArbilNode[0])});
+        super(null, labelString, null, new ContainerNode[]{new ContainerNode(null, "loading...", null, new ArbilNode[0])});
         this.entityCollection = entityCollection;
     }
 }

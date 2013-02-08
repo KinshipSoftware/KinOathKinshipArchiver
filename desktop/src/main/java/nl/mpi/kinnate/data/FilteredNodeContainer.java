@@ -29,7 +29,7 @@ import nl.mpi.arbil.data.ContainerNode;
 public class FilteredNodeContainer extends ContainerNode {
 
     public FilteredNodeContainer(String labelString, ImageIcon imageIcon, KinTreeFilteredNode[] childNodes) {
-        super(labelString, imageIcon, childNodes);
+        super(null, labelString, imageIcon, childNodes);
     }
 
     @Override

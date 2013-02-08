@@ -20,6 +20,7 @@ package nl.mpi.kinnate.data;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import javax.swing.ImageIcon;
@@ -28,6 +29,7 @@ import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.flap.model.FieldGroup;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
@@ -144,7 +146,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
                 ArbilDataNode linkedArbilDataNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
                 relationList.add(linkedArbilDataNode);
             }
-            kinTreeMetaNodes.add(new ContainerNode("External Links", null, relationList.toArray(new ArbilDataNode[]{})));
+            kinTreeMetaNodes.add(new ContainerNode(null, "External Links", null, relationList.toArray(new ArbilDataNode[]{})));
         }
     }
 
@@ -159,6 +161,21 @@ public class KinTreeNode extends ArbilNode implements Comparable {
             return symbolGraphic.getSymbolGraphic(entityData.getSymbolNames(), entityData.isEgo);
         }
         return null;
+    }
+
+    @Override
+    public String getID() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getUrlString() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<FieldGroup> getFieldGroups() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

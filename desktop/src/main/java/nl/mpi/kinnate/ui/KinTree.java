@@ -29,7 +29,8 @@ import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Created on : Aug 25, 2011, 11:44:11 AM 
+ * Created on : Aug 25, 2011, 11:44:11 AM
+ *
  * @author Peter Withers
  */
 public class KinTree extends ArbilTree {
@@ -40,6 +41,7 @@ public class KinTree extends ArbilTree {
     private boolean updateGraphOnSelectionChange = false;
 
     public KinTree(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, ContainerNode rootNode) {
+        super(null, null, null);
         this.kinDiagramPanel = kinDiagramPanel;
         this.graphPanel = graphPanel;
         this.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode), true));

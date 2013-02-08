@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -37,9 +37,9 @@ import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : EgoSelectionPanel
- * Created on : Sep 29, 2010, 13:12:01 PM
- * Author : Peter Withers
+ * Document : EgoSelectionPanel Created on : Sep 29, 2010, 13:12:01 PM
+ *
+ * @author Peter Withers
  */
 public class EgoSelectionPanel extends JPanel implements ActionListener {
 
@@ -72,19 +72,19 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         convertTransientButton.setEnabled(false);
         transientNodePanel.add(convertTransientButton, BorderLayout.PAGE_END);
 
-        transientNode = new ContainerNode("transient", null, new ArbilNode[]{});
+        transientNode = new ContainerNode(null, "transient", null, new ArbilNode[]{});
         transientTree = new KinTree(kinDiagramPanel, graphPanel, transientNode);
         transientTree.setBackground(transientNodePanel.getBackground());
         transientNodePanel.add(transientTree, BorderLayout.CENTER);
 
         metadataNodePanel = new JPanel(new BorderLayout());
-        egoNode = new ContainerNode("ego", null, new ArbilNode[]{});
+        egoNode = new ContainerNode(null, "ego", null, new ArbilNode[]{});
         egoTree = new KinTree(kinDiagramPanel, graphPanel, egoNode);
         egoTree.setCellRenderer(new ArbilTreeRenderer());
-        requiredNode = new ContainerNode("required", null, new ArbilNode[]{});
+        requiredNode = new ContainerNode(null, "required", null, new ArbilNode[]{});
         requiredTree = new KinTree(kinDiagramPanel, graphPanel, requiredNode);
         requiredTree.setCellRenderer(new ArbilTreeRenderer());
-        impliedNode = new ContainerNode("implied", null, new ArbilNode[]{});
+        impliedNode = new ContainerNode(null, "implied", null, new ArbilNode[]{});
         impliedTree = new KinTree(kinDiagramPanel, graphPanel, impliedNode);
         impliedTree.setCellRenderer(new ArbilTreeRenderer());
 

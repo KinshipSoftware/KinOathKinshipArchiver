@@ -24,7 +24,7 @@ import java.util.UUID;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 import nl.mpi.arbil.data.ArbilField;
-import nl.mpi.arbil.plugin.PluginSessionStorage;
+import nl.mpi.flap.plugin.PluginSessionStorage;
 
 /**
  * Document : UniqueIdentifier Created on : Jul 21, 2011, 3:23:17 PM

@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -47,9 +47,9 @@ import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : EntitySearchPanel
- * Created on : Mar 14, 2011, 4:01:11 PM
- * Author : Peter Withers
+ * Document : EntitySearchPanel Created on : Mar 14, 2011, 4:01:11 PM
+ *
+ * @author Peter Withers
  */
 public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
 
@@ -84,7 +84,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
         this.setLayout(new BorderLayout());
-        rootNode = new ContainerNode("results", null, new ArbilNode[]{});
+        rootNode = new ContainerNode(null, "results", null, new ArbilNode[]{});
         resultsTree = new KinTree(kinDiagramPanel, graphPanel, rootNode);
 //        resultsTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Test Tree"), true));
 //        resultsTree.setRootVisible(false);
@@ -92,7 +92,6 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         JLabel searchLabel = new JLabel(nodeSetTitle);
         searchField = new JTextField();
         searchField.addKeyListener(new KeyAdapter() {
-
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -104,7 +103,6 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         progressBar = new JProgressBar();
         searchButton = new JButton("Search");
         searchButton.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EntitySearchPanel.this.performSearch();
             }
@@ -127,7 +125,6 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         optionsPanel.add(expandByKinTypeCheckBox);
         kinTypeStringTextArea = new JTextField(kinTypeString);
         kinTypeStringTextArea.addKeyListener(new KeyListener() {
-
             public void keyTyped(KeyEvent e) {
             }
 
@@ -149,7 +146,6 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         });
         optionsPanel.add(kinTypeStringTextArea);
         graphSelectionCheckBox.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 expandByKinTypeCheckBox.setEnabled(graphSelectionCheckBox.isSelected());
                 kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected() && graphSelectionCheckBox.isSelected());
@@ -159,7 +155,6 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         });
         kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected() && graphSelectionCheckBox.isSelected());
         expandByKinTypeCheckBox.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected());
                 kinDiagramPanel.drawGraph();
@@ -191,7 +186,6 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         searchPanel.add(progressBar, BorderLayout.PAGE_END);
         searchPanel.revalidate();
         new Thread() {
-
             @Override
             public void run() {
                 ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
@@ -223,7 +217,6 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         searchPanel.add(progressBar, BorderLayout.PAGE_END);
         searchPanel.revalidate();
         new Thread() {
-
             @Override
             public void run() {
                 HashSet<ArbilNode> resultsArray = new HashSet<ArbilNode>();
@@ -238,7 +231,6 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                     loadedCount++;
                     resultsArea.setText("Loaded " + loadedCount + " of " + entityIdentifiers.length + " entities\n");
                     SwingUtilities.invokeLater(new Runnable() {
-
                         public void run() {
                             progressBar.setValue(progressBar.getValue() + 1);
                         }

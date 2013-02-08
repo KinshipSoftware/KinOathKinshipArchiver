@@ -38,11 +38,12 @@ import nl.mpi.arbil.data.ArbilDataNodeContainer;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.data.ArbilTreeHelper;
-import nl.mpi.arbil.plugin.KinOathPanelPlugin;
-import nl.mpi.arbil.plugin.PluginException;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.flap.module.BaseModule;
+import nl.mpi.flap.plugin.KinOathPanelPlugin;
+import nl.mpi.flap.plugin.PluginException;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
@@ -60,7 +61,6 @@ import nl.mpi.kinnate.kintypestrings.ImportRequiredException;
 import nl.mpi.kinnate.kintypestrings.KinTermCalculator;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
-import nl.mpi.kinnate.plugin.BasePlugin;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
@@ -237,8 +237,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
 
         TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
-        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, entityCollection, this, tableHidePane, tableCellDragHandler, dataNodeLoader, null, sessionStorage, dialogHandler)); // todo: pass a ImageBoxRenderer here if you want thumbnails
-
+        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, entityCollection, this, tableHidePane, tableCellDragHandler, dataNodeLoader, null, sessionStorage, dialogHandler, null, null)); // todo: pass a ImageBoxRenderer here if you want thumbnails
         // in some older files and non kinoath files these VisiblePanelSettings would not be set, so we make sure that they are here
         final ProfileManager profileManager = new ProfileManager(sessionStorage, dialogHandler);
         final CmdiProfileSelectionPanel cmdiProfileSelectionPanel = new CmdiProfileSelectionPanel("Entity Profiles", profileManager, graphPanel);
@@ -578,7 +577,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         VisiblePanelSetting panelSetting = graphPanel.dataStoreSvg.getPanelSettingByType(PanelType.PluginPanel);
         if (panelSetting != null) {
             final JScrollPane uiPanel = kinOathPanelPlugin.getUiPanel(dialogHandler, sessionStorage, BugCatcherManager.getBugCatcher());
-            uiPanel.setName("Plugin: " + ((BasePlugin) kinOathPanelPlugin).getName());
+            uiPanel.setName("Plugin: " + ((BaseModule) kinOathPanelPlugin).getName());
             if (isVisible) {
                 panelSetting.setPanelShown(true);
                 panelSetting.addTargetPanel(uiPanel, true);
