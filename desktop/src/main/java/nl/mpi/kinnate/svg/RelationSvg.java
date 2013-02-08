@@ -67,25 +67,24 @@ public class RelationSvg {
         targetGroup.appendChild(useNode);
     }
 
-    private void updateLabelNode(SVGDocument doc, String svgNameSpace, String lineIdString, String targetRelationId) {
-        // remove and readd the text on path label so that it updates with the new path
-        String labelNodeId = targetRelationId + "label";
-        Node useNodeOld = doc.getElementById(labelNodeId);
-        if (useNodeOld != null) {
-            Node textParentNode = useNodeOld.getParentNode();
-            String labelText = useNodeOld.getTextContent();
-            useNodeOld.getParentNode().removeChild(useNodeOld);
-
-            Element textPath = doc.createElementNS(svgNameSpace, "textPath");
-            textPath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
-            textPath.setAttribute("startOffset", "50%");
-            textPath.setAttribute("id", labelNodeId);
-            Text textNode = doc.createTextNode(labelText);
-            textPath.appendChild(textNode);
-            textParentNode.appendChild(textPath);
-        }
-    }
-
+//    private void updateLabelNode(SVGDocument doc, String svgNameSpace, String lineIdString, String targetRelationId) {
+//        // remove and readd the text on path label so that it updates with the new path
+//        String labelNodeId = targetRelationId + "label";
+//        Node useNodeOld = doc.getElementById(labelNodeId);
+//        if (useNodeOld != null) {
+//            Node textParentNode = useNodeOld.getParentNode();
+//            String labelText = useNodeOld.getTextContent();
+//            useNodeOld.getParentNode().removeChild(useNodeOld);
+//
+//            Element textPath = doc.createElementNS(svgNameSpace, "textPath");
+//            textPath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
+//            textPath.setAttribute("startOffset", "50%");
+//            textPath.setAttribute("id", labelNodeId);
+//            Text textNode = doc.createTextNode(labelText);
+//            textPath.appendChild(textNode);
+//            textParentNode.appendChild(textPath);
+//        }
+//    }
 //    private Float getCommonParentMaxY(EntitySvg entitySvg, EntityData currentNode, EntityRelation graphLinkNode) {
 //        if (graphLinkNode.relationType == DataTypes.RelationType.sibling) {
 //            Float maxY = null;
@@ -192,29 +191,27 @@ public class RelationSvg {
                 // insert the node that uses the above definition
                 addUseNode(graphPanel.doc, graphPanel.svgNameSpace, groupNode, relationRecord.lineIdString);
                 // add the relation label
-                if (relationRecord.lineLabel != null) {
-                    Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
-                    labelText.setAttribute("text-anchor", "middle");
-                    //                        labelText.setAttribute("x", Integer.toString(labelX));
-                    //                        labelText.setAttribute("y", Integer.toString(labelY));
-                    if (relationRecord.lineColour != null) {
-                        labelText.setAttribute("fill", relationRecord.lineColour);
-                    } else {
-                        labelText.setAttribute("fill", "blue");
-                    }
-                    labelText.setAttribute("stroke-width", "0");
-                    labelText.setAttribute("font-size", "14");
-                    //                        labelText.setAttribute("transform", "rotate(45)");
-//                // todo: resolve issues with the USE node for the text
-//                Element textPath = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "textPath");
-//                textPath.setAttributeNS("http://www.w3.rg/1999/xlink", "xlink:href", "#" + lineIdString); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
-//                textPath.setAttribute("startOffset", "50%");
-//                textPath.setAttribute("id", "relation" + relationLineIndex + "label");
-//                Text textNode = graphPanel.doc.createTextNode(lineLabel);
-//                textPath.appendChild(textNode);
-//                labelText.appendChild(textPath);
-                    groupNode.appendChild(labelText);
-                }
+                // todo: the label on relation lines code is suppresed at the moment because it seems that there is a name space issue preventing the line labels to show, as exemplified by saving and reloading the document which will then show the labels correctly.
+//                if (relationRecord.lineLabel != null) {
+//                    Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
+//                    labelText.setAttributeNS(graphPanel.svgNameSpace, "text-anchor", "middle");
+//                    if (relationRecord.lineColour != null) {
+//                        labelText.setAttributeNS(graphPanel.svgNameSpace, "fill", relationRecord.lineColour);
+//                    } else {
+//                        labelText.setAttributeNS(graphPanel.svgNameSpace, "fill", "blue");
+//                    }
+//                    labelText.setAttributeNS(graphPanel.svgNameSpace, "stroke-width", "0");
+//                    labelText.setAttributeNS(graphPanel.svgNameSpace, "font-size", "14");
+////                  labelText.setAttribute("transform", "rotate(45)");
+////                // todo: resolve issues with the USE node for the text
+//                    Element textPath = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "textPath");
+////                    textPath.setAttributeNS("http://www.w3.rg/1999/xlink", "xlink:href", "#" + relationRecord.lineIdString);
+////                  //  textPath.setAttributeNS("http://www.w3.rg/1999/xlink", "xlink:actuate", "onRequest");
+//                    textPath.setAttributeNS(graphPanel.svgNameSpace, "startOffset", "50%");
+//                    textPath.setTextContent(relationRecord.lineLabel);
+//                    labelText.appendChild(textPath);
+//                    groupNode.appendChild(labelText);
+//                }
             }
             relationGroupNode.appendChild(groupNode);
         }
@@ -284,7 +281,7 @@ public class RelationSvg {
                         relationLineElement.setAttribute("d", relationRecord.getPathPointsString());
                     }
                     addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
-                    updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
+//                    updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
                 }
 //                    }
 //                } catch (IdentifierException exception) {
