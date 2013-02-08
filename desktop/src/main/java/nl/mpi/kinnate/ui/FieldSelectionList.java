@@ -98,13 +98,15 @@ public class FieldSelectionList extends JPanel {
                 }
 
                 public void focusLost(FocusEvent fe) {
-                    parameterElement.setXpathString(fieldPathLabel.getText());
+                    if (!parameterElement.getXpathString().equals(fieldPathLabel.getText())) {
+                        parameterElement.setXpathString(fieldPathLabel.getText());
+                        indexerParam.setChangedFlag();
+                        populateSelectionList();
+                        revalidate();
+                        savePanel.updateGraph();
+                        savePanel.requiresSave();
+                    }
                     fieldPathLabel.setBackground(paddingPanel.getBackground());
-                    indexerParam.setChangedFlag();
-                    populateSelectionList();
-                    revalidate();
-                    savePanel.updateGraph();
-                    savePanel.requiresSave();
                 }
             });
             JButton removeButton = new JButton("x");
