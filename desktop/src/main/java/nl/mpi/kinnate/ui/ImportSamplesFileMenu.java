@@ -1,3 +1,20 @@
+/**
+ * Copyright (C) 2012 The Language Archive
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package nl.mpi.kinnate.ui;
 
 import java.awt.Component;
@@ -10,9 +27,9 @@ import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- * Document : RecentFileMenu
- * Created on : Apr 15, 2011, 11:30:39 AM
- * Author : Peter Withers
+ * Document : RecentFileMenu Created on : Apr 15, 2011, 11:30:39
+ *
+ * @author Peter Withers
  */
 public class ImportSamplesFileMenu extends JMenu implements ActionListener {
 
@@ -29,6 +46,7 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
 //        addSampleToMenu("Descententes de Jose Antonio de Figueiredo", "/gedcomsamples/descententes_de_jose_antonio_de_figueiredo.ged");
 //        addSampleToMenu("Wadeye-Joe-Blythe-20110525", "/AllianceSamples/Wadeye-Joe-Blythe-20110525.csv");
         addSampleToMenu("European Royalty (royal92.ged)", "/gedcomsamples/royal92.ged");
+// todo:         addSampleToMenu("Bengkala Sample Data", "/csvexamples/bengkala.csv");
 //        addSampleToMenu("Doerte Sample", "/DoerteSamples/sample.csv");
 //        addSampleToMenu("AltNetspace Sample", "/AltNetspace/people.csv");
     }
