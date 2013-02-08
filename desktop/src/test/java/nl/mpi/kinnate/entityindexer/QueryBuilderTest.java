@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.entityindexer;
 
@@ -24,9 +24,9 @@ import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.QueryTerm;
 
 /**
- * Document : QueryBuilderTest
- * Created on : Jun 27, 2012, 10:03:23 AM
- * Author : Peter Withers
+ * Document : QueryBuilderTest Created on : Jun 27, 2012, 10:03:23 AM
+ *
+ * @author Peter Withers
  */
 public class QueryBuilderTest extends TestCase {
 
@@ -68,7 +68,7 @@ public class QueryBuilderTest extends TestCase {
                     {"*:Kinnate/*:CustomData[*:Gender='Male']", "triangle"},
                     {"*:Kinnate/*:CustomData[*:Gender='']", "square"},
                     {"*:Kinnate/*:CustomData[*:DateOfDeath!='']", "blackstrikethrough"}
-                });
+                }, "%s");
         QueryBuilder instance = new QueryBuilder();
         String expResult = "(\"one&amp;two\",\"single'quote\",\"double&quot;quote\",\"*:Kinnate/*:CustomData[*:Gender='Male']\",\"*:Kinnate/*:CustomData[*:Gender='']\",\"*:Kinnate/*:CustomData[*:DateOfDeath!='']\")";
         String result = instance.asSequenceString(indexerParam);
