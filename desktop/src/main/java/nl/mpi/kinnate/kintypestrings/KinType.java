@@ -77,7 +77,7 @@ public class KinType implements Comparable<KinType> {
         return codeString.contains("E");
     }
 
-    public boolean matchesRelation(EntityRelation entityRelation, String kinTypeModifier) {
+    public boolean matchesRelation(EntityRelation entityRelation, String kinTypeModifier, String defaultSymbol) {
         // todo: make use of the kin type modifier
         if (entityRelation.getAlterNode().isEgo != this.isEgoType()) {
             return false;
@@ -98,7 +98,7 @@ public class KinType implements Comparable<KinType> {
         } else {
             for (EntityData.SymbolType symbolType : symbolTypes) {
                 // square was the wildcard symbol but now a null symbol array is used and since it is not null we compare all symbols in the array
-                for (String symbolName : entityRelation.getAlterNode().getSymbolNames()) {
+                for (String symbolName : entityRelation.getAlterNode().getSymbolNames(defaultSymbol)) {
                     if (symbolType.name().equals(symbolName)) { // entityRelation.getAlterNode().getFirstSymbolName()
                         symbolMatchFound = true;
                     }
@@ -127,7 +127,7 @@ public class KinType implements Comparable<KinType> {
         return true;
     }
 
-    public boolean matchesEgonessAndSymbol(EntityData entityData, String kinTypeModifier) {
+    public boolean matchesEgonessAndSymbol(EntityData entityData, String kinTypeModifier, String defaultSymbol) {
         // todo: make use of the kin type modifier or remove it if it proves irelevant
         if (!entityData.isEgo || !this.isEgoType()) {
             return false;
@@ -137,7 +137,7 @@ public class KinType implements Comparable<KinType> {
         }
         // square used to be the wildcard symbol but now a null symbol array is used and since we know it is not null we compare all symbols in the array
         for (EntityData.SymbolType symbolType : symbolTypes) {
-            for (String symbolName : entityData.getSymbolNames()) {
+            for (String symbolName : entityData.getSymbolNames(defaultSymbol)) {
                 if (symbolType.name().equals(symbolName)) { // entityData.getFirstSymbolName()
                     return true;
                 }

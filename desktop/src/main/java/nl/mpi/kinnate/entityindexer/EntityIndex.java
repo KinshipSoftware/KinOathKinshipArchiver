@@ -79,13 +79,13 @@ public class EntityIndex implements EntityService {
                         URI alterUri = egoEntityUri.resolve(relationLinkNode.getTextContent());
                         entityData.addRelation(alterUri.toASCIIString());
                         // get any requested link data
-                        for (ParameterElement relevantDataPath : indexParameters.relevantLinkData.getValues()) {
-                            for (Node linkDataNode = relationLinkNode.getParentNode().getFirstChild(); linkDataNode != null; linkDataNode = linkDataNode.getNextSibling()) {
-                                if (relevantDataPath.getXpathString().equals(linkDataNode.getNodeName())) {
-                                    entityData.addRelationData(alterUri.toASCIIString(), relevantDataPath.getXpathString(), linkDataNode.getTextContent());
-                                }
-                            }
-                        }
+//                        for (ParameterElement relevantDataPath : indexParameters.relevantLinkData.getValues()) {
+//                            for (Node linkDataNode = relationLinkNode.getParentNode().getFirstChild(); linkDataNode != null; linkDataNode = linkDataNode.getNextSibling()) {
+//                                if (relevantDataPath.getXpathString().equals(linkDataNode.getNodeName())) {
+//                                    entityData.addRelationData(alterUri.toASCIIString(), relevantDataPath.getXpathString(), linkDataNode.getTextContent());
+//                                }
+//                            }
+//                        }
                     }
                 }
                 // get any requested entity data

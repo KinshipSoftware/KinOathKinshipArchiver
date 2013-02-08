@@ -284,8 +284,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     panelSetting.setHidePane(kinTypeHidePane, "Diagram Settings");
                     graphPanel.getIndexParameters().symbolFieldsFields.setParent(graphPanel.getIndexParameters());
                     graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
-                    final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
-                    final JScrollPane labelFieldsPanel = new JScrollPane(new FieldSelectionList(this, graphPanel.getIndexParameters().labelFields, tableCellDragHandler));
+                    final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, this, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
+                    final JScrollPane labelFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, this, graphPanel.getIndexParameters().labelFields, tableCellDragHandler));
                     // todo: Ticket #1115 add overlay fields as paramters
                     symbolFieldsPanel.setName("Symbol Fields");
                     labelFieldsPanel.setName("Label Fields");

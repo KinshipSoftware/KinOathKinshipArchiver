@@ -123,7 +123,7 @@ public class QueryBuilder {
                 stringBuilder.append(",\n");
             }
             notFirst = true;
-            String trimmedXpath = currentEntry.getXpathString().substring("*:Kinnate".length());
+            String trimmedXpath = currentEntry.getXpathString().replaceFirst("^\\*:Kinnate", "");
             stringBuilder.append("if (exists(");
             stringBuilder.append(docRootVar);
             stringBuilder.append(trimmedXpath);
@@ -268,6 +268,7 @@ public class QueryBuilder {
 //                + "<String>base-uri($identifierNode)</String>,"
 //                + "$identifierNode";
 //    }
+
     public String getAllFieldNamesQuery() {
         return "for $facetEntry in index:facets('nl-mpi-kinnate')/document-node/element/element[@name='CustomData']/element/@name\n"
                 + "order by lower-case($facetEntry)\n return data($facetEntry)";

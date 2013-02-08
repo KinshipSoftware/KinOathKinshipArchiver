@@ -138,7 +138,7 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         HashSet<KinTreeNode> transientNodeArray = new HashSet<KinTreeNode>();
         for (EntityData entityData : allEntities) {
             if (entityData.isVisible) {
-                KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
+                KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
                 if (entityData.getUniqueIdentifier().isTransientIdentifier()) {
                     transientNodeArray.add(kinTreeNode);
                 } else {

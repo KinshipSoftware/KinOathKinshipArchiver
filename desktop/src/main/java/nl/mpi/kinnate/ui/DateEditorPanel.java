@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -44,23 +44,26 @@ import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.svg.DataStoreSvg;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * Document : SvgElementEditor
- * Created on : Aug 17, 2011, 1:17:13 PM
- * Author : Peter Withers
+ * Document : SvgElementEditor Created on : Aug 17, 2011, 1:17:13 PM
+ *
+ * @author Peter Withers
  */
 public class DateEditorPanel extends JPanel {
 
     JPanel outerPanel;
-    private IndexerParameters indexerParameters;
-    private MessageDialogHandler dialogHandler;
-    private EntityCollection entityCollection;
-    private ArbilDataNodeLoader dataNodeLoader;
+    final private IndexerParameters indexerParameters;
+    final private MessageDialogHandler dialogHandler;
+    final private EntityCollection entityCollection;
+    final private ArbilDataNodeLoader dataNodeLoader;
+    final private DataStoreSvg dataStoreSvg;
 
-    public DateEditorPanel(IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+    public DateEditorPanel(DataStoreSvg dataStoreSvg, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+        this.dataStoreSvg = dataStoreSvg;
         this.indexerParameters = indexerParameters;
         this.dialogHandler = dialogHandler;
         this.entityCollection = entityCollection;
@@ -74,7 +77,7 @@ public class DateEditorPanel extends JPanel {
 
     private JPanel getDateSpinners(EntityData entityData) {
         JPanel rowPanel = new JPanel(new FlowLayout());
-        KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
+        KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
         rowPanel.add(new JLabel(kinTreeNode.toString(), kinTreeNode.getIcon(), JLabel.LEFT));
         SpinnerModel startDateModel;
 //        if (entityData.getDateOfBirth() != null) {
@@ -106,7 +109,6 @@ public class DateEditorPanel extends JPanel {
         sidePanel.add(unDeleteButton);
         unDeleteButton.setEnabled(false);
         unDeleteButton.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 reAddElement(parentElement, svgElement);
                 unDeleteButton.setEnabled(false);
@@ -115,7 +117,6 @@ public class DateEditorPanel extends JPanel {
         });
         sidePanel.add(deleteButton);
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeElement(parentElement, svgElement);
                 unDeleteButton.setEnabled(true);
@@ -139,7 +140,6 @@ public class DateEditorPanel extends JPanel {
                 new SpinnerNumberModel(initialValue, minValue, maxValue, 1);
         final JSpinner numberSpinner = new JSpinner(spinnerModel);
         numberSpinner.addChangeListener(new ChangeListener() {
-
             public void stateChanged(ChangeEvent e) {
                 updateValue(svgElement, attributeString, numberSpinner.getValue().toString());
             }
@@ -161,7 +161,6 @@ public class DateEditorPanel extends JPanel {
         final JPanel colourSquare = new JPanel();
         colourSquare.setBackground(initialColour);
         colourSquare.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 pickerPanel.removeAll();
@@ -178,7 +177,6 @@ public class DateEditorPanel extends JPanel {
                 final JButton okButton = new JButton("OK");
                 buttonPanel.add(okButton);
                 cancelButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         colourSquare.setBackground(revertColour);
                         colourChooser.setColor(revertColour);
@@ -188,7 +186,6 @@ public class DateEditorPanel extends JPanel {
                     }
                 });
                 revertButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         colourSquare.setBackground(revertColour);
                         colourChooser.setColor(revertColour);
@@ -196,7 +193,6 @@ public class DateEditorPanel extends JPanel {
                     }
                 });
                 noneButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         updateValue(svgElement, attributeString, "none");
                         colourSquare.setBackground(Color.WHITE);
@@ -204,7 +200,6 @@ public class DateEditorPanel extends JPanel {
                     }
                 });
                 okButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         pickerPanel.removeAll();
                         revalidate();
@@ -214,7 +209,6 @@ public class DateEditorPanel extends JPanel {
 
                 colourChooser.setPreviewPanel(new JPanel());
                 colourChooser.getSelectionModel().addChangeListener(new ChangeListener() {
-
                     public void stateChanged(ChangeEvent e) {
                         colourSquare.setBackground(colourChooser.getColor());
                         updateValue(svgElement, attributeString, "#" + Integer.toHexString(colourChooser.getColor().getRGB()).substring(2));

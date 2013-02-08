@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.kintypestrings;
 
@@ -31,9 +31,9 @@ import nl.mpi.kinnate.ui.KinTypeStringProvider;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : KinTypeStringConverter
- * Created on : Sep 29, 2010, 12:52:33 PM
- * Author : Peter Withers
+ * Document : KinTypeStringConverter Created on : Sep 29, 2010, 12:52:33 PM
+ *
+ * @author Peter Withers
  */
 public class KinTypeStringConverter extends GraphSorter {
 
@@ -50,7 +50,7 @@ public class KinTypeStringConverter extends GraphSorter {
 
     public void setEgoKinTypeString(EntityData entityData) {
         for (KinType kinType : dataStoreSvg.getKinTypeDefinitions()) {
-            if (kinType.isEgoType() && kinType.matchesEgonessAndSymbol(entityData, null)) { // todo: should this be passing a kin type modifier?
+            if (kinType.isEgoType() && kinType.matchesEgonessAndSymbol(entityData, null, dataStoreSvg.defaultSymbol)) { // todo: should this be passing a kin type modifier?
                 entityData.addKinTypeString(kinType.codeString);
             }
         }
@@ -272,7 +272,7 @@ public class KinTypeStringConverter extends GraphSorter {
                                         parserHighlight = parserHighlight.addHighlight(ParserHighlightType.Query, initialLength - labelStringsParser.dateEndLocation, "Label text");
                                     }
                                     if (parentDataNodes.isEmpty()) {
-                                       // todo:  Ticket #1807 Correct errors in the generation of freeform kintype string diagrams
+                                        // todo:  Ticket #1807 Correct errors in the generation of freeform kintype string diagrams
                                         generateNeededEntities(null, labelStringsParser, parentDataNodes, currentReferenceKinType, currentGraphDataNodeSet, kinTypeModifier, fullKinTypeString, egoDataNodeList, namedEntitiesMap, allEntitiesSet);
                                     } else {
                                         for (EntityData currentParentNode : parentDataNodes.toArray(new EntityData[]{})) { // todo: this is probably incorrect since there may be more relation/symbol types to create
@@ -340,7 +340,7 @@ public class KinTypeStringConverter extends GraphSorter {
             // look for any existing relaitons that match the required kin type
             for (EntityData parentDataNode : parentDataNodes) {
                 for (EntityRelation entityRelation : parentDataNode.getAllRelations()) {
-                    if (currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier)) {
+                    if (currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier, dataStoreSvg.defaultSymbol)) {
                         final EntityData alterNode = entityRelation.getAlterNode();
                         currentGraphDataNodeSet.add(alterNode);
                         alterNode.addKinTypeString(fullKinTypeString);
@@ -353,7 +353,7 @@ public class KinTypeStringConverter extends GraphSorter {
         } else if (parentDataNodes.isEmpty() && !labelStringsParser.userDefinedIdentifierFound) { /* also skip this if a user defined identifier has been given */
             // look through all the known egos to find a match (must be an ego to match), use case could be: Em:Richard:|Em which should re use the existing ego
             for (EntityData egoEntity : egoDataNodeList) {
-                if (currentReferenceKinType.matchesEgonessAndSymbol(egoEntity, kinTypeModifier)) {
+                if (currentReferenceKinType.matchesEgonessAndSymbol(egoEntity, kinTypeModifier, dataStoreSvg.defaultSymbol)) {
                     currentGraphDataNodeSet.add(egoEntity);
                     egoEntity.addKinTypeString(fullKinTypeString);
                 }
@@ -370,7 +370,7 @@ public class KinTypeStringConverter extends GraphSorter {
                 // check for existing relations of the current parents that match
                 for (EntityRelation entityRelation : currentParentNode.getAllRelations()) {
                     boolean symbolMatchFound = false;
-                    for (String symbolName : entityRelation.getAlterNode().getSymbolNames()) {
+                    for (String symbolName : entityRelation.getAlterNode().getSymbolNames(dataStoreSvg.defaultSymbol)) {
                         // rather than only considering the first symbol, the full list overlay symbols for the entity are considered
                         if (symbolType.toString().equals(symbolName)) {
                             symbolMatchFound = true;
@@ -378,7 +378,7 @@ public class KinTypeStringConverter extends GraphSorter {
                         }
                     }
                     if (symbolMatchFound) {
-                        if (currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier)) {
+                        if (currentReferenceKinType.matchesRelation(entityRelation, kinTypeModifier, dataStoreSvg.defaultSymbol)) {
                             currentGraphDataNode = entityRelation.getAlterNode();
                             currentGraphDataNodeSet.add(currentGraphDataNode);
                             currentGraphDataNode.addKinTypeString(fullKinTypeString);
@@ -389,7 +389,7 @@ public class KinTypeStringConverter extends GraphSorter {
                 // todo: Ticket #1807 Correct errors in the generation of freeform kintype string diagrams
                 // there are no parents so check for existing entities in the current set that match
                 for (EntityData existingEntity : currentGraphDataNodeSet) {
-                    if (currentReferenceKinType.matchesEgonessAndSymbol(existingEntity, kinTypeModifier)) {
+                    if (currentReferenceKinType.matchesEgonessAndSymbol(existingEntity, kinTypeModifier, dataStoreSvg.defaultSymbol)) {
                         currentGraphDataNode = existingEntity;
                     }
                 }

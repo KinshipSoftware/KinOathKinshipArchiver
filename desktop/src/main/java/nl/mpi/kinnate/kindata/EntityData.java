@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.kindata;
 
@@ -29,9 +29,9 @@ import nl.mpi.kinnate.kintypestrings.LabelStringsParser;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : GraphDataNode
- * Created on : Sep 11, 2010, 4:30:41 PM
- * Author : Peter Withers
+ * Document : GraphDataNode Created on : Sep 11, 2010, 4:30:41 PM
+ *
+ * @author Peter Withers
  */
 @XmlRootElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
 public class EntityData {
@@ -152,8 +152,12 @@ public class EntityData {
         archiveLinkArray = linksList.toArray(new URI[]{});
     }
 
-    public String[] getSymbolNames() {
-        return symbolNames;
+    public String[] getSymbolNames(String defaultSymbol) {
+        if (symbolNames != null && symbolNames.length > 0) {
+            return symbolNames;
+        } else {
+            return new String[]{defaultSymbol};
+        }
     }
 
     public String getFirstSymbolName() {
@@ -178,7 +182,6 @@ public class EntityData {
 //    public String getEntityPath() {
 //        return entityPath;
 //    }
-
     public void addKinTypeString(String kinTypeString) {
         ArrayList<String> tempList = new ArrayList<String>(Arrays.asList(kinTypeArray));
         if (!tempList.contains(kinTypeString)) {

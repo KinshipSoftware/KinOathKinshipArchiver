@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.data;
 
@@ -35,13 +35,14 @@ import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.svg.SymbolGraphic;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : KinTreeNode
- * Created on : Aug 22, 2011, 5:14:05 PM
- * Author : Peter Withers
+ * Document : KinTreeNode Created on : Aug 22, 2011, 5:14:05 PM
+ *
+ * @author Peter Withers
  */
 public class KinTreeNode extends ArbilNode implements Comparable {
 
@@ -54,11 +55,13 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     protected MessageDialogHandler dialogHandler;
     protected ArbilDataNodeLoader dataNodeLoader;
     private String derivedLabelString = null;
+    final protected DataStoreSvg dataStoreSvg;
 
-    public KinTreeNode(UniqueIdentifier uniqueIdentifier, EntityData entityData, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+    public KinTreeNode(UniqueIdentifier uniqueIdentifier, EntityData entityData, DataStoreSvg dataStoreSvg, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         // todo: create new constructor that takes a unique identifer and loads from the database.
         super();
         this.uniqueIdentifier = uniqueIdentifier;
+        this.dataStoreSvg = dataStoreSvg;
         this.indexerParameters = indexerParameters;
         this.entityData = entityData;
         this.entityCollection = entityCollection;
@@ -127,7 +130,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
                 if (!metaNodeMap.containsKey(entityRelation.getRelationType())) {
                     metaNodeMap.put(entityRelation.getRelationType(), new HashSet<KinTreeFilteredNode>());
                 }
-                metaNodeMap.get(entityRelation.getRelationType()).add(new KinTreeFilteredNode(entityRelation, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
+                metaNodeMap.get(entityRelation.getRelationType()).add(new KinTreeFilteredNode(entityRelation, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
             }
             HashSet<ArbilNode> kinTreeMetaNodes = new HashSet<ArbilNode>();
             for (Map.Entry<DataTypes.RelationType, HashSet<KinTreeFilteredNode>> filteredNodeEntry : metaNodeMap.entrySet()) {//values().toArray(new KinTreeFilteredNode[]{})
@@ -158,7 +161,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     @Override
     public ImageIcon getIcon() {
         if (entityData != null) {
-            return symbolGraphic.getSymbolGraphic(entityData.getSymbolNames(), entityData.isEgo);
+            return symbolGraphic.getSymbolGraphic(entityData.getSymbolNames(dataStoreSvg.defaultSymbol), entityData.isEgo);
         }
         return null;
     }

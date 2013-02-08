@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.entityindexer;
 
@@ -34,9 +34,9 @@ import nl.mpi.kinnate.ui.KinTypeStringProvider;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
- * Document : QueryParser
- * Created on : Mar 31, 2011, 2:38:20 PM
- * Author : Peter Withers
+ * Document : QueryParser Created on : Mar 31, 2011, 2:38:20 PM
+ *
+ * @author Peter Withers
  */
 public class QueryParser implements EntityService {
 
@@ -202,7 +202,6 @@ public class QueryParser implements EntityService {
         }
         final int totalProgressRequiredFinal = totalProgressRequired;
         SwingUtilities.invokeLater(new Runnable() {
-
             public void run() {
                 progressBar.setMaximum(totalProgressRequiredFinal);
                 progressBar.setMinimum(0);
@@ -281,7 +280,7 @@ public class QueryParser implements EntityService {
                                 }
                                 egoNode.isEgo = true;
                                 egoNode.isVisible = true;
-                                if (firstKinType.kinType.matchesEgonessAndSymbol(egoNode, null)) {
+                                if (firstKinType.kinType.matchesEgonessAndSymbol(egoNode, null, dataStoreSvg.defaultSymbol)) {
                                     firstKinType.entityData.add(egoNode);
                                 }
                             }
@@ -312,7 +311,7 @@ public class QueryParser implements EntityService {
                             for (EntityRelation entityRelation : kinTypeEntityData.getAllRelations()) { // this has been changed to check all the relations not just the sanguine nor only one relation per entitiy
                                 // compare each relation to the required kin type
                                 if (kinTypeElement.nextType != null) {
-                                    if (kinTypeElement.nextType.kinType.matchesRelation(entityRelation, null)) { // todo: this should also take into account the modifier eg -, +, -1, -3, +2 etc..
+                                    if (kinTypeElement.nextType.kinType.matchesRelation(entityRelation, null, dataStoreSvg.defaultSymbol)) { // todo: this should also take into account the modifier eg -, +, -1, -3, +2 etc..
                                         kinTypeElement.nextType.entityData.add(entityRelation.getAlterNode());
                                         entityRelation.getAlterNode().isVisible = true;
 //                                entityRelation.getAlterNode().appendTempLabel(kinTypeElement.kinType.getCodeString());
@@ -338,7 +337,6 @@ public class QueryParser implements EntityService {
                     }
                 }
                 SwingUtilities.invokeLater(new Runnable() {
-
                     public void run() {
                         progressBar.setValue(progressBar.getValue() + 1);
                     }
@@ -365,7 +363,6 @@ public class QueryParser implements EntityService {
             }
             requiredNode.isVisible = true;
             SwingUtilities.invokeLater(new Runnable() {
-
                 public void run() {
                     progressBar.setValue(progressBar.getValue() + 1);
                 }

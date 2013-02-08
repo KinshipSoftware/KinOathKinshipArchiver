@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.export;
 
@@ -29,9 +29,9 @@ import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kindata.EntityData;
 
 /**
- * Document : ExportToR
- * Created on : May 30, 2011, 2:30:34 PM
- * Author : Peter Withers
+ * Document : ExportToR Created on : May 30, 2011, 2:30:34 PM
+ *
+ * @author Peter Withers
  */
 public class ExportToR {
 
@@ -44,7 +44,7 @@ public class ExportToR {
     }
 
     public void doExport(Component mainFrame, SavePanel savePanel, File destinationFile) {
-        PedigreePackageExport packageExport = new PedigreePackageExport();
+        PedigreePackageExport packageExport = new PedigreePackageExport(savePanel.getGraphPanel().dataStoreSvg.defaultSymbol);
         try {
             FileWriter fileWriter = new FileWriter(destinationFile, false);
             final EntityData[] dataNodes = savePanel.getGraphPanel().dataStoreSvg.graphData.getDataNodes();

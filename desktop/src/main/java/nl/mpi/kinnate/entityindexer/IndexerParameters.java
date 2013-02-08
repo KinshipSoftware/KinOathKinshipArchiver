@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.entityindexer;
 
@@ -32,18 +32,18 @@ public class IndexerParameters {
     @XmlTransient
     public String linkPath = "/Kinnate/Relation/Link";
 //    public IndexerParam relevantEntityData = new IndexerParam(new String[][]{{"Kinnate/Gedcom/Entity/NoteText"}, {"Kinnate/Gedcom/Entity/SEX"}, {"Kinnate/Gedcom/Entity/GedcomType"}, {"Kinnate/Gedcom/Entity/NAME/NAME"}, {"Kinnate/Gedcom/Entity/NAME/NPFX"}}); // todo: the relevantData array comes from the user via the svg
-    @XmlTransient
-    public IndexerParam relevantLinkData = new IndexerParam(new String[][]{{"Type"}});
+//    @XmlTransient
+//    public IndexerParam relevantLinkData = new IndexerParam(new String[][]{{"Type"}}, "%s");
     @XmlElement(name = "DateOfBirthFields", namespace = "http://mpi.nl/tla/kin") // todo:. allow the user to edit the date of birth and date of death fields
-    public IndexerParam dateOfBirthField = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*:DateOfBirth"}});
+    public IndexerParam dateOfBirthField = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*:DateOfBirth"}}, "*:Kinnate/*:CustomData/*:%s");
     @XmlElement(name = "DateOfDeathFields", namespace = "http://mpi.nl/tla/kin")
-    public IndexerParam dateOfDeathField = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*:DateOfDeath"}});
+    public IndexerParam dateOfDeathField = new IndexerParam(new String[][]{{"*:Kinnate/*:CustomData/*:DateOfDeath"}}, "*:Kinnate/*:CustomData/*:%s");
     @XmlElement(name = "LabelFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam labelFields = new IndexerParam(new String[][]{
                 {"*:Kinnate/*:CustomData/*:Type"},
                 {"*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"},
                 {"*:Kinnate/*:CustomData/*[ends-with(local-name(), 'name')]"}
-            });
+            }, "*:Kinnate/*:CustomData/*:%s");
     @XmlElement(name = "SymbolFieldsFields", namespace = "http://mpi.nl/tla/kin")
     public IndexerParam symbolFieldsFields = new IndexerParam(new String[][]{
                 //        {"*:Kinnate/*:Gedcom/*:Entity[*:sex='male']", "triangle"},
@@ -57,7 +57,7 @@ public class IndexerParameters {
             //                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Male']", "triangle"},
             //                {"*:Kinnate/*:CustomData/*:Individual[*:Gender='Female']", "circle"}
             //        , {"*:Kinnate/*:Gedcom/*:Entity[*:GedcomType='FAM']", "union"}
-            });
+            }, "*:Kinnate/*:CustomData[*:%s='']");
 //    @XmlElement(name = "DefaultSymbol", namespace = "http://mpi.nl/tla/kin")
 //    public String defaultSymbol = "square";
 //    @XmlElement(name = "AncestorFields", namespace = "http://mpi.nl/tla/kin")

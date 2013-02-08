@@ -571,7 +571,7 @@ public class EntitySvg {
         // the kin type strings are stored here so that on selection in the graph the add kin term panel can be pre populatedwith the kin type strings of the selection
         groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
 //        counterTest++;
-        String[] symbolNames = currentNode.getSymbolNames();
+        String[] symbolNames = currentNode.getSymbolNames(graphPanel.dataStoreSvg.defaultSymbol);
         if (symbolNames == null || symbolNames.length == 0) {
             symbolNames = new String[]{"blank"};
         }

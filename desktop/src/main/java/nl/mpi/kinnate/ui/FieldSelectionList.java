@@ -1,24 +1,26 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,21 +28,24 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParam;
 import nl.mpi.kinnate.entityindexer.ParameterElement;
 
 /**
- *  Document   : FieldSelectionList
- *  Created on : Feb 11, 2011, 2:05:55 PM
- *  Author     : Peter Withers
+ * Document : FieldSelectionList Created on : Feb 11, 2011, 2:05:55 PM
+ *
+ * @author Peter Withers
  */
 public class FieldSelectionList extends JPanel {
 
     private SavePanel savePanel;
     private JPanel paddingPanel;
     protected IndexerParam indexerParam;
+    final private EntityCollection entityCollection;
 
-    public FieldSelectionList(SavePanel savePanelLocal, IndexerParam indexerParamLocal, TableCellDragHandler tableCellDragHandler) {
+    public FieldSelectionList(EntityCollection entityCollection, SavePanel savePanelLocal, IndexerParam indexerParamLocal, TableCellDragHandler tableCellDragHandler) {
+        this.entityCollection = entityCollection;
         // keep the panel items pushed to the top of the page
         paddingPanel = new JPanel();
         this.setLayout(new BorderLayout());
@@ -55,7 +60,7 @@ public class FieldSelectionList extends JPanel {
         paddingPanel.setLayout(new BoxLayout(paddingPanel, BoxLayout.PAGE_AXIS));
         paddingPanel.removeAll();
         for (ParameterElement parameterElement : indexerParam.getValues()) {
-            JLabel fieldPathLabel = new JLabel(parameterElement.getXpathString());
+            JTextField fieldPathLabel = new JTextField(parameterElement.getXpathString());
             JPanel fieldPanel = new JPanel();
             fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.LINE_AXIS));
             fieldPanel.add(fieldPathLabel);
@@ -68,7 +73,6 @@ public class FieldSelectionList extends JPanel {
                     valueSelect.setActionCommand(parameterElement.getXpathString());
                     fieldPanel.add(valueSelect);
                     valueSelect.addActionListener(new java.awt.event.ActionListener() {
-
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
                             indexerParam.setValue(evt.getActionCommand(), ((JComboBox) evt.getSource()).getSelectedItem().toString());
                             populateSelectionList();
@@ -88,7 +92,6 @@ public class FieldSelectionList extends JPanel {
             removeButton.setPreferredSize(new Dimension(removeButtonSize, removeButtonSize));
             removeButton.setActionCommand(parameterElement.getXpathString());
             removeButton.addActionListener(new java.awt.event.ActionListener() {
-
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     indexerParam.removeValue(evt.getActionCommand());
                     populateSelectionList();
@@ -100,7 +103,58 @@ public class FieldSelectionList extends JPanel {
             fieldPanel.add(removeButton);
             paddingPanel.add(fieldPanel);
         }
+
+        final String[] availableValues = indexerParam.getAvailableValues();
+        JPanel addPanel = new JPanel();
+        addPanel.setLayout(new BoxLayout(addPanel, BoxLayout.LINE_AXIS));
+        final JComboBox fieldSelectComboBox = new JComboBox(entityCollection.getAllFieldNames());
+        addPanel.add(fieldSelectComboBox);
+        final JButton addButton = new JButton("Add");
+        addButton.addActionListener(new AbstractAction() {
+            public void actionPerformed(ActionEvent ae) {
+                String initialValue = null;
+                if (availableValues != null) {
+                    if (availableValues.length > 0) {
+                        initialValue = availableValues[0];
+                    } else {
+                        initialValue = "";
+                    }
+                };
+                String initialParameter = String.format(indexerParam.getDefaultValueFormat(), fieldSelectComboBox.getSelectedItem().toString());
+                indexerParam.setValue(initialParameter, initialValue);
+                populateSelectionList();
+                revalidate();
+                savePanel.updateGraph();
+                savePanel.requiresSave();
+            }
+        });
+        addPanel.add(addButton);
+        addPanel.add(new JPanel());
+        paddingPanel.add(addPanel);
         paddingPanel.add(new JPanel());
+
+        if (availableValues != null) {
+            JPanel defaultValuePanel = new JPanel();
+            defaultValuePanel.setLayout(new BoxLayout(defaultValuePanel, BoxLayout.LINE_AXIS));
+            defaultValuePanel.add(new JLabel("Default Symbol"));
+            final JComboBox defaultSymbolComboBox = new JComboBox(availableValues);
+            String currentDefault = savePanel.getGraphPanel().dataStoreSvg.defaultSymbol;
+            for (String currentValue : availableValues) {
+                if (currentValue.equals(currentDefault)) {
+                    defaultSymbolComboBox.setSelectedItem(currentValue);
+                }
+            }
+            defaultSymbolComboBox.addActionListener(new AbstractAction() {
+                public void actionPerformed(ActionEvent ae) {
+                    savePanel.getGraphPanel().dataStoreSvg.defaultSymbol = defaultSymbolComboBox.getSelectedItem().toString();
+                    savePanel.updateGraph();
+                    savePanel.requiresSave();
+                }
+            });
+            defaultValuePanel.add(defaultSymbolComboBox);
+            defaultValuePanel.add(new JPanel());
+            paddingPanel.add(defaultValuePanel);
+        }
     }
 //    private void populateSelectionList(String[][] fieldListArray, String[] availableValues) {
 //        paddingPanel.setLayout(new BoxLayout(paddingPanel, BoxLayout.PAGE_AXIS));

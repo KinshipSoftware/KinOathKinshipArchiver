@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.data;
 
@@ -25,19 +25,20 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.svg.DataStoreSvg;
 
 /**
- * Document : KinTreeFilteredNode
- * Created on : Mar 28, 2012, 1:30:23 PM
- * Author : Peter Withers
+ * Document : KinTreeFilteredNode Created on : Mar 28, 2012, 1:30:23 PM
+ *
+ * @author Peter Withers
  */
 public class KinTreeFilteredNode extends KinTreeNode {
 
     DataTypes.RelationType subnodeFilter;
     EntityRelation entityRelation;
 
-    public KinTreeFilteredNode(EntityRelation entityRelation, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
-        super(entityRelation.alterUniqueIdentifier, entityRelation.getAlterNode(), indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
+    public KinTreeFilteredNode(EntityRelation entityRelation, DataStoreSvg dataStoreSvg, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+        super(entityRelation.alterUniqueIdentifier, entityRelation.getAlterNode(), dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
         this.subnodeFilter = entityRelation.getRelationType(); // subnode filter will be used to filter the child nodes
         this.entityRelation = entityRelation;
     }
@@ -71,13 +72,12 @@ public class KinTreeFilteredNode extends KinTreeNode {
 //                    alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
 //                    entityRelation.setAlterNode(alterEntity);
 //                }
-                    relationList.add(new KinTreeFilteredNode(entityRelation, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
+                    relationList.add(new KinTreeFilteredNode(entityRelation, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
                 }
             }
             getLinksMetaNode(relationList);
             childNodes = relationList.toArray(new ArbilNode[]{});
             new Thread() {
-
                 @Override
                 public void run() {
                     for (ArbilNode childNode : childNodes) {

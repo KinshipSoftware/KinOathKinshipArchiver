@@ -35,7 +35,12 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class PedigreePackageExport {
 
+    final private String defaultSymbol;
     private static UniqueIdentifier orphanId = new UniqueIdentifier("orphan", UniqueIdentifier.IdentifierType.tid);
+
+    public PedigreePackageExport(String defaultSymbol) {
+        this.defaultSymbol = defaultSymbol;
+    }
 
     private String getSimpleId(ArrayList<UniqueIdentifier> allIdArray, UniqueIdentifier entityIdentifier) {
 //        String entityIdentifier = entityData.getUniqueIdentifier();
@@ -50,7 +55,7 @@ public class PedigreePackageExport {
             if (entityRelation.getRelationType().equals(DataTypes.RelationType.ancestor)) {
                 final EntityData alterNode = entityRelation.getAlterNode();
                 if (alterNode != null) {
-                    for (String symbolName : alterNode.getSymbolNames()) {
+                    for (String symbolName : alterNode.getSymbolNames(defaultSymbol)) {
                         if (symbolName.equals(symbolType.name())) {
                             return entityRelation.getAlterNode().getUniqueIdentifier();
                         }
@@ -63,7 +68,7 @@ public class PedigreePackageExport {
 
     private int getIntegerGender(EntityData entityData) {
         // Gender of individual noted in `id'. Character("male","female","unknown", "terminated") or numeric (1="male", 2="female", 3="unknown", 4="terminated") allowed.
-        for (String symbolName : entityData.getSymbolNames()) {
+        for (String symbolName : entityData.getSymbolNames(defaultSymbol)) {
             if (symbolName.equals(EntityData.SymbolType.triangle.name())) {
                 return 1;
             }
@@ -83,7 +88,7 @@ public class PedigreePackageExport {
         int labelMaxCount = 0;
         ArrayList<String> symbolHeaders = new ArrayList<String>();
         for (EntityData entityData : entityDataArray) {
-            for (String symbolName : entityData.getSymbolNames()) {
+            for (String symbolName : entityData.getSymbolNames(defaultSymbol)) {
                 if (!symbolHeaders.contains(symbolName)) {
                     symbolHeaders.add(symbolName);
                 }
@@ -147,7 +152,7 @@ public class PedigreePackageExport {
                 }
                 stringBuilder.append("\t");
             }
-            ArrayList<String> currentSymbols = new ArrayList<String>(Arrays.asList(entityData.getSymbolNames()));
+            ArrayList<String> currentSymbols = new ArrayList<String>(Arrays.asList(entityData.getSymbolNames(defaultSymbol)));
             for (String symbolString : symbolHeaders) {
                 if (currentSymbols.contains(symbolString)) {
                     stringBuilder.append("1");
@@ -183,6 +188,6 @@ public class PedigreePackageExport {
         ArrayList<KinTypeStringProvider> kinTypeStringProviders = new ArrayList<KinTypeStringProvider>();
         kinTypeStringProviders.add(kinTypeStringProvider);
         graphData.readKinTypes(kinTypeStringProviders, new DataStoreSvg());
-        System.out.println(new PedigreePackageExport().createCsvContents(graphData.getDataNodes()));
+        System.out.println(new PedigreePackageExport("").createCsvContents(graphData.getDataNodes()));
     }
 }
