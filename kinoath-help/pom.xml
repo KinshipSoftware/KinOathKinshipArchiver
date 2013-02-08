@@ -7,7 +7,7 @@
     <!--    Either use the snapshot version of manually enter the current build number. 
     The build number is only required when depending on the output in other projects or building to the server.-->
     <version>${help.majorVersion}.${help.minorVersion}-${help.branch}-SNAPSHOT</version>
-    <!--<version>${help.majorVersion}.${help.minorVersion}.33726-${help.branch}</version>-->
+    <!--<version>${help.majorVersion}.${help.minorVersion}.33727-${help.branch}</version>-->
     <name>KinOath Help</name>
     <organization> 
 	<name>The Language Archive</name> 
@@ -170,9 +170,9 @@
     </build>
     <dependencies>
 	<dependency>
-	    <groupId>${project.groupId}</groupId>
+	    <groupId>nl.mpi</groupId>
 	    <artifactId>plugins-core</artifactId>
-	    <version>0.0.33389-pretesting</version>
+	    <version>1.1-pretesting-SNAPSHOT</version>
 	</dependency>
 	<dependency>
 	    <groupId>junit</groupId>

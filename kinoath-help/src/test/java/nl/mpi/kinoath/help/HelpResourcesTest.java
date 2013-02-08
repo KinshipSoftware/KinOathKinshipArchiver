@@ -2,8 +2,8 @@ package nl.mpi.kinoath.help;
 
 import java.io.InputStream;
 import junit.framework.TestCase;
-import nl.mpi.arbil.plugin.PluginException;
-import nl.mpi.kinnate.plugin.AbstractBasePlugin;
+import nl.mpi.flap.module.AbstractBaseModule;
+import nl.mpi.flap.plugin.PluginException;
 
 /**
  * Created on : Oct 11, 2012, 17:48
@@ -18,7 +18,7 @@ public class HelpResourcesTest extends TestCase {
     public void testGetArtifactVersion() {
         System.out.println("getArtifactVersion");
         try {
-            AbstractBasePlugin abstractBasePlugin = new HelpResources();
+            AbstractBaseModule abstractBasePlugin = new HelpResources();
             assertTrue(abstractBasePlugin.isMavenVersionCorrect());
         } catch (PluginException exception) {
             fail(exception.getMessage());
