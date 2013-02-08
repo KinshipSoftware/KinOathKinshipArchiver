@@ -237,7 +237,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
 
         TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
-        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, entityCollection, tableHidePane, tableCellDragHandler, dataNodeLoader, null, sessionStorage, dialogHandler)); // todo: pass a ImageBoxRenderer here if you want thumbnails
+        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, entityCollection, this, tableHidePane, tableCellDragHandler, dataNodeLoader, null, sessionStorage, dialogHandler)); // todo: pass a ImageBoxRenderer here if you want thumbnails
 
         // in some older files and non kinoath files these VisiblePanelSettings would not be set, so we make sure that they are here
         final ProfileManager profileManager = new ProfileManager(sessionStorage, dialogHandler);

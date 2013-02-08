@@ -1,10 +1,26 @@
+/**
+ * Copyright (C) 2012 The Language Archive
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 package nl.mpi.kinnate;
 
 import nl.mpi.arbil.ArbilSwingInjector;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
@@ -12,17 +28,20 @@ import nl.mpi.arbil.util.ArbilMimeHashQueue;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.projects.ProjectManager;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
- * Takes care of injecting certain class instances into objects or classes.
- * This provides us with a sort of dependency injection, which enables loosening
- * the coupling between for example data classes and UI classes.
+ * Takes care of injecting certain class instances into objects or classes. This
+ * provides us with a sort of dependency injection, which enables loosening the
+ * coupling between for example data classes and UI classes.
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  *
- * @author     : Peter Withers
- * Cut down version as required for kinship
+ * @author Peter Withers 
+ * 
+ * Cut down version as required for kinship 
  * Created on : May 3, 2011, 12:17:34 PM
  */
 public class KinnateArbilInjector extends ArbilSwingInjector {
@@ -31,7 +50,7 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
     private ArbilMimeHashQueue mimeHashQueue;
     private ArbilWindowManager windowManager;
     private ArbilDataNodeLoader dataNodeLoader;
-    private ArbilSessionStorage sessionStorage;
+    private KinSessionStorage sessionStorage;
     private EntityCollection entityCollection;
 
     public synchronized void injectHandlers() {
@@ -75,11 +94,15 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
         windowManager.setDataNodeLoader(dataNodeLoader);
         injectDataNodeLoader(dataNodeLoader);
 
-        entityCollection = new EntityCollection(sessionStorage, windowManager);
+        ProjectManager projectManager = new ProjectManager();
+        final ProjectRecord defaultProject = projectManager.getDefaultProject(sessionStorage);
+        sessionStorage.setProjectRecord(defaultProject);
+        entityCollection = new EntityCollection(sessionStorage, windowManager, defaultProject);
     }
 
     /**
      * Should not be called before injectHandlers()!!
+     *
      * @return the treeHelper
      */
     public ArbilTreeHelper getTreeHelper() {
@@ -88,6 +111,7 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
 
     /**
      * Should not be called before injectHandlers()!!
+     *
      * @return the treeHelper
      */
     public ArbilMimeHashQueue getMimeHashQueue() {
@@ -96,6 +120,7 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
 
     /**
      * Should not be called before injectHandlers()!!
+     *
      * @return the treeHelper
      */
     public ArbilWindowManager getWindowManager() {
@@ -104,6 +129,7 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
 
     /**
      * Should not be called before injectHandlers()!!
+     *
      * @return the treeHelper
      */
     public ArbilDataNodeLoader getDataNodeLoader() {
