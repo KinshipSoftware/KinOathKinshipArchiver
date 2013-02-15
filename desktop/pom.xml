@@ -273,7 +273,7 @@
             <groupId>nl.mpi</groupId>
             <artifactId>arbil</artifactId>
             <!--when changing the Arbil version make sure that the JNLP dependencies are also updated--> 
-            <version>2.5.33992-pretesting</version>
+            <version>2.5-pretesting-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
@@ -288,28 +288,23 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>pluginloader</artifactId>
-            <version>0.1.34202-pretesting</version>
+            <version>1.1-pretesting-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinnate-plugins-export</artifactId>
-            <version>0.2.34247-pretesting</version>
+            <version>0.3-pretesting-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.1.33727-pretesting</version>
+            <version>1.1-pretesting-SNAPSHOT</version>
         </dependency>
         <!--        <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>sampleplugins</artifactId>
             <version>0.0.33654-pretesting</version>
         </dependency>-->
-        <dependency>
-            <groupId>nl.mpi</groupId>
-            <artifactId>arbil-commons</artifactId>
-            <version>0.2.34219-pretesting</version>
-        </dependency>
     </dependencies>
     <repositories>
         <repository>
