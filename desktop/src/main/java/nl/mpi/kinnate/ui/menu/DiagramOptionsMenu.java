@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui.menu;
 
@@ -28,9 +28,9 @@ import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
- * Document : DiagramOptionsMenu
- * Created on : Dec 8, 2011, 10:35:50 AM
- * Author : Peter Withers
+ * Document : DiagramOptionsMenu Created on : Dec 8, 2011, 10:35:50 AM
+ *
+ * @author Peter Withers
  */
 public class DiagramOptionsMenu extends JMenu {
 
@@ -38,7 +38,6 @@ public class DiagramOptionsMenu extends JMenu {
         this.setText("Diagram Options");
 
         this.addMenuListener(new MenuListener() {
-
             public void menuSelected(MenuEvent e) {
                 final SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
                 DiagramOptionsMenu.this.removeAll();
@@ -62,7 +61,6 @@ public class DiagramOptionsMenu extends JMenu {
     private void setupMenuItems(final SavePanel currentSavePanel, final GraphPanel graphPanel) {
         JCheckBoxMenuItem snapToGridMenuItem = new JCheckBoxMenuItem("Snap To Grid");
         snapToGridMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 graphPanel.dataStoreSvg.snapToGrid = !graphPanel.dataStoreSvg.snapToGrid;
             }
@@ -71,20 +69,18 @@ public class DiagramOptionsMenu extends JMenu {
 
         JCheckBoxMenuItem highlightRelationsMenuItem = new JCheckBoxMenuItem("Highlight Selected Relations");
         highlightRelationsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 graphPanel.dataStoreSvg.highlightRelationLines = !graphPanel.dataStoreSvg.highlightRelationLines;
-                graphPanel.drawNodes();
+                graphPanel.drawNodes(false);
             }
         });
         this.add(highlightRelationsMenuItem);
 
         JCheckBoxMenuItem showBorderMenuItem = new JCheckBoxMenuItem("Show Diagram Border");
         showBorderMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 graphPanel.dataStoreSvg.showDiagramBorder = !graphPanel.dataStoreSvg.showDiagramBorder;
-                graphPanel.drawNodes();
+                graphPanel.drawNodes(true);
             }
         });
         this.add(showBorderMenuItem);
@@ -108,11 +104,10 @@ public class DiagramOptionsMenu extends JMenu {
 
         JCheckBoxMenuItem showSanguineLinesMenuItem = new JCheckBoxMenuItem("Show Sanguin Lines");
         showSanguineLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show Sanguin Lines on the graph
                 graphPanel.dataStoreSvg.showSanguineLines = !graphPanel.dataStoreSvg.showSanguineLines;
-                graphPanel.drawNodes();
+                graphPanel.drawNodes(false);
             }
         });
         this.add(showSanguineLinesMenuItem);
@@ -128,22 +123,20 @@ public class DiagramOptionsMenu extends JMenu {
 //        this.add(showKinTermLinesMenuItem);
         JCheckBoxMenuItem showLabelssMenuItem = new JCheckBoxMenuItem("Show Labels");
         showLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show labels on the graph
                 graphPanel.dataStoreSvg.showLabels = !graphPanel.dataStoreSvg.showLabels;
-                graphPanel.drawNodes();
+                graphPanel.drawNodes(false);
             }
         });
         this.add(showLabelssMenuItem);
 
         JCheckBoxMenuItem showKinTypeLabelssMenuItem = new JCheckBoxMenuItem("Show Kin Type Labels");
         showKinTypeLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show Kin type labels on the graph
                 graphPanel.dataStoreSvg.showKinTypeLabels = !graphPanel.dataStoreSvg.showKinTypeLabels;
-                graphPanel.drawNodes();
+                graphPanel.drawNodes(false);
             }
         });
         this.add(showKinTypeLabelssMenuItem);
@@ -161,22 +154,20 @@ public class DiagramOptionsMenu extends JMenu {
         // todo: this should not show when no ids are specified by the user
         JCheckBoxMenuItem showIdLabelsMenuItem = new JCheckBoxMenuItem("Show Id Labels");
         showIdLabelsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show transient node ids on the graph
                 graphPanel.dataStoreSvg.showIdLabels = !graphPanel.dataStoreSvg.showIdLabels;
-                graphPanel.drawNodes();
+                graphPanel.drawNodes(false);
             }
         });
         this.add(showIdLabelsMenuItem);
 
         JCheckBoxMenuItem showDateLabelsMenuItem = new JCheckBoxMenuItem("Show Date Labels");
         showDateLabelsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show dates on the graph
                 graphPanel.dataStoreSvg.showDateLabels = !graphPanel.dataStoreSvg.showDateLabels;
-                graphPanel.drawNodes();
+                graphPanel.drawNodes(false);
             }
         });
         this.add(showDateLabelsMenuItem);
@@ -184,10 +175,9 @@ public class DiagramOptionsMenu extends JMenu {
 
         JCheckBoxMenuItem showArchiveLinksMenuItem = new JCheckBoxMenuItem("Show Archive Links");
         showArchiveLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 graphPanel.dataStoreSvg.showArchiveLinks = !graphPanel.dataStoreSvg.showArchiveLinks;
-                graphPanel.drawNodes();
+                graphPanel.drawNodes(false);
             }
         });
         this.add(showArchiveLinksMenuItem);

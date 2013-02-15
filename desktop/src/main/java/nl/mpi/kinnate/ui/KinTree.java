@@ -73,7 +73,7 @@ public class KinTree extends ArbilTree {
         // set the graph selection
         graphPanel.metadataPanel.updateEditorPane();
         if (updateGraphOnSelectionChange) {
-            kinDiagramPanel.drawGraph(identifierList.toArray(new UniqueIdentifier[]{}));
+            kinDiagramPanel.drawGraph(identifierList.toArray(new UniqueIdentifier[]{}), true);
         } else {
             graphPanel.setSelectedIds(identifierList.toArray(new UniqueIdentifier[]{}));
         }

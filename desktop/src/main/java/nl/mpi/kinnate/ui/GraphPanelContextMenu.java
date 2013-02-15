@@ -341,7 +341,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                 if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
                     return;
                 }
-                graphPanel.resetLayout();
+                graphPanel.resetLayout(true);
             }
         });
         this.add(resetLayoutMenuItem);

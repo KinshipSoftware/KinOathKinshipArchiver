@@ -425,7 +425,6 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path");
 //        }
 //    }
-
     public String getKinTypeForElementId(UniqueIdentifier elementId) {
         Element entityElement = doc.getElementById(elementId.getAttributeIdentifier());
         if (entityElement != null) {
@@ -447,14 +446,14 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgUpdateHandler.requestResize();
     }
 
-    public void resetLayout() {
+    public void resetLayout(boolean resetZoom) {
         // this requires that the entity data is loaded by recalculating the diagram at least once
         entitySvg = new EntitySvg(dialogHandler);
         dataStoreSvg.graphData.clearPreferredEntityLocations();
         dataStoreSvg.graphData.setEntitys(dataStoreSvg.graphData.getDataNodes());
         try {
             dataStoreSvg.graphData.placeAllNodes(entitySvg.entityPositions);
-            drawNodes();
+            drawNodes(resetZoom);
         } catch (GraphSorter.UnsortablePointsException exception) {
             dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
         }
@@ -476,16 +475,16 @@ public class GraphPanel extends JPanel implements SavePanel {
         entitySvg.clearEntityLocations(selectedIdentifiers);
     }
 
-    public void drawNodes() {
+    public void drawNodes(boolean resetZoom) {
         requiresSave = true;
         selectedGroupId.clear();
-        svgUpdateHandler.updateEntities();
+        svgUpdateHandler.updateEntities(resetZoom);
     }
 
-    public void drawNodes(GraphSorter graphDataLocal) {
+    public void drawNodes(GraphSorter graphDataLocal, boolean resetZoom) {
         kinDiagramPanel.setStatusBarText(graphDataLocal.getDataNodes().length + " entities shown");
         dataStoreSvg.graphData = graphDataLocal;
-        drawNodes();
+        drawNodes(resetZoom);
         if (graphDataLocal.getDataNodes().length == 0) {
             // if all entities have been removed then reset the zoom so that new nodes are going to been centered
             // todo: it would be better to move the window to cover the drawing area but not change the zoom

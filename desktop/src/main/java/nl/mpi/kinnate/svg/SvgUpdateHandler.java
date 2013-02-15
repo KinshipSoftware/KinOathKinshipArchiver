@@ -1052,21 +1052,21 @@ public class SvgUpdateHandler {
         }
     }
 
-    public void updateEntities() {
+    public void updateEntities(final boolean resetZoom) {
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    drawEntities();
+                    drawEntities(resetZoom);
                 }
             });
         } else {
             // on the first draw there will be on update manager
-            drawEntities();
+            drawEntities(resetZoom);
         }
     }
 
-    public void drawEntities() { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
+    public void drawEntities(boolean resetZoom) { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
         graphPanel.dataStoreSvg.graphData.setPadding(graphPanel.graphPanelSize);
         relationRecords = new RelationRecordTable();
         int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);
@@ -1112,7 +1112,7 @@ public class SvgUpdateHandler {
                 entityGroupNodeOld.getParentNode().removeChild(entityGroupNodeOld);
             }
             graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel.entitySvg.entityPositions);
-            resizeCanvas(svgRoot, diagramGroupNode, true);
+            resizeCanvas(svgRoot, diagramGroupNode, resetZoom);
 
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik

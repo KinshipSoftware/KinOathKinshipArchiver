@@ -137,7 +137,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                         kinTypeString = kinTypeStringTextArea.getText();
                         if (expandByKinTypeCheckBox.isSelected() && graphSelectionCheckBox.isSelected()) {
                             // update if text changed and selected
-                            kinDiagramPanel.drawGraph();
+                            kinDiagramPanel.drawGraph(true);
                         }
                     }
 
@@ -149,7 +149,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
             public void actionPerformed(ActionEvent e) {
                 expandByKinTypeCheckBox.setEnabled(graphSelectionCheckBox.isSelected());
                 kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected() && graphSelectionCheckBox.isSelected());
-                kinDiagramPanel.drawGraph();
+                kinDiagramPanel.drawGraph(true);
                 resultsTree.setUpdateGraphOnSelectionChange(graphSelectionCheckBox.isSelected());
             }
         });
@@ -157,7 +157,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         expandByKinTypeCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 kinTypeStringTextArea.setEnabled(expandByKinTypeCheckBox.isSelected());
-                kinDiagramPanel.drawGraph();
+                kinDiagramPanel.drawGraph(true);
             }
         });
         diagramSelectionCheckBox = new JCheckBox("Replace search with diagram selection", false);
