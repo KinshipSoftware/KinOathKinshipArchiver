@@ -781,7 +781,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     public void entityRelationsChanged(UniqueIdentifier[] selectedIdentifiers) {
         // this method does not need to update the database because the link changing process has already done that
         // remove the stored graph locations of the selected ids
-        graphPanel.clearEntityLocations(selectedIdentifiers);
+//        graphPanel.clearEntityLocations(selectedIdentifiers);
         graphPanel.getIndexParameters().valuesChanged = true;
         drawGraph(false);
     }
