@@ -29,8 +29,6 @@ import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.util.MessageDialogHandler;
-import nl.mpi.flap.model.DataNodeType;
-import nl.mpi.flap.model.PluginDataNodeType;
 import nl.mpi.flap.model.FieldGroup;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
@@ -300,16 +298,6 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public List<String> getChildIds() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setType(DataNodeType dataNodeType) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public DataNodeType getType() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
