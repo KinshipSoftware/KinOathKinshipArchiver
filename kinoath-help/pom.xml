@@ -6,8 +6,8 @@
     <packaging>jar</packaging>
     <!--    Either use the snapshot version of manually enter the current build number. 
     The build number is only required when depending on the output in other projects or building to the server.-->
-    <version>${help.majorVersion}.${help.minorVersion}-${help.branch}-SNAPSHOT</version>
-    <!--<version>${help.majorVersion}.${help.minorVersion}.33727-${help.branch}</version>-->
+    <!--<version>${help.majorVersion}.${help.minorVersion}-${help.branch}-SNAPSHOT</version>-->
+    <version>${help.majorVersion}.${help.minorVersion}.35877-${help.branch}</version>
     <name>KinOath Help</name>
     <organization> 
 	<name>The Language Archive</name> 
@@ -16,8 +16,8 @@
     
     <properties>
 	<help.majorVersion>1</help.majorVersion>
-	<help.minorVersion>1</help.minorVersion>
-	<help.branch>pretesting</help.branch>
+	<help.minorVersion>2</help.minorVersion>
+	<help.branch>stable</help.branch>
 	
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<output.jarname>${project.build.finalName}</output.jarname>
@@ -172,7 +172,7 @@
 	<dependency>
 	    <groupId>nl.mpi</groupId>
 	    <artifactId>plugins-core</artifactId>
-	    <version>1.1-pretesting-SNAPSHOT</version>
+	    <version>1.1.35868-stable</version>
 	</dependency>
 	<dependency>
 	    <groupId>junit</groupId>
