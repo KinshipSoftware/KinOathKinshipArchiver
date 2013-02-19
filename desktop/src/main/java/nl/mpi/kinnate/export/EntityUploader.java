@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.export;
 
@@ -37,11 +37,12 @@ import javax.swing.JTextArea;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 
 /**
- *  Document   : EntityUpload
- *  Created on : Jun 29, 2011, 3:00:33 PM
- *  Author     : Peter Withers
+ * Document : EntityUpload Created on : Jun 29, 2011, 3:00:33 PM 
+ * 
+ * @author Peter Withers
  */
 public class EntityUploader {
 
@@ -89,20 +90,25 @@ public class EntityUploader {
 
     public void findLocalEntities(final ActionListener actionListener) {
         new Thread() {
-
             @Override
             public void run() {
                 // search the database
 //                EntityCollection entityCollection = new EntityCollection(sessionStorage, dialogHandler);
-                searchResults = entityCollection.searchForLocalEntites();
-                actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
+                try {
+                    searchResults = entityCollection.searchForLocalEntites();
+                    actionListener.actionPerformed(new ActionEvent(this, 0, "seachcomplete"));
+                } catch (EntityServiceException exception) {
+                    // todo: handle this better, if this class comes back into use
+                    BugCatcherManager.getBugCatcher().logError(exception);
+//                    outputArea.append(exception.getMessage() + "\n");
+//                    dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Search Query");
+                }
             }
         }.start();
     }
 
     public void findModifiedEntities(final ActionListener actionListener) {
         new Thread() {
-
             @Override
             public void run() {
                 // search file system
@@ -125,7 +131,6 @@ public class EntityUploader {
 
     public void uploadLocalEntites(final ActionListener actionListener, final JProgressBar uploadProgress, final JTextArea outputArea, final String workspaceName, final char[] workspacePassword/*, final boolean createWorkspace*/) {
         new Thread() {
-
             @Override
             public void run() {
                 try {

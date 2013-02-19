@@ -35,6 +35,7 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindocument.EntityDocument;
@@ -100,6 +101,9 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                                 kinDiagramPanel.clearProgressBar();
                                 BugCatcherManager.getBugCatcher().logError(exception);
                                 arbilWindowManager.addMessageDialogToQueue("Failed to create entity: " + exception.getMessage(), "Add Entity");
+                            } catch (EntityServiceException exception) {
+                                BugCatcherManager.getBugCatcher().logError(exception);
+                                arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Update Database");
                             }
                         }
                     }.start();
@@ -206,6 +210,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                                     kinDiagramPanel.removeRequiredNodes(entityMerger.getDeletedIdentifiersArray());
                                 } catch (ImportException exception) {
                                     arbilWindowManager.addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
+                                } catch (EntityServiceException exception) {
+                                    arbilWindowManager.addMessageDialogToQueue("Failed to merge: " + exception.getMessage(), mergeEntitiesMenu.getText());
                                 }
                                 kinDiagramPanel.clearProgressBar();
                             }
@@ -226,6 +232,8 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                                 kinDiagramPanel.entityRelationsChanged(selectedIdentifiers);
                                 kinDiagramPanel.addRequiredNodes(duplicateEntities, eventLocation);
                             } catch (ImportException exception) {
+                                arbilWindowManager.addMessageDialogToQueue("Failed to duplicate: " + exception.getMessage(), duplicateEntitiesMenu.getText());
+                            } catch (EntityServiceException exception) {
                                 arbilWindowManager.addMessageDialogToQueue("Failed to duplicate: " + exception.getMessage(), duplicateEntitiesMenu.getText());
                             }
                             kinDiagramPanel.clearProgressBar();

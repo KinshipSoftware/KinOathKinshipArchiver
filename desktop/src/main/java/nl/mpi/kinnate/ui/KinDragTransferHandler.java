@@ -39,6 +39,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindocument.EntityDocument;
@@ -240,6 +241,10 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             // todo: warn user with a dialog
             BugCatcherManager.getBugCatcher().logError(exception);
             return false;
+        } catch (EntityServiceException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+            return false;
+            // dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Get Entity Path");
         }
     }
 
@@ -287,6 +292,11 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         } catch (URISyntaxException exception) {
             // todo: warn user with a dialog
             BugCatcherManager.getBugCatcher().logError(exception);
+            return false;
+        } catch (EntityServiceException exception) {
+            // todo: warn user with a dialog
+            BugCatcherManager.getBugCatcher().logError(exception);
+//            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Update Database");
             return false;
         }
     }

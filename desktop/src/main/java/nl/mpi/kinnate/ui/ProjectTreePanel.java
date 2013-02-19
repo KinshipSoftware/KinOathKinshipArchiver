@@ -38,6 +38,7 @@ import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.data.ProjectNode;
 import nl.mpi.kinnate.entityindexer.DatabaseUpdateListener;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -152,10 +153,11 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
                 synchronized (lockObject) {
                     if (!projectQueryRunning && updateRequired) {
                         staticTreeNodesArray = new ArrayList<KinTreeNode>();
-                        EntityData[] projectEntities = entityCollection.getEntityByEndPoint(DataTypes.RelationType.ancestor, graphPanel.getIndexParameters());
-                        for (EntityData entityData : projectEntities) {
-                            boolean isHorizontalEndPoint = true;
-                            // this check is for end points that have a sibling or spouse who are not an end point, but it is removed because it is not possible to browse to a spouse or sibling in a directional branch
+                        try {
+                            EntityData[] projectEntities = entityCollection.getEntityByEndPoint(DataTypes.RelationType.ancestor, graphPanel.getIndexParameters());
+                            for (EntityData entityData : projectEntities) {
+                                boolean isHorizontalEndPoint = true;
+                                // this check is for end points that have a sibling or spouse who are not an end point, but it is removed because it is not possible to browse to a spouse or sibling in a directional branch
 //                    for (EntityRelation entityRelation : entityData.getAllRelations()) {
 //                        if (entityRelation.getAlterNode() == null) {
 //                            // if the alter node has not been loaded then it must not be an end point
@@ -165,13 +167,16 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
 //                            }
 //                        }
 //                    }
-                            if (isHorizontalEndPoint) {
-                                // todo: add cache and update (on change) of the tree nodes
-                                staticTreeNodesArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                                if (isHorizontalEndPoint) {
+                                    // todo: add cache and update (on change) of the tree nodes
+                                    staticTreeNodesArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                                }
                             }
+                            Collections.sort(staticTreeNodesArray);
+                            updateRequired = false;
+                        } catch (EntityServiceException exception) {
+                            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Get Project Entities");
                         }
-                        Collections.sort(staticTreeNodesArray);
-                        updateRequired = false;
                     }
                     treeNodesArray = staticTreeNodesArray;
                     SwingUtilities.invokeLater(new Runnable() {

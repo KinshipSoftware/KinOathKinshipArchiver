@@ -30,8 +30,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.IndexerParam;
 import nl.mpi.kinnate.entityindexer.ParameterElement;
 
@@ -130,8 +132,16 @@ public class FieldSelectionList extends JPanel {
         final String[] availableValues = indexerParam.getAvailableValues();
         JPanel addPanel = new JPanel();
         addPanel.setLayout(new BoxLayout(addPanel, BoxLayout.LINE_AXIS));
-        final JComboBox fieldSelectComboBox = new JComboBox(entityCollection.getAllFieldNames());
-        addPanel.add(fieldSelectComboBox);
+        JComboBox fieldSelect;
+        try {
+            fieldSelect = new JComboBox(entityCollection.getAllFieldNames());
+            addPanel.add(fieldSelect);
+        } catch (EntityServiceException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+            fieldSelect = new JComboBox(new String[]{"<Error Getting Field Names>"});
+            addPanel.add(fieldSelect);
+        }
+        final JComboBox fieldSelectComboBox = fieldSelect;
         final JButton addButton = new JButton("Add");
         addButton.addActionListener(new AbstractAction() {
             public void actionPerformed(ActionEvent ae) {

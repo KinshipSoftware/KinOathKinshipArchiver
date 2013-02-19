@@ -24,7 +24,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.HashSet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -44,6 +43,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.XsdChecker;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.CsvImporter;
 import nl.mpi.kinnate.gedcomimport.GedcomImporter;
 import nl.mpi.kinnate.gedcomimport.GenericImporter;
@@ -294,6 +294,8 @@ public class GedcomImportPanel extends JPanel {
                             } catch (IOException exception) {
                                 importTextArea.append("Import Failed: " + exception.getMessage() + "\n");
                             } catch (ImportException exception) {
+                                importTextArea.append("Import Failed:" + exception.getMessage() + "\n");
+                            } catch (EntityServiceException exception) {
                                 importTextArea.append("Import Failed:" + exception.getMessage() + "\n");
                             }
                             progressBar.setVisible(false);

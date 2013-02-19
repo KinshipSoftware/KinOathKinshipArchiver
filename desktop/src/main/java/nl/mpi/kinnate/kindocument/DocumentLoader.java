@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.kindocument;
 
@@ -26,6 +26,7 @@ import nl.mpi.arbil.data.ArbilDataNodeService;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -48,7 +49,7 @@ public class DocumentLoader {
         this.entityCollection = entityCollection;
     }
 
-    protected EntityDocument getEntityDocument(UniqueIdentifier selectedIdentifier) throws ImportException, URISyntaxException {
+    protected EntityDocument getEntityDocument(UniqueIdentifier selectedIdentifier) throws ImportException, URISyntaxException, EntityServiceException {
         EntityDocument entityDocument = new EntityDocument(new URI(entityCollection.getEntityPath(selectedIdentifier)), new ImportTranslator(true), sessionStorage);
 //        System.out.println("Loaded 1: " + entityDocument.entityData.getUniqueIdentifier().getAttributeIdentifier());
         entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
@@ -66,7 +67,7 @@ public class DocumentLoader {
         return entityDocument;
     }
 
-    protected EntityDocument getEntityDocuments(UniqueIdentifier[] selectedIdentifiers, ArrayList<EntityDocument> entityDocumentList) throws ImportException, URISyntaxException {
+    protected EntityDocument getEntityDocuments(UniqueIdentifier[] selectedIdentifiers, ArrayList<EntityDocument> entityDocumentList) throws ImportException, URISyntaxException, EntityServiceException {
         EntityDocument leadEntityDocument = null;
         for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
             EntityDocument entityDocument = getEntityDocument(uniqueIdentifier);
@@ -103,13 +104,21 @@ public class DocumentLoader {
     protected void saveAllDocuments() throws ImportException {
         for (EntityDocument entityDocument : entityMap.values()) {
             entityDocument.saveDocument();
-            entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
+            try {
+                entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
+            } catch (EntityServiceException exception) {
+                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Update Database");
+            }
         }
     }
 
     protected void deleteFromDataBase(EntityDocument entityDocument) throws IOException {
         ArbilDataNodeService arbilDataNodeService = new ArbilDataNodeService(null, null, null, null, null);
         arbilDataNodeService.bumpHistory(entityDocument.getFile());
-        entityCollection.deleteFromDatabase(entityDocument.getUniqueIdentifier());
+        try {
+            entityCollection.deleteFromDatabase(entityDocument.getUniqueIdentifier());
+        } catch (EntityServiceException exception) {
+            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Update Database");
+        }
     }
 }

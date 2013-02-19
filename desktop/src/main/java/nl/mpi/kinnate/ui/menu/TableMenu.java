@@ -31,6 +31,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
@@ -72,17 +73,21 @@ public class TableMenu extends JPopupMenu implements ActionListener {
     private void getAddMenu() {
         int addedCounter = 0;
         JMenu addMenu = new JMenu("Add");
-        for (String fieldName : entityCollection.getAllFieldNames()) {
-            if (addedCounter > 20) {
-                this.add(addMenu);
-                addMenu = new JMenu("Add (" + fieldName.substring(0, 1) + ")");
-                addedCounter = 0;
+        try {
+            for (String fieldName : entityCollection.getAllFieldNames()) {
+                if (addedCounter > 20) {
+                    this.add(addMenu);
+                    addMenu = new JMenu("Add (" + fieldName.substring(0, 1) + ")");
+                    addedCounter = 0;
+                }
+                final JMenuItem addMenuItem = new JMenuItem(fieldName);
+                addMenuItem.setActionCommand(addCommand + fieldName);
+                addMenuItem.addActionListener(this);
+                addMenu.add(addMenuItem);
+                addedCounter++;
             }
-            final JMenuItem addMenuItem = new JMenuItem(fieldName);
-            addMenuItem.setActionCommand(addCommand + fieldName);
-            addMenuItem.addActionListener(this);
-            addMenu.add(addMenuItem);
-            addedCounter++;
+        } catch (EntityServiceException exception) {
+            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Get All Field Names");
         }
         this.add(addMenu);
         final JMenuItem addCustomMenuItem = new JMenuItem("Add <custom field>");
@@ -174,9 +179,13 @@ public class TableMenu extends JPopupMenu implements ActionListener {
     }
 
     private void saveAllDocuments() throws ImportException {
-        for (EntityDocument entityDocument : documentMap.values()) {
-            entityDocument.saveDocument();
-            entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
+        try {
+            for (EntityDocument entityDocument : documentMap.values()) {
+                entityDocument.saveDocument();
+                entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
+            }
+        } catch (EntityServiceException exception) {
+            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Update Database");
         }
         for (ArbilDataNode arbilDataNode : documentMap.keySet()) {
             arbilDataNode.reloadNode();

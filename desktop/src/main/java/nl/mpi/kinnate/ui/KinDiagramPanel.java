@@ -807,8 +807,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     redrawRequired = true;
                 }
                 if (dataBaseRequiresUpdate) {
-                    entityCollection.updateDatabase(arbilDataNode.getURI(), registeredArbilDataNode.get(arbilDataNode));
-                    graphPanel.getIndexParameters().valuesChanged = true;
+                    try {
+                        entityCollection.updateDatabase(arbilDataNode.getURI(), registeredArbilDataNode.get(arbilDataNode));
+                        graphPanel.getIndexParameters().valuesChanged = true;
+                    } catch (EntityServiceException exception) {
+                        dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Update Database");
+                    }
                 }
             }
             if (redrawRequired) {

@@ -75,7 +75,6 @@ import org.basex.query.value.item.Item;
 public class EntityCollection extends DatabaseUpdateHandler {
 
     final private SessionStorage sessionStorage;
-    final private MessageDialogHandler dialogHandler;
     final private String databaseName; // = "nl-mpi-kinnate";
     final private ProjectRecord projectRecord;
     final static Context context = new Context();
@@ -91,7 +90,6 @@ public class EntityCollection extends DatabaseUpdateHandler {
 
     public EntityCollection(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, ProjectRecord projectRecord) {
         this.sessionStorage = sessionStorage;
-        this.dialogHandler = dialogHandler;
         this.projectRecord = projectRecord;
         databaseName = projectRecord.getProjectUUID();
         // make sure the database exists
@@ -213,7 +211,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
     }
 
-    private void addFileToDB(URI updatedDataUrl, UniqueIdentifier updatedFileIdentifier) {
+    private void addFileToDB(URI updatedDataUrl, UniqueIdentifier updatedFileIdentifier) throws EntityServiceException {
         // the document might be in any location, so the url must be used to add to the DB, but the ID must be used to remove the old DB entries, so that old records will removed including duplicates
         String urlString = updatedDataUrl.toASCIIString();
         try {
@@ -224,17 +222,18 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 runDeleteQuery(updatedFileIdentifier);
                 // add requires a url other wise it appends the working path when using base-uri in a query
                 // add requires the parent directory otherwise it adds the file name to the root and appends the working path when using base-uri in a query
+                // todo: has the database been opened at this point???
                 // add appears not to have been tested by anybody, I am not sure if I like basex now, but the following works
-                new Add(urlString.replaceFirst("[^/]*$", ""), urlString).execute(context);
+                new Add(sessionStorage.getProjectWorkingDirectory().toURI().relativize(updatedDataUrl).toASCIIString(), urlString).execute(context);
             }
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             BugCatcherManager.getBugCatcher().logError(baseXException);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Add File To DB");
+            throw new EntityServiceException(dbErrorMessage /* baseXException.getMessage() */ + ": Add File To DB");
         }
     }
 
-    public void deleteFromDatabase(UniqueIdentifier updatedFileIdentifier) {
+    public void deleteFromDatabase(UniqueIdentifier updatedFileIdentifier) throws EntityServiceException {
         try {
             synchronized (databaseLock) {
                 new Open(databaseName).execute(context);
@@ -248,11 +247,11 @@ public class EntityCollection extends DatabaseUpdateHandler {
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             BugCatcherManager.getBugCatcher().logError(baseXException);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Add File To DB");
+            throw new EntityServiceException(dbErrorMessage /* baseXException.getMessage() */ + ":Add File To DB");
         }
     }
 
-    public void updateDatabase(final UniqueIdentifier[] updatedFileArray, final JProgressBar progressBar) {
+    public void updateDatabase(final UniqueIdentifier[] updatedFileArray, final JProgressBar progressBar) throws EntityServiceException {
         try {
             if (progressBar != null) {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -296,11 +295,11 @@ public class EntityCollection extends DatabaseUpdateHandler {
             updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Update Database");
+            throw new EntityServiceException(dbErrorMessage /* baseXException.getMessage() */ + ": Update Database");
         }
     }
 
-    public void updateDatabase(URI updatedFile, UniqueIdentifier updatedFileIdentifier) {
+    public void updateDatabase(URI updatedFile, UniqueIdentifier updatedFileIdentifier) throws EntityServiceException {
         // it would appear that a re adding a file does not remove the old entries so for now we will dump and recreate the entire database
         // update, this has been updated and adding directories as a collection breaks the update and delete methods in basex so we now do each document individualy
 //        createDatabase();
@@ -314,7 +313,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* baseXException.getMessage() */, "Update Database");
+            throw new EntityServiceException(dbErrorMessage /* baseXException.getMessage() */);
         }
     }
 
@@ -333,12 +332,12 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //        String queryString = "for $doc in collection('nl-mpi-kinnate') where contains(string-join($doc//text()), \"" + namePartString + "\") return base-uri($doc)";
 //        return performQuery(queryString);
 //    }
-    public SearchResults searchForLocalEntites() {
+    public SearchResults searchForLocalEntites() throws EntityServiceException {
         String queryString = "for $doc in collection('nl-mpi-kinnate') where exists(/*:Kinnate/*:Entity/*:Identifier/@*:type=\"lid\") return base-uri($doc)";
         return performQuery(queryString);
     }
 
-    private SearchResults performQuery(String queryString) {
+    private SearchResults performQuery(String queryString) throws EntityServiceException {
         SearchResults searchResults = new SearchResults();
         ArrayList<String> resultPaths = new ArrayList<String>();
         try {
@@ -359,14 +358,14 @@ public class EntityCollection extends DatabaseUpdateHandler {
         } catch (QueryException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Perform Query");
+            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Perform Query");
         }
         searchResults.resultsPathArray = resultPaths.toArray(new String[]{});
 //        searchResults.statusMessage = searchResults.statusMessage + "\n query: " + queryString;
         return searchResults;
     }
 
-    public UniqueIdentifier[] getEntityIdByTerm(KinTypeElement queryTerms) {
+    public UniqueIdentifier[] getEntityIdByTerm(KinTypeElement queryTerms) throws EntityServiceException {
         // todo: add a query cache or determine that the xml database does the job of caching adequately (p.s. basex appears to cache the queries adequately)
         UniqueIdentifier[] returnArray = new UniqueIdentifier[]{};
         QueryBuilder queryBuilder = new QueryBuilder();
@@ -400,28 +399,28 @@ public class EntityCollection extends DatabaseUpdateHandler {
             }
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity Id ByTerm");
+            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity Id ByTerm");
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity Id By Term");
+            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity Id By Term");
         }
         return returnArray;
     }
 
-    public EntityData[] getEntityByEndPoint(DataTypes.RelationType relationType, IndexerParameters indexParameters) {
+    public EntityData[] getEntityByEndPoint(DataTypes.RelationType relationType, IndexerParameters indexParameters) throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityByEndPointQuery(relationType, indexParameters);
         System.out.println("getEntityByEndPoint:" + query1String);
         return getEntityByQuery(query1String, indexParameters);
     }
 
-    public EntityData[] getEntityByKeyWord(String keyWords, IndexerParameters indexParameters) {
+    public EntityData[] getEntityByKeyWord(String keyWords, IndexerParameters indexParameters) throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityByKeyWordQuery(keyWords, indexParameters);
         return getEntityByQuery(query1String, indexParameters);
     }
 
-    private EntityData[] getEntityByQuery(String query1String, IndexerParameters indexParameters) {
+    private EntityData[] getEntityByQuery(String query1String, IndexerParameters indexParameters) throws EntityServiceException {
         long startTime = System.currentTimeMillis();
         System.out.println("query1String: " + query1String);
         try {
@@ -445,15 +444,15 @@ public class EntityCollection extends DatabaseUpdateHandler {
             return foundEntities.getEntityDataArray();
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity By Key Word");
+            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity By Key Word");
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity By Key Word");
+            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity By Key Word");
         }
-        return new EntityData[]{};
+//        return new EntityData[]{};
     }
 
-    public EntityData[] getEntityWithRelations(UniqueIdentifier uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) {
+    public EntityData[] getEntityWithRelations(UniqueIdentifier uniqueIdentifier, String[] excludeUniqueIdentifiers, IndexerParameters indexParameters) throws EntityServiceException {
         // todo: probably needs to be updated.
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
@@ -475,15 +474,15 @@ public class EntityCollection extends DatabaseUpdateHandler {
             return selectedEntity;
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity With Relations");
+            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity With Relations");
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity With Relations");
+            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity With Relations");
         }
-        return new EntityData[]{}; //(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
+//        return new EntityData[]{}; //(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
     }
 
-    public void runDeleteQuery(UniqueIdentifier uniqueIdentifier) {
+    public void runDeleteQuery(UniqueIdentifier uniqueIdentifier) throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getDeleteQuery(uniqueIdentifier);
 //        System.out.println("query1String: " + query1String);
@@ -497,11 +496,11 @@ public class EntityCollection extends DatabaseUpdateHandler {
             System.out.println("Query time: " + queryMils + "ms");
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Run Delete Query");
+            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Run Delete Query");
         }
     }
 
-    public String getEntityPath(UniqueIdentifier uniqueIdentifier) {
+    public String getEntityPath(UniqueIdentifier uniqueIdentifier) throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityPath(databaseName, sessionStorage.getProjectWorkingDirectory().toString(), uniqueIdentifier);
 //        System.out.println("query1String: " + query1String);
@@ -516,12 +515,11 @@ public class EntityCollection extends DatabaseUpdateHandler {
             return queryResult;
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Entity Path");
+            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */);
         }
-        return null;
     }
 
-    public String[] getAllFieldNames() {
+    public String[] getAllFieldNames() throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
         final String allFieldNamesQuery = queryBuilder.getAllFieldNamesQuery();
         String queryResult = "";
@@ -531,7 +529,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             }
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(allFieldNamesQuery + "\n" + queryResult, exception);
-            dialogHandler.addMessageDialogToQueue(dbErrorMessage /* exception.getMessage() */, "Get Field Names");
+            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Field Names");
         }
         return queryResult.split(" ");
     }

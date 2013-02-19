@@ -41,6 +41,7 @@ import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -188,23 +189,27 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         new Thread() {
             @Override
             public void run() {
-                ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
-                EntityData[] searchResults = entityCollection.getEntityByKeyWord(searchField.getText(), graphPanel.getIndexParameters());
-                resultsArea.setText("Found " + searchResults.length + " entities\n");
-                for (EntityData entityData : searchResults) {
+                try {
+                    ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
+                    EntityData[] searchResults = entityCollection.getEntityByKeyWord(searchField.getText(), graphPanel.getIndexParameters());
+                    resultsArea.setText("Found " + searchResults.length + " entities\n");
+                    for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
-                    // todo: add cache and update of the tree nodes
-                    resultsArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                        // todo: add cache and update of the tree nodes
+                        resultsArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
 //                break;
 //            }
+                    }
+                    rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
+                    resultsTree.requestResort();
+                    searchPanel.remove(progressBar);
+                    searchPanel.add(searchButton, BorderLayout.PAGE_END);
+                    searchPanel.revalidate();
+                } catch (EntityServiceException exception) {
+                    dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Perform Search");
                 }
-                rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
-                resultsTree.requestResort();
-                searchPanel.remove(progressBar);
-                searchPanel.add(searchButton, BorderLayout.PAGE_END);
-                searchPanel.revalidate();
             }
         }.start();
     }

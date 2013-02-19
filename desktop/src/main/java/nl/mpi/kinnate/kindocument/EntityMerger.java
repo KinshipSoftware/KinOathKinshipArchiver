@@ -24,6 +24,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -50,7 +51,7 @@ public class EntityMerger extends DocumentLoader {
         return deletedIdentifiersArray;
     }
 
-    public void mergeEntities(UniqueIdentifier[] selectedIdentifiers) throws ImportException {
+    public void mergeEntities(UniqueIdentifier[] selectedIdentifiers) throws ImportException, EntityServiceException {
         ArrayList<EntityDocument> nonLeadEntityDocuments = new ArrayList<EntityDocument>();
         ArrayList<UniqueIdentifier> deletedIdentifiers = new ArrayList<UniqueIdentifier>();
         try {
@@ -94,7 +95,7 @@ public class EntityMerger extends DocumentLoader {
         affectedIdentifiersArray = getAffectedIdentifiers();
     }
 
-    public UniqueIdentifier[] duplicateEntities(UniqueIdentifier[] selectedIdentifiers) throws ImportException {
+    public UniqueIdentifier[] duplicateEntities(UniqueIdentifier[] selectedIdentifiers) throws ImportException, EntityServiceException {
         // todo: complete this duplicate code based on mergeEntities and DocumentLoader
         ArrayList<UniqueIdentifier> addedIdentifiers = new ArrayList<UniqueIdentifier>();
         ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
