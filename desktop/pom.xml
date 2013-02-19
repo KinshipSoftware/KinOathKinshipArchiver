@@ -27,7 +27,7 @@
     <properties>
         <output.jarname>${project.build.finalName}</output.jarname>
         <application.majorVersion>1</application.majorVersion> 
-        <application.minorVersion>2</application.minorVersion> 
+        <application.minorVersion>3</application.minorVersion> 
         <application.branch>pretesting</application.branch> 
         <application.title>KinOath Kinship Archiver (pretesting)</application.title>
         <output.directory>${project.build.directory}</output.directory>

@@ -16,7 +16,7 @@
     
     <properties>
 	<help.majorVersion>1</help.majorVersion>
-	<help.minorVersion>1</help.minorVersion>
+	<help.minorVersion>3</help.minorVersion>
 	<help.branch>pretesting</help.branch>
 	
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
