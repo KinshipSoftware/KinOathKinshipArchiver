@@ -247,11 +247,11 @@ public class QueryBuilder {
                 + "return db:delete('nl-mpi-kinnate', fn:substring-after(base-uri($identifierNode), '/'))";
     }
 
-    public String getEntityPath(String projectName, String projectPathString, UniqueIdentifier uniqueIdentifier) {
-        // replaced the path stored in the entity by ID get path in project method, which alows reindexing and would make the query a little faster
-        return "let $identifierNode := collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n"
-                + "return replace(replace(base-uri($identifierNode),'" + projectName + "/file:','file:'),'" + projectName + "/','file://" + projectPathString + "/')";
-    }
+//    public String getEntityPath(String projectName, String projectPathString, UniqueIdentifier uniqueIdentifier) {
+//        // replaced the path stored in the entity by ID get path in project method, which alows reindexing and would make the query a little faster
+//        return "let $identifierNode := collection('nl-mpi-kinnate')/*:Kinnate/*:Entity[*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]\n"
+//                + "return replace(replace(base-uri($identifierNode),'" + projectName + "/file:','file:'),'" + projectName + "/','file://" + projectPathString + "/')";
+//    }
 //    public String getEntityPaths(UniqueIdentifier[] uniqueIdentifier) {
 //        StringBuilder builder = new StringBuilder();
 //        for (UniqueIdentifier identifier : uniqueIdentifier) {

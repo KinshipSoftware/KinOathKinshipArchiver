@@ -50,14 +50,14 @@ public class DocumentLoader {
     }
 
     protected EntityDocument getEntityDocument(UniqueIdentifier selectedIdentifier) throws ImportException, URISyntaxException, EntityServiceException {
-        EntityDocument entityDocument = new EntityDocument(new URI(entityCollection.getEntityPath(selectedIdentifier)), new ImportTranslator(true), sessionStorage);
+        EntityDocument entityDocument = new EntityDocument(selectedIdentifier.getFileInProject(sessionStorage).toURI(), new ImportTranslator(true), sessionStorage);
 //        System.out.println("Loaded 1: " + entityDocument.entityData.getUniqueIdentifier().getAttributeIdentifier());
         entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
         for (EntityRelation entityRelation : entityDocument.entityData.getAllRelations()) {
             EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
             if (relatedDocument == null) {
                 // get the path from the database
-                final URI entityUri = new URI(entityCollection.getEntityPath(entityRelation.alterUniqueIdentifier));
+                final URI entityUri = entityRelation.alterUniqueIdentifier.getFileInProject(sessionStorage).toURI();
                 relatedDocument = new EntityDocument(entityUri, new ImportTranslator(true), sessionStorage);
 //                System.out.println("Loaded 2: " + entityRelation.alterUniqueIdentifier.getAttributeIdentifier());
                 entityMap.put(entityRelation.alterUniqueIdentifier, relatedDocument);

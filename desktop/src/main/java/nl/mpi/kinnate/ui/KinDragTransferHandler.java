@@ -278,7 +278,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     private boolean attachMetadata() {
         System.out.println("importMetadata");
         try {
-            EntityDocument entityDocument = new EntityDocument(new URI(entityCollection.getEntityPath(targetEntity.getUniqueIdentifier())), new ImportTranslator(true), sessionStorage);
+            EntityDocument entityDocument = new EntityDocument(targetEntity.getUniqueIdentifier().getFileInProject(sessionStorage).toURI(), new ImportTranslator(true), sessionStorage);
             attachMetadata(entityDocument.entityData);
             entityDocument.saveDocument();
             URI addedEntityUri = entityDocument.getFile().toURI();
@@ -289,10 +289,10 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             // todo: warn user with a dialog
             BugCatcherManager.getBugCatcher().logError(exception);
             return false;
-        } catch (URISyntaxException exception) {
-            // todo: warn user with a dialog
-            BugCatcherManager.getBugCatcher().logError(exception);
-            return false;
+//        } catch (URISyntaxException exception) {
+//            // todo: warn user with a dialog
+//            BugCatcherManager.getBugCatcher().logError(exception);
+//            return false;
         } catch (EntityServiceException exception) {
             // todo: warn user with a dialog
             BugCatcherManager.getBugCatcher().logError(exception);
