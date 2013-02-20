@@ -19,6 +19,7 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -41,7 +42,6 @@ import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.arbil.util.TreeHelper;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
-import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.ui.menu.TableMenu;
@@ -69,12 +69,14 @@ public class MetadataPanel extends JPanel {
     private ContainerNode rootNode;
     private EntityCollection entityCollection;
     final private MessageDialogHandler dialogHandler;
+    final SessionStorage sessionStorage;
 
     public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, final KinDiagramPanel kinDiagramPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer, final SessionStorage sessionStorage, final MessageDialogHandler dialogHandler, ArbilTreeController treeController, TreeHelper treeHelper) {
         this.arbilTree = new ArbilTree(treeController, treeHelper, dialogHandler);
         this.kinDiagramPanel = kinDiagramPanel;
         this.entityCollection = entityCollection;
         this.dialogHandler = dialogHandler;
+        this.sessionStorage = sessionStorage;
         rootNode = new ContainerNode(null, "links", null, new ArbilNode[]{});
         arbilTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode)));
         this.kinTableModel = new ArbilTableModel(imageBoxRenderer);
@@ -168,40 +170,27 @@ public class MetadataPanel extends JPanel {
     }
 
     public void addEntityDataNode(EntityData entityData) {
-        try {
-            String entityPath = entityCollection.getEntityPath(entityData.getUniqueIdentifier());
-            System.out.println("entity path: " + entityPath);
-            boolean metadataFileMissing = false;
-            if (entityPath != null && entityPath.length() > 0) {
-                try {
-                    ArbilDataNode arbilDataNode = dataNodeLoader.getArbilDataNode(null, new URI(entityPath));
-                    if (arbilDataNode.fileNotFound) {
-                        metadataFileMissing = true;
-                    } else {
-                        // register this node with the graph panel
-                        kinDiagramPanel.registerArbilNode(entityData.getUniqueIdentifier(), arbilDataNode);
-                        kinTableModel.addSingleArbilDataNode(arbilDataNode);
-                        metadataNodes.add(arbilDataNode);
-                        // add the corpus links to the other table
-                        if (entityData.archiveLinkArray != null) {
-                            for (URI archiveLink : entityData.archiveLinkArray) {
-                                ArbilDataNode archiveLinkNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
-                                // todo: we do not register this node with the graph panel because it is not rendered on the graph, but if the name of the node changes then it should be updated in the tree which is not yet handled
-                                archiveTableModel.addSingleArbilDataNode(archiveLinkNode);
-                                archiveTreeNodes.add(archiveLinkNode);
-                                archiveRootNodes.add(archiveLinkNode.getParentDomNode());
-                                metadataNodes.add(archiveLinkNode);
-                            }
-                        }
-                    }
-                } catch (URISyntaxException exception) {
-                    BugCatcherManager.getBugCatcher().logError(exception);
-                    dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Get Entity URI");
+        File entityFile = entityData.getUniqueIdentifier().getFileInProject(sessionStorage);
+        System.out.println("entity path: " + entityFile);
+        if (entityFile != null && entityFile.exists()) {
+            ArbilDataNode arbilDataNode = dataNodeLoader.getArbilDataNode(null, entityFile.toURI());
+            // register this node with the graph panel
+            kinDiagramPanel.registerArbilNode(entityData.getUniqueIdentifier(), arbilDataNode);
+            kinTableModel.addSingleArbilDataNode(arbilDataNode);
+            metadataNodes.add(arbilDataNode);
+            // add the corpus links to the other table
+            if (entityData.archiveLinkArray != null) {
+                for (URI archiveLink : entityData.archiveLinkArray) {
+                    ArbilDataNode archiveLinkNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
+                    // todo: we do not register this node with the graph panel because it is not rendered on the graph, but if the name of the node changes then it should be updated in the tree which is not yet handled
+                    archiveTableModel.addSingleArbilDataNode(archiveLinkNode);
+                    archiveTreeNodes.add(archiveLinkNode);
+                    archiveRootNodes.add(archiveLinkNode.getParentDomNode());
+                    metadataNodes.add(archiveLinkNode);
                 }
             }
-        } catch (EntityServiceException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Get Entity Path");
+        } else {
+            dialogHandler.addMessageDialogToQueue("One or more items could not be displayed in the table.", "Table View");
         }
     }
 

@@ -500,24 +500,24 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
     }
 
-    public String getEntityPath(UniqueIdentifier uniqueIdentifier) throws EntityServiceException {
-        QueryBuilder queryBuilder = new QueryBuilder();
-        String query1String = queryBuilder.getEntityPath(databaseName, sessionStorage.getProjectWorkingDirectory().toString(), uniqueIdentifier);
-//        System.out.println("query1String: " + query1String);
-        try {
-            long startQueryTime = System.currentTimeMillis();
-            String queryResult;
-            synchronized (databaseLock) {
-                queryResult = new XQuery(query1String).execute(context);
-            }
-            long queryMils = System.currentTimeMillis() - startQueryTime;
-            System.out.println("Query time: " + queryMils + "ms");
-            return queryResult;
-        } catch (BaseXException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */);
-        }
-    }
+//    public String getEntityPath(UniqueIdentifier uniqueIdentifier) throws EntityServiceException {
+//        QueryBuilder queryBuilder = new QueryBuilder();
+//        String query1String = queryBuilder.getEntityPath(databaseName, sessionStorage.getProjectWorkingDirectory().toString(), uniqueIdentifier);
+////        System.out.println("query1String: " + query1String);
+//        try {
+//            long startQueryTime = System.currentTimeMillis();
+//            String queryResult;
+//            synchronized (databaseLock) {
+//                queryResult = new XQuery(query1String).execute(context);
+//            }
+//            long queryMils = System.currentTimeMillis() - startQueryTime;
+//            System.out.println("Query time: " + queryMils + "ms");
+//            return queryResult;
+//        } catch (BaseXException exception) {
+//            BugCatcherManager.getBugCatcher().logError(exception);
+//            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */);
+//        }
+//    }
 
     public String[] getAllFieldNames() throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
