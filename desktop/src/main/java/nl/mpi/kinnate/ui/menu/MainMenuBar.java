@@ -44,7 +44,7 @@ public class MainMenuBar extends JMenuBar {
         this.add(new EditMenu(abstractDiagramManager, parentComponent));
         this.add(new DiagramOptionsMenu(abstractDiagramManager, parentComponent));
         this.add(new KinTermsMenu(abstractDiagramManager, parentComponent));
-        this.add(new ArchiveMenu(abstractDiagramManager, parentComponent));
+//        this.add(new ArchiveMenu(abstractDiagramManager, parentComponent));
         this.add(new DiagramPanelsMenu(abstractDiagramManager, parentComponent));
         // get the list of available plugins
         ArrayList<URL> pluginUlrs = new ArrayList<URL>();

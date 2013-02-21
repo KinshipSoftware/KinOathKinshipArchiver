@@ -18,6 +18,7 @@
 package nl.mpi.kinnate.ui.menu;
 
 import java.awt.Component;
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.net.URI;
 import javax.swing.JFrame;
@@ -79,7 +80,7 @@ public class HelpMenu extends JMenu {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     if (helpWindow == null) {
-                        helpWindow = diagramWindowManager.createHelpWindow("Internal Help", new KinOathHelp(), null);
+                        helpWindow = diagramWindowManager.createHelpWindow("Internal Help", new KinOathHelp(), new Rectangle(600, 400));
                     } else {
                         helpWindow.setVisible(true);
                         helpWindow.toFront();

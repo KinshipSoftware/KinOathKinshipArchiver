@@ -153,13 +153,13 @@ public class FileMenu extends javax.swing.JMenu {
         jMenu1.setText("Open Sample Diagram");
         this.add(jMenu1);
 
-        this.add(new javax.swing.JPopupMenu.Separator());
-        projectOpenMenu.setText("Open Project");
-        projectOpenMenu.setActionCommand("browse");
-        projectOpenMenu.addActionListener(projectRecentMenu);
-        this.add(projectOpenMenu);
-
-        this.add(projectRecentMenu);
+//        this.add(new javax.swing.JPopupMenu.Separator());
+//        projectOpenMenu.setText("Open Project");
+//        projectOpenMenu.setActionCommand("browse");
+//        projectOpenMenu.addActionListener(projectRecentMenu);
+//        this.add(projectOpenMenu);
+//
+//        this.add(projectRecentMenu);
 
         this.add(jSeparator1);
 
