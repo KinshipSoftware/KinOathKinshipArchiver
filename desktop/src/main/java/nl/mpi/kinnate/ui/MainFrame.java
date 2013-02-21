@@ -1,24 +1,25 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
 import java.awt.Rectangle;
 import java.io.File;
+import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.KinOathVersion;
@@ -71,7 +72,7 @@ public class MainFrame extends javax.swing.JFrame {
                 abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), injector.getSessionStorage(), injector.getDataNodeLoader(), injector.getTreeHelper(), injector.getEntityCollection());
                 abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480));
                 abstractDiagramManager.createApplicationWindow();
-                
+
                 injector.getWindowManager().setMessagesCanBeShown(true);
                 ////////////////////////////////////////
                 // check for old data directories 1-0 and offer the user to export all the old data and import into the new version IF no entities exist in the new version, the user can always use the export plugin at a later date
@@ -79,7 +80,8 @@ public class MainFrame extends javax.swing.JFrame {
                 new Thread() {
                     @Override
                     public void run() {
-                        File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration();
+                        final ApplicationVersion applicationVersion = versionManager.getApplicationVersion();
+                        File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor));
                         if (oldAppExportFile != null) {
                             try {
                                 abstractDiagramManager.openImportPanel(oldAppExportFile, null);

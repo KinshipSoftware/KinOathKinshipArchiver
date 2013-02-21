@@ -256,7 +256,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     panelSetting.addTargetPanel(archiveEntityLinkerPanelRemote, false);
                     panelSetting.addTargetPanel(archiveEntityLinkerPanelLocal, false);
                     panelSetting.addTargetPanel(archiveEntityLinkerPanelMpiRemote, false);
-                    panelSetting.setMenuEnabled(false);
+                    panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery);
                     break;
                 case DiagramTree:
                     if (panelSetting == null) {

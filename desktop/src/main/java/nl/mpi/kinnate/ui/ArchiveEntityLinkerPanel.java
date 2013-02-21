@@ -83,21 +83,22 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
 
     public void loadTreeNodes() {
         try {
+            treeHelper.loadLocationsList();
             ArbilNode[] allEntities;
             switch (treeType) {
                 case LocalTree:
                     allEntities = treeHelper.getLocalCorpusNodes();
-                    this.setName("Local Corpus");
+                    this.setName("Arbil Local Corpus");
                     break;
                 case RemoteTree:
                     allEntities = treeHelper.getRemoteCorpusNodes();
-                    this.setName("Remote Corpus");
+                    this.setName("Arbil Remote Corpus");
                     break;
                 case MpiTree:
                 default:
                     ArbilNode imdiCorporaNode = dataNodeLoader.getArbilDataNode(null, new URI("http://corpus1.mpi.nl/IMDI/metadata/IMDI.imdi"));
                     allEntities = new ArbilNode[]{imdiCorporaNode};
-                    this.setName("Nijmegen Corpus");
+                    this.setName("The TLA Language Archive");
                     break;
             }
             rootNode.setChildNodes(allEntities);
