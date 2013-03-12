@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
@@ -89,9 +90,9 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         } else {
             if (startDragPoint != null) {
 //            System.out.println("mouseDragged: " + me.toString());
-                if (me.getButton() == MouseEvent.BUTTON2) {
+                if (SwingUtilities.isMiddleMouseButton(me)) {
                     graphPanel.svgUpdateHandler.dragCanvas(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
-                } else if (me.getButton() == MouseEvent.BUTTON1) {
+                } else if (SwingUtilities.isLeftMouseButton(me)) {
                     // we check and clear the selection here on the drag because on mouse down it is not known if an svg element was the target of the click
                     checkSelectionClearRequired(me);
                     if (!mouseActionOnNode) {
@@ -116,7 +117,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     private void checkSelectionClearRequired(MouseEvent me) {
         boolean shiftDown = me.isShiftDown();
-        if (!shiftDown && /* !mouseActionIsDrag && */ !mouseActionIsPopupTrigger && !mouseActionOnNode && me.getButton() == MouseEvent.BUTTON1) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
+        if (!shiftDown && /* !mouseActionIsDrag && */ !mouseActionIsPopupTrigger && !mouseActionOnNode
+                && SwingUtilities.isLeftMouseButton(me)) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
             System.out.println("Clear selection");
             graphPanel.selectedGroupId.clear();
             updateSelectionDisplay();
