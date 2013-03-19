@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -39,19 +39,22 @@ import javax.swing.event.ChangeListener;
 import nl.mpi.arbil.util.BugCatcherManager;
 import org.apache.batik.bridge.UpdateManager;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
- *  Document   : SvgElementEditor
- *  Created on : Aug 17, 2011, 1:17:13 PM
- *  Author     : Peter Withers
+ * Document : SvgElementEditor Created on : Aug 17, 2011, 1:17:13 PM
+ *
+ * @author Peter Withers
  */
 public class SvgElementEditor extends JPanel {
 
-    UpdateManager updateManager;
+    final UpdateManager updateManager;
+//    final GraphPanel graphPanel;
+//    final UniqueIdentifier uniqueIdentifier;
 
-    public SvgElementEditor(final UpdateManager updateManager, final Element svgElement) {
+    public SvgElementEditor(/*final GraphPanel graphPanel, final UniqueIdentifier uniqueIdentifier, */final UpdateManager updateManager, final Element svgElement) {
         this.updateManager = updateManager;
+//        this.graphPanel = graphPanel;
+//        this.uniqueIdentifier = uniqueIdentifier;
         this.setLayout(new BorderLayout());
         JPanel outerPanel = new JPanel(new BorderLayout());
         JPanel pickerPanel = new JPanel(new BorderLayout());
@@ -66,7 +69,6 @@ public class SvgElementEditor extends JPanel {
 //            this.add(new JLabel("Label Text:"));
             final JTextArea textArea = new JTextArea(svgElement.getTextContent());
             textArea.addFocusListener(new FocusListener() {
-
                 public void focusGained(FocusEvent e) {
                 }
 
@@ -87,34 +89,32 @@ public class SvgElementEditor extends JPanel {
             }
             outerPanel.add(pickerWrapperPanel, BorderLayout.LINE_END);
         }
-        addDeleteButton(svgElement, sidePanel);
+//        addDeleteButton(svgElement, sidePanel);
         this.add(new JScrollPane(outerPanel));
     }
 
-    private void addDeleteButton(final Element svgElement, JPanel sidePanel) {
-        final Node parentElement = svgElement.getParentNode();
-        final JButton unDeleteButton = new JButton("Undelete");
-        final JButton deleteButton = new JButton("Delete");
-        sidePanel.add(unDeleteButton);
-        unDeleteButton.setEnabled(false);
-        unDeleteButton.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                reAddElement(parentElement, svgElement);
-                unDeleteButton.setEnabled(false);
-                deleteButton.setEnabled(true);
-            }
-        });
-        sidePanel.add(deleteButton);
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeElement(parentElement, svgElement);
-                unDeleteButton.setEnabled(true);
-                deleteButton.setEnabled(false);
-            }
-        });
-    }
+//    private void addDeleteButton(final Element svgElement, JPanel sidePanel) {
+//        final Node parentElement = svgElement.getParentNode();
+//        final JButton unDeleteButton = new JButton("Undelete");
+//        final JButton deleteButton = new JButton("Delete");
+//        sidePanel.add(unDeleteButton);
+//        unDeleteButton.setEnabled(false);
+//        unDeleteButton.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                reAddElement(parentElement, svgElement);
+//                unDeleteButton.setEnabled(false);
+//                deleteButton.setEnabled(true);
+//            }
+//        });
+//        sidePanel.add(deleteButton);
+//        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                removeElement(parentElement, svgElement);
+//                unDeleteButton.setEnabled(true);
+//                deleteButton.setEnabled(false);
+//            }
+//        });
+//    }
 
     private void addNumberSpinner(final Element svgElement, JPanel sidePanel, String labelString, final String attributeString, int minValue, int maxValue) {
         int initialValue = 0;
@@ -131,7 +131,6 @@ public class SvgElementEditor extends JPanel {
                 new SpinnerNumberModel(initialValue, minValue, maxValue, 1);
         final JSpinner numberSpinner = new JSpinner(spinnerModel);
         numberSpinner.addChangeListener(new ChangeListener() {
-
             public void stateChanged(ChangeEvent e) {
                 updateValue(svgElement, attributeString, numberSpinner.getValue().toString());
             }
@@ -153,7 +152,6 @@ public class SvgElementEditor extends JPanel {
         final JPanel colourSquare = new JPanel();
         colourSquare.setBackground(initialColour);
         colourSquare.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 pickerPanel.removeAll();
@@ -170,7 +168,6 @@ public class SvgElementEditor extends JPanel {
                 final JButton okButton = new JButton("OK");
                 buttonPanel.add(okButton);
                 cancelButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         colourSquare.setBackground(revertColour);
                         colourChooser.setColor(revertColour);
@@ -180,7 +177,6 @@ public class SvgElementEditor extends JPanel {
                     }
                 });
                 revertButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         colourSquare.setBackground(revertColour);
                         colourChooser.setColor(revertColour);
@@ -188,7 +184,6 @@ public class SvgElementEditor extends JPanel {
                     }
                 });
                 noneButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         updateValue(svgElement, attributeString, "none");
                         colourSquare.setBackground(Color.WHITE);
@@ -196,7 +191,6 @@ public class SvgElementEditor extends JPanel {
                     }
                 });
                 okButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         pickerPanel.removeAll();
                         revalidate();
@@ -207,7 +201,6 @@ public class SvgElementEditor extends JPanel {
 
                 colourChooser.setPreviewPanel(new JPanel());
                 colourChooser.getSelectionModel().addChangeListener(new ChangeListener() {
-
                     public void stateChanged(ChangeEvent e) {
                         colourSquare.setBackground(colourChooser.getColor());
                         updateValue(svgElement, attributeString, "#" + Integer.toHexString(colourChooser.getColor().getRGB()).substring(2));
@@ -225,7 +218,6 @@ public class SvgElementEditor extends JPanel {
     protected void updateValue(final Element changeTarget, final String attributeName, final String changeValue) {
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
-
                 public void run() {
                     changeTarget.setAttribute(attributeName, changeValue);
                 }
@@ -236,33 +228,31 @@ public class SvgElementEditor extends JPanel {
     protected void updateValue(final Element changeTarget, final String changeValue) {
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
-
                 public void run() {
                     changeTarget.setTextContent(changeValue);
                 }
             });
         }
     }
-
-    protected void removeElement(final Node parentTarget, final Element changeTarget) {
-        if (updateManager != null) {
-            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
-
-                public void run() {
-                    parentTarget.removeChild(changeTarget);
-                }
-            });
-        }
-    }
-
-    protected void reAddElement(final Node parentTarget, final Element changeTarget) {
-        if (updateManager != null) {
-            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
-
-                public void run() {
-                    parentTarget.appendChild(changeTarget);
-                }
-            });
-        }
-    }
+// this add and remove code has been suppressed because removing and readding elements in this way does not remove the graphics location and hence the diavram size is affected. the user can delete via the diagram context menu instead
+//    protected void removeElement(final Node parentTarget, final Element changeTarget) {
+//        graphPanel.svgUpdateHandler.deleteGraphics(uniqueIdentifier);
+//                    graphPanel.entitySvg.entityPositions.remove(uniqueIdentifier);
+//        if (updateManager != null) {
+//            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+//                public void run() {
+//                    parentTarget.removeChild(changeTarget);
+//                }
+//            });
+//        }
+//    }
+//    protected void reAddElement(final Node parentTarget, final Element changeTarget) {
+//        if (updateManager != null) {
+//            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+//                public void run() {
+//                    parentTarget.appendChild(changeTarget);
+//                }
+//            });
+//        }
+//    }
 }
