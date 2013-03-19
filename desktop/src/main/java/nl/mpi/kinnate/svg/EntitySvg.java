@@ -55,6 +55,14 @@ public class EntitySvg {
         this.dialogHandler = dialogHandler;
     }
 
+    public void discardEntityPositions() {
+        for (UniqueIdentifier uniqueIdentifier : entityPositions.keySet().toArray(new UniqueIdentifier[0])) {
+            if (!uniqueIdentifier.isGraphicsIdentifier()) {
+                entityPositions.remove(uniqueIdentifier);
+            }
+        }
+    }
+
     public void readEntityPositions(Node entityGroup) {
         // read the entity positions from the existing dom
         // this now replaces the position values in the entity data and the entity position is now stored in the svg entity visual not the entity data 
