@@ -448,7 +448,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void resetLayout(boolean resetZoom) {
         // this requires that the entity data is loaded by recalculating the diagram at least once
-        entitySvg = new EntitySvg(dialogHandler);
+        entitySvg.discardEntityPositions();
         dataStoreSvg.graphData.clearPreferredEntityLocations();
         dataStoreSvg.graphData.setEntitys(dataStoreSvg.graphData.getDataNodes());
         try {

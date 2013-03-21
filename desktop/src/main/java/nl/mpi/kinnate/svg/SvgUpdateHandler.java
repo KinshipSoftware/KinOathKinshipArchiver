@@ -755,6 +755,7 @@ public class SvgUpdateHandler {
 //                    // remove the relation highlight group because lines will be out of date when the entities are moved
 //                    relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
 //                }
+                Rectangle initialGraphRect = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
                 Element entityGroup = graphPanel.doc.getElementById("EntityGroup");
                 try {
                     boolean continueUpdating = true;
@@ -837,6 +838,12 @@ public class SvgUpdateHandler {
                             int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
                             new RelationSvg(dialogHandler).updateRelationLines(graphPanel, relationRecords, graphPanel.selectedGroupId, hSpacing, vSpacing);
                             createRelationLineHighlights(entityGroup);
+                            final Rectangle currentGraphRect = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+                            if (!initialGraphRect.contains(currentGraphRect)) {
+                                Element svgRoot = graphPanel.doc.getDocumentElement();
+                                Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
+                                resizeCanvas(svgRoot, diagramGroupNode, false);
+                            }
                             //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
                         }
                         // graphPanel.updateCanvasSize(); // updating the canvas size here is too slow so it is moved into the drag ended 
@@ -965,12 +972,17 @@ public class SvgUpdateHandler {
 
     public void deleteGraphics(UniqueIdentifier uniqueIdentifier) {
         final Element graphicsElement = graphPanel.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
+        final Element existingHighlight = graphPanel.doc.getElementById("highlight_" + uniqueIdentifier.getAttributeIdentifier());
         final Node parentElement = graphicsElement.getParentNode();
+        graphPanel.entitySvg.entityPositions.remove(uniqueIdentifier);
         UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
                     parentElement.removeChild(graphicsElement);
+                    if (existingHighlight != null) {
+                        existingHighlight.getParentNode().removeChild(existingHighlight);
+                    }
                     graphPanel.setRequiresSave();
                 }
             });
