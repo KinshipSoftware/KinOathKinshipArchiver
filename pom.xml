@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.mpi</groupId>
     <artifactId>kinoath-parent</artifactId>
-    <name>KinOath Parent 1.2</name>
+    <name>KinOath Parent 1.3</name>
     <packaging>pom</packaging>
     <version>1.0</version>
     <description>Parent pom for KinOath Kinship Archiver</description>
@@ -30,7 +30,7 @@
         <!--<netbeans.hint.license>http://www.gnu.org/licenses/gpl-2.0.html</netbeans.hint.license>-->
         <netbeans.hint.license>gpl20</netbeans.hint.license>
     </properties>
-        
+
     <reporting>
         <plugins>
             <plugin>
