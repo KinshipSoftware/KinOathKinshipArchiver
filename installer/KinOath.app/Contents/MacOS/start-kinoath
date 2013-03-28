@@ -1,7 +1,0 @@
-#!/bin/sh
-BASEDIR=`dirname "$0"`
-exec java -Xmx512m \
-	-classpath "$BASEDIR" \
-	-Xdock:name="KinOath" \
-        -Xdock:icon="$BASEDIR/../Resources/kinoath.icns" \
-        -jar "/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/target/Kinnate-1.0-SNAPSHOT.jar"
