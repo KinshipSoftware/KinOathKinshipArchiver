@@ -298,7 +298,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.2.35877-stable</version>
+            <version>1.2.35878-stable</version>
         </dependency>
         <!--        <dependency>
             <groupId>nl.mpi</groupId>
