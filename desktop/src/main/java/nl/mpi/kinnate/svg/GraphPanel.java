@@ -80,15 +80,17 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    private URI[] egoPathsTemp = null;
     public SvgUpdateHandler svgUpdateHandler;
     public MouseListenerSvg mouseListenerSvg;
-    private MessageDialogHandler dialogHandler;
-    private SessionStorage sessionStorage;
+    final private ArbilWindowManager dialogHandler;
+    final private ArbilDataNodeLoader dataNodeLoader;
+    final private SessionStorage sessionStorage;
 //    private EntityCollection entityCollection;
     final KinDiagramPanel kinDiagramPanel;
 
-    public GraphPanel(KinDiagramPanel kinDiagramPanel, final ArbilWindowManager arbilWindowManager, SessionStorage sessionStorage, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+    public GraphPanel(KinDiagramPanel kinDiagramPanel, final ArbilWindowManager arbilWindowManager, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader) {
         this.kinDiagramPanel = kinDiagramPanel;
         this.dialogHandler = arbilWindowManager;
         this.sessionStorage = sessionStorage;
+        this.dataNodeLoader = dataNodeLoader;
 //        this.entityCollection = entityCollection;
         dataStoreSvg = new DataStoreSvg();
         entitySvg = new EntitySvg(dialogHandler);
@@ -143,15 +145,17 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        svgCanvas.setEnableResetTransformInteractor(true);
 //        svgCanvas.setDoubleBufferedRendering(true); // todo: look into reducing the noticable aliasing on the canvas
 
-        mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this, sessionStorage, dialogHandler, entityCollection);
-        svgCanvas.addMouseListener(mouseListenerSvg);
-        svgCanvas.addMouseMotionListener(mouseListenerSvg);
         jSVGScrollPane = new JSVGScrollPane(svgCanvas);
 //        svgCanvas.setBackground(Color.LIGHT_GRAY);
         this.add(BorderLayout.CENTER, jSVGScrollPane);
-        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, entityCollection, arbilWindowManager, dataNodeLoader, sessionStorage));
     }
 
+    public void setEntityCollection(EntityCollection entityCollection) {
+        mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this, sessionStorage, dialogHandler, entityCollection);
+        svgCanvas.addMouseListener(mouseListenerSvg);
+        svgCanvas.addMouseMotionListener(mouseListenerSvg);
+        svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, entityCollection, dialogHandler, dataNodeLoader, sessionStorage));
+    }
 //    private void zoomDrawing() {
 //        AffineTransform scaleTransform = new AffineTransform();
 //        scaleTransform.scale(1 - currentZoom / 10.0, 1 - currentZoom / 10.0);
@@ -172,6 +176,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        zoomAffineTransform.concatenate(scaleTransform);
 //        svgCanvas.setRenderingTransform(zoomAffineTransform);
 //    }
+
     public void setArbilTableModel(MetadataPanel metadataPanel) {
         this.metadataPanel = metadataPanel;
     }

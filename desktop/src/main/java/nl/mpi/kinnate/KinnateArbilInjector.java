@@ -28,9 +28,6 @@ import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.arbil.util.ArbilMimeHashQueue;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
-import nl.mpi.kinnate.entityindexer.EntityCollection;
-import nl.mpi.kinnate.projects.ProjectManager;
-import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
@@ -52,7 +49,6 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
     private ArbilWindowManager windowManager;
     private ArbilDataNodeLoader dataNodeLoader;
     private KinSessionStorage sessionStorage;
-    private EntityCollection entityCollection;
 
     public synchronized void injectHandlers() {
         injectHandlers(new ApplicationVersionManager(new KinOathVersion()));
@@ -94,11 +90,6 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
         mimeHashQueue.setDataNodeLoader(dataNodeLoader);
         windowManager.setDataNodeLoader(dataNodeLoader);
         injectDataNodeLoader(dataNodeLoader);
-
-        ProjectManager projectManager = new ProjectManager();
-        final ProjectRecord defaultProject = projectManager.getDefaultProject(sessionStorage);
-        sessionStorage.setProjectRecord(defaultProject);
-        entityCollection = new EntityCollection(sessionStorage, windowManager, defaultProject);
     }
 
     /**
@@ -139,9 +130,5 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
 
     public SessionStorage getSessionStorage() {
         return sessionStorage;
-    }
-
-    public EntityCollection getEntityCollection() {
-        return entityCollection;
     }
 }

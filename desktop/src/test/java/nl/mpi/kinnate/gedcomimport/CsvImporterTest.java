@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.gedcomimport;
 
@@ -27,6 +27,7 @@ import junit.framework.TestCase;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.kinnate.KinOathVersion;
+import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
@@ -60,7 +61,7 @@ public class CsvImporterTest extends TestCase {
             final ApplicationVersionManager applicationVersionManager = new ApplicationVersionManager(new KinOathVersion());
             final KinSessionStorage kinSessionStorage = new KinSessionStorage(applicationVersionManager);
             final ArbilBugCatcher bugCatcher = new ArbilBugCatcher(kinSessionStorage, new ApplicationVersionManager(new KinOathVersion()));
-            ArrayList<String> arrayList = new CsvImporter(new JProgressBar(), new JTextArea(), true, new KinSessionStorage(applicationVersionManager)).getFieldsForLineExcludingComments(bufferedReader, fieldSeparator);
+            ArrayList<String> arrayList = new CsvImporter(new JProgressBar(), new JTextArea(), true, new KinSessionStorage(applicationVersionManager), new ProjectManager().getDefaultProject(kinSessionStorage)).getFieldsForLineExcludingComments(bufferedReader, fieldSeparator);
 
             assertTrue("Incorrect number of fields found", expectedResult.length == arrayList.size());
             for (int arrayCounter = 0; arrayCounter < expectedResult.length; arrayCounter++) {

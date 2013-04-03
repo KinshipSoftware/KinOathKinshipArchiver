@@ -92,7 +92,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                             kinDiagramPanel.showProgressBar();
                             String nodeType = evt.getActionCommand();
                             try {
-                                EntityDocument entityDocument = new EntityDocument(nodeType, new ImportTranslator(true), sessionStorage);
+                                EntityDocument entityDocument = new EntityDocument(nodeType, new ImportTranslator(true), sessionStorage, entityCollection.getProjectRecord());
                                 entityDocument.saveDocument();
                                 URI addedEntityUri = entityDocument.getFile().toURI();
                                 entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());

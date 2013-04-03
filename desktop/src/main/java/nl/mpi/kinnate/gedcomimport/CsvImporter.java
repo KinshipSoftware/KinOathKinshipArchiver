@@ -30,6 +30,7 @@ import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -45,8 +46,8 @@ public class CsvImporter extends EntityImporter implements GenericImporter {
     }
     private SeparatorType separatorType;
 
-    public CsvImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
-        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage);
+    public CsvImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage, ProjectRecord projectRecord) {
+        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage, projectRecord);
     }
 
     @Override

@@ -37,10 +37,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
-import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityArray;
@@ -74,7 +72,6 @@ import org.basex.query.value.item.Item;
  */
 public class EntityCollection extends DatabaseUpdateHandler {
 
-    final private SessionStorage sessionStorage;
     final private String databaseName; // = "nl-mpi-kinnate";
     final private ProjectRecord projectRecord;
     final static Context context = new Context();
@@ -88,14 +85,13 @@ public class EntityCollection extends DatabaseUpdateHandler {
         public int resultCount = 0;
     }
 
-    public EntityCollection(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, ProjectRecord projectRecord) {
-        this.sessionStorage = sessionStorage;
+    public EntityCollection(ProjectRecord projectRecord) {
         this.projectRecord = projectRecord;
         databaseName = projectRecord.getProjectUUID();
         // make sure the database exists
         try {
             synchronized (databaseLock) {
-                new Set("dbpath", new File(sessionStorage.getApplicationSettingsDirectory(), "BaseXData")).execute(context);
+                new Set("dbpath", projectRecord.getProjectDataBaseDirectory()).execute(context);
                 new Open(databaseName).execute(context);
                 //context.close();
                 new Close().execute(context);
@@ -112,6 +108,10 @@ public class EntityCollection extends DatabaseUpdateHandler {
         }
         // todo: should we explicitly close the DB? putting it in the distructor would not be reliable
         // todo: however now that we close via the Close() method it seems fine and the DB is not explicitly opened 
+    }
+
+    public ProjectRecord getProjectRecord() {
+        return projectRecord;
     }
 
 //    public void closeDataBase() {
@@ -132,7 +132,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             synchronized (databaseLock) {
                 new DropDB(databaseName).execute(context);
                 new Set("CREATEFILTER", "*.kmdi").execute(context);
-                new CreateDB(databaseName, sessionStorage.getProjectWorkingDirectory().toString()).execute(context);
+                new CreateDB(databaseName, projectRecord.getProjectDataFilesDirectory().toString()).execute(context);
 //            System.out.println("List: " + new List().execute(context));
 //            System.out.println("Find: " + new Find(databaseName).title());
 //            System.out.println("Info: " + new Info().execute(context));
@@ -224,7 +224,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 // add requires the parent directory otherwise it adds the file name to the root and appends the working path when using base-uri in a query
                 // todo: has the database been opened at this point???
                 // add appears not to have been tested by anybody, I am not sure if I like basex now, but the following works
-                new Add(sessionStorage.getProjectWorkingDirectory().toURI().relativize(updatedDataUrl).toASCIIString(), urlString).execute(context);
+                new Add(projectRecord.getProjectDataFilesDirectory().toURI().relativize(updatedDataUrl).toASCIIString(), urlString).execute(context);
             }
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
@@ -266,7 +266,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             synchronized (databaseLock) {
                 new Open(databaseName).execute(context);
                 for (UniqueIdentifier updatedUniqueIdentifier : updatedFileArray) {
-                    addFileToDB(updatedUniqueIdentifier.getFileInProject(sessionStorage).toURI(), updatedUniqueIdentifier);
+                    addFileToDB(updatedUniqueIdentifier.getFileInProject(projectRecord).toURI(), updatedUniqueIdentifier);
                     if (progressBar != null) {
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
@@ -518,7 +518,6 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */);
 //        }
 //    }
-
     public String[] getAllFieldNames() throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
         final String allFieldNamesQuery = queryBuilder.getAllFieldNamesQuery();
@@ -578,7 +577,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         final JLabel queryTimeLabel = new JLabel();
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
         final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
-        final EntityCollection entityCollection = new EntityCollection(kinSessionStorage, arbilWindowManager, new ProjectManager().getDefaultProject(kinSessionStorage));
+        final EntityCollection entityCollection = new EntityCollection(new ProjectManager().getDefaultProject(kinSessionStorage));
         //queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));

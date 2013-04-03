@@ -34,6 +34,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -51,6 +52,7 @@ import org.xml.sax.SAXException;
 public class EntityDocument {
 
     final File entityFile;
+    final ProjectRecord projectRecord;
     Document metadataDom = null;
     Node kinnateNode = null;
     Element metadataNode = null;
@@ -63,15 +65,17 @@ public class EntityDocument {
     // todo:. when the menu requests a new node it should show the progress bar before making the request
     final private SessionStorage sessionStorage;
 
-    public EntityDocument(ImportTranslator importTranslator, SessionStorage sessionStorage) {
+    public EntityDocument(ImportTranslator importTranslator, SessionStorage sessionStorage, ProjectRecord projectRecord) {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
+        this.projectRecord = projectRecord;
         entityFile = assignIdentiferAndFile();
     }
 
-    public EntityDocument(String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
+    public EntityDocument(String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage, ProjectRecord projectRecord) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
+        this.projectRecord = projectRecord;
         entityFile = assignIdentiferAndFile();
         try {
             // construct the metadata file
@@ -93,9 +97,10 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(EntityDocument entityDocumentToCopy, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
+    public EntityDocument(EntityDocument entityDocumentToCopy, ImportTranslator importTranslator, SessionStorage sessionStorage, ProjectRecord projectRecord) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
+        this.projectRecord = projectRecord;
         entityFile = assignIdentiferAndFile();
         try {
             // load the document that needs to be copied so that it can be saved into the new location
@@ -115,11 +120,12 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(UniqueIdentifier uniqueIdentifier, String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
+    public EntityDocument(UniqueIdentifier uniqueIdentifier, String profileId, ImportTranslator importTranslator, SessionStorage sessionStorage, ProjectRecord projectRecord) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
+        this.projectRecord = projectRecord;
         entityData = new EntityData(uniqueIdentifier);
-        entityFile = uniqueIdentifier.getFileInProject(sessionStorage);
+        entityFile = uniqueIdentifier.getFileInProject(projectRecord);
         File subDirectory = entityFile.getParentFile();
         subDirectory.mkdir();
         try {
@@ -133,16 +139,17 @@ public class EntityDocument {
         setDomNodesFromExistingFile();
     }
 
-    public EntityDocument(URI entityUri, ImportTranslator importTranslator, SessionStorage sessionStorage) throws ImportException {
+    public EntityDocument(URI entityUri, ImportTranslator importTranslator, SessionStorage sessionStorage, ProjectRecord projectRecord) throws ImportException {
         this.importTranslator = importTranslator;
         this.sessionStorage = sessionStorage;
+        this.projectRecord = projectRecord;
         entityFile = new File(entityUri);
         setDomNodesFromExistingFile();
     }
 
     private File assignIdentiferAndFile() {
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
-        final File fileInProject = entityData.getUniqueIdentifier().getFileInProject(sessionStorage);
+        final File fileInProject = entityData.getUniqueIdentifier().getFileInProject(projectRecord);
         File subDirectory = fileInProject.getParentFile();
         subDirectory.mkdir();
         return fileInProject;
@@ -205,7 +212,7 @@ public class EntityDocument {
         } else { // start skip overwrite
             try {
                 entityUri = entityFile.toURI();
-                URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false); // todo: change this to a real profile
+                URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false);
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 documentBuilderFactory.setNamespaceAware(true);
                 String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"

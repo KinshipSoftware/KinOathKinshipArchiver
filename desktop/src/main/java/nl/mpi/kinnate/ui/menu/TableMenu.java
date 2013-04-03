@@ -173,7 +173,7 @@ public class TableMenu extends JPopupMenu implements ActionListener {
 
     private EntityDocument getEntityDocument(ArbilDataNode arbilDataNode) throws ImportException {
         if (!documentMap.containsKey(arbilDataNode)) {
-            documentMap.put(arbilDataNode, new EntityDocument(arbilDataNode.getURI(), new ImportTranslator(true), sessionStorage));
+            documentMap.put(arbilDataNode, new EntityDocument(arbilDataNode.getURI(), new ImportTranslator(true), sessionStorage, entityCollection.getProjectRecord()));
         }
         return documentMap.get(arbilDataNode);
     }

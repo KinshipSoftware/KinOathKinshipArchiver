@@ -51,7 +51,7 @@ public class HelpMenu extends JMenu {
 
     JFrame helpWindow = null;
 
-    public HelpMenu(final AbstractDiagramManager diagramWindowManager, final ArbilWindowManager dialogHandler, final SessionStorage sessionStorage, final EntityCollection entityCollection, final ApplicationVersionManager versionManager, final Component parentComponent) {
+    public HelpMenu(final AbstractDiagramManager diagramWindowManager, final ArbilWindowManager dialogHandler, final SessionStorage sessionStorage, final ApplicationVersionManager versionManager, final Component parentComponent) {
         this.setText("Help");
         JMenuItem aboutMenuItem = new JMenuItem("About");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -153,12 +153,13 @@ public class HelpMenu extends JMenu {
                             SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
                             try {
                                 if (currentSavePanel instanceof KinDiagramPanel) {
-                                    ((KinDiagramPanel) currentSavePanel).showProgressBar();
+                                    final KinDiagramPanel diagramPanel = (KinDiagramPanel) currentSavePanel;
+                                    diagramPanel.showProgressBar();
+                                    diagramPanel.getEntityCollection().recreateDatabase();
                                 }
-                                JProgressBar progressBar = new JProgressBar();
+//                                JProgressBar progressBar = new JProgressBar();
 //                                progressBar.setString("reindexing all files");
 //                                progressBar.setIndeterminate(true);
-                                entityCollection.recreateDatabase();
                                 dialogHandler.addMessageDialogToQueue("Reindexing complete.", "Reindex All Files");
                             } catch (EntityServiceException exception) {
                                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Database Error");

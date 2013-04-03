@@ -170,7 +170,7 @@ public class MetadataPanel extends JPanel {
     }
 
     public void addEntityDataNode(EntityData entityData) {
-        File entityFile = entityData.getUniqueIdentifier().getFileInProject(sessionStorage);
+        File entityFile = entityData.getUniqueIdentifier().getFileInProject(entityCollection.getProjectRecord());
         System.out.println("entity path: " + entityFile);
         if (entityFile != null && entityFile.exists()) {
             ArbilDataNode arbilDataNode = dataNodeLoader.getArbilDataNode(null, entityFile.toURI());

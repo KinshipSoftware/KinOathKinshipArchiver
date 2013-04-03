@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.uniqueidentifiers;
 
@@ -24,7 +24,7 @@ import java.util.UUID;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 import nl.mpi.arbil.data.ArbilField;
-import nl.mpi.flap.plugin.PluginSessionStorage;
+import nl.mpi.kinnate.projects.ProjectRecord;
 
 /**
  * Document : UniqueIdentifier Created on : Jul 21, 2011, 3:23:17 PM
@@ -159,7 +159,7 @@ public class UniqueIdentifier {
         throw new UnsupportedOperationException();
     }
 
-    public File getFileInProject(PluginSessionStorage sessionStorage) {
-        return new File(new File(sessionStorage.getProjectWorkingDirectory(), identifierString.substring(0, 3)), identifierString + ".kmdi");
+    public File getFileInProject(ProjectRecord projectRecord) {
+        return new File(new File(projectRecord.getProjectDataFilesDirectory(), identifierString.substring(0, 3)), identifierString + ".kmdi");
     }
 }

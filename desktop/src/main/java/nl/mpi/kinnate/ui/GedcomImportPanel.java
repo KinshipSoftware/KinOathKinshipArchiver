@@ -202,10 +202,10 @@ public class GedcomImportPanel extends JPanel {
                             try {
                                 boolean overwriteExisting = overwriteOnImport.isSelected();
                                 GenericImporter genericImporter = null;
-                                for (GenericImporter testImporter : new GenericImporter[]{new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage),
-                                            new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage),
-                                            new KinOathImporter(progressBar, importTextArea, overwriteExisting, sessionStorage),
-                                            new TipImporter(progressBar, importTextArea, overwriteExisting, sessionStorage)}) {
+                                for (GenericImporter testImporter : new GenericImporter[]{new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord()),
+                                            new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord()),
+                                            new KinOathImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord()),
+                                            new TipImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord())}) {
                                     if (importFileString != null) {
                                         if (testImporter.canImport(importFileString)) {
                                             genericImporter = testImporter;
@@ -252,8 +252,8 @@ public class GedcomImportPanel extends JPanel {
                                             SwingUtilities.invokeLater(new Runnable() {
                                                 public void run() {
                                                     XsdChecker xsdChecker = new XsdChecker();
-                                                    if (xsdChecker.simpleCheck(new File(currentUniqueIdentifier.getFileInProject(sessionStorage).toURI())) != null) {
-                                                        xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentUniqueIdentifier.getFileInProject(sessionStorage).toURI()));
+                                                    if (xsdChecker.simpleCheck(new File(currentUniqueIdentifier.getFileInProject(entityCollection.getProjectRecord()).toURI())) != null) {
+                                                        xsdChecker.checkXML(dataNodeLoader.getArbilDataNode(null, currentUniqueIdentifier.getFileInProject(entityCollection.getProjectRecord()).toURI()));
                                                         xsdChecker.setDividerLocation(0.5);
                                                         if (errorPanel == null) {
                                                             xsdChecker.setName("XSD Error on Import");

@@ -26,7 +26,6 @@ import javax.swing.JMenuBar;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
-import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.plugins.KinOathPluginManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.pluginloader.PluginService;
@@ -39,7 +38,7 @@ import nl.mpi.pluginloader.ui.PluginMenu;
  */
 public class MainMenuBar extends JMenuBar {
 
-    public MainMenuBar(AbstractDiagramManager abstractDiagramManager, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, final EntityCollection entityCollection, ApplicationVersionManager versionManager, Component parentComponent) {
+    public MainMenuBar(AbstractDiagramManager abstractDiagramManager, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, final ApplicationVersionManager versionManager, Component parentComponent) {
         this.add(new FileMenu(abstractDiagramManager, sessionStorage, dialogHandler, parentComponent));
         this.add(new EditMenu(abstractDiagramManager, parentComponent));
         this.add(new DiagramOptionsMenu(abstractDiagramManager, parentComponent));
@@ -72,6 +71,6 @@ public class MainMenuBar extends JMenuBar {
         }
         this.add(new PluginMenu(new PluginService(pluginUlrs.toArray(new URL[0])), new KinOathPluginManager(abstractDiagramManager, dialogHandler, parentComponent), false));
         this.add(new WindowMenu(abstractDiagramManager, parentComponent));
-        this.add(new HelpMenu(abstractDiagramManager, dialogHandler, sessionStorage, entityCollection, versionManager, parentComponent));
+        this.add(new HelpMenu(abstractDiagramManager, dialogHandler, sessionStorage, versionManager, parentComponent));
     }
 }

@@ -36,6 +36,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -46,6 +47,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class EntityImporter implements GenericImporter {
 
+    final ProjectRecord projectRecord;
     protected JProgressBar progressBar = null;
     protected URI inputFileUri = null; // used only for copying resource files
     protected JTextArea importTextArea;
@@ -58,7 +60,8 @@ public class EntityImporter implements GenericImporter {
 //    private MetadataBuilder metadataBuilder;
     final private SessionStorage sessionStorage;
 
-    public EntityImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
+    public EntityImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage, ProjectRecord projectRecord) {
+        this.projectRecord = projectRecord;
         overwriteExisting = overwriteExistingLocal;
         importTextArea = importTextAreaLocal;
         progressBar = progressBarLocal;
@@ -183,7 +186,7 @@ public class EntityImporter implements GenericImporter {
                 uniqueIdentifier = new UniqueIdentifier(inputFileMd5Sum + ":" + cleanedIdString, UniqueIdentifier.IdentifierType.iid);
             }
             // create a new entity file
-            currentEntity = new EntityDocument(/* getDestinationDirectory(),*/uniqueIdentifier, typeString, importTranslator, sessionStorage);
+            currentEntity = new EntityDocument(/* getDestinationDirectory(),*/uniqueIdentifier, typeString, importTranslator, sessionStorage, projectRecord);
 //            appendToTaskOutput("created: " + currentEntity.getFilePath());
             createdNodes.add(currentEntity.getUniqueIdentifier());
             createdDocuments.put(idString, currentEntity);

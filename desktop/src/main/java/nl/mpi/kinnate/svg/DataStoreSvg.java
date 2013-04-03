@@ -25,7 +25,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -40,6 +39,7 @@ import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinType;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.NodeList;
@@ -73,6 +73,8 @@ public class DataStoreSvg {
     protected IndexerParameters indexParameters;
     @XmlElement(name = "KinTermGroup", namespace = "http://mpi.nl/tla/kin")
     protected KinTermGroup[] kinTermGroups = new KinTermGroup[]{};
+    @XmlElement(name = "ProjectRecord", namespace = "http://mpi.nl/tla/kin")
+    public ProjectRecord projectRecord = null;
     @XmlElementWrapper(name = "SelectedProfiles")
     @XmlElement(name = "Profile", namespace = "http://mpi.nl/tla/kin")
     // these profiles are set here so that old format diagrams have something in the add menu

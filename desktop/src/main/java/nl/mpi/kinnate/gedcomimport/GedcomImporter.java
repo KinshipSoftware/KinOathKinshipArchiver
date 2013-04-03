@@ -36,6 +36,7 @@ import nl.mpi.kinnate.kindata.EntityDate;
 import nl.mpi.kinnate.kindata.EntityDateException;
 import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -46,8 +47,8 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class GedcomImporter extends EntityImporter implements GenericImporter {
 
-    public GedcomImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage) {
-        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage);
+    public GedcomImporter(JProgressBar progressBarLocal, JTextArea importTextAreaLocal, boolean overwriteExistingLocal, SessionStorage sessionStorage, ProjectRecord projectRecord) {
+        super(progressBarLocal, importTextAreaLocal, overwriteExistingLocal, sessionStorage, projectRecord);
     }
 
     @Override

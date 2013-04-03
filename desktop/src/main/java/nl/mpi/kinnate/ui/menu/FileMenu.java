@@ -29,6 +29,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.export.ExportToR;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.svg.DiagramTranscoder;
@@ -153,13 +154,13 @@ public class FileMenu extends javax.swing.JMenu {
         jMenu1.setText("Open Sample Diagram");
         this.add(jMenu1);
 
-//        this.add(new javax.swing.JPopupMenu.Separator());
-//        projectOpenMenu.setText("Open Project");
-//        projectOpenMenu.setActionCommand("browse");
-//        projectOpenMenu.addActionListener(projectRecentMenu);
-//        this.add(projectOpenMenu);
-//
-//        this.add(projectRecentMenu);
+        this.add(new javax.swing.JPopupMenu.Separator());
+        projectOpenMenu.setText("Open Project");
+        projectOpenMenu.setActionCommand("browse");
+        projectOpenMenu.addActionListener(projectRecentMenu);
+        this.add(projectOpenMenu);
+
+        this.add(projectRecentMenu);
 
         this.add(jSeparator1);
 
@@ -423,7 +424,7 @@ public class FileMenu extends javax.swing.JMenu {
             } else {
                 for (File importFile : importFiles) {
                     try {
-                        diagramWindowManager.openImportPanel(importFile, parentComponent);
+                        diagramWindowManager.openImportPanel(importFile, parentComponent, getEntityCollection());
                     } catch (ImportException exception1) {
                         dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importFile.getAbsolutePath(), "Import File");
                     }
@@ -460,7 +461,7 @@ public class FileMenu extends javax.swing.JMenu {
             "http://GedcomLibrary.com/gedcoms/gl120372.ged"};
         for (String importUrlString : importList) {
             try {
-                diagramWindowManager.openImportPanel(importUrlString, parentComponent);
+                diagramWindowManager.openImportPanel(importUrlString, parentComponent, getEntityCollection());
             } catch (ImportException exception1) {
                 dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importUrlString, "Import File");
             }
@@ -518,12 +519,22 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void entityUploadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        diagramWindowManager.openEntityUploadPanel(null);
+        diagramWindowManager.openEntityUploadPanel(null, getEntityCollection());
     }
 
     private void saveAsDefaultMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         int tabIndex = Integer.valueOf(evt.getActionCommand());
         SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
         savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile(sessionStorage));
+    }
+
+    private EntityCollection getEntityCollection() {
+        SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
+        if (currentSavePanel instanceof KinDiagramPanel) {
+            final KinDiagramPanel diagramPanel = (KinDiagramPanel) currentSavePanel;
+            return diagramPanel.getEntityCollection();
+        } else {
+            throw new UnsupportedOperationException("Cannot perform this menu action on this type of window");
+        }
     }
 }

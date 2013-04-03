@@ -61,6 +61,7 @@ import nl.mpi.kinnate.kintypestrings.ImportRequiredException;
 import nl.mpi.kinnate.kintypestrings.KinTermCalculator;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
+import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
@@ -77,6 +78,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePanel, ArbilDataNodeContainer {
 
+    private ProjectManager projectManager;
     private EntityCollection entityCollection;
     private KinTypeStringInput kinTypeStringInput;
     private ArrayList<KinTypeStringProvider> kinTypeStringProviders;
@@ -102,14 +104,24 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private AbstractDiagramManager diagramWindowManager;
     private StatusBar statusBar;
 
-    public KinDiagramPanel(URI existingFile, boolean savableType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager) {
+    public KinDiagramPanel(URI existingFile, boolean savableType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
-        this.entityCollection = entityCollection;
         this.diagramWindowManager = diagramWindowManager;
+        this.projectManager = projectManager;
         initKinDiagramPanel(existingFile, null, savableType);
+    }
+
+    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) {
+        this.sessionStorage = sessionStorage;
+        this.dialogHandler = dialogHandler;
+        this.dataNodeLoader = dataNodeLoader;
+        this.treeHelper = treeHelper;
+        this.diagramWindowManager = diagramWindowManager;
+        this.projectManager = projectManager;
+        initKinDiagramPanel(null, documentType, false);
     }
 
     public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager) {
@@ -117,14 +129,14 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
-        this.entityCollection = entityCollection;
+        this.entityCollection = entityCollection; // we are setting the entity collection here because it has the project that has just been imported to and we want to show the results
         this.diagramWindowManager = diagramWindowManager;
         initKinDiagramPanel(null, documentType, false);
     }
 
     private void initKinDiagramPanel(URI existingFile, DocumentType documentType, boolean savableType) {
         progressBar = new JProgressBar();
-        graphPanel = new GraphPanel(this, dialogHandler, sessionStorage, entityCollection, dataNodeLoader);
+        graphPanel = new GraphPanel(this, dialogHandler, sessionStorage, dataNodeLoader);
         kinTypeStringInput = new KinTypeStringInput(graphPanel.dataStoreSvg);
 
         boolean showKinTerms = false;
@@ -202,6 +214,22 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             }
             graphPanel.generateDefaultSvg();
         }
+        // todo: resove the context menu actions on a free form diagram that require the entitycollection to exist
+//        if (graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm) {
+        if (graphPanel.dataStoreSvg.projectRecord == null) {
+            if (entityCollection != null) {
+                // if an existing entity collection has been passed in, then set the project from it
+                graphPanel.dataStoreSvg.projectRecord = entityCollection.getProjectRecord();
+            } else {
+                graphPanel.dataStoreSvg.projectRecord = projectManager.getDefaultProject(sessionStorage);
+            }
+        }
+        entityCollection = new EntityCollection(graphPanel.dataStoreSvg.projectRecord);
+        graphPanel.setEntityCollection(entityCollection);
+//        } else {
+//            // do not store the project settings for a free form diagram but make sure the defalut project is available for importing
+//            entityCollection = new EntityCollection(projectManager.getDefaultProject(sessionStorage));
+//        }
         this.setLayout(new BorderLayout());
 
         progressBar.setVisible(false);
@@ -284,15 +312,15 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     panelSetting.setHidePane(kinTypeHidePane, "Diagram Settings");
                     graphPanel.getIndexParameters().symbolFieldsFields.setParent(graphPanel.getIndexParameters());
                     graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
-                    final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, this, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
-                    final JScrollPane labelFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, this, graphPanel.getIndexParameters().labelFields, tableCellDragHandler));
-                    // todo: Ticket #1115 add overlay fields as paramters
-                    symbolFieldsPanel.setName("Symbol Fields");
-                    labelFieldsPanel.setName("Label Fields");
                     panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg), false);
                     panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg, dialogHandler), false);
                     if (graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm) {
                         // hide some of the settings panels from freeform diagrams
+                        final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, this, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
+                        final JScrollPane labelFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, this, graphPanel.getIndexParameters().labelFields, tableCellDragHandler));
+                        // todo: Ticket #1115 add overlay fields as paramters
+                        symbolFieldsPanel.setName("Symbol Fields");
+                        labelFieldsPanel.setName("Label Fields");
                         panelSetting.addTargetPanel(symbolFieldsPanel, false);
                         panelSetting.addTargetPanel(labelFieldsPanel, false);
                         panelSetting.addTargetPanel(cmdiProfileSelectionPanel, false);
@@ -494,9 +522,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 if (userOption == 0) {
                                     try {
                                         if ("jar".equals(exception.getImportURI().getScheme())) {
-                                            diagramWindowManager.openJarImportPanel(exception.getImportURI().getPath(), KinDiagramPanel.this);
+                                            diagramWindowManager.openJarImportPanel(exception.getImportURI().getPath(), KinDiagramPanel.this, entityCollection);
                                         } else {
-                                            diagramWindowManager.openImportPanel(exception.getImportURI().toASCIIString(), KinDiagramPanel.this);
+                                            diagramWindowManager.openImportPanel(exception.getImportURI().toASCIIString(), KinDiagramPanel.this, entityCollection);
                                         }
                                     } catch (ImportException exception1) {
                                         dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + exception.getImportURI().toASCIIString(), "Import Required Data");
@@ -697,6 +725,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         if (tabComponent instanceof KinTermPanel) {
             ((KinTermPanel) tabComponent).importKinTerms();
         }
+    }
+
+    public EntityCollection getEntityCollection() {
+        return entityCollection;
     }
 
     public int getKinTermGroupCount() {

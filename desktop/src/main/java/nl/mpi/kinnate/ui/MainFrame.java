@@ -26,6 +26,7 @@ import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.KinnateArbilInjector;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.plugins.export.MigrationWizard;
+import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
 
@@ -66,10 +67,11 @@ public class MainFrame extends javax.swing.JFrame {
                 final KinnateArbilInjector injector = new KinnateArbilInjector();
                 injector.injectHandlers(versionManager);
                 final AbstractDiagramManager abstractDiagramManager;
+                final ProjectManager projectManager = new ProjectManager();
 
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
-                abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), injector.getSessionStorage(), injector.getDataNodeLoader(), injector.getTreeHelper(), injector.getEntityCollection());
+                abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), injector.getSessionStorage(), injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager);
                 abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480));
                 abstractDiagramManager.createApplicationWindow();
 
@@ -84,7 +86,7 @@ public class MainFrame extends javax.swing.JFrame {
                         File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor));
                         if (oldAppExportFile != null) {
                             try {
-                                abstractDiagramManager.openImportPanel(oldAppExportFile, null);
+                                abstractDiagramManager.openImportPanel(oldAppExportFile, null, projectManager.getEntityCollectionForProject(projectManager.getDefaultProject(injector.getSessionStorage())));
                             } catch (ImportException exception1) {
                                 injector.getWindowManager().addMessageDialogToQueue(exception1.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import File");
                             }

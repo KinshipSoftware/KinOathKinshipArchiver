@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
@@ -60,9 +61,14 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-//        SavePanel originatingSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
+        SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
         try {
-            diagramWindowManager.openJarImportPanel(e.getActionCommand(), parentComponent);
+            if (currentSavePanel instanceof KinDiagramPanel) {
+                final KinDiagramPanel diagramPanel = (KinDiagramPanel) currentSavePanel;
+                diagramWindowManager.openJarImportPanel(e.getActionCommand(), parentComponent, diagramPanel.getEntityCollection());
+            } else {
+                dialogHandler.addMessageDialogToQueue("Cannot import into this type of window\n" + e.getActionCommand(), "Import Sample Data");
+            }
         } catch (ImportException exception1) {
             dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + e.getActionCommand(), "Import Sample Data");
         }

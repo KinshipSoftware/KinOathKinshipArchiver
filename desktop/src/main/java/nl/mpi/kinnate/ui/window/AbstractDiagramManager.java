@@ -41,7 +41,6 @@ import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.projects.ProjectManager;
-import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.ui.EntityUploadPanel;
 import nl.mpi.kinnate.ui.GedcomImportPanel;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
@@ -57,20 +56,20 @@ import nl.mpi.kinnate.ui.menu.RecentFileMenu;
 public abstract class AbstractDiagramManager {
 
     private EntityUploadPanel entityUploadPanel;
-    private ApplicationVersionManager versionManager;
-    private ArbilWindowManager dialogHandler;
-    private SessionStorage sessionStorage;
-    private ArbilDataNodeLoader dataNodeLoader;
-    private ArbilTreeHelper treeHelper;
-    private EntityCollection entityCollection;
+    final private ApplicationVersionManager versionManager;
+    final private ArbilWindowManager dialogHandler;
+    final private SessionStorage sessionStorage;
+    final private ArbilDataNodeLoader dataNodeLoader;
+    final private ArbilTreeHelper treeHelper;
+    final private ProjectManager projectManager;
 
-    public AbstractDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection) {
+    public AbstractDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager) {
         this.versionManager = versionManager;
         this.dialogHandler = dialogHandler;
         this.sessionStorage = sessionStorage;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
-        this.entityCollection = entityCollection;
+        this.projectManager = projectManager;
     }
 
     abstract public void createApplicationWindow();
@@ -83,7 +82,7 @@ public abstract class AbstractDiagramManager {
             diagramFame = new JFrame();
         }
         setWindowTitle(diagramFame, diagramTitle);
-        diagramFame.setJMenuBar(new MainMenuBar(this, sessionStorage, dialogHandler, entityCollection, versionManager, diagramFame));
+        diagramFame.setJMenuBar(new MainMenuBar(this, sessionStorage, dialogHandler, versionManager, diagramFame));
         if (diagramComponent != null) {
             diagramFame.setContentPane((Container) diagramComponent);
 //        } else {
@@ -171,16 +170,14 @@ public abstract class AbstractDiagramManager {
         if (KinDiagramPanel.getDefaultDiagramFile(sessionStorage).exists()) {
             defaultDiagramUri = KinDiagramPanel.getDefaultDiagramFile(sessionStorage).toURI();
         }
-        //todo: continue working on the project manager and sort out the use of session storage
-        ProjectRecord removeThis = new ProjectManager().getDefaultProject(sessionStorage);
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, this);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
         egoSelectionTestPanel.setName("Unsaved Default Diagram");
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
         egoSelectionTestPanel.loadAllTrees();
     }
 
     public void newDiagram(DocumentNewMenu.DocumentType documentType, Rectangle preferredSizeLocation) {
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, this);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
         egoSelectionTestPanel.setName("Unsaved " + documentType.getDisplayName());
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
         egoSelectionTestPanel.loadAllTrees();
@@ -191,7 +188,7 @@ public abstract class AbstractDiagramManager {
             // prevent files from the samples menu being added to the recent files menu
             RecentFileMenu.addRecentFile(sessionStorage, new File(selectedUri));
         }
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, this);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         egoSelectionTestPanel.setName(diagramTitle);
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
@@ -206,15 +203,15 @@ public abstract class AbstractDiagramManager {
 //            ((KinDiagramPanel) selectedComponent).loadAllTrees();
 //        }
 //    }
-    public void openImportPanel(File importFile, Component parentComponent) throws ImportException {
+    public void openImportPanel(File importFile, Component parentComponent, EntityCollection entityCollection) throws ImportException {
         new GedcomImportPanel(this, parentComponent, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importFile);
     }
 
-    public void openImportPanel(String importUrlString, Component parentComponent) throws ImportException {
+    public void openImportPanel(String importUrlString, Component parentComponent, EntityCollection entityCollection) throws ImportException {
         new GedcomImportPanel(this, parentComponent, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImport(importUrlString);
     }
 
-    public void openJarImportPanel(String importUrlString, Component parentComponent) throws ImportException {
+    public void openJarImportPanel(String importUrlString, Component parentComponent, EntityCollection entityCollection) throws ImportException {
         new GedcomImportPanel(this, parentComponent, entityCollection, sessionStorage, dialogHandler, dataNodeLoader, treeHelper).startImportJar(importUrlString);
     }
 
@@ -222,7 +219,7 @@ public abstract class AbstractDiagramManager {
 
     public abstract void setSelectedDiagram(int diagramIndex);
 
-    public void openEntityUploadPanel(Rectangle preferredSizeLocation) {
+    public void openEntityUploadPanel(Rectangle preferredSizeLocation, EntityCollection entityCollection) {
         if (entityUploadPanel == null) {
             entityUploadPanel = new EntityUploadPanel(sessionStorage, entityCollection, dialogHandler);
             entityUploadPanel.setName("Entity Upload");

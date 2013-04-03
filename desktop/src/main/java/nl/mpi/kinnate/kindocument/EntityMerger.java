@@ -27,6 +27,7 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -38,9 +39,11 @@ public class EntityMerger extends DocumentLoader {
 
     private UniqueIdentifier[] deletedIdentifiersArray;
     private UniqueIdentifier[] affectedIdentifiersArray;
+    final ProjectRecord projectRecord;
 
     public EntityMerger(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection) {
         super(sessionStorage, dialogHandler, entityCollection);
+        this.projectRecord = entityCollection.getProjectRecord();
     }
 
     public UniqueIdentifier[] getAffectedIdentifiersArray() {
@@ -103,7 +106,7 @@ public class EntityMerger extends DocumentLoader {
             getEntityDocuments(selectedIdentifiers, entityDocumentList);
             for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
                 EntityDocument masterDocument = entityMap.get(uniqueIdentifier);
-                EntityDocument duplicateEntityDocument = new EntityDocument(masterDocument, new ImportTranslator(true), sessionStorage);
+                EntityDocument duplicateEntityDocument = new EntityDocument(masterDocument, new ImportTranslator(true), sessionStorage, projectRecord);
                 addedIdentifiers.add(duplicateEntityDocument.getUniqueIdentifier());
                 for (EntityRelation entityRelation : masterDocument.entityData.getAllRelations()) {
                     EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);

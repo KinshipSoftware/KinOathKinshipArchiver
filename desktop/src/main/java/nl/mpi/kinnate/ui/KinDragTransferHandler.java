@@ -214,7 +214,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
             ArrayList<EntityDocument> entityDocumentList = new ArrayList<EntityDocument>();
             for (ArbilNode draggedNode : selectedNodes) {
                 // todo: allow the user to set EntityDocument.defaultDragType some where
-                EntityDocument entityDocument = new EntityDocument(EntityDocument.defaultDragType, importTranslator, sessionStorage);
+                EntityDocument entityDocument = new EntityDocument(EntityDocument.defaultDragType, importTranslator, sessionStorage, entityCollection.getProjectRecord());
                 entityDocument.insertValue("Name", draggedNode.toString());
                 if (draggedNode instanceof ArbilDataNode) {
                     for (String fieldOfInterest : new String[]{"Sex", "BirthDate"}) {
@@ -278,7 +278,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     private boolean attachMetadata() {
         System.out.println("importMetadata");
         try {
-            EntityDocument entityDocument = new EntityDocument(targetEntity.getUniqueIdentifier().getFileInProject(sessionStorage).toURI(), new ImportTranslator(true), sessionStorage);
+            EntityDocument entityDocument = new EntityDocument(targetEntity.getUniqueIdentifier().getFileInProject(entityCollection.getProjectRecord()).toURI(), new ImportTranslator(true), sessionStorage, entityCollection.getProjectRecord());
             attachMetadata(entityDocument.entityData);
             entityDocument.saveDocument();
             URI addedEntityUri = entityDocument.getFile().toURI();
