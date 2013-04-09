@@ -85,7 +85,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         public int resultCount = 0;
     }
 
-    public EntityCollection(ProjectRecord projectRecord) {
+    public EntityCollection(ProjectRecord projectRecord) throws EntityServiceException {
         this.projectRecord = projectRecord;
         databaseName = projectRecord.getProjectUUID();
         // make sure the database exists
@@ -102,8 +102,9 @@ public class EntityCollection extends DatabaseUpdateHandler {
                     new CreateDB(databaseName).execute(context);
 //                new Open(databaseName).execute(context);
                 }
-            } catch (BaseXException baseXException2) {
-                BugCatcherManager.getBugCatcher().logError(baseXException2);
+            } catch (BaseXException exception2) {
+                BugCatcherManager.getBugCatcher().logError(exception2);
+                throw new EntityServiceException("Could not create database:" + exception2.getMessage());
             }
         }
         // todo: should we explicitly close the DB? putting it in the distructor would not be reliable
@@ -144,9 +145,9 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //            new Close().execute(context);
 //            context.close();
             }
-        } catch (BaseXException baseXException) {
-            BugCatcherManager.getBugCatcher().logError(baseXException);
-            throw new EntityServiceException(baseXException.getMessage());
+        } catch (BaseXException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+            throw new EntityServiceException("Could not recreate database:" + exception.getMessage());
         }
         updateOccured();
     }
@@ -229,7 +230,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             BugCatcherManager.getBugCatcher().logError(baseXException);
-            throw new EntityServiceException(dbErrorMessage /* baseXException.getMessage() */ + ": Add File To DB");
+            throw new EntityServiceException(dbErrorMessage + "\n Add file to database:" + baseXException.getMessage());
         }
     }
 
@@ -247,7 +248,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             BugCatcherManager.getBugCatcher().logError(baseXException);
-            throw new EntityServiceException(dbErrorMessage /* baseXException.getMessage() */ + ":Add File To DB");
+            throw new EntityServiceException(dbErrorMessage + "\n Delete file from database:" + baseXException.getMessage());
         }
     }
 
@@ -295,7 +296,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
-            throw new EntityServiceException(dbErrorMessage /* baseXException.getMessage() */ + ": Update Database");
+            throw new EntityServiceException(dbErrorMessage + "\n Update database:" + baseXException.getMessage());
         }
     }
 
@@ -313,7 +314,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
-            throw new EntityServiceException(dbErrorMessage /* baseXException.getMessage() */);
+            throw new EntityServiceException(dbErrorMessage + "\n Update database:" + baseXException.getMessage());
         }
     }
 
@@ -358,7 +359,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         } catch (QueryException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
             searchResults.statusMessage = exception.getMessage();
-            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Perform Query");
+            throw new EntityServiceException(dbErrorMessage + "\n Query database:" + exception.getMessage());
         }
         searchResults.resultsPathArray = resultPaths.toArray(new String[]{});
 //        searchResults.statusMessage = searchResults.statusMessage + "\n query: " + queryString;
@@ -399,10 +400,10 @@ public class EntityCollection extends DatabaseUpdateHandler {
             }
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity Id ByTerm");
+            throw new EntityServiceException(dbErrorMessage + "\n Search database:" + exception.getMessage());
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity Id By Term");
+            throw new EntityServiceException(dbErrorMessage + "\n Search database:" + exception.getMessage());
         }
         return returnArray;
     }
@@ -444,10 +445,10 @@ public class EntityCollection extends DatabaseUpdateHandler {
             return foundEntities.getEntityDataArray();
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity By Key Word");
+            throw new EntityServiceException(dbErrorMessage + "\n Search database by keyword:" + exception.getMessage());
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity By Key Word");
+            throw new EntityServiceException(dbErrorMessage + "\n Search database by keyword:" + exception.getMessage());
         }
 //        return new EntityData[]{};
     }
@@ -474,10 +475,10 @@ public class EntityCollection extends DatabaseUpdateHandler {
             return selectedEntity;
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity With Relations");
+            throw new EntityServiceException(dbErrorMessage + "\n Get entity with relations:" + exception.getMessage());
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Entity With Relations");
+            throw new EntityServiceException(dbErrorMessage + "\n Get entity with relations:" + exception.getMessage());
         }
 //        return new EntityData[]{}; //(uniqueIdentifier, null, "", EntityData.SymbolType.none, new String[]{"Error loading data", "view log for details"}, false);
     }
@@ -496,7 +497,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             System.out.println("Query time: " + queryMils + "ms");
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
-            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Run Delete Query");
+            throw new EntityServiceException(dbErrorMessage + "\n Delete from database:" + exception.getMessage());
         }
     }
 
@@ -528,7 +529,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             }
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(allFieldNamesQuery + "\n" + queryResult, exception);
-            throw new EntityServiceException(dbErrorMessage /* exception.getMessage() */ + ": Get Field Names");
+            throw new EntityServiceException(dbErrorMessage + "\n Get field names:" + exception.getMessage());
         }
         return queryResult.split(" ");
     }
@@ -577,40 +578,41 @@ public class EntityCollection extends DatabaseUpdateHandler {
         final JLabel queryTimeLabel = new JLabel();
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
         final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
-        final EntityCollection entityCollection = new EntityCollection(new ProjectManager().getDefaultProject(kinSessionStorage));
-        //queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
+        try {
+            final EntityCollection entityCollection = new EntityCollection(new ProjectManager().getDefaultProject(kinSessionStorage));
+            //queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityWithRelationsQuery("e4dfbd92d311088bf692211ced5179e5", new String[]{"e4dfbd92d311088bf692211ced5179e5"}, new IndexerParameters()));
-        queryText.setText("for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate[(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = \"e4dfbd92d311088bf692211ced5179e5\"]\n"
-                + "return<Entity>{\n"
-                + "<Identifier>{$entityNode/(*:Entity|*:Gedcom)/*:UniqueIdentifier//text()}</Identifier>,\n"
-                + "<DateOfBirth>{$entityNode/(*:Entity|*:Gedcom)/DOB}</DateOfBirth>,\n"
-                + "<Path>{base-uri($entityNode)}</Path>\n"
-                + "}</Entity>\n");
-        final JTextArea resultsText = new JTextArea();
-        resultsText.setVisible(false);
-        JButton jButton = new JButton("run query");
-        jButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                resultsText.setText("");
-                try {
-                    long startTime = System.currentTimeMillis();
-                    resultsText.append(new XQuery(queryText.getText()).execute(context));
-                    long queryMils = System.currentTimeMillis() - startTime;
-                    String queryTimeString = "Query time: " + queryMils + "ms";
-                    queryTimeLabel.setText(queryTimeString);
-                } catch (BaseXException exception) {
-                    resultsText.append(exception.getMessage());
-                    arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Action Performed");
-                }
+            queryText.setText("for $entityNode in collection('nl-mpi-kinnate')/*:Kinnate[(*:Entity|*:Gedcom)/*:UniqueIdentifier/. = \"e4dfbd92d311088bf692211ced5179e5\"]\n"
+                    + "return<Entity>{\n"
+                    + "<Identifier>{$entityNode/(*:Entity|*:Gedcom)/*:UniqueIdentifier//text()}</Identifier>,\n"
+                    + "<DateOfBirth>{$entityNode/(*:Entity|*:Gedcom)/DOB}</DateOfBirth>,\n"
+                    + "<Path>{base-uri($entityNode)}</Path>\n"
+                    + "}</Entity>\n");
+            final JTextArea resultsText = new JTextArea();
+            resultsText.setVisible(false);
+            JButton jButton = new JButton("run query");
+            jButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    resultsText.setText("");
+                    try {
+                        long startTime = System.currentTimeMillis();
+                        resultsText.append(new XQuery(queryText.getText()).execute(context));
+                        long queryMils = System.currentTimeMillis() - startTime;
+                        String queryTimeString = "Query time: " + queryMils + "ms";
+                        queryTimeLabel.setText(queryTimeString);
+                    } catch (BaseXException exception) {
+                        resultsText.append(exception.getMessage());
+                        arbilWindowManager.addMessageDialogToQueue(exception.getMessage(), "Action Performed");
+                    }
 //                SearchResults results = entityCollection.performQuery(queryText.getText());
 //                for (String resultLine : results.resultsPathArray) {
 //                    resultsText.append(resultLine + "\n");
 //                }
-                resultsText.setVisible(true);
-            }
-        });
+                    resultsText.setVisible(true);
+                }
+            });
 //        JButton updateButton = new JButton("update file");
 //        updateButton.addActionListener(new ActionListener() {
 //            public void actionPerformed(ActionEvent e) {
@@ -624,47 +626,47 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //                resultsText.setVisible(true);
 //            }
 //        });
-        JButton dropButton = new JButton("drop database");
-        dropButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                resultsText.setText("");
-                entityCollection.dropDatabase();
+            JButton dropButton = new JButton("drop database");
+            dropButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    resultsText.setText("");
+                    entityCollection.dropDatabase();
 //                try {
 //                new EntityCollection().createDatabase();
 //                } catch (URISyntaxException exception) {
 //                    resultsText.append(exception.getMessage());
 //                }
-                resultsText.setVisible(true);
-            }
-        });
-        JButton recreateButton = new JButton("drop and recreate database");
-        recreateButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                resultsText.setText("recreating database");
-//                new EntityCollection().dropDatabase();
-                try {
-                    entityCollection.recreateDatabase();
-                    resultsText.setText("done\n");
-                } catch (EntityServiceException exception) {
-                    resultsText.append(exception.getMessage());
+                    resultsText.setVisible(true);
                 }
-                resultsText.setVisible(true);
-            }
-        });
+            });
+            JButton recreateButton = new JButton("drop and recreate database");
+            recreateButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    resultsText.setText("recreating database");
+//                new EntityCollection().dropDatabase();
+                    try {
+                        entityCollection.recreateDatabase();
+                        resultsText.setText("done\n");
+                    } catch (EntityServiceException exception) {
+                        resultsText.append(exception.getMessage());
+                    }
+                    resultsText.setVisible(true);
+                }
+            });
 
-        JPanel jPanel = new JPanel(new BorderLayout());
-        jPanel.add(queryText, BorderLayout.CENTER);
-        jPanel.add(resultsText, BorderLayout.PAGE_END);
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(jButton);
+            JPanel jPanel = new JPanel(new BorderLayout());
+            jPanel.add(queryText, BorderLayout.CENTER);
+            jPanel.add(resultsText, BorderLayout.PAGE_END);
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.add(jButton);
 //        buttonPanel.add(updateButton);
-        buttonPanel.add(dropButton);
-        buttonPanel.add(recreateButton);
-        buttonPanel.add(queryTimeLabel);
-        jPanel.add(buttonPanel, BorderLayout.PAGE_START);
-        jFrame.setContentPane(new JScrollPane(jPanel));
-        jFrame.pack();
-        jFrame.setVisible(true);
+            buttonPanel.add(dropButton);
+            buttonPanel.add(recreateButton);
+            buttonPanel.add(queryTimeLabel);
+            jPanel.add(buttonPanel, BorderLayout.PAGE_START);
+            jFrame.setContentPane(new JScrollPane(jPanel));
+            jFrame.pack();
+            jFrame.setVisible(true);
 //        try {
 //            String xmlString = "<results>"
 //                    + "<relations>"
@@ -692,5 +694,9 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //            System.out.println(exception.toString());
 //            System.out.println(exception.getMessage());
 //        }
+
+        } catch (EntityServiceException exception) {
+            System.out.println(exception.getMessage());
+        }
     }
 }
