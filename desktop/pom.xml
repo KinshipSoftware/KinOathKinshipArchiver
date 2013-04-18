@@ -28,8 +28,8 @@
         <output.jarname>${project.build.finalName}</output.jarname>
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>2</application.minorVersion> 
-        <application.branch>testing</application.branch> 
-        <application.title>KinOath Kinship Archiver (testing)</application.title>
+        <application.branch>stable</application.branch> 
+        <application.title>KinOath Kinship Archiver</application.title>
         <output.directory>${project.build.directory}</output.directory>
         <maven.build.timestamp.format>EEE MMM dd HH:mm:ss z yyyy</maven.build.timestamp.format><!--"Mon Dec 10 14:37:33 CET 2012"-->
         <application.build-date>${maven.build.timestamp}</application.build-date>     
@@ -300,11 +300,6 @@
             <artifactId>kinoath-help</artifactId>
             <version>1.2.35878-stable</version>
         </dependency>
-        <!--        <dependency>
-            <groupId>nl.mpi</groupId>
-            <artifactId>sampleplugins</artifactId>
-            <version>0.0.33654-pretesting</version>
-        </dependency>-->
     </dependencies>
     <repositories>
         <repository>
