@@ -260,6 +260,11 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>plugins-core</artifactId>
+            <version>1.1.35868-stable</version>
+        </dependency>
+        <dependency>
             <groupId>org.basex</groupId>
             <artifactId>basex</artifactId>
             <version>7.3.1</version>
