@@ -371,7 +371,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         UniqueIdentifier[] returnArray = new UniqueIdentifier[]{};
         QueryBuilder queryBuilder = new QueryBuilder();
         String queryString = queryBuilder.getTermQuery(queryTerms);
-        System.out.println("queryString: " + queryString);
+//        System.out.println("queryString: " + queryString);
         long startTime = System.currentTimeMillis();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifierArray.class);
@@ -411,7 +411,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
     public EntityData[] getEntityByEndPoint(DataTypes.RelationType relationType, IndexerParameters indexParameters) throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityByEndPointQuery(relationType, indexParameters);
-        System.out.println("getEntityByEndPoint:" + query1String);
+//        System.out.println("getEntityByEndPoint:" + query1String);
         return getEntityByQuery(query1String, indexParameters);
     }
 
@@ -423,7 +423,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
 
     private EntityData[] getEntityByQuery(String query1String, IndexerParameters indexParameters) throws EntityServiceException {
         long startTime = System.currentTimeMillis();
-        System.out.println("query1String: " + query1String);
+//        System.out.println("query1String: " + query1String);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityArray.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();

@@ -42,11 +42,13 @@ public class DocumentLoader {
     private MessageDialogHandler dialogHandler;
     protected HashMap<UniqueIdentifier, EntityDocument> entityMap = new HashMap<UniqueIdentifier, EntityDocument>();
     private EntityCollection entityCollection;
+    final long startTime;
 
     public DocumentLoader(SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.entityCollection = entityCollection;
+        startTime = System.currentTimeMillis();
     }
 
     protected EntityDocument getEntityDocument(UniqueIdentifier selectedIdentifier) throws ImportException, URISyntaxException, EntityServiceException {
@@ -102,13 +104,19 @@ public class DocumentLoader {
     }
 
     protected void saveAllDocuments() throws ImportException {
+        long lastTime = System.currentTimeMillis();
         for (EntityDocument entityDocument : entityMap.values()) {
             entityDocument.saveDocument();
-            try {
-                entityCollection.updateDatabase(entityDocument.getFile().toURI(), entityDocument.getUniqueIdentifier());
-            } catch (EntityServiceException exception) {
-                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Update Database");
-            }
+            System.out.println("Saved file in " + (System.currentTimeMillis() - lastTime) + "ms");
+            System.out.println("Total time " + (System.currentTimeMillis() - startTime) + "ms");
+            lastTime = System.currentTimeMillis();
+        }
+        try {
+            entityCollection.updateDatabase(entityMap.keySet().toArray(new UniqueIdentifier[0]), null);
+            System.out.println("Updated DB in " + (System.currentTimeMillis() - lastTime) + "ms");
+            System.out.println("Total time " + (System.currentTimeMillis() - startTime) + "ms");
+        } catch (EntityServiceException exception) {
+            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Update Database");
         }
     }
 

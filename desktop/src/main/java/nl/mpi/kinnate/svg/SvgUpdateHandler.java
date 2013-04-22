@@ -727,7 +727,7 @@ public class SvgUpdateHandler {
                     selectionBorderNode.setAttribute("y", Float.toString(highlightY));
                     selectionBorderNode.setAttribute("width", Float.toString(highlightWidth));
                     selectionBorderNode.setAttribute("height", Float.toString(highlightHeight));
-                    System.out.println("pageBorderNode:" + selectionBorderNode);
+//                    System.out.println("pageBorderNode:" + selectionBorderNode);
                 }
             });
         }
