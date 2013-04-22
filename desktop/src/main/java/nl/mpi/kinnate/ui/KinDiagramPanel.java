@@ -104,7 +104,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private AbstractDiagramManager diagramWindowManager;
     private StatusBar statusBar;
 
-    public KinDiagramPanel(URI existingFile, boolean savableType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) {
+    public KinDiagramPanel(URI existingFile, boolean savableType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
@@ -114,7 +114,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         initKinDiagramPanel(existingFile, null, savableType);
     }
 
-    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) {
+    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
@@ -124,7 +124,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         initKinDiagramPanel(null, documentType, false);
     }
 
-    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager) {
+    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
@@ -134,7 +134,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         initKinDiagramPanel(null, documentType, false);
     }
 
-    private void initKinDiagramPanel(URI existingFile, DocumentType documentType, boolean savableType) {
+    private void initKinDiagramPanel(URI existingFile, DocumentType documentType, boolean savableType) throws EntityServiceException {
         progressBar = new JProgressBar();
         graphPanel = new GraphPanel(this, dialogHandler, sessionStorage, dataNodeLoader);
         kinTypeStringInput = new KinTypeStringInput(graphPanel.dataStoreSvg);

@@ -107,17 +107,22 @@ public class GedcomImportPanel extends JPanel {
                         }
 //                        kinDiagramPanel.updateGraph(); // there is no point updating the graph at this point
                     }
-                    if (kinDiagramPanel == null) {
-                        kinDiagramPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, abstractDiagramManager);
-                        kinDiagramPanel.setName("Imported Entities");
-                        abstractDiagramManager.createDiagramContainer(kinDiagramPanel, null);
+                    try {
+                        if (kinDiagramPanel == null) {
+                            kinDiagramPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, abstractDiagramManager);
+                            kinDiagramPanel.setName("Imported Entities");
+                            abstractDiagramManager.createDiagramContainer(kinDiagramPanel, null);
+                        }
+                        final HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>();
+                        for (HashSet<UniqueIdentifier> identifiers : gedcomImporter.getCreatedNodeIds().values()) {
+                            selectedIds.addAll(identifiers);
+                        }
+                        kinDiagramPanel.addNodeCollection(selectedIds.toArray(new UniqueIdentifier[]{}), "Imported Entities");
+                        kinDiagramPanel.loadAllTrees();
+                    } catch (EntityServiceException exception) {
+                        importTextArea.append("Creating a new document failed, cannot show the imported entitys." + "\n");
+                        dialogHandler.addMessageDialogToQueue("Creating a new document failed, cannot show the imported entitys.", "Import Entities");
                     }
-                    final HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>();
-                    for (HashSet<UniqueIdentifier> identifiers : gedcomImporter.getCreatedNodeIds().values()) {
-                        selectedIds.addAll(identifiers);
-                    }
-                    kinDiagramPanel.addNodeCollection(selectedIds.toArray(new UniqueIdentifier[]{}), "Imported Entities");
-                    kinDiagramPanel.loadAllTrees();
                     dialoguePanel.dispose();
                 }
             });
@@ -203,9 +208,9 @@ public class GedcomImportPanel extends JPanel {
                                 boolean overwriteExisting = overwriteOnImport.isSelected();
                                 GenericImporter genericImporter = null;
                                 for (GenericImporter testImporter : new GenericImporter[]{new GedcomImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord()),
-                                            new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord()),
-                                            new KinOathImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord()),
-                                            new TipImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord())}) {
+                                    new CsvImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord()),
+                                    new KinOathImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord()),
+                                    new TipImporter(progressBar, importTextArea, overwriteExisting, sessionStorage, entityCollection.getProjectRecord())}) {
                                     if (importFileString != null) {
                                         if (testImporter.canImport(importFileString)) {
                                             genericImporter = testImporter;

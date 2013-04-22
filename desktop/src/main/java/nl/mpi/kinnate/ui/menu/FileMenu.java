@@ -30,6 +30,7 @@ import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.export.ExportToR;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.svg.DiagramTranscoder;
@@ -86,11 +87,11 @@ public class FileMenu extends javax.swing.JMenu {
 //        importCsvFile = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
-        jMenu3 = new DocumentNewMenu(diagramWindowManager, parentComponent);
+        jMenu3 = new DocumentNewMenu(diagramWindowManager, parentComponent, dialogHandler);
         openDiagram = new javax.swing.JMenuItem();
-        recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage, parentComponent);
+        recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage, parentComponent, dialogHandler);
         projectOpenMenu = new javax.swing.JMenuItem();
-        projectRecentMenu = new ProjectFileMenu(diagramWindowManager, sessionStorage, parentComponent);
+        projectRecentMenu = new ProjectFileMenu(diagramWindowManager, sessionStorage, parentComponent, dialogHandler);
         jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
@@ -299,7 +300,11 @@ public class FileMenu extends javax.swing.JMenu {
         final Rectangle windowRectangle = new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
-                diagramWindowManager.openDiagram(selectedFile.getName(), selectedFile.toURI(), true, windowRectangle);
+                try {
+                    diagramWindowManager.openDiagram(selectedFile.getName(), selectedFile.toURI(), true, windowRectangle);
+                } catch (EntityServiceException entityServiceException) {
+                    dialogHandler.addMessageDialogToQueue("Failed to create a new diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
+                }
             }
         }
     }
@@ -379,7 +384,11 @@ public class FileMenu extends javax.swing.JMenu {
         final Dimension parentSize = parentComponent.getSize();
         final Point parentLocation = parentComponent.getLocation();
         int offset = 10;
-        diagramWindowManager.newDiagram(new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset));
+        try {
+            diagramWindowManager.newDiagram(new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset));
+        } catch (EntityServiceException entityServiceException) {
+            dialogHandler.addMessageDialogToQueue("Failed to create a new diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
+        }
     }
 
     private void importGedcomFileActionPerformed(java.awt.event.ActionEvent evt) {

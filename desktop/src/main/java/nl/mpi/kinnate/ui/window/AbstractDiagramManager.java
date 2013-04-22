@@ -39,6 +39,7 @@ import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.ui.EntityUploadPanel;
@@ -165,7 +166,7 @@ public abstract class AbstractDiagramManager {
 
     abstract public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel);
 
-    public void newDiagram(Rectangle preferredSizeLocation) {
+    public void newDiagram(Rectangle preferredSizeLocation) throws EntityServiceException {
         URI defaultDiagramUri = null;
         if (KinDiagramPanel.getDefaultDiagramFile(sessionStorage).exists()) {
             defaultDiagramUri = KinDiagramPanel.getDefaultDiagramFile(sessionStorage).toURI();
@@ -176,19 +177,20 @@ public abstract class AbstractDiagramManager {
         egoSelectionTestPanel.loadAllTrees();
     }
 
-    public void newDiagram(DocumentNewMenu.DocumentType documentType, Rectangle preferredSizeLocation) {
+    public void newDiagram(DocumentNewMenu.DocumentType documentType, Rectangle preferredSizeLocation) throws EntityServiceException {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
         egoSelectionTestPanel.setName("Unsaved " + documentType.getDisplayName());
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
         egoSelectionTestPanel.loadAllTrees();
     }
 
-    public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu, Rectangle preferredSizeLocation) {
+    public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu, Rectangle preferredSizeLocation) throws EntityServiceException {
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
         if (saveToRecentMenu) {
+            // only save to the recent diagrams if there was no error opening it
             // prevent files from the samples menu being added to the recent files menu
             RecentFileMenu.addRecentFile(sessionStorage, new File(selectedUri));
         }
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         egoSelectionTestPanel.setName(diagramTitle);
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);

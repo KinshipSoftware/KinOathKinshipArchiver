@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui.menu;
 
@@ -34,6 +34,8 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -46,11 +48,13 @@ public class RecentFileMenu extends JMenu implements ActionListener {
     private final AbstractDiagramManager diagramWindowManager;
     private final SessionStorage sessionStorage;
     private final Component parentComponent;
+    private final MessageDialogHandler dialogHandler;
 
-    public RecentFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, Component parentComponent) {
+    public RecentFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, Component parentComponent, MessageDialogHandler dialogHandler) {
         this.diagramWindowManager = diagramWindowManager;
         this.sessionStorage = sessionStorage;
         this.parentComponent = parentComponent;
+        this.dialogHandler = dialogHandler;
         this.setText("Open Recent Diagram");
         this.addMenuListener(new MenuListener() {
             public void menuCanceled(MenuEvent evt) {
@@ -127,21 +131,24 @@ public class RecentFileMenu extends JMenu implements ActionListener {
             }
 //            setupMenu();
         } else {
-//            try {
-            final String actionString = e.getActionCommand();
-            final File recentFile = new File(actionString);
+            try {
+                final String actionString = e.getActionCommand();
+                final File recentFile = new File(actionString);
 //                final int startIndex = actionString.lastIndexOf('/');
 //                final String recentName = actionString.substring(startIndex + 1);
-            final String recentName = recentFile.getName();
-            final Dimension parentSize = parentComponent.getSize();
-            final Point parentLocation = parentComponent.getLocation();
-            int offset = 10;
-            final Rectangle windowRectangle = new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset);
-            diagramWindowManager.openDiagram(recentName, recentFile.toURI(), true, windowRectangle);
+                final String recentName = recentFile.getName();
+                final Dimension parentSize = parentComponent.getSize();
+                final Point parentLocation = parentComponent.getLocation();
+                int offset = 10;
+                final Rectangle windowRectangle = new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset);
+                diagramWindowManager.openDiagram(recentName, recentFile.toURI(), true, windowRectangle);
 //            } catch (URISyntaxException exception) {
 //                bugCatcher.logError(exception);
 //                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
 //            }
+            } catch (EntityServiceException entityServiceException) {
+                dialogHandler.addMessageDialogToQueue("Failed to open diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
+            }
         }
     }
 }

@@ -19,11 +19,13 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.Rectangle;
 import java.io.File;
+import javax.swing.JOptionPane;
 import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.KinnateArbilInjector;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.plugins.export.MigrationWizard;
 import nl.mpi.kinnate.projects.ProjectManager;
@@ -72,30 +74,37 @@ public class MainFrame extends javax.swing.JFrame {
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
                 abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), injector.getSessionStorage(), injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager);
-                abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480));
-                abstractDiagramManager.createApplicationWindow();
+                try {
+                    abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480));
+                    abstractDiagramManager.createApplicationWindow();
 
-                injector.getWindowManager().setMessagesCanBeShown(true);
-                ////////////////////////////////////////
-                // check for old data directories 1-0 and offer the user to export all the old data and import into the new version IF no entities exist in the new version, the user can always use the export plugin at a later date
-                // start handle any migration requirements
-                new Thread() {
-                    @Override
-                    public void run() {
-                        final ApplicationVersion applicationVersion = versionManager.getApplicationVersion();
-                        File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor));
-                        if (oldAppExportFile != null) {
-                            try {
-                                abstractDiagramManager.openImportPanel(oldAppExportFile, null, projectManager.getEntityCollectionForProject(projectManager.getDefaultProject(injector.getSessionStorage())));
-                            } catch (ImportException exception1) {
-                                injector.getWindowManager().addMessageDialogToQueue(exception1.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import File");
+                    injector.getWindowManager().setMessagesCanBeShown(true);
+                    ////////////////////////////////////////
+                    // check for old data directories 1-0 and offer the user to export all the old data and import into the new version IF no entities exist in the new version, the user can always use the export plugin at a later date
+                    // start handle any migration requirements
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            final ApplicationVersion applicationVersion = versionManager.getApplicationVersion();
+                            File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor), projectManager.getDefaultProject(injector.getSessionStorage()).getProjectDataBaseDirectory());
+                            if (oldAppExportFile != null) {
+                                try {
+                                    abstractDiagramManager.openImportPanel(oldAppExportFile, null, projectManager.getEntityCollectionForProject(projectManager.getDefaultProject(injector.getSessionStorage())));
+                                } catch (ImportException exception) {
+                                    injector.getWindowManager().addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
+                                } catch (EntityServiceException exception) {
+                                    injector.getWindowManager().addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
+                                }
                             }
                         }
-                    }
-                }.start();
-                // end handle any migration requirements
-                ////////////////////////////////////////
-
+                    }.start();
+                    // end handle any migration requirements
+                    ////////////////////////////////////////
+                } catch (EntityServiceException entityServiceException) {
+                    System.out.println(entityServiceException.getMessage());
+                    JOptionPane.showMessageDialog(null, "Failed to create a new diagram: " + entityServiceException.getMessage(), "Launch Diagram Error", JOptionPane.PLAIN_MESSAGE);
+                    System.exit(-1);
+                }
 //	if (arbilMenuBar.checkNewVersionAtStartCheckBoxMenuItem.isSelected()) {
                 // todo: Ticket #1066 add the check for updates and check now menu items
                 versionManager.checkForUpdate();

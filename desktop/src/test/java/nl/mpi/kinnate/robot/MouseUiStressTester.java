@@ -26,6 +26,7 @@ import javax.swing.JFrame;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.KinnateArbilInjector;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
@@ -42,7 +43,7 @@ public class MouseUiStressTester {
     final private int applicationCenterY;
     final private Robot robot;
 
-    public MouseUiStressTester() throws AWTException {
+    public MouseUiStressTester() throws AWTException, EntityServiceException {
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
         final KinnateArbilInjector injector = new KinnateArbilInjector();
         injector.injectHandlers(versionManager);
@@ -168,6 +169,8 @@ public class MouseUiStressTester {
                 }
             }.start();
         } catch (AWTException exception) {
+            System.out.println("Failed to start robot: " + exception.getMessage());
+        } catch (EntityServiceException exception) {
             System.out.println("Failed to start robot: " + exception.getMessage());
         }
     }
