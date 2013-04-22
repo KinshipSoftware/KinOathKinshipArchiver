@@ -8,7 +8,7 @@
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
     <!--<version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>-->
-    <version>${application.majorVersion}.${application.minorVersion}.36214-${application.branch}</version>
+    <version>${application.majorVersion}.${application.minorVersion}.36623-${application.branch}</version>
     <name>KinOath 1.2</name>
     <parent>
         <groupId>nl.mpi</groupId>
