@@ -86,7 +86,8 @@ public class RelationRecordTable {
             if (entityRelation.getRelationType() == DataTypes.RelationType.sibling) {
                 String siblingGroupId = getGroupId(entityData, entityRelation);
                 // do not draw lines for siblings if the common parent is visible because the ancestor lines will take the place of the sibling lines
-                skipSiblingRelation = groupId != null && groupId.equals(siblingGroupId);
+                skipSiblingRelation = ((groupId == null) ? false : groupId.equals(siblingGroupId));
+//                 skipSiblingRelation = groupId != null && groupId.equals(siblingGroupId); // this is correct because if the group is null then there are no parents 
             }
             if (!skipSiblingRelation) {
                 doneRelations.add(compoundIdentifier);
@@ -113,7 +114,7 @@ public class RelationRecordTable {
                         labelString = labelString + " : " + entityRelation.labelString;
                     }
                 }
-                RelationRecord relationRecord = new RelationRecord(groupId, graphPanel, this.size(), leftEntity, rightEntity, directedRelation, lineWidth, lineDash, curveLineOrientation, lineColour, labelString, hSpacing, vSpacing);
+                RelationRecord relationRecord = new RelationRecord(groupId, graphPanel, this.size(), leftEntity, rightEntity, directedRelation, entityRelation.dcrType, entityRelation.customType, lineWidth, lineDash, curveLineOrientation, lineColour, labelString, hSpacing, vSpacing);
                 recordStore.put(relationRecord.lineIdString, relationRecord);
             }
         }

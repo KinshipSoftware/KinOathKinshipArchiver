@@ -53,21 +53,29 @@ public class RelationRecord {
     public LineRecord lineRecord; // todo: remove this 
     private String curveLinePoints = null; // todo: remove this 
 //    private boolean lineDirectionReversed = false; // sometimes a line is reversed so that any label is not shown upside down, but this must be known when rendering directed lines with line end markers
+    final private String dcrType;
+    final private String customType;
 
     public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, Point egoPoint, Point alterPoint, Point averageParentPassed) throws OldFormatException {
+        this.dcrType = null;
+        this.customType = null;
         lineRecord = setPolylinePointsAttribute(lineIdString, relationType, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y, averageParentPassed);
     }
 
     public RelationRecord(RelationTypeDefinition.CurveLineOrientation curveLineOrientation, float hSpacing, float vSpacing, Point egoPoint, Point alterPoint) {
+        this.dcrType = null;
+        this.customType = null;
         curveLinePoints = setPathPointsAttribute(curveLineOrientation, hSpacing, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y);
     }
 
-    protected RelationRecord(String groupName, GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
+    protected RelationRecord(String groupName, GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, String dcrType, String customType, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
         this.groupName = groupName;
         this.graphPanel = graphPanel;
         this.leftEntity = leftEntity;
         this.rightEntity = rightEntity;
         this.directedRelation = directedRelation;
+        this.dcrType = dcrType;
+        this.customType = customType;
         this.lineWidth = lineWidth;
         this.lineDash = lineDash;
         this.curveLineOrientation = curveLineOrientation;
@@ -139,7 +147,7 @@ public class RelationRecord {
         HashSet<UniqueIdentifier> identifierSet = new HashSet<UniqueIdentifier>();
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
             if (entityRelation.getAlterNode() != null && entityRelation.getAlterNode().isVisible) {
-                if (entityRelation.getRelationType() == DataTypes.RelationType.ancestor) {
+                if (entityRelation.isSameType(DataTypes.RelationType.ancestor, dcrType, customType)) {
                     identifierSet.add(entityRelation.alterUniqueIdentifier);
                 }
             }
