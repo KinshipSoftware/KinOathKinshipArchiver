@@ -137,7 +137,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             graphPanel.svgUpdateHandler.updateCanvasSize(false);
         }
         startDragPoint = null;
-        if (!mouseActionIsDrag && entityToToggle != null) {
+        if (!mouseActionIsDrag && entityToToggle != null && graphPanel.svgUpdateHandler.relationDragHandle == null) {
             // toggle the highlight
             graphPanel.selectedGroupId.remove(entityToToggle);
             entityToToggle = null;
