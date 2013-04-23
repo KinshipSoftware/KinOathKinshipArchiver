@@ -126,16 +126,17 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     public ArbilNode[] getChildArray() {
         if (childNodes == null) {
             // add the related entities grouped into metanodes by relation type and within each group the subsequent nodes are filtered by the type of relation.
-            HashMap<DataTypes.RelationType, HashSet<KinTreeFilteredNode>> metaNodeMap = new HashMap<DataTypes.RelationType, HashSet<KinTreeFilteredNode>>();
+            HashMap<String, HashSet<KinTreeFilteredNode>> metaNodeMap = new HashMap<String, HashSet<KinTreeFilteredNode>>();
             for (EntityRelation entityRelation : entityData.getAllRelations()) {
-                if (!metaNodeMap.containsKey(entityRelation.getRelationType())) {
-                    metaNodeMap.put(entityRelation.getRelationType(), new HashSet<KinTreeFilteredNode>());
+                final String wraperNodeLabel = entityRelation.getTypeLabel();
+                if (!metaNodeMap.containsKey(wraperNodeLabel)) {
+                    metaNodeMap.put(wraperNodeLabel, new HashSet<KinTreeFilteredNode>());
                 }
-                metaNodeMap.get(entityRelation.getRelationType()).add(new KinTreeFilteredNode(entityRelation, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
+                metaNodeMap.get(wraperNodeLabel).add(new KinTreeFilteredNode(entityRelation, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
             }
             HashSet<ArbilNode> kinTreeMetaNodes = new HashSet<ArbilNode>();
-            for (Map.Entry<DataTypes.RelationType, HashSet<KinTreeFilteredNode>> filteredNodeEntry : metaNodeMap.entrySet()) {//values().toArray(new KinTreeFilteredNode[]{})
-                kinTreeMetaNodes.add(new FilteredNodeContainer(filteredNodeEntry.getKey().name(), null, filteredNodeEntry.getValue().toArray(new KinTreeFilteredNode[]{})));
+            for (Map.Entry<String, HashSet<KinTreeFilteredNode>> filteredNodeEntry : metaNodeMap.entrySet()) {//values().toArray(new KinTreeFilteredNode[]{})
+                kinTreeMetaNodes.add(new FilteredNodeContainer(filteredNodeEntry.getKey(), null, filteredNodeEntry.getValue().toArray(new KinTreeFilteredNode[]{})));
             }
             getLinksMetaNode(kinTreeMetaNodes);
             childNodes = kinTreeMetaNodes.toArray(new ArbilNode[]{});

@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.kindata;
 
@@ -24,9 +24,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- *  Document   : EntityRelation
- *  Created on : Mar 25, 2011, 6:18:44 PM
- *  Author     : Peter Withers
+ * Document : EntityRelation Created on : Mar 25, 2011, 6:18:44 PM
+ *
+ * @author Peter Withers
  */
 public class EntityRelation implements Comparable<EntityRelation> {
 
@@ -114,6 +114,25 @@ public class EntityRelation implements Comparable<EntityRelation> {
             return false;
         }
         return true;
+    }
+
+    public boolean isSameType(DataTypes.RelationType otherRelationType, String otherDcrType, String otherCustomType) {
+        if (this.relationType != otherRelationType) {
+            return false;
+        }
+        if ((this.dcrType == null) ? (otherDcrType != null) : !this.dcrType.equals(otherDcrType)) {
+            return false;
+        }
+        if ((this.customType == null) ? (otherCustomType != null) : !this.customType.equals(otherCustomType)) {
+            return false;
+        }
+        return true;
+    }
+
+    public String getTypeLabel() {
+        return getRelationType().toString()
+                + ((customType == null || customType.isEmpty()) ? "" : " : " + customType)
+                + ((dcrType == null || dcrType.isEmpty()) ? "" : " : " + dcrType);
     }
 
     @Override

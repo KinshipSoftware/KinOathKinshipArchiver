@@ -72,6 +72,7 @@ public class EntityData {
     @XmlElement(name = "ArchiveLink", namespace = "http://mpi.nl/tla/kin")
     // todo: this needs to provide both the archive handle (for opening the browser) and the url to open localy stored copy of the file
     //@Deprecated // todo: should this be separate from the relations? can it even work that way? replace this archive link with a relation of type resource: but then again a resource link such as a jpg cannot be a relaion it is metadata only, maybe this is also the case for collector?
+    // todo: change this to an object of archive handle and uri
     public URI[] archiveLinkArray = null; //new String[]{"http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7", "http://www.google.com", "http://www.mpi.nl"};
 //    @XmlElement(name = "ResourceLink")
 //    public String[] resourceLinkArray;
@@ -245,7 +246,7 @@ public class EntityData {
     private void insertUnionRelations(EntityData childEntity, String dcrType, String customType) {
         // update the union relations of the parents other children
         for (EntityRelation entityRelation : childEntity.getAllRelations()) {
-            if (entityRelation.getRelationType().equals(DataTypes.RelationType.ancestor)) {
+            if (entityRelation.isSameType(DataTypes.RelationType.ancestor, dcrType, customType)) {
                 if (!entityRelation.getAlterNode().equals(this)) {
                     entityRelation.getAlterNode().addRelatedNode(this, DataTypes.RelationType.union, null, null, dcrType, customType);
                     this.addRelatedNode(entityRelation.getAlterNode(), DataTypes.RelationType.union, null, null, dcrType, customType);
@@ -258,7 +259,7 @@ public class EntityData {
         // update the sibling relations of the parents other children
         for (EntityRelation entityRelation : parentEntity.getAllRelations()) {
             // todo: Ticket #1062  there is an issue here when you add a child node to a parent that when you add a second child node the alter node is null "getAlterNode()", maybe it is time to put all the nodes into a hash or create some kind of loader (maybe mbased on the ArbilLoader). This would also beable to service the loading branches of the tree.
-            if (entityRelation.getRelationType().equals(DataTypes.RelationType.descendant)) {
+            if (entityRelation.isSameType(DataTypes.RelationType.descendant, dcrType, customType)) {
                 if (!entityRelation.getAlterNode().equals(this)) {
                     entityRelation.getAlterNode().addRelatedNode(this, DataTypes.RelationType.sibling, null, null, dcrType, customType);
                     this.addRelatedNode(entityRelation.getAlterNode(), DataTypes.RelationType.sibling, null, null, dcrType, customType);

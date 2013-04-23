@@ -43,40 +43,40 @@ public class RelationLinker extends DocumentLoader {
         super(sessionStorage, dialogHandler, entityCollection);
     }
 
-    private void removeMatchingRelations(Document entityDocument, UniqueIdentifier[] selectedIdentifiers) {
-        // todo: complete the relation removal code
-        // todo: this should use the EntityData object to remove the relaitons and then save via jaxb as is done in linkEntities other wise if a user removes a sibling relation and the common parent relation persists then the data will be in a broken state
-//        ArrayList<String> identifierList = new ArrayList<String>();
-//        for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
-//            identifierList.add(uniqueIdentifier.getQueryIdentifier());
-//        }
-//        Element roodNode = entityDocument.getDocumentElement();
-//        NodeList entityNodeList = roodNode.getElementsByTagNameNS("http://mpi.nl/tla/kin", "Entity");
-//        Element entityNode = ((Element) entityNodeList.item(0));
-//        NodeList relationsNodeList = entityNode.getElementsByTagNameNS("http://mpi.nl/tla/kin", "Relations");
-//        Node relationsGroupNode = relationsNodeList.item(0);
-//        if (relationsGroupNode != null) {
-//            for (Node relationNode = relationsGroupNode.getFirstChild(); relationNode != null; relationNode = relationNode.getNextSibling()) {
-//                if ("Relation".equals(relationNode.getLocalName())) {
-//                    if (identifierList.contains(relationNode.getFirstChild().getNodeValue())) {
-//                        // remove the matching relations
-//                        relationsGroupNode.removeChild(relationNode);
-//                    }
-//                }
-//            }
-//        }
-//        try {
-//            NodeList relationIdentifierNodeList = org.apache.xpath.XPathAPI.selectNodeList(entityDocument, "/Kinnate/kin:Entity/kin:Relations/kin:Relation/kin:Identifier", roodNode);
-//            for (int nodeCounter = 0; nodeCounter < relationIdentifierNodeList.getLength(); nodeCounter++) {
-//                Node identifierNode = relationIdentifierNodeList.item(nodeCounter);
-//                if (identifierNode != null) {
-//                    System.out.println(identifierNode.getLocalName() + " : " + identifierNode.getTextContent());
-//                }
-//            }
-//        } catch (TransformerException transformerException) {
-//            new ArbilBugCatcher().logError(transformerException);
-//        }
-    }
+//    private void removeMatchingRelations(Document entityDocument, UniqueIdentifier[] selectedIdentifiers) {
+//        // todo: complete the relation removal code
+//        // todo: this should use the EntityData object to remove the relaitons and then save via jaxb as is done in linkEntities other wise if a user removes a sibling relation and the common parent relation persists then the data will be in a broken state
+////        ArrayList<String> identifierList = new ArrayList<String>();
+////        for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
+////            identifierList.add(uniqueIdentifier.getQueryIdentifier());
+////        }
+////        Element roodNode = entityDocument.getDocumentElement();
+////        NodeList entityNodeList = roodNode.getElementsByTagNameNS("http://mpi.nl/tla/kin", "Entity");
+////        Element entityNode = ((Element) entityNodeList.item(0));
+////        NodeList relationsNodeList = entityNode.getElementsByTagNameNS("http://mpi.nl/tla/kin", "Relations");
+////        Node relationsGroupNode = relationsNodeList.item(0);
+////        if (relationsGroupNode != null) {
+////            for (Node relationNode = relationsGroupNode.getFirstChild(); relationNode != null; relationNode = relationNode.getNextSibling()) {
+////                if ("Relation".equals(relationNode.getLocalName())) {
+////                    if (identifierList.contains(relationNode.getFirstChild().getNodeValue())) {
+////                        // remove the matching relations
+////                        relationsGroupNode.removeChild(relationNode);
+////                    }
+////                }
+////            }
+////        }
+////        try {
+////            NodeList relationIdentifierNodeList = org.apache.xpath.XPathAPI.selectNodeList(entityDocument, "/Kinnate/kin:Entity/kin:Relations/kin:Relation/kin:Identifier", roodNode);
+////            for (int nodeCounter = 0; nodeCounter < relationIdentifierNodeList.getLength(); nodeCounter++) {
+////                Node identifierNode = relationIdentifierNodeList.item(nodeCounter);
+////                if (identifierNode != null) {
+////                    System.out.println(identifierNode.getLocalName() + " : " + identifierNode.getTextContent());
+////                }
+////            }
+////        } catch (TransformerException transformerException) {
+////            new ArbilBugCatcher().logError(transformerException);
+////        }
+//    }
 
     public UniqueIdentifier[] linkEntities(UniqueIdentifier leadIdentifier, UniqueIdentifier[] otherIdentifiers, DataTypes.RelationType relationType, String dcrType, String customType) throws ImportException {
         try {
@@ -98,6 +98,7 @@ public class RelationLinker extends DocumentLoader {
     }
 
     public UniqueIdentifier[] linkEntities(UniqueIdentifier[] selectedIdentifiers, DataTypes.RelationType relationType, String dcrType, String customType) throws ImportException {
+        // this is only used from the context menu not drag handle actions
         ArrayList<EntityDocument> nonLeadEntityDocuments = new ArrayList<EntityDocument>();
         try {
             EntityDocument leadEntityDocument = getEntityDocuments(selectedIdentifiers, nonLeadEntityDocuments);
