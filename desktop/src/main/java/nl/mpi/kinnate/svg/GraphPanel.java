@@ -276,7 +276,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             String parser = XMLResourceDescriptor.getXMLParserClassName();
             SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
             doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
-            entitySvg.insertSymbols(doc, svgNameSpace);
+            entitySvg.updateSymbolsElement(doc, svgNameSpace);
             configureDiagramGroups();
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
             svgCanvas.setSVGDocument(doc);

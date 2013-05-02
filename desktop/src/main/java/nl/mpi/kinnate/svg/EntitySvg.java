@@ -104,94 +104,116 @@ public class EntitySvg {
         }
     }
 
-    public int insertSymbols(SVGDocument doc, String svgNameSpace) {
+    public Element updateSymbolsElement(SVGDocument doc, String svgNameSpace) {
         Element svgRoot = doc.getDocumentElement();
-        Element lineMarkerDefsNode = doc.createElementNS(svgNameSpace, "defs");
-        lineMarkerDefsNode.setAttribute("id", "LineMarkerSymbols");
-
+        Element lineMarkerDefsNode = doc.getElementById("LineMarkerSymbols");
+        if (lineMarkerDefsNode == null) {
+            lineMarkerDefsNode = doc.createElementNS(svgNameSpace, "defs");
+            lineMarkerDefsNode.setAttribute("id", "LineMarkerSymbols");
+            svgRoot.appendChild(lineMarkerDefsNode);
+        }
         // add the start line marker
-        Element startMarker = doc.createElementNS(svgNameSpace, "circle");
-        startMarker.setAttribute("id", "StartMarker");
-        startMarker.setAttribute("cx", "6");
-        startMarker.setAttribute("cy", "6");
-        startMarker.setAttribute("r", "5");
-        lineMarkerDefsNode.appendChild(startMarker);
+        Element startMarker = doc.getElementById("StartMarker");
+        if (startMarker == null) {
+            startMarker = doc.createElementNS(svgNameSpace, "circle");
+            startMarker.setAttribute("id", "StartMarker");
+            startMarker.setAttribute("cx", "6");
+            startMarker.setAttribute("cy", "6");
+            startMarker.setAttribute("r", "5");
+            lineMarkerDefsNode.appendChild(startMarker);
+        }
         // add the end line marker
-        Element endMarker = doc.createElementNS(svgNameSpace, "path");
-        endMarker.setAttribute("id", "EndMarker");
-        endMarker.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
-        lineMarkerDefsNode.appendChild(endMarker);
-        svgRoot.appendChild(lineMarkerDefsNode);
+        Element endMarker = doc.getElementById("EndMarker");
+        if (endMarker == null) {
+            endMarker = doc.createElementNS(svgNameSpace, "path");
+            endMarker.setAttribute("id", "EndMarker");
+            endMarker.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
+            lineMarkerDefsNode.appendChild(endMarker);
+        }
+        Element kinSymbols = doc.getElementById("KinSymbols");
+        if (kinSymbols == null) {
+            kinSymbols = doc.createElementNS(svgNameSpace, "defs");
+            kinSymbols.setAttribute("id", "KinSymbols");
+            svgRoot.appendChild(kinSymbols);
+        }
 
-        Element defsNode = doc.createElementNS(svgNameSpace, "defs");
-        defsNode.setAttribute("id", "KinSymbols");
         // add the blank symbol
-        Element blankGroup = doc.createElementNS(svgNameSpace, "g");
-        blankGroup.setAttribute("id", "blank");
-        Element blankNode = doc.createElementNS(svgNameSpace, "circle");
-        blankNode.setAttribute("cx", Float.toString(symbolSize + strokeWidth / 4f));
-        blankNode.setAttribute("cy", Float.toString(symbolSize + strokeWidth / 4f));
-        blankNode.setAttribute("r", Integer.toString((symbolSize - strokeWidth / 2)));
+        Element blankGroup = doc.getElementById("blank");
+        if (blankGroup == null) {
+            blankGroup = doc.createElementNS(svgNameSpace, "g");
+            blankGroup.setAttribute("id", "blank");
+            Element blankNode = doc.createElementNS(svgNameSpace, "circle");
+            blankNode.setAttribute("cx", Float.toString(symbolSize + strokeWidth / 4f));
+            blankNode.setAttribute("cy", Float.toString(symbolSize + strokeWidth / 4f));
+            blankNode.setAttribute("r", Integer.toString((symbolSize - strokeWidth / 2)));
 //        circleNode.setAttribute("height", Integer.toString(symbolSize - (strokeWidth * 3)));
-        blankNode.setAttribute("stroke", "none");
-        blankNode.setAttribute("fill", "none");
-        blankGroup.appendChild(blankNode);
-        defsNode.appendChild(blankGroup);
-
+            blankNode.setAttribute("stroke", "none");
+            blankNode.setAttribute("fill", "none");
+            blankGroup.appendChild(blankNode);
+            kinSymbols.appendChild(blankGroup);
+        }
         // add the circle symbol
-        Element circleGroup = doc.createElementNS(svgNameSpace, "g");
-        circleGroup.setAttribute("id", "circle");
-        Element circleNode = doc.createElementNS(svgNameSpace, "circle");
-        circleNode.setAttribute("cx", Float.toString(symbolSize / 2 + strokeWidth / 4f));
-        circleNode.setAttribute("cy", Float.toString(symbolSize / 2 + strokeWidth / 4f));
-        circleNode.setAttribute("r", Integer.toString((symbolSize - strokeWidth) / 2));
+        Element circleGroup = doc.getElementById("circle");
+        if (circleGroup == null) {
+            circleGroup = doc.createElementNS(svgNameSpace, "g");
+            circleGroup.setAttribute("id", "circle");
+            Element circleNode = doc.createElementNS(svgNameSpace, "circle");
+            circleNode.setAttribute("cx", Float.toString(symbolSize / 2 + strokeWidth / 4f));
+            circleNode.setAttribute("cy", Float.toString(symbolSize / 2 + strokeWidth / 4f));
+            circleNode.setAttribute("r", Integer.toString((symbolSize - strokeWidth) / 2));
 //        circleNode.setAttribute("height", Integer.toString(symbolSize - (strokeWidth * 3)));
-        circleNode.setAttribute("stroke", "black");
-        circleNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
-        circleGroup.appendChild(circleNode);
-        defsNode.appendChild(circleGroup);
-
+            circleNode.setAttribute("stroke", "black");
+            circleNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            circleGroup.appendChild(circleNode);
+            kinSymbols.appendChild(circleGroup);
+        }
         // add the square symbol
-        Element squareGroup = doc.createElementNS(svgNameSpace, "g");
-        squareGroup.setAttribute("id", "square");
-        Element squareNode = doc.createElementNS(svgNameSpace, "rect");
-        squareNode.setAttribute("x", Integer.toString(strokeWidth));
-        squareNode.setAttribute("y", Integer.toString(strokeWidth));
-        squareNode.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
-        squareNode.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
-        squareNode.setAttribute("stroke", "black");
-        squareNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
-        squareGroup.appendChild(squareNode);
-        defsNode.appendChild(squareGroup);
-
+        Element squareGroup = doc.getElementById("square");
+        if (squareGroup == null) {
+            squareGroup = doc.createElementNS(svgNameSpace, "g");
+            squareGroup.setAttribute("id", "square");
+            Element squareNode = doc.createElementNS(svgNameSpace, "rect");
+            squareNode.setAttribute("x", Integer.toString(strokeWidth));
+            squareNode.setAttribute("y", Integer.toString(strokeWidth));
+            squareNode.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
+            squareNode.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
+            squareNode.setAttribute("stroke", "black");
+            squareNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            squareGroup.appendChild(squareNode);
+            kinSymbols.appendChild(squareGroup);
+        }
         // add the square symbol
-        Element squareGroup45 = doc.createElementNS(svgNameSpace, "g");
-        squareGroup45.setAttribute("id", "square-45");
-        Element squareNode45 = doc.createElementNS(svgNameSpace, "rect");
-        squareNode45.setAttribute("transform", "rotate(-45 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
-        squareNode45.setAttribute("x", Integer.toString(strokeWidth));
-        squareNode45.setAttribute("y", Integer.toString(strokeWidth));
-        squareNode45.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
-        squareNode45.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
-        squareNode45.setAttribute("stroke", "black");
-        squareNode45.setAttribute("stroke-width", Integer.toString(strokeWidth));
-        squareGroup45.appendChild(squareNode45);
-        defsNode.appendChild(squareGroup45);
-
+        Element squareGroup45 = doc.getElementById("square-45");
+        if (squareGroup45 == null) {
+            squareGroup45 = doc.createElementNS(svgNameSpace, "g");
+            squareGroup45.setAttribute("id", "square-45");
+            Element squareNode45 = doc.createElementNS(svgNameSpace, "rect");
+            squareNode45.setAttribute("transform", "rotate(-45 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
+            squareNode45.setAttribute("x", Integer.toString(strokeWidth));
+            squareNode45.setAttribute("y", Integer.toString(strokeWidth));
+            squareNode45.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
+            squareNode45.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
+            squareNode45.setAttribute("stroke", "black");
+            squareNode45.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            squareGroup45.appendChild(squareNode45);
+            kinSymbols.appendChild(squareGroup45);
+        }
         // add the rhombus symbol
-        Element rhombusGroup = doc.createElementNS(svgNameSpace, "g");
-        rhombusGroup.setAttribute("id", "rhombus");
-        Element rhombusNode = doc.createElementNS(svgNameSpace, "rect");
-        rhombusNode.setAttribute("transform", "scale(1,0.5), rotate(-45 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
-        rhombusNode.setAttribute("x", Integer.toString(strokeWidth));
-        rhombusNode.setAttribute("y", Integer.toString(strokeWidth));
-        rhombusNode.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
-        rhombusNode.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
-        rhombusNode.setAttribute("stroke", "black");
-        rhombusNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
-        rhombusGroup.appendChild(rhombusNode);
-        defsNode.appendChild(rhombusGroup);
-
+        Element rhombusGroup = doc.getElementById("rhombus");
+        if (rhombusGroup == null) {
+            rhombusGroup = doc.createElementNS(svgNameSpace, "g");
+            rhombusGroup.setAttribute("id", "rhombus");
+            Element rhombusNode = doc.createElementNS(svgNameSpace, "rect");
+            rhombusNode.setAttribute("transform", "scale(1,0.5), rotate(-45 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
+            rhombusNode.setAttribute("x", Integer.toString(strokeWidth));
+            rhombusNode.setAttribute("y", Integer.toString(strokeWidth));
+            rhombusNode.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
+            rhombusNode.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
+            rhombusNode.setAttribute("stroke", "black");
+            rhombusNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            rhombusGroup.appendChild(rhombusNode);
+            kinSymbols.appendChild(rhombusGroup);
+        }
 //        // add the rhombus symbol
 //        Element rhombusGroup90 = doc.createElementNS(svgNameSpace, "g");
 //        rhombusGroup90.setAttribute("id", "rhombus90");
@@ -207,88 +229,98 @@ public class EntitySvg {
 //        defsNode.appendChild(rhombusGroup90);
 
         // add the union symbol
-        Element unionGroup = doc.createElementNS(svgNameSpace, "g");
-        unionGroup.setAttribute("id", "union");
-        Element upperNode = doc.createElementNS(svgNameSpace, "line");
-        Element lowerNode = doc.createElementNS(svgNameSpace, "line");
-        upperNode.setAttribute("x1", Integer.toString(0));
-        upperNode.setAttribute("y1", Integer.toString((symbolSize / 6)));
-        upperNode.setAttribute("x2", Integer.toString(symbolSize));
-        upperNode.setAttribute("y2", Integer.toString((symbolSize / 6)));
-        upperNode.setAttribute("stroke-width", Integer.toString(symbolSize / 3));
-        upperNode.setAttribute("stroke", "black");
-        lowerNode.setAttribute("x1", Integer.toString(0));
-        lowerNode.setAttribute("y1", Integer.toString(symbolSize - (symbolSize / 6)));
-        lowerNode.setAttribute("x2", Integer.toString(symbolSize));
-        lowerNode.setAttribute("y2", Integer.toString(symbolSize - (symbolSize / 6)));
-        lowerNode.setAttribute("stroke-width", Integer.toString(symbolSize / 3));
-        lowerNode.setAttribute("stroke", "black");
-        // add a background for selecting and draging
-        Element backgroundNode = doc.createElementNS(svgNameSpace, "rect");
-        backgroundNode.setAttribute("x", "0");
-        backgroundNode.setAttribute("y", "0");
-        backgroundNode.setAttribute("width", Integer.toString(symbolSize));
-        backgroundNode.setAttribute("height", Integer.toString(symbolSize));
-        backgroundNode.setAttribute("stroke", "none");
-        backgroundNode.setAttribute("fill", "white");
-        unionGroup.appendChild(backgroundNode);
-        unionGroup.appendChild(upperNode);
-        unionGroup.appendChild(lowerNode);
-        defsNode.appendChild(unionGroup);
-
-        // add the triangle symbol
-        Element triangleGroup = doc.createElementNS(svgNameSpace, "g");
-        triangleGroup.setAttribute("id", "triangle");
-        Element triangleNode = doc.createElementNS(svgNameSpace, "polygon");
+        Element unionGroup = doc.getElementById("union");
+        if (unionGroup == null) {
+            unionGroup = doc.createElementNS(svgNameSpace, "g");
+            unionGroup.setAttribute("id", "union");
+            Element upperNode = doc.createElementNS(svgNameSpace, "line");
+            Element lowerNode = doc.createElementNS(svgNameSpace, "line");
+            upperNode.setAttribute("x1", Integer.toString(0));
+            upperNode.setAttribute("y1", Integer.toString((symbolSize / 6)));
+            upperNode.setAttribute("x2", Integer.toString(symbolSize));
+            upperNode.setAttribute("y2", Integer.toString((symbolSize / 6)));
+            upperNode.setAttribute("stroke-width", Integer.toString(symbolSize / 3));
+            upperNode.setAttribute("stroke", "black");
+            lowerNode.setAttribute("x1", Integer.toString(0));
+            lowerNode.setAttribute("y1", Integer.toString(symbolSize - (symbolSize / 6)));
+            lowerNode.setAttribute("x2", Integer.toString(symbolSize));
+            lowerNode.setAttribute("y2", Integer.toString(symbolSize - (symbolSize / 6)));
+            lowerNode.setAttribute("stroke-width", Integer.toString(symbolSize / 3));
+            lowerNode.setAttribute("stroke", "black");
+            // add a background for selecting and draging
+            Element backgroundNode = doc.createElementNS(svgNameSpace, "rect");
+            backgroundNode.setAttribute("x", "0");
+            backgroundNode.setAttribute("y", "0");
+            backgroundNode.setAttribute("width", Integer.toString(symbolSize));
+            backgroundNode.setAttribute("height", Integer.toString(symbolSize));
+            backgroundNode.setAttribute("stroke", "none");
+            backgroundNode.setAttribute("fill", "white");
+            unionGroup.appendChild(backgroundNode);
+            unionGroup.appendChild(upperNode);
+            unionGroup.appendChild(lowerNode);
+            kinSymbols.appendChild(unionGroup);
+        }
+        // add the triangle symbol        
         int triangleSize = symbolSize - strokeWidth / 2;
         int triangleHeight = (int) (Math.sqrt(3) * triangleSize / 2);
-        triangleNode.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
-                + strokeWidth / 2 + "," + triangleHeight
-                + " " + triangleSize + "," + triangleHeight);
-        triangleNode.setAttribute("stroke", "black");
-        triangleNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
-        triangleGroup.appendChild(triangleNode);
-        defsNode.appendChild(triangleGroup);
-
+        Element triangle = doc.getElementById("triangle");
+        if (triangle == null) {
+            Element triangleGroup = doc.createElementNS(svgNameSpace, "g");
+            triangleGroup.setAttribute("id", "triangle");
+            Element triangleNode = doc.createElementNS(svgNameSpace, "polygon");
+            triangleNode.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
+                    + strokeWidth / 2 + "," + triangleHeight
+                    + " " + triangleSize + "," + triangleHeight);
+            triangleNode.setAttribute("stroke", "black");
+            triangleNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            triangleGroup.appendChild(triangleNode);
+            kinSymbols.appendChild(triangleGroup);
+        }
         // add the triangle symbol
-        Element triangleGroup1 = doc.createElementNS(svgNameSpace, "g");
-        triangleGroup1.setAttribute("id", "triangle-270");
-        Element triangleNode1 = doc.createElementNS(svgNameSpace, "polygon");
-        triangleNode1.setAttribute("transform", "rotate(-90 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
-        triangleNode1.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
-                + strokeWidth / 2 + "," + triangleHeight
-                + " " + triangleSize + "," + triangleHeight);
-        triangleNode1.setAttribute("stroke", "black");
-        triangleNode1.setAttribute("stroke-width", Integer.toString(strokeWidth));
-        triangleGroup1.appendChild(triangleNode1);
-        defsNode.appendChild(triangleGroup1);
-
+        Element triangleGroup1 = doc.getElementById("triangle-270");
+        if (triangleGroup1 == null) {
+            triangleGroup1 = doc.createElementNS(svgNameSpace, "g");
+            triangleGroup1.setAttribute("id", "triangle-270");
+            Element triangleNode1 = doc.createElementNS(svgNameSpace, "polygon");
+            triangleNode1.setAttribute("transform", "rotate(-90 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
+            triangleNode1.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
+                    + strokeWidth / 2 + "," + triangleHeight
+                    + " " + triangleSize + "," + triangleHeight);
+            triangleNode1.setAttribute("stroke", "black");
+            triangleNode1.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            triangleGroup1.appendChild(triangleNode1);
+            kinSymbols.appendChild(triangleGroup1);
+        }
         // add the triangle symbol
-        Element triangleGroup2 = doc.createElementNS(svgNameSpace, "g");
-        triangleGroup2.setAttribute("id", "triangle-180");
-        triangleGroup2.setAttribute("transform", "rotate(180 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
-        Element triangleNode2 = doc.createElementNS(svgNameSpace, "polygon");
-        triangleNode2.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
-                + strokeWidth / 2 + "," + triangleHeight
-                + " " + triangleSize + "," + triangleHeight);
-        triangleNode2.setAttribute("stroke", "black");
-        triangleNode2.setAttribute("stroke-width", Integer.toString(strokeWidth));
-        triangleGroup2.appendChild(triangleNode2);
-        defsNode.appendChild(triangleGroup2);
-
+        Element triangleGroup2 = doc.getElementById("triangle-180");
+        if (triangleGroup2 == null) {
+            triangleGroup2 = doc.createElementNS(svgNameSpace, "g");
+            triangleGroup2.setAttribute("id", "triangle-180");
+            triangleGroup2.setAttribute("transform", "rotate(180 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
+            Element triangleNode2 = doc.createElementNS(svgNameSpace, "polygon");
+            triangleNode2.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
+                    + strokeWidth / 2 + "," + triangleHeight
+                    + " " + triangleSize + "," + triangleHeight);
+            triangleNode2.setAttribute("stroke", "black");
+            triangleNode2.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            triangleGroup2.appendChild(triangleNode2);
+            kinSymbols.appendChild(triangleGroup2);
+        }
         // add the triangle symbol
-        Element triangleGroup3 = doc.createElementNS(svgNameSpace, "g");
-        triangleGroup3.setAttribute("id", "triangle-90");
-        triangleGroup3.setAttribute("transform", "rotate(90 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
-        Element triangleNode3 = doc.createElementNS(svgNameSpace, "polygon");
-        triangleNode3.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
-                + strokeWidth / 2 + "," + triangleHeight
-                + " " + triangleSize + "," + triangleHeight);
-        triangleNode3.setAttribute("stroke", "black");
-        triangleNode3.setAttribute("stroke-width", Integer.toString(strokeWidth));
-        triangleGroup3.appendChild(triangleNode3);
-        defsNode.appendChild(triangleGroup3);
-
+        Element triangleGroup3 = doc.getElementById("triangle-90");
+        if (triangleGroup3 == null) {
+            triangleGroup3 = doc.createElementNS(svgNameSpace, "g");
+            triangleGroup3.setAttribute("id", "triangle-90");
+            triangleGroup3.setAttribute("transform", "rotate(90 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
+            Element triangleNode3 = doc.createElementNS(svgNameSpace, "polygon");
+            triangleNode3.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
+                    + strokeWidth / 2 + "," + triangleHeight
+                    + " " + triangleSize + "," + triangleHeight);
+            triangleNode3.setAttribute("stroke", "black");
+            triangleNode3.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            triangleGroup3.appendChild(triangleNode3);
+            kinSymbols.appendChild(triangleGroup3);
+        }
 //        // add the equals symbol
 //        Element equalsGroup = doc.createElementNS(svgNameSpace, "g");
 //        equalsGroup.setAttribute("id", "equals");
@@ -304,75 +336,80 @@ public class EntitySvg {
 //        defsNode.appendChild(equalsGroup);
 
         // add the error symbol
-        Element noneGroup = doc.createElementNS(svgNameSpace, "g");
-        noneGroup.setAttribute("id", "error");
-        Element noneNode = doc.createElementNS(svgNameSpace, "polyline");
-        int posXnone = symbolSize / 2;
-        int posYnone = symbolSize / 2;
-        int offsetNoneAmount = symbolSize;
-        noneNode.setAttribute("points", (posXnone - offsetNoneAmount) + "," + (posYnone - offsetNoneAmount) + " " + (posXnone + offsetNoneAmount) + "," + (posYnone + offsetNoneAmount) + " " + (posXnone) + "," + (posYnone) + " " + (posXnone - offsetNoneAmount) + "," + (posYnone + offsetNoneAmount)
-                + " " + (posXnone + offsetNoneAmount) + "," + (posYnone - offsetNoneAmount)
-                + " " + (posXnone - offsetNoneAmount) + "," + (posYnone - offsetNoneAmount)
-                + " " + (posXnone - offsetNoneAmount) + "," + (posYnone + offsetNoneAmount)
-                + " " + (posXnone + offsetNoneAmount) + "," + (posYnone + offsetNoneAmount)
-                + " " + (posXnone + offsetNoneAmount) + "," + (posYnone - offsetNoneAmount));
-        noneNode.setAttribute("fill", "none");
-        noneNode.setAttribute("stroke", "red");
-        noneNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
-        noneGroup.appendChild(noneNode);
-        defsNode.appendChild(noneGroup);
-
+        Element noneGroup = doc.getElementById("error");
+        if (noneGroup == null) {
+            noneGroup = doc.createElementNS(svgNameSpace, "g");
+            noneGroup.setAttribute("id", "error");
+            Element noneNode = doc.createElementNS(svgNameSpace, "polyline");
+            int posXnone = symbolSize / 2;
+            int posYnone = symbolSize / 2;
+            int offsetNoneAmount = symbolSize;
+            noneNode.setAttribute("points", (posXnone - offsetNoneAmount) + "," + (posYnone - offsetNoneAmount) + " " + (posXnone + offsetNoneAmount) + "," + (posYnone + offsetNoneAmount) + " " + (posXnone) + "," + (posYnone) + " " + (posXnone - offsetNoneAmount) + "," + (posYnone + offsetNoneAmount)
+                    + " " + (posXnone + offsetNoneAmount) + "," + (posYnone - offsetNoneAmount)
+                    + " " + (posXnone - offsetNoneAmount) + "," + (posYnone - offsetNoneAmount)
+                    + " " + (posXnone - offsetNoneAmount) + "," + (posYnone + offsetNoneAmount)
+                    + " " + (posXnone + offsetNoneAmount) + "," + (posYnone + offsetNoneAmount)
+                    + " " + (posXnone + offsetNoneAmount) + "," + (posYnone - offsetNoneAmount));
+            noneNode.setAttribute("fill", "none");
+            noneNode.setAttribute("stroke", "red");
+            noneNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
+            noneGroup.appendChild(noneNode);
+            kinSymbols.appendChild(noneGroup);
+        }
         for (String markerColour : new String[]{"black", "orange", "cyan", "purple", "red", "green", "blue"}) {// todo: add a few more colours
             // add the marker symbols
-            Element markerGroup = doc.createElementNS(svgNameSpace, "g");
-            markerGroup.setAttribute("id", markerColour + "marker");
-            Element markerNode = doc.createElementNS(svgNameSpace, "circle");
-            markerNode.setAttribute("cx", Integer.toString(symbolSize));
-            markerNode.setAttribute("cy", "0");
-            markerNode.setAttribute("r", Integer.toString((symbolSize) / 4));
+            Element markerGroup = doc.getElementById(markerColour + "marker");
+            if (markerGroup == null) {
+                markerGroup = doc.createElementNS(svgNameSpace, "g");
+                markerGroup.setAttribute("id", markerColour + "marker");
+                Element markerNode = doc.createElementNS(svgNameSpace, "circle");
+                markerNode.setAttribute("cx", Integer.toString(symbolSize));
+                markerNode.setAttribute("cy", "0");
+                markerNode.setAttribute("r", Integer.toString((symbolSize) / 4));
 //        circleNode.setAttribute("height", Integer.toString(symbolSize - (strokeWidth * 3)));
-            markerNode.setAttribute("stroke", "none");
-            markerNode.setAttribute("fill", markerColour);
-            markerGroup.appendChild(markerNode);
-            defsNode.appendChild(markerGroup);
-
+                markerNode.setAttribute("stroke", "none");
+                markerNode.setAttribute("fill", markerColour);
+                markerGroup.appendChild(markerNode);
+                kinSymbols.appendChild(markerGroup);
+            }
             // add the strike through symbol
-            Element lineGroup = doc.createElementNS(svgNameSpace, "g");
-            lineGroup.setAttribute("id", markerColour + "strikethrough");
-            Element lineNode = doc.createElementNS(svgNameSpace, "polyline");
-            lineNode.setAttribute("points", "0," + (symbolSize) + " " + (symbolSize) + ",0");
-            lineNode.setAttribute("fill", "none");
-            lineNode.setAttribute("stroke", markerColour);
-            lineNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
-            lineGroup.appendChild(lineNode);
-            defsNode.appendChild(lineGroup);
-
+            Element lineGroup = doc.getElementById(markerColour + "strikethrough");
+            if (lineGroup == null) {
+                lineGroup = doc.createElementNS(svgNameSpace, "g");
+                lineGroup.setAttribute("id", markerColour + "strikethrough");
+                Element lineNode = doc.createElementNS(svgNameSpace, "polyline");
+                lineNode.setAttribute("points", "0," + (symbolSize) + " " + (symbolSize) + ",0");
+                lineNode.setAttribute("fill", "none");
+                lineNode.setAttribute("stroke", markerColour);
+                lineNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
+                lineGroup.appendChild(lineNode);
+                kinSymbols.appendChild(lineGroup);
+            }
             // add the cross symbol
-            Element crossGroup = doc.createElementNS(svgNameSpace, "g");
-            crossGroup.setAttribute("id", markerColour + "cross");
-            Element crossNode = doc.createElementNS(svgNameSpace, "polyline");
-            int posX = symbolSize / 2;
-            int posY = symbolSize / 2;
-            int offsetAmount = symbolSize / 2;
-            crossNode.setAttribute("points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
-            crossNode.setAttribute("fill", "none");
-            crossNode.setAttribute("stroke", markerColour);
-            crossNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
-            crossGroup.appendChild(crossNode);
-            defsNode.appendChild(crossGroup);
+            Element crossGroup = doc.getElementById(markerColour + "cross");
+            if (crossGroup == null) {
+                crossGroup = doc.createElementNS(svgNameSpace, "g");
+                crossGroup.setAttribute("id", markerColour + "cross");
+                Element crossNode = doc.createElementNS(svgNameSpace, "polyline");
+                int posX = symbolSize / 2;
+                int posY = symbolSize / 2;
+                int offsetAmount = symbolSize / 2;
+                crossNode.setAttribute("points", (posX - offsetAmount) + "," + (posY - offsetAmount) + " " + (posX + offsetAmount) + "," + (posY + offsetAmount) + " " + (posX) + "," + (posY) + " " + (posX - offsetAmount) + "," + (posY + offsetAmount) + " " + (posX + offsetAmount) + "," + (posY - offsetAmount));
+                crossNode.setAttribute("fill", "none");
+                crossNode.setAttribute("stroke", markerColour);
+                crossNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
+                crossGroup.appendChild(crossNode);
+                kinSymbols.appendChild(crossGroup);
+            }
         }
-        svgRoot.appendChild(defsNode);
-        return symbolSize;
+        return kinSymbols;
     }
 
     public String[] listSymbolNames(SVGDocument doc, String svgNameSpace) {
         // get the symbol list from the dom
         ArrayList<String> symbolArray = new ArrayList<String>();
-        Element kinSymbols = doc.getElementById("KinSymbols");
-        if (kinSymbols == null) {
-            insertSymbols(doc, svgNameSpace);
-            kinSymbols = doc.getElementById("KinSymbols");
-        }
+
+        Element kinSymbols = updateSymbolsElement(doc, svgNameSpace);
         for (Node kinSymbolNode = kinSymbols.getFirstChild(); kinSymbolNode != null; kinSymbolNode = kinSymbolNode.getNextSibling()) {
             NamedNodeMap attributesMap = kinSymbolNode.getAttributes();
             if (attributesMap != null) {
