@@ -18,6 +18,7 @@
 package nl.mpi.kinnate.entityindexer;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -32,7 +33,8 @@ public class IndexerParam {
     @XmlTransient
     IndexerParameters indexerParameters;
     @XmlElement(name = "IndexerParam", namespace = "http://mpi.nl/tla/kin")
-    private ArrayList<ParameterElement> parametersList;
+//    private List<ParameterElement> parametersList = Collections.<ParameterElement>emptyList();
+    private List<ParameterElement> parametersList = new ArrayList<ParameterElement>();
     @XmlTransient
     private String[] availableValuesArray = null;
     @XmlAttribute(name = "DefaultFormat", namespace = "http://mpi.nl/tla/kin")
