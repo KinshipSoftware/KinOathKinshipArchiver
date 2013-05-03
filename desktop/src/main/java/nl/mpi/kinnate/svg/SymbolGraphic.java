@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg;
 
@@ -33,9 +33,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- *  Document   : SymbolGraphic
- *  Created on : Aug 25, 2011, 1:27:40 PM
- *  Author     : Peter Withers
+ * Document : SymbolGraphic Created on : Aug 25, 2011, 1:27:40 PM 
+ * @ author Peter Withers
  */
 public class SymbolGraphic {
 
@@ -77,8 +76,9 @@ public class SymbolGraphic {
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
         SVGDocument doc = (SVGDocument) impl.createDocument(svgNS, "svg", null);
-
-        int symbolSize = new EntitySvg(dialogHandler).insertSymbols(doc, svgNS);
+        // todo: this will not be in sync with the symbols in the actual document, these symbols should be copid from the parent document
+        new EntitySvg(dialogHandler).updateSymbolsElement(doc, svgNS);
+        int symbolSize = EntitySvg.symbolSize;
         for (String currentSymbol : symbolNames) {
             Element symbolNode;
             symbolNode = doc.createElementNS(svgNS, "use");
