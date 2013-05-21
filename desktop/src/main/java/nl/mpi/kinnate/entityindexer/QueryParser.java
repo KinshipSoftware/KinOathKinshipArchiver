@@ -188,6 +188,9 @@ public class QueryParser implements EntityService {
             indexParameters.valuesChanged = false;
             loadedGraphNodes = new HashMap<UniqueIdentifier, EntityData>();
         }
+        // todo: loadedGraphNodes can be replaced by the graph dump from the DB that is used in the project tree
+        // todo: it would be better to store the matched entities in the respective kin type objects so that they can be removed if a latter query excludes them. after the query is complete all entities left in the kin types can be returned to the caller
+        // todo: once the matched entites are stored in the kin type objects, a second pass in reverse order can be done so that ED[Aaa]W[Ccc] can find the required ego for example.
         KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter(dataStoreSvg);
 //        kinTypeStringConverter.highlightComments(kinTypeStrings, parserHighlight);
 //        QueryParser queryParser = new QueryParser();
@@ -336,6 +339,7 @@ public class QueryParser implements EntityService {
                         }
                     }
                 }
+                // todo: at this point we should traverse the kin types in the reverse order to match ED[Aaa]W[Ccc]
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         progressBar.setValue(progressBar.getValue() + 1);
