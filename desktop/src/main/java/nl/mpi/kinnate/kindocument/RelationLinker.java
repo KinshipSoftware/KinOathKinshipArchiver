@@ -126,6 +126,7 @@ public class RelationLinker extends DocumentLoader {
                     // remove the relation
                     leadEntityDocument.entityData.removeRelationsWithNode(entityDocument.entityData);
                     entityDocument.entityData.removeRelationsWithNode(leadEntityDocument.entityData);
+                    // todo: here we should check the union and sibling lines and update/remove as required
                 }
                 leadEntityDocument = nonLeadEntityDocuments.remove(0);
             }
@@ -152,6 +153,7 @@ public class RelationLinker extends DocumentLoader {
                     // remove the relation
                     currentDocument.entityData.removeRelationsWithNode(relatedDocument.entityData);
                     relatedDocument.entityData.removeRelationsWithNode(currentDocument.entityData);
+                    // todo: should this also remove sibling/union lines?
 //                    }
                 }
             }
