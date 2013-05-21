@@ -34,6 +34,8 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -46,11 +48,13 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
     private final AbstractDiagramManager diagramWindowManager;
     private final SessionStorage sessionStorage;
     private final Component parentComponent;
+    private final MessageDialogHandler dialogHandler;
 
-    public ProjectFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, Component parentComponent) {
+    public ProjectFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, Component parentComponent, MessageDialogHandler dialogHandler) {
         this.diagramWindowManager = diagramWindowManager;
         this.sessionStorage = sessionStorage;
         this.parentComponent = parentComponent;
+        this.dialogHandler = dialogHandler;
         this.setText("Open Recent Project");
         this.addMenuListener(new MenuListener() {
             public void menuCanceled(MenuEvent evt) {
@@ -129,21 +133,26 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
             }
 //            setupMenu();
         } else {
-//            try {
-            final String actionString = e.getActionCommand();
-            final File recentProjectFile = new File(actionString);
+            try {
+                final String actionString = e.getActionCommand();
+                final File recentProjectFile = new File(actionString);
 //                final int startIndex = actionString.lastIndexOf('/');
 //                final String recentName = actionString.substring(startIndex + 1);
-            final String recentName = recentProjectFile.getName();
-            final Dimension parentSize = parentComponent.getSize();
-            final Point parentLocation = parentComponent.getLocation();
-            int offset = 10;
-            final Rectangle windowRectangle = new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset);
-            diagramWindowManager.openDiagram(recentName, recentProjectFile.toURI(), true, windowRectangle);
+                final String recentName = recentProjectFile.getName();
+                final Dimension parentSize = parentComponent.getSize();
+                final Point parentLocation = parentComponent.getLocation();
+                int offset = 10;
+                final Rectangle windowRectangle = new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset);
+                diagramWindowManager.openDiagram(recentName, recentProjectFile.toURI(), true, windowRectangle);
 //            } catch (URISyntaxException exception) {
 //                bugCatcher.logError(exception);
 //                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
 //            }
+                // todo: finish testing this action
+                throw new EntityServiceException("Test throw of EntityServiceException");
+            } catch (EntityServiceException entityServiceException) {
+                dialogHandler.addMessageDialogToQueue("Failed to open diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
+            }
         }
     }
 }

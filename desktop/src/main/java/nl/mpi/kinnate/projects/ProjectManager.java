@@ -19,6 +19,7 @@ package nl.mpi.kinnate.projects;
 
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 
 /**
  * Created on : Oct 22, 2011, 09:43
@@ -43,9 +44,13 @@ public class ProjectManager {
     public ProjectRecord[] getProjectRecords(SessionStorage sessionStorage) {
         return projectRecords;
     }
-
-    public EntityCollection getEntityCollectionForProject(ProjectRecord projectRecord) {
-         todo: keep track of these collections so that the db does not get locking errors
-        return new EntityCollection(projectRecord);
+/*
+ * todo: Ticket #2880 (new enhancement)
+ * The open project window could also show which diagrams are known to use each project. Also it could show any known copies of a given project based on uuid.
+ */
+    public EntityCollection getEntityCollectionForProject(ProjectRecord projectRecord)throws EntityServiceException{
+//         todo: keep track of these collections so that the db does not get locking errors
+        throw new EntityServiceException("Test throw of EntityServiceException");
+//        return new EntityCollection(projectRecord);
     }
 }
