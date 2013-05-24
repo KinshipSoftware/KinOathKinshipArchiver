@@ -61,6 +61,8 @@ public class EntityData {
     public boolean isEgo = false;
     @XmlElement(name = "Visible", namespace = "http://mpi.nl/tla/kin") // required for populating the tree when first loading a saved svg
     public boolean isVisible = false;
+    @XmlTransient
+    public boolean isRequired = false;
 //    @XmlElementWrapper(name = "Labels", namespace="http://mpi.nl/tla/kin")
     @XmlElement(name = "Label", namespace = "http://mpi.nl/tla/kin")
     private String[] labelStringArray = new String[]{};
@@ -322,6 +324,7 @@ public class EntityData {
     public void clearVisibility() {
         isVisible = false;
         isEgo = false;
+        isRequired = false;
         visiblyRelateNodes = null;
         distinctRelateNodes = null;
     }

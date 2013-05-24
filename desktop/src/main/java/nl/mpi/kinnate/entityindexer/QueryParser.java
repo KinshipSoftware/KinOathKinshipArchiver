@@ -366,6 +366,7 @@ public class QueryParser implements EntityService {
                 requiredNode.isEgo = true;
             }
             requiredNode.isVisible = true;
+            requiredNode.isRequired = true;
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     progressBar.setValue(progressBar.getValue() + 1);

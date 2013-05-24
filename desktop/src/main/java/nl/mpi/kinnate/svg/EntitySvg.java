@@ -104,6 +104,21 @@ public class EntitySvg {
         }
     }
 
+    private void removeAttributeStrokeBlack(Node symbolNode) {
+        // remove all child attributes that set the stroke to black so that existing svg files are updated and the stroke can be changed on composing the diagram
+        if (symbolNode instanceof Element) {
+            final Element symbolElement = (Element) symbolNode;
+            if (symbolElement.getAttribute("stroke").contentEquals("black")) {
+                symbolElement.removeAttribute("stroke");
+            }
+            Node childNode = symbolNode.getFirstChild();
+            while (childNode != null) {
+                removeAttributeStrokeBlack(childNode);
+                childNode = childNode.getNextSibling();
+            }
+        }
+    }
+
     public Element updateSymbolsElement(SVGDocument doc, String svgNameSpace) {
         Element svgRoot = doc.getDocumentElement();
         Element lineMarkerDefsNode = doc.getElementById("LineMarkerSymbols");
@@ -162,10 +177,12 @@ public class EntitySvg {
             circleNode.setAttribute("cy", Float.toString(symbolSize / 2 + strokeWidth / 4f));
             circleNode.setAttribute("r", Integer.toString((symbolSize - strokeWidth) / 2));
 //        circleNode.setAttribute("height", Integer.toString(symbolSize - (strokeWidth * 3)));
-            circleNode.setAttribute("stroke", "black");
+//            circleNode.setAttribute("stroke", "black");
             circleNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
             circleGroup.appendChild(circleNode);
             kinSymbols.appendChild(circleGroup);
+        } else {
+            removeAttributeStrokeBlack(circleGroup);
         }
         // add the square symbol
         Element squareGroup = doc.getElementById("square");
@@ -177,10 +194,12 @@ public class EntitySvg {
             squareNode.setAttribute("y", Integer.toString(strokeWidth));
             squareNode.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
             squareNode.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
-            squareNode.setAttribute("stroke", "black");
+//            squareNode.setAttribute("stroke", "black");
             squareNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
             squareGroup.appendChild(squareNode);
             kinSymbols.appendChild(squareGroup);
+        } else {
+            removeAttributeStrokeBlack(squareGroup);
         }
         // add the square symbol
         Element squareGroup45 = doc.getElementById("square-45");
@@ -193,10 +212,12 @@ public class EntitySvg {
             squareNode45.setAttribute("y", Integer.toString(strokeWidth));
             squareNode45.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
             squareNode45.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
-            squareNode45.setAttribute("stroke", "black");
+//            squareNode45.setAttribute("stroke", "black");
             squareNode45.setAttribute("stroke-width", Integer.toString(strokeWidth));
             squareGroup45.appendChild(squareNode45);
             kinSymbols.appendChild(squareGroup45);
+        } else {
+            removeAttributeStrokeBlack(squareGroup45);
         }
         // add the rhombus symbol
         Element rhombusGroup = doc.getElementById("rhombus");
@@ -209,10 +230,12 @@ public class EntitySvg {
             rhombusNode.setAttribute("y", Integer.toString(strokeWidth));
             rhombusNode.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
             rhombusNode.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
-            rhombusNode.setAttribute("stroke", "black");
+//            rhombusNode.setAttribute("stroke", "black");
             rhombusNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
             rhombusGroup.appendChild(rhombusNode);
             kinSymbols.appendChild(rhombusGroup);
+        } else {
+            removeAttributeStrokeBlack(rhombusGroup);
         }
 //        // add the rhombus symbol
 //        Element rhombusGroup90 = doc.createElementNS(svgNameSpace, "g");
@@ -223,7 +246,7 @@ public class EntitySvg {
 //        rhombusNode90.setAttribute("y", Integer.toString(strokeWidth));
 //        rhombusNode90.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
 //        rhombusNode90.setAttribute("height", Integer.toString(symbolSize - strokeWidth * 2));
-//        rhombusNode90.setAttribute("stroke", "black");
+//        //rhombusNode90.setAttribute("stroke", "black");
 //        rhombusNode90.setAttribute("stroke-width", Integer.toString(strokeWidth));
 //        rhombusGroup90.appendChild(rhombusNode90);
 //        defsNode.appendChild(rhombusGroup90);
@@ -240,13 +263,13 @@ public class EntitySvg {
             upperNode.setAttribute("x2", Integer.toString(symbolSize));
             upperNode.setAttribute("y2", Integer.toString((symbolSize / 6)));
             upperNode.setAttribute("stroke-width", Integer.toString(symbolSize / 3));
-            upperNode.setAttribute("stroke", "black");
+//            upperNode.setAttribute("stroke", "black");
             lowerNode.setAttribute("x1", Integer.toString(0));
             lowerNode.setAttribute("y1", Integer.toString(symbolSize - (symbolSize / 6)));
             lowerNode.setAttribute("x2", Integer.toString(symbolSize));
             lowerNode.setAttribute("y2", Integer.toString(symbolSize - (symbolSize / 6)));
             lowerNode.setAttribute("stroke-width", Integer.toString(symbolSize / 3));
-            lowerNode.setAttribute("stroke", "black");
+//            lowerNode.setAttribute("stroke", "black");
             // add a background for selecting and draging
             Element backgroundNode = doc.createElementNS(svgNameSpace, "rect");
             backgroundNode.setAttribute("x", "0");
@@ -259,6 +282,8 @@ public class EntitySvg {
             unionGroup.appendChild(upperNode);
             unionGroup.appendChild(lowerNode);
             kinSymbols.appendChild(unionGroup);
+        } else {
+            removeAttributeStrokeBlack(unionGroup);
         }
         // add the triangle symbol        
         int triangleSize = symbolSize - strokeWidth / 2;
@@ -271,10 +296,12 @@ public class EntitySvg {
             triangleNode.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
                     + strokeWidth / 2 + "," + triangleHeight
                     + " " + triangleSize + "," + triangleHeight);
-            triangleNode.setAttribute("stroke", "black");
+//            triangleNode.setAttribute("stroke", "black");
             triangleNode.setAttribute("stroke-width", Integer.toString(strokeWidth));
             triangleGroup.appendChild(triangleNode);
             kinSymbols.appendChild(triangleGroup);
+        } else {
+            removeAttributeStrokeBlack(triangle);
         }
         // add the triangle symbol
         Element triangleGroup1 = doc.getElementById("triangle-270");
@@ -286,10 +313,12 @@ public class EntitySvg {
             triangleNode1.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
                     + strokeWidth / 2 + "," + triangleHeight
                     + " " + triangleSize + "," + triangleHeight);
-            triangleNode1.setAttribute("stroke", "black");
+//            triangleNode1.setAttribute("stroke", "black");
             triangleNode1.setAttribute("stroke-width", Integer.toString(strokeWidth));
             triangleGroup1.appendChild(triangleNode1);
             kinSymbols.appendChild(triangleGroup1);
+        } else {
+            removeAttributeStrokeBlack(triangleGroup1);
         }
         // add the triangle symbol
         Element triangleGroup2 = doc.getElementById("triangle-180");
@@ -301,10 +330,12 @@ public class EntitySvg {
             triangleNode2.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
                     + strokeWidth / 2 + "," + triangleHeight
                     + " " + triangleSize + "," + triangleHeight);
-            triangleNode2.setAttribute("stroke", "black");
+//            triangleNode2.setAttribute("stroke", "black");
             triangleNode2.setAttribute("stroke-width", Integer.toString(strokeWidth));
             triangleGroup2.appendChild(triangleNode2);
             kinSymbols.appendChild(triangleGroup2);
+        } else {
+            removeAttributeStrokeBlack(triangleGroup2);
         }
         // add the triangle symbol
         Element triangleGroup3 = doc.getElementById("triangle-90");
@@ -316,10 +347,12 @@ public class EntitySvg {
             triangleNode3.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
                     + strokeWidth / 2 + "," + triangleHeight
                     + " " + triangleSize + "," + triangleHeight);
-            triangleNode3.setAttribute("stroke", "black");
+//            triangleNode3.setAttribute("stroke", "black");
             triangleNode3.setAttribute("stroke-width", Integer.toString(strokeWidth));
             triangleGroup3.appendChild(triangleNode3);
             kinSymbols.appendChild(triangleGroup3);
+        } else {
+            removeAttributeStrokeBlack(triangleGroup3);
         }
 //        // add the equals symbol
 //        Element equalsGroup = doc.createElementNS(svgNameSpace, "g");
@@ -659,12 +692,22 @@ public class EntitySvg {
 
             // todo: resolve the null pointer on first run with transient nodes (last test on this did not get a null pointer so maybe it is resolved)
             groupNode.setAttribute("transform", "translate(" + Integer.toString(storedPosition.x) + ", " + Integer.toString(storedPosition.y) + ")");
-            if (currentNode.isEgo) {
-                symbolNode.setAttribute("fill", "black");
+            if (currentNode.isRequired) {
+                symbolNode.setAttribute("stroke", "black");
+                if (currentNode.isEgo) {
+                    symbolNode.setAttribute("fill", "black");
+                } else {
+                    symbolNode.setAttribute("fill", "white");
+                }
             } else {
-                symbolNode.setAttribute("fill", "white");
+                // if entity is transient not permanent then use a grey stroke and fill
+                symbolNode.setAttribute("stroke", "grey");
+                if (currentNode.isEgo) {
+                    symbolNode.setAttribute("fill", "grey");
+                } else {
+                    symbolNode.setAttribute("fill", "white");
+                }
             }
-            symbolNode.setAttribute("stroke", "black");
             symbolNode.setAttribute("stroke-width", "2");
             groupNode.appendChild(symbolNode);
         }
