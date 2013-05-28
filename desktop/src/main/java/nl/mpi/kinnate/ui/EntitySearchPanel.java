@@ -165,6 +165,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         // todo: link this selection when checked
         // todo: consider if this spring graph action is best in the search tree or the diagram tree and enable it
 //        optionsPanel.add(diagramSelectionCheckBox);
+        // todo: add button to make transient entities permanent.
         if (entityIdentifiers == null) {
             searchPanel.add(searchButton, BorderLayout.PAGE_END);
         }
@@ -260,7 +261,9 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
             }
             for (ArbilNode arbilNode : resultsTree.getSelectedNodeArray()) { // return getSelectedNodesOfType(ArbilNode.class).toArray(new ArbilNode[]{});
                 if (arbilNode instanceof KinTreeNode) {
-                    currentStrings.add(prefixString + "[Entity.Identifier=" + ((KinTreeNode) arbilNode).getUniqueIdentifier().getQueryIdentifier() + "]" + kinTypeStringExtention);
+                    for (String kinTypeStringItem : kinTypeStringExtention.split(",")) {
+                        currentStrings.add(prefixString + "[Entity.Identifier=" + ((KinTreeNode) arbilNode).getUniqueIdentifier().getQueryIdentifier() + "]" + kinTypeStringItem);
+                    }
                 }
             }
         }
