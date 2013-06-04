@@ -33,6 +33,7 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.export.ExportToR;
 import nl.mpi.kinnate.gedcomimport.ImportException;
+import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.svg.DiagramTranscoder;
 import nl.mpi.kinnate.ui.DiagramTranscoderPanel;
 import nl.mpi.kinnate.ui.ImportSamplesFileMenu;
@@ -65,6 +66,7 @@ public class FileMenu extends javax.swing.JMenu {
     private javax.swing.JMenuItem newDiagramMenuItem;
     private javax.swing.JMenuItem openDiagram;
     private RecentFileMenu recentFileMenu;
+    private javax.swing.JMenuItem projectNewMenu;
     private javax.swing.JMenuItem projectOpenMenu;
     private ProjectFileMenu projectRecentMenu;
     private javax.swing.JMenuItem saveAsDefaultMenuItem;
@@ -76,7 +78,7 @@ public class FileMenu extends javax.swing.JMenu {
     private MessageDialogHandler dialogHandler; //ArbilWindowManager
     private Component parentComponent;
 
-    public FileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, Component parentComponent) {
+    public FileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, Component parentComponent, ProjectManager projectManager) {
         this.diagramWindowManager = diagramWindowManager;
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
@@ -90,8 +92,9 @@ public class FileMenu extends javax.swing.JMenu {
         jMenu3 = new DocumentNewMenu(diagramWindowManager, parentComponent, dialogHandler);
         openDiagram = new javax.swing.JMenuItem();
         recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage, parentComponent, dialogHandler);
+        projectNewMenu = new javax.swing.JMenuItem();
         projectOpenMenu = new javax.swing.JMenuItem();
-        projectRecentMenu = new ProjectFileMenu(diagramWindowManager, sessionStorage, parentComponent, dialogHandler);
+        projectRecentMenu = new ProjectFileMenu(diagramWindowManager, sessionStorage, parentComponent, dialogHandler, projectManager);
         jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
@@ -156,6 +159,10 @@ public class FileMenu extends javax.swing.JMenu {
         this.add(jMenu1);
 
         this.add(new javax.swing.JPopupMenu.Separator());
+        projectNewMenu.setText("New Project");
+        projectNewMenu.setActionCommand("new");
+        projectNewMenu.addActionListener(projectRecentMenu);
+        this.add(projectNewMenu);
         projectOpenMenu.setText("Open Project");
         projectOpenMenu.setActionCommand("browse");
         projectOpenMenu.addActionListener(projectRecentMenu);

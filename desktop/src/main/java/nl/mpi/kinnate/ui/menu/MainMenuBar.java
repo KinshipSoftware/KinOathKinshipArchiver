@@ -27,6 +27,7 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.plugins.KinOathPluginManager;
+import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.pluginloader.PluginService;
 import nl.mpi.pluginloader.ui.PluginMenu;
@@ -38,8 +39,8 @@ import nl.mpi.pluginloader.ui.PluginMenu;
  */
 public class MainMenuBar extends JMenuBar {
 
-    public MainMenuBar(AbstractDiagramManager abstractDiagramManager, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, final ApplicationVersionManager versionManager, Component parentComponent) {
-        this.add(new FileMenu(abstractDiagramManager, sessionStorage, dialogHandler, parentComponent));
+    public MainMenuBar(AbstractDiagramManager abstractDiagramManager, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, final ApplicationVersionManager versionManager, Component parentComponent, ProjectManager projectManager) {
+        this.add(new FileMenu(abstractDiagramManager, sessionStorage, dialogHandler, parentComponent, projectManager));
         this.add(new EditMenu(abstractDiagramManager, parentComponent));
         this.add(new DiagramOptionsMenu(abstractDiagramManager, parentComponent));
         this.add(new KinTermsMenu(abstractDiagramManager, parentComponent));

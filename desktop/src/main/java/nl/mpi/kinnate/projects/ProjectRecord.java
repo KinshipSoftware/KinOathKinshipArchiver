@@ -18,57 +18,117 @@
 package nl.mpi.kinnate.projects;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created on : Oct 22, 2011, 09:33
  *
  * @author Peter Withers
  */
+@XmlRootElement(name = "ProjectRecord")
 public class ProjectRecord {
 
-    @XmlAttribute(name = "ProjectDirectory", namespace = "http://mpi.nl/tla/kin")
     protected File projectDirectory;
-//    final private String projectName;
-    @XmlAttribute(name = "ProjectUUID", namespace = "http://mpi.nl/tla/kin")
+    protected String projectName;
+    protected String projectDescription;
     protected String projectUUID;
+    protected int entityCount;
+    protected int relationCount;
+    protected Date lastChangeDate;
 
-    protected ProjectRecord() {
+    public ProjectRecord() {
     }
 
-//    public ProjectRecord(File projectDirectory, String projectName) {
-//        this.projectDirectory = projectDirectory;
-//        this.projectName = projectName;
-//        this.projectUUID = UUID.randomUUID().toString();
-//    }
-    public ProjectRecord(File projectDirectory) {
+    public ProjectRecord(File projectDirectory, String projectName) {
+        this.projectName = projectName;
         this.projectDirectory = projectDirectory;
         this.projectUUID = UUID.randomUUID().toString();
     }
 
-    public ProjectRecord(File projectDirectory, String projectUUID) {
-        this.projectDirectory = projectDirectory;
-        this.projectUUID = projectUUID;
-    }
-
-    private File getProjectDirectory() {
+    public File getProjectDirectory() {
         return projectDirectory;
     }
 
-    @XmlTransient
+    @XmlElement(name = "ProjectDirectory")
+    public void setProjectDirectory(File projectDirectory) {
+        this.projectDirectory = projectDirectory;
+    }
+
+    public void bumpLastChangeDate() {
+        lastChangeDate = Calendar.getInstance().getTime();
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    @XmlAttribute(name = "ProjectName")
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getProjectDescription() {
+        return projectDescription;
+    }
+
+    @XmlElement(name = "ProjectDescription")
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription = projectDescription;
+    }
+
+    public int getEntityCount() {
+        return entityCount;
+    }
+
+    @XmlAttribute(name = "EntityCount")
+    public void setEntityCount(int entityCount) {
+        this.entityCount = entityCount;
+    }
+
+    public int getRelationCount() {
+        return relationCount;
+    }
+
+    @XmlAttribute(name = "RelationCount")
+    public void setRelationCount(int relationCount) {
+        this.relationCount = relationCount;
+    }
+
+    public Date getLastChangeDate() {
+        return lastChangeDate;
+    }
+
+    @XmlElement(name = "LastChangeTime")
+    public void setLastChangeDate(Date lastChangeDate) {
+        this.lastChangeDate = lastChangeDate;
+    }
+
     public File getProjectDataBaseDirectory() {
-        return new File(getProjectDirectory(), "BaseXData");
+        return createDirectoryIfNotFound(new File(getProjectDirectory(), "BaseXData"));
     }
 
-    @XmlTransient
     public File getProjectDataFilesDirectory() {
-        return new File(getProjectDirectory(), "KinDataFiles");
+        return createDirectoryIfNotFound(new File(getProjectDirectory(), "KinDataFiles"));
     }
 
-    @XmlTransient
     public String getProjectUUID() {
         return projectUUID;
+    }
+
+    @XmlAttribute(name = "ProjectUUID")
+    public void setProjectUUID(String projectUUID) {
+        this.projectUUID = projectUUID;
+    }
+
+    private File createDirectoryIfNotFound(File directoryFile) {
+        if (!directoryFile.exists()) {
+            directoryFile.mkdir();
+        }
+        return directoryFile;
     }
 }

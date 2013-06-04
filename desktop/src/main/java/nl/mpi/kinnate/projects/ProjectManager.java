@@ -17,6 +17,11 @@
  */
 package nl.mpi.kinnate.projects;
 
+import java.io.File;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
@@ -44,13 +49,34 @@ public class ProjectManager {
     public ProjectRecord[] getProjectRecords(SessionStorage sessionStorage) {
         return projectRecords;
     }
-/*
- * todo: Ticket #2880 (new enhancement)
- * The open project window could also show which diagrams are known to use each project. Also it could show any known copies of a given project based on uuid.
- */
-    public EntityCollection getEntityCollectionForProject(ProjectRecord projectRecord)throws EntityServiceException{
+    /*
+     * todo: Ticket #2880 (new enhancement)
+     * The open project window could also show which diagrams are known to use each project. Also it could show any known copies of a given project based on uuid.
+     */
+
+    public EntityCollection getEntityCollectionForProject(ProjectRecord projectRecord) throws EntityServiceException {
 //         todo: keep track of these collections so that the db does not get locking errors
         throw new EntityServiceException("Test throw of EntityServiceException");
 //        return new EntityCollection(projectRecord);
+    }
+
+    public void saveProjectRecord(ProjectRecord projectRecord) throws JAXBException {
+        JAXBContext jaxbContext = JAXBContext.newInstance(ProjectRecord.class);
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.marshal(projectRecord, new File(projectRecord.projectDirectory, "kinoath.proj"));
+    }
+
+    public ProjectRecord loadProjectRecord(File projectDirectory) throws JAXBException {
+        JAXBContext jaxbContext = JAXBContext.newInstance(ProjectRecord.class);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        final String kinoathproj = "kinoath.proj";
+        File projectFile;
+        if (projectDirectory.isFile() && kinoathproj.equals(projectDirectory.getName())) {
+            projectFile = projectDirectory;
+        } else {
+            projectFile = new File(projectDirectory, kinoathproj);
+        }
+        return (ProjectRecord) unmarshaller.unmarshal(projectFile);
     }
 }

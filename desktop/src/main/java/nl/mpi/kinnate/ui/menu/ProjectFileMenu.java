@@ -27,15 +27,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+import javax.swing.filechooser.FileFilter;
+import javax.xml.bind.JAXBException;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
+import nl.mpi.kinnate.projects.ProjectManager;
+import nl.mpi.kinnate.projects.ProjectRecord;
+import nl.mpi.kinnate.ui.ProjectPreviewPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -49,12 +55,14 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
     private final SessionStorage sessionStorage;
     private final Component parentComponent;
     private final MessageDialogHandler dialogHandler;
+    final private ProjectManager projectManager;
 
-    public ProjectFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, Component parentComponent, MessageDialogHandler dialogHandler) {
+    public ProjectFileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, Component parentComponent, MessageDialogHandler dialogHandler, ProjectManager projectManager) {
         this.diagramWindowManager = diagramWindowManager;
         this.sessionStorage = sessionStorage;
         this.parentComponent = parentComponent;
         this.dialogHandler = dialogHandler;
+        this.projectManager = projectManager;
         this.setText("Open Recent Project");
         this.addMenuListener(new MenuListener() {
             public void menuCanceled(MenuEvent evt) {
@@ -122,9 +130,66 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
         }
     }
 
+    private HashMap<String, FileFilter> getProjectFileFilter() {
+        HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
+        for (final String[] currentType : new String[][]{{"KinOath Project", "kinoath.proj"}}) {
+            fileFilterMap.put(currentType[0], new FileFilter() {
+                @Override
+                public boolean accept(File selectedFile) {
+//                    System.out.println("selectedFile: " + selectedFile);
+                        try {
+                            final ProjectRecord projectRecord = projectManager.loadProjectRecord(selectedFile);
+                            if (projectRecord == null) {
+                                return false;
+                            }
+                            return true;
+                        } catch (JAXBException exception) {
+                            // if we cannot read the project file then we cannot open the project
+                            return false;
+                        }
+//                    } else {
+//                    return (selectedFile.exists() && (selectedFile.isDirectory()));
+//                    }
+                }
+
+                @Override
+                public String getDescription() {
+                    return currentType[0];
+                }
+            });
+        }
+        return fileFilterMap;
+    }
+
     public void actionPerformed(ActionEvent e) {
-        if ("browse".equals(e.getActionCommand())) {
-            System.out.println("browse for project");
+        if ("new".equals(e.getActionCommand())) {
+//            ProjectPreviewPanel previewPanel = new ProjectPreviewPanel(true);
+            final File[] selectedFilesArray = dialogHandler.showFileSelectBox("New Project", true, false, getProjectFileFilter(), MessageDialogHandler.DialogueType.save, null);
+            if (selectedFilesArray != null) {
+                final File selecteFile = selectedFilesArray[0];
+                System.out.println(selecteFile.getAbsolutePath());
+                if (selecteFile.exists()) {
+                    // cannot use an existing file
+                    // offer a project edit box
+                    dialogHandler.addMessageDialogToQueue("The selected file already exists, please enter a unique name.", "Create Project");
+                } else {
+                    ProjectRecord projectRecord = new ProjectRecord(selecteFile, selecteFile.getName());
+                    try {
+                        selecteFile.mkdir();
+                        projectManager.saveProjectRecord(projectRecord);
+                    } catch (JAXBException exception) {
+                        dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Create Project Error");
+                    }
+                }
+            }
+
+        } else if ("browse".equals(e.getActionCommand())) {
+            ProjectPreviewPanel previewPanel = new ProjectPreviewPanel(projectManager, false);
+            final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Project", false, false, getProjectFileFilter(), MessageDialogHandler.DialogueType.open, previewPanel);
+            if (selectedFilesArray != null) {
+                System.out.println(selectedFilesArray[0].getAbsolutePath());
+            }
+
         } else if ("Clear List".equals(e.getActionCommand())) {
             try {
                 /* move this to the project manager */ sessionStorage.saveStringArray("RecentKinProjects", new String[]{});
