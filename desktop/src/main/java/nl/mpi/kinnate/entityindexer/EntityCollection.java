@@ -118,15 +118,11 @@ public class EntityCollection extends DatabaseUpdateHandler {
                     new CreateDB(databaseName).execute(context);
                     new Close().execute(context);
 //                new Open(databaseName).execute(context);
-                    projectRecord.bumpLastChangeDate();
-                    projectManager.saveProjectRecord(projectRecord);
+                    updateProjectRecord();
                 }
             } catch (BaseXException exception2) {
                 BugCatcherManager.getBugCatcher().logError(exception2);
                 throw new EntityServiceException("Could not create database:" + exception2.getMessage());
-            } catch (JAXBException exception) {
-                BugCatcherManager.getBugCatcher().logError(exception);
-//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
             }
         }
         // todo: should we explicitly close the DB? putting it in the distructor would not be reliable
@@ -135,6 +131,37 @@ public class EntityCollection extends DatabaseUpdateHandler {
 
     public ProjectRecord getProjectRecord() {
         return projectRecord;
+    }
+
+    private void updateProjectRecord() {
+        long startTime = System.currentTimeMillis();
+        try {
+            synchronized (databaseLock) {
+                QueryBuilder queryBuilder = new QueryBuilder();
+                final String databaseStatsQuery = queryBuilder.getDatabaseStats(databaseName);
+//                System.out.println("databaseStatsQuery: " + databaseStatsQuery);
+                String queryResult = new XQuery(databaseStatsQuery).execute(context);
+//                System.out.println("DatabaseStatsResult: " + queryResult);
+                final String[] statsArray = queryResult.split(":");
+                final int entityCount = Integer.parseInt(statsArray[0]);
+                final int relationCount = Integer.parseInt(statsArray[1]) / 2;
+                projectRecord.setEntityCount(entityCount);
+                projectRecord.setRelationCount(relationCount);
+            }
+        } catch (BaseXException baseXException) {
+            projectRecord.setEntityCount(-1);
+            projectRecord.setRelationCount(-1);
+        }
+        try {
+            projectRecord.bumpLastChangeDate();
+            projectManager.saveProjectRecord(projectRecord);
+        } catch (JAXBException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
+        }
+        long queryMils = System.currentTimeMillis() - startTime;
+        String queryTimeString = "updateProjectRecord time: " + queryMils + "milliseconds";
+        System.out.println(queryTimeString);
     }
 
 //    public void closeDataBase() {
@@ -171,13 +198,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             BugCatcherManager.getBugCatcher().logError(exception);
             throw new EntityServiceException("Could not recreate database:" + exception.getMessage());
         }
-        try {
-            projectRecord.bumpLastChangeDate();
-            projectManager.saveProjectRecord(projectRecord);
-        } catch (JAXBException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
-        }
+        updateProjectRecord();
         updateOccured();
     }
 
@@ -195,7 +216,6 @@ public class EntityCollection extends DatabaseUpdateHandler {
             new DropDB(exportDatabaseName).execute(tempDbContext);
         }
     }
-// todo: try this COMMAND CREATE BACKUP '/Users/petwit/Desktop/BasexDbBackupTest.zip'
 
     public Context createExportDatabase(File directoryOfInputFiles, String suffixFilter, String exportDatabaseName) throws BaseXException {
         if (suffixFilter == null) {
@@ -274,16 +294,12 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 new Optimize().execute(context);
                 new Close().execute(context);
             }
-            projectRecord.bumpLastChangeDate();
-            projectManager.saveProjectRecord(projectRecord);
+            updateProjectRecord();
             updateOccured();
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             BugCatcherManager.getBugCatcher().logError(baseXException);
             throw new EntityServiceException(dbErrorMessage + "\n Delete file from database:" + baseXException.getMessage());
-        } catch (JAXBException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
         }
     }
 
@@ -328,15 +344,11 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 }
                 new Close().execute(context);
             }
-            projectRecord.bumpLastChangeDate();
-            projectManager.saveProjectRecord(projectRecord);
+            updateProjectRecord();
             updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
             throw new EntityServiceException(dbErrorMessage + "\n Update database:" + baseXException.getMessage());
-        } catch (JAXBException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
         }
     }
 
@@ -351,15 +363,11 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 new Optimize().execute(context);
                 new Close().execute(context);
             }
-            projectRecord.bumpLastChangeDate();
-            projectManager.saveProjectRecord(projectRecord);
+            updateProjectRecord();
             updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
             throw new EntityServiceException(dbErrorMessage + "\n Update database:" + baseXException.getMessage());
-        } catch (JAXBException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
         }
     }
 
@@ -440,7 +448,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                     returnArray = identifierArray.testIdentifiers;
                 }
                 long queryMils = System.currentTimeMillis() - startTime;
-                String queryTimeString = "Query time: " + queryMils + "ms for " + returnArray.length + " UniqueIdentifiers";
+                String queryTimeString = "Query time: " + queryMils + "milliseconds for " + returnArray.length + " UniqueIdentifiers";
                 System.out.println(queryTimeString);
             }
         } catch (JAXBException exception) {
@@ -484,7 +492,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             if (entityDataArray != null) {
                 resultCount = entityDataArray.length;
             }
-            String queryTimeString = "Query time: " + queryMils + "ms for " + resultCount + " entities";
+            String queryTimeString = "Query time: " + queryMils + "milliseconds for " + resultCount + " entities";
             System.out.println(queryTimeString);
 //            selectedEntity.appendTempLabel(queryTimeString);
             return foundEntities.getEntityDataArray();
@@ -514,7 +522,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //            System.out.println("queryResult: " + queryResult);
             EntityData[] selectedEntity = (EntityData[]) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData[].class).getValue();
             long queryMils = System.currentTimeMillis() - startTime;
-            String queryTimeString = "Query time: " + queryMils + "ms for " + selectedEntity.length + " entities";
+            String queryTimeString = "Query time: " + queryMils + "milliseconds for " + selectedEntity.length + " entities";
             System.out.println(queryTimeString);
 //            selectedEntity.appendTempLabel(queryTimeString);
             return selectedEntity;
@@ -539,7 +547,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 queryResult = new XQuery(query1String).execute(context);
             }
             long queryMils = System.currentTimeMillis() - startQueryTime;
-            System.out.println("Query time: " + queryMils + "ms");
+            System.out.println("Query time: " + queryMils + "milliseconds");
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
             throw new EntityServiceException(dbErrorMessage + "\n Delete from database:" + exception.getMessage());
@@ -557,7 +565,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //                queryResult = new XQuery(query1String).execute(context);
 //            }
 //            long queryMils = System.currentTimeMillis() - startQueryTime;
-//            System.out.println("Query time: " + queryMils + "ms");
+//            System.out.println("Query time: " + queryMils + "milliseconds");
 //            return queryResult;
 //        } catch (BaseXException exception) {
 //            BugCatcherManager.getBugCatcher().logError(exception);
@@ -593,15 +601,15 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 queryResult = new XQuery(query1String).execute(context);
             }
 //            long queryMils = System.currentTimeMillis() - startQueryTime;
-//            System.out.println("Query time: " + queryMils + "ms");
+//            System.out.println("Query time: " + queryMils + "milliseconds");
 //            long startJaxbTime = System.currentTimeMillis();
 //            System.out.println("queryResult: " + queryResult);
             EntityData selectedEntity = (EntityData) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityData.class).getValue();
 //            long queryJaxBMils = System.currentTimeMillis() - startJaxbTime;
-//            System.out.println("JaxB time: " + queryJaxBMils + "ms");
+//            System.out.println("JaxB time: " + queryJaxBMils + "milliseconds");
 //            long queryTotalMils = System.currentTimeMillis() - startTime;
             // todo: this should not be called if the entire database has been loaded into the tree, check why it occurs
-//            final String queryTimeString = "Total Query time: " + queryTotalMils + "ms";
+//            final String queryTimeString = "Total Query time: " + queryTotalMils + "milliseconds";
 //            System.out.println(queryTimeString);
 //            selectedEntity.appendTempLabel(queryTimeString);
 //            System.out.println("Query Result: " + queryResult);
@@ -646,7 +654,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                         long startTime = System.currentTimeMillis();
                         resultsText.append(new XQuery(queryText.getText()).execute(context));
                         long queryMils = System.currentTimeMillis() - startTime;
-                        String queryTimeString = "Query time: " + queryMils + "ms";
+                        String queryTimeString = "Query time: " + queryMils + "milliseconds";
                         queryTimeLabel.setText(queryTimeString);
                     } catch (BaseXException exception) {
                         resultsText.append(exception.getMessage());

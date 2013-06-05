@@ -269,6 +269,14 @@ public class QueryBuilder {
 //                + "<String>base-uri($identifierNode)</String>,"
 //                + "$identifierNode";
 //    }
+    public String getDatabaseStats(String databaseName) {
+        // the use of facets here seems to depend on the version of the database, so we avoid it
+//        return "let $identifierNode := index:facets('" + databaseName + "', 'flat')/document-node/element[@name contains text 'Identifier']\n"
+//                + "return concat(count($identifierNode/*),':',$identifierNode/@count/string())";
+        return "concat(count(collection('" + databaseName + "')),':',"
+                + "count(collection('" + databaseName + "')/*:Kinnate/*:Entity/*:Relations/*:Relation))";
+    }
+
     public String getAllFieldNamesQuery(String databaseName) {
         return "for $facetEntry in index:facets('" + databaseName + "')/document-node/element/element[@name='CustomData']/element/@name\n"
                 + "order by lower-case($facetEntry)\n return data($facetEntry)";

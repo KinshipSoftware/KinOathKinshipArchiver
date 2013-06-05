@@ -93,7 +93,7 @@ public class MainFrame extends javax.swing.JFrame {
                         @Override
                         public void run() {
                             final ApplicationVersion applicationVersion = versionManager.getApplicationVersion();
-                            File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor), projectManager.getDefaultProject(injector.getSessionStorage()).getProjectDataBaseDirectory());
+                            File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor));
                             if (oldAppExportFile != null) {
                                 try {
                                     abstractDiagramManager.openImportPanel(oldAppExportFile, null, projectManager.getEntityCollectionForProject(projectManager.getDefaultProject(injector.getSessionStorage())));
