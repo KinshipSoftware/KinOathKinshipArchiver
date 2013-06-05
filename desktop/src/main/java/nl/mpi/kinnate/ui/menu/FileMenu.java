@@ -97,7 +97,7 @@ public class FileMenu extends javax.swing.JMenu {
         recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage, parentComponent, dialogHandler);
         projectNewMenu = new javax.swing.JMenuItem();
         projectOpenMenu = new javax.swing.JMenuItem();
-        projectRecentMenu = new ProjectFileMenu(diagramWindowManager, sessionStorage, parentComponent, dialogHandler, projectManager);
+        projectRecentMenu = new ProjectFileMenu(diagramWindowManager, parentComponent, dialogHandler, projectManager);
         jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();

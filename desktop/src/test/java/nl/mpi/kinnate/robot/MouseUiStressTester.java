@@ -49,7 +49,7 @@ public class MouseUiStressTester {
         final KinnateArbilInjector injector = new KinnateArbilInjector();
         injector.injectHandlers(versionManager);
         final AbstractDiagramManager abstractDiagramManager;
-        final ProjectManager projectManager = new ProjectManager();
+        final ProjectManager projectManager = new ProjectManager(injector.getSessionStorage());
         final SessionStorage sessionStorage = injector.getSessionStorage();
         abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), sessionStorage, injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager);
         abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480), projectManager.getDefaultProject(sessionStorage));

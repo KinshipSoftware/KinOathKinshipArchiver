@@ -18,6 +18,7 @@
 package nl.mpi.kinnate.projects;
 
 import java.io.File;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -33,10 +34,11 @@ import nl.mpi.kinnate.entityindexer.EntityServiceException;
  */
 public class ProjectManager {
 
-    private ProjectRecord[] projectRecords;
+    private final File recentProjectsFile;
     private ProjectRecord defaultProject = null; // should the default project be discarded and a mandatory import be required?
 
-    public ProjectManager() {
+    public ProjectManager(SessionStorage sessionStorage) {
+        recentProjectsFile = new File(sessionStorage.getApplicationSettingsDirectory(), "RecentProjects.xml");
     }
 
     // this should be replaced by the wizard that explains the difference between freeform diagrams and project diagrams
@@ -48,8 +50,20 @@ public class ProjectManager {
         return defaultProject;
     }
 
-    public ProjectRecord[] getProjectRecords(SessionStorage sessionStorage) {
-        return projectRecords;
+    public List<ProjectRecord> getProjectRecords(SessionStorage sessionStorage) throws JAXBException {
+        return getRecentProjectsList().getProjectRecords();
+    }
+
+    public void addRecentProjectRecord(ProjectRecord projectRecord) throws JAXBException {
+        final RecentProjects recentProjectsList = getRecentProjectsList();
+        recentProjectsList.addProjectRecord(projectRecord);
+        saveRecentProjectsList(recentProjectsList);
+    }
+
+    public void clearRecentProjectsList() throws JAXBException {
+        final RecentProjects recentProjectsList = getRecentProjectsList();
+        recentProjectsList.clearList();
+        saveRecentProjectsList(recentProjectsList);
     }
     /*
      * todo: Ticket #2880 (new enhancement)
@@ -60,6 +74,23 @@ public class ProjectManager {
 //         todo: keep track of these collections so that the db does not get locking errors
         throw new EntityServiceException("Test throw of EntityServiceException");
 //        return new EntityCollection(projectRecord);
+    }
+
+    public RecentProjects getRecentProjectsList() throws JAXBException {
+        JAXBContext jaxbContext = JAXBContext.newInstance(RecentProjects.class);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        if (recentProjectsFile.exists()) {
+            return (RecentProjects) unmarshaller.unmarshal(recentProjectsFile);
+        } else {
+            return new RecentProjects();
+        }
+    }
+
+    public void saveRecentProjectsList(RecentProjects recentProjects) throws JAXBException {
+        JAXBContext jaxbContext = JAXBContext.newInstance(RecentProjects.class);
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.marshal(recentProjects, recentProjectsFile);
     }
 
     public void saveProjectRecord(ProjectRecord projectRecord) throws JAXBException {
@@ -79,6 +110,8 @@ public class ProjectManager {
         } else {
             projectFile = new File(projectDirectory, kinoathproj);
         }
-        return (ProjectRecord) unmarshaller.unmarshal(projectFile);
+        final ProjectRecord projectRecord = (ProjectRecord) unmarshaller.unmarshal(projectFile);
+        projectRecord.setProjectDirectory(projectFile.getParentFile());
+        return projectRecord;
     }
 }

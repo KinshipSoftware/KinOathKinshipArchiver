@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.xml.bind.JAXBException;
 import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeContainer;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
@@ -230,6 +231,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             entityCollection = new EntityCollection(projectManager, graphPanel.dataStoreSvg.projectRecord);
         }
         graphPanel.setEntityCollection(entityCollection);
+        try {
+            projectManager.addRecentProjectRecord(graphPanel.dataStoreSvg.projectRecord);
+        } catch (JAXBException exception) {
+            dialogHandler.addMessageDialogToQueue("Failed to save the project in the recent list: " + exception.getMessage(), "Recent Project List Error");
+        }
 //        } else {
 //            // do not store the project settings for a free form diagram but make sure the defalut project is available for importing
 //            entityCollection = new EntityCollection(projectManager.getDefaultProject(sessionStorage));
