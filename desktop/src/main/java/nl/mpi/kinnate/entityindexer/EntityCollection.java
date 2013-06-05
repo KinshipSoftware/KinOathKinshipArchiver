@@ -37,6 +37,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.KinOathVersion;
@@ -74,6 +75,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
 
     final private String databaseName; // = "nl-mpi-kinnate";
     final private ProjectRecord projectRecord;
+    final private ProjectManager projectManager;
     final static Context context = new Context();
     final static Object databaseLock = new Object();
     final private String dbErrorMessage = "Could not perform the required query, not all data might be shown at this point.\nSee the log file via the help menu for more details.";
@@ -85,13 +87,27 @@ public class EntityCollection extends DatabaseUpdateHandler {
         public int resultCount = 0;
     }
 
-    public EntityCollection(ProjectRecord projectRecord) throws EntityServiceException {
+    static public void setGlobalDatabasePath(SessionStorage sessionStorage) throws EntityServiceException {
+        try {
+            final File globalDatabaseDirectory = new File(sessionStorage.getApplicationSettingsDirectory(), "BaseXData");
+            if (!globalDatabaseDirectory.exists()) {
+                globalDatabaseDirectory.mkdir();
+            }
+            // set db path cannot be changed when any database is open, but more importantly "Points to the directory in which ALL databases are located."
+            new Set("dbpath", globalDatabaseDirectory).execute(context);
+        } catch (BaseXException exception2) {
+            BugCatcherManager.getBugCatcher().logError(exception2);
+            throw new EntityServiceException("Could not set the database directory: " + exception2.getMessage());
+        }
+    }
+
+    public EntityCollection(ProjectManager projectManager, ProjectRecord projectRecord) throws EntityServiceException {
+        this.projectManager = projectManager;
         this.projectRecord = projectRecord;
         databaseName = projectRecord.getProjectUUID();
         // make sure the database exists
         try {
             synchronized (databaseLock) {
-                new Set("dbpath", projectRecord.getProjectDataBaseDirectory()).execute(context);
                 new Open(databaseName).execute(context);
                 //context.close();
                 new Close().execute(context);
@@ -100,11 +116,17 @@ public class EntityCollection extends DatabaseUpdateHandler {
             try {
                 synchronized (databaseLock) {
                     new CreateDB(databaseName).execute(context);
+                    new Close().execute(context);
 //                new Open(databaseName).execute(context);
+                    projectRecord.bumpLastChangeDate();
+                    projectManager.saveProjectRecord(projectRecord);
                 }
             } catch (BaseXException exception2) {
                 BugCatcherManager.getBugCatcher().logError(exception2);
                 throw new EntityServiceException("Could not create database:" + exception2.getMessage());
+            } catch (JAXBException exception) {
+                BugCatcherManager.getBugCatcher().logError(exception);
+//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
             }
         }
         // todo: should we explicitly close the DB? putting it in the distructor would not be reliable
@@ -149,6 +171,13 @@ public class EntityCollection extends DatabaseUpdateHandler {
             BugCatcherManager.getBugCatcher().logError(exception);
             throw new EntityServiceException("Could not recreate database:" + exception.getMessage());
         }
+        try {
+            projectRecord.bumpLastChangeDate();
+            projectManager.saveProjectRecord(projectRecord);
+        } catch (JAXBException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
+        }
         updateOccured();
     }
 
@@ -166,6 +195,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             new DropDB(exportDatabaseName).execute(tempDbContext);
         }
     }
+// todo: try this COMMAND CREATE BACKUP '/Users/petwit/Desktop/BasexDbBackupTest.zip'
 
     public Context createExportDatabase(File directoryOfInputFiles, String suffixFilter, String exportDatabaseName) throws BaseXException {
         if (suffixFilter == null) {
@@ -244,11 +274,16 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 new Optimize().execute(context);
                 new Close().execute(context);
             }
+            projectRecord.bumpLastChangeDate();
+            projectManager.saveProjectRecord(projectRecord);
             updateOccured();
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             BugCatcherManager.getBugCatcher().logError(baseXException);
             throw new EntityServiceException(dbErrorMessage + "\n Delete file from database:" + baseXException.getMessage());
+        } catch (JAXBException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
         }
     }
 
@@ -293,10 +328,15 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 }
                 new Close().execute(context);
             }
+            projectRecord.bumpLastChangeDate();
+            projectManager.saveProjectRecord(projectRecord);
             updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
             throw new EntityServiceException(dbErrorMessage + "\n Update database:" + baseXException.getMessage());
+        } catch (JAXBException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
         }
     }
 
@@ -311,10 +351,15 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 new Optimize().execute(context);
                 new Close().execute(context);
             }
+            projectRecord.bumpLastChangeDate();
+            projectManager.saveProjectRecord(projectRecord);
             updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
             throw new EntityServiceException(dbErrorMessage + "\n Update database:" + baseXException.getMessage());
+        } catch (JAXBException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+//            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
         }
     }
 
@@ -370,7 +415,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         // todo: add a query cache or determine that the xml database does the job of caching adequately (p.s. basex appears to cache the queries adequately)
         UniqueIdentifier[] returnArray = new UniqueIdentifier[]{};
         QueryBuilder queryBuilder = new QueryBuilder();
-        String queryString = queryBuilder.getTermQuery(queryTerms);
+        String queryString = queryBuilder.getTermQuery(queryTerms, databaseName);
 //        System.out.println("queryString: " + queryString);
         long startTime = System.currentTimeMillis();
         try {
@@ -410,14 +455,14 @@ public class EntityCollection extends DatabaseUpdateHandler {
 
     public EntityData[] getEntityByEndPoint(DataTypes.RelationType relationType, IndexerParameters indexParameters) throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
-        String query1String = queryBuilder.getEntityByEndPointQuery(relationType, indexParameters);
+        String query1String = queryBuilder.getEntityByEndPointQuery(relationType, indexParameters, databaseName);
 //        System.out.println("getEntityByEndPoint:" + query1String);
         return getEntityByQuery(query1String, indexParameters);
     }
 
     public EntityData[] getEntityByKeyWord(String keyWords, IndexerParameters indexParameters) throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
-        String query1String = queryBuilder.getEntityByKeyWordQuery(keyWords, indexParameters);
+        String query1String = queryBuilder.getEntityByKeyWordQuery(keyWords, indexParameters, databaseName);
         return getEntityByQuery(query1String, indexParameters);
     }
 
@@ -457,7 +502,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         // todo: probably needs to be updated.
         long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
-        String query1String = queryBuilder.getEntityWithRelationsQuery(uniqueIdentifier, excludeUniqueIdentifiers, indexParameters);
+        String query1String = queryBuilder.getEntityWithRelationsQuery(uniqueIdentifier, excludeUniqueIdentifiers, indexParameters, databaseName);
 //        System.out.println("query1String: " + query1String);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
@@ -485,7 +530,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
 
     public void runDeleteQuery(UniqueIdentifier uniqueIdentifier) throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
-        String query1String = queryBuilder.getDeleteQuery(uniqueIdentifier);
+        String query1String = queryBuilder.getDeleteQuery(uniqueIdentifier, databaseName);
 //        System.out.println("query1String: " + query1String);
         try {
             long startQueryTime = System.currentTimeMillis();
@@ -521,7 +566,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //    }
     public String[] getAllFieldNames() throws EntityServiceException {
         QueryBuilder queryBuilder = new QueryBuilder();
-        final String allFieldNamesQuery = queryBuilder.getAllFieldNamesQuery();
+        final String allFieldNamesQuery = queryBuilder.getAllFieldNamesQuery(databaseName);
         String queryResult = "";
         try {
             synchronized (databaseLock) {
@@ -537,7 +582,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
     public EntityData getEntity(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
 //        long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
-        String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters);
+        String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters, databaseName);
         String queryResult = "";
 //        System.out.println("query1String: " + query1String);
         try {
@@ -579,7 +624,8 @@ public class EntityCollection extends DatabaseUpdateHandler {
         final ArbilWindowManager arbilWindowManager = new ArbilWindowManager();
         final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
         try {
-            final EntityCollection entityCollection = new EntityCollection(new ProjectManager().getDefaultProject(kinSessionStorage));
+            final ProjectManager projectManager1 = new ProjectManager();
+            final EntityCollection entityCollection = new EntityCollection(projectManager1, projectManager1.getDefaultProject(kinSessionStorage));
             //queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));

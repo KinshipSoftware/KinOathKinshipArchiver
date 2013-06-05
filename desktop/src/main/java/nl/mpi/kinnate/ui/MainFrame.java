@@ -25,6 +25,7 @@ import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.KinnateArbilInjector;
+import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.plugins.export.MigrationWizard;
@@ -75,7 +76,13 @@ public class MainFrame extends javax.swing.JFrame {
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
                 abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), injector.getSessionStorage(), injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager);
                 try {
-                    abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480));
+//                    try {
+                    EntityCollection.setGlobalDatabasePath(injector.getSessionStorage());
+//                    } catch (EntityServiceException entityServiceException) {
+                    // todo: if this fails then we might need to offer the user to select a custom directory
+//                    }
+
+                    abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480), null);
                     abstractDiagramManager.createApplicationWindow();
 
                     injector.getWindowManager().setMessagesCanBeShown(true);

@@ -48,6 +48,15 @@ public class ProjectRecord {
         this.projectName = projectName;
         this.projectDirectory = projectDirectory;
         this.projectUUID = UUID.randomUUID().toString();
+        this.lastChangeDate = Calendar.getInstance().getTime();
+    }
+
+    @Deprecated
+    public ProjectRecord(File projectDirectory, String projectName, String projectUUID) {
+        this.projectName = projectName;
+        this.projectDirectory = projectDirectory;
+        this.projectUUID = projectUUID;
+        this.lastChangeDate = Calendar.getInstance().getTime();
     }
 
     public File getProjectDirectory() {
@@ -106,10 +115,6 @@ public class ProjectRecord {
     @XmlElement(name = "LastChangeTime")
     public void setLastChangeDate(Date lastChangeDate) {
         this.lastChangeDate = lastChangeDate;
-    }
-
-    public File getProjectDataBaseDirectory() {
-        return createDirectoryIfNotFound(new File(getProjectDirectory(), "BaseXData"));
     }
 
     public File getProjectDataFilesDirectory() {

@@ -42,6 +42,7 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.projects.ProjectManager;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.ui.EntityUploadPanel;
 import nl.mpi.kinnate.ui.GedcomImportPanel;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
@@ -166,13 +167,19 @@ public abstract class AbstractDiagramManager {
 
     abstract public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel);
 
-    public void newDiagram(Rectangle preferredSizeLocation) throws EntityServiceException {
+    public void newDiagram(Rectangle preferredSizeLocation, ProjectRecord projectRecord) throws EntityServiceException {
         URI defaultDiagramUri = null;
-        if (KinDiagramPanel.getDefaultDiagramFile(sessionStorage).exists()) {
-            defaultDiagramUri = KinDiagramPanel.getDefaultDiagramFile(sessionStorage).toURI();
+        if (projectRecord == null) {
+            if (KinDiagramPanel.getGlobalDefaultDiagramFile(sessionStorage).exists()) {
+                defaultDiagramUri = KinDiagramPanel.getGlobalDefaultDiagramFile(sessionStorage).toURI();
+            }
+        } else {
+            if (KinDiagramPanel.getDefaultDiagramFile(projectRecord).exists()) {
+                defaultDiagramUri = KinDiagramPanel.getDefaultDiagramFile(projectRecord).toURI();
+            }
         }
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
-        egoSelectionTestPanel.setName("Unsaved Default Diagram");
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, projectRecord, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
+        egoSelectionTestPanel.setName("[" + egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName() + "] Unsaved Default Diagram");
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
         egoSelectionTestPanel.loadAllTrees();
     }
@@ -185,7 +192,7 @@ public abstract class AbstractDiagramManager {
     }
 
     public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu, Rectangle preferredSizeLocation) throws EntityServiceException {
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, null, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
         if (saveToRecentMenu) {
             // only save to the recent diagrams if there was no error opening it
             // prevent files from the samples menu being added to the recent files menu

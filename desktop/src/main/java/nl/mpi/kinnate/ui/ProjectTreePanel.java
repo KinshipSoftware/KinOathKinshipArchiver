@@ -134,10 +134,10 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
         ProjectTreePanel.this.add(pagePanel, BorderLayout.PAGE_END);
         this.revalidate();
     }
-    static final private Object lockObject = new Object();
-    static final private AtomicBoolean ATOMIC_BOOLEAN = new AtomicBoolean(false);
-    static private ArrayList<KinTreeNode> staticTreeNodesArray = null;
-    static private boolean updateRequired = true;
+    final private Object lockObject = new Object();
+    final private AtomicBoolean ATOMIC_BOOLEAN = new AtomicBoolean(false);
+//     private ArrayList<KinTreeNode> tempTreeNodesArray = null;
+    private boolean updateRequired = true;
 
     public void loadProjectTree() {
         ProjectTreePanel.this.remove(pagePanel);
@@ -151,8 +151,8 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
             public void run() {
                 boolean projectQueryRunning = ATOMIC_BOOLEAN.getAndSet(true);
                 synchronized (lockObject) {
+                    final ArrayList<KinTreeNode> tempTreeNodesArray = new ArrayList<KinTreeNode>();
                     if (!projectQueryRunning && updateRequired) {
-                        staticTreeNodesArray = new ArrayList<KinTreeNode>();
                         try {
                             EntityData[] projectEntities = entityCollection.getEntityByEndPoint(DataTypes.RelationType.ancestor, graphPanel.getIndexParameters());
                             for (EntityData entityData : projectEntities) {
@@ -169,16 +169,16 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
 //                    }
                                 if (isHorizontalEndPoint) {
                                     // todo: add cache and update (on change) of the tree nodes
-                                    staticTreeNodesArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                                    tempTreeNodesArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
                                 }
                             }
-                            Collections.sort(staticTreeNodesArray);
+                            Collections.sort(tempTreeNodesArray);
                             updateRequired = false;
                         } catch (EntityServiceException exception) {
                             dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Get Project Entities");
                         }
                     }
-                    treeNodesArray = staticTreeNodesArray;
+                    treeNodesArray = tempTreeNodesArray;
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             showPage();

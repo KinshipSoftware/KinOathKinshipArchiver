@@ -137,16 +137,16 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
                 @Override
                 public boolean accept(File selectedFile) {
 //                    System.out.println("selectedFile: " + selectedFile);
-                        try {
-                            final ProjectRecord projectRecord = projectManager.loadProjectRecord(selectedFile);
-                            if (projectRecord == null) {
-                                return false;
-                            }
-                            return true;
-                        } catch (JAXBException exception) {
-                            // if we cannot read the project file then we cannot open the project
+                    try {
+                        final ProjectRecord projectRecord = projectManager.loadProjectRecord(selectedFile);
+                        if (projectRecord == null) {
                             return false;
                         }
+                        return true;
+                    } catch (JAXBException exception) {
+                        // if we cannot read the project file then we cannot open the project
+                        return false;
+                    }
 //                    } else {
 //                    return (selectedFile.exists() && (selectedFile.isDirectory()));
 //                    }
@@ -159,6 +159,17 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
             });
         }
         return fileFilterMap;
+    }
+
+    private void openProject(ProjectRecord projectRecord) {
+        final Dimension parentSize = parentComponent.getSize();
+        final Point parentLocation = parentComponent.getLocation();
+        int offset = 10;
+        try {
+            diagramWindowManager.newDiagram(new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset), projectRecord);
+        } catch (EntityServiceException entityServiceException) {
+            dialogHandler.addMessageDialogToQueue("Failed to create a new diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -177,6 +188,7 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
                     try {
                         selecteFile.mkdir();
                         projectManager.saveProjectRecord(projectRecord);
+                        openProject(projectRecord);
                     } catch (JAXBException exception) {
                         dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Create Project Error");
                     }
@@ -188,6 +200,11 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
             final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Project", false, false, getProjectFileFilter(), MessageDialogHandler.DialogueType.open, previewPanel);
             if (selectedFilesArray != null) {
                 System.out.println(selectedFilesArray[0].getAbsolutePath());
+                try {
+                    openProject(projectManager.loadProjectRecord(selectedFilesArray[0]));
+                } catch (JAXBException exception) {
+                    dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Read Project Record Error");
+                }
             }
 
         } else if ("Clear List".equals(e.getActionCommand())) {

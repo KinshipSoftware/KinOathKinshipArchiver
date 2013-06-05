@@ -62,6 +62,7 @@ import nl.mpi.kinnate.kintypestrings.KinTermCalculator;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.projects.ProjectManager;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
@@ -92,7 +93,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private HidePane kinTypeHidePane;
     private EntityService entityIndex;
     private JProgressBar progressBar;
-    static private File defaultDiagramTemplate;
     private HashMap<ArbilDataNode, UniqueIdentifier> registeredArbilDataNode;
     private HashMap<ArbilNode, Boolean> arbilDataNodesChangedStatus;
 //    private ArrayList<ArbilTree> treeLoadQueue = new ArrayList<ArbilTree>();
@@ -104,14 +104,14 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private AbstractDiagramManager diagramWindowManager;
     private StatusBar statusBar;
 
-    public KinDiagramPanel(URI existingFile, boolean savableType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
+    public KinDiagramPanel(URI existingFile, boolean savableType, ProjectRecord projectRecord, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
         this.diagramWindowManager = diagramWindowManager;
         this.projectManager = projectManager;
-        initKinDiagramPanel(existingFile, null, savableType);
+        initKinDiagramPanel(existingFile, null, savableType, projectRecord);
     }
 
     public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
@@ -121,7 +121,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         this.treeHelper = treeHelper;
         this.diagramWindowManager = diagramWindowManager;
         this.projectManager = projectManager;
-        initKinDiagramPanel(null, documentType, false);
+        //ProjectRecord projectRecord, 
+        initKinDiagramPanel(null, documentType, false, null);
     }
 
     public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
@@ -131,10 +132,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         this.treeHelper = treeHelper;
         this.entityCollection = entityCollection; // we are setting the entity collection here because it has the project that has just been imported to and we want to show the results
         this.diagramWindowManager = diagramWindowManager;
-        initKinDiagramPanel(null, documentType, false);
+        initKinDiagramPanel(null, documentType, false, null);
     }
 
-    private void initKinDiagramPanel(URI existingFile, DocumentType documentType, boolean savableType) throws EntityServiceException {
+    private void initKinDiagramPanel(URI existingFile, DocumentType documentType, boolean savableType, ProjectRecord projectRecord) throws EntityServiceException {
         progressBar = new JProgressBar();
         graphPanel = new GraphPanel(this, dialogHandler, sessionStorage, dataNodeLoader);
         kinTypeStringInput = new KinTypeStringInput(graphPanel.dataStoreSvg);
@@ -216,15 +217,18 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         }
         // todo: resove the context menu actions on a free form diagram that require the entitycollection to exist
 //        if (graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm) {
-        if (graphPanel.dataStoreSvg.projectRecord == null) {
-            if (entityCollection != null) {
-                // if an existing entity collection has been passed in, then set the project from it
-                graphPanel.dataStoreSvg.projectRecord = entityCollection.getProjectRecord();
-            } else {
+//        if (graphPanel.dataStoreSvg.projectRecord == null) {
+        if (entityCollection != null) {
+            // if an existing entity collection has been passed in, then set the project from it
+            graphPanel.dataStoreSvg.projectRecord = entityCollection.getProjectRecord();
+        } else {
+            if (projectRecord != null) {
+                graphPanel.dataStoreSvg.projectRecord = projectRecord;
+            } else if (graphPanel.dataStoreSvg.projectRecord == null) {
                 graphPanel.dataStoreSvg.projectRecord = projectManager.getDefaultProject(sessionStorage);
             }
+            entityCollection = new EntityCollection(projectManager, graphPanel.dataStoreSvg.projectRecord);
         }
-        entityCollection = new EntityCollection(graphPanel.dataStoreSvg.projectRecord);
         graphPanel.setEntityCollection(entityCollection);
 //        } else {
 //            // do not store the project settings for a free form diagram but make sure the defalut project is available for importing
@@ -414,11 +418,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         statusBar.setStatusBarText(statusText);
     }
 
-    static public File getDefaultDiagramFile(SessionStorage sessionStorage) {
-        if (defaultDiagramTemplate == null) {
-            defaultDiagramTemplate = new File(sessionStorage.getProjectDirectory(), "DefaultKinDiagram.svg");
-        }
-        return defaultDiagramTemplate;
+    static public File getGlobalDefaultDiagramFile(SessionStorage sessionStorage) {
+        return new File(sessionStorage.getProjectDirectory(), "DefaultKinDiagram.svg");
+    }
+
+    static public File getDefaultDiagramFile(ProjectRecord projectRecord) {
+        return new File(projectRecord.getProjectDirectory(), "DefaultKinDiagram.svg");
     }
 
     public void redrawIfKinTermsChanged() {

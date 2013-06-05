@@ -39,9 +39,11 @@ public class ProjectManager {
     public ProjectManager() {
     }
 
+    // this should be replaced by the wizard that explains the difference between freeform diagrams and project diagrams
+    @Deprecated
     public ProjectRecord getDefaultProject(SessionStorage sessionStorage) {
         if (defaultProject == null) {
-            defaultProject = new ProjectRecord(sessionStorage.getProjectDirectory(), "nl-mpi-kinnate");
+            defaultProject = new ProjectRecord(sessionStorage.getProjectDirectory(), "nl-mpi-kinnate", "nl-mpi-kinnate");
         }
         return defaultProject;
     }

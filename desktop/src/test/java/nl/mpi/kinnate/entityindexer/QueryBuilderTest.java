@@ -62,13 +62,13 @@ public class QueryBuilderTest extends TestCase {
     public void testAsSequenceString_IndexerParam() {
         System.out.println("asSequenceString");
         IndexerParam indexerParam = new IndexerParam(new String[][]{
-                    {"one&two", "triangle"},
-                    {"single'quote", "triangle"},
-                    {"double\"quote", "triangle"},
-                    {"*:Kinnate/*:CustomData[*:Gender='Male']", "triangle"},
-                    {"*:Kinnate/*:CustomData[*:Gender='']", "square"},
-                    {"*:Kinnate/*:CustomData[*:DateOfDeath!='']", "blackstrikethrough"}
-                }, "%s");
+            {"one&two", "triangle"},
+            {"single'quote", "triangle"},
+            {"double\"quote", "triangle"},
+            {"*:Kinnate/*:CustomData[*:Gender='Male']", "triangle"},
+            {"*:Kinnate/*:CustomData[*:Gender='']", "square"},
+            {"*:Kinnate/*:CustomData[*:DateOfDeath!='']", "blackstrikethrough"}
+        }, "%s");
         QueryBuilder instance = new QueryBuilder();
         String expResult = "(\"one&amp;two\",\"single'quote\",\"double&quot;quote\",\"*:Kinnate/*:CustomData[*:Gender='Male']\",\"*:Kinnate/*:CustomData[*:Gender='']\",\"*:Kinnate/*:CustomData[*:DateOfDeath!='']\")";
         String result = instance.asSequenceString(indexerParam);
@@ -137,7 +137,7 @@ public class QueryBuilderTest extends TestCase {
         String keyWords = "one two one&two single'quote double\"quote";
         IndexerParameters indexParameters = new IndexerParameters();
         QueryBuilder instance = new QueryBuilder();
-        String result = instance.getEntityByKeyWordQuery(keyWords, indexParameters);
+        String result = instance.getEntityByKeyWordQuery(keyWords, indexParameters, "dbname");
         assertEquals(result.indexOf("one&two"), -1);
 //        assertEquals(result.indexOf("single'quote"), -1); // single quotes are fine because we use double quotes for the query strings
         assertEquals(result.indexOf("double\"quote"), -1);
@@ -157,7 +157,7 @@ public class QueryBuilderTest extends TestCase {
 //        queryTerms.queryTerms.add(new QueryTerm("double\"quote", KinTypeStringConverter.QueryType.Greater, "value"));
         queryTerms.queryTerms.add(new QueryTerm("field", KinTypeStringConverter.QueryType.Greater, "double\"quote"));
         QueryBuilder instance = new QueryBuilder();
-        String result = instance.getTermQuery(queryTerms);
+        String result = instance.getTermQuery(queryTerms, "dbname");
 //        System.out.println("result: " + result);
         assertEquals(result.indexOf("one&two"), -1);
 //        assertEquals(result.indexOf("single'quote"), -1); // single quotes are fine because we use double quotes for the query strings

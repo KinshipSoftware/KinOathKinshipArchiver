@@ -69,7 +69,8 @@ public class FileMenu extends javax.swing.JMenu {
     private javax.swing.JMenuItem projectNewMenu;
     private javax.swing.JMenuItem projectOpenMenu;
     private ProjectFileMenu projectRecentMenu;
-    private javax.swing.JMenuItem saveAsDefaultMenuItem;
+    private javax.swing.JMenuItem saveAsGlobalDefaultMenuItem;
+    private javax.swing.JMenuItem saveAsProjectDefaultMenuItem;
     private javax.swing.JMenuItem saveDiagram;
     private javax.swing.JMenuItem saveDiagramAs;
     private javax.swing.JMenuItem savePdfMenuItem;
@@ -77,10 +78,12 @@ public class FileMenu extends javax.swing.JMenu {
     private SessionStorage sessionStorage;
     private MessageDialogHandler dialogHandler; //ArbilWindowManager
     private Component parentComponent;
+    private ProjectManager projectManager;
 
     public FileMenu(AbstractDiagramManager diagramWindowManager, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, Component parentComponent, ProjectManager projectManager) {
         this.diagramWindowManager = diagramWindowManager;
         this.sessionStorage = sessionStorage;
+        this.projectManager = projectManager;
         this.dialogHandler = dialogHandler;
         this.diagramWindowManager = diagramWindowManager;
         this.parentComponent = parentComponent;
@@ -106,7 +109,8 @@ public class FileMenu extends javax.swing.JMenu {
         exportToR = new javax.swing.JMenuItem();
         closeTabMenuItem = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
-        saveAsDefaultMenuItem = new javax.swing.JMenuItem();
+        saveAsGlobalDefaultMenuItem = new javax.swing.JMenuItem();
+        saveAsProjectDefaultMenuItem = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         exitApplication = new javax.swing.JMenuItem();
         // todo: Ticket #1297 add an import gedcom and csv menu item
@@ -258,13 +262,21 @@ public class FileMenu extends javax.swing.JMenu {
         this.add(closeTabMenuItem);
         this.add(jSeparator3);
 
-        saveAsDefaultMenuItem.setText("Save as Default Diagram");
-        saveAsDefaultMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        saveAsGlobalDefaultMenuItem.setText("Save as Global Default Diagram");
+        saveAsGlobalDefaultMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveAsDefaultMenuItemActionPerformed(evt);
+                saveAsDefaultMenuItemActionPerformed(evt, true);
             }
         });
-        this.add(saveAsDefaultMenuItem);
+        this.add(saveAsGlobalDefaultMenuItem);
+
+        saveAsProjectDefaultMenuItem.setText("Save as Project Default Diagram");
+        saveAsProjectDefaultMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAsDefaultMenuItemActionPerformed(evt, false);
+            }
+        });
+        this.add(saveAsProjectDefaultMenuItem);
         this.add(jSeparator5);
 
         exitApplication.setText("Exit");
@@ -357,22 +369,26 @@ public class FileMenu extends javax.swing.JMenu {
             saveDiagram.setActionCommand(Integer.toString(selectedIndex));
             closeTabMenuItem.setText("Close (" + currentTabText + ")");
             closeTabMenuItem.setActionCommand(Integer.toString(selectedIndex));
-            saveAsDefaultMenuItem.setText("Set Default Diagram as (" + currentTabText + ")");
-            saveAsDefaultMenuItem.setActionCommand(Integer.toString(selectedIndex));
+            saveAsGlobalDefaultMenuItem.setText("Set Global Default Diagram as (" + currentTabText + ")");
+            saveAsGlobalDefaultMenuItem.setActionCommand(Integer.toString(selectedIndex));
+            saveAsProjectDefaultMenuItem.setText("Set Project Default Diagram as (" + currentTabText + ")");
+            saveAsProjectDefaultMenuItem.setActionCommand(Integer.toString(selectedIndex));
         }
         if (savePanel != null) {
             saveDiagram.setEnabled(savePanel.hasSaveFileName() && savePanel.requiresSave());
             saveDiagramAs.setEnabled(true);
             exportToR.setEnabled(true);
             closeTabMenuItem.setEnabled(true);
-            saveAsDefaultMenuItem.setEnabled(true);
+            saveAsGlobalDefaultMenuItem.setEnabled(true);
+            saveAsProjectDefaultMenuItem.setEnabled(true);
             savePdfMenuItem.setEnabled(true);
         } else {
             saveDiagramAs.setEnabled(false);
             saveDiagram.setEnabled(false);
             exportToR.setEnabled(false);
             closeTabMenuItem.setEnabled(false);
-            saveAsDefaultMenuItem.setEnabled(false);
+            saveAsGlobalDefaultMenuItem.setEnabled(true);
+            saveAsProjectDefaultMenuItem.setEnabled(true);
             savePdfMenuItem.setEnabled(false);
         }
     }
@@ -392,7 +408,7 @@ public class FileMenu extends javax.swing.JMenu {
         final Point parentLocation = parentComponent.getLocation();
         int offset = 10;
         try {
-            diagramWindowManager.newDiagram(new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset));
+            diagramWindowManager.newDiagram(new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset), null);
         } catch (EntityServiceException entityServiceException) {
             dialogHandler.addMessageDialogToQueue("Failed to create a new diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
         }
@@ -538,10 +554,14 @@ public class FileMenu extends javax.swing.JMenu {
         diagramWindowManager.openEntityUploadPanel(null, getEntityCollection());
     }
 
-    private void saveAsDefaultMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+    private void saveAsDefaultMenuItemActionPerformed(java.awt.event.ActionEvent evt, boolean saveAsGlobal) {
         int tabIndex = Integer.valueOf(evt.getActionCommand());
         SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
-        savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile(sessionStorage));
+        if (saveAsGlobal) {
+            savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile(projectManager.getDefaultProject(sessionStorage)));
+        } else {
+            savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile(savePanel.getGraphPanel().dataStoreSvg.projectRecord));
+        }
     }
 
     private EntityCollection getEntityCollection() {
