@@ -45,7 +45,7 @@ public class ProjectManager {
     @Deprecated
     public ProjectRecord getDefaultProject(SessionStorage sessionStorage) {
         if (defaultProject == null) {
-            defaultProject = new ProjectRecord(sessionStorage.getProjectDirectory(), "nl-mpi-kinnate", "nl-mpi-kinnate");
+            defaultProject = new ProjectRecord(sessionStorage.getProjectDirectory(), sessionStorage.getProjectDirectory().getName(), "nl-mpi-kinnate");
         }
         return defaultProject;
     }

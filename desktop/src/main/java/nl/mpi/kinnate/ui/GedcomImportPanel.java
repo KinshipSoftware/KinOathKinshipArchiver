@@ -41,7 +41,6 @@ import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.XsdChecker;
-import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.CsvImporter;
@@ -50,9 +49,7 @@ import nl.mpi.kinnate.gedcomimport.GenericImporter;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.gedcomimport.KinOathImporter;
 import nl.mpi.kinnate.gedcomimport.TipImporter;
-import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
-import nl.mpi.kinnate.ui.menu.DocumentNewMenu;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -63,9 +60,9 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class GedcomImportPanel extends JPanel {
 
-    private EntityCollection entityCollection;
-    private AbstractDiagramManager abstractDiagramManager;
-    private Component parentComponent;
+    private final EntityCollection entityCollection;
+    private final AbstractDiagramManager abstractDiagramManager;
+    private final KinDiagramPanel kinDiagramPanel;
     private JTextArea importTextArea;
     private JProgressBar progressBar;
     private JCheckBox overwriteOnImport;
@@ -74,18 +71,18 @@ public class GedcomImportPanel extends JPanel {
     private JButton startButton;
     private JButton closeButton;
     private JPanel endPagePanel;
-    private SessionStorage sessionStorage;
-    private ArbilWindowManager dialogHandler;
-    private ArbilDataNodeLoader dataNodeLoader;
-    private ArbilTreeHelper treeHelper;
+    private final SessionStorage sessionStorage;
+    private final ArbilWindowManager dialogHandler;
+    private final ArbilDataNodeLoader dataNodeLoader;
+    private final ArbilTreeHelper treeHelper;
     private JDialog dialoguePanel;
     private Component errorPanel = null;
 
-    public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager, Component parentComponent, EntityCollection entityCollection, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper) {
+    public GedcomImportPanel(AbstractDiagramManager abstractDiagramManager, KinDiagramPanel kinDiagramPanel, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper) {
         this.setPreferredSize(new Dimension(500, 500));
         this.abstractDiagramManager = abstractDiagramManager;
-        this.parentComponent = parentComponent;
-        this.entityCollection = entityCollection;
+        this.kinDiagramPanel = kinDiagramPanel;
+        this.entityCollection = kinDiagramPanel.getEntityCollection();
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
@@ -98,31 +95,31 @@ public class GedcomImportPanel extends JPanel {
         } else {
             closeButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    final SavePanel currentSavePanel = abstractDiagramManager.getCurrentSavePanel(parentComponent);
-                    KinDiagramPanel kinDiagramPanel = null;
-                    if (currentSavePanel instanceof KinDiagramPanel) {
-                        kinDiagramPanel = (KinDiagramPanel) currentSavePanel;
-                        if (kinDiagramPanel.getGraphPanel().dataStoreSvg.diagramMode != DataStoreSvg.DiagramMode.KinTypeQuery) {
-                            kinDiagramPanel = null;
-                        }
+//                    final SavePanel currentSavePanel = abstractDiagramManager.getCurrentSavePanel(parentComponent);
+//                    KinDiagramPanel kinDiagramPanel = null;
+//                    if (currentSavePanel instanceof KinDiagramPanel) {
+//                        kinDiagramPanel = (KinDiagramPanel) currentSavePanel;
+//                        if (kinDiagramPanel.getGraphPanel().dataStoreSvg.diagramMode != DataStoreSvg.DiagramMode.KinTypeQuery) {
+//                            kinDiagramPanel = null;
+//                        }
 //                        kinDiagramPanel.updateGraph(); // there is no point updating the graph at this point
-                    }
-                    try {
-                        if (kinDiagramPanel == null) {
-                            kinDiagramPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, abstractDiagramManager);
-                            kinDiagramPanel.setName("Imported Entities");
-                            abstractDiagramManager.createDiagramContainer(kinDiagramPanel, null);
-                        }
+//                    }
+//                    try {
+//                        if (kinDiagramPanel == null) {
+//                            kinDiagramPanel = new KinDiagramPanel(DocumentNewMenu.DocumentType.Simple, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, entityCollection, abstractDiagramManager);
+//                            kinDiagramPanel.setName("Imported Entities");
+//                            abstractDiagramManager.createDiagramContainer(kinDiagramPanel, null);
+//                        }
                         final HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>();
                         for (HashSet<UniqueIdentifier> identifiers : gedcomImporter.getCreatedNodeIds().values()) {
                             selectedIds.addAll(identifiers);
                         }
                         kinDiagramPanel.addNodeCollection(selectedIds.toArray(new UniqueIdentifier[]{}), "Imported Entities");
                         kinDiagramPanel.loadAllTrees();
-                    } catch (EntityServiceException exception) {
-                        importTextArea.append("Creating a new document failed, cannot show the imported entitys." + "\n");
-                        dialogHandler.addMessageDialogToQueue("Creating a new document failed, cannot show the imported entitys.", "Import Entities");
-                    }
+//                    } catch (EntityServiceException exception) {
+//                        importTextArea.append("Creating a new document failed, cannot show the imported entitys." + "\n");
+//                        dialogHandler.addMessageDialogToQueue("Creating a new document failed, cannot show the imported entitys.", "Import Entities");
+//                    }
                     dialoguePanel.dispose();
                 }
             });
@@ -169,7 +166,7 @@ public class GedcomImportPanel extends JPanel {
             // todo: any existing files are always being overwritten and the entity id also being changed so existing relations will be broken, maybe prevent overwritting all entities for an import file?
             // todo: it might be better to check for a file already exsiting and if it does load it and strip out the relations and metadata that would be replaced by the import?
             // todo: add a label and a better default for gedcom (non INDI does not need DOB etc.)
-            final JComboBox profileSelectBox = new JComboBox(new DataStoreSvg().selectedProfiles); // todo: changee this to use <default> for the gedcom profile
+            final JComboBox profileSelectBox = new JComboBox(kinDiagramPanel.getGraphPanel().dataStoreSvg.selectedProfiles); // todo: changee this to use <default> for the gedcom profile
             final ProfileRecord defaultImportProfile = ProfileRecord.getDefaultImportProfile();
             profileSelectBox.addItem(defaultImportProfile);
             profileSelectBox.setSelectedItem(defaultImportProfile);
@@ -314,7 +311,7 @@ public class GedcomImportPanel extends JPanel {
                 dialoguePanel.dispose();
             }
         });
-        dialoguePanel = abstractDiagramManager.createDialogueContainer(GedcomImportPanel.this, parentComponent);
+        dialoguePanel = abstractDiagramManager.createDialogueContainer(GedcomImportPanel.this, kinDiagramPanel);
         dialoguePanel.setVisible(true);
     }
 }

@@ -138,7 +138,7 @@ public class EntityImporter implements GenericImporter {
     }
 
     protected File getDestinationDirectory() {
-        File destinationDirectory = new File(sessionStorage.getProjectWorkingDirectory(), inputFileMd5Sum);
+        File destinationDirectory = new File(projectRecord.getProjectDataFilesDirectory(), inputFileMd5Sum);
         if (!destinationDirectory.exists()) {
             destinationDirectory.mkdir();
         }

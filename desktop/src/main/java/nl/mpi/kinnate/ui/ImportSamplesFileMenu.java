@@ -65,7 +65,7 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
         try {
             if (currentSavePanel instanceof KinDiagramPanel) {
                 final KinDiagramPanel diagramPanel = (KinDiagramPanel) currentSavePanel;
-                diagramWindowManager.openJarImportPanel(e.getActionCommand(), parentComponent, diagramPanel.getEntityCollection());
+                diagramWindowManager.openJarImportPanel(e.getActionCommand(), diagramPanel, diagramPanel.getEntityCollection());
             } else {
                 dialogHandler.addMessageDialogToQueue("Cannot import into this type of window\n" + e.getActionCommand(), "Import Sample Data");
             }

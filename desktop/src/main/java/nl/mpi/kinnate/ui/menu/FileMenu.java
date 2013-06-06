@@ -454,13 +454,17 @@ public class FileMenu extends javax.swing.JMenu {
             if (importFiles.length == 0) {
                 dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kinship Data");
             } else {
-                for (File importFile : importFiles) {
-                    try {
-                        diagramWindowManager.openImportPanel(importFile, parentComponent, getEntityCollection());
-                    } catch (ImportException exception1) {
-                        dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importFile.getAbsolutePath(), "Import File");
+                SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
+                if (currentSavePanel instanceof KinDiagramPanel) {
+                    final KinDiagramPanel diagramPanel = (KinDiagramPanel) currentSavePanel;
+                    for (File importFile : importFiles) {
+                        try {
+                            diagramWindowManager.openImportPanel(importFile, diagramPanel, getEntityCollection());
+                        } catch (ImportException exception1) {
+                            dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importFile.getAbsolutePath(), "Import File");
+                        }
                     }
-                }
+                } // todo: while it would not happen, if we do land here then the user should be informed as to why
             }
         }
     }
@@ -492,11 +496,15 @@ public class FileMenu extends javax.swing.JMenu {
             "http://GedcomLibrary.com/gedcoms/misc2a.ged", //
             "http://GedcomLibrary.com/gedcoms/gl120372.ged"};
         for (String importUrlString : importList) {
-            try {
-                diagramWindowManager.openImportPanel(importUrlString, parentComponent, getEntityCollection());
-            } catch (ImportException exception1) {
-                dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importUrlString, "Import File");
-            }
+            SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
+            if (currentSavePanel instanceof KinDiagramPanel) {
+                final KinDiagramPanel diagramPanel = (KinDiagramPanel) currentSavePanel;
+                try {
+                    diagramWindowManager.openImportPanel(importUrlString, diagramPanel, getEntityCollection());
+                } catch (ImportException exception1) {
+                    dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importUrlString, "Import File");
+                }
+            } // todo: while it would not happen, if we do land here then the user should be informed as to why
         }
     }
 
