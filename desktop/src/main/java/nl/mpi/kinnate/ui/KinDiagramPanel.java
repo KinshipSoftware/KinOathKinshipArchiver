@@ -284,6 +284,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             VisiblePanelSetting panelSetting = graphPanel.dataStoreSvg.getPanelSettingByType(panelType);
             switch (panelType) {
                 case ArchiveLinker:
+                    treeHelper.loadLocationsList();
                     if (panelSetting == null) {
                         panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, showArchiveLinker);
                     }
