@@ -74,7 +74,7 @@
                             </xs:sequence>
                         </xs:complexType>
                     </xs:element>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" type="xs:anyURI" name="ArchiveLink"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" type="xs:anyURI" name="ExternalLink"/>
                 </xs:sequence>
             </xs:complexType>
         </xs:element>

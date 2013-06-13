@@ -223,7 +223,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
                             entityDocument.insertValue(fieldOfInterest, arbilFeildsArray[0].getFieldValue().toLowerCase());
                         }
                     }
-                    entityDocument.entityData.addArchiveLink(((ArbilDataNode) draggedNode).getURI());
+                    entityDocument.entityData.addExternalLink(((ArbilDataNode) draggedNode).getURI(), ((ArbilDataNode) draggedNode).getID());
                 }
                 // todo: based on the DCR entries the relevant data could be selected and inserted, or the user could specify which fields to insert
 //            entityDocument.insertDefaultMetadata(); // todo: insert copy of metadata from source node
@@ -251,7 +251,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     private boolean attachMetadata(EntityData entityData) {
         for (ArbilNode currentArbilNode : selectedNodes) {
             final ArbilDataNode currentArbilDataNode = (ArbilDataNode) currentArbilNode;
-            entityData.addArchiveLink(currentArbilDataNode.getURI());
+            entityData.addExternalLink(currentArbilDataNode.getURI(), currentArbilDataNode.getID());
             // todo: insert the archive handle here also
             // todo: insert the entity identifier into the attached metadata
 

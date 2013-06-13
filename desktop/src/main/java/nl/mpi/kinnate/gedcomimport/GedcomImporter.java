@@ -270,7 +270,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                             } else {
                                                 resolvedUri = inputFileUri.resolve(lineStructure.getLineContents());
                                             }
-                                            currentEntity.entityData.addArchiveLink(resolvedUri);
+                                            currentEntity.entityData.addExternalLink(resolvedUri, null);
                                             notConsumed = false;
                                         } catch (java.lang.IllegalArgumentException exception) {
                                             appendToTaskOutput("Unsupported File Path: " + lineStructure.getLineContents());

@@ -136,10 +136,10 @@ public class QueryBuilder {
         return stringBuilder.toString();
     }
 
-    public String getArchiveLinksClause() {
-        return "for $corpusLink in $entityNode/*:CorpusLink\n"
-                + "return <ArchiveLink>{$corpusLink/text()}</ArchiveLink>";
-    }
+//    public String getArchiveLinksClause() {
+//        return "for $corpusLink in $entityNode/*:CorpusLink\n"
+//                + "return <ArchiveLink>{$corpusLink/text()}</ArchiveLink>";
+//    }
 
     public String getRelationQuery() {
         return "<Relations>{"

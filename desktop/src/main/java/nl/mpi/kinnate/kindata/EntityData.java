@@ -20,6 +20,7 @@ package nl.mpi.kinnate.kindata;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -71,11 +72,11 @@ public class EntityData {
     @XmlElementWrapper(name = "Relations", namespace = "http://mpi.nl/tla/kin")
     @XmlElement(name = "Relation", namespace = "http://mpi.nl/tla/kin")
     private EntityRelation[] relatedNodes;
-    @XmlElement(name = "ArchiveLink", namespace = "http://mpi.nl/tla/kin")
+    @XmlElement(name = "ExternalLink", namespace = "http://mpi.nl/tla/kin")
     // todo: this needs to provide both the archive handle (for opening the browser) and the url to open localy stored copy of the file
     //@Deprecated // todo: should this be separate from the relations? can it even work that way? replace this archive link with a relation of type resource: but then again a resource link such as a jpg cannot be a relaion it is metadata only, maybe this is also the case for collector?
     // todo: change this to an object of archive handle and uri
-    public URI[] archiveLinkArray = null; //new String[]{"http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7", "http://www.google.com", "http://www.mpi.nl"};
+    public List<ExternalLink> externalLinks = null; //new String[]{"http://corpus1.mpi.nl/ds/imdi_browser/?openpath=hdl%3A1839%2F00-0000-0000-000D-2E72-7", "http://www.google.com", "http://www.mpi.nl"};
 //    @XmlElement(name = "ResourceLink")
 //    public String[] resourceLinkArray;
     @XmlTransient
@@ -144,15 +145,11 @@ public class EntityData {
 //        this.dateOfDeath = new EntityDate(dateOfDeath);
 //    }
     // end code used for importing gedcom and other file types
-    public void addArchiveLink(URI resourceUri) {
-        ArrayList<URI> linksList;
-        if (archiveLinkArray != null) {
-            linksList = new ArrayList<URI>(Arrays.asList(archiveLinkArray));
-        } else {
-            linksList = new ArrayList<URI>();
+    public void addExternalLink(URI resourceUri, String pidString) {
+        if (externalLinks == null) {
+            externalLinks = new ArrayList<ExternalLink>();
         }
-        linksList.add(resourceUri);
-        archiveLinkArray = linksList.toArray(new URI[]{});
+        externalLinks.add(new ExternalLink(resourceUri, pidString));
     }
 
     public String[] getSymbolNames(String defaultSymbol) {

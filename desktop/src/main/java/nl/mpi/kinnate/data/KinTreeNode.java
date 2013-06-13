@@ -17,7 +17,6 @@
  */
 package nl.mpi.kinnate.data;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,9 +32,9 @@ import nl.mpi.flap.model.DataNodeType;
 import nl.mpi.flap.model.FieldGroup;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
-import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindata.ExternalLink;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.svg.SymbolGraphic;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -145,10 +144,10 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     }
 
     protected void getLinksMetaNode(HashSet<ArbilNode> kinTreeMetaNodes) {
-        if (entityData.archiveLinkArray != null) {
+        if (entityData.externalLinks != null) {
             HashSet<ArbilDataNode> relationList = new HashSet<ArbilDataNode>();
-            for (URI archiveLink : entityData.archiveLinkArray) {
-                ArbilDataNode linkedArbilDataNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
+            for (ExternalLink externalLink : entityData.externalLinks) {
+                ArbilDataNode linkedArbilDataNode = dataNodeLoader.getArbilDataNode(null, externalLink.getLinkUri());
                 relationList.add(linkedArbilDataNode);
             }
             kinTreeMetaNodes.add(new ContainerNode(null, "External Links", null, relationList.toArray(new ArbilDataNode[]{})));

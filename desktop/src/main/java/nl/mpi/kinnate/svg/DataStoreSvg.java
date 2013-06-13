@@ -95,8 +95,8 @@ public class DataStoreSvg {
     public boolean snapToGrid = true;
     @XmlElement(name = "ShowSanguineLines", namespace = "http://mpi.nl/tla/kin")
     public boolean showSanguineLines = true;
-    @XmlElement(name = "ShowArchiveLinks", namespace = "http://mpi.nl/tla/kin")
-    public boolean showArchiveLinks = true;
+    @XmlElement(name = "ShowExternalLinks", namespace = "http://mpi.nl/tla/kin")
+    public boolean showExternalLinks = true;
 //    @XmlElement(name = "ShowResourceLinks", namespace = "http://mpi.nl/tla/kin")
 //    public boolean showResourceLinks = true;
     @XmlElement(name = "HighlightRelationLines", namespace = "http://mpi.nl/tla/kin")

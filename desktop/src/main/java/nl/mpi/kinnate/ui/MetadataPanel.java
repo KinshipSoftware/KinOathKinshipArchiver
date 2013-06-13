@@ -20,8 +20,6 @@ package nl.mpi.kinnate.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,11 +36,11 @@ import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.ui.ArbilTreeController;
 import nl.mpi.arbil.ui.ImageBoxRenderer;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.arbil.util.TreeHelper;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.ExternalLink;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.ui.menu.TableMenu;
 
@@ -179,9 +177,9 @@ public class MetadataPanel extends JPanel {
             kinTableModel.addSingleArbilDataNode(arbilDataNode);
             metadataNodes.add(arbilDataNode);
             // add the corpus links to the other table
-            if (entityData.archiveLinkArray != null) {
-                for (URI archiveLink : entityData.archiveLinkArray) {
-                    ArbilDataNode archiveLinkNode = dataNodeLoader.getArbilDataNode(null, archiveLink);
+            if (entityData.externalLinks != null) {
+                for (ExternalLink archiveLink : entityData.externalLinks) {
+                    ArbilDataNode archiveLinkNode = dataNodeLoader.getArbilDataNode(null, archiveLink.getLinkUri());
                     // todo: we do not register this node with the graph panel because it is not rendered on the graph, but if the name of the node changes then it should be updated in the tree which is not yet handled
                     archiveTableModel.addSingleArbilDataNode(archiveLinkNode);
                     archiveTreeNodes.add(archiveLinkNode);

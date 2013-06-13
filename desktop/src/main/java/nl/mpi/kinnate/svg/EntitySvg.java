@@ -19,7 +19,6 @@ package nl.mpi.kinnate.svg;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,6 +28,7 @@ import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityDate;
+import nl.mpi.kinnate.kindata.ExternalLink;
 import nl.mpi.kinnate.kindata.GraphLabel;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -797,7 +797,7 @@ public class EntitySvg {
             // end date of birth/death label
         }
         int linkCounter = 0;
-        if (graphPanel.dataStoreSvg.showArchiveLinks && currentNode.archiveLinkArray != null) {
+        if (graphPanel.dataStoreSvg.showExternalLinks && currentNode.externalLinks != null) {
             // loop through the archive links and optionaly add href tags for each linked archive data <a xlink:href="http://www.mpi.nl/imdi-archive-link" target="_blank"></a>
             Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
             labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
@@ -808,11 +808,18 @@ public class EntitySvg {
 
             Text textNode = graphPanel.doc.createTextNode("archive ref: ");
             labelText.appendChild(textNode);
-            for (URI linkURI : currentNode.archiveLinkArray) {
+            for (ExternalLink linkURI : currentNode.externalLinks) {
                 linkCounter++;
                 Element labelTagA = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "a");
-
-                labelTagA.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", linkURI.toASCIIString());
+                String linkUrl;
+                if (linkURI.getPidString() != null) {
+                    linkUrl = "http://corpus1.mpi.nl/ds/imdi_browser/?openpath=" + linkURI.getPidString();
+                } else {
+                    linkUrl = linkURI.getLinkUri().toASCIIString();
+                }
+                labelTagA.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", linkUrl);
+//11:19:24 AM Peter: http://corpus1.mpi.nl/ds/imdi_browser/viewcontroller?nodeid=MPI77915%23&action=ViewNode
+//11:20:01 AM Guilherme Silva: http://corpus1.mpi.nl/ds/imdi_browser/?openpath=MPI77915%23
                 labelTagA.setAttribute("target", "_blank");
                 if (linkCounter == 1) {
                     labelTagA.appendChild(graphPanel.doc.createTextNode("" + linkCounter));

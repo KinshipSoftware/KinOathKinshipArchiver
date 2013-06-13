@@ -66,7 +66,7 @@ This is no longer used
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element maxOccurs="unbounded" minOccurs="0" type="xs:anyURI" name="ArchiveLink"/>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" type="xs:anyURI" name="ExternalLink"/>
                             <xs:element maxOccurs="1" minOccurs="0" type="xs:boolean" name="Visible"/>
                         </xs:sequence>
                     </xs:complexType>
