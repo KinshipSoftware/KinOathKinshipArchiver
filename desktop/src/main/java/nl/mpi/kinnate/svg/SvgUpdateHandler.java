@@ -290,22 +290,25 @@ public class SvgUpdateHandler {
         float stepC = 12; //(bbox.getHeight() + paddingDistance) / relationTypeDefinitions.length;
         float maxCY = bbox.getHeight() + paddingDistance;
         for (RelationTypeDefinition typeDefinition : relationTypeDefinitions) {
-            for (DataTypes.RelationType relationType : typeDefinition.getRelationType()) {
-                // use a constant spacing between the drag handle dots and to start a new column when each line is full
-                Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
-                symbolNode.setAttribute("cx", Float.toString(currentCX));
-                symbolNode.setAttribute("cy", Float.toString(currentCY));
-                currentCY += stepC;
-                if (currentCY >= maxCY) {
-                    currentCY = minCY;
-                    currentCX += stepC;
+            // if typeDefinition is null than the type any has been selected, but no drag handle can be given for the type any
+            if (typeDefinition != null) {
+                for (DataTypes.RelationType relationType : typeDefinition.getRelationType()) {
+                    // use a constant spacing between the drag handle dots and to start a new column when each line is full
+                    Element symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "circle");
+                    symbolNode.setAttribute("cx", Float.toString(currentCX));
+                    symbolNode.setAttribute("cy", Float.toString(currentCY));
+                    currentCY += stepC;
+                    if (currentCY >= maxCY) {
+                        currentCY = minCY;
+                        currentCX += stepC;
+                    }
+                    symbolNode.setAttribute("r", "5");
+                    symbolNode.setAttribute("handletype", "custom:" + relationType + ":" + typeDefinition.hashCode());
+                    symbolNode.setAttribute("fill", typeDefinition.getLineColour());
+                    symbolNode.setAttribute("stroke", "none");
+                    ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
+                    highlightGroupNode.appendChild(symbolNode);
                 }
-                symbolNode.setAttribute("r", "5");
-                symbolNode.setAttribute("handletype", "custom:" + relationType + ":" + typeDefinition.hashCode());
-                symbolNode.setAttribute("fill", typeDefinition.getLineColour());
-                symbolNode.setAttribute("stroke", "none");
-                ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
-                highlightGroupNode.appendChild(symbolNode);
             }
         }
     }
