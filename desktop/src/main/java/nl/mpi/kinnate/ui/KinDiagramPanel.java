@@ -228,7 +228,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             } else if (graphPanel.dataStoreSvg.projectRecord == null) {
                 graphPanel.dataStoreSvg.projectRecord = projectManager.getDefaultProject(sessionStorage);
             }
-            entityCollection = new EntityCollection(projectManager, graphPanel.dataStoreSvg.projectRecord);
+            entityCollection = projectManager.getEntityCollectionForProject(graphPanel.dataStoreSvg.projectRecord);
         }
         graphPanel.setEntityCollection(entityCollection);
         try {
@@ -287,12 +287,16 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     if (panelSetting == null) {
                         panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, showArchiveLinker);
                     }
-                    panelSetting.setHidePane(kinTermHidePane, "Archive Linker");
-                    archiveEntityLinkerPanelRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree, treeHelper, dataNodeLoader);
-                    archiveEntityLinkerPanelLocal = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree, treeHelper, dataNodeLoader);
+                    panelSetting.setHidePane(kinTermHidePane, "Archive Linker"); // todo: this name is overwriting the correct tab titles
+                    if (treeHelper.getRemoteCorpusNodes().length > 0) {
+                        archiveEntityLinkerPanelRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree, treeHelper, dataNodeLoader);
+                        panelSetting.addTargetPanel(archiveEntityLinkerPanelRemote, false);
+                    }
+                    if (treeHelper.getLocalCorpusNodes().length > 0) {
+                        archiveEntityLinkerPanelLocal = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree, treeHelper, dataNodeLoader);
+                        panelSetting.addTargetPanel(archiveEntityLinkerPanelLocal, false);
+                    }
                     archiveEntityLinkerPanelMpiRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree, treeHelper, dataNodeLoader);
-                    panelSetting.addTargetPanel(archiveEntityLinkerPanelRemote, false);
-                    panelSetting.addTargetPanel(archiveEntityLinkerPanelLocal, false);
                     panelSetting.addTargetPanel(archiveEntityLinkerPanelMpiRemote, false);
                     panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery);
                     break;
@@ -643,9 +647,15 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
     public void loadAllTrees() {
         egoSelectionPanel.setTreeNodes(graphPanel); // init the trees in the side panel
-        archiveEntityLinkerPanelRemote.loadTreeNodes();
-        archiveEntityLinkerPanelLocal.loadTreeNodes();
-        archiveEntityLinkerPanelMpiRemote.loadTreeNodes();
+        if (archiveEntityLinkerPanelRemote != null) {
+            archiveEntityLinkerPanelRemote.loadTreeNodes();
+        }
+        if (archiveEntityLinkerPanelLocal != null) {
+            archiveEntityLinkerPanelLocal.loadTreeNodes();
+        }
+        if (archiveEntityLinkerPanelMpiRemote != null) {
+            archiveEntityLinkerPanelMpiRemote.loadTreeNodes();
+        }
         if (projectTree != null) {
             projectTree.loadProjectTree();
             entityCollection.addDatabaseUpdateListener(projectTree);
