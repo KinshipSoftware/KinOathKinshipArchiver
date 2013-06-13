@@ -319,7 +319,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         this.add(removeEgoMenuItem);
         this.add(jSeparator2);
 
-        addAsRequiredMenuItem = new JMenuItem("Keep on diagram");
+        addAsRequiredMenuItem = new JMenuItem("Attach to diagram");
         addAsRequiredMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kinDiagramPanel.addRequiredNodes(selectedIdentifiers, null); //getSelectedUriArray(),
