@@ -61,7 +61,7 @@ public class CsvImporterTest extends TestCase {
             final ApplicationVersionManager applicationVersionManager = new ApplicationVersionManager(new KinOathVersion());
             final KinSessionStorage kinSessionStorage = new KinSessionStorage(applicationVersionManager);
             final ArbilBugCatcher bugCatcher = new ArbilBugCatcher(kinSessionStorage, new ApplicationVersionManager(new KinOathVersion()));
-            ArrayList<String> arrayList = new CsvImporter(new JProgressBar(), new JTextArea(), true, new KinSessionStorage(applicationVersionManager), new ProjectManager(kinSessionStorage).getDefaultProject(kinSessionStorage)).getFieldsForLineExcludingComments(bufferedReader, fieldSeparator);
+            ArrayList<String> arrayList = new CsvImporter(new JProgressBar(), new JTextArea(), true, new KinSessionStorage(applicationVersionManager), new ProjectManager(kinSessionStorage, null).getDefaultProject(kinSessionStorage)).getFieldsForLineExcludingComments(bufferedReader, fieldSeparator);
 
             assertTrue("Incorrect number of fields found", expectedResult.length == arrayList.size());
             for (int arrayCounter = 0; arrayCounter < expectedResult.length; arrayCounter++) {

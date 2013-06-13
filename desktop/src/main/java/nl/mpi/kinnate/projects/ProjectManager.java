@@ -18,11 +18,16 @@
 package nl.mpi.kinnate.projects;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.ProgressMonitor;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
@@ -36,9 +41,12 @@ public class ProjectManager {
 
     private final File recentProjectsFile;
     private ProjectRecord defaultProject = null; // should the default project be discarded and a mandatory import be required?
+    private HashMap<ProjectRecord, EntityCollection> projectEntityCollectionMap = new HashMap<ProjectRecord, EntityCollection>();
+    private final ArbilWindowManager dialogHandler;
 
-    public ProjectManager(SessionStorage sessionStorage) {
+    public ProjectManager(SessionStorage sessionStorage, ArbilWindowManager dialogHandler) {
         recentProjectsFile = new File(sessionStorage.getApplicationSettingsDirectory(), "RecentProjects.xml");
+        this.dialogHandler = dialogHandler;
     }
 
     // this should be replaced by the wizard that explains the difference between freeform diagrams and project diagrams
@@ -56,6 +64,7 @@ public class ProjectManager {
 
     public void addRecentProjectRecord(ProjectRecord projectRecord) throws JAXBException {
         final RecentProjects recentProjectsList = getRecentProjectsList();
+        checkProjectChangeDate(recentProjectsList, projectRecord);
         recentProjectsList.addProjectRecord(projectRecord);
         saveRecentProjectsList(recentProjectsList);
     }
@@ -64,6 +73,7 @@ public class ProjectManager {
         final RecentProjects recentProjectsList = getRecentProjectsList();
         recentProjectsList.clearList();
         saveRecentProjectsList(recentProjectsList);
+        // todo: remove the unused databases
     }
     /*
      * todo: Ticket #2880 (new enhancement)
@@ -71,9 +81,12 @@ public class ProjectManager {
      */
 
     public EntityCollection getEntityCollectionForProject(ProjectRecord projectRecord) throws EntityServiceException {
-//         todo: keep track of these collections so that the db does not get locking errors
-        throw new EntityServiceException("Test throw of EntityServiceException");
-//        return new EntityCollection(projectRecord);
+        if (projectEntityCollectionMap.containsKey(projectRecord)) {
+            return projectEntityCollectionMap.get(projectRecord);
+        }
+        final EntityCollection entityCollection = new EntityCollection(this, projectRecord);
+        projectEntityCollectionMap.put(projectRecord, entityCollection);
+        return entityCollection;
     }
 
     public RecentProjects getRecentProjectsList() throws JAXBException {
@@ -113,5 +126,38 @@ public class ProjectManager {
         final ProjectRecord projectRecord = (ProjectRecord) unmarshaller.unmarshal(projectFile);
         projectRecord.setProjectDirectory(projectFile.getParentFile());
         return projectRecord;
+    }
+
+    private void checkProjectChangeDate(RecentProjects recentProjectsList, ProjectRecord projectRecord) {
+        for (ProjectRecord recentProjectRecord : recentProjectsList.getProjectRecords()) {
+            if (recentProjectRecord.equals(projectRecord)) {
+                checkProjectChangeDate(recentProjectRecord, projectRecord);
+                return;
+            }
+        }
+        // if we arrived here then the project is not in the recent list and we do not know if the database is up to date, so we offer to recreate the database
+//        if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox("The project '" + projectRecord.projectName + "' is not in your recent projects list, it is\nrecommended that you create / update the database.\nDo you want to do this now?", "KinOath Project Check", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+        dialogHandler.addMessageDialogToQueue("Creating database for project '" + projectRecord.projectName + "'.", "KinOath Project");
+        recreateDatabse(projectRecord);
+//        }
+    }
+
+    private void checkProjectChangeDate(ProjectRecord databaseProjectRecord, ProjectRecord projectRecord) {
+        if (databaseProjectRecord.getLastChangeDate().after(projectRecord.getLastChangeDate())) {
+            dialogHandler.addMessageDialogToQueue("The project '" + projectRecord.projectName + "' appears to be out of date, please check if there is another more recently modified version.", "KinOath Project Check");
+        } else if (databaseProjectRecord.getLastChangeDate().before(projectRecord.getLastChangeDate())) {
+            if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox("The project '" + projectRecord.projectName + "' has been modified externally,\ndo you want to update the database so that the changes are visible?", "KinOath Project Check", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+                recreateDatabse(projectRecord);
+            }
+        }
+    }
+
+    private void recreateDatabse(ProjectRecord projectRecord) {
+        try {
+            // todo: provide feedback to the user if this is a long process
+            getEntityCollectionForProject(projectRecord).recreateDatabase();
+        } catch (EntityServiceException exception) {
+            dialogHandler.addMessageDialogToQueue("Database update failed: " + exception, "KinOath Project Check");
+        }
     }
 }

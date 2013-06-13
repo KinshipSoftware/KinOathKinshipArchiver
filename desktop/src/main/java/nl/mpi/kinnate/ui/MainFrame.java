@@ -70,7 +70,7 @@ public class MainFrame extends javax.swing.JFrame {
                 final KinnateArbilInjector injector = new KinnateArbilInjector();
                 injector.injectHandlers(versionManager);
                 final AbstractDiagramManager abstractDiagramManager;
-                final ProjectManager projectManager = new ProjectManager(injector.getSessionStorage());
+                final ProjectManager projectManager = new ProjectManager(injector.getSessionStorage(), injector.getWindowManager());
 
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
