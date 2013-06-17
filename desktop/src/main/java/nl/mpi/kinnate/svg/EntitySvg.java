@@ -225,7 +225,7 @@ public class EntitySvg {
             rhombusGroup = doc.createElementNS(svgNameSpace, "g");
             rhombusGroup.setAttribute("id", "rhombus");
             Element rhombusNode = doc.createElementNS(svgNameSpace, "rect");
-            rhombusNode.setAttribute("transform", "scale(1,0.5), rotate(-45 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
+            rhombusNode.setAttribute("transform", "translate(0, " + Integer.toString(symbolSize / 3) + "), scale(1,0.5), rotate(-45 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
             rhombusNode.setAttribute("x", Integer.toString(strokeWidth));
             rhombusNode.setAttribute("y", Integer.toString(strokeWidth));
             rhombusNode.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
