@@ -34,6 +34,7 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.svg.SymbolGraphic;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -57,11 +58,13 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
     private MessageDialogHandler dialogHandler;
     private EntityCollection entityCollection;
     private ArbilDataNodeLoader dataNodeLoader;
+    private final SymbolGraphic symbolGraphic;
 
     public EgoSelectionPanel(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         this.dialogHandler = dialogHandler;
         this.entityCollection = entityCollection;
         this.dataNodeLoader = dataNodeLoader;
+        this.symbolGraphic = graphPanel.getSymbolGraphic();
         JScrollPane metadataNodeScrolPane;
         transientNodePanel = new JPanel(new BorderLayout());
         transientNodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Transient Entities"));
@@ -138,14 +141,14 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         HashSet<KinTreeNode> transientNodeArray = new HashSet<KinTreeNode>();
         for (EntityData entityData : allEntities) {
             if (entityData.isVisible) {
-                KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
+                KinTreeNode kinTreeNode = new KinTreeNode(symbolGraphic, entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
                 if (entityData.getUniqueIdentifier().isTransientIdentifier()) {
                     transientNodeArray.add(kinTreeNode);
                 } else {
 //                    if (entityData.isEgo || egoIdentifiers.contains(entityData.getUniqueIdentifier())) {
 //                        egoNodeArray.add(kinTreeNode);
 //                    } else 
-                        if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
+                    if (requiredEntityIdentifiers.contains(entityData.getUniqueIdentifier())) {
                         requiredNodeArray.add(kinTreeNode);
                     } else {
                         remainingNodeArray.add(kinTreeNode);

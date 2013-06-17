@@ -50,14 +50,14 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     protected EntityData entityData = null;
     protected IndexerParameters indexerParameters;
     protected ArbilNode[] childNodes = null;
-    static private SymbolGraphic symbolGraphic = null;
+    protected final SymbolGraphic symbolGraphic;
     protected EntityCollection entityCollection;
     protected MessageDialogHandler dialogHandler;
     protected ArbilDataNodeLoader dataNodeLoader;
     private String derivedLabelString = null;
     final protected DataStoreSvg dataStoreSvg;
 
-    public KinTreeNode(UniqueIdentifier uniqueIdentifier, EntityData entityData, DataStoreSvg dataStoreSvg, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+    public KinTreeNode(SymbolGraphic symbolGraphic, UniqueIdentifier uniqueIdentifier, EntityData entityData, DataStoreSvg dataStoreSvg, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
         // todo: create new constructor that takes a unique identifer and loads from the database.
         super();
         this.uniqueIdentifier = uniqueIdentifier;
@@ -67,9 +67,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
         this.entityCollection = entityCollection;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
-        if (symbolGraphic == null) {
-            symbolGraphic = new SymbolGraphic(dialogHandler);
-        }
+        this.symbolGraphic = symbolGraphic;
     }
 
 //    public void setEntityData(EntityData entityData) {
@@ -131,7 +129,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
                 if (!metaNodeMap.containsKey(wraperNodeLabel)) {
                     metaNodeMap.put(wraperNodeLabel, new HashSet<KinTreeFilteredNode>());
                 }
-                metaNodeMap.get(wraperNodeLabel).add(new KinTreeFilteredNode(entityRelation, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
+                metaNodeMap.get(wraperNodeLabel).add(new KinTreeFilteredNode(symbolGraphic, entityRelation, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
             }
             HashSet<ArbilNode> kinTreeMetaNodes = new HashSet<ArbilNode>();
             for (Map.Entry<String, HashSet<KinTreeFilteredNode>> filteredNodeEntry : metaNodeMap.entrySet()) {//values().toArray(new KinTreeFilteredNode[]{})
@@ -162,7 +160,7 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     @Override
     public ImageIcon getIcon() {
         if (entityData != null) {
-            return symbolGraphic.getSymbolGraphic(entityData.getSymbolNames(dataStoreSvg.defaultSymbol), entityData.isEgo);
+            return symbolGraphic.getSymbolGraphic(entityData.getSymbolNames(dataStoreSvg.defaultSymbol), entityData.isEgo, entityData.isRequired);
         }
         return null;
     }

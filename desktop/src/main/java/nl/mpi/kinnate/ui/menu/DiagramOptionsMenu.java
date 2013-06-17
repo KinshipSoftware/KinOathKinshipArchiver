@@ -21,6 +21,7 @@ import java.awt.Component;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu.Separator;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.kinnate.SavePanel;
@@ -59,6 +60,14 @@ public class DiagramOptionsMenu extends JMenu {
     }
 
     private void setupMenuItems(final SavePanel currentSavePanel, final GraphPanel graphPanel) {
+        JMenuItem diagramSettings = new JMenuItem("Settings");
+        diagramSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                currentSavePanel.showSettings();
+            }
+        });
+        this.add(diagramSettings);
+        this.add(new Separator());
         JCheckBoxMenuItem snapToGridMenuItem = new JCheckBoxMenuItem("Snap To Grid");
         snapToGridMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,7 +130,9 @@ public class DiagramOptionsMenu extends JMenu {
 //            }
 //        });
 //        this.add(showKinTermLinesMenuItem);
-        JCheckBoxMenuItem showLabelssMenuItem = new JCheckBoxMenuItem("Show Labels");
+        
+        this.add(new Separator());
+        JCheckBoxMenuItem showLabelssMenuItem = new JCheckBoxMenuItem("Show Entity Labels");
         showLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show labels on the graph
@@ -173,14 +184,15 @@ public class DiagramOptionsMenu extends JMenu {
         this.add(showDateLabelsMenuItem);
 
 
-        JCheckBoxMenuItem showArchiveLinksMenuItem = new JCheckBoxMenuItem("Show Archive Links");
+        JCheckBoxMenuItem showArchiveLinksMenuItem = new JCheckBoxMenuItem("Show External Link Labels");
         showArchiveLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                graphPanel.dataStoreSvg.showArchiveLinks = !graphPanel.dataStoreSvg.showArchiveLinks;
+                graphPanel.dataStoreSvg.showExternalLinks = !graphPanel.dataStoreSvg.showExternalLinks;
                 graphPanel.drawNodes(false);
             }
         });
         this.add(showArchiveLinksMenuItem);
+
 //        showResourceLinksMenuItem = new JCheckBoxMenuItem("Show Archive Resource Links");
 //        showResourceLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
 //
@@ -210,7 +222,7 @@ public class DiagramOptionsMenu extends JMenu {
 //        showKinTermLabelssMenuItem.setSelected(graphPanel.dataStoreSvg.showKinTermLabels);
         showIdLabelsMenuItem.setSelected(graphPanel.dataStoreSvg.showIdLabels);
         showDateLabelsMenuItem.setSelected(graphPanel.dataStoreSvg.showDateLabels);
-        showArchiveLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showArchiveLinks);
+        showArchiveLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showExternalLinks);
 //        showResourceLinksMenuItem.setSelected(graphPanel.dataStoreSvg.showResourceLinks);
     }
 }

@@ -77,7 +77,7 @@ public class DateEditorPanel extends JPanel {
 
     private JPanel getDateSpinners(EntityData entityData) {
         JPanel rowPanel = new JPanel(new FlowLayout());
-        KinTreeNode kinTreeNode = new KinTreeNode(entityData.getUniqueIdentifier(), entityData, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
+        KinTreeNode kinTreeNode = new KinTreeNode(null, entityData.getUniqueIdentifier(), entityData, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
         rowPanel.add(new JLabel(kinTreeNode.toString(), kinTreeNode.getIcon(), JLabel.LEFT));
         SpinnerModel startDateModel;
 //        if (entityData.getDateOfBirth() != null) {

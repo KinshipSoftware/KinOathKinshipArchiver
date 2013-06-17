@@ -197,7 +197,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                     for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
                         // todo: add cache and update of the tree nodes
-                        resultsArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                        resultsArray.add(new KinTreeNode(graphPanel.getSymbolGraphic(), entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
 //            } else {
 //                resultsArea.append("results limited to 1000\n");
 //                break;
@@ -231,7 +231,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 for (UniqueIdentifier entityId : entityIdentifiers) {
                     EntityData entityData = entityCollection.getEntity(entityId, graphPanel.getIndexParameters());
                     // todo: add cache and update of the tree nodes
-                    resultsArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                    resultsArray.add(new KinTreeNode(graphPanel.getSymbolGraphic(), entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
                     rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
                     resultsTree.requestResort();
                     loadedCount++;

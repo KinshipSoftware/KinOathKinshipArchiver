@@ -21,7 +21,6 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
 import nl.mpi.arbil.util.BugCatcherManager;
-import nl.mpi.arbil.util.MessageDialogHandler;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
@@ -30,20 +29,25 @@ import org.apache.batik.transcoder.TranscodingHints;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- * Document : SymbolGraphic Created on : Aug 25, 2011, 1:27:40 PM 
+ * Document : SymbolGraphic Created on : Aug 25, 2011, 1:27:40 PM
+ *
  * @ author Peter Withers
  */
 public class SymbolGraphic {
 
     HashMap<String[], ImageIcon> symbolMapEgo = new HashMap<String[], ImageIcon>();
     HashMap<String[], ImageIcon> symbolMapAlter = new HashMap<String[], ImageIcon>();
-    private MessageDialogHandler dialogHandler;
+    HashMap<String[], ImageIcon> symbolMapEgoAttached = new HashMap<String[], ImageIcon>();
+    HashMap<String[], ImageIcon> symbolMapAlterAttached = new HashMap<String[], ImageIcon>();
+    private final SVGDocument svgDocument;
 
-    public SymbolGraphic(MessageDialogHandler dialogHandler) {
-        this.dialogHandler = dialogHandler;
+    public SymbolGraphic(SVGDocument svgDocument) {
+        // the parent diagram is passed here so that symbols from it can be used in the tree nodes
+        this.svgDocument = svgDocument;
     }
 
     class ImageIconTranscoder extends ImageTranscoder {
@@ -63,12 +67,20 @@ public class SymbolGraphic {
         }
     }
 
-    public ImageIcon getSymbolGraphic(String[] symbolNames, boolean isEgo) {
+    public ImageIcon getSymbolGraphic(String[] symbolNames, boolean isEgo, boolean isAttached) {
         HashMap<String[], ImageIcon> symbolMap;
-        if (isEgo) {
-            symbolMap = symbolMapEgo;
+        if (isAttached) {
+            if (isEgo) {
+                symbolMap = symbolMapEgoAttached;
+            } else {
+                symbolMap = symbolMapAlterAttached;
+            }
         } else {
-            symbolMap = symbolMapAlter;
+            if (isEgo) {
+                symbolMap = symbolMapEgo;
+            } else {
+                symbolMap = symbolMapAlter;
+            }
         }
         if (symbolMap.containsKey(symbolNames)) {
             return symbolMap.get(symbolNames);
@@ -76,19 +88,33 @@ public class SymbolGraphic {
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
         SVGDocument doc = (SVGDocument) impl.createDocument(svgNS, "svg", null);
-        // todo: this will not be in sync with the symbols in the actual document, these symbols should be copid from the parent document
-        new EntitySvg(dialogHandler).updateSymbolsElement(doc, svgNS);
+        // in order to be in sync with the symbols in the actual document, these symbols are copied from the parent document
+        // copy the kin symbols from the users diagram
+        Element kinSymbols = svgDocument.getElementById("KinSymbols");
+        Node newNode = doc.importNode(kinSymbols, true);
+        doc.getDocumentElement().appendChild(newNode);
+
         int symbolSize = EntitySvg.symbolSize;
         for (String currentSymbol : symbolNames) {
             Element symbolNode;
             symbolNode = doc.createElementNS(svgNS, "use");
             symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + currentSymbol); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
             if (isEgo) {
-                symbolNode.setAttribute("fill", "black");
+                if (isAttached) {
+                    symbolNode.setAttribute("stroke", "black");
+                    symbolNode.setAttribute("fill", "black");
+                } else {
+                    symbolNode.setAttribute("stroke", "grey");
+                    symbolNode.setAttribute("fill", "grey");
+                }
             } else {
                 symbolNode.setAttribute("fill", "none");
+                if (isAttached) {
+                    symbolNode.setAttribute("stroke", "black");
+                } else {
+                    symbolNode.setAttribute("stroke", "grey");
+                }
             }
-            symbolNode.setAttribute("stroke", "black");
             symbolNode.setAttribute("stroke-width", "2");
 
             Element svgRoot = doc.getDocumentElement();

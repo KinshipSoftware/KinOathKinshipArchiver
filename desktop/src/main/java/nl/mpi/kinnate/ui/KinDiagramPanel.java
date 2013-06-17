@@ -104,6 +104,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private KinDragTransferHandler dragTransferHandler;
     private AbstractDiagramManager diagramWindowManager;
     private StatusBar statusBar;
+    private TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
 
     public KinDiagramPanel(URI existingFile, boolean savableType, ProjectRecord projectRecord, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
         this.sessionStorage = sessionStorage;
@@ -263,7 +264,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         graphPanel.setTransferHandler(dragTransferHandler);
         egoSelectionPanel.setTransferHandler(dragTransferHandler);
         if (graphPanel.dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
-            projectTree = new ProjectTreePanel(entityCollection, "Project Tree", this, graphPanel, dialogHandler, dataNodeLoader);
+            projectTree = new ProjectTreePanel(entityCollection, graphPanel.getSymbolGraphic(), "Project Tree", this, graphPanel, dialogHandler, dataNodeLoader);
             projectTree.setTransferHandler(dragTransferHandler);
         }
 
@@ -274,12 +275,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
 
-        TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
         graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, entityCollection, this, tableHidePane, tableCellDragHandler, dataNodeLoader, null, sessionStorage, dialogHandler, null, null)); // todo: pass a ImageBoxRenderer here if you want thumbnails
-        // in some older files and non kinoath files these VisiblePanelSettings would not be set, so we make sure that they are here
-        final ProfileManager profileManager = new ProfileManager(sessionStorage, dialogHandler);
-        final CmdiProfileSelectionPanel cmdiProfileSelectionPanel = new CmdiProfileSelectionPanel("Entity Profiles", profileManager, graphPanel);
-        profileManager.loadProfiles(false, cmdiProfileSelectionPanel, graphPanel);
+        // in some older files and non kinoath files these VisiblePanelSettings would not be set, so we make sure that they are here        
         for (PanelType panelType : PanelType.values()) {
             VisiblePanelSetting panelSetting = graphPanel.dataStoreSvg.getPanelSettingByType(panelType);
             switch (panelType) {
@@ -321,26 +318,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
                     break;
                 case IndexerSettings:
-                    if (panelSetting == null) {
-                        panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.IndexerSettings, 150, showIndexerSettings);
-                    }
-                    panelSetting.setHidePane(kinTypeHidePane, "Diagram Settings");
-                    graphPanel.getIndexParameters().symbolFieldsFields.setParent(graphPanel.getIndexParameters());
-                    graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
-                    panelSetting.addTargetPanel(new KinTypeDefinitions("Kin Type Definitions", this, graphPanel.dataStoreSvg), false);
-                    panelSetting.addTargetPanel(new RelationSettingsPanel("Relation Type Definitions", this, graphPanel.dataStoreSvg, dialogHandler), false);
-                    if (graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm) {
-                        // hide some of the settings panels from freeform diagrams
-                        final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, this, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
-                        final JScrollPane labelFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, this, graphPanel.getIndexParameters().labelFields, tableCellDragHandler));
-                        // todo: Ticket #1115 add overlay fields as paramters
-                        symbolFieldsPanel.setName("Symbol Fields");
-                        labelFieldsPanel.setName("Label Fields");
-                        panelSetting.addTargetPanel(symbolFieldsPanel, false);
-                        panelSetting.addTargetPanel(labelFieldsPanel, false);
-                        panelSetting.addTargetPanel(cmdiProfileSelectionPanel, false);
-                    }
-                    panelSetting.setMenuEnabled(true);
                     break;
                 case KinTerms:
                     if (panelSetting == null) {
@@ -730,6 +707,10 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
     public GraphPanel getGraphPanel() {
         return graphPanel;
+    }
+
+    public void showSettings() {
+        diagramWindowManager.createDialogueContainer(new DiagramSettingsPanel(this, entityCollection, sessionStorage, graphPanel, dialogHandler, tableCellDragHandler), this).setVisible(true);
     }
 
     public void exportKinTerms() {

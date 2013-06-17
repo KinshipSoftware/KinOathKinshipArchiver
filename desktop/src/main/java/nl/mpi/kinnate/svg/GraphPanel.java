@@ -85,6 +85,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     final private SessionStorage sessionStorage;
 //    private EntityCollection entityCollection;
     final KinDiagramPanel kinDiagramPanel;
+    private SymbolGraphic symbolGraphic;
 
     public GraphPanel(KinDiagramPanel kinDiagramPanel, final ArbilWindowManager arbilWindowManager, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader) {
         this.kinDiagramPanel = kinDiagramPanel;
@@ -192,6 +193,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         try {
             doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toString());
             svgCanvas.setDocument(doc);
+            symbolGraphic = new SymbolGraphic(doc);
             dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc);
             if (dataStoreSvg.indexParameters == null) {
                 dataStoreSvg.setDefaults();
@@ -280,6 +282,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             configureDiagramGroups();
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
             svgCanvas.setSVGDocument(doc);
+            symbolGraphic = new SymbolGraphic(doc);
             dataStoreSvg.graphData = new GraphSorter();
         } catch (IOException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
@@ -529,7 +532,15 @@ public class GraphPanel extends JPanel implements SavePanel {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public void showSettings() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     public GraphPanel getGraphPanel() {
         return this;
+    }
+
+    public SymbolGraphic getSymbolGraphic() {
+        return symbolGraphic;
     }
 }

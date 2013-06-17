@@ -26,6 +26,7 @@ import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.svg.SymbolGraphic;
 
 /**
  * Document : KinTreeFilteredNode Created on : Mar 28, 2012, 1:30:23 PM
@@ -37,8 +38,8 @@ public class KinTreeFilteredNode extends KinTreeNode {
     DataTypes.RelationType subnodeFilter;
     EntityRelation entityRelation;
 
-    public KinTreeFilteredNode(EntityRelation entityRelation, DataStoreSvg dataStoreSvg, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
-        super(entityRelation.alterUniqueIdentifier, entityRelation.getAlterNode(), dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
+    public KinTreeFilteredNode(SymbolGraphic symbolGraphic, EntityRelation entityRelation, DataStoreSvg dataStoreSvg, IndexerParameters indexerParameters, MessageDialogHandler dialogHandler, EntityCollection entityCollection, ArbilDataNodeLoader dataNodeLoader) {
+        super(symbolGraphic, entityRelation.alterUniqueIdentifier, entityRelation.getAlterNode(), dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader);
         this.subnodeFilter = entityRelation.getRelationType(); // subnode filter will be used to filter the child nodes
         this.entityRelation = entityRelation;
     }
@@ -72,7 +73,7 @@ public class KinTreeFilteredNode extends KinTreeNode {
 //                    alterEntity = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
 //                    entityRelation.setAlterNode(alterEntity);
 //                }
-                    relationList.add(new KinTreeFilteredNode(entityRelation, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
+                    relationList.add(new KinTreeFilteredNode(symbolGraphic, entityRelation, dataStoreSvg, indexerParameters, dialogHandler, entityCollection, dataNodeLoader));
                 }
             }
             getLinksMetaNode(relationList);

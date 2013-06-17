@@ -42,6 +42,7 @@ import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.svg.SymbolGraphic;
 
 /**
  * Document : ProjectTreePanel Created on : Apr 25, 2012, 11:03:10 AM
@@ -64,11 +65,13 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
     private int maxNodesPerPage = 100;
     private JPanel pagePanel;
     private JLabel currentPageLabel;
+    private final SymbolGraphic symbolGraphic;
 
-    public ProjectTreePanel(EntityCollection entityCollection, String panelName, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader) {
+    public ProjectTreePanel(EntityCollection entityCollection, SymbolGraphic symbolGraphic, String panelName, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader) {
         super(new BorderLayout());
         this.setName(panelName);
         this.entityCollection = entityCollection;
+        this.symbolGraphic = symbolGraphic;
         this.panelName = panelName;
         this.kinDiagramPanel = kinDiagramPanel;
         this.graphPanel = graphPanel;
@@ -169,7 +172,7 @@ public class ProjectTreePanel extends JPanel implements DatabaseUpdateListener {
 //                    }
                                 if (isHorizontalEndPoint) {
                                     // todo: add cache and update (on change) of the tree nodes
-                                    tempTreeNodesArray.add(new KinTreeNode(entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                                    tempTreeNodesArray.add(new KinTreeNode(symbolGraphic, entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
                                 }
                             }
                             Collections.sort(tempTreeNodesArray);
