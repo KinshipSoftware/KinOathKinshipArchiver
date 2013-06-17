@@ -233,7 +233,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         }
         graphPanel.setEntityCollection(entityCollection);
         try {
-            projectManager.addRecentProjectRecord(graphPanel.dataStoreSvg.projectRecord);
+            projectManager.addRecentProjectRecord(graphPanel.dataStoreSvg.projectRecord, this);
         } catch (JAXBException exception) {
             dialogHandler.addMessageDialogToQueue("Failed to save the project in the recent list: " + exception.getMessage(), "Recent Project List Error");
         }

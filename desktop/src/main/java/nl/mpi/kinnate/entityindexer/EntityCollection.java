@@ -633,7 +633,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
         try {
             final ProjectManager projectManager1 = new ProjectManager(kinSessionStorage, arbilWindowManager);
-            final EntityCollection entityCollection = new EntityCollection(projectManager1, projectManager1.getDefaultProject(kinSessionStorage));
+            final EntityCollection entityCollection = projectManager1.getEntityCollectionForProject(new ProjectRecord(kinSessionStorage.getProjectDirectory(), kinSessionStorage.getProjectDirectory().getName()));
             //queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getRelationQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));
 //        queryText.setText(new QueryBuilder().getEntityQuery("e4dfbd92d311088bf692211ced5179e5", new IndexerParameters()));

@@ -566,7 +566,7 @@ public class FileMenu extends javax.swing.JMenu {
         int tabIndex = Integer.valueOf(evt.getActionCommand());
         SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
         if (saveAsGlobal) {
-            savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile(projectManager.getDefaultProject(sessionStorage)));
+            savePanel.saveToFile(KinDiagramPanel.getGlobalDefaultDiagramFile(sessionStorage));
         } else {
             savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile(savePanel.getGraphPanel().dataStoreSvg.projectRecord));
         }

@@ -20,9 +20,7 @@ package nl.mpi.kinnate.projects;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.ProgressMonitor;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -31,6 +29,7 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
+import nl.mpi.kinnate.ui.KinDiagramPanel;
 
 /**
  * Created on : Oct 22, 2011, 09:43
@@ -62,9 +61,9 @@ public class ProjectManager {
         return getRecentProjectsList().getProjectRecords();
     }
 
-    public void addRecentProjectRecord(ProjectRecord projectRecord) throws JAXBException {
+    public void addRecentProjectRecord(ProjectRecord projectRecord, KinDiagramPanel diagramPanel) throws JAXBException {
         final RecentProjects recentProjectsList = getRecentProjectsList();
-        checkProjectChangeDate(recentProjectsList, projectRecord);
+        checkProjectChangeDate(recentProjectsList, projectRecord, diagramPanel);
         recentProjectsList.addProjectRecord(projectRecord);
         saveRecentProjectsList(recentProjectsList);
     }
@@ -128,36 +127,42 @@ public class ProjectManager {
         return projectRecord;
     }
 
-    private void checkProjectChangeDate(RecentProjects recentProjectsList, ProjectRecord projectRecord) {
+    private void checkProjectChangeDate(RecentProjects recentProjectsList, ProjectRecord projectRecord, KinDiagramPanel diagramPanel) {
         for (ProjectRecord recentProjectRecord : recentProjectsList.getProjectRecords()) {
             if (recentProjectRecord.equals(projectRecord)) {
-                checkProjectChangeDate(recentProjectRecord, projectRecord);
+                checkProjectChangeDate(recentProjectRecord, projectRecord, diagramPanel);
                 return;
             }
         }
         // if we arrived here then the project is not in the recent list and we do not know if the database is up to date, so we offer to recreate the database
 //        if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox("The project '" + projectRecord.projectName + "' is not in your recent projects list, it is\nrecommended that you create / update the database.\nDo you want to do this now?", "KinOath Project Check", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
         dialogHandler.addMessageDialogToQueue("Creating database for project '" + projectRecord.projectName + "'.", "KinOath Project");
-        recreateDatabse(projectRecord);
+        recreateDatabse(projectRecord, diagramPanel);
 //        }
     }
 
-    private void checkProjectChangeDate(ProjectRecord databaseProjectRecord, ProjectRecord projectRecord) {
+    private void checkProjectChangeDate(ProjectRecord databaseProjectRecord, ProjectRecord projectRecord, KinDiagramPanel diagramPanel) {
         if (databaseProjectRecord.getLastChangeDate().after(projectRecord.getLastChangeDate())) {
             dialogHandler.addMessageDialogToQueue("The project '" + projectRecord.projectName + "' appears to be out of date, please check if there is another more recently modified version.", "KinOath Project Check");
         } else if (databaseProjectRecord.getLastChangeDate().before(projectRecord.getLastChangeDate())) {
             if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox("The project '" + projectRecord.projectName + "' has been modified externally,\ndo you want to update the database so that the changes are visible?", "KinOath Project Check", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
-                recreateDatabse(projectRecord);
+                recreateDatabse(projectRecord, diagramPanel);
             }
         }
     }
 
-    private void recreateDatabse(ProjectRecord projectRecord) {
-        try {
-            // todo: provide feedback to the user if this is a long process
-            getEntityCollectionForProject(projectRecord).recreateDatabase();
-        } catch (EntityServiceException exception) {
-            dialogHandler.addMessageDialogToQueue("Database update failed: " + exception, "KinOath Project Check");
-        }
+    private void recreateDatabse(final ProjectRecord projectRecord, final KinDiagramPanel diagramPanel) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    diagramPanel.showProgressBar();
+                    getEntityCollectionForProject(projectRecord).recreateDatabase();
+                    dialogHandler.addMessageDialogToQueue("Reindexing complete.", "KinOath Project Check");
+                } catch (EntityServiceException exception) {
+                    dialogHandler.addMessageDialogToQueue("Database update failed: " + exception, "KinOath Project Check");
+                }
+                diagramPanel.clearProgressBar();
+            }
+        }).start();
     }
 }

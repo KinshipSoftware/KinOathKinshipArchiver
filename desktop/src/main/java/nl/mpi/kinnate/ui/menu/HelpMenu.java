@@ -144,7 +144,7 @@ public class HelpMenu extends JMenu {
         });
         this.add(viewErrorLogMenuItem);
 
-        JMenuItem reindexFilesMenuItem = new JMenuItem("Reindex all files");
+        JMenuItem reindexFilesMenuItem = new JMenuItem("Reindex all files for this project");
         reindexFilesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (dialogHandler.showConfirmDialogBox("This will reindex all files in the project,\nthis may take some time, do you want to proceed?", "Reindex All Files")) {
