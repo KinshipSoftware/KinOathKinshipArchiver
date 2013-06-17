@@ -60,14 +60,6 @@ public class DiagramOptionsMenu extends JMenu {
     }
 
     private void setupMenuItems(final SavePanel currentSavePanel, final GraphPanel graphPanel) {
-        JMenuItem diagramSettings = new JMenuItem("Settings");
-        diagramSettings.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                currentSavePanel.showSettings();
-            }
-        });
-        this.add(diagramSettings);
-        this.add(new Separator());
         JCheckBoxMenuItem snapToGridMenuItem = new JCheckBoxMenuItem("Snap To Grid");
         snapToGridMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,7 +122,7 @@ public class DiagramOptionsMenu extends JMenu {
 //            }
 //        });
 //        this.add(showKinTermLinesMenuItem);
-        
+
         this.add(new Separator());
         JCheckBoxMenuItem showLabelssMenuItem = new JCheckBoxMenuItem("Show Entity Labels");
         showLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -183,7 +175,6 @@ public class DiagramOptionsMenu extends JMenu {
         });
         this.add(showDateLabelsMenuItem);
 
-
         JCheckBoxMenuItem showArchiveLinksMenuItem = new JCheckBoxMenuItem("Show External Link Labels");
         showArchiveLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,6 +183,15 @@ public class DiagramOptionsMenu extends JMenu {
             }
         });
         this.add(showArchiveLinksMenuItem);
+
+        this.add(new Separator());
+        JMenuItem diagramSettings = new JMenuItem("Settings");
+        diagramSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                currentSavePanel.showSettings();
+            }
+        });
+        this.add(diagramSettings);
 
 //        showResourceLinksMenuItem = new JCheckBoxMenuItem("Show Archive Resource Links");
 //        showResourceLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
