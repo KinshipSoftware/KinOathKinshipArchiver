@@ -22,6 +22,8 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import javax.swing.JFrame;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
@@ -29,6 +31,7 @@ import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.KinnateArbilInjector;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.projects.ProjectManager;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
 
@@ -44,15 +47,19 @@ public class MouseUiStressTester {
     final private int applicationCenterY;
     final private Robot robot;
 
-    public MouseUiStressTester() throws AWTException, EntityServiceException {
+    public MouseUiStressTester() throws AWTException, EntityServiceException, IOException {
         final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
         final KinnateArbilInjector injector = new KinnateArbilInjector();
         injector.injectHandlers(versionManager);
         final AbstractDiagramManager abstractDiagramManager;
-        final ProjectManager projectManager = new ProjectManager(injector.getSessionStorage(), null);
+        final ProjectManager projectManager = new ProjectManager(injector.getSessionStorage(), injector.getWindowManager());
         final SessionStorage sessionStorage = injector.getSessionStorage();
         abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), sessionStorage, injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager);
-        abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480), projectManager.getDefaultProject(sessionStorage));
+//        final File tempFile = File.createTempFile("MouseUiStressTester", ".temp");
+        final File tempFile = new File("MouseUiStressTester");
+        tempFile.mkdir();
+        new File(tempFile, "KinDataFiles").mkdir();
+        abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480), new ProjectRecord(tempFile, "MouseUiStressTester"));
         abstractDiagramManager.createApplicationWindow();
         injector.getWindowManager().setMessagesCanBeShown(true);
         diagramComponent = (JFrame) abstractDiagramManager.getAllDiagrams()[0];
@@ -103,7 +110,7 @@ public class MouseUiStressTester {
     public void useAddRelationMenu() {
         robot.mouseMove(applicationCenterX + 20, applicationCenterY + 110);
         robot.delay(200);
-        robot.mouseMove(applicationCenterX + 270, applicationCenterY + 130);
+        robot.mouseMove(applicationCenterX + 270, applicationCenterY + 110);
         robot.delay(200);
         robot.mousePress(InputEvent.BUTTON1_MASK);
         robot.delay(200);
@@ -174,6 +181,8 @@ public class MouseUiStressTester {
         } catch (AWTException exception) {
             System.out.println("Failed to start robot: " + exception.getMessage());
         } catch (EntityServiceException exception) {
+            System.out.println("Failed to start robot: " + exception.getMessage());
+        } catch (IOException exception) {
             System.out.println("Failed to start robot: " + exception.getMessage());
         }
     }

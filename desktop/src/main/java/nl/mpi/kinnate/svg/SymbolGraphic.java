@@ -18,7 +18,10 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import nl.mpi.arbil.util.BugCatcherManager;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
@@ -39,10 +42,10 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class SymbolGraphic {
 
-    HashMap<String[], ImageIcon> symbolMapEgo = new HashMap<String[], ImageIcon>();
-    HashMap<String[], ImageIcon> symbolMapAlter = new HashMap<String[], ImageIcon>();
-    HashMap<String[], ImageIcon> symbolMapEgoAttached = new HashMap<String[], ImageIcon>();
-    HashMap<String[], ImageIcon> symbolMapAlterAttached = new HashMap<String[], ImageIcon>();
+    HashMap<Set<String>, ImageIcon> symbolMapEgo = new HashMap<Set<String>, ImageIcon>();
+    HashMap<Set<String>, ImageIcon> symbolMapAlter = new HashMap<Set<String>, ImageIcon>();
+    HashMap<Set<String>, ImageIcon> symbolMapEgoAttached = new HashMap<Set<String>, ImageIcon>();
+    HashMap<Set<String>, ImageIcon> symbolMapAlterAttached = new HashMap<Set<String>, ImageIcon>();
     private final SVGDocument svgDocument;
 
     public SymbolGraphic(SVGDocument svgDocument) {
@@ -68,7 +71,7 @@ public class SymbolGraphic {
     }
 
     public ImageIcon getSymbolGraphic(String[] symbolNames, boolean isEgo, boolean isAttached) {
-        HashMap<String[], ImageIcon> symbolMap;
+        HashMap<Set<String>, ImageIcon> symbolMap;
         if (isAttached) {
             if (isEgo) {
                 symbolMap = symbolMapEgoAttached;
@@ -82,9 +85,11 @@ public class SymbolGraphic {
                 symbolMap = symbolMapAlter;
             }
         }
-        if (symbolMap.containsKey(symbolNames)) {
-            return symbolMap.get(symbolNames);
+        final Set<String> symbolNamesList = new HashSet(Arrays.asList(symbolNames));
+        if (symbolMap.containsKey(symbolNamesList)) {
+            return symbolMap.get(symbolNamesList);
         }
+        System.out.println("generating symbol for symbolNames:" + symbolNamesList + " : " + isEgo + " : " + isAttached);
         DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
         SVGDocument doc = (SVGDocument) impl.createDocument(svgNS, "svg", null);
@@ -95,6 +100,7 @@ public class SymbolGraphic {
         doc.getDocumentElement().appendChild(newNode);
 
         int symbolSize = EntitySvg.symbolSize;
+        Arrays.sort(symbolNames); // we sort the symbol names so that they are always consistent
         for (String currentSymbol : symbolNames) {
             Element symbolNode;
             symbolNode = doc.createElementNS(svgNS, "use");
@@ -131,7 +137,7 @@ public class SymbolGraphic {
             transcoder.transcode(new TranscoderInput(doc), null);
             BufferedImage bufferedImage = transcoder.getImage();
             ImageIcon imageIcon = new ImageIcon(bufferedImage);
-            symbolMap.put(symbolNames, imageIcon);
+            symbolMap.put(symbolNamesList, imageIcon);
             return imageIcon;
         } catch (TranscoderException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
