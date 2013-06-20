@@ -439,8 +439,10 @@ public class EntityDocument {
 
     public void saveDocument() throws ImportException {
         try {
-            ArbilDataNodeService arbilDataNodeService = new ArbilDataNodeService(null, null, null, null, null);
-            arbilDataNodeService.bumpHistory(this.getFile());
+            // when there are a large number of history files this becomes slow so it is removed for the time being
+            // this history is not available to KinOath users, so there is little point keeping it at this point
+//            ArbilDataNodeService arbilDataNodeService = new ArbilDataNodeService(null, null, null, null, null);
+//            arbilDataNodeService.bumpHistory(this.getFile());
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
             // the property "com.sun.xml.internal.bind.namespacePrefixMapper" seems to be questionable, more research should be done before using this
@@ -450,8 +452,8 @@ public class EntityDocument {
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
-        } catch (IOException exception) {
-            throw new ImportException(exception.getMessage());
+//        } catch (IOException exception) {
+//            throw new ImportException(exception.getMessage());
         }
 //        try {
 //            Node entityNode = org.apache.xpath.XPathAPI.selectSingleNode(metadataDom, "/:Kinnate/:Entity");

@@ -291,7 +291,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 // the use of DELETE has been replaced by deleting via the ID in a query
 //                new Delete(urlString).execute(context);
                 runDeleteQuery(updatedFileIdentifier);
-                new Optimize().execute(context);
+//                new Optimize().execute(context);
                 new Close().execute(context);
             }
             updateProjectRecord();
@@ -334,7 +334,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                         }
                     });
                 }
-                new Optimize().execute(context);
+//                new Optimize().execute(context);
                 if (progressBar != null) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
@@ -360,7 +360,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             synchronized (databaseLock) {
                 new Open(databaseName).execute(context);
                 addFileToDB(updatedFile, updatedFileIdentifier);
-                new Optimize().execute(context);
+//                new Optimize().execute(context);
                 new Close().execute(context);
             }
             updateProjectRecord();
