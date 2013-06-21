@@ -184,9 +184,9 @@ public abstract class AbstractDiagramManager {
         egoSelectionTestPanel.loadAllTrees();
     }
 
-    public void newDiagram(DocumentNewMenu.DocumentType documentType, Rectangle preferredSizeLocation) throws EntityServiceException {
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
-        egoSelectionTestPanel.setName("Unsaved " + documentType.getDisplayName());
+    public void newDiagram(DocumentNewMenu.DocumentType documentType, ProjectRecord projectRecord, Rectangle preferredSizeLocation) throws EntityServiceException {
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, projectRecord, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
+        egoSelectionTestPanel.setName("[" + egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName() + "] Unsaved " + documentType.getDisplayName());
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
         egoSelectionTestPanel.loadAllTrees();
     }

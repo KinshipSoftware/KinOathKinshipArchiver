@@ -57,7 +57,6 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
-import nl.mpi.kinnate.kindocument.ProfileManager;
 import nl.mpi.kinnate.kintypestrings.ImportRequiredException;
 import nl.mpi.kinnate.kintypestrings.KinTermCalculator;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
@@ -67,10 +66,7 @@ import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
-import nl.mpi.kinnate.ui.entityprofiles.CmdiProfileSelectionPanel;
-import nl.mpi.kinnate.ui.kintypeeditor.KinTypeDefinitions;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
-import nl.mpi.kinnate.ui.relationsettings.RelationSettingsPanel;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -116,7 +112,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         initKinDiagramPanel(existingFile, null, savableType, projectRecord);
     }
 
-    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
+    public KinDiagramPanel(DocumentType documentType, ProjectRecord projectRecord, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
@@ -124,7 +120,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         this.diagramWindowManager = diagramWindowManager;
         this.projectManager = projectManager;
         //ProjectRecord projectRecord, 
-        initKinDiagramPanel(null, documentType, false, null);
+        initKinDiagramPanel(null, documentType, false, projectRecord);
     }
 
     public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {

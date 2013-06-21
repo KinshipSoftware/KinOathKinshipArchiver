@@ -26,7 +26,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -42,12 +44,12 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
 
     public enum DocumentType {
 
-        Simple("Standard Diagram (database driven)"),
+        Simple("Standard Diagram (current project)"),
         Freeform("Freeform Diagram (transient)"),
-        KinTerms("Kin Terms Diagram"),
-        Query("Query Diagram"),
+        KinTerms("Kin Terms Diagram (transient)"),
+        Query("Query Diagram (current project)"),
         //EntitySearch("Entity Search"),
-        ArchiveLinker("Archive Data Linker");//,
+        ArchiveLinker("Archive Data Linker (current project)");//,
 //        CustomQuery("Custom Data Formats");
         private String displayName;
 
@@ -79,7 +81,10 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
         int offset = 10;
         final Rectangle windowRectangle = new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset);
         try {
-            diagramWindowManager.newDiagram(documentType, windowRectangle);
+            SavePanel savePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
+            final ProjectRecord projectRecord = savePanel.getGraphPanel().dataStoreSvg.projectRecord;
+            // open the new diagram with the current diagrams project
+            diagramWindowManager.newDiagram(documentType, projectRecord, windowRectangle);
         } catch (EntityServiceException entityServiceException) {
             dialogHandler.addMessageDialogToQueue("Failed to open diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
         }
