@@ -87,9 +87,9 @@ public class EntityCollection extends DatabaseUpdateHandler {
         public int resultCount = 0;
     }
 
-    static public void setGlobalDatabasePath(SessionStorage sessionStorage) throws EntityServiceException {
+    static public void setGlobalDatabasePath(File databaseDirectory) throws EntityServiceException {
         try {
-            final File globalDatabaseDirectory = new File(sessionStorage.getApplicationSettingsDirectory(), "BaseXData");
+            final File globalDatabaseDirectory = new File(databaseDirectory, "BaseXData");
             if (!globalDatabaseDirectory.exists()) {
                 globalDatabaseDirectory.mkdir();
             }

@@ -20,6 +20,8 @@ package nl.mpi.kinnate.ui;
 import java.awt.Rectangle;
 import java.io.File;
 import javax.swing.JOptionPane;
+import nl.mpi.arbil.ui.ArbilWindowManager;
+import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
@@ -70,22 +72,43 @@ public class MainFrame extends javax.swing.JFrame {
                 final KinnateArbilInjector injector = new KinnateArbilInjector();
                 injector.injectHandlers(versionManager);
                 final AbstractDiagramManager abstractDiagramManager;
-                final ProjectManager projectManager = new ProjectManager(injector.getSessionStorage(), injector.getWindowManager());
+                final ArbilWindowManager windowManager = injector.getWindowManager();
+                final SessionStorage sessionStorage = injector.getSessionStorage();
+                final ProjectManager projectManager = new ProjectManager(sessionStorage, windowManager);
 
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
-                abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), injector.getSessionStorage(), injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager);
+                abstractDiagramManager = new WindowedDiagramManager(versionManager, windowManager, sessionStorage, injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager);
                 try {
-//                    try {
-                    EntityCollection.setGlobalDatabasePath(injector.getSessionStorage());
-//                    } catch (EntityServiceException entityServiceException) {
-                    // todo: if this fails then we might need to offer the user to select a custom directory
-//                    }
+                    boolean databaseDirectoryOk = false;
+                    while (!databaseDirectoryOk) {
+                        try {
+                            final String storedDatabasePath = sessionStorage.loadString("KinOathDatabaseDirectory");
+                            File databaseDirectory;
+                            if (storedDatabasePath == null) {
+                                databaseDirectory = sessionStorage.getApplicationSettingsDirectory();
+                            } else {
+                                databaseDirectory = new File(storedDatabasePath);
+                            }
+                            EntityCollection.setGlobalDatabasePath(databaseDirectory);
+                            databaseDirectoryOk = true;
+                        } catch (EntityServiceException entityServiceException) {
+                            final String kinOath_Database_Directory = "KinOath Database Directory";
+                            if (!windowManager.showConfirmDialogBox("The KinOath database could not be created. Do you want to choose another location?", kinOath_Database_Directory)) {
+                                System.exit(-1);
+                            }
+                            final File[] databaseDirectorySelection = windowManager.showDirectorySelectBox(kinOath_Database_Directory, false);
+                            if (databaseDirectorySelection == null || databaseDirectorySelection.length == 0) {
+                                System.exit(-1);
+                            }
+                            sessionStorage.saveString("KinOathDatabaseDirectory", databaseDirectorySelection[0].toString());
+                        }
+                    }
 
                     abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480), null);
                     abstractDiagramManager.createApplicationWindow();
 
-                    injector.getWindowManager().setMessagesCanBeShown(true);
+                    windowManager.setMessagesCanBeShown(true);
                     ////////////////////////////////////////
                     // check for old data directories 1-0 and offer the user to export all the old data and import into the new version IF no entities exist in the new version, the user can always use the export plugin at a later date
                     // start handle any migration requirements
@@ -93,14 +116,14 @@ public class MainFrame extends javax.swing.JFrame {
                         @Override
                         public void run() {
                             final ApplicationVersion applicationVersion = versionManager.getApplicationVersion();
-                            File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), injector.getWindowManager(), injector.getSessionStorage()).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor));
+                            File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), windowManager, sessionStorage).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor));
                             if (oldAppExportFile != null) {
                                 try {
-                                    abstractDiagramManager.openImportPanel(oldAppExportFile, null, projectManager.getEntityCollectionForProject(projectManager.getDefaultProject(injector.getSessionStorage())));
+                                    abstractDiagramManager.openImportPanel(oldAppExportFile, null, projectManager.getEntityCollectionForProject(projectManager.getDefaultProject(sessionStorage)));
                                 } catch (ImportException exception) {
-                                    injector.getWindowManager().addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
+                                    windowManager.addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
                                 } catch (EntityServiceException exception) {
-                                    injector.getWindowManager().addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
+                                    windowManager.addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
                                 }
                             }
                         }
