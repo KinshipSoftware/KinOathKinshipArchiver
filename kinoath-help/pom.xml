@@ -6,8 +6,8 @@
     <packaging>jar</packaging>
     <!--    Either use the snapshot version of manually enter the current build number. 
     The build number is only required when depending on the output in other projects or building to the server.-->
-    <version>${help.majorVersion}.${help.minorVersion}-${help.branch}-SNAPSHOT</version>
-    <!--<version>${help.majorVersion}.${help.minorVersion}.33727-${help.branch}</version>-->
+    <!--<version>${help.majorVersion}.${help.minorVersion}-${help.branch}-SNAPSHOT</version>-->
+    <version>${help.majorVersion}.${help.minorVersion}.37054-${help.branch}</version>
     <name>KinOath Help</name>
     <organization> 
 	<name>The Language Archive</name> 
