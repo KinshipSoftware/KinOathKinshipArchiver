@@ -8,7 +8,7 @@
     The build number is only required when depending on the output in other projects or building to the server.-->
     <version>${help.majorVersion}.${help.minorVersion}-${help.branch}-SNAPSHOT</version>
     <!--<version>${help.majorVersion}.${help.minorVersion}.33727-${help.branch}</version>-->
-    <name>KinOath Help</name>
+    <name>KinOath Help ${help.majorVersion}.${help.minorVersion}</name>
     <organization> 
 	<name>The Language Archive</name> 
 	<url>http://tla.mpi.nl/tools/tla-tools</url>
@@ -16,7 +16,7 @@
     
     <properties>
 	<help.majorVersion>1</help.majorVersion>
-	<help.minorVersion>3</help.minorVersion>
+	<help.minorVersion>4</help.minorVersion>
 	<help.branch>pretesting</help.branch>
 	
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -57,7 +57,7 @@
 		<configuration>
 		    <entries>
 			<entry>
-			    <path>${basedir}</path>
+			    <path>${basedir}/src</path>
 			    <!-- this will populate "plugin.version.revision" etc -->
 			    <prefix>plugin.version</prefix>
 			</entry>
