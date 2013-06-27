@@ -8,7 +8,7 @@
     The build number is only required when depending on the output in other projects or building to the server.-->
     <!--<version>${help.majorVersion}.${help.minorVersion}-${help.branch}-SNAPSHOT</version>-->
     <version>${help.majorVersion}.${help.minorVersion}.35672-${help.branch}</version>
-    <name>KinOath Help</name>
+    <name>KinOath Help ${help.majorVersion}.${help.minorVersion}</name>
     <organization> 
         <name>The Language Archive</name> 
         <url>http://tla.mpi.nl/tools/tla-tools</url>
