@@ -61,10 +61,10 @@ public class ProjectManager {
         return getRecentProjectsList().getProjectRecords();
     }
 
-    public void addRecentProjectRecord(ProjectRecord projectRecord, KinDiagramPanel diagramPanel) throws JAXBException {
+    public void moveProjectRecordToTop(ProjectRecord projectRecord, KinDiagramPanel diagramPanel) throws JAXBException {
         final RecentProjects recentProjectsList = getRecentProjectsList();
         checkProjectChangeDate(recentProjectsList, projectRecord, diagramPanel);
-        recentProjectsList.addProjectRecord(projectRecord);
+        recentProjectsList.moveProjectRecordToTop(projectRecord);
         saveRecentProjectsList(recentProjectsList);
     }
 
@@ -110,6 +110,10 @@ public class ProjectManager {
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.marshal(projectRecord, new File(projectRecord.projectDirectory, "kinoath.proj"));
+        // update the date in the recent projects list
+        final RecentProjects recentProjectsList = getRecentProjectsList();
+        recentProjectsList.updateProjectRecord(projectRecord);
+        saveRecentProjectsList(recentProjectsList);
     }
 
     public ProjectRecord loadProjectRecord(File projectDirectory) throws JAXBException {
@@ -144,7 +148,7 @@ public class ProjectManager {
     private void checkProjectChangeDate(ProjectRecord databaseProjectRecord, ProjectRecord projectRecord, KinDiagramPanel diagramPanel) {
         if (databaseProjectRecord.getLastChangeDate().after(projectRecord.getLastChangeDate())) {
             dialogHandler.addMessageDialogToQueue("The project '" + projectRecord.projectName + "' appears to be out of date, please check if there is another more recently modified version.", "KinOath Project Check");
-        } else if (databaseProjectRecord.getLastChangeDate().before(projectRecord.getLastChangeDate())) {
+        } else if (databaseProjectRecord.getLastChangeDate().after(projectRecord.getLastChangeDate())) {
             if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox("The project '" + projectRecord.projectName + "' has been modified externally,\ndo you want to update the database so that the changes are visible?", "KinOath Project Check", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
                 recreateDatabse(projectRecord, diagramPanel);
             }
