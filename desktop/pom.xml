@@ -8,7 +8,7 @@
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
     <!--<version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>-->
-    <version>${application.majorVersion}.${application.minorVersion}.37376-${application.branch}</version>
+    <version>${application.majorVersion}.${application.minorVersion}.37468-${application.branch}</version>
     <name>KinOath ${application.majorVersion}.${application.minorVersion}</name>
     <parent>
         <groupId>nl.mpi</groupId>
@@ -293,12 +293,12 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinnate-plugins-export</artifactId>
-            <version>1.0.36845-stable</version>
+            <version>1.0.37446-stable</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.3.37412-testing</version>
+            <version>1.3.37469-testing</version>
         </dependency>
         <!--        <dependency>
             <groupId>nl.mpi</groupId>

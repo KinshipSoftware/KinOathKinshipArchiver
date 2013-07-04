@@ -7,7 +7,7 @@
     <!--    Either use the snapshot version of manually enter the current build number. 
     The build number is only required when depending on the output in other projects or building to the server.-->
     <!--<version>${help.majorVersion}.${help.minorVersion}-${help.branch}-SNAPSHOT</version>-->
-    <version>${help.majorVersion}.${help.minorVersion}.37412-${help.branch}</version>
+    <version>${help.majorVersion}.${help.minorVersion}.37469-${help.branch}</version>
     <name>KinOath Help ${help.majorVersion}.${help.minorVersion}</name>
     <organization> 
         <name>The Language Archive</name> 
