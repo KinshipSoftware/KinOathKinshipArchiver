@@ -20,6 +20,7 @@ package nl.mpi.kinnate.projects;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,13 +32,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class RecentProjects {
 
     final private int maxRecentCount = 9;
+    @XmlElement(name = "ProjectRecord")
     public ArrayList<ProjectRecord> recentProjects;
 
     public RecentProjects() {
         this.recentProjects = new ArrayList<ProjectRecord>();
     }
 
-    public void addProjectRecord(ProjectRecord projectRecord) {
+    public void moveProjectRecordToTop(ProjectRecord projectRecord) {
+        ProjectRecord existingRecord = recentProjects.get(recentProjects.indexOf(projectRecord));
+        recentProjects.remove(existingRecord);
+        while (recentProjects.size() > maxRecentCount) {
+            recentProjects.remove(recentProjects.size() - 1);
+        }
+        recentProjects.add(0, existingRecord);
+    }
+
+    public void updateProjectRecord(ProjectRecord projectRecord) {
         recentProjects.remove(projectRecord);
         while (recentProjects.size() > maxRecentCount) {
             recentProjects.remove(recentProjects.size() - 1);
