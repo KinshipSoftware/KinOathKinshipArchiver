@@ -22,8 +22,10 @@ import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
+import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
+import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.svg.SymbolGraphic;
@@ -50,7 +52,11 @@ public class KinTreeFilteredNode extends KinTreeNode {
             // todo change this to return a node imediately and the node can then load itself and then request a tree resort
             entityData = entityRelation.getAlterNode();
             if (entityData == null) {
-                entityData = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
+                try {
+                    entityData = entityCollection.getEntity(entityRelation.alterUniqueIdentifier, indexerParameters);
+                } catch (EntityServiceException exception) {
+                    entityData = new EntityData(entityRelation.alterUniqueIdentifier, new String[]{"Error loading the entity data", "view log for details"});
+                }
                 entityRelation.setAlterNode(entityData);
             }
         }
