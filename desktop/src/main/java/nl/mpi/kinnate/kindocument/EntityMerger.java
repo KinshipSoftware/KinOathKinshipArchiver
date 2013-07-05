@@ -29,6 +29,7 @@ import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import org.w3c.dom.Node;
 
 /**
  * Created on : Aug 29, 2011, 3:47:29 PM
@@ -54,11 +55,31 @@ public class EntityMerger extends DocumentLoader {
         return deletedIdentifiersArray;
     }
 
-    public void mergeEntities(UniqueIdentifier[] selectedIdentifiers) throws ImportException, EntityServiceException {
+    private void mergeFields(EntityDocument leadEntityDocument, Node alterElement, int level) throws ImportException {
+        Node currentChild = alterElement.getFirstChild();
+        while (currentChild != null) {
+            if (currentChild.getNodeType() == Node.ELEMENT_NODE) {
+                final String localName = currentChild.getLocalName();
+                String nodeValue = currentChild.getTextContent();
+                if (nodeValue == null) {
+                    nodeValue = "";
+                }
+                leadEntityDocument.appendValue(localName, nodeValue, level);
+                if (currentChild.hasChildNodes()) {
+                    mergeFields(leadEntityDocument, currentChild, level + 1);
+                }
+            }
+            currentChild = currentChild.getNextSibling();
+        }
+    }
+
+    public UniqueIdentifier mergeEntities(UniqueIdentifier[] selectedIdentifiers) throws ImportException, EntityServiceException {
         ArrayList<EntityDocument> nonLeadEntityDocuments = new ArrayList<EntityDocument>();
         ArrayList<UniqueIdentifier> deletedIdentifiers = new ArrayList<UniqueIdentifier>();
+        UniqueIdentifier leadUniqueIdentifier;
         try {
             EntityDocument leadEntityDocument = getEntityDocuments(selectedIdentifiers, nonLeadEntityDocuments);
+            leadUniqueIdentifier = leadEntityDocument.getUniqueIdentifier();
             for (EntityDocument alterEntity : nonLeadEntityDocuments) {
                 deletedIdentifiers.add(alterEntity.getUniqueIdentifier());
                 for (EntityRelation entityRelation : alterEntity.entityData.getAllRelations()) {
@@ -71,6 +92,7 @@ public class EntityMerger extends DocumentLoader {
                     relatedDocument.entityData.removeRelationsWithNode(alterEntity.entityData);
                     alterEntity.entityData.removeRelationsWithNode(relatedDocument.entityData);
                 }
+                mergeFields(leadEntityDocument, alterEntity.metadataNode, 1);
             }
             // sometimes a sibling relation is created when parent relations are added so we iterate again and make sure none are left
             for (EntityDocument alterEntity : nonLeadEntityDocuments) {
@@ -96,6 +118,7 @@ public class EntityMerger extends DocumentLoader {
         }
         deletedIdentifiersArray = deletedIdentifiers.toArray(new UniqueIdentifier[0]);
         affectedIdentifiersArray = getAffectedIdentifiers();
+        return leadUniqueIdentifier;
     }
 
     public UniqueIdentifier[] duplicateEntities(UniqueIdentifier[] selectedIdentifiers) throws ImportException, EntityServiceException {
