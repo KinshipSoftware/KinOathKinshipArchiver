@@ -40,7 +40,12 @@ public class RecentProjects {
     }
 
     public void moveProjectRecordToTop(ProjectRecord projectRecord) {
-        ProjectRecord existingRecord = recentProjects.get(recentProjects.indexOf(projectRecord));
+        ProjectRecord existingRecord;
+        if (recentProjects.contains(projectRecord)) {
+            existingRecord = recentProjects.get(recentProjects.indexOf(projectRecord));
+        } else {
+            existingRecord = projectRecord;
+        }
         recentProjects.remove(existingRecord);
         while (recentProjects.size() > maxRecentCount) {
             recentProjects.remove(recentProjects.size() - 1);

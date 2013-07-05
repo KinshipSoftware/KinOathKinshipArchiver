@@ -95,7 +95,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             }
             // set db path cannot be changed when any database is open, but more importantly "Points to the directory in which ALL databases are located."
             new Set("dbpath", globalDatabaseDirectory).execute(context);
-            new Open("test-db").execute(context);
+            new CreateDB("test-db").execute(context);
             new Close().execute(context);
         } catch (BaseXException exception2) {
             BugCatcherManager.getBugCatcher().logError(exception2);
