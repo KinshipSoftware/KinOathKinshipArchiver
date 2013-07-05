@@ -353,20 +353,25 @@ public class QueryParser implements EntityService {
                 throw new ProcessAbortException();
             }
             UniqueIdentifier currentId = iterator.next();
-            // load and show any mandatory entities
-            EntityData requiredNode;
-            if (loadedGraphNodes.containsKey(currentId)) {
-                requiredNode = loadedGraphNodes.get(currentId);
-            } else {
-                requiredNode = entityCollection.getEntity(currentId, indexParameters);
-                loadedGraphNodes.put(requiredNode.getUniqueIdentifier(), requiredNode);
+            try {
+                // load and show any mandatory entities
+                EntityData requiredNode;
+                if (loadedGraphNodes.containsKey(currentId)) {
+                    requiredNode = loadedGraphNodes.get(currentId);
+                } else {
+                    requiredNode = entityCollection.getEntity(currentId, indexParameters);
+                    loadedGraphNodes.put(requiredNode.getUniqueIdentifier(), requiredNode);
+                }
+                if (dataStoreSvg.egoEntities.contains(currentId)) {
+                    // set the egoness based on the users selection
+                    requiredNode.isEgo = true;
+                }
+                requiredNode.isVisible = true;
+                requiredNode.isRequired = true;
+            } catch (EntityServiceException exception) {
+                // if the entity is not in the database we will end up here, but this is most likey to happen when the user has deleted an entity then reopend a diagram of that entity
+                // todo: it would be best to notify the user the number of entities that were on this diagram that are no longer existing the database 
             }
-            if (dataStoreSvg.egoEntities.contains(currentId)) {
-                // set the egoness based on the users selection
-                requiredNode.isEgo = true;
-            }
-            requiredNode.isVisible = true;
-            requiredNode.isRequired = true;
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     progressBar.setValue(progressBar.getValue() + 1);

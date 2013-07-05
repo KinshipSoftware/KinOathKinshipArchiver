@@ -228,10 +228,15 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 HashSet<ArbilNode> resultsArray = new HashSet<ArbilNode>();
                 resultsArea.setText("Loading " + entityIdentifiers.length + " entities\n");
                 int loadedCount = 0;
+                int unloadableEntityCount = 0;
                 for (UniqueIdentifier entityId : entityIdentifiers) {
-                    EntityData entityData = entityCollection.getEntity(entityId, graphPanel.getIndexParameters());
-                    // todo: add cache and update of the tree nodes
-                    resultsArray.add(new KinTreeNode(graphPanel.getSymbolGraphic(), entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                    try {
+                        EntityData entityData = entityCollection.getEntity(entityId, graphPanel.getIndexParameters());
+                        // todo: add cache and update of the tree nodes
+                        resultsArray.add(new KinTreeNode(graphPanel.getSymbolGraphic(), entityData.getUniqueIdentifier(), entityData, graphPanel.dataStoreSvg, graphPanel.getIndexParameters(), dialogHandler, entityCollection, dataNodeLoader));
+                    } catch (EntityServiceException exception) {
+                        unloadableEntityCount++;
+                    }
                     rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
                     resultsTree.requestResort();
                     loadedCount++;
@@ -246,6 +251,9 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 resultsArea.setVisible(false);
                 searchPanel.remove(progressBar);
                 searchPanel.revalidate();
+                if (unloadableEntityCount > 0) {
+                    dialogHandler.addMessageDialogToQueue("Failed to load " + unloadableEntityCount + " entities.", "Error Loading Entities");
+                }
             }
         }.start();
     }

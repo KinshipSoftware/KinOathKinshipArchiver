@@ -179,6 +179,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
          * this was depricated due to inserted data being non updateable without creating duplicates, 
          * however we can use it again now that paths are not used to delete records but instead the identifier is used.
          * */
+        System.out.println("recreateDatabase: " + databaseName);
         try {
 //            System.out.println("List: " + new List().execute(context));
             synchronized (databaseLock) {
@@ -589,7 +590,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         return queryResult.split(" ");
     }
 
-    public EntityData getEntity(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) {
+    public EntityData getEntity(UniqueIdentifier uniqueIdentifier, IndexerParameters indexParameters) throws EntityServiceException {
 //        long startTime = System.currentTimeMillis();
         QueryBuilder queryBuilder = new QueryBuilder();
         String query1String = queryBuilder.getEntityQuery(uniqueIdentifier, indexParameters, databaseName);
@@ -619,7 +620,8 @@ public class EntityCollection extends DatabaseUpdateHandler {
         } catch (JAXBException exception) {
             // this is where the symptom of duplicate ids has been seen, but it should have been resolved by the delete query replacing the DELETE command
             BugCatcherManager.getBugCatcher().logError(query1String + "\n" + queryResult, exception);
-            return new EntityData(uniqueIdentifier, new String[]{"Error loading the entity data", "view log for details"});
+//            return new EntityData(uniqueIdentifier, new String[]{"Error loading the entity data", "view log for details"});
+            throw new EntityServiceException("Error loading the entity data");
         } catch (BaseXException exception) {
             BugCatcherManager.getBugCatcher().logError(query1String + "\n" + queryResult, exception);
             return new EntityData(uniqueIdentifier, new String[]{"Error in db query", "view log for details"});
