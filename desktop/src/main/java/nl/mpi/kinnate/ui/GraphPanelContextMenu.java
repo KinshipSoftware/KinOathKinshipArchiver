@@ -144,7 +144,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
             }
             this.add(shapeSubMenu);
 
-            deleteMenu = new JMenuItem("Delete");
+            deleteMenu = new JMenuItem("Delete selected from project");
             deleteMenu.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     int entityCount = 0;
@@ -156,7 +156,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                     boolean doDelete = false;
                     if (entityCount == 0) {
                         doDelete = true;
-                    } else if (JOptionPane.OK_OPTION == arbilWindowManager.showDialogBox(entityCount + " entities will be deleted from the database", "Delete Entity", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE)) {
+                    } else if (JOptionPane.OK_OPTION == arbilWindowManager.showDialogBox(entityCount + " entities will be deleted from the current project", "Delete Entity", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE)) {
                         doDelete = true;
                     }
                     if (doDelete) {

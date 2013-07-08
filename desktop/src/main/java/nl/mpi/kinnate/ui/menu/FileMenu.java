@@ -24,6 +24,7 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import javax.swing.JMenu;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
@@ -34,6 +35,7 @@ import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.export.ExportToR;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.projects.ProjectManager;
+import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.svg.DiagramTranscoder;
 import nl.mpi.kinnate.ui.DiagramTranscoderPanel;
 import nl.mpi.kinnate.ui.ImportSamplesFileMenu;
@@ -48,16 +50,15 @@ import org.apache.batik.transcoder.TranscoderException;
  */
 public class FileMenu extends javax.swing.JMenu {
 
-    private javax.swing.JMenuItem importGedcomUrl;
+//    private javax.swing.JMenuItem importGedcomUrl;
     private javax.swing.JMenuItem importGedcomFile;
 //    private javax.swing.JMenuItem importCsvFile;
     private javax.swing.JMenuItem closeTabMenuItem;
-    private javax.swing.JMenuItem entityUploadMenuItem;
+//    private javax.swing.JMenuItem entityUploadMenuItem;
     private javax.swing.JMenuItem exitApplication;
     private javax.swing.JMenuItem exportToR;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -87,12 +88,11 @@ public class FileMenu extends javax.swing.JMenu {
         this.dialogHandler = dialogHandler;
         this.diagramWindowManager = diagramWindowManager;
         this.parentComponent = parentComponent;
-        importGedcomUrl = new javax.swing.JMenuItem();
+//        importGedcomUrl = new javax.swing.JMenuItem();
         importGedcomFile = new javax.swing.JMenuItem();
 //        importCsvFile = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         newDiagramMenuItem = new javax.swing.JMenuItem();
-        jMenu3 = new DocumentNewMenu(diagramWindowManager, parentComponent, dialogHandler);
         openDiagram = new javax.swing.JMenuItem();
         recentFileMenu = new RecentFileMenu(diagramWindowManager, sessionStorage, parentComponent, dialogHandler);
         projectNewMenu = new javax.swing.JMenuItem();
@@ -101,7 +101,7 @@ public class FileMenu extends javax.swing.JMenu {
         jMenu1 = new SamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jMenu2 = new ImportSamplesFileMenu(diagramWindowManager, dialogHandler, parentComponent);
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        entityUploadMenuItem = new javax.swing.JMenuItem();
+//        entityUploadMenuItem = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         saveDiagram = new javax.swing.JMenuItem();
         saveDiagramAs = new javax.swing.JMenuItem();
@@ -113,7 +113,6 @@ public class FileMenu extends javax.swing.JMenu {
         saveAsProjectDefaultMenuItem = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         exitApplication = new javax.swing.JMenuItem();
-        // todo: Ticket #1297 add an import gedcom and csv menu item
 
 
         this.setText("File");
@@ -136,6 +135,7 @@ public class FileMenu extends javax.swing.JMenu {
 
         newDiagramMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         newDiagramMenuItem.setText("New (default diagram)");
+        newDiagramMenuItem.setEnabled(KinDiagramPanel.getGlobalDefaultDiagramFile(sessionStorage).exists());
         newDiagramMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newDiagramMenuItemActionPerformed(evt);
@@ -143,8 +143,24 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(newDiagramMenuItem);
 
-        jMenu3.setText("New Diagram of Type");
-        this.add(jMenu3);
+//        JMenuItem wizardMenuItem = new JMenuItem();
+//        wizardMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+//        wizardMenuItem.setText("Start New Diagram Wizard");
+//        wizardMenuItem.setEnabled(KinDiagramPanel.getGlobalDefaultDiagramFile(sessionStorage).exists());
+//        wizardMenuItem.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+////                newDiagramMenuItemActionPerformed(evt);
+//            }
+//        });
+//        this.add(wizardMenuItem);
+
+//        JMenu freeformDiagramMenuItem = new DocumentNewMenu(diagramWindowManager, parentComponent, dialogHandler);
+//        freeformDiagramMenuItem.setText("New Freform Diagram");
+//        this.add(freeformDiagramMenuItem);
+
+        JMenu projectDiagramMenuItem = new DocumentNewMenu(diagramWindowManager, parentComponent, dialogHandler);
+        projectDiagramMenuItem.setText("New Diagram of Type");
+        this.add(projectDiagramMenuItem);
 
         openDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         openDiagram.setText("Open Diagram");
@@ -174,9 +190,9 @@ public class FileMenu extends javax.swing.JMenu {
 
         this.add(projectRecentMenu);
 
-        this.add(jSeparator1);
+//        this.add(jSeparator1);
 
-        importGedcomFile.setText("Import Gedcom / CSV / TIP File");
+        importGedcomFile.setText("Import Gedcom / CSV / TIP File (into current project)");
         importGedcomFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 importGedcomFileActionPerformed(evt);
@@ -193,28 +209,32 @@ public class FileMenu extends javax.swing.JMenu {
 //        });
 //        this.add(importCsvFile);
 
-        jMenu2.setText("Import Sample Data");
+        jMenu2.setText("Import Sample Data (into current project)");
         this.add(jMenu2);
 
-        importGedcomUrl.setText("Import Gedcom Samples (from internet)");
-        importGedcomUrl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importGedcomUrlActionPerformed(evt);
-            }
-        });
-        importGedcomUrl.setEnabled(false);
-        this.add(importGedcomUrl);
-
+//        importGedcomUrl.setText("Import Gedcom Samples (from internet)");
+//        importGedcomUrl.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                importGedcomUrlActionPerformed(evt);
+//            }
+//        });
+//        importGedcomUrl.setEnabled(false);
+//        this.add(importGedcomUrl);
+        SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
+        if (currentSavePanel == null || currentSavePanel.getGraphPanel().dataStoreSvg.diagramMode != DataStoreSvg.DiagramMode.KinTypeQuery) {
+            jMenu2.setEnabled(false);
+            importGedcomFile.setEnabled(false);
+        }
         this.add(jSeparator2);
 
-        entityUploadMenuItem.setText("Entity Upload");
-        entityUploadMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                entityUploadMenuItemActionPerformed(evt);
-            }
-        });
-        this.add(entityUploadMenuItem);
-        this.add(jSeparator4);
+//        entityUploadMenuItem.setText("Entity Upload");
+//        entityUploadMenuItem.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                entityUploadMenuItemActionPerformed(evt);
+//            }
+//        });
+//        this.add(entityUploadMenuItem);
+//        this.add(jSeparator4);
 
         saveDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         saveDiagram.setText("Save");
