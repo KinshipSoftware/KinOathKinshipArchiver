@@ -18,6 +18,7 @@
 package nl.mpi.kinnate.ui.window;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,7 +124,10 @@ public class WindowedDiagramManager extends AbstractDiagramManager {
     @Override
     public SavePanel getCurrentSavePanel(Component parentComponent) {
         if (parentComponent instanceof SavePanelFrame) {
-            return (SavePanel) ((SavePanelFrame) parentComponent).getContentPane();
+            final Container contentPane = ((SavePanelFrame) parentComponent).getContentPane();
+            if (contentPane instanceof SavePanel) {
+                return (SavePanel) contentPane;
+            }
         }
         if (parentComponent instanceof SavePanel) {
             return (SavePanel) parentComponent; // in the case of clicking the panels menu on the import error window, this will not be a savepanel.

@@ -115,7 +115,7 @@ public class GedcomImportPanel extends JPanel {
                             selectedIds.addAll(identifiers);
                         }
                         kinDiagramPanel.addNodeCollection(selectedIds.toArray(new UniqueIdentifier[]{}), "Imported Entities");
-                        kinDiagramPanel.loadAllTrees();
+//                        kinDiagramPanel.loadAllTrees();
 //                    } catch (EntityServiceException exception) {
 //                        importTextArea.append("Creating a new document failed, cannot show the imported entitys." + "\n");
 //                        dialogHandler.addMessageDialogToQueue("Creating a new document failed, cannot show the imported entitys.", "Import Entities");

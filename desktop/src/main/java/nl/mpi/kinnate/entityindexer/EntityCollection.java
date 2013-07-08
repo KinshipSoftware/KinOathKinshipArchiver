@@ -280,7 +280,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 // add appears not to have been tested by anybody, I am not sure if I like basex now, but the following works
                 new Add(projectRecord.getProjectDataFilesDirectory().toURI().relativize(updatedDataUrl).toASCIIString(), urlString).execute(context);
             }
-            // todo: why dont we update the project record here?
+            // we dont update the project record here because this is called by an outer method that does update the project record
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             BugCatcherManager.getBugCatcher().logError(baseXException);

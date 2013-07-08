@@ -116,7 +116,7 @@ public class ProjectManager {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(projectRecord, new File(projectRecord.projectDirectory, "kinoath.proj"));
         }
-        if (updateInProjectDirectory) {
+        if (updateInRecentList) {
             // update the date in the recent projects list
             final RecentProjects recentProjectsList = getRecentProjectsList();
             recentProjectsList.updateProjectRecord(projectRecord);
@@ -153,13 +153,22 @@ public class ProjectManager {
 //        }
     }
 
-    private void checkProjectChangeDate(ProjectRecord databaseProjectRecord, ProjectRecord projectRecord, KinDiagramPanel diagramPanel) {
+    private void checkProjectChangeDate(final ProjectRecord databaseProjectRecord, final ProjectRecord projectRecord, final KinDiagramPanel diagramPanel) {
         if (!databaseProjectRecord.getLastChangeId().equals(projectRecord.getLastChangeId())) {
-//            dialogHandler.addMessageDialogToQueue("The project '" + projectRecord.projectName + "' appears to be out of date, please check if there is another more recently modified version.", "KinOath Project Check");
-//        } else if (databaseProjectRecord.getLastChangeDate().before(projectRecord.getLastChangeDate())) {
-            if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox("The project '" + projectRecord.projectName + "' has been modified externally,\ndo you want to update the database so that the changes are visible?", "KinOath Project Check", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
-                recreateDatabse(projectRecord, diagramPanel);
-            }
+            new Thread(new Runnable() {
+                public void run() {
+                    if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox("The project '" + projectRecord.projectName + "' has been modified externally,\ndo you want to update the database so that the changes are visible?", "KinOath Project Check", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+                        try {
+                            diagramPanel.showProgressBar();
+                            getEntityCollectionForProject(projectRecord).recreateDatabase();
+//                    dialogHandler.addMessageDialogToQueue("Reindexing complete.", "KinOath Project Check");
+                        } catch (EntityServiceException exception) {
+                            dialogHandler.addMessageDialogToQueue("Database update failed: " + exception, "KinOath Project Check");
+                        }
+                        diagramPanel.clearProgressBar();
+                    }
+                }
+            }).start();
         }
     }
 
