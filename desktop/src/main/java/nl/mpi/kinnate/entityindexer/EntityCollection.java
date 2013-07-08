@@ -37,7 +37,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.ui.ArbilWindowManager;
-import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.KinOathVersion;
@@ -58,7 +57,6 @@ import org.basex.core.cmd.CreateDB;
 import org.basex.core.cmd.DropDB;
 import org.basex.core.cmd.List;
 import org.basex.core.cmd.Open;
-import org.basex.core.cmd.Optimize;
 import org.basex.core.cmd.Set;
 import org.basex.core.cmd.XQuery;
 import org.basex.query.QueryException;
@@ -120,7 +118,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                     new CreateDB(databaseName).execute(context);
                     new Close().execute(context);
 //                new Open(databaseName).execute(context);
-                    updateProjectRecord();
+                    //updateProjectRecord();
                 }
             } catch (BaseXException exception2) {
                 BugCatcherManager.getBugCatcher().logError(exception2);
@@ -135,7 +133,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         return projectRecord;
     }
 
-    private void updateProjectRecord() {
+    private void updateProjectRecord(boolean updateInRecentList, boolean updateInProjectDirectory) {
         long startTime = System.currentTimeMillis();
         try {
             synchronized (databaseLock) {
@@ -155,8 +153,10 @@ public class EntityCollection extends DatabaseUpdateHandler {
             projectRecord.setRelationCount(-1);
         }
         try {
-            projectRecord.bumpLastChangeDate();
-            projectManager.saveProjectRecord(projectRecord);
+            if (updateInProjectDirectory) {
+                projectRecord.bumpLastChangeDate();
+            }
+            projectManager.saveProjectRecord(projectRecord, updateInRecentList, updateInProjectDirectory);
         } catch (JAXBException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
 //            throw new EntityServiceException("Error updating the project record:" + exception.getMessage());
@@ -201,7 +201,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             BugCatcherManager.getBugCatcher().logError(exception);
             throw new EntityServiceException("Could not recreate database:" + exception.getMessage());
         }
-        updateProjectRecord();
+        updateProjectRecord(true, false);
         updateOccured();
     }
 
@@ -280,6 +280,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 // add appears not to have been tested by anybody, I am not sure if I like basex now, but the following works
                 new Add(projectRecord.getProjectDataFilesDirectory().toURI().relativize(updatedDataUrl).toASCIIString(), urlString).execute(context);
             }
+            // todo: why dont we update the project record here?
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
             BugCatcherManager.getBugCatcher().logError(baseXException);
@@ -297,7 +298,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //                new Optimize().execute(context);
                 new Close().execute(context);
             }
-            updateProjectRecord();
+            updateProjectRecord(true, true);
             updateOccured();
         } catch (BaseXException baseXException) {
             // todo: if this throws here then the db might be corrupt and the user needs a way to drop and repopulate the db
@@ -347,7 +348,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                 }
                 new Close().execute(context);
             }
-            updateProjectRecord();
+            updateProjectRecord(true, true);
             updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);
@@ -366,7 +367,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
 //                new Optimize().execute(context);
                 new Close().execute(context);
             }
-            updateProjectRecord();
+            updateProjectRecord(true, true);
             updateOccured();
         } catch (BaseXException baseXException) {
             BugCatcherManager.getBugCatcher().logError(baseXException);

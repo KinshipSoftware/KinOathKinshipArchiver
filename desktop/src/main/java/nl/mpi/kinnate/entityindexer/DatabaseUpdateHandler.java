@@ -26,7 +26,7 @@ import java.util.ArrayList;
  */
 public class DatabaseUpdateHandler {
 
-    ArrayList<DatabaseUpdateListener> registeredListeners = new ArrayList<DatabaseUpdateListener>();
+    private final ArrayList<DatabaseUpdateListener> registeredListeners = new ArrayList<DatabaseUpdateListener>();
 
     public void addDatabaseUpdateListener(DatabaseUpdateListener databaseUpdateListener) {
         registeredListeners.add(databaseUpdateListener);

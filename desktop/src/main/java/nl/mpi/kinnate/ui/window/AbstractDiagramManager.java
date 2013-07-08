@@ -181,14 +181,14 @@ public abstract class AbstractDiagramManager {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, projectRecord, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
         egoSelectionTestPanel.setName("[" + egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName() + "] Unsaved Default Diagram");
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
-        egoSelectionTestPanel.loadAllTrees();
+//        egoSelectionTestPanel.loadAllTrees();
     }
 
     public void newDiagram(DocumentNewMenu.DocumentType documentType, ProjectRecord projectRecord, Rectangle preferredSizeLocation) throws EntityServiceException {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, projectRecord, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
         egoSelectionTestPanel.setName("[" + egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName() + "] Unsaved " + documentType.getDisplayName());
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
-        egoSelectionTestPanel.loadAllTrees();
+//        egoSelectionTestPanel.loadAllTrees();
     }
 
     public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu, Rectangle preferredSizeLocation) throws EntityServiceException {
@@ -201,7 +201,7 @@ public abstract class AbstractDiagramManager {
 //        egoSelectionTestPanel.setTransferHandler(dragTransferHandler);
         egoSelectionTestPanel.setName(diagramTitle);
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
-        egoSelectionTestPanel.loadAllTrees();
+//        egoSelectionTestPanel.loadAllTrees();
     }
 
     abstract Component getSelectedDiagram();

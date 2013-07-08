@@ -52,7 +52,11 @@ public class ProjectManager {
     @Deprecated
     public ProjectRecord getDefaultProject(SessionStorage sessionStorage) {
         if (defaultProject == null) {
-            defaultProject = new ProjectRecord(sessionStorage.getProjectDirectory(), sessionStorage.getProjectDirectory().getName(), "nl-mpi-kinnate");
+            try {
+                defaultProject = loadProjectRecord(sessionStorage.getProjectDirectory());
+            } catch (JAXBException exception) {
+                defaultProject = new ProjectRecord(sessionStorage.getProjectDirectory(), sessionStorage.getProjectDirectory().getName(), "nl-mpi-kinnate");
+            }
         }
         return defaultProject;
     }
@@ -98,22 +102,26 @@ public class ProjectManager {
         }
     }
 
-    public void saveRecentProjectsList(RecentProjects recentProjects) throws JAXBException {
+    private void saveRecentProjectsList(RecentProjects recentProjects) throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(RecentProjects.class);
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.marshal(recentProjects, recentProjectsFile);
     }
 
-    public void saveProjectRecord(ProjectRecord projectRecord) throws JAXBException {
+    public void saveProjectRecord(ProjectRecord projectRecord, boolean updateInRecentList, boolean updateInProjectDirectory) throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(ProjectRecord.class);
-        Marshaller marshaller = jaxbContext.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.marshal(projectRecord, new File(projectRecord.projectDirectory, "kinoath.proj"));
-        // update the date in the recent projects list
-        final RecentProjects recentProjectsList = getRecentProjectsList();
-        recentProjectsList.updateProjectRecord(projectRecord);
-        saveRecentProjectsList(recentProjectsList);
+        if (updateInProjectDirectory) {
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(projectRecord, new File(projectRecord.projectDirectory, "kinoath.proj"));
+        }
+        if (updateInProjectDirectory) {
+            // update the date in the recent projects list
+            final RecentProjects recentProjectsList = getRecentProjectsList();
+            recentProjectsList.updateProjectRecord(projectRecord);
+            saveRecentProjectsList(recentProjectsList);
+        }
     }
 
     public ProjectRecord loadProjectRecord(File projectDirectory) throws JAXBException {
@@ -140,15 +148,15 @@ public class ProjectManager {
         }
         // if we arrived here then the project is not in the recent list and we do not know if the database is up to date, so we offer to recreate the database
 //        if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox("The project '" + projectRecord.projectName + "' is not in your recent projects list, it is\nrecommended that you create / update the database.\nDo you want to do this now?", "KinOath Project Check", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
-        dialogHandler.addMessageDialogToQueue("Creating database for project '" + projectRecord.projectName + "'.", "KinOath Project");
+        //dialogHandler.addMessageDialogToQueue("Creating database for project '" + projectRecord.projectName + "'.", "KinOath Project");
         recreateDatabse(projectRecord, diagramPanel);
 //        }
     }
 
     private void checkProjectChangeDate(ProjectRecord databaseProjectRecord, ProjectRecord projectRecord, KinDiagramPanel diagramPanel) {
-        if (databaseProjectRecord.getLastChangeDate().after(projectRecord.getLastChangeDate())) {
-            dialogHandler.addMessageDialogToQueue("The project '" + projectRecord.projectName + "' appears to be out of date, please check if there is another more recently modified version.", "KinOath Project Check");
-        } else if (databaseProjectRecord.getLastChangeDate().after(projectRecord.getLastChangeDate())) {
+        if (!databaseProjectRecord.getLastChangeId().equals(projectRecord.getLastChangeId())) {
+//            dialogHandler.addMessageDialogToQueue("The project '" + projectRecord.projectName + "' appears to be out of date, please check if there is another more recently modified version.", "KinOath Project Check");
+//        } else if (databaseProjectRecord.getLastChangeDate().before(projectRecord.getLastChangeDate())) {
             if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox("The project '" + projectRecord.projectName + "' has been modified externally,\ndo you want to update the database so that the changes are visible?", "KinOath Project Check", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
                 recreateDatabse(projectRecord, diagramPanel);
             }
@@ -161,7 +169,7 @@ public class ProjectManager {
                 try {
                     diagramPanel.showProgressBar();
                     getEntityCollectionForProject(projectRecord).recreateDatabase();
-                    dialogHandler.addMessageDialogToQueue("Reindexing complete.", "KinOath Project Check");
+//                    dialogHandler.addMessageDialogToQueue("Reindexing complete.", "KinOath Project Check");
                 } catch (EntityServiceException exception) {
                     dialogHandler.addMessageDialogToQueue("Database update failed: " + exception, "KinOath Project Check");
                 }
