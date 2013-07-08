@@ -151,7 +151,7 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
                     ProjectRecord projectRecord = new ProjectRecord(selecteFile, selecteFile.getName());
                     try {
                         selecteFile.mkdir();
-                        projectManager.saveProjectRecord(projectRecord);
+                        projectManager.saveProjectRecord(projectRecord, true, true);
                         openProject(projectRecord);
                     } catch (JAXBException exception) {
                         dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Create Project Error");

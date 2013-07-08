@@ -228,11 +228,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             entityCollection = projectManager.getEntityCollectionForProject(graphPanel.dataStoreSvg.projectRecord);
         }
         graphPanel.setEntityCollection(entityCollection);
-        try {
-            projectManager.moveProjectRecordToTop(graphPanel.dataStoreSvg.projectRecord, this);
-        } catch (JAXBException exception) {
-            dialogHandler.addMessageDialogToQueue("Failed to save the project in the recent list: " + exception.getMessage(), "Recent Project List Error");
-        }
 //        } else {
 //            // do not store the project settings for a free form diagram but make sure the defalut project is available for importing
 //            entityCollection = new EntityCollection(projectManager.getDefaultProject(sessionStorage));
@@ -396,6 +391,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTypeStringProviders.add(entitySearchPanel);
         kinTypeStringProviders.addAll(Arrays.asList(graphPanel.getkinTermGroups()));
 //        graphPanel.svgUpdateHandler.updateEntities();
+        loadAllTrees();
+        try {
+            projectManager.moveProjectRecordToTop(graphPanel.dataStoreSvg.projectRecord, this);
+        } catch (JAXBException exception) {
+            dialogHandler.addMessageDialogToQueue("Failed to save the project in the recent list: " + exception.getMessage(), "Recent Project List Error");
+        }
     }
 
     public void setStatusBarText(String statusText) {

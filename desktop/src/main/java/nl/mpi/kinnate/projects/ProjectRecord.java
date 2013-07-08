@@ -40,6 +40,7 @@ public class ProjectRecord {
     protected int entityCount;
     protected int relationCount;
     protected Date lastChangeDate;
+    protected UUID lastChangeUUID = UUID.randomUUID(); // because this has just been added 2013/07/08 we need to make sure it is not null in old records
 
     public ProjectRecord() {
     }
@@ -49,6 +50,7 @@ public class ProjectRecord {
         this.projectDirectory = projectDirectory;
         this.projectUUID = UUID.randomUUID().toString();
         this.lastChangeDate = Calendar.getInstance().getTime();
+        this.lastChangeUUID = UUID.randomUUID();
     }
 
     @Deprecated
@@ -57,6 +59,7 @@ public class ProjectRecord {
         this.projectDirectory = projectDirectory;
         this.projectUUID = projectUUID;
         this.lastChangeDate = Calendar.getInstance().getTime();
+        this.lastChangeUUID = UUID.randomUUID();
     }
 
     public File getProjectDirectory() {
@@ -70,6 +73,7 @@ public class ProjectRecord {
 
     public void bumpLastChangeDate() {
         lastChangeDate = Calendar.getInstance().getTime();
+        this.lastChangeUUID = UUID.randomUUID();
     }
 
     public String getProjectName() {
@@ -115,6 +119,15 @@ public class ProjectRecord {
     @XmlElement(name = "LastChangeTime")
     public void setLastChangeDate(Date lastChangeDate) {
         this.lastChangeDate = lastChangeDate;
+    }
+
+    public UUID getLastChangeId() {
+        return lastChangeUUID;
+    }
+
+    @XmlElement(name = "LastChangeId")
+    public void setLastChangeId(UUID lastChangeUUID) {
+        this.lastChangeUUID = lastChangeUUID;
     }
 
     public File getProjectDataFilesDirectory() {
