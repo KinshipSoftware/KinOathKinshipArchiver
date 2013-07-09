@@ -2,22 +2,19 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book>
-  <title>KinOath Kinship Archiver</title>
-  <subtitle>Manual</subtitle>
+  <title>KinOath Kinship Archiver 1.3</title>
   <bookinfo>
-      <mediaobject>
-        <imageobject>
+    <mediaobject>
+      <imageobject>
         <imagedata fileref="images/KinOath-512.png" contentdepth="100%" scalefit="1" width="100%"/>
       </imageobject>
-      </mediaobject>
-      
-      <orgname>The Language Archive, MPI for Psycholinguistics, Nijmegen, The Netherlands</orgname>
-    
-      <releaseinfo>The latest version can be downloaded from <ulink url="http://tla.mpi.nl/tools/tla-tools/kinoath"
+    </mediaobject>
+    <orgname>The Language Archive, MPI for Psycholinguistics, Nijmegen, The Netherlands</orgname>
+    <releaseinfo>The latest version can be downloaded from <ulink
+        url="http://tla.mpi.nl/tools/tla-tools/kinoath"
         >http://tla.mpi.nl/tools/tla-tools/kinoath</ulink></releaseinfo>
-      <releaseinfo>This manual was last updated in June 2013</releaseinfo>
-      <releaseinfo>Francesca Bechis</releaseinfo>
-      
+    <releaseinfo>This manual was last updated in July 2013</releaseinfo>
+    <releaseinfo>Francesca Bechis</releaseinfo>
   </bookinfo>
   <preface id="Pre_Introduction">
     <title id="Overview">Overview </title>
@@ -37,9 +34,29 @@
         </tbody>
       </informaltable>
     </para>
+    <para/>
+    <para>For <emphasis role="underline">further information</emphasis> on KinOath Kinship Archiver,
+      please refer to the following links:</para>
+    <para>
+      <itemizedlist>
+        <listitem>
+          <para><ulink url="http://tla.mpi.nl/tools/tla-tools/kinoath/requests/"
+              >http://tla.mpi.nl/tools/tla-tools/kinoath/requests/</ulink>; on this page you will
+            find a list of already known issues about the current version, and of some feature
+            requests which will be possibly implemented in the future versions of the
+            application.</para>
+        </listitem>
+        <listitem>
+          <para><ulink url="http://tla.mpi.nl/tools/tla-tools/kinoath/changes/"
+              >http://tla.mpi.nl/tools/tla-tools/kinoath/changes/</ulink>; on this page, by
+            contrast, you will see a list showing which changes have been made to which version of
+            the application. </para>
+        </listitem>
+      </itemizedlist>
+    </para>
   </preface>
-  <chapter id="Ch_How_to_run_the_application" label="">
-    <title>How to run the application</title>
+  <chapter id="Ch_How_to_run_the_application">
+    <title>How to run the application: webstart and installation</title>
     <para>KinOath Kinship Archiver is part of the Language Archiving Technology suite. You will find
       a link to the program on the TLA web page <ulink
         url="http://tla.mpi.nl/tools/tla-tools/kinoath"
@@ -53,9 +70,9 @@
         </listitem>
         <listitem>
           <para>through one of the installers provided. Installers are available for <emphasis
-              role="bold">Windows</emphasis>, <emphasis role="bold">MacOS</emphasis> and <emphasis
-              role="bold">Debian</emphasis>. See sections below for more detailed
-            information.</para>
+              role="bold">Windows</emphasis>, <emphasis role="bold">Debian</emphasis>, and <emphasis
+              role="bold">MacOS</emphasis>. See sections below for more detailed information about
+            the installation process.</para>
         </listitem>
       </itemizedlist>
     </para>
@@ -103,8 +120,8 @@
               to allow changes to the computer;</para>
           </listitem>
           <listitem>
-            <para>A setup wizards will appear: go through the several steps until when it says
-                <emphasis role="bold">Install</emphasis>;</para>
+            <para>A setup wizards will appear: go through the several steps till it says <emphasis
+                role="bold">Install</emphasis>;</para>
           </listitem>
           <listitem>
             <para>After installing click on <emphasis role="bold">Finish</emphasis>. If you want to
@@ -173,6 +190,9 @@
           <para>how to create a Query Diagram;</para>
         </listitem>
         <listitem>
+          <para>how to create an Archive Data Linker Diagram;</para>
+        </listitem>
+        <listitem>
           <para>how to deal with the several features related to the above mentioned
             diagrams.</para>
         </listitem>
@@ -190,8 +210,7 @@
         </listitem>
         <listitem>
           <para>right click onto the main panel > <emphasis role="bold">Reset Layout</emphasis>: use
-            this option when the diagram is not neatly displayed (e.g. when lines and/or labels
-            overlap).</para>
+            this option when you want the entities of the diagram to be differently displayed; </para>
         </listitem>
         <listitem>
           <para>to <emphasis role="underline">zoom the diagram in/out</emphasis>: press <emphasis
@@ -213,8 +232,8 @@
           <emphasis role="underline">project database</emphasis>. A standard diagram is created
         through the adding of individuals (or other kind of entities such as social events or kin
         terms) and of relations between them. </para>
-      <para id="para_create_a_project">First of all, you should <emphasis role="underline">create a
-          project</emphasis>. To do so:</para>
+      <para id="para_create_a_project">First of all, you may want to <emphasis role="underline"
+          >create a project</emphasis>. To do so:</para>
       <para>
         <orderedlist>
           <listitem>
@@ -272,9 +291,9 @@
             <para>
               <itemizedlist>
                 <listitem>
-                  <para><emphasis role="bold">Add Label</emphasis> allows you to enter a label for
-                    your diagram, and you can do it by entering the text into a small window opening
-                    at the bottom of the page when the option is selected.</para>
+                  <para><emphasis role="bold">Add Label</emphasis>, which allows you to enter a
+                    label for your diagram, and you can do it by entering the text into a small
+                    window opening at the bottom of the page when the option is selected.</para>
                 </listitem>
                 <listitem>
                   <para><emphasis role="bold">Add Circle</emphasis>
@@ -316,9 +335,7 @@
                 Entities</emphasis> when, for example, you have two separate entities carrying
               different pieces of information, and you find them to be the same individual.
               Therefore, you want to make them merge into a single entity. What results from the
-              merger is a single individual carrying the information of the two merged entities.
-              [NOTE: at the moment it only merges the entities but not the kinship data that such
-              entities carry] </para>
+              merger is a single entity carrying the data of both entities which have been merged . </para>
           </listitem>
           <listitem>
             <para>Select the entity you have created. At the bottom of the page you will see a table
@@ -340,8 +357,8 @@
                 </screenshot>
               </figure>
             </para>
-            <para>As far as <emphasis role="bold">kinship data</emphasis> are concerned, you
-              can:</para>
+            <para id="para_custom_fields">As far as <emphasis role="bold">kinship data</emphasis>
+              are concerned, you can:</para>
             <para>
               <itemizedlist>
                 <listitem>
@@ -378,9 +395,8 @@
                   </para>
                 </listitem>
                 <listitem>
-                  <para id="para_custom_fields">decide <emphasis role="underline">which custom
-                      fields need to be shown</emphasis> on the diagram next to the entity. To do
-                    so: </para>
+                  <para>decide <emphasis role="underline">which custom fields need to be
+                      shown</emphasis> on the diagram next to the entity. To do so: </para>
                   <para>
                     <orderedlist>
                       <listitem>
@@ -423,7 +439,7 @@
             <para>
               <itemizedlist>
                 <listitem>
-                  <para>select how many entities you need (click on them while holding down the ntrl
+                  <para>select how many entities you need (click on them while holding down the Ctrl
                     or Shift key on the keyboard) and right click. You can choose between: <emphasis
                       role="bold">sibling</emphasis>, <emphasis role="bold">ancestor</emphasis>,
                       <emphasis role="bold">descendant</emphasis>, <emphasis role="bold"
@@ -437,7 +453,8 @@
                       >undirected</emphasis> (a bidirectional relation). </para>
                   <para>
                     <note>
-                      <para>as far as ancestor and descendant are concerned, the choice of one or
+                      <para>as far as <emphasis role="underline">ancestor</emphasis> and <emphasis
+                          role="underline">descendant</emphasis> are concerned, the choice of one or
                         the other depends on which entity you select first. In other words: if you
                         select the parent first, then you have to use the descendant relation,
                         whereas if you select the child first, you will have to choose the ancestor
@@ -469,8 +486,9 @@
                 role="bold">Set as Ego (list will be cleared)</emphasis>. That entity will go
               black.</para>
             <para>The text into brackets (<emphasis role="bold">list will be cleared</emphasis>)
-              means that a diagram can only have one ego. The moment you try to set a second ego,
-              the other one will return a normal entity again. One excludes the other.</para>
+              means that a diagram can only have one ego. The moment you try to set a second ego on
+              the same diagram, the other one will return a normal entity again. One excludes the
+              other.</para>
             <para>However, if you have <emphasis role="underline">several diagrams</emphasis>, you
               can set <emphasis role="underline">several egos</emphasis>: select the entity > right
               click > <emphasis role="bold">Add to ego list</emphasis>.</para>
@@ -494,15 +512,16 @@
             <para>
               <itemizedlist>
                 <listitem>
-                  <para>select the necessary entity > right click > <emphasis role="bold"
-                      >Delete</emphasis>. The entity will be deleted from the database and from all
-                    diagrams. </para>
+                  <para>select the necessary entity > right click > <emphasis role="bold">Delete
+                      selected from project</emphasis>. The entity will be deleted from the database
+                    and from all diagrams. </para>
                 </listitem>
                 <listitem>
                   <para>select the necessary entity > right click > <emphasis role="bold">Release
-                      from diagram</emphasis>. The entity will be removed from the diagram, but in
-                    this case it will remain in the database, unlike with the option <emphasis
-                      role="bold">Delete</emphasis>, just described.</para>
+                      from diagram</emphasis>. The entity will be removed from the diagram you are
+                    working on, but in this case it will remain in the database, unlike with the
+                    option <emphasis role="bold">Delete selected form project</emphasis>, just
+                    described.</para>
                 </listitem>
               </itemizedlist>
             </para>
@@ -517,7 +536,7 @@
                       Definitions</emphasis> tab. This tab, in turn, is made up of sub-tabs:</para>
                   <para><emphasis role="bold">Custom Name</emphasis>: a free text field to make the
                     relation more specific;</para>
-                  <para><emphasis role="bold">Data Category</emphasis>: the data can have an ISOcat
+                  <para><emphasis role="bold">Data Category</emphasis>: the data can carry an ISOcat
                     link;</para>
                   <para><emphasis role="bold">Relation Type</emphasis>: you can choose among the
                     types seen above (sibling, union, etc.);</para>
@@ -529,8 +548,9 @@
                     continuous lines or dashed lines, with the dashes being thicker or
                     thinner;</para>
                   <para><emphasis role="bold">Curve Line Orientation</emphasis>: you can choose
-                    between horizontal and vertical orientation. This option, however, is not valid
-                    for sanguine relations lines.</para>
+                    between horizontal and vertical orientation. This option, however, is <emphasis
+                      role="underline"><emphasis role="bold">not</emphasis> valid for sanguine
+                      relations lines</emphasis>.</para>
                   <para>Look at the figure below to see how these features work.</para>
                 </listitem>
               </itemizedlist>
@@ -610,8 +630,7 @@
               <listitem>
                 <para><emphasis role="bold">Export as PDF/JPEG/PNG/TIFF</emphasis>: this option
                   allows you to export files (in one of the following formats: PDF, JPEG, PNG and
-                  TIFF) to a directory in your computer (see <xref
-                    linkend="app_Features_not_available"/>). As in the previous option, <emphasis
+                  TIFF) to a directory in your computer. As in the previous option, <emphasis
                     role="bold">Save as</emphasis>, when selecting <emphasis role="bold">Export
                     as</emphasis> you will be asked to choose a directory and a file name plus, in
                   this case, a file format. </para>
@@ -659,13 +678,12 @@
       <para>
         <orderedlist>
           <listitem>
-            <para>First of all, you have to <emphasis role="underline">import data</emphasis>. To do
-              so:</para>
+            <para id="para_open_import_diagram">First of all, you have to <emphasis role="underline"
+                >import data</emphasis>. To do so:</para>
             <para>
               <itemizedlist>
                 <listitem>
-                  <para id="para_open_import_diagram">if you have data of your own, you can import
-                    data in two different ways: </para>
+                  <para>if you have data of your own, you can import data in two different ways: </para>
                   <para>
                     <itemizedlist>
                       <listitem>
@@ -675,8 +693,8 @@
                       </listitem>
                       <listitem>
                         <para><emphasis role="bold">File</emphasis> menu > <emphasis role="bold"
-                            >Import Gedcom/CSV/TIP file</emphasis> > choose the necessary file >
-                            <emphasis role="bold">Open</emphasis>;</para>
+                            >Import Gedcom/CSV/TIP file (into current project)</emphasis> > choose
+                          the necessary file > <emphasis role="bold">Open</emphasis>;</para>
                       </listitem>
                     </itemizedlist>
                   </para>
@@ -696,8 +714,8 @@
                 <listitem>
                   <para>otherwise, if you want to become more familiar with the application, you can
                     use the sample data contained into the application itself: <emphasis role="bold"
-                      >File</emphasis> menu > <emphasis role="bold">Import Sample Data</emphasis> >
-                    choose the data you want to import. </para>
+                      >File</emphasis> menu > <emphasis role="bold">Import Sample Data (into current
+                      project)</emphasis> > choose the data you want to import. </para>
                 </listitem>
                 <listitem>
                   <para>when you start the import, a window like the one below appears. Select
@@ -705,6 +723,14 @@
                     select <emphasis role="bold">Close</emphasis>. The entities will be now listed
                     in the <emphasis role="bold">Project Tree</emphasis> tab on the left of the
                     page.</para>
+                  <para>
+                    <note>
+                      <para>In the project tree you will see only the <emphasis role="underline"
+                          >top-level ancestors</emphasis> of the genealogical tree, so that very big
+                        database, with a big amount of entities, will not result too
+                        confusing.</para>
+                    </note>
+                  </para>
                   <para>
                     <figure>
                       <title>Import process</title>
@@ -744,8 +770,9 @@
                 <listitem>
                   <para>in the white field located below the just mentioned option enter the
                     necessary kin type strings (you can find a list of the main kin type strings
-                    below in Section 2.2 <xref linkend="para_kin_type_strings"/>). As you enter
-                    different strings, the diagram updates itself accordingly.</para>
+                    below in <xref linkend="Sec_Freeform_Diagram"/>
+                    <xref linkend="para_kin_type_strings"/>). As you enter different strings, the
+                    diagram updates itself accordingly.</para>
                   <para>
                     <figure>
                       <title>Search Entities tab</title>
@@ -891,12 +918,12 @@
                   <para>
                     <itemizedlist>
                       <listitem>
-                        <para id="para_Id_labels"><emphasis role="italic">Id</emphasis>: an Id is
-                          added when the same kin type definition is used for different entities, so
-                          that you are able to distinguish them; it is represented by a #-sign
-                          followed by a number. So, for example, if you have two male egos, one will
-                          be simply <emphasis role="italic">Em</emphasis>, and the other <emphasis
-                            role="italic">Em:#1</emphasis>. </para>
+                        <para><emphasis role="italic">Id</emphasis>: an Id is added when the same
+                          kin type definition is used for different entities, so that you are able
+                          to distinguish them; it is represented by a #-sign followed by a number.
+                          So, for example, if you have two male egos, one will be simply <emphasis
+                            role="italic">Em</emphasis>, and the other <emphasis role="italic"
+                            >Em:#1</emphasis>. </para>
                         <para>You can decide whether to show or hide the Ids. To show them:
                             <emphasis role="bold">Diagram Options</emphasis> > check the item
                             <emphasis role="bold">Show Id Labels</emphasis>. Leave it unchecked to
@@ -905,6 +932,9 @@
                       <listitem>
                         <para><emphasis role="italic">name</emphasis>
                         </para>
+                      </listitem>
+                      <listitem>
+                        <para><emphasis role="italic">surname</emphasis></para>
                       </listitem>
                       <listitem>
                         <para><emphasis role="italic">date of birth</emphasis></para>
@@ -946,8 +976,7 @@
                       diagram</emphasis>.</para>
                 </listitem>
                 <listitem>
-                  <para id="para_recalculate_diagram">If you want to modify such diagram, you
-                    can:</para>
+                  <para>If you want to modify such diagram, you can:</para>
                   <para>
                     <itemizedlist>
                       <listitem>
@@ -1007,8 +1036,8 @@
                     the letters listed in <xref linkend="Sec_Freeform_Diagram"/>, point 2;</para>
                 </listitem>
                 <listitem>
-                  <para><emphasis role="bold">Propositus Kin Type Strings</emphasis>
-                  </para>
+                  <para><emphasis role="bold">Propositus Kin Type Strings</emphasis>: <emphasis
+                      role="italic">this option is not yet functional</emphasis>;</para>
                 </listitem>
                 <listitem>
                   <para><emphasis role="bold">Description</emphasis>: here you explain your kin
@@ -1083,14 +1112,16 @@
                   <para><emphasis role="underline">to delete some of the kin terms</emphasis> >
                     check the corresponding little squares on the right of the column <emphasis
                       role="bold">Description</emphasis> and click on <emphasis role="bold">Delete
-                      Selected</emphasis>; </para>
+                      Selected</emphasis>. The option to <emphasis role="underline">delete the whole
+                      kin terms group</emphasis> (<emphasis role="bold">Delete Group</emphasis>) is
+                      <emphasis role="italic">not yet functional</emphasis>. </para>
                 </listitem>
               </itemizedlist>
             </para>
           </listitem>
           <listitem id="para_export_import">
-            <para>To <emphasis role="underline">save</emphasis> the diagram: see Section 2.1, point
-              6.</para>
+            <para>To <emphasis role="underline">save</emphasis> the diagram: see <xref
+                linkend="Sec_Standard_Diagram"/>, point 6.</para>
             <para>You can also save/export the kin terms diagram you have created via <emphasis
                 role="bold">Kin Terms</emphasis> menu > <emphasis role="bold">Export</emphasis> >
               choose a file name and a directory > <emphasis role="bold">Save</emphasis>.</para>
@@ -1105,7 +1136,7 @@
     <section id="Sec_Query_Diagram">
       <title>Query Diagram (current project)</title>
       <para>A query diagram is a project-based diagram whose entities can be searched for through
-        the kin type strings. As for the standard diagram, here as well you can create a project
+        the kin type strings. Like with the standard diagram, here as well you can create a project
         before creating the actual diagram (see paragraph <xref linkend="para_create_a_project"/> ). </para>
       <para>To <emphasis role="underline">create</emphasis> a query diagram:</para>
       <para>
@@ -1163,9 +1194,9 @@
                       </listitem>
                       <listitem>
                         <para>Take the specific entity you are looking for and drag it to the
-                            <emphasis role="bold">Kin Type Strings</emphasis> panel, preceded by the
-                          E of ego. This will appear on the main panel. Add other kin strings if you
-                          want to modify your query.</para>
+                            <emphasis role="bold">Kin Type Strings</emphasis> panel, preceded by 'E'
+                          or 'x', which stand for 'undefined ego'. This will appear on the main
+                          panel. Add other kin strings if you want to modify your query.</para>
                         <para>
                           <figure>
                             <title>Query Diagram example 2</title>
@@ -1188,8 +1219,8 @@
             </para>
           </listitem>
           <listitem>
-            <para>To <emphasis role="underline">save</emphasis> the diagram: see Section 2.1, point
-              6.</para>
+            <para>To <emphasis role="underline">save</emphasis> the diagram: see <xref
+                linkend="Sec_Standard_Diagram"/>, point 6.</para>
             <para>
               <note>
                 <para>The application contains a couple of sample query diagrams, named <emphasis
@@ -1203,6 +1234,47 @@
         </orderedlist>
       </para>
     </section>
+    <section>
+      <title>Archive Data Linker (current project)</title>
+      <para>An archive data linker diagram works, broadly speaking, in the same way as the archive
+        linker panel does (see paragraph <xref linkend="para_link_archive_data"/>). Like the
+        standard and the query diagram, the archive data linker diagram is project-based. To see how
+        to create a project see <xref linkend="para_create_a_project"/> above. </para>
+      <para>To <emphasis role="underline">create</emphasis> an archive data linker diagram:</para>
+      <para>
+        <orderedlist>
+          <listitem>
+            <para><emphasis role="bold">File</emphasis> menu > <emphasis role="bold">New Diagram of
+                Type</emphasis> > <emphasis role="bold">Archive Data Linker (current
+                project)</emphasis>; a new page of the application will open, with a tab on the
+              right called <emphasis role="bold">Archive Linker</emphasis> and showing the whole
+              IMDI Browser tree (according to whether you have been using Arbil, you may see three
+              tabs instead of one, all of them called <emphasis role="bold">Archive
+                Linker</emphasis>, but containing different trees).</para>
+          </listitem>
+          <listitem>
+            <para>Once you have your diagram ready, select the required archive link from the
+              archive linker tree on the right of the page and drag it to the specific entity under
+              the diagram tree on the left. The entity on the diagram will now carry the archive
+              reference. See figure below.</para>
+            <para>
+              <figure>
+                <title>Archive Data Linker diagram</title>
+                <screenshot>
+                  <screeninfo/>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata fileref="images/ArchiveDataLinkerDiagram.png" contentdepth="100%"
+                        scalefit="1" width="100%"/>
+                    </imageobject>
+                  </mediaobject>
+                </screenshot>
+              </figure>
+            </para>
+          </listitem>
+        </orderedlist>
+      </para>
+    </section>
     <section id="Sec_Template_Documents">
       <title>Template Documents</title>
       <para>The initial page of the application, or the one with the diagram you are working on can
@@ -1210,24 +1282,23 @@
       <para>
         <itemizedlist>
           <listitem>
-            <para>as for the <emphasis role="underline">initial page of the
-                application</emphasis>:<emphasis role="bold">File</emphasis> menu > <emphasis
-                role="bold">Set Global Default Diagram as (</emphasis><emphasis role="italic">name
-                of the diagram</emphasis><emphasis role="bold">)</emphasis>;</para>
+            <para>as for the <emphasis role="underline">initial page of the application</emphasis>:
+              decide which page (standard diagram, freeform diagram, etc.) you want to be your
+              template document > <emphasis role="bold">File</emphasis> menu > <emphasis role="bold"
+                >Set Global Default Diagram as (</emphasis><emphasis role="italic">name of the
+                diagram</emphasis><emphasis role="bold">)</emphasis>; next time you open the
+              application or a new default diagram, you will see that particular page.</para>
+          </listitem>
+          <listitem>
             <para>as for the <emphasis role="underline">page with your project open</emphasis>:
                 <emphasis role="bold">File</emphasis> menu > <emphasis role="bold">Set Project
                 Default Diagram as (</emphasis><emphasis role="italic">name of the
-                diagram</emphasis><emphasis role="bold">)</emphasis>;</para>
-          </listitem>
-          <listitem>
-            <para><emphasis role="bold">File</emphasis> menu > <emphasis role="bold">New (default
-                diagram)</emphasis> > the application will open showing the diagram you set as
-              default.</para>
-            <para>The same thing happens when you close and re-open the application.</para>
-          </listitem>
-          <listitem>
-            <para>To continue working on that diagram you need to recalculate it (see paragraph
-                <xref linkend="para_recalculate_diagram"/>).</para>
+                diagram</emphasis><emphasis role="bold">)</emphasis>; next time you open this
+              project you will see the diagram previously created in the main panel. Otherwise, if
+              you open a project which was not set as default, you will only see the list of
+              entities making up the diagram in the project tree on the left of the page.</para>
+            <para>To continue working on that diagram you need to recalculate it first (see
+              paragraph <xref linkend="para_sample_diagram"/>).</para>
           </listitem>
         </itemizedlist>
       </para>
@@ -1239,7 +1310,7 @@
       and to work with the different kinds of diagrams.</para>
     <section>
       <title>How to create a project</title>
-      <para>To create a new project or open an existing one see paragraph <xref
+      <para>To create a new project or open an existing one see <xref
           linkend="para_create_a_project"/>.</para>
     </section>
     <section>
@@ -1264,7 +1335,7 @@
           </listitem>
           <listitem>
             <para>How to <emphasis role="bold">add entities</emphasis> to the diagram through the
-                <emphasis role="bold">search tab</emphasis>: see paragraph <xref
+                <emphasis role="bold">search tab</emphasis>: see <xref
                 linkend="para_add_entities_search_tab"/>.</para>
           </listitem>
         </itemizedlist>
@@ -1313,9 +1384,9 @@
   </chapter>
   <appendix id="app_Menu_options">
     <title>Menu options</title>
-    <para>Here is a comprehensive list of all the options that you can find located under the
-      several menus of the application. Those which have already been explained only report a link
-      to the relevant part of the manual. The others, by contrast, carry a brief explanation.</para>
+    <para>Here is a comprehensive list of all the options that you can find under the several menus
+      of the application. Those which have already been explained only report a link to the relevant
+      part of the manual. The others, by contrast, carry a brief explanation.</para>
     <para>
       <orderedlist>
         <listitem>
@@ -1327,7 +1398,7 @@
                     linkend="Sec_Template_Documents"/>;</para>
               </listitem>
               <listitem>
-                <para><emphasis role="bold">New Diagram of Type</emphasis>: see paragraph <xref
+                <para><emphasis role="bold">New Diagram of Type</emphasis>: see <xref
                     linkend="para_new_diagram"/>;</para>
               </listitem>
               <listitem>
@@ -1343,24 +1414,25 @@
                     linkend="para_sample_diagram"/></para>
               </listitem>
               <listitem>
-                <para><emphasis role="bold">New Project</emphasis>: see paragraph <xref
+                <para><emphasis role="bold">New Project</emphasis>: see <xref
                     linkend="para_create_a_project"/>;</para>
               </listitem>
               <listitem>
-                <para><emphasis role="bold">Open Project</emphasis>: see paragraph <xref
+                <para><emphasis role="bold">Open Project</emphasis>: see <xref
                     linkend="para_create_a_project"/>;</para>
               </listitem>
               <listitem>
-                <para><emphasis role="bold">Open Recent Project</emphasis>: see paragraph <xref
+                <para><emphasis role="bold">Open Recent Project</emphasis>: see <xref
                     linkend="para_create_a_project"/>;</para>
               </listitem>
               <listitem>
-                <para><emphasis role="bold">Import Gedcom / CSV / TIP file</emphasis>: see paragraph
-                    <xref linkend="para_open_import_diagram"/>;</para>
+                <para><emphasis role="bold">Import Gedcom / CSV / TIP file (into current
+                    project)</emphasis>: see paragraph <xref linkend="para_open_import_diagram"
+                  />;</para>
               </listitem>
               <listitem>
-                <para><emphasis role="bold">Import Sample Data</emphasis>: see paragraph <xref
-                    linkend="para_open_import_diagram"/>;</para>
+                <para><emphasis role="bold">Import Sample Data (into current project)</emphasis>:
+                  see paragraph <xref linkend="para_open_import_diagram"/>;</para>
               </listitem>
               <listitem>
                 <para><emphasis role="bold">Save as (<emphasis role="italic">name of the
@@ -1382,12 +1454,12 @@
               </listitem>
               <listitem>
                 <para><emphasis role="bold">Set Global Default Diagram as (<emphasis role="italic"
-                      >name of the diagram</emphasis>)</emphasis>: see paragraph <xref
+                      >name of the diagram</emphasis>)</emphasis>: see <xref
                     linkend="Sec_Template_Documents"/>;</para>
               </listitem>
               <listitem>
                 <para><emphasis role="bold">Set Project Default Diagram as (<emphasis role="italic"
-                      >name of the diagram</emphasis>)</emphasis>: see paragraph <xref
+                      >name of the diagram</emphasis>)</emphasis>: see <xref
                     linkend="Sec_Template_Documents"/>;</para>
               </listitem>
               <listitem>
@@ -1423,7 +1495,7 @@
               </listitem>
               <listitem>
                 <para><emphasis role="bold">Recalculate the Diagram</emphasis>: see paragraph <xref
-                    linkend="para_recalculate_diagram"/>.</para>
+                    linkend="para_sample_diagram"/>.</para>
               </listitem>
             </itemizedlist>
           </para>
@@ -1450,8 +1522,7 @@
               </listitem>
               <listitem>
                 <para><emphasis role="bold">Show Sanguin Lines</emphasis>: if this option is
-                  unchecked, the sanguine lines connecting one entity to the other
-                  disappear.</para>
+                  unchecked, the sanguine lines connecting one entity to the other disappear.</para>
               </listitem>
               <listitem>
                 <para><emphasis role="bold">Show Labels</emphasis>: if this option is unchecked, the
@@ -1465,7 +1536,7 @@
               </listitem>
               <listitem>
                 <para><emphasis role="bold">Show Id Labels</emphasis>: see paragraph <xref
-                    linkend="para_Id_labels"/>.</para>
+                    linkend="para_add_labels"/>.</para>
               </listitem>
               <listitem>
                 <para><emphasis role="bold">Show Date Labels</emphasis>: when you create individuals
@@ -1476,10 +1547,9 @@
               <listitem>
                 <para><emphasis role="bold">Show Archive Links</emphasis>: this option is valid for
                   the Gedcom imports that have resources (and for the diagram type <emphasis
-                    role="bold">Archive Data Linker</emphasis> which, however, is not yet
-                  functional). In both cases, the entities that are placed into the diagram will
-                  carry a label of the type: "archive ref.: 1, 2, etc.". Such label disappears if
-                  this option is unchecked.</para>
+                    role="bold">Archive Data Linker</emphasis>). In both cases, the entities that
+                  are placed into the diagram will carry a label of the type: "archive ref.: 1, 2,
+                  etc.". Such label disappears if this option is unchecked.</para>
               </listitem>
               <listitem>
                 <para><emphasis role="bold">Settings</emphasis>: by selecting this option a dialog
@@ -1583,7 +1653,7 @@
                   Diagram <xref linkend="Sec_Query_Diagram"/>).</para>
               </listitem>
               <listitem>
-                <para><emphasis role="bold">Search Entities</emphasis>: see paragraph <xref
+                <para><emphasis role="bold">Search Entities</emphasis>: see <xref
                     linkend="para_add_entities_search_tab"/>.</para>
               </listitem>
             </itemizedlist>
@@ -1654,68 +1724,6 @@
           </para>
         </listitem>
       </orderedlist>
-    </para>
-  </appendix>
-  <appendix id="app_Features_not_available">
-    <title>Features not available in KinOath 1.3 </title>
-    <para>
-      <note>
-        <para>As you may have noticed, KinOath 1.3 presents some hidden options. These features are
-          not implemented at the moment, but will be available in the next releases of the
-          application. However, they are already available in the current testing version.</para>
-      </note>
-    </para>
-    <para>
-      <orderedlist>
-        <listitem>
-          <para><emphasis role="bold">Export as JPEG/PNG/TIFF</emphasis> (File menu) [<emphasis
-              role="underline">Note: PDF format works!</emphasis>]. These feature fails on the
-            webstart, but it works if KinOath is installed;</para>
-        </listitem>
-        <listitem>
-          <para><emphasis role="bold">Add Polyline</emphasis> (Standard Diagram > right click menu >
-            Add Geometry);</para>
-        </listitem>
-        <listitem>
-          <para><emphasis role="bold">Propositus Kin Type Strings</emphasis> (File menu > New
-            Diagram of Type > Kin Terms Diagram > table on the right of the page > third
-            column);</para>
-        </listitem>
-        <listitem>
-          <para><emphasis role="bold">Delete Group</emphasis> ((File menu > New Diagram of Type >
-            Kin Terms Diagram > panel on the right of the page);</para>
-        </listitem>
-        <listitem>
-          <para><emphasis role="bold">Archive Data Linker</emphasis> diagram (File menu > New
-            Diagram of Type > Archive Data Linker);</para>
-        </listitem>
-        <listitem>
-          <para><emphasis role="bold">Archive Linker</emphasis> menu (top of the page).</para>
-          <para/>
-        </listitem>
-      </orderedlist>
-    </para>
-    <para>For further information on KinOath Kinship Archiver, please refer to the following
-      links:</para>
-    <para>
-      <itemizedlist>
-        <listitem>
-          <para><ulink url="http://tla.mpi.nl/tools/tla-tools/kinoath/requests/"
-              >http://tla.mpi.nl/tools/tla-tools/kinoath/requests/</ulink>; on this page you will
-            find a list of already known issues about KinOath 1.2, and of some feature requests
-            which will be possibly implemented in the future versions of the application.</para>
-        </listitem>
-      </itemizedlist>
-    </para>
-    <para>
-      <itemizedlist>
-        <listitem>
-          <para><ulink url="http://tla.mpi.nl/tools/tla-tools/kinoath/changes/"
-              >http://tla.mpi.nl/tools/tla-tools/kinoath/changes/</ulink>; on this page, by
-            contrast, you will see a list showing which changes have been made to which version of
-            the application. </para>
-        </listitem>
-      </itemizedlist>
     </para>
   </appendix>
 </book>
