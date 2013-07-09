@@ -153,8 +153,7 @@ public class ProjectRecord {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 73 * hash + (this.projectDirectory != null ? this.projectDirectory.hashCode() : 0);
-        hash = 73 * hash + (this.projectUUID != null ? this.projectUUID.hashCode() : 0);
+        hash = 17 * hash + (this.projectUUID != null ? this.projectUUID.hashCode() : 0);
         return hash;
     }
 
@@ -167,9 +166,6 @@ public class ProjectRecord {
             return false;
         }
         final ProjectRecord other = (ProjectRecord) obj;
-        if (this.projectDirectory != other.projectDirectory && (this.projectDirectory == null || !this.projectDirectory.equals(other.projectDirectory))) {
-            return false;
-        }
         if ((this.projectUUID == null) ? (other.projectUUID != null) : !this.projectUUID.equals(other.projectUUID)) {
             return false;
         }
