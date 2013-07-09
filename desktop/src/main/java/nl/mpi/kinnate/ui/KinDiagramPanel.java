@@ -393,7 +393,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //        graphPanel.svgUpdateHandler.updateEntities();
         loadAllTrees();
         try {
-            projectManager.moveProjectRecordToTop(graphPanel.dataStoreSvg.projectRecord, this);
+            // we need to make sure that we are comparing the project directory version with the database directory version, so we get copy from the directory here
+            // todo: if the project directory cannot be found, then we should help the user via the recent projects or via a file select
+            projectManager.moveProjectRecordToTop(projectManager.loadProjectRecord(graphPanel.dataStoreSvg.projectRecord.getProjectDirectory()), this);
         } catch (JAXBException exception) {
             dialogHandler.addMessageDialogToQueue("Failed to save the project in the recent list: " + exception.getMessage(), "Recent Project List Error");
         }
