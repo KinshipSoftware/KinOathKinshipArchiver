@@ -94,40 +94,6 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
         }
     }
 
-    private HashMap<String, FileFilter> getProjectFileFilter() {
-        HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
-        for (final String[] currentType : new String[][]{{"KinOath Project", "kinoath.proj"}}) {
-            fileFilterMap.put(currentType[0], new FileFilter() {
-                @Override
-                public boolean accept(File selectedFile) {
-//                    System.out.println("selectedFile: " + selectedFile);
-                    if (selectedFile.isDirectory()) {
-                        return true;
-                    }
-                    try {
-                        final ProjectRecord projectRecord = projectManager.loadProjectRecord(selectedFile);
-                        if (projectRecord == null) {
-                            return false;
-                        }
-                        return true;
-                    } catch (JAXBException exception) {
-                        // if we cannot read the project file then we cannot open the project
-                        return false;
-                    }
-//                    } else {
-//                    return (selectedFile.exists() && (selectedFile.isDirectory()));
-//                    }
-                }
-
-                @Override
-                public String getDescription() {
-                    return currentType[0];
-                }
-            });
-        }
-        return fileFilterMap;
-    }
-
     private void openProject(ProjectRecord projectRecord) {
         final Dimension parentSize = parentComponent.getSize();
         final Point parentLocation = parentComponent.getLocation();
@@ -142,7 +108,7 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if ("new".equals(e.getActionCommand())) {
 //            ProjectPreviewPanel previewPanel = new ProjectPreviewPanel(true);
-            final File[] selectedFilesArray = dialogHandler.showFileSelectBox("New Project", true, false, getProjectFileFilter(), MessageDialogHandler.DialogueType.save, null);
+            final File[] selectedFilesArray = dialogHandler.showFileSelectBox("New Project", true, false, projectManager.getProjectFileFilter(), MessageDialogHandler.DialogueType.save, null);
             if (selectedFilesArray != null) {
                 final File selecteFile = selectedFilesArray[0];
                 System.out.println(selecteFile.getAbsolutePath());
@@ -164,7 +130,7 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
 
         } else if ("browse".equals(e.getActionCommand())) {
             ProjectPreviewPanel previewPanel = new ProjectPreviewPanel(projectManager, false);
-            final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Project", false, false, getProjectFileFilter(), MessageDialogHandler.DialogueType.open, previewPanel);
+            final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Project", false, false, projectManager.getProjectFileFilter(), MessageDialogHandler.DialogueType.open, previewPanel);
             if (selectedFilesArray != null) {
                 System.out.println(selectedFilesArray[0].getAbsolutePath());
                 try {

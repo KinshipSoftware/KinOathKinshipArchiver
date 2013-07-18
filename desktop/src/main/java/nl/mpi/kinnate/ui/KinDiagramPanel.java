@@ -225,7 +225,13 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             } else if (graphPanel.dataStoreSvg.projectRecord == null) {
                 graphPanel.dataStoreSvg.projectRecord = projectManager.getDefaultProject(sessionStorage);
             }
-            entityCollection = projectManager.getEntityCollectionForProject(graphPanel.dataStoreSvg.projectRecord);
+            try {
+                graphPanel.dataStoreSvg.projectRecord = projectManager.checkForMissingProject(graphPanel.dataStoreSvg.projectRecord);
+                entityCollection = projectManager.getEntityCollectionForProject(graphPanel.dataStoreSvg.projectRecord);
+            } catch (JAXBException exception) {
+                // todo: should/can we do more here
+                dialogHandler.addMessageDialogToQueue("The required project is not available.", "Project Loading Error");
+            }
         }
         graphPanel.setEntityCollection(entityCollection);
 //        } else {
