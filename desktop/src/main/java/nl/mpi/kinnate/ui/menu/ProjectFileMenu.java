@@ -101,6 +101,9 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
                 @Override
                 public boolean accept(File selectedFile) {
 //                    System.out.println("selectedFile: " + selectedFile);
+                    if (selectedFile.isDirectory()) {
+                        return true;
+                    }
                     try {
                         final ProjectRecord projectRecord = projectManager.loadProjectRecord(selectedFile);
                         if (projectRecord == null) {
