@@ -21,15 +21,18 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
+import nl.mpi.kinnate.ui.ProjectPreviewPanel;
 
 /**
  * Created on : Oct 22, 2011, 09:43
@@ -42,6 +45,7 @@ public class ProjectManager {
     private ProjectRecord defaultProject = null; // should the default project be discarded and a mandatory import be required?
     private HashMap<ProjectRecord, EntityCollection> projectEntityCollectionMap = new HashMap<ProjectRecord, EntityCollection>();
     private final ArbilWindowManager dialogHandler;
+    static final public String kinoathproj = "kinoath.proj";
 
     public ProjectManager(SessionStorage sessionStorage, ArbilWindowManager dialogHandler) {
         recentProjectsFile = new File(sessionStorage.getApplicationSettingsDirectory(), "RecentProjects.xml");
@@ -96,7 +100,9 @@ public class ProjectManager {
         JAXBContext jaxbContext = JAXBContext.newInstance(RecentProjects.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
         if (recentProjectsFile.exists()) {
-            return (RecentProjects) unmarshaller.unmarshal(recentProjectsFile);
+            final RecentProjects recentProjects = (RecentProjects) unmarshaller.unmarshal(recentProjectsFile);
+            recentProjects.removeMissingProjects();
+            return recentProjects;
         } else {
             return new RecentProjects();
         }
@@ -124,10 +130,35 @@ public class ProjectManager {
         }
     }
 
+    public ProjectRecord checkForMissingProject(ProjectRecord projectRecord) throws JAXBException {
+        if (projectRecord.getProjectDirectory().exists()) {
+            return projectRecord;
+        } else {
+            try {
+                final RecentProjects recentProjectsList = getRecentProjectsList();
+                for (ProjectRecord recentProject : recentProjectsList.recentProjects) {
+                    if (recentProject.getProjectUUID().equals(projectRecord.getProjectUUID()) && recentProject.getProjectDirectory().exists()) {
+                        return recentProject;
+                    }
+                }
+            } catch (JAXBException exception) {
+                // if this fails we must ask the user to browse for the required project
+            }
+        }
+        // all else failed so we ask the user to browse for the matching project
+        ProjectPreviewPanel previewPanel = new ProjectPreviewPanel(this, false);
+        dialogHandler.showDialogBox("The project for this diagram could not be found.\nPlease browse for the required project.", "Open Project Error", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Project", false, false, getProjectFileFilter(), MessageDialogHandler.DialogueType.open, previewPanel);
+        if (selectedFilesArray != null) {
+            System.out.println(selectedFilesArray[0].getAbsolutePath());
+            return loadProjectRecord(selectedFilesArray[0]);
+        }
+        return projectRecord;
+    }
+
     public ProjectRecord loadProjectRecord(File projectDirectory) throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(ProjectRecord.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        final String kinoathproj = "kinoath.proj";
         File projectFile;
         if (projectDirectory.isFile() && kinoathproj.equals(projectDirectory.getName())) {
             projectFile = projectDirectory;
@@ -185,5 +216,39 @@ public class ProjectManager {
                 diagramPanel.clearProgressBar();
             }
         }).start();
+    }
+
+    public HashMap<String, FileFilter> getProjectFileFilter() {
+        HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
+        for (final String[] currentType : new String[][]{{"KinOath Project", "kinoath.proj"}}) {
+            fileFilterMap.put(currentType[0], new FileFilter() {
+                @Override
+                public boolean accept(File selectedFile) {
+//                    System.out.println("selectedFile: " + selectedFile);
+                    if (selectedFile.isDirectory()) {
+                        return true;
+                    }
+                    try {
+                        final ProjectRecord projectRecord = loadProjectRecord(selectedFile);
+                        if (projectRecord == null) {
+                            return false;
+                        }
+                        return true;
+                    } catch (JAXBException exception) {
+                        // if we cannot read the project file then we cannot open the project
+                        return false;
+                    }
+//                    } else {
+//                    return (selectedFile.exists() && (selectedFile.isDirectory()));
+//                    }
+                }
+
+                @Override
+                public String getDescription() {
+                    return currentType[0];
+                }
+            });
+        }
+        return fileFilterMap;
     }
 }

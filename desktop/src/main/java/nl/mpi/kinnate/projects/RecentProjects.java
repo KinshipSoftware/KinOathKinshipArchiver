@@ -17,6 +17,7 @@
  */
 package nl.mpi.kinnate.projects;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,6 +60,14 @@ public class RecentProjects {
             recentProjects.remove(recentProjects.size() - 1);
         }
         recentProjects.add(0, projectRecord);
+    }
+
+    public void removeMissingProjects() {
+        for (ProjectRecord projectRecord : recentProjects.toArray(new ProjectRecord[0])) {
+            if (!new File(projectRecord.getProjectDirectory(), ProjectManager.kinoathproj).exists()) {
+                recentProjects.remove(projectRecord);
+            }
+        }
     }
 
     public void clearList() {
