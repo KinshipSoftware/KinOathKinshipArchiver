@@ -104,8 +104,7 @@ public class MainFrame extends javax.swing.JFrame {
                             sessionStorage.saveString("KinOathDatabaseDirectory", databaseDirectorySelection[0].toString());
                         }
                     }
-
-                    abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480), null);
+                    final KinDiagramPanel initialDiagram = abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480), null);
                     abstractDiagramManager.createApplicationWindow();
 
                     windowManager.setMessagesCanBeShown(true);
@@ -119,7 +118,7 @@ public class MainFrame extends javax.swing.JFrame {
                             File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), windowManager, sessionStorage).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor));
                             if (oldAppExportFile != null) {
                                 try {
-                                    abstractDiagramManager.openImportPanel(oldAppExportFile, null, projectManager.getEntityCollectionForProject(projectManager.getDefaultProject(sessionStorage)));
+                                    abstractDiagramManager.openImportPanel(oldAppExportFile, initialDiagram, projectManager.getEntityCollectionForProject(projectManager.getDefaultProject(sessionStorage)));
                                 } catch (ImportException exception) {
                                     windowManager.addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
                                 } catch (EntityServiceException exception) {
