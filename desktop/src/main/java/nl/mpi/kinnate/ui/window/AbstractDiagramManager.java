@@ -167,7 +167,7 @@ public abstract class AbstractDiagramManager {
 
     abstract public void createDiagramSubPanel(String diagramTitle, Component diagramComponent, Component parentPanel);
 
-    public void newDiagram(Rectangle preferredSizeLocation, ProjectRecord projectRecord) throws EntityServiceException {
+    public KinDiagramPanel newDiagram(Rectangle preferredSizeLocation, ProjectRecord projectRecord) throws EntityServiceException {
         URI defaultDiagramUri = null;
         if (projectRecord == null) {
             if (KinDiagramPanel.getGlobalDefaultDiagramFile(sessionStorage).exists()) {
@@ -182,6 +182,7 @@ public abstract class AbstractDiagramManager {
         egoSelectionTestPanel.setName("[" + egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName() + "] Unsaved Default Diagram");
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
 //        egoSelectionTestPanel.loadAllTrees();
+        return egoSelectionTestPanel;
     }
 
     public void newDiagram(DocumentNewMenu.DocumentType documentType, ProjectRecord projectRecord, Rectangle preferredSizeLocation) throws EntityServiceException {
