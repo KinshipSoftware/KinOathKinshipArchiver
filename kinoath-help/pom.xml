@@ -17,7 +17,7 @@
     <properties>
         <help.majorVersion>1</help.majorVersion>
         <help.minorVersion>3</help.minorVersion>
-        <help.branch>testing</help.branch>
+        <help.branch>stable</help.branch>
 	
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <output.jarname>${project.build.finalName}</output.jarname>
