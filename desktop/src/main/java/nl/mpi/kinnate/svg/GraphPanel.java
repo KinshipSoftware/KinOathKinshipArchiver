@@ -36,7 +36,6 @@ import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
-import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
@@ -331,15 +330,17 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public KinTermGroup[] getkinTermGroups() {
-        return dataStoreSvg.kinTermGroups;
+        return dataStoreSvg.kinTermGroups.toArray(new KinTermGroup[0]);
     }
 
     public KinTermGroup addKinTermGroup() {
-        ArrayList<KinTermGroup> kinTermsList = new ArrayList<KinTermGroup>(Arrays.asList(dataStoreSvg.kinTermGroups));
         final KinTermGroup kinTermGroup = new KinTermGroup();
-        kinTermsList.add(kinTermGroup);
-        dataStoreSvg.kinTermGroups = kinTermsList.toArray(new KinTermGroup[]{});
+        dataStoreSvg.kinTermGroups.add(kinTermGroup);
         return kinTermGroup;
+    }
+
+    public void deleteKinTermGroup(KinTermGroup kinTermGroup) {
+        dataStoreSvg.kinTermGroups.remove(kinTermGroup);
     }
 
 //    public String[] getEgoUniquiIdentifiersList() {

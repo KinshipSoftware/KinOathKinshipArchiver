@@ -322,7 +322,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     }
                     panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
                     for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
-                        panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, dialogHandler), false); //  + kinTerms.titleString
+                        panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, dialogHandler, graphPanel), false); //  + kinTerms.titleString
                     }
                     panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode == DiagramMode.FreeForm);
                     break;
@@ -593,7 +593,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         final KinTermGroup kinTermGroup = graphPanel.addKinTermGroup();
         for (VisiblePanelSetting panelSetting : graphPanel.dataStoreSvg.getVisiblePanels()) {
             if (panelSetting.getPanelType() == PanelType.KinTerms) {
-                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup, dialogHandler), true);
+                panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup, dialogHandler, graphPanel), true);
             }
         }
         kinTypeStringProviders.add(kinTermGroup);

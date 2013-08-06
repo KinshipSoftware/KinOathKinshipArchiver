@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2012 The Language Archive
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -54,11 +54,12 @@ import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.kintypestrings.KinTerm;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
+import nl.mpi.kinnate.svg.GraphPanel;
 
 /**
- * Document : KinTermPanel
- * Created on : Mar 8, 2011, 12:21:12 PM
- * Author : Peter Withers
+ * Document : KinTermPanel Created on : Mar 8, 2011, 12:21:12 PM
+ *
+ * @author Peter Withers
  */
 public class KinTermPanel extends JPanel {
 
@@ -79,15 +80,16 @@ public class KinTermPanel extends JPanel {
     KinTermTableModel kinTermTableModel;
     private MessageDialogHandler dialogHandler;
     final String csvHeaderString = "Kin Term, Alter Kin Type Strings, Propositus KinType Strings, Kin Term Description";
+    final private GraphPanel graphPanel;
 
-    public KinTermPanel(SavePanel savePanelLocal, KinTermGroup kinTermsLocal, MessageDialogHandler dialogHandler) {
+    public KinTermPanel(SavePanel savePanelLocal, KinTermGroup kinTermsLocal, MessageDialogHandler dialogHandler, GraphPanel graphPanel) {
         this.dialogHandler = dialogHandler;
+        this.graphPanel = graphPanel;
         kinTerms = kinTermsLocal;
         savePanel = savePanelLocal;
 //        defaultKinType = defaultKinTypeLocal;
         kinTypeGroupName = new JTextField(kinTerms.titleString);
         kinTypeGroupName.addKeyListener(new KeyAdapter() {
-
             @Override
             public void keyReleased(KeyEvent ke) {
                 super.keyReleased(ke);
@@ -101,7 +103,6 @@ public class KinTermPanel extends JPanel {
         });
         kinTypeGroupDescription = new JTextField(kinTerms.descriptionString);
         kinTypeGroupDescription.addKeyListener(new KeyAdapter() {
-
             @Override
             public void keyReleased(KeyEvent ke) {
                 super.keyReleased(ke);
@@ -125,7 +126,6 @@ public class KinTermPanel extends JPanel {
         showOnGraphCheckBox = new JCheckBox("Show On Graph");
         showOnGraphCheckBox.setSelected(kinTerms.graphShow);
         showOnGraphCheckBox.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (savePanel.getGraphPanel().dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
                     showOnGraphCheckBox.setSelected(false);
@@ -140,7 +140,6 @@ public class KinTermPanel extends JPanel {
         autoGenerateCheckBox = new JCheckBox("Generate Example Entities");
         autoGenerateCheckBox.setSelected(kinTerms.graphGenerate);
         autoGenerateCheckBox.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (savePanel.getGraphPanel().dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
                     autoGenerateCheckBox.setSelected(false);
@@ -191,11 +190,12 @@ public class KinTermPanel extends JPanel {
 
     private JButton getDeleteKinTermGroupButton() {
         JButton deleteGroupButton = new JButton("Delete Group");
-        deleteGroupButton.setEnabled(false);
+//        deleteGroupButton.setEnabled(false);
         deleteGroupButton.addActionListener(new java.awt.event.ActionListener() {
-
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                graphPanel.deleteKinTermGroup(kinTerms);
+                KinTermPanel.this.getParent().remove(KinTermPanel.this);
+                graphPanel.drawNodes(false);
             }
         });
         return deleteGroupButton;
@@ -390,7 +390,6 @@ public class KinTermPanel extends JPanel {
         colourSquare.setBackground(initialColour);
 //        colourSquare.setMinimumSize(new Dimension(100, 100));
         colourSquare.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 pickerPanel.removeAll();
@@ -405,7 +404,6 @@ public class KinTermPanel extends JPanel {
                 final JButton okButton = new JButton("OK");
                 buttonPanel.add(okButton);
                 cancelButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         colourSquare.setBackground(revertColour);
                         colourChooser.setColor(revertColour);
@@ -416,7 +414,6 @@ public class KinTermPanel extends JPanel {
                     }
                 });
                 revertButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         colourSquare.setBackground(revertColour);
                         colourChooser.setColor(revertColour);
@@ -424,7 +421,6 @@ public class KinTermPanel extends JPanel {
                     }
                 });
                 okButton.addActionListener(new java.awt.event.ActionListener() {
-
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         pickerPanel.removeAll();
                         revalidate();
@@ -435,7 +431,6 @@ public class KinTermPanel extends JPanel {
 
                 colourChooser.setPreviewPanel(new JPanel());
                 colourChooser.getSelectionModel().addChangeListener(new ChangeListener() {
-
                     public void stateChanged(ChangeEvent e) {
                         colourSquare.setBackground(colourChooser.getColor());
                         setColour(colourChooser.getColor());
@@ -511,7 +506,6 @@ public class KinTermPanel extends JPanel {
         HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
         for (final String[] currentType : new String[][]{{"Comma-separated values", ".csv"}}) { // {"Tab-separated values", ".txt"}, 
             fileFilterMap.put(currentType[0], new FileFilter() {
-
                 @Override
                 public boolean accept(File selectedFile) {
                     final String extensionLowerCase = currentType[1].toLowerCase();

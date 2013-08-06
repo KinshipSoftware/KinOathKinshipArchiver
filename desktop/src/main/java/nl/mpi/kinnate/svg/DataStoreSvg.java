@@ -17,10 +17,12 @@
  */
 package nl.mpi.kinnate.svg;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -72,7 +74,7 @@ public class DataStoreSvg {
     @XmlElement(name = "IndexParameters", namespace = "http://mpi.nl/tla/kin")
     protected IndexerParameters indexParameters;
     @XmlElement(name = "KinTermGroup", namespace = "http://mpi.nl/tla/kin")
-    protected KinTermGroup[] kinTermGroups = new KinTermGroup[]{};
+    protected List<KinTermGroup> kinTermGroups = new ArrayList<KinTermGroup>();
     @XmlElement(name = "ProjectRecord", namespace = "http://mpi.nl/tla/kin")
     public ProjectRecord projectRecord = null;
     @XmlElementWrapper(name = "SelectedProfiles")
@@ -136,7 +138,7 @@ public class DataStoreSvg {
 
     public void setDefaults() {
         // todo: it might be better not to add any kin group until the user explicitly adds one from the menu
-        kinTermGroups = new KinTermGroup[]{}; //new KinTermGroup(0), new KinTermGroup(1)};
+        kinTermGroups = new ArrayList<KinTermGroup>(); //new KinTermGroup(0), new KinTermGroup(1)};
         indexParameters = new IndexerParameters();
     }
 
