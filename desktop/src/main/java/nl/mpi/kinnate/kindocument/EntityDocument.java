@@ -29,7 +29,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
-import nl.mpi.arbil.data.ArbilDataNodeService;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.gedcomimport.ImportException;
@@ -443,6 +442,7 @@ public class EntityDocument {
             // this history is not available to KinOath users, so there is little point keeping it at this point
 //            ArbilDataNodeService arbilDataNodeService = new ArbilDataNodeService(null, null, null, null, null);
 //            arbilDataNodeService.bumpHistory(this.getFile());
+            // todo: make a back up file and roll back if this fails
             JAXBContext jaxbContext = JAXBContext.newInstance(EntityData.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
             // the property "com.sun.xml.internal.bind.namespacePrefixMapper" seems to be questionable, more research should be done before using this
