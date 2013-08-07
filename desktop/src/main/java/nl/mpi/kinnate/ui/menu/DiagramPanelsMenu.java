@@ -21,6 +21,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -36,6 +37,7 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  * Author : Peter Withers
  */
 public class DiagramPanelsMenu extends JMenu implements ActionListener {
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
 
     private AbstractDiagramManager diagramWindowManager;
     private Component parentComponent;
@@ -43,7 +45,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
     public DiagramPanelsMenu(AbstractDiagramManager diagramWindowManager, Component parentComponent) {
         this.diagramWindowManager = diagramWindowManager;
         this.parentComponent = parentComponent;
-        this.setText("Panels");
+        this.setText(menus.getString("PANELS"));
         this.addMenuListener(new MenuListener() {
 
             public void menuSelected(MenuEvent e) {
@@ -78,7 +80,7 @@ public class DiagramPanelsMenu extends JMenu implements ActionListener {
             }
         }
         if (menuItemsAdded == false) {
-            JMenuItem noItemsMenu = new JMenuItem("<no items available in this context>");
+            JMenuItem noItemsMenu = new JMenuItem(menus.getString("<NO ITEMS AVAILABLE IN THIS CONTEXT>"));
             noItemsMenu.setEnabled(false);
             this.add(noItemsMenu);
         }

@@ -21,6 +21,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -43,6 +44,7 @@ import nl.mpi.kinnate.ui.KinDiagramPanel;
  * @author Peter Withers <peter.withers@mpi.nl>
  */
 public class TableMenu extends JPopupMenu implements ActionListener {
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
 
     final private SessionStorage sessionStorage;
     final private MessageDialogHandler dialogHandler;
@@ -72,12 +74,12 @@ public class TableMenu extends JPopupMenu implements ActionListener {
 
     private void getAddMenu() {
         int addedCounter = 0;
-        JMenu addMenu = new JMenu("Add");
+        JMenu addMenu = new JMenu(menus.getString("ADD"));
         try {
             for (String fieldName : entityCollection.getAllFieldNames()) {
                 if (addedCounter > 20) {
                     this.add(addMenu);
-                    addMenu = new JMenu("Add (" + fieldName.substring(0, 1) + ")");
+                    addMenu = new JMenu(java.text.MessageFormat.format(menus.getString("ADD ({0})"), new Object[] {fieldName.substring(0, 1)}));
                     addedCounter = 0;
                 }
                 final JMenuItem addMenuItem = new JMenuItem(fieldName);
@@ -90,7 +92,7 @@ public class TableMenu extends JPopupMenu implements ActionListener {
             dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Get All Field Names");
         }
         this.add(addMenu);
-        final JMenuItem addCustomMenuItem = new JMenuItem("Add <custom field>");
+        final JMenuItem addCustomMenuItem = new JMenuItem(menus.getString("ADD <CUSTOM FIELD>"));
         addCustomMenuItem.setActionCommand(addCustomCommand);
         addCustomMenuItem.addActionListener(this);
         this.add(addCustomMenuItem);
@@ -99,9 +101,9 @@ public class TableMenu extends JPopupMenu implements ActionListener {
     private JMenuItem getDeleteMenuItem(ArbilField[] arbilFields) {
         String deleteFieldLabel;
         if (arbilFields.length == 1) {
-            deleteFieldLabel = "Delete Field \"" + arbilFields[0].getTranslateFieldName() + "\"";
+            deleteFieldLabel = java.text.MessageFormat.format(menus.getString("DELETE FIELD \"{0}\""), new Object[] {arbilFields[0].getTranslateFieldName()});
         } else {
-            deleteFieldLabel = "Delete  " + arbilFields.length + " Field(s)";
+            deleteFieldLabel = java.text.MessageFormat.format(menus.getString("DELETE  {0} FIELD(S)"), new Object[] {arbilFields.length});
         }
         final JMenuItem deleteMenuItem = new JMenuItem(deleteFieldLabel);
         deleteMenuItem.setActionCommand(deleteCommand);
@@ -133,7 +135,7 @@ public class TableMenu extends JPopupMenu implements ActionListener {
                     } else if (actionCommand.equals(addCustomCommand)) {
                         String userInput = null;
                         do {
-                            userInput = JOptionPane.showInputDialog(TableMenu.this, "only alphanumeric characters are recommended", "Add Custom Field", JOptionPane.PLAIN_MESSAGE);
+                            userInput = JOptionPane.showInputDialog(TableMenu.this, menus.getString("ONLY ALPHANUMERIC CHARACTERS ARE RECOMMENDED"), menus.getString("ADD CUSTOM FIELD"), JOptionPane.PLAIN_MESSAGE);
                         } while (userInput != null && (userInput.length() < 1 /*|| userInput.matches(".*[: \t].*") */));
                         if (userInput != null) {
                             performAddField(userInput);

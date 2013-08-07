@@ -310,6 +310,11 @@
             <artifactId>plugins-core</artifactId>
             <version>1.2-pretesting-SNAPSHOT</version>
         </dependency>-->
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>kinoath-localisation</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>

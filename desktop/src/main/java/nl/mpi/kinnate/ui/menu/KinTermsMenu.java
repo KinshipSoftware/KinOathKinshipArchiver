@@ -18,6 +18,7 @@
 package nl.mpi.kinnate.ui.menu;
 
 import java.awt.Component;
+import java.util.ResourceBundle;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -32,6 +33,7 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  * Author : Peter Withers
  */
 public class KinTermsMenu extends JMenu {
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
 
     AbstractDiagramManager diagramWindowManager;
     KinTermSavePanel currentKinTermSavePanel;
@@ -53,12 +55,12 @@ public class KinTermsMenu extends JMenu {
     }
 
     private void initMenu() {
-        hideShowMenu = new JCheckBoxMenuItem("Show");
-        newMenu = new JMenuItem("New Kin Term Group");
-        exportMenu = new JMenuItem("Export");
-        importMenu = new JMenuItem("Import");
-        deleteMenu = new JMenuItem("Delete");
-        this.setText("Kin Terms");
+        hideShowMenu = new JCheckBoxMenuItem(menus.getString("SHOW"));
+        newMenu = new JMenuItem(menus.getString("NEW KIN TERM GROUP"));
+        exportMenu = new JMenuItem(menus.getString("EXPORT"));
+        importMenu = new JMenuItem(menus.getString("IMPORT"));
+        deleteMenu = new JMenuItem(menus.getString("DELETE"));
+        this.setText(menus.getString("KIN TERMS"));
         this.add(hideShowMenu);
         this.add(newMenu);
         this.add(importMenu);

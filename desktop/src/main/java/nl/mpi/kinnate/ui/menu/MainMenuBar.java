@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import javax.swing.JMenuBar;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -38,6 +39,8 @@ import nl.mpi.pluginloader.ui.PluginMenu;
  * @author Peter Withers
  */
 public class MainMenuBar extends JMenuBar {
+
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
 
     public MainMenuBar(AbstractDiagramManager abstractDiagramManager, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, final ApplicationVersionManager versionManager, Component parentComponent, ProjectManager projectManager) {
         this.add(new FileMenu(abstractDiagramManager, sessionStorage, dialogHandler, parentComponent, projectManager));
@@ -57,14 +60,14 @@ public class MainMenuBar extends JMenuBar {
                         pluginUlrs.add(new URL(pluginString));
                     } catch (MalformedURLException exception) {
                         System.out.println(exception.getMessage());
-                        errorMessages = errorMessages + "Could not load plugin: " + pluginString + "\n";
+                        errorMessages = errorMessages + java.text.MessageFormat.format(menus.getString("COULD NOT LOAD PLUGIN: {0}"), new Object[]{pluginString}) + "\n";
                     }
                 }
 //            } else {
 //                sessionStorage.saveStringArray("PluginList", new String[]{"file:///<path to plugin>.jar", "file:///<path to plugin>.jar"});
             }
             if (!"".equals(errorMessages)) {
-                dialogHandler.addMessageDialogToQueue(errorMessages, "Plugin Error");
+                dialogHandler.addMessageDialogToQueue(errorMessages, menus.getString("PLUGIN ERROR"));
             }
         } catch (IOException ex) {
             // if the list is not found then we need not worry at this point.

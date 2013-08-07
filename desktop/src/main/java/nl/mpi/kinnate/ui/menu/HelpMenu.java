@@ -21,10 +21,10 @@ import java.awt.Component;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JProgressBar;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.arbil.ArbilVersion;
@@ -35,7 +35,6 @@ import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.KinOathHelp;
@@ -49,55 +48,48 @@ import org.xml.sax.SAXException;
  */
 public class HelpMenu extends JMenu {
 
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
     JFrame helpWindow = null;
 
     public HelpMenu(final AbstractDiagramManager diagramWindowManager, final ArbilWindowManager dialogHandler, final SessionStorage sessionStorage, final ApplicationVersionManager versionManager, final Component parentComponent) {
-        this.setText("Help");
-        JMenuItem aboutMenuItem = new JMenuItem("About");
+        this.setText(menus.getString("HELP"));
+        JMenuItem aboutMenuItem = new JMenuItem(menus.getString("ABOUT"));
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // todo: move this into the window manager
                 ApplicationVersion appVersion = versionManager.getApplicationVersion();
-                String messageString = "KinOath is an application for  Kinship and Archiving.\n"
-                        + "Designed to be flexible and culturally nonspecific, such that\n"
-                        + "culturally different social structures can equally be represented.\n\n"
-                        + "By linking archived data to kinship individuals, queries can be\n"
-                        + "performed to retrieve the archive data based on kinship relations.\n\n"
-                        + "Max Planck Institute for Psycholinguistics Nijmegen\n"
-                        + "Application design and programming by Peter Withers\n"
-                        + "KinOath also uses components of Arbil\n\n"
-                        + "KinOath Version: " + appVersion.currentMajor + "." + appVersion.currentMinor + "." + appVersion.currentRevision + "\n"
-                        + appVersion.lastCommitDate + "\n" + "Compile Date: " + appVersion.compileDate + "\n"
-                        + "Arbil Version: " + new ArbilVersion().currentMajor + "." + new ArbilVersion().currentMinor + "." + new ArbilVersion().currentRevision + "\n"
-                        + "Java version: " + System.getProperty("java.version") + " by " + System.getProperty("java.vendor");
-                dialogHandler.addMessageDialogToQueue(messageString, "About " + versionManager.getApplicationVersion().applicationTitle);
+                String messageString = menus.getString("KINOATH IS AN APPLICATION FOR  KINSHIP AND ARCHIVING.")
+                        + java.text.MessageFormat.format(menus.getString("KINOATH VERSION: {0}.{1}.{2}"), new Object[]{appVersion.currentMajor, appVersion.currentMinor, appVersion.currentRevision})
+                        + appVersion.lastCommitDate + java.text.MessageFormat.format(menus.getString("" + "COMPILE DATE: {0}"), new Object[]{appVersion.compileDate})
+                        + java.text.MessageFormat.format(menus.getString("ARBIL VERSION: {0}.{1}.{2}"), new Object[]{new ArbilVersion().currentMajor, new ArbilVersion().currentMinor, new ArbilVersion().currentRevision})
+                        + java.text.MessageFormat.format(menus.getString("JAVA VERSION: {0} BY {1}"), new Object[]{System.getProperty("java.version"), System.getProperty("java.vendor")});
+                dialogHandler.addMessageDialogToQueue(messageString, java.text.MessageFormat.format(menus.getString("ABOUT {0}"), new Object[]{versionManager.getApplicationVersion().applicationTitle}));
             }
         });
         this.add(aboutMenuItem);
-        JMenuItem helpMenuItem = new JMenuItem("Internal Help");
+        JMenuItem helpMenuItem = new JMenuItem(menus.getString("INTERNAL HELP"));
         helpMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
         helpMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     if (helpWindow == null) {
-                        helpWindow = diagramWindowManager.createHelpWindow("Internal Help", new KinOathHelp(), new Rectangle(600, 400));
+                        helpWindow = diagramWindowManager.createHelpWindow(menus.getString("INTERNAL HELP"), new KinOathHelp(), new Rectangle(600, 400));
                     } else {
                         helpWindow.setVisible(true);
                         helpWindow.toFront();
                     }
                 } catch (IOException ex) {
-                    dialogHandler.addMessageDialogToQueue("Could not start the help system:\n" + ex.getMessage(), "Internal Help");
+                    dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(menus.getString("COULD NOT START THE HELP SYSTEM:{0}"), new Object[]{ex.getMessage()}), "Internal Help");
                     BugCatcherManager.getBugCatcher().logError(ex);
                 } catch (SAXException ex) {
-                    dialogHandler.addMessageDialogToQueue("Could not start the help system:\n" + ex.getMessage(), "Internal Help");
+                    dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(menus.getString("COULD NOT START THE HELP SYSTEM:{0}"), new Object[]{ex.getMessage()}), "Internal Help");
                     BugCatcherManager.getBugCatcher().logError(ex);
                 }
             }
         });
         helpMenuItem.setEnabled(true);
         this.add(helpMenuItem);
-
-        JMenuItem arbilWebsiteMenuItem = new JMenuItem("KinOath Website");
+        JMenuItem arbilWebsiteMenuItem = new JMenuItem(menus.getString("KINOATH WEBSITE"));
         arbilWebsiteMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
@@ -109,7 +101,7 @@ public class HelpMenu extends JMenu {
         });
         this.add(arbilWebsiteMenuItem);
 
-        JMenuItem arbilOnlineManualMenuItem = new JMenuItem("KinOath Online Manual");
+        JMenuItem arbilOnlineManualMenuItem = new JMenuItem(menus.getString("KINOATH ONLINE MANUAL"));
         arbilOnlineManualMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
@@ -121,7 +113,7 @@ public class HelpMenu extends JMenu {
         });
         this.add(arbilOnlineManualMenuItem);
 
-        JMenuItem arbilForumMenuItem = new JMenuItem("KinOath Forum (Website)");
+        JMenuItem arbilForumMenuItem = new JMenuItem(menus.getString("KINOATH FORUM (WEBSITE)"));
         arbilForumMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
@@ -132,7 +124,7 @@ public class HelpMenu extends JMenu {
             }
         });
         this.add(arbilForumMenuItem);
-        final JMenuItem viewErrorLogMenuItem = new JMenuItem("View Error Log");
+        final JMenuItem viewErrorLogMenuItem = new JMenuItem(menus.getString("VIEW ERROR LOG"));
         viewErrorLogMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
@@ -144,10 +136,10 @@ public class HelpMenu extends JMenu {
         });
         this.add(viewErrorLogMenuItem);
 
-        JMenuItem reindexFilesMenuItem = new JMenuItem("Reindex all files for this project");
+        JMenuItem reindexFilesMenuItem = new JMenuItem(menus.getString("REINDEX ALL FILES FOR THIS PROJECT"));
         reindexFilesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (dialogHandler.showConfirmDialogBox("This will reindex all files in the project,\nthis may take some time, do you want to proceed?", "Reindex All Files")) {
+                if (dialogHandler.showConfirmDialogBox(menus.getString("THIS WILL REINDEX ALL FILES IN THE PROJECT, THIS MAY TAKE SOME TIME, DO YOU WANT TO PROCEED?"), menus.getString("REINDEX ALL FILES"))) {
                     new Thread(new Runnable() {
                         public void run() {
                             SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
@@ -160,7 +152,7 @@ public class HelpMenu extends JMenu {
 //                                JProgressBar progressBar = new JProgressBar();
 //                                progressBar.setString("reindexing all files");
 //                                progressBar.setIndeterminate(true);
-                                dialogHandler.addMessageDialogToQueue("Reindexing complete.", "Reindex All Files");
+                                dialogHandler.addMessageDialogToQueue(menus.getString("REINDEXING COMPLETE."), menus.getString("REINDEX ALL FILES"));
                             } catch (EntityServiceException exception) {
                                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Database Error");
                             }
@@ -174,14 +166,14 @@ public class HelpMenu extends JMenu {
         });
         this.add(reindexFilesMenuItem);
 
-        JMenuItem checkForUpdatesMenuItem = new JMenuItem("Check for Updates");
+        JMenuItem checkForUpdatesMenuItem = new JMenuItem(menus.getString("CHECK FOR UPDATES"));
         checkForUpdatesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     if (!versionManager.forceUpdateCheck()) {
                         ApplicationVersion appVersion = versionManager.getApplicationVersion();
                         String versionString = appVersion.currentMajor + "." + appVersion.currentMinor + "." + appVersion.currentRevision;
-                        dialogHandler.addMessageDialogToQueue("No updates found, current version is " + versionString, "Check for Updates");
+                        dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(menus.getString("NO UPDATES FOUND, CURRENT VERSION IS {0}"), new Object[]{versionString}), menus.getString("CHECK FOR UPDATES"));
                     }
                 } catch (Exception ex) {
                     BugCatcherManager.getBugCatcher().logError(ex);
@@ -206,7 +198,6 @@ public class HelpMenu extends JMenu {
 //                }
 //            }
 //        });
-
 //        this.add(updateKmdiProfileMenuItem);
         this.addMenuListener(new MenuListener() {
             public void menuCanceled(MenuEvent evt) {

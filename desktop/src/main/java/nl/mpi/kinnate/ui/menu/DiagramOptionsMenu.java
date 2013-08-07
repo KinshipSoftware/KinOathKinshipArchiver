@@ -18,6 +18,7 @@
 package nl.mpi.kinnate.ui.menu;
 
 import java.awt.Component;
+import java.util.ResourceBundle;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -34,9 +35,10 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  * @author Peter Withers
  */
 public class DiagramOptionsMenu extends JMenu {
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
 
     public DiagramOptionsMenu(final AbstractDiagramManager diagramWindowManager, final Component parentComponent) {
-        this.setText("Diagram Options");
+        this.setText(menus.getString("DIAGRAM OPTIONS"));
 
         this.addMenuListener(new MenuListener() {
             public void menuSelected(MenuEvent e) {
@@ -45,7 +47,7 @@ public class DiagramOptionsMenu extends JMenu {
                 if (currentSavePanel != null) {
                     setupMenuItems(currentSavePanel, currentSavePanel.getGraphPanel());
                 } else {
-                    JMenuItem noItemsMenu = new JMenuItem("<no items available in this context>");
+                    JMenuItem noItemsMenu = new JMenuItem(menus.getString("<NO ITEMS AVAILABLE IN THIS CONTEXT>"));
                     noItemsMenu.setEnabled(false);
                     DiagramOptionsMenu.this.add(noItemsMenu);
                 }
@@ -60,7 +62,7 @@ public class DiagramOptionsMenu extends JMenu {
     }
 
     private void setupMenuItems(final SavePanel currentSavePanel, final GraphPanel graphPanel) {
-        JCheckBoxMenuItem snapToGridMenuItem = new JCheckBoxMenuItem("Snap To Grid");
+        JCheckBoxMenuItem snapToGridMenuItem = new JCheckBoxMenuItem(menus.getString("SNAP TO GRID"));
         snapToGridMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 graphPanel.dataStoreSvg.snapToGrid = !graphPanel.dataStoreSvg.snapToGrid;
@@ -68,7 +70,7 @@ public class DiagramOptionsMenu extends JMenu {
         });
         this.add(snapToGridMenuItem);
 
-        JCheckBoxMenuItem highlightRelationsMenuItem = new JCheckBoxMenuItem("Highlight Selected Relations");
+        JCheckBoxMenuItem highlightRelationsMenuItem = new JCheckBoxMenuItem(menus.getString("HIGHLIGHT SELECTED RELATIONS"));
         highlightRelationsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 graphPanel.dataStoreSvg.highlightRelationLines = !graphPanel.dataStoreSvg.highlightRelationLines;
@@ -77,7 +79,7 @@ public class DiagramOptionsMenu extends JMenu {
         });
         this.add(highlightRelationsMenuItem);
 
-        JCheckBoxMenuItem showBorderMenuItem = new JCheckBoxMenuItem("Show Diagram Border");
+        JCheckBoxMenuItem showBorderMenuItem = new JCheckBoxMenuItem(menus.getString("SHOW DIAGRAM BORDER"));
         showBorderMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 graphPanel.dataStoreSvg.showDiagramBorder = !graphPanel.dataStoreSvg.showDiagramBorder;
@@ -103,7 +105,7 @@ public class DiagramOptionsMenu extends JMenu {
 //        }
 //        this.add(diagramSizeMenuItem);
 
-        JCheckBoxMenuItem showSanguineLinesMenuItem = new JCheckBoxMenuItem("Show Sanguin Lines");
+        JCheckBoxMenuItem showSanguineLinesMenuItem = new JCheckBoxMenuItem(menus.getString("SHOW SANGUIN LINES"));
         showSanguineLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show Sanguin Lines on the graph
@@ -124,7 +126,7 @@ public class DiagramOptionsMenu extends JMenu {
 //        this.add(showKinTermLinesMenuItem);
 
         this.add(new Separator());
-        JCheckBoxMenuItem showLabelssMenuItem = new JCheckBoxMenuItem("Show Entity Labels");
+        JCheckBoxMenuItem showLabelssMenuItem = new JCheckBoxMenuItem(menus.getString("SHOW ENTITY LABELS"));
         showLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show labels on the graph
@@ -134,7 +136,7 @@ public class DiagramOptionsMenu extends JMenu {
         });
         this.add(showLabelssMenuItem);
 
-        JCheckBoxMenuItem showKinTypeLabelssMenuItem = new JCheckBoxMenuItem("Show Kin Type Labels");
+        JCheckBoxMenuItem showKinTypeLabelssMenuItem = new JCheckBoxMenuItem(menus.getString("SHOW KIN TYPE LABELS"));
         showKinTypeLabelssMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show Kin type labels on the graph
@@ -155,7 +157,7 @@ public class DiagramOptionsMenu extends JMenu {
 //        this.add(showKinTermLabelssMenuItem);
 
         // todo: this should not show when no ids are specified by the user
-        JCheckBoxMenuItem showIdLabelsMenuItem = new JCheckBoxMenuItem("Show Id Labels");
+        JCheckBoxMenuItem showIdLabelsMenuItem = new JCheckBoxMenuItem(menus.getString("SHOW ID LABELS"));
         showIdLabelsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show transient node ids on the graph
@@ -165,7 +167,7 @@ public class DiagramOptionsMenu extends JMenu {
         });
         this.add(showIdLabelsMenuItem);
 
-        JCheckBoxMenuItem showDateLabelsMenuItem = new JCheckBoxMenuItem("Show Date Labels");
+        JCheckBoxMenuItem showDateLabelsMenuItem = new JCheckBoxMenuItem(menus.getString("SHOW DATE LABELS"));
         showDateLabelsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // Hide/Show dates on the graph
@@ -175,7 +177,7 @@ public class DiagramOptionsMenu extends JMenu {
         });
         this.add(showDateLabelsMenuItem);
 
-        JCheckBoxMenuItem showArchiveLinksMenuItem = new JCheckBoxMenuItem("Show External Link Labels");
+        JCheckBoxMenuItem showArchiveLinksMenuItem = new JCheckBoxMenuItem(menus.getString("SHOW EXTERNAL LINK LABELS"));
         showArchiveLinksMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 graphPanel.dataStoreSvg.showExternalLinks = !graphPanel.dataStoreSvg.showExternalLinks;
@@ -185,7 +187,7 @@ public class DiagramOptionsMenu extends JMenu {
         this.add(showArchiveLinksMenuItem);
 
         this.add(new Separator());
-        JMenuItem diagramSettings = new JMenuItem("Settings");
+        JMenuItem diagramSettings = new JMenuItem(menus.getString("SETTINGS"));
         diagramSettings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 currentSavePanel.showSettings();

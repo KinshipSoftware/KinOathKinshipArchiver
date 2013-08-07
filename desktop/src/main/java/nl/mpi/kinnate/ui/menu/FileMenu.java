@@ -24,6 +24,7 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import javax.swing.JMenu;
 import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -50,6 +51,7 @@ import org.apache.batik.transcoder.TranscoderException;
  */
 public class FileMenu extends javax.swing.JMenu {
 
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
 //    private javax.swing.JMenuItem importGedcomUrl;
     private javax.swing.JMenuItem importGedcomFile;
 //    private javax.swing.JMenuItem importCsvFile;
@@ -115,7 +117,7 @@ public class FileMenu extends javax.swing.JMenu {
         exitApplication = new javax.swing.JMenuItem();
 
 
-        this.setText("File");
+        this.setText(menus.getString("FILE"));
         this.addMenuListener(new javax.swing.event.MenuListener() {
             public void menuSelected(javax.swing.event.MenuEvent evt) {
                 fileMenuMenuSelected(evt);
@@ -134,7 +136,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
 
         newDiagramMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        newDiagramMenuItem.setText("New (default diagram)");
+        newDiagramMenuItem.setText(menus.getString("NEW (DEFAULT DIAGRAM)"));
         newDiagramMenuItem.setEnabled(KinDiagramPanel.getGlobalDefaultDiagramFile(sessionStorage).exists());
         newDiagramMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -159,11 +161,11 @@ public class FileMenu extends javax.swing.JMenu {
 //        this.add(freeformDiagramMenuItem);
 
         JMenu projectDiagramMenuItem = new DocumentNewMenu(diagramWindowManager, parentComponent, dialogHandler);
-        projectDiagramMenuItem.setText("New Diagram of Type");
+        projectDiagramMenuItem.setText(menus.getString("NEW DIAGRAM OF TYPE"));
         this.add(projectDiagramMenuItem);
 
         openDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        openDiagram.setText("Open Diagram");
+        openDiagram.setText(menus.getString("OPEN DIAGRAM"));
         openDiagram.setActionCommand("open");
         openDiagram.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -175,15 +177,15 @@ public class FileMenu extends javax.swing.JMenu {
 
         this.add(recentFileMenu);
 
-        jMenu1.setText("Open Sample Diagram");
+        jMenu1.setText(menus.getString("OPEN SAMPLE DIAGRAM"));
         this.add(jMenu1);
 
         this.add(new javax.swing.JPopupMenu.Separator());
-        projectNewMenu.setText("New Project");
+        projectNewMenu.setText(menus.getString("NEW PROJECT"));
         projectNewMenu.setActionCommand("new");
         projectNewMenu.addActionListener(projectRecentMenu);
         this.add(projectNewMenu);
-        projectOpenMenu.setText("Open Project");
+        projectOpenMenu.setText(menus.getString("OPEN PROJECT"));
         projectOpenMenu.setActionCommand("browse");
         projectOpenMenu.addActionListener(projectRecentMenu);
         this.add(projectOpenMenu);
@@ -192,7 +194,7 @@ public class FileMenu extends javax.swing.JMenu {
 
 //        this.add(jSeparator1);
 
-        importGedcomFile.setText("Import Gedcom / CSV / TIP File (into current project)");
+        importGedcomFile.setText(menus.getString("IMPORT GEDCOM / CSV / TIP FILE (INTO CURRENT PROJECT)"));
         importGedcomFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 importGedcomFileActionPerformed(evt);
@@ -209,7 +211,7 @@ public class FileMenu extends javax.swing.JMenu {
 //        });
 //        this.add(importCsvFile);
 
-        jMenu2.setText("Import Sample Data (into current project)");
+        jMenu2.setText(menus.getString("IMPORT SAMPLE DATA (INTO CURRENT PROJECT)"));
         this.add(jMenu2);
 
 //        importGedcomUrl.setText("Import Gedcom Samples (from internet)");
@@ -237,7 +239,7 @@ public class FileMenu extends javax.swing.JMenu {
 //        this.add(jSeparator4);
 
         saveDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        saveDiagram.setText("Save");
+        saveDiagram.setText(menus.getString("SAVE"));
         saveDiagram.setActionCommand("save");
         saveDiagram.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -247,7 +249,7 @@ public class FileMenu extends javax.swing.JMenu {
         this.add(saveDiagram);
 
         saveDiagramAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        saveDiagramAs.setText("Save As");
+        saveDiagramAs.setText(menus.getString("SAVE AS"));
         saveDiagramAs.setActionCommand("saveas");
         saveDiagramAs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -256,7 +258,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(saveDiagramAs);
 
-        savePdfMenuItem.setText("Export as PDF/JPEG/PNG/TIFF");
+        savePdfMenuItem.setText(menus.getString("EXPORT AS PDF/JPEG/PNG/TIFF"));
         savePdfMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 savePdfMenuItemActionPerformed(evt);
@@ -264,7 +266,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(savePdfMenuItem);
 
-        exportToR.setText("Export for R / SPSS");
+        exportToR.setText(menus.getString("EXPORT FOR R / SPSS"));
         exportToR.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exportToRActionPerformed(evt);
@@ -273,7 +275,7 @@ public class FileMenu extends javax.swing.JMenu {
         this.add(exportToR);
 
         closeTabMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
-        closeTabMenuItem.setText("Close");
+        closeTabMenuItem.setText(menus.getString("CLOSE"));
         closeTabMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeTabMenuItemActionPerformed(evt);
@@ -282,7 +284,7 @@ public class FileMenu extends javax.swing.JMenu {
         this.add(closeTabMenuItem);
         this.add(jSeparator3);
 
-        saveAsGlobalDefaultMenuItem.setText("Save as Global Default Diagram");
+        saveAsGlobalDefaultMenuItem.setText(menus.getString("SAVE AS GLOBAL DEFAULT DIAGRAM"));
         saveAsGlobalDefaultMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveAsDefaultMenuItemActionPerformed(evt, true);
@@ -290,7 +292,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(saveAsGlobalDefaultMenuItem);
 
-        saveAsProjectDefaultMenuItem.setText("Save as Project Default Diagram");
+        saveAsProjectDefaultMenuItem.setText(menus.getString("SAVE AS PROJECT DEFAULT DIAGRAM"));
         saveAsProjectDefaultMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveAsDefaultMenuItemActionPerformed(evt, false);
@@ -299,7 +301,7 @@ public class FileMenu extends javax.swing.JMenu {
         this.add(saveAsProjectDefaultMenuItem);
         this.add(jSeparator5);
 
-        exitApplication.setText("Exit");
+        exitApplication.setText(menus.getString("EXIT"));
         exitApplication.setActionCommand("exit");
         exitApplication.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -314,7 +316,7 @@ public class FileMenu extends javax.swing.JMenu {
 
     private HashMap<String, FileFilter> getSvgFileFilter() {
         HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
-        for (final String[] currentType : new String[][]{{"Kinship Diagram (SVG format)", ".svg"}}) { // "Scalable Vector Graphics (SVG)";
+        for (final String[] currentType : new String[][]{{menus.getString("KINSHIP DIAGRAM (SVG FORMAT)"), ".svg"}}) { // "Scalable Vector Graphics (SVG)";
             fileFilterMap.put(currentType[0], new FileFilter() {
                 @Override
                 public boolean accept(File selectedFile) {
@@ -332,7 +334,7 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void openDiagramActionPerformed(java.awt.event.ActionEvent evt) {
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Diagram", false, true, getSvgFileFilter(), MessageDialogHandler.DialogueType.open, null);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox(menus.getString("OPEN DIAGRAM"), false, true, getSvgFileFilter(), MessageDialogHandler.DialogueType.open, null);
         final Dimension parentSize = parentComponent.getSize();
         final Point parentLocation = parentComponent.getLocation();
         int offset = 10;
@@ -342,7 +344,7 @@ public class FileMenu extends javax.swing.JMenu {
                 try {
                     diagramWindowManager.openDiagram(selectedFile.getName(), selectedFile.toURI(), true, windowRectangle);
                 } catch (EntityServiceException entityServiceException) {
-                    dialogHandler.addMessageDialogToQueue("Failed to create a new diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
+                    dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(menus.getString("FAILED TO CREATE A NEW DIAGRAM: {0}"), new Object[]{entityServiceException.getMessage()}), "Open Diagram Error");
                 }
             }
         }
@@ -355,7 +357,7 @@ public class FileMenu extends javax.swing.JMenu {
     }
 
     private void saveDiagramAsActionPerformed(java.awt.event.ActionEvent evt) {
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Save Diagram As", false, false, getSvgFileFilter(), MessageDialogHandler.DialogueType.save, null);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox(menus.getString("SAVE DIAGRAM AS"), false, false, getSvgFileFilter(), MessageDialogHandler.DialogueType.save, null);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 if (!selectedFile.getName().toLowerCase().endsWith(".svg")) {
@@ -383,15 +385,15 @@ public class FileMenu extends javax.swing.JMenu {
         int selectedIndex = diagramWindowManager.getSavePanelIndex(parentComponent);
         String currentTabText = diagramWindowManager.getSavePanelTitle(selectedIndex);
         if (selectedIndex > -1) {
-            saveDiagramAs.setText("Save As (" + currentTabText + ")");
+            saveDiagramAs.setText(java.text.MessageFormat.format(menus.getString("SAVE AS ({0})"), new Object[]{currentTabText}));
             saveDiagramAs.setActionCommand(Integer.toString(selectedIndex));
-            saveDiagram.setText("Save (" + currentTabText + ")");
+            saveDiagram.setText(java.text.MessageFormat.format(menus.getString("SAVE ({0})"), new Object[]{currentTabText}));
             saveDiagram.setActionCommand(Integer.toString(selectedIndex));
-            closeTabMenuItem.setText("Close (" + currentTabText + ")");
+            closeTabMenuItem.setText(java.text.MessageFormat.format(menus.getString("CLOSE ({0})"), new Object[]{currentTabText}));
             closeTabMenuItem.setActionCommand(Integer.toString(selectedIndex));
-            saveAsGlobalDefaultMenuItem.setText("Set Global Default Diagram as (" + currentTabText + ")");
+            saveAsGlobalDefaultMenuItem.setText(java.text.MessageFormat.format(menus.getString("SET GLOBAL DEFAULT DIAGRAM AS ({0})"), new Object[]{currentTabText}));
             saveAsGlobalDefaultMenuItem.setActionCommand(Integer.toString(selectedIndex));
-            saveAsProjectDefaultMenuItem.setText("Set Project Default Diagram as (" + currentTabText + ")");
+            saveAsProjectDefaultMenuItem.setText(java.text.MessageFormat.format(menus.getString("SET PROJECT DEFAULT DIAGRAM AS ({0})"), new Object[]{currentTabText}));
             saveAsProjectDefaultMenuItem.setActionCommand(Integer.toString(selectedIndex));
         }
         if (savePanel != null) {
@@ -430,7 +432,7 @@ public class FileMenu extends javax.swing.JMenu {
         try {
             diagramWindowManager.newDiagram(new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset), null);
         } catch (EntityServiceException entityServiceException) {
-            dialogHandler.addMessageDialogToQueue("Failed to create a new diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
+            dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(menus.getString("FAILED TO CREATE A NEW DIAGRAM: {0}"), new Object[]{entityServiceException.getMessage()}), "Open Diagram Error");
         }
     }
 
@@ -469,10 +471,10 @@ public class FileMenu extends javax.swing.JMenu {
                 return "GEDCOM, CSV, TIP Kinship Data";
             }
         });
-        File[] importFiles = dialogHandler.showFileSelectBox("Import Kinship Data", false, true, fileFilterMap, MessageDialogHandler.DialogueType.open, null);
+        File[] importFiles = dialogHandler.showFileSelectBox(menus.getString("IMPORT KINSHIP DATA"), false, true, fileFilterMap, MessageDialogHandler.DialogueType.open, null);
         if (importFiles != null) {
             if (importFiles.length == 0) {
-                dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kinship Data");
+                dialogHandler.addMessageDialogToQueue(menus.getString("NO FILES SELECTED FOR IMPORT"), menus.getString("IMPORT KINSHIP DATA"));
             } else {
                 SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
                 if (currentSavePanel instanceof KinDiagramPanel) {
@@ -481,7 +483,7 @@ public class FileMenu extends javax.swing.JMenu {
                         try {
                             diagramWindowManager.openImportPanel(importFile, diagramPanel, getEntityCollection());
                         } catch (ImportException exception1) {
-                            dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importFile.getAbsolutePath(), "Import File");
+                            dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importFile.getAbsolutePath(), menus.getString("IMPORT FILE"));
                         }
                     }
                 } // todo: while it would not happen, if we do land here then the user should be informed as to why
@@ -522,7 +524,7 @@ public class FileMenu extends javax.swing.JMenu {
                 try {
                     diagramWindowManager.openImportPanel(importUrlString, diagramPanel, getEntityCollection());
                 } catch (ImportException exception1) {
-                    dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importUrlString, "Import File");
+                    dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + importUrlString, menus.getString("IMPORT FILE"));
                 }
             } // todo: while it would not happen, if we do land here then the user should be informed as to why
         }
@@ -532,14 +534,14 @@ public class FileMenu extends javax.swing.JMenu {
 
         final DiagramTranscoder diagramTranscoder = new DiagramTranscoder(diagramWindowManager.getCurrentSavePanel(parentComponent));
         DiagramTranscoderPanel diagramTranscoderPanel = new DiagramTranscoderPanel(diagramTranscoder);
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export as PDF/JPEG/PNG/TIFF", false, false, null, MessageDialogHandler.DialogueType.save, diagramTranscoderPanel);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox(menus.getString("EXPORT AS PDF/JPEG/PNG/TIFF"), false, false, null, MessageDialogHandler.DialogueType.save, diagramTranscoderPanel);
         if (selectedFilesArray != null) {
             try {
                 for (File selectedFile : selectedFilesArray) {
                     diagramTranscoder.exportDiagram(selectedFile);
                 }
             } catch (TranscoderException exception) {
-                dialogHandler.addMessageDialogToQueue(exception.getMessage() + "\nThis may occur when using the webstart version.", "Export Image Error");
+                dialogHandler.addMessageDialogToQueue(exception.getMessage() + "\n" + menus.getString("THIS MAY OCCUR WHEN USING THE WEBSTART VERSION."), menus.getString("EXPORT IMAGE ERROR"));
                 BugCatcherManager.getBugCatcher().logError(exception);
             } catch (IOException exception) {
                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Export Image Error");
@@ -553,7 +555,7 @@ public class FileMenu extends javax.swing.JMenu {
         SavePanel currentSavePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
 
         HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
-        for (final String[] currentType : new String[][]{{"Data Frame Tab-separated Values", ".tab"}}) { // "Data Frame (CSV)"
+        for (final String[] currentType : new String[][]{{menus.getString("DATA FRAME TAB-SEPARATED VALUES"), ".tab"}}) { // "Data Frame (CSV)"
             fileFilterMap.put(currentType[0], new FileFilter() {
                 @Override
                 public boolean accept(File selectedFile) {
@@ -567,7 +569,7 @@ public class FileMenu extends javax.swing.JMenu {
                 }
             });
         }
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Export Tab-separated Values", false, false, fileFilterMap, MessageDialogHandler.DialogueType.save, null);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox(menus.getString("EXPORT TAB-SEPARATED VALUES"), false, false, fileFilterMap, MessageDialogHandler.DialogueType.save, null);
         if (selectedFilesArray != null) {
             for (File selectedFile : selectedFilesArray) {
                 if (!selectedFile.getName().toLowerCase().endsWith(".tab")) {

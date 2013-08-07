@@ -20,6 +20,7 @@ package nl.mpi.kinnate.ui.menu;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.event.MenuEvent;
@@ -32,11 +33,12 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  * Author : Peter Withers
  */
 public class WindowMenu extends JMenu implements ActionListener {
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
 
     AbstractDiagramManager diagramWindowManager;
 
     public WindowMenu(AbstractDiagramManager diagramWindowManager, final Component parentComponent) {
-        this.setText("Window");
+        this.setText(menus.getString("WINDOW"));
         this.diagramWindowManager = diagramWindowManager;
         this.addMenuListener(new MenuListener() {
 

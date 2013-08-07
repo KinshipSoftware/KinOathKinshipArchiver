@@ -20,6 +20,7 @@ package nl.mpi.kinnate.ui.menu;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
@@ -34,6 +35,7 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  * Author : Peter Withers
  */
 public class EditMenu extends JMenu implements ActionListener {
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
     //    ctrl + a = select all
     //    ctrl + r = select related
     //    ctrl + e = expand selection
@@ -51,7 +53,7 @@ public class EditMenu extends JMenu implements ActionListener {
     public EditMenu(AbstractDiagramManager diagramWindowManager, Component parentComponent) {
         this.diagramWindowManager = diagramWindowManager;
         this.parentComponent = parentComponent;
-        this.setText("Edit");
+        this.setText(menus.getString("EDIT"));
         this.addMenuListener(new MenuListener() {
             
             public void menuCanceled(MenuEvent evt) {
@@ -66,25 +68,25 @@ public class EditMenu extends JMenu implements ActionListener {
                 initMenu();
             }
         });
-        selectAllMenu = new JMenuItem("Select All");
+        selectAllMenu = new JMenuItem(menus.getString("SELECT ALL"));
         selectAllMenu.setActionCommand(MouseListenerSvg.ActionCode.selectAll.name());
         selectAllMenu.addActionListener(EditMenu.this);
         selectAllMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
-        selectRelatedMenu = new JMenuItem("Select Related");
+        selectRelatedMenu = new JMenuItem(menus.getString("SELECT RELATED"));
         selectRelatedMenu.setActionCommand(MouseListenerSvg.ActionCode.selectRelated.name());
         selectRelatedMenu.addActionListener(EditMenu.this);
         selectRelatedMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
-        expandSelectionMenu = new JMenuItem("Expand Selection");
+        expandSelectionMenu = new JMenuItem(menus.getString("EXPAND SELECTION"));
         expandSelectionMenu.setActionCommand(MouseListenerSvg.ActionCode.expandSelection.name());
         expandSelectionMenu.addActionListener(EditMenu.this);
         expandSelectionMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         
-        deselectAllMenu = new JMenuItem("Deselect All");
+        deselectAllMenu = new JMenuItem(menus.getString("DESELECT ALL"));
         deselectAllMenu.setActionCommand(MouseListenerSvg.ActionCode.deselectAll.name());
         deselectAllMenu.addActionListener(EditMenu.this);
         deselectAllMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
         
-        recalculateDiagramMenuItem = new JMenuItem("Recalculate the Diagram");
+        recalculateDiagramMenuItem = new JMenuItem(menus.getString("RECALCULATE THE DIAGRAM"));
         recalculateDiagramMenuItem.setActionCommand("RecalculateDiagram");
         recalculateDiagramMenuItem.addActionListener(EditMenu.this);
         

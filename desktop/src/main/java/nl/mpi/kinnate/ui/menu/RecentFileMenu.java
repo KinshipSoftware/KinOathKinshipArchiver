@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
@@ -45,6 +46,7 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class RecentFileMenu extends JMenu implements ActionListener {
 
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
     private final AbstractDiagramManager diagramWindowManager;
     private final SessionStorage sessionStorage;
     private final Component parentComponent;
@@ -55,7 +57,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
         this.sessionStorage = sessionStorage;
         this.parentComponent = parentComponent;
         this.dialogHandler = dialogHandler;
-        this.setText("Open Recent Diagram");
+        this.setText(menus.getString("OPEN RECENT DIAGRAM"));
         this.addMenuListener(new MenuListener() {
             public void menuCanceled(MenuEvent evt) {
             }
@@ -111,12 +113,12 @@ public class RecentFileMenu extends JMenu implements ActionListener {
                 }
             }
             this.add(new JSeparator());
-            JMenuItem clearMenuItem = new JMenuItem("Clear List");
+            JMenuItem clearMenuItem = new JMenuItem(menus.getString("CLEAR LIST"));
             clearMenuItem.setActionCommand("Clear List");
             clearMenuItem.addActionListener(this);
             this.add(clearMenuItem);
         } catch (IOException exception) {
-            JMenuItem currentMenuItem = new JMenuItem("no recent files");
+            JMenuItem currentMenuItem = new JMenuItem(menus.getString("NO RECENT FILES"));
             currentMenuItem.setEnabled(false);
             this.add(currentMenuItem);
         }
@@ -147,7 +149,7 @@ public class RecentFileMenu extends JMenu implements ActionListener {
 //                ArbilWindowManager.getSingleInstance().addMessageDialogToQueue("Failed to load sample", "Sample Diagram");
 //            }
             } catch (EntityServiceException entityServiceException) {
-                dialogHandler.addMessageDialogToQueue("Failed to open diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
+                dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(menus.getString("FAILED TO OPEN DIAGRAM: {0}"), new Object[]{entityServiceException.getMessage()}), "Open Diagram Error");
             }
         }
     }

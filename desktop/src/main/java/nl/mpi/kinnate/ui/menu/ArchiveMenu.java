@@ -18,6 +18,7 @@
 package nl.mpi.kinnate.ui.menu;
 
 import java.awt.Component;
+import java.util.ResourceBundle;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -31,6 +32,7 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  * Author : Peter Withers
  */
 public class ArchiveMenu extends JMenu {
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
 
     AbstractDiagramManager diagramWindowManager;
     KinTermSavePanel currentKinTermSavePanel;
@@ -46,12 +48,12 @@ public class ArchiveMenu extends JMenu {
     }
 
     private void initMenu(final Component parentComponent) {
-        hideShowMenu = new JCheckBoxMenuItem("Show");
-        showRemoteTreeMenu = new JMenuItem("Archive Tree");
-        showLocalTreeMenu = new JMenuItem("Local Tree");
-        closeResultsMenu = new JMenu("Close Results");
-        showResultsMenu = new JMenu("Show Results");
-        this.setText("Archive Linker");
+        hideShowMenu = new JCheckBoxMenuItem(menus.getString("SHOW"));
+        showRemoteTreeMenu = new JMenuItem(menus.getString("ARCHIVE TREE"));
+        showLocalTreeMenu = new JMenuItem(menus.getString("LOCAL TREE"));
+        closeResultsMenu = new JMenu(menus.getString("CLOSE RESULTS"));
+        showResultsMenu = new JMenu(menus.getString("SHOW RESULTS"));
+        this.setText(menus.getString("ARCHIVE LINKER"));
         this.add(hideShowMenu);
         this.add(showRemoteTreeMenu);
         this.add(showLocalTreeMenu);

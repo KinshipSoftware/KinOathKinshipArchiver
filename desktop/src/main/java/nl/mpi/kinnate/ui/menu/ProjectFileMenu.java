@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
@@ -47,6 +48,7 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class ProjectFileMenu extends JMenu implements ActionListener {
 
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
     private final AbstractDiagramManager diagramWindowManager;
     private final Component parentComponent;
     private final MessageDialogHandler dialogHandler;
@@ -57,7 +59,7 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
         this.parentComponent = parentComponent;
         this.dialogHandler = dialogHandler;
         this.projectManager = projectManager;
-        this.setText("Open Recent Project");
+        this.setText(menus.getString("OPEN RECENT PROJECT"));
         this.addMenuListener(new MenuListener() {
             public void menuCanceled(MenuEvent evt) {
             }
@@ -83,12 +85,12 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
                 this.add(currentMenuItem);
             }
             this.add(new JSeparator());
-            JMenuItem clearMenuItem = new JMenuItem("Clear List");
+            JMenuItem clearMenuItem = new JMenuItem(menus.getString("CLEAR LIST"));
             clearMenuItem.setActionCommand("Clear List");
             clearMenuItem.addActionListener(this);
             this.add(clearMenuItem);
         } catch (JAXBException exception) {
-            JMenuItem currentMenuItem = new JMenuItem("<recent projects could not be found>");
+            JMenuItem currentMenuItem = new JMenuItem(menus.getString("<RECENT PROJECTS COULD NOT BE FOUND>"));
             currentMenuItem.setEnabled(false);
             this.add(currentMenuItem);
         }
@@ -101,21 +103,21 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
         try {
             diagramWindowManager.newDiagram(new Rectangle(parentLocation.x + offset, parentLocation.y + offset, parentSize.width - offset, parentSize.height - offset), projectRecord);
         } catch (EntityServiceException entityServiceException) {
-            dialogHandler.addMessageDialogToQueue("Failed to create a new diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
+            dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(menus.getString("FAILED TO CREATE A NEW DIAGRAM: {0}"), new Object[]{entityServiceException.getMessage()}), "Open Diagram Error");
         }
     }
 
     public void actionPerformed(ActionEvent e) {
         if ("new".equals(e.getActionCommand())) {
 //            ProjectPreviewPanel previewPanel = new ProjectPreviewPanel(true);
-            final File[] selectedFilesArray = dialogHandler.showFileSelectBox("New Project", true, false, projectManager.getProjectFileFilter(), MessageDialogHandler.DialogueType.save, null);
+            final File[] selectedFilesArray = dialogHandler.showFileSelectBox(menus.getString("NEW PROJECT"), true, false, projectManager.getProjectFileFilter(), MessageDialogHandler.DialogueType.save, null);
             if (selectedFilesArray != null) {
                 final File selecteFile = selectedFilesArray[0];
                 System.out.println(selecteFile.getAbsolutePath());
                 if (selecteFile.exists()) {
                     // cannot use an existing file
                     // offer a project edit box
-                    dialogHandler.addMessageDialogToQueue("The selected file already exists, please enter a unique name.", "Create Project");
+                    dialogHandler.addMessageDialogToQueue(menus.getString("THE SELECTED FILE ALREADY EXISTS, PLEASE ENTER A UNIQUE NAME."), menus.getString("CREATE PROJECT"));
                 } else {
                     ProjectRecord projectRecord = new ProjectRecord(selecteFile, selecteFile.getName());
                     try {
@@ -130,7 +132,7 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
 
         } else if ("browse".equals(e.getActionCommand())) {
             ProjectPreviewPanel previewPanel = new ProjectPreviewPanel(projectManager, false);
-            final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Project", false, false, projectManager.getProjectFileFilter(), MessageDialogHandler.DialogueType.open, previewPanel);
+            final File[] selectedFilesArray = dialogHandler.showFileSelectBox(menus.getString("OPEN PROJECT"), false, false, projectManager.getProjectFileFilter(), MessageDialogHandler.DialogueType.open, previewPanel);
             if (selectedFilesArray != null) {
                 System.out.println(selectedFilesArray[0].getAbsolutePath());
                 try {
@@ -153,7 +155,7 @@ public class ProjectFileMenu extends JMenu implements ActionListener {
                 final ProjectRecord selectedProjectRecord = projectManager.loadProjectRecord(recentProjectFile);
                 openProject(selectedProjectRecord);
             } catch (JAXBException exception) {
-                dialogHandler.addMessageDialogToQueue("Failed to open project: " + exception.getMessage(), "Open Project Error");
+                dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(menus.getString("FAILED TO OPEN PROJECT: {0}"), new Object[]{exception.getMessage()}), "Open Project Error");
             }
         }
     }

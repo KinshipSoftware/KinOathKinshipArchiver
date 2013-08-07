@@ -23,6 +23,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import nl.mpi.arbil.util.MessageDialogHandler;
@@ -38,18 +39,19 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  */
 public class DocumentNewMenu extends JMenu implements ActionListener {
 
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
     private final AbstractDiagramManager diagramWindowManager;
     private final Component parentComponent;
     private final MessageDialogHandler dialogHandler;
 
     public enum DocumentType {
 
-        Simple("Standard Diagram (current project)"),
-        Freeform("Freeform Diagram (transient)"),
-        KinTerms("Kin Terms Diagram (transient)"),
-        Query("Query Diagram (current project)"),
+        Simple(menus.getString("STANDARD DIAGRAM (CURRENT PROJECT)")),
+        Freeform(menus.getString("FREEFORM DIAGRAM (TRANSIENT)")),
+        KinTerms(menus.getString("KIN TERMS DIAGRAM (TRANSIENT)")),
+        Query(menus.getString("QUERY DIAGRAM (CURRENT PROJECT)")),
         //EntitySearch("Entity Search"),
-        ArchiveLinker("Archive Data Linker (current project)");//,
+        ArchiveLinker(menus.getString("ARCHIVE DATA LINKER (CURRENT PROJECT)"));//,
 //        CustomQuery("Custom Data Formats");
         private String displayName;
 
@@ -86,7 +88,7 @@ public class DocumentNewMenu extends JMenu implements ActionListener {
             // open the new diagram with the current diagrams project
             diagramWindowManager.newDiagram(documentType, projectRecord, windowRectangle);
         } catch (EntityServiceException entityServiceException) {
-            dialogHandler.addMessageDialogToQueue("Failed to open diagram: " + entityServiceException.getMessage(), "Open Diagram Error");
+            dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(menus.getString("FAILED TO OPEN DIAGRAM: {0}"), new Object[]{entityServiceException.getMessage()}), "Open Diagram Error");
         }
     }
 }
