@@ -17,6 +17,7 @@
  */
 package nl.mpi.kinnate.ui.entityprofiles;
 
+import java.util.ResourceBundle;
 import javax.xml.bind.annotation.XmlAttribute;
 
 /**
@@ -25,6 +26,7 @@ import javax.xml.bind.annotation.XmlAttribute;
  * @author Peter Withers
  */
 public class ProfileRecord {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     @XmlAttribute(name = "ProfileName", namespace = "http://mpi.nl/tla/kin")
     public String profileName;

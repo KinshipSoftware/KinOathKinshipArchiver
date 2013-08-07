@@ -19,6 +19,7 @@ package nl.mpi.kinnate.ui.kintypeeditor;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -30,7 +31,8 @@ import javax.swing.table.TableCellRenderer;
  */
 public class ArrayListCellRenderer extends DefaultTableCellRenderer implements TableCellRenderer {
 
-    static protected String anyOptionDisplayString = "<any>";
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
+    static protected String anyOptionDisplayString = widgets.getString("<ANY>");
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

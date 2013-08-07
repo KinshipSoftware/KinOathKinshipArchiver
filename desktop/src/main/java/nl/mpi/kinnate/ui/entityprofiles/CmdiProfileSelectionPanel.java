@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,6 +38,7 @@ import nl.mpi.kinnate.svg.GraphPanel;
  * Author : Peter Withers
  */
 public class CmdiProfileSelectionPanel extends JPanel implements ActionListener {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     private JTable profileTable;
     private JPanel topPanel;
@@ -59,7 +61,7 @@ public class CmdiProfileSelectionPanel extends JPanel implements ActionListener 
         profileReloadProgressBar = new JProgressBar();
         statusLabel = new JLabel();
         foregroundColour = new JLabel().getForeground();
-        reloadButton = new JButton("Reload List");
+        reloadButton = new JButton(widgets.getString("RELOAD LIST"));
         reloadButton.addActionListener(this);
         topPanel.add(statusLabel, BorderLayout.CENTER);
         topPanel.add(reloadButton, BorderLayout.LINE_END);

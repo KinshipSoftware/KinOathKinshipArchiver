@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ResourceBundle;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JColorChooser;
 import javax.swing.JPanel;
@@ -37,6 +38,7 @@ import javax.swing.event.ChangeListener;
  * Author : Peter Withers
  */
 public class ColourCellEditor extends DefaultCellEditor implements ChangeListener {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     private AbstractColorChooserPanel colourPickerPanel;
     final JColorChooser colourChooser;

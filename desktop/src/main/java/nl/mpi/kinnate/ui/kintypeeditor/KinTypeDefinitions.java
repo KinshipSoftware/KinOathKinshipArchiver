@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -39,11 +40,12 @@ import nl.mpi.kinnate.svg.DataStoreSvg;
  *  Author     : Peter Withers
  */
 public class KinTypeDefinitions extends JPanel {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     public KinTypeDefinitions(String panelName, SavePanel savePanel, DataStoreSvg dataStoreSvg) {
         this.setName(panelName);
         this.setLayout(new BorderLayout());
-        JButton deleteButton = new JButton("Delete Selected");
+        JButton deleteButton = new JButton(widgets.getString("DELETE SELECTED"));
 //        JButton insertDefaultTypesButton = new JButton("Insert Defaults");
 //        JButton insertOtherTypesButton = new JButton("Insert Other");
         final KinTypeTableModel kinTypeTableModel = new KinTypeTableModel(savePanel, dataStoreSvg, deleteButton);

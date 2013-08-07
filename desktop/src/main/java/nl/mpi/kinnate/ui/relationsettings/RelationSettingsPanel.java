@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -47,18 +48,19 @@ import nl.mpi.kinnate.ui.kintypeeditor.CheckBoxRenderer;
  * Author : Peter Withers
  */
 public class RelationSettingsPanel extends JPanel implements ActionListener {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     private DataStoreSvg dataStoreSvg;
     private RelationTypesTableModel relationTypesTableModel;
     private ArbilWindowManager dialogHandler;
-    private final String Scan_For_Types = "Scan For Types";
+    private final String Scan_For_Types = widgets.getString("RelationSettings_SCAN FOR TYPES");
 
     public RelationSettingsPanel(String panelName, SavePanel savePanel, DataStoreSvg dataStoreSvg, ArbilWindowManager dialogHandler) {
         this.dataStoreSvg = dataStoreSvg;
         this.dialogHandler = dialogHandler;
         this.setName(panelName);
         this.setLayout(new BorderLayout());
-        final JButton deleteButton = new JButton("Delete Selected");
+        final JButton deleteButton = new JButton(widgets.getString("RelationSettings_DELETE SELECTED"));
         final JButton scanButton = new JButton(Scan_For_Types);
         scanButton.setEnabled(true);
         scanButton.setActionCommand("scan");
@@ -140,9 +142,9 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
             final int foundTypesCount = dataStoreSvg.getRelationTypeDefinitions().length - initalTypeCount;
             if (foundTypesCount > 0) {
                 relationTypesTableModel.fireTableDataChanged();
-                dialogHandler.addMessageDialogToQueue("Added " + foundTypesCount + " new types from the diagram", Scan_For_Types);
+                dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(widgets.getString("ADDED {0} NEW TYPES FROM THE DIAGRAM"), new Object[] {foundTypesCount}), Scan_For_Types);
             } else {
-                dialogHandler.addMessageDialogToQueue("No new types found on the diagram", Scan_For_Types);
+                dialogHandler.addMessageDialogToQueue(widgets.getString("NO NEW TYPES FOUND ON THE DIAGRAM"), Scan_For_Types);
             }
         }
     }

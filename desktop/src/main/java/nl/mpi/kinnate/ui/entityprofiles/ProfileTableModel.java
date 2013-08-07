@@ -17,6 +17,7 @@
  */
 package nl.mpi.kinnate.ui.entityprofiles;
 
+import java.util.ResourceBundle;
 import javax.swing.table.AbstractTableModel;
 import nl.mpi.kinnate.kindocument.ProfileManager;
 
@@ -26,8 +27,9 @@ import nl.mpi.kinnate.kindocument.ProfileManager;
  * @author Peter Withers
  */
 public class ProfileTableModel extends AbstractTableModel {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
-    private String[] columnNames = new String[]{"Name", "Description", "Registration Date", "Creator Name", "Use Entity Type"}; //, "ID", "href"};
+    private String[] columnNames = new String[]{widgets.getString("ProfileTable_NAME"), widgets.getString("ProfileTable_DESCRIPTION"), widgets.getString("ProfileTable_REGISTRATION DATE"), widgets.getString("ProfileTable_CREATOR NAME"), widgets.getString("ProfileTable_USE ENTITY TYPE")}; //, "ID", "href"};
     private ProfileManager profileManager;
 
     public void setProfileManager(ProfileManager profileManager) {

@@ -18,6 +18,7 @@
 package nl.mpi.kinnate.ui.relationsettings;
 
 import java.awt.Component;
+import java.util.ResourceBundle;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
@@ -33,6 +34,7 @@ import javax.swing.table.TableCellEditor;
  *  Author     : Peter Withers
  */
 public class NumberSpinnerEditor extends DefaultCellEditor implements TableCellEditor, ChangeListener {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     private final JSpinner jSpinner;
     private RelationTypesTableModel relationTypesTableModel;

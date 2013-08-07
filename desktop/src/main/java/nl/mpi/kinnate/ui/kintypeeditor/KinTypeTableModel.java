@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 import nl.mpi.kinnate.SavePanel;
@@ -38,6 +39,7 @@ import nl.mpi.kinnate.svg.DataStoreSvg;
  *  Author     : Peter Withers
  */
 public class KinTypeTableModel extends AbstractTableModel implements ActionListener, CheckBoxModel {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     SavePanel savePanel;
     DataStoreSvg dataStoreSvg;
@@ -65,13 +67,13 @@ public class KinTypeTableModel extends AbstractTableModel implements ActionListe
     public String getColumnName(int column) {
         switch (column) {
             case 0:
-                return "Kin Type String";
+                return widgets.getString("KinTypeTable_KIN TYPE STRING");
             case 1:
-                return "Relation Type";
+                return widgets.getString("KinTypeTable_RELATION TYPE");
             case 2:
-                return "Symbol Type";
+                return widgets.getString("KinTypeTable_SYMBOL TYPE");
             case 3:
-                return "Display Name";
+                return widgets.getString("KinTypeTable_DISPLAY NAME");
             case 4:
                 return "";
             default:
@@ -197,7 +199,7 @@ public class KinTypeTableModel extends AbstractTableModel implements ActionListe
             fireTableDataChanged();
             return;
         }
-        String codeString = "undefined";
+        String codeString = widgets.getString("KinTypeTable_UNDEFINED");
         RelationType[] relationType = null;
         SymbolType[] symbolType = null;
         String displayString = "";

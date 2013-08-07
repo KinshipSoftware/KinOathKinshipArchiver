@@ -21,6 +21,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -35,6 +36,7 @@ import javax.swing.table.TableCellEditor;
  * Author : Peter Withers
  */
 public class CheckBoxRenderer extends DefaultCellEditor implements ListCellRenderer, TableCellEditor, ActionListener {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     private CheckBoxModel kinTypeTableModel;
     private JComboBox comboBoxRelationType;

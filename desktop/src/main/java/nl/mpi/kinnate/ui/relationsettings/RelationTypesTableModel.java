@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 import nl.mpi.kinnate.SavePanel;
@@ -38,6 +39,7 @@ import nl.mpi.kinnate.ui.kintypeeditor.CheckBoxModel;
  * @author Peter Withers
  */
 public class RelationTypesTableModel extends AbstractTableModel implements ActionListener, CheckBoxModel {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     SavePanel savePanel;
     DataStoreSvg dataStoreSvg;
@@ -66,19 +68,19 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
     public String getColumnName(int column) {
         switch (column) {
             case 0:
-                return "Custom Name";
+                return widgets.getString("RelationTypesTable_CUSTOM NAME");
             case 1:
-                return "Data Category";
+                return widgets.getString("RelationTypesTable_DATA CATEGORY");
             case 2:
-                return "Relation Type";
+                return widgets.getString("RelationTypesTable_RELATION TYPE");
             case 3:
-                return "Line Colour";
+                return widgets.getString("RelationTypesTable_LINE COLOUR");
             case 4:
-                return "Line Width";
+                return widgets.getString("RelationTypesTable_LINE WIDTH");
             case 5:
-                return "Line/Dash";
+                return widgets.getString("RelationTypesTable_LINE_DASH");
             case 6: // todo: add this to the relation definitions table
-                return "Curve Line Orientation";
+                return widgets.getString("RelationTypesTable_CURVE LINE ORIENTATION");
             case 7:
                 return "";
             default:
@@ -199,7 +201,7 @@ public class RelationTypesTableModel extends AbstractTableModel implements Actio
             fireTableDataChanged();
             return;
         }
-        String displayName = "undefined";
+        String displayName = widgets.getString("RelationTypesTable_UNDEFINED");
         RelationType[] relationType = new RelationType[0]; //{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant, DataTypes.RelationType.sibling, DataTypes.RelationType.union};
         String dataCategory = "";
         String lineColour = "#999999";

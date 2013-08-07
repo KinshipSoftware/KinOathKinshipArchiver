@@ -24,6 +24,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URI;
+import java.util.ResourceBundle;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -57,6 +58,7 @@ import nl.mpi.kinnate.ui.menu.RecentFileMenu;
  */
 public abstract class AbstractDiagramManager {
 
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
     private EntityUploadPanel entityUploadPanel;
     final private ApplicationVersionManager versionManager;
     final private ArbilWindowManager dialogHandler;
@@ -179,7 +181,7 @@ public abstract class AbstractDiagramManager {
             }
         }
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, projectRecord, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
-        egoSelectionTestPanel.setName("[" + egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName() + "] Unsaved Default Diagram");
+        egoSelectionTestPanel.setName(java.text.MessageFormat.format(widgets.getString("[{0}] UNSAVED DEFAULT DIAGRAM"), new Object[]{egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName()}));
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
 //        egoSelectionTestPanel.loadAllTrees();
         return egoSelectionTestPanel;
@@ -187,7 +189,7 @@ public abstract class AbstractDiagramManager {
 
     public void newDiagram(DocumentNewMenu.DocumentType documentType, ProjectRecord projectRecord, Rectangle preferredSizeLocation) throws EntityServiceException {
         KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, projectRecord, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
-        egoSelectionTestPanel.setName("[" + egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName() + "] Unsaved " + documentType.getDisplayName());
+        egoSelectionTestPanel.setName(java.text.MessageFormat.format(widgets.getString("[{0}] UNSAVED {1}"), new Object[]{egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName(), documentType.getDisplayName()}));
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
 //        egoSelectionTestPanel.loadAllTrees();
     }
@@ -232,7 +234,7 @@ public abstract class AbstractDiagramManager {
     public void openEntityUploadPanel(Rectangle preferredSizeLocation, EntityCollection entityCollection) {
         if (entityUploadPanel == null) {
             entityUploadPanel = new EntityUploadPanel(sessionStorage, entityCollection, dialogHandler);
-            entityUploadPanel.setName("Entity Upload");
+            entityUploadPanel.setName(widgets.getString("ENTITY UPLOAD"));
             createDiagramContainer(entityUploadPanel, preferredSizeLocation);
         }
         setSelectedDiagram(entityUploadPanel);
@@ -302,10 +304,13 @@ public abstract class AbstractDiagramManager {
 
     public boolean offerUserToSave(SavePanel savePanel, String diagramName) {
         if (savePanel.requiresSave()) {
+// todo:           boolean isProjectDiagram = savePanel.getGraphPanel().
             // warn user to save
             boolean fileSaved = false;
             while (!fileSaved) {
-                switch (dialogHandler.showDialogBox("There are unsaved changes in: \"" + diagramName + "\"\nDo you want to save before closing?", "Close Diagram", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
+                // todo: is this a project or freeform diagram? ask user accordingly
+                // todo: offer to save to the project default also
+                switch (dialogHandler.showDialogBox(java.text.MessageFormat.format(widgets.getString("THE PROJECT DATA HAS BEEN SAVED, HOWEVER THE CURRENT DIAGRAM HAS NOT: \"{0}\"DO YOU WANT TO SAVE THIS DIAGRAM BEFORE CLOSING?"), new Object[]{diagramName}), "CLOSE DIAGRAM", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
                     case JOptionPane.YES_OPTION:
                         if (savePanel.hasSaveFileName()) {
                             savePanel.saveToFile();
@@ -340,7 +345,7 @@ public abstract class AbstractDiagramManager {
 
             @Override
             public String getDescription() {
-                return "Scalable Vector Graphics (SVG)";
+                return widgets.getString("SCALABLE VECTOR GRAPHICS (SVG)");
             }
         });
 
