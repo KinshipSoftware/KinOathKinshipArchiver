@@ -13,17 +13,10 @@
         <version>1.0</version>
     </parent> 
     <url>http://maven.apache.org</url>
-    <organization> 
-        <name>The Language Archive</name> 
-        <url>http://tla.mpi.nl/tools/tla-tools</url>
-    </organization>
     <scm>
         <developerConnection>scm:svn:https://svn.mpi.nl/LAT/Kinnate/trunk/rest</developerConnection>
         <url>https://trac.mpi.nl/wiki/KinOath</url>
     </scm>
-    <properties>
-        <application.license.copyrightYear>2013</application.license.copyrightYear>           
-    </properties>
     <build>
         <finalName>kinoath-rest</finalName>
         <plugins>

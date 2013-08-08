@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (C) 2013 The Language Archive
+    Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
