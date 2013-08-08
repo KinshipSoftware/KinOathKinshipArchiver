@@ -15,42 +15,86 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <!--    <build>
+    <build>
         <plugins>
             <plugin>
-                <groupId>com.systemsplanet.plugin</groupId>
-                <artifactId>google-api-translate-java-maven-plugin</artifactId>
-                <inherited>false</inherited>
+                <!--                                		 
+		    License plugin checks for presence of license header in all source files (with some exceptions, see excludes below).
+		    You can use this plugin to actually insert or fix the license headers by running maven with the following goal:
+
+		    mvn license:format
+
+                    For more info, see <http://mathieu.carbou.free.fr/p/maven-license-plugin/>.
+                -->
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.9.0</version> 
                 <configuration>
-                    <debug>true</debug>
-                    <sourceTranslationPath>
-                        ${basedir}/src/main/resources/nl/mpi/arbil/localisation
-                    </sourceTranslationPath>
-                    <languageFilePattern>
-                        Menus_{0}.properties
-                    </languageFilePattern>
-                    <sourceLanguage>
-                        en
-                    </sourceLanguage>
-                    <destinationPath>
-                        ${project.build.directory}/classes/
-                    </destinationPath>
-                      ar,zh,zh-CN,zh-TW,nl,fr,de,el,it,ja,ko,pt,ru,es 
-                    <targetLanguages>
-                        nl,fr,de,it,es
-                    </targetLanguages>
+                    <header>${project.parent.basedir}/license-header.txt</header>
+                    <strictCheck>false</strictCheck>
+                    <properties>
+                        <year>${application.license.copyrightYear}</year>
+                        <organization>${project.organization.name}</organization>
+                    </properties>
+                    <mapping>
+                        <svg>XML_STYLE</svg>
+                        <imdi>XML_STYLE</imdi>
+                        <cmdi>XML_STYLE</cmdi>
+                    </mapping>
+                    <excludes>
+                        <exclude>nbactions.xml</exclude>
+                        <exclude>nb-configuration.xml</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.icns</exclude>
+                        <exclude>**/*.php</exclude>
+                        <exclude>installer/**</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>generate-projects</id>
                         <goals>
-                            <goal>localize</goal>
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+    <!--    
+        
+                   <plugin>
+                       <groupId>com.systemsplanet.plugin</groupId>
+                       <artifactId>google-api-translate-java-maven-plugin</artifactId>
+                       <inherited>false</inherited>
+                       <configuration>
+                           <debug>true</debug>
+                           <sourceTranslationPath>
+                               ${basedir}/src/main/resources/nl/mpi/arbil/localisation
+                           </sourceTranslationPath>
+                           <languageFilePattern>
+                               Menus_{0}.properties
+                           </languageFilePattern>
+                           <sourceLanguage>
+                               en
+                           </sourceLanguage>
+                           <destinationPath>
+                               ${project.build.directory}/classes/
+                           </destinationPath>
+                             ar,zh,zh-CN,zh-TW,nl,fr,de,el,it,ja,ko,pt,ru,es 
+                           <targetLanguages>
+                               nl,fr,de,it,es
+                           </targetLanguages>
+                       </configuration>
+                       <executions>
+                           <execution>
+                               <id>generate-projects</id>
+                               <goals>
+                                   <goal>localize</goal>
+                               </goals>
+                           </execution>
+                       </executions>
+                   </plugin>
+            -->   
         </plugins>
-    </build>-->
+    </build>
     <dependencies>
     </dependencies>
 </project>
