@@ -5,18 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.mpi</groupId>
     <artifactId>kinoath-parent</artifactId>
-    <name>KinOath Parent 1.3</name>
+    <name>KinOath Parent 1.4</name>
     <packaging>pom</packaging>
     <version>1.0</version>
     <description>Parent pom for KinOath Kinship Archiver</description>
     <modules>
         <module>desktop</module>
         <module>kinoath-help</module>
-        <!--        <module>rest</module>-->
+        <module>rest</module>
+        <module>localisation</module>
     </modules>
 
     <organization> 
-        <name>Max Planck Institute for Psycholinguistics</name> 
+        <name>The Language Archive, Max Planck Institute for Psycholinguistics</name> 
         <url>http://tla.mpi.nl/tools/tla-tools</url>
     </organization>
     
@@ -28,9 +29,77 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--<netbeans.hint.license>http://www.gnu.org/licenses/gpl-2.0.html</netbeans.hint.license>-->
-        <netbeans.hint.license>gpl20</netbeans.hint.license>
+        <netbeans.hint.license>gpl20</netbeans.hint.license> 
+        <application.license.copyrightYear>2013</application.license.copyrightYear>    
+        <parentpom.location>${project.basedir}</parentpom.location>       
     </properties>
+    <build> 
+        <plugins> 
+            <plugin> 
+                <artifactId>maven-assembly-plugin</artifactId> 
+                <version>2.4</version> 
+                <inherited>false</inherited> 
+                <configuration> 
+                    <encoding>UTF-8</encoding> 
+                    <finalName>kinoath</finalName> 
+                    <descriptors> 
+                        <descriptor>sources-assembly.xml</descriptor> 
+                    </descriptors> 
+                    <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot> 
+                </configuration> 
+                <executions> 
+                    <execution> 
+                        <id>standalone</id> 
+                        <phase>package</phase> 
+                        <goals> 
+                            <goal>single</goal> 
+                        </goals> 
+                    </execution> 
+                </executions> 
+            </plugin> <plugin>
+                <!--                                		 
+		    License plugin checks for presence of license header in all source files (with some exceptions, see excludes below).
+		    You can use this plugin to actually insert or fix the license headers by running maven with the following goal:
 
+		    mvn license:format
+
+                    For more info, see <http://mathieu.carbou.free.fr/p/maven-license-plugin/>.
+                -->
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.9.0</version> 
+                <configuration>
+                    <header>${parentpom.location}/license-header.txt</header>
+                    <strictCheck>false</strictCheck>
+                    <properties>
+                        <year>${application.license.copyrightYear}</year>
+                        <organization>${project.organization.name}</organization>
+                    </properties>
+                    <mapping>
+                        <svg>XML_STYLE</svg>
+                        <imdi>XML_STYLE</imdi>
+                        <cmdi>XML_STYLE</cmdi>
+                    </mapping>
+                    <excludes>
+                        <exclude>nbactions.xml</exclude>
+                        <exclude>nb-configuration.xml</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.icns</exclude>
+                        <exclude>**/*.php</exclude>
+                        <exclude>installer/**</exclude>
+                        <exclude>**/src/main/docbook/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins> 
+    </build> 
     <reporting>
         <plugins>
             <plugin>
