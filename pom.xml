@@ -12,7 +12,7 @@
     <modules>
         <module>desktop</module>
         <module>kinoath-help</module>
-        <module>rest</module>
+<!--        <module>rest</module>-->
         <module>localisation</module>
     </modules>
 
@@ -81,8 +81,8 @@
                         <cmdi>XML_STYLE</cmdi>
                     </mapping>
                     <excludes>
-                        <exclude>nbactions.xml</exclude>
-                        <exclude>nb-configuration.xml</exclude>
+                        <exclude>**/nbactions.xml</exclude>
+                        <exclude>**/nb-configuration.xml</exclude>
                         <exclude>**/*.txt</exclude>
                         <exclude>**/*.icns</exclude>
                         <exclude>**/*.php</exclude>
