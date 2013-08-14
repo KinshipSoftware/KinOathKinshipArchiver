@@ -229,6 +229,12 @@
             <artifactId>arbil</artifactId>
             <!--when changing the Arbil version make sure that the JNLP dependencies are also updated--> 
             <version>2.5.37662-stable</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>plugins-core</artifactId>
+                    <groupId>nl.mpi</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
