@@ -248,7 +248,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinnate-plugins-export</artifactId>
-            <version>1.0.36845-stable</version>
+            <version>1.0.37446-stable</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
