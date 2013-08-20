@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -75,6 +76,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  * Author : Peter Withers
  */
 public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePanel, ArbilDataNodeContainer {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     private ProjectManager projectManager;
     private EntityCollection entityCollection;
@@ -230,7 +232,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 entityCollection = projectManager.getEntityCollectionForProject(graphPanel.dataStoreSvg.projectRecord);
             } catch (JAXBException exception) {
                 // todo: should/can we do more here
-                dialogHandler.addMessageDialogToQueue("The required project is not available.", "Project Loading Error");
+                dialogHandler.addMessageDialogToQueue(widgets.getString("THE REQUIRED PROJECT IS NOT AVAILABLE."), widgets.getString("PROJECT LOADING ERROR"));
             }
         }
         graphPanel.setEntityCollection(entityCollection);
@@ -261,7 +263,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         graphPanel.setTransferHandler(dragTransferHandler);
         egoSelectionPanel.setTransferHandler(dragTransferHandler);
         if (graphPanel.dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
-            projectTree = new ProjectTreePanel(entityCollection, graphPanel.getSymbolGraphic(), "Project Tree", this, graphPanel, dialogHandler, dataNodeLoader);
+            projectTree = new ProjectTreePanel(entityCollection, graphPanel.getSymbolGraphic(), widgets.getString("PROJECT TREE"), this, graphPanel, dialogHandler, dataNodeLoader);
             projectTree.setTransferHandler(dragTransferHandler);
         }
 
@@ -282,7 +284,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     if (panelSetting == null) {
                         panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ArchiveLinker, 150, showArchiveLinker);
                     }
-                    panelSetting.setHidePane(kinTermHidePane, "Archive Linker"); // todo: this name is overwriting the correct tab titles
+                    panelSetting.setHidePane(kinTermHidePane, widgets.getString("ARCHIVE LINKER")); // todo: this name is overwriting the correct tab titles
                     if (treeHelper.getRemoteCorpusNodes().length > 0) {
                         archiveEntityLinkerPanelRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.RemoteTree, treeHelper, dataNodeLoader);
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelRemote, false);
@@ -299,7 +301,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     if (panelSetting == null) {
                         panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.DiagramTree, 150, showDiagramTree);
                     }
-                    panelSetting.setHidePane(egoSelectionHidePane, "Diagram Tree");
+                    panelSetting.setHidePane(egoSelectionHidePane, widgets.getString("DIAGRAM TREE"));
                     panelSetting.addTargetPanel(egoSelectionPanel, false);
                     if (projectTree != null) {
                         panelSetting.addTargetPanel(projectTree, true);
@@ -310,7 +312,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     if (panelSetting == null) {
                         panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.EntitySearch, 150, showEntitySearch);
                     }
-                    panelSetting.setHidePane(egoSelectionHidePane, "Search Entities");
+                    panelSetting.setHidePane(egoSelectionHidePane, widgets.getString("SEARCH ENTITIES"));
                     panelSetting.addTargetPanel(entitySearchPanel, false);
                     panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode != DiagramMode.FreeForm);
                     break;
@@ -320,7 +322,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     if (panelSetting == null) {
                         panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTerms, 150, showKinTerms);
                     }
-                    panelSetting.setHidePane(kinTermHidePane, "Kin Terms");
+                    panelSetting.setHidePane(kinTermHidePane, widgets.getString("KIN TERMS"));
                     for (KinTermGroup kinTerms : graphPanel.getkinTermGroups()) {
                         panelSetting.addTargetPanel(new KinTermPanel(this, kinTerms, dialogHandler, graphPanel), false); //  + kinTerms.titleString
                     }
@@ -330,7 +332,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     if (panelSetting == null) {
                         panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.KinTypeStrings, 150, showKinTypeStrings);
                     }
-                    panelSetting.setHidePane(kinTypeHidePane, "Kin Type Strings");
+                    panelSetting.setHidePane(kinTypeHidePane, widgets.getString("KIN TYPE STRINGS"));
                     panelSetting.addTargetPanel(new JScrollPane(kinTypeStringInput), false);
                     panelSetting.setMenuEnabled(true);
                     break;
@@ -338,7 +340,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     if (panelSetting == null) {
                         panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.ExportPanel, 150, showExportPanel);
                     }
-                    panelSetting.setHidePane(kinTypeHidePane, "Export Data");
+                    panelSetting.setHidePane(kinTypeHidePane, widgets.getString("EXPORT DATA"));
                     panelSetting.addTargetPanel(new ExportPanel(), false);
                     panelSetting.setMenuEnabled(false);
                     break;
@@ -352,11 +354,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     if (panelSetting == null) {
                         panelSetting = graphPanel.dataStoreSvg.setPanelState(VisiblePanelSetting.PanelType.PluginPanel, 150, false);
                     }
-                    panelSetting.setHidePane(kinTypeHidePane, "Active Plugins");
+                    panelSetting.setHidePane(kinTypeHidePane, widgets.getString("ACTIVE PLUGINS"));
                     panelSetting.setMenuEnabled(panelSetting.getTargetPanels().length > 0);
                     break;
                 default:
-                    dialogHandler.addMessageDialogToQueue("Panel type '" + panelType.name() + "' unknown or unsupported.", "Load Diagram");
+            final String message = "Panel type '" + panelType.name() + "' unknown or unsupported.";
+                    dialogHandler.addMessageDialogToQueue(message, "Load Diagram");
             }
         }
         tableHidePane.setVisible(false);
@@ -368,7 +371,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinGraphPanel.add(tableHidePane, BorderLayout.PAGE_END);
 
         this.add(kinGraphPanel, BorderLayout.CENTER);
-        statusBar = new StatusBar("diagram data not yet loaded");
+        statusBar = new StatusBar(widgets.getString("DIAGRAM DATA NOT YET LOADED"));
         this.add(statusBar, BorderLayout.SOUTH);
 
         EntityData[] svgDataNodes;
@@ -403,7 +406,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             // todo: if the project directory cannot be found, then we should help the user via the recent projects or via a file select
             projectManager.moveProjectRecordToTop(projectManager.loadProjectRecord(graphPanel.dataStoreSvg.projectRecord.getProjectDirectory()), this);
         } catch (JAXBException exception) {
-            dialogHandler.addMessageDialogToQueue("Failed to save the project in the recent list: " + exception.getMessage(), "Recent Project List Error");
+            final String message3 = "Failed to save the project in the recent list: " + exception.getMessage();
+            dialogHandler.addMessageDialogToQueue(message3, "Recent Project List Error");
         }
     }
 
@@ -431,7 +435,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     public boolean verifyDiagramDataLoaded() {
         if (graphPanel.dataStoreSvg.graphData == null) {
 //            // if the first draw has not occured then we must do this now
-            if (dialogHandler.showConfirmDialogBox("The diagram needs to be recalculated before it can be interacted with.\nRecalculate now?", "Recalculate Diagram")) {
+            if (dialogHandler.showConfirmDialogBox(widgets.getString("THE DIAGRAM NEEDS TO BE RECALCULATED BEFORE IT CAN BE INTERACTED WITH.RECALCULATE NOW?"), widgets.getString("RECALCULATE DIAGRAM"))) {
                 this.drawGraph(true);
             }
             return false;
@@ -507,15 +511,16 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //        kinTypeStrings = graphPanel.getKinTypeStrigs();
                             } catch (EntityServiceException exception) {
                                 BugCatcherManager.getBugCatcher().logError(exception);
-                                dialogHandler.addMessageDialogToQueue("Failed to load all entities required", "Draw Graph");
+                                dialogHandler.addMessageDialogToQueue(widgets.getString("FAILED TO LOAD ALL ENTITIES REQUIRED"), widgets.getString("DRAW GRAPH"));
                             }
                         } catch (ProcessAbortException exception) {
                             // if the process has been aborted then it should be safe to let the next thread loop take over from here
                             System.out.println("draw graph process has been aborted, it should be safe to let the next thread loop take over from here");
                         } catch (ImportRequiredException exception) {
                             if (exception.getImportURI() != null) {
-                                final String[] optionStrings = new String[]{"Import", "Cancel"};
-                                int userOption = dialogHandler.showDialogBox(exception.getMessageString() + "\nDo you want to import this data now?\n" + exception.getImportURI().toASCIIString(), "Import Required", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, optionStrings, optionStrings[0]);
+                                final String[] optionStrings = new String[]{widgets.getString("IMPORT"), widgets.getString("CANCEL")};
+                                final String message1 = exception.getMessageString() + "\nDo you want to import this data now?\n" + exception.getImportURI().toASCIIString();
+                                int userOption = dialogHandler.showDialogBox(message1, "Import Required", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, optionStrings, optionStrings[0]);
                                 // ask the user if they want to import the required file and start the import on yes
                                 if (userOption == 0) {
                                     try {
@@ -525,11 +530,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                             diagramWindowManager.openImportPanel(exception.getImportURI().toASCIIString(), KinDiagramPanel.this, entityCollection);
                                         }
                                     } catch (ImportException exception1) {
-                                        dialogHandler.addMessageDialogToQueue(exception1.getMessage() + "\n" + exception.getImportURI().toASCIIString(), "Import Required Data");
+                                        final String message2 = exception1.getMessage() + "\n" + exception.getImportURI().toASCIIString();
+                                        dialogHandler.addMessageDialogToQueue(message2, "Import Required Data");
                                     }
                                 }
                             } else {
-                                dialogHandler.addMessageDialogToQueue(exception.getMessageString(), "Draw Graph");
+                                dialogHandler.addMessageDialogToQueue(exception.getMessageString(), widgets.getString("DRAW GRAPH"));
                             }
                         }
                     }
@@ -865,14 +871,14 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void dataNodeChildAdded(ArbilNode destination, ArbilNode newChildNode) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(widgets.getString("NOT SUPPORTED YET."));
     }
 
     public void dataNodeRemoved(ArbilNode adn) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(widgets.getString("NOT SUPPORTED YET."));
     }
 
     public boolean isFullyLoadedNodeRequired() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(widgets.getString("NOT SUPPORTED YET."));
     }
 }
