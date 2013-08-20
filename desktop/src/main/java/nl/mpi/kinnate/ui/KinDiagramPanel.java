@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -76,8 +77,8 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  * Author : Peter Withers
  */
 public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePanel, ArbilDataNodeContainer {
-    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
     private ProjectManager projectManager;
     private EntityCollection entityCollection;
     private KinTypeStringInput kinTypeStringInput;
@@ -358,8 +359,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     panelSetting.setMenuEnabled(panelSetting.getTargetPanels().length > 0);
                     break;
                 default:
-            final String message = "Panel type '" + panelType.name() + "' unknown or unsupported.";
-                    dialogHandler.addMessageDialogToQueue(message, "Load Diagram");
+                    final String message = java.text.MessageFormat.format(widgets.getString("PANEL TYPE '{0}' UNKNOWN OR UNSUPPORTED."), new Object[]{panelType.name()});
+                    dialogHandler.addMessageDialogToQueue(message, widgets.getString("LOAD DIAGRAM"));
             }
         }
         tableHidePane.setVisible(false);
@@ -406,8 +407,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             // todo: if the project directory cannot be found, then we should help the user via the recent projects or via a file select
             projectManager.moveProjectRecordToTop(projectManager.loadProjectRecord(graphPanel.dataStoreSvg.projectRecord.getProjectDirectory()), this);
         } catch (JAXBException exception) {
-            final String message3 = "Failed to save the project in the recent list: " + exception.getMessage();
-            dialogHandler.addMessageDialogToQueue(message3, "Recent Project List Error");
+            final String message3 = java.text.MessageFormat.format(widgets.getString("FAILED TO SAVE THE PROJECT IN THE RECENT LIST: {0}"), new Object[]{exception.getMessage()});
+            dialogHandler.addMessageDialogToQueue(message3, widgets.getString("RECENT PROJECT LIST ERROR"));
         }
     }
 
@@ -519,8 +520,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         } catch (ImportRequiredException exception) {
                             if (exception.getImportURI() != null) {
                                 final String[] optionStrings = new String[]{widgets.getString("IMPORT"), widgets.getString("CANCEL")};
-                                final String message1 = exception.getMessageString() + "\nDo you want to import this data now?\n" + exception.getImportURI().toASCIIString();
-                                int userOption = dialogHandler.showDialogBox(message1, "Import Required", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, optionStrings, optionStrings[0]);
+                                final String message1 = exception.getMessageString() + java.text.MessageFormat.format(widgets.getString("DO YOU WANT TO IMPORT THIS DATA NOW?{0}"), new Object[]{exception.getImportURI().toASCIIString()});
+                                int userOption = dialogHandler.showDialogBox(message1, widgets.getString("IMPORT REQUIRED"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, optionStrings, optionStrings[0]);
                                 // ask the user if they want to import the required file and start the import on yes
                                 if (userOption == 0) {
                                     try {
@@ -531,7 +532,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                         }
                                     } catch (ImportException exception1) {
                                         final String message2 = exception1.getMessage() + "\n" + exception.getImportURI().toASCIIString();
-                                        dialogHandler.addMessageDialogToQueue(message2, "Import Required Data");
+                                        dialogHandler.addMessageDialogToQueue(message2, widgets.getString("IMPORT REQUIRED DATA"));
                                     }
                                 }
                             } else {
@@ -609,7 +610,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         VisiblePanelSetting panelSetting = graphPanel.dataStoreSvg.getPanelSettingByType(PanelType.PluginPanel);
         if (panelSetting != null) {
             final JScrollPane uiPanel = kinOathPanelPlugin.getUiPanel(dialogHandler, sessionStorage, BugCatcherManager.getBugCatcher());
-            uiPanel.setName("Plugin: " + ((BaseModule) kinOathPanelPlugin).getName());
+            uiPanel.setName(java.text.MessageFormat.format(widgets.getString("PLUGIN: {0}"), new Object[]{((BaseModule) kinOathPanelPlugin).getName()}));
             if (isVisible) {
                 panelSetting.setPanelShown(true);
                 panelSetting.addTargetPanel(uiPanel, true);
