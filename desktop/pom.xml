@@ -7,8 +7,8 @@
     <packaging>jar</packaging>
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
-    <version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>
-    <!--<version>${application.majorVersion}.${application.minorVersion}.33502-${application.branch}</version>-->
+    <!--<version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>-->
+    <version>${application.majorVersion}.${application.minorVersion}.33502-${application.branch}</version>
     <name>KinOath ${application.majorVersion}.${application.minorVersion}</name>
     <parent>
         <groupId>nl.mpi</groupId>
@@ -22,10 +22,6 @@
     </scm>
     <properties>
         <output.jarname>${project.build.finalName}</output.jarname>
-        <application.majorVersion>1</application.majorVersion> 
-        <application.minorVersion>4</application.minorVersion> 
-        <application.branch>testing</application.branch> 
-        <application.title>KinOath Kinship Archiver (testing)</application.title>
         <output.directory>${project.build.directory}</output.directory>
         <maven.build.timestamp.format>EEE MMM dd HH:mm:ss z yyyy</maven.build.timestamp.format><!--"Mon Dec 10 14:37:33 CET 2012"-->
         <application.build-date>${maven.build.timestamp}</application.build-date>  
@@ -259,12 +255,12 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.4-testing-SNAPSHOT</version>
+            <version>1.4-testing</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-localisation</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.4-testing</version>
         </dependency>
     </dependencies>
     <repositories>
