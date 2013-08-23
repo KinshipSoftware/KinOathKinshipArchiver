@@ -255,7 +255,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.4-pretesting-SNAPSHOT</version>
+            <version>1.5-pretesting-SNAPSHOT</version>
         </dependency>
         <!--        <dependency>
             <groupId>nl.mpi</groupId>
@@ -270,7 +270,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-localisation</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.5-pretesting-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <repositories>
