@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -34,6 +35,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -63,6 +65,7 @@ import nl.mpi.kinnate.svg.GraphPanel;
  */
 public class KinTermPanel extends JPanel {
 
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
     JTextField kinTypeGroupName;
     JTextField kinTypeGroupDescription;
     KinTermGroup kinTerms;
@@ -123,13 +126,13 @@ public class KinTermPanel extends JPanel {
             kinTerms.graphShow = false;
             kinTerms.graphGenerate = false;
         }
-        showOnGraphCheckBox = new JCheckBox("Show On Graph");
+        showOnGraphCheckBox = new JCheckBox(widgets.getString("SHOW ON GRAPH"));
         showOnGraphCheckBox.setSelected(kinTerms.graphShow);
         showOnGraphCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (savePanel.getGraphPanel().dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
                     showOnGraphCheckBox.setSelected(false);
-                    KinTermPanel.this.dialogHandler.addMessageDialogToQueue("At this stage Kin Terms can only be shown on freeform diagrams.", "Kin Terms");
+                    KinTermPanel.this.dialogHandler.addMessageDialogToQueue(widgets.getString("AT THIS STAGE KIN TERMS CAN ONLY BE SHOWN ON FREEFORM DIAGRAMS."), widgets.getString("KIN TERMS"));
                 } else {
                     kinTerms.graphShow = showOnGraphCheckBox.isSelected();
                     savePanel.updateGraph();
@@ -137,13 +140,13 @@ public class KinTermPanel extends JPanel {
                 }
             }
         });
-        autoGenerateCheckBox = new JCheckBox("Generate Example Entities");
+        autoGenerateCheckBox = new JCheckBox(widgets.getString("GENERATE EXAMPLE ENTITIES"));
         autoGenerateCheckBox.setSelected(kinTerms.graphGenerate);
         autoGenerateCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (savePanel.getGraphPanel().dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
                     autoGenerateCheckBox.setSelected(false);
-                    KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Entities can only be generated on freeform diagrams.", "Kin Terms");
+                    KinTermPanel.this.dialogHandler.addMessageDialogToQueue(widgets.getString("ENTITIES CAN ONLY BE GENERATED ON FREEFORM DIAGRAMS."), widgets.getString("KIN TERMS"));
                 } else {
                     kinTerms.graphGenerate = autoGenerateCheckBox.isSelected();
                     savePanel.updateGraph();
@@ -176,7 +179,7 @@ public class KinTermPanel extends JPanel {
         optionsPanel.add(showOnGraphCheckBox);
         optionsPanel.add(autoGenerateCheckBox);
         optionsPanel.add(getDeleteKinTermGroupButton());
-        final JButton deleteSeletedButton = new JButton("Delete Selected");
+        final JButton deleteSeletedButton = new JButton(widgets.getString("DELETE SELECTED"));
         optionsPanel.add(deleteSeletedButton);
         outerPanel.add(optionsPanel);
         kinTermTableModel = new KinTermTableModel(savePanel, kinTerms, deleteSeletedButton);
@@ -189,7 +192,7 @@ public class KinTermPanel extends JPanel {
     }
 
     private JButton getDeleteKinTermGroupButton() {
-        JButton deleteGroupButton = new JButton("Delete Group");
+        JButton deleteGroupButton = new JButton(widgets.getString("DELETE GROUP"));
 //        deleteGroupButton.setEnabled(false);
         deleteGroupButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -385,7 +388,7 @@ public class KinTermPanel extends JPanel {
             initialColour = Color.blue;
             savePanel.setRequiresSave();
         }
-        labelPanel.add(new JLabel("Graph Colour"));
+        labelPanel.add(new JLabel(widgets.getString("GRAPH COLOUR")));
         final JPanel colourSquare = new JPanel();
         colourSquare.setBackground(initialColour);
 //        colourSquare.setMinimumSize(new Dimension(100, 100));
@@ -397,11 +400,11 @@ public class KinTermPanel extends JPanel {
                 final Color revertColour = colourSquare.getBackground();
                 final JPanel buttonPanel = new JPanel();
                 buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
-                final JButton cancelButton = new JButton("Cancel");
+                final JButton cancelButton = new JButton(widgets.getString("CANCEL"));
                 buttonPanel.add(cancelButton);
-                final JButton revertButton = new JButton("Revert");
+                final JButton revertButton = new JButton(widgets.getString("REVERT"));
                 buttonPanel.add(revertButton);
-                final JButton okButton = new JButton("OK");
+                final JButton okButton = new JButton(widgets.getString("OK"));
                 buttonPanel.add(okButton);
                 cancelButton.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -454,10 +457,10 @@ public class KinTermPanel extends JPanel {
 
     public void exportKinTerms() {
         // todo: move this to a import/export class #1743 
-        File[] exportFile = KinTermPanel.this.dialogHandler.showFileSelectBox("Export Kin Terms", false, false, null, MessageDialogHandler.DialogueType.save, null);
+        File[] exportFile = KinTermPanel.this.dialogHandler.showFileSelectBox(widgets.getString("EXPORT KIN TERMS"), false, false, null, MessageDialogHandler.DialogueType.save, null);
         if (exportFile != null) {
             if (exportFile.length != 1) {
-                KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Export file not selected", "Export Kin Terms");
+                KinTermPanel.this.dialogHandler.addMessageDialogToQueue(widgets.getString("EXPORT FILE NOT SELECTED"), widgets.getString("EXPORT KIN TERMS"));
             } else {
                 File outputFile;
                 if (exportFile[0].getName().toLowerCase().endsWith(".csv")) {
@@ -466,7 +469,7 @@ public class KinTermPanel extends JPanel {
                     outputFile = new File(exportFile[0].getParentFile(), exportFile[0].getName() + ".csv");
                 }
                 if (exportFile[0].exists()) {
-                    if (!KinTermPanel.this.dialogHandler.showConfirmDialogBox("Export file already exists, overwrite?", "Export Kin Terms")) {
+                    if (!KinTermPanel.this.dialogHandler.showConfirmDialogBox(widgets.getString("EXPORT FILE ALREADY EXISTS, OVERWRITE?"), widgets.getString("EXPORT KIN TERMS"))) {
                         return;
                     }
                 }
@@ -504,7 +507,7 @@ public class KinTermPanel extends JPanel {
     public void importKinTerms() {
         // todo: move this to a import/export class #1743 
         HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
-        for (final String[] currentType : new String[][]{{"Comma-separated values", ".csv"}}) { // {"Tab-separated values", ".txt"}, 
+        for (final String[] currentType : new String[][]{{widgets.getString("COMMA-SEPARATED VALUES"), ".csv"}}) { // {"Tab-separated values", ".txt"}, 
             fileFilterMap.put(currentType[0], new FileFilter() {
                 @Override
                 public boolean accept(File selectedFile) {
@@ -518,10 +521,10 @@ public class KinTermPanel extends JPanel {
                 }
             });
         }
-        File[] importFiles = KinTermPanel.this.dialogHandler.showFileSelectBox("Import Kin Terms", false, true, fileFilterMap, MessageDialogHandler.DialogueType.open, null);
+        File[] importFiles = KinTermPanel.this.dialogHandler.showFileSelectBox(widgets.getString("IMPORT KIN TERMS"), false, true, fileFilterMap, MessageDialogHandler.DialogueType.open, null);
         if (importFiles != null) {
             if (importFiles.length == 0) {
-                KinTermPanel.this.dialogHandler.addMessageDialogToQueue("No files selected for import", "Import Kin Terms");
+                KinTermPanel.this.dialogHandler.addMessageDialogToQueue(widgets.getString("NO FILES SELECTED FOR IMPORT"), widgets.getString("IMPORT KIN TERMS"));
             }
             for (File currentFile : importFiles) {
                 int importCount = 0;
@@ -530,7 +533,7 @@ public class KinTermPanel extends JPanel {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(currentFile), "UTF-8"));
                     String currentLine = bufferedReader.readLine();
                     if (!csvHeaderString.equals(currentLine)) {
-                        KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Incorrect csv format, nothing imported", "Import Kin Terms");
+                        KinTermPanel.this.dialogHandler.addMessageDialogToQueue(widgets.getString("INCORRECT CSV FORMAT, NOTHING IMPORTED"), widgets.getString("IMPORT KIN TERMS"));
                         return;
                     }
                     while ((currentLine = bufferedReader.readLine()) != null) {
@@ -557,7 +560,7 @@ public class KinTermPanel extends JPanel {
                 }
                 kinTermTableModel.fireTableDataChanged();
                 // todo: resolve why this dialogue does not show
-                KinTermPanel.this.dialogHandler.addMessageDialogToQueue("Imported " + importCount + " kin terms", "Import Kin Terms");
+                KinTermPanel.this.dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(widgets.getString("IMPORTED {0} KIN TERMS"), new Object[]{importCount}), widgets.getString("IMPORT KIN TERMS"));
             }
         }
     }

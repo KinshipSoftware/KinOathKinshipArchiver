@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 import nl.mpi.kinnate.SavePanel;
@@ -33,6 +34,7 @@ import nl.mpi.kinnate.kintypestrings.KinTermGroup;
  *  Author     : Peter Withers
  */
 public class KinTermTableModel extends AbstractTableModel implements ActionListener {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     SavePanel savePanel;
     KinTermGroup kinTerms;
@@ -58,17 +60,17 @@ public class KinTermTableModel extends AbstractTableModel implements ActionListe
     public String getColumnName(int column) {
         switch (column) {
             case 0:
-                return "Kin Term";
+                return widgets.getString("KIN TERM");
             case 1:
-                return "Referent Kin Type Strings";
+                return widgets.getString("REFERENT KIN TYPE STRINGS");
             case 2:
-                return "Propositus Kin Type Strings";
+                return widgets.getString("PROPOSITUS KIN TYPE STRINGS");
             case 3:
-                return "Description";
+                return widgets.getString("DESCRIPTION");
             case 4:
                 return "";
             default:
-                throw new UnsupportedOperationException("Too many columns");
+                throw new UnsupportedOperationException(widgets.getString("TOO MANY COLUMNS"));
         }
     }
 
@@ -119,7 +121,7 @@ public class KinTermTableModel extends AbstractTableModel implements ActionListe
             case 4:
                 return checkBoxSet.contains(kinTerm);
             default:
-                throw new UnsupportedOperationException("Too many columns");
+                throw new UnsupportedOperationException(widgets.getString("TOO MANY COLUMNS"));
         }
     }
 
@@ -175,7 +177,7 @@ public class KinTermTableModel extends AbstractTableModel implements ActionListe
                 }
                 break;
             default:
-                throw new UnsupportedOperationException("Too many columns");
+                throw new UnsupportedOperationException(widgets.getString("TOO MANY COLUMNS"));
         }
         deleteSelectedButton.setEnabled(!checkBoxSet.isEmpty());
         super.setValueAt(aValue, rowIndex, columnIndex);
