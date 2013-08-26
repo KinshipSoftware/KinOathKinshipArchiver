@@ -63,7 +63,7 @@ public class HelpMenu extends JMenu {
                         + appVersion.lastCommitDate + java.text.MessageFormat.format(menus.getString("" + "COMPILE DATE: {0}"), new Object[]{appVersion.compileDate})
                         + java.text.MessageFormat.format(menus.getString("ARBIL VERSION: {0}.{1}.{2}"), new Object[]{new ArbilVersion().currentMajor, new ArbilVersion().currentMinor, new ArbilVersion().currentRevision})
                         + java.text.MessageFormat.format(menus.getString("JAVA VERSION: {0} BY {1}"), new Object[]{System.getProperty("java.version"), System.getProperty("java.vendor")});
-                dialogHandler.addMessageDialogToQueue(messageString, java.text.MessageFormat.format(menus.getString("ABOUT {0}"), new Object[]{versionManager.getApplicationVersion().applicationTitle}));
+                dialogHandler.addMessageDialogToQueue(messageString, java.text.MessageFormat.format(menus.getString("ABOUT_BOX_TITLE {0}"), new Object[]{versionManager.getApplicationVersion().applicationTitle}));
             }
         });
         this.add(aboutMenuItem);
