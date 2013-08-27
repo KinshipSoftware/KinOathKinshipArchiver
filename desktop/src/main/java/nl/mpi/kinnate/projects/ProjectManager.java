@@ -1,25 +1,27 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.projects;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.bind.JAXBContext;
@@ -46,6 +48,7 @@ public class ProjectManager {
     private HashMap<ProjectRecord, EntityCollection> projectEntityCollectionMap = new HashMap<ProjectRecord, EntityCollection>();
     private final ArbilWindowManager dialogHandler;
     static final public String kinoathproj = "kinoath.proj";
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     public ProjectManager(SessionStorage sessionStorage, ArbilWindowManager dialogHandler) {
         recentProjectsFile = new File(sessionStorage.getApplicationSettingsDirectory(), "RecentProjects.xml");
@@ -147,8 +150,8 @@ public class ProjectManager {
         }
         // all else failed so we ask the user to browse for the matching project
         ProjectPreviewPanel previewPanel = new ProjectPreviewPanel(this, false);
-        dialogHandler.showDialogBox("The project for this diagram could not be found.\nPlease browse for the required project.", "Open Project Error", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
-        final File[] selectedFilesArray = dialogHandler.showFileSelectBox("Open Project", false, false, getProjectFileFilter(), MessageDialogHandler.DialogueType.open, previewPanel);
+        dialogHandler.showDialogBox(widgets.getString("THE PROJECT FOR THIS DIAGRAM COULD NOT BE FOUND.PLEASE BROWSE FOR THE REQUIRED PROJECT."), widgets.getString("OPEN PROJECT ERROR"), JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        final File[] selectedFilesArray = dialogHandler.showFileSelectBox(widgets.getString("OPEN PROJECT"), false, false, getProjectFileFilter(), MessageDialogHandler.DialogueType.open, previewPanel);
         if (selectedFilesArray != null) {
             System.out.println(selectedFilesArray[0].getAbsolutePath());
             return loadProjectRecord(selectedFilesArray[0]);
@@ -188,7 +191,8 @@ public class ProjectManager {
         if (!databaseProjectRecord.getLastChangeId().equals(projectRecord.getLastChangeId())) {
             new Thread(new Runnable() {
                 public void run() {
-                    if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox("The project '" + projectRecord.projectName + "' has been modified externally,\ndo you want to update the database so that the changes are visible?", "KinOath Project Check", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+                    final String message = java.text.MessageFormat.format(widgets.getString("THE PROJECT '{0}' HAS BEEN MODIFIED EXTERNALLY,DO YOU WANT TO UPDATE THE DATABASE SO THAT THE CHANGES ARE VISIBLE?"), new Object[]{projectRecord.projectName});
+                    if (JOptionPane.OK_OPTION == dialogHandler.showDialogBox(message, widgets.getString("KINOATH PROJECT CHECK"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
                         try {
                             diagramPanel.showProgressBar();
                             getEntityCollectionForProject(projectRecord).recreateDatabase();
@@ -220,7 +224,7 @@ public class ProjectManager {
 
     public HashMap<String, FileFilter> getProjectFileFilter() {
         HashMap<String, FileFilter> fileFilterMap = new HashMap<String, FileFilter>(2);
-        for (final String[] currentType : new String[][]{{"KinOath Project", "kinoath.proj"}}) {
+        for (final String[] currentType : new String[][]{{widgets.getString("KINOATH PROJECT"), "kinoath.proj"}}) {
             fileFilterMap.put(currentType[0], new FileFilter() {
                 @Override
                 public boolean accept(File selectedFile) {

@@ -76,7 +76,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
     }
 
     public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader) {
-        InitPanel(entityCollection, kinDiagramPanel, graphPanel, dialogHandler, dataNodeLoader, "Search Entity Names", null);
+        InitPanel(entityCollection, kinDiagramPanel, graphPanel, dialogHandler, dataNodeLoader, java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("SEARCH ENTITY NAMES"), null);
     }
 
     private void InitPanel(EntityCollection entityCollection, final KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader, String nodeSetTitle, UniqueIdentifier[] entityIdentifiers) {
@@ -102,7 +102,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
             }
         });
         progressBar = new JProgressBar();
-        searchButton = new JButton("Search");
+        searchButton = new JButton(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("SEARCH"));
         searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EntitySearchPanel.this.performSearch();
@@ -117,11 +117,11 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         if (entityIdentifiers == null) {
             optionsPanel.add(searchField);
         }
-        graphSelectionCheckBox = new JCheckBox("Graph selection", true);
+        graphSelectionCheckBox = new JCheckBox(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("GRAPH SELECTION"), true);
         resultsTree.setUpdateGraphOnSelectionChange(true);
         // graph the selection when checked
         optionsPanel.add(graphSelectionCheckBox);
-        expandByKinTypeCheckBox = new JCheckBox("Expand selection by kin type string", false);
+        expandByKinTypeCheckBox = new JCheckBox(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("EXPAND SELECTION BY KIN TYPE STRING"), false);
         // expand the selection when checked
         optionsPanel.add(expandByKinTypeCheckBox);
         kinTypeStringTextArea = new JTextField(kinTypeString);
@@ -161,7 +161,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 kinDiagramPanel.drawGraph(true);
             }
         });
-        diagramSelectionCheckBox = new JCheckBox("Replace search with diagram selection", false);
+        diagramSelectionCheckBox = new JCheckBox(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("REPLACE SEARCH WITH DIAGRAM SELECTION"), false);
         // todo: link this selection when checked
         // todo: consider if this spring graph action is best in the search tree or the diagram tree and enable it
 //        optionsPanel.add(diagramSelectionCheckBox);
@@ -193,7 +193,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 try {
                     ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
                     EntityData[] searchResults = entityCollection.getEntityByKeyWord(searchField.getText(), graphPanel.getIndexParameters());
-                    resultsArea.setText("Found " + searchResults.length + " entities\n");
+                    resultsArea.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("FOUND {0} ENTITIES\N"), new Object[] {searchResults.length}));
                     for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
                         // todo: add cache and update of the tree nodes
@@ -226,7 +226,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
             @Override
             public void run() {
                 HashSet<ArbilNode> resultsArray = new HashSet<ArbilNode>();
-                resultsArea.setText("Loading " + entityIdentifiers.length + " entities\n");
+                resultsArea.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("LOADING {0} ENTITIES\N"), new Object[] {entityIdentifiers.length}));
                 int loadedCount = 0;
                 int unloadableEntityCount = 0;
                 for (UniqueIdentifier entityId : entityIdentifiers) {
@@ -240,7 +240,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                     rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
                     resultsTree.requestResort();
                     loadedCount++;
-                    resultsArea.setText("Loaded " + loadedCount + " of " + entityIdentifiers.length + " entities\n");
+                    resultsArea.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("LOADED {0} OF {1} ENTITIES\N"), new Object[] {loadedCount, entityIdentifiers.length}));
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             progressBar.setValue(progressBar.getValue() + 1);

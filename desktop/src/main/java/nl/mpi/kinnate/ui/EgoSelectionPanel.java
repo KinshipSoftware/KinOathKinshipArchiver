@@ -67,9 +67,9 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         this.symbolGraphic = graphPanel.getSymbolGraphic();
         JScrollPane metadataNodeScrolPane;
         transientNodePanel = new JPanel(new BorderLayout());
-        transientNodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Transient Entities"));
+        transientNodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("TRANSIENT ENTITIES")));
 
-        JButton convertTransientButton = new JButton("Convert to Database Diagram");
+        JButton convertTransientButton = new JButton(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("CONVERT TO DATABASE DIAGRAM"));
         convertTransientButton.setActionCommand("convert");
         convertTransientButton.addActionListener(this);
         convertTransientButton.setEnabled(false);
@@ -98,8 +98,8 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         JPanel labelPanel2 = new JPanel(new BorderLayout());
         labelPanel3 = new JPanel(new BorderLayout());
 //        labelPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Ego"));
-        labelPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Attached"));
-        labelPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Search Results"));
+        labelPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("ATTACHED")));
+        labelPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("SEARCH RESULTS")));
 //        labelPanel1.add(egoTree, BorderLayout.CENTER);
         labelPanel2.add(requiredTree, BorderLayout.CENTER);
         labelPanel3.add(impliedTree, BorderLayout.CENTER);
