@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -21,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -44,6 +46,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class EgoSelectionPanel extends JPanel implements ActionListener {
 
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 //    private KinTree egoTree;
 //    private ContainerNode egoNode;
     private KinTree requiredTree;
@@ -67,9 +70,9 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         this.symbolGraphic = graphPanel.getSymbolGraphic();
         JScrollPane metadataNodeScrolPane;
         transientNodePanel = new JPanel(new BorderLayout());
-        transientNodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("TRANSIENT ENTITIES")));
+        transientNodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(widgets.getString("TRANSIENT ENTITIES")));
 
-        JButton convertTransientButton = new JButton(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("CONVERT TO DATABASE DIAGRAM"));
+        JButton convertTransientButton = new JButton(widgets.getString("CONVERT TO DATABASE DIAGRAM"));
         convertTransientButton.setActionCommand("convert");
         convertTransientButton.addActionListener(this);
         convertTransientButton.setEnabled(false);
@@ -98,8 +101,8 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         JPanel labelPanel2 = new JPanel(new BorderLayout());
         labelPanel3 = new JPanel(new BorderLayout());
 //        labelPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Ego"));
-        labelPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("ATTACHED")));
-        labelPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("SEARCH RESULTS")));
+        labelPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(widgets.getString("ATTACHED")));
+        labelPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(widgets.getString("SEARCH RESULTS")));
 //        labelPanel1.add(egoTree, BorderLayout.CENTER);
         labelPanel2.add(requiredTree, BorderLayout.CENTER);
         labelPanel3.add(impliedTree, BorderLayout.CENTER);

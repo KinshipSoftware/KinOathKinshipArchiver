@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -25,6 +26,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -54,6 +56,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
 
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
     private EntityCollection entityCollection;
     private KinTree resultsTree;
     private JTextArea resultsArea = new JTextArea();
@@ -76,7 +79,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
     }
 
     public EntitySearchPanel(EntityCollection entityCollection, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader) {
-        InitPanel(entityCollection, kinDiagramPanel, graphPanel, dialogHandler, dataNodeLoader, java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("SEARCH ENTITY NAMES"), null);
+        InitPanel(entityCollection, kinDiagramPanel, graphPanel, dialogHandler, dataNodeLoader, widgets.getString("SEARCH ENTITY NAMES"), null);
     }
 
     private void InitPanel(EntityCollection entityCollection, final KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, MessageDialogHandler dialogHandler, ArbilDataNodeLoader dataNodeLoader, String nodeSetTitle, UniqueIdentifier[] entityIdentifiers) {
@@ -102,7 +105,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
             }
         });
         progressBar = new JProgressBar();
-        searchButton = new JButton(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("SEARCH"));
+        searchButton = new JButton(widgets.getString("SEARCH"));
         searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EntitySearchPanel.this.performSearch();
@@ -117,11 +120,11 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
         if (entityIdentifiers == null) {
             optionsPanel.add(searchField);
         }
-        graphSelectionCheckBox = new JCheckBox(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("GRAPH SELECTION"), true);
+        graphSelectionCheckBox = new JCheckBox(widgets.getString("GRAPH SELECTION"), true);
         resultsTree.setUpdateGraphOnSelectionChange(true);
         // graph the selection when checked
         optionsPanel.add(graphSelectionCheckBox);
-        expandByKinTypeCheckBox = new JCheckBox(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("EXPAND SELECTION BY KIN TYPE STRING"), false);
+        expandByKinTypeCheckBox = new JCheckBox(widgets.getString("EXPAND SELECTION BY KIN TYPE STRING"), false);
         // expand the selection when checked
         optionsPanel.add(expandByKinTypeCheckBox);
         kinTypeStringTextArea = new JTextField(kinTypeString);
@@ -161,7 +164,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 kinDiagramPanel.drawGraph(true);
             }
         });
-        diagramSelectionCheckBox = new JCheckBox(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("REPLACE SEARCH WITH DIAGRAM SELECTION"), false);
+        diagramSelectionCheckBox = new JCheckBox(widgets.getString("REPLACE SEARCH WITH DIAGRAM SELECTION"), false);
         // todo: link this selection when checked
         // todo: consider if this spring graph action is best in the search tree or the diagram tree and enable it
 //        optionsPanel.add(diagramSelectionCheckBox);
@@ -193,7 +196,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                 try {
                     ArrayList<ArbilNode> resultsArray = new ArrayList<ArbilNode>();
                     EntityData[] searchResults = entityCollection.getEntityByKeyWord(searchField.getText(), graphPanel.getIndexParameters());
-                    resultsArea.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("FOUND {0} ENTITIES\N"), new Object[] {searchResults.length}));
+                    resultsArea.setText(java.text.MessageFormat.format(widgets.getString("FOUND {0} ENTITIES"), new Object[]{searchResults.length}) + "\n");
                     for (EntityData entityData : searchResults) {
 //            if (resultsArray.size() < 1000) {
                         // todo: add cache and update of the tree nodes
@@ -226,7 +229,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
             @Override
             public void run() {
                 HashSet<ArbilNode> resultsArray = new HashSet<ArbilNode>();
-                resultsArea.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("LOADING {0} ENTITIES\N"), new Object[] {entityIdentifiers.length}));
+                resultsArea.setText(java.text.MessageFormat.format(widgets.getString("LOADING {0} ENTITIES"), new Object[]{entityIdentifiers.length}) + "\n");
                 int loadedCount = 0;
                 int unloadableEntityCount = 0;
                 for (UniqueIdentifier entityId : entityIdentifiers) {
@@ -240,7 +243,7 @@ public class EntitySearchPanel extends JPanel implements KinTypeStringProvider {
                     rootNode.setChildNodes(resultsArray.toArray(new ArbilNode[]{}));
                     resultsTree.requestResort();
                     loadedCount++;
-                    resultsArea.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets").getString("LOADED {0} OF {1} ENTITIES\N"), new Object[] {loadedCount, entityIdentifiers.length}));
+                    resultsArea.setText(java.text.MessageFormat.format(widgets.getString("LOADED {0} OF {1} ENTITIES"), new Object[]{loadedCount, entityIdentifiers.length}) + "\n");
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             progressBar.setValue(progressBar.getValue() + 1);
