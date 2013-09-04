@@ -30,6 +30,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
+import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
@@ -63,6 +64,12 @@ public class ProjectManager {
                 defaultProject = loadProjectRecord(sessionStorage.getProjectDirectory());
             } catch (JAXBException exception) {
                 defaultProject = new ProjectRecord(sessionStorage.getProjectDirectory(), sessionStorage.getProjectDirectory().getName(), "nl-mpi-kinnate");
+                try {
+                    saveProjectRecord(defaultProject, true, true);
+                } catch (JAXBException saveRecordException) {
+                    dialogHandler.addMessageDialogToQueue("Save project record failed: " + saveRecordException, "KinOath Project Check");
+                    BugCatcherManager.getBugCatcher().logError(saveRecordException);
+                }
             }
         }
         return defaultProject;
