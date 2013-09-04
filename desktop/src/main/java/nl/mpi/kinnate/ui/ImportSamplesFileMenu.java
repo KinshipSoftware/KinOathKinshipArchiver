@@ -20,6 +20,7 @@ package nl.mpi.kinnate.ui;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import nl.mpi.arbil.util.MessageDialogHandler;
@@ -33,6 +34,7 @@ import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
  * @author Peter Withers
  */
 public class ImportSamplesFileMenu extends JMenu implements ActionListener {
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
 
     private AbstractDiagramManager diagramWindowManager;
     private MessageDialogHandler dialogHandler;
@@ -42,11 +44,11 @@ public class ImportSamplesFileMenu extends JMenu implements ActionListener {
         this.diagramWindowManager = diagramWindowManager;
         this.parentComponent = parentComponent;
         this.dialogHandler = dialogHandler;
-        addSampleToMenu("Gedcom Simple File (small sample of three individuals)", "/gedcomsamples/wiki-test-ged.ged");
-        addSampleToMenu("Gedcom Torture File (only for testing GEDOM compliance)", "/TestGED/TGC55C.ged");
+        addSampleToMenu(menus.getString("GEDCOM SIMPLE FILE (SMALL SAMPLE OF THREE INDIVIDUALS)"), "/gedcomsamples/wiki-test-ged.ged");
+        addSampleToMenu(menus.getString("GEDCOM TORTURE FILE (ONLY FOR TESTING GEDOM COMPLIANCE)"), "/TestGED/TGC55C.ged");
 //        addSampleToMenu("Descententes de Jose Antonio de Figueiredo", "/gedcomsamples/descententes_de_jose_antonio_de_figueiredo.ged");
 //        addSampleToMenu("Wadeye-Joe-Blythe-20110525", "/AllianceSamples/Wadeye-Joe-Blythe-20110525.csv");
-        addSampleToMenu("European Royalty (royal92.ged)", "/gedcomsamples/royal92.ged");
+        addSampleToMenu(menus.getString("EUROPEAN ROYALTY (ROYAL92.GED)"), "/gedcomsamples/royal92.ged");
 // todo:         addSampleToMenu("Bengkala Sample Data", "/csvexamples/bengkala.csv");
 //        addSampleToMenu("Doerte Sample", "/DoerteSamples/sample.csv");
 //        addSampleToMenu("AltNetspace Sample", "/AltNetspace/people.csv");

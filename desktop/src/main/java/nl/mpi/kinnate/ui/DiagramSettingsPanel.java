@@ -18,6 +18,7 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
+import java.util.ResourceBundle;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -37,13 +38,14 @@ import nl.mpi.kinnate.ui.relationsettings.RelationSettingsPanel;
  * @author Peter Withers <peter.withers@mpi.nl>
  */
 public class DiagramSettingsPanel extends JPanel {
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     public DiagramSettingsPanel(KinDiagramPanel kinDiagramPanel, EntityCollection entityCollection, SessionStorage sessionStorage, GraphPanel graphPanel, ArbilWindowManager dialogHandler, TableCellDragHandler tableCellDragHandler) {
         super(new BorderLayout());
-        this.setName("Diagram Settings");
+        this.setName(widgets.getString("DiagramSettingsPanel_DIAGRAM SETTINGS"));
         JTabbedPane jTabbedPane = new JTabbedPane();
         final ProfileManager profileManager = new ProfileManager(sessionStorage, dialogHandler);
-        final CmdiProfileSelectionPanel cmdiProfileSelectionPanel = new CmdiProfileSelectionPanel("Entity Profiles", profileManager, graphPanel);
+        final CmdiProfileSelectionPanel cmdiProfileSelectionPanel = new CmdiProfileSelectionPanel(widgets.getString("DiagramSettingsPanel_ENTITY PROFILES"), profileManager, graphPanel);
         profileManager.loadProfiles(false, cmdiProfileSelectionPanel, graphPanel);
 
 //                    if (panelSetting == null) {
@@ -52,18 +54,18 @@ public class DiagramSettingsPanel extends JPanel {
 //        panelSetting.setHidePane(kinTypeHidePane, "Diagram Settings");
         graphPanel.getIndexParameters().symbolFieldsFields.setParent(graphPanel.getIndexParameters());
         graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
-        jTabbedPane.addTab("Kin Type Definitions", new KinTypeDefinitions("Kin Type Definitions", kinDiagramPanel, graphPanel.dataStoreSvg));
-        jTabbedPane.addTab("Relation Type Definitions", new RelationSettingsPanel("Relation Type Definitions", kinDiagramPanel, graphPanel.dataStoreSvg, dialogHandler));
+        jTabbedPane.addTab(widgets.getString("DiagramSettingsPanel_KIN TYPE DEFINITIONS"), new KinTypeDefinitions(widgets.getString("DiagramSettingsPanel_KIN TYPE DEFINITIONS"), kinDiagramPanel, graphPanel.dataStoreSvg));
+        jTabbedPane.addTab(widgets.getString("DiagramSettingsPanel_RELATION TYPE DEFINITIONS"), new RelationSettingsPanel(widgets.getString("DiagramSettingsPanel_RELATION TYPE DEFINITIONS"), kinDiagramPanel, graphPanel.dataStoreSvg, dialogHandler));
         if (graphPanel.dataStoreSvg.diagramMode != DataStoreSvg.DiagramMode.FreeForm) {
             // hide some of the settings panels from freeform diagrams
             final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, kinDiagramPanel, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));
             final JScrollPane labelFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, kinDiagramPanel, graphPanel.getIndexParameters().labelFields, tableCellDragHandler));
             // todo: Ticket #1115 add overlay fields as paramters
-            symbolFieldsPanel.setName("Symbol Fields");
-            labelFieldsPanel.setName("Label Fields");
-            jTabbedPane.addTab("Symbol Fields", symbolFieldsPanel);
-            jTabbedPane.addTab("Label Fields", labelFieldsPanel);
-            jTabbedPane.addTab("Entity Profiles", cmdiProfileSelectionPanel);
+            symbolFieldsPanel.setName(widgets.getString("DiagramSettingsPanel_SYMBOL FIELDS"));
+            labelFieldsPanel.setName(widgets.getString("DiagramSettingsPanel_LABEL FIELDS"));
+            jTabbedPane.addTab(widgets.getString("DiagramSettingsPanel_SYMBOL FIELDS"), symbolFieldsPanel);
+            jTabbedPane.addTab(widgets.getString("DiagramSettingsPanel_LABEL FIELDS"), labelFieldsPanel);
+            jTabbedPane.addTab(widgets.getString("DiagramSettingsPanel_ENTITY PROFILES"), cmdiProfileSelectionPanel);
         }
 //        panelSetting.setMenuEnabled(true);
         this.add(jTabbedPane, BorderLayout.CENTER);
