@@ -1,32 +1,34 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.kindocument;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.PrintWriter;
 import java.net.URI;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import nl.mpi.arbil.data.ArbilComponentBuilder;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -40,7 +42,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -86,6 +87,7 @@ public class EntityDocument {
             System.out.println("Creating the component file");
             long startTime = System.currentTimeMillis();
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
+            relativiseSchemaLocation(addedNodeUri);
             long queryMils = System.currentTimeMillis() - startTime;
             String queryTimeString = "ArbilComponentBuilder().createComponentFile took: " + queryMils + "ms for " + addedNodeUri.toString();
             System.out.println(queryTimeString);
@@ -131,6 +133,7 @@ public class EntityDocument {
             // construct the metadata file
             URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false);
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
+            relativiseSchemaLocation(addedNodeUri);
         } catch (KinXsdException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
             throw new ImportException("Error: " + exception.getMessage());
@@ -144,6 +147,26 @@ public class EntityDocument {
         this.projectRecord = projectRecord;
         entityFile = new File(entityUri);
         setDomNodesFromExistingFile();
+    }
+
+    private void relativiseSchemaLocation(URI entityUri) {
+        File originalFile = new File(entityUri);
+        File outputFile = new File(originalFile.getParent(), originalFile.getName() + ".tmp");
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(originalFile));
+            PrintWriter writer = new PrintWriter(new FileWriter(outputFile));
+            String line;
+            String regexString = "xsi:schemaLocation=\"http://www.clarin.eu/cmd/[\\s]+?[\\S]+?/KmdiProfiles/";
+            while ((line = reader.readLine()) != null) {
+                writer.println(line.replaceFirst(regexString, "xsi:schemaLocation=\"http://www.clarin.eu/cmd/ ../../KmdiProfiles/"));
+            }
+            reader.close();
+            writer.close();
+            originalFile.delete();
+            outputFile.renameTo(originalFile);
+        } catch (IOException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+        }
     }
 
     private File assignIdentiferAndFile() {
@@ -201,57 +224,57 @@ public class EntityDocument {
         return entityData.getUniqueIdentifier();
     }
 
-    public URI createBlankDocument(boolean overwriteExisting, String profileId) throws ImportException {
-        if (metadataDom != null) {
-            throw new ImportException("The document already exists");
-        }
-        URI entityUri;
-        if (!overwriteExisting && entityFile.exists()) {
-            throw new ImportException("Skipping existing entity file");
-        } else { // start skip overwrite
-            try {
-                entityUri = entityFile.toURI();
-                URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false);
-                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                documentBuilderFactory.setNamespaceAware(true);
-                String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                        + "<Kinnate \n"
-                        + "xmlns:kin=\"http://mpi.nl/tla/kin\" \n"
-                        + "xmlns:dcr=\"http://www.isocat.org/ns/dcr\" \n"
-                        + "xmlns:ann=\"http://www.clarin.eu\" \n"
-                        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"
-                        + "xmlns:cmd=\"http://www.clarin.eu/cmd/\" \n"
-                        + "xmlns=\"http://www.clarin.eu/cmd/\" \n"
-                        + "KmdiVersion=\"1.1\" \n"
-                        + "xsi:schemaLocation=\"http://mpi.nl/tla/kin "
-                        + xsdUri.toString()
-                        + "\n \" />";
-                System.out.println("templateXml: " + templateXml);
-                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-                metadataDom = documentBuilder.parse(new InputSource(new StringReader(templateXml)));
-                metadataNode = metadataDom.createElementNS("http://www.clarin.eu/cmd/", "CustomData");
-                currentDomNode = metadataNode;
-                kinnateNode = metadataDom.getDocumentElement();
-            } catch (DOMException exception) {
-                BugCatcherManager.getBugCatcher().logError(exception);
-                throw new ImportException("Error: " + exception.getMessage());
-            } catch (ParserConfigurationException exception) {
-                BugCatcherManager.getBugCatcher().logError(exception);
-                throw new ImportException("Error: " + exception.getMessage());
-            } catch (IOException exception) {
-                BugCatcherManager.getBugCatcher().logError(exception);
-                throw new ImportException("Error: " + exception.getMessage());
-            } catch (SAXException exception) {
-                BugCatcherManager.getBugCatcher().logError(exception);
-                throw new ImportException("Error: " + exception.getMessage());
-            } catch (KinXsdException exception) {
-                BugCatcherManager.getBugCatcher().logError(exception);
-                throw new ImportException("Error: " + exception.getMessage());
-            }
-            return entityUri;
-        }
-    }
-
+//    public URI createBlankDocument(boolean overwriteExisting, String profileId) throws ImportException {
+//        if (metadataDom != null) {
+//            throw new ImportException("The document already exists");
+//        }
+//        URI entityUri;
+//        if (!overwriteExisting && entityFile.exists()) {
+//            throw new ImportException("Skipping existing entity file");
+//        } else { // start skip overwrite
+//            try {
+//                entityUri = entityFile.toURI();
+//                URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false);
+//                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+//                documentBuilderFactory.setNamespaceAware(true);
+//                final String relativisedXsdLocation = projectRecord.getProjectDirectory().toURI().relativize(xsdUri).toString();
+//                String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+//                        + "<Kinnate \n"
+//                        + "xmlns:kin=\"http://mpi.nl/tla/kin\" \n"
+//                        + "xmlns:dcr=\"http://www.isocat.org/ns/dcr\" \n"
+//                        + "xmlns:ann=\"http://www.clarin.eu\" \n"
+//                        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"
+//                        + "xmlns:cmd=\"http://www.clarin.eu/cmd/\" \n"
+//                        + "xmlns=\"http://www.clarin.eu/cmd/\" \n"
+//                        + "KmdiVersion=\"1.1\" \n"
+//                        + "xsi:schemaLocation=\"http://mpi.nl/tla/kin "
+//                        + relativisedXsdLocation
+//                        + "\n \" />";
+//                System.out.println("templateXml: " + templateXml);
+//                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+//                metadataDom = documentBuilder.parse(new InputSource(new StringReader(templateXml)));
+//                metadataNode = metadataDom.createElementNS("http://www.clarin.eu/cmd/", "CustomData");
+//                currentDomNode = metadataNode;
+//                kinnateNode = metadataDom.getDocumentElement();
+//            } catch (DOMException exception) {
+//                BugCatcherManager.getBugCatcher().logError(exception);
+//                throw new ImportException("Error: " + exception.getMessage());
+//            } catch (ParserConfigurationException exception) {
+//                BugCatcherManager.getBugCatcher().logError(exception);
+//                throw new ImportException("Error: " + exception.getMessage());
+//            } catch (IOException exception) {
+//                BugCatcherManager.getBugCatcher().logError(exception);
+//                throw new ImportException("Error: " + exception.getMessage());
+//            } catch (SAXException exception) {
+//                BugCatcherManager.getBugCatcher().logError(exception);
+//                throw new ImportException("Error: " + exception.getMessage());
+//            } catch (KinXsdException exception) {
+//                BugCatcherManager.getBugCatcher().logError(exception);
+//                throw new ImportException("Error: " + exception.getMessage());
+//            }
+//            return entityUri;
+//        }
+//    }
     public void removeValue(String nodeName, String valueString) throws ImportException {
         NodeList nodeList = metadataNode.getElementsByTagName(nodeName);
         for (int nodeCounter = 0; nodeCounter < nodeList.getLength(); nodeCounter++) {
