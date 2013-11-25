@@ -63,10 +63,10 @@ public class LineRecord {
         this.lineIdSring = lineIdString;
         this.pointsList = pointsList;
     }
-    private String lineIdSring;
-    private ArrayList<Point> pointsList;
-    private ArrayList<IntersectionRecord> intersectionList = new ArrayList<IntersectionRecord>();
-    private String groupName;
+    private final String lineIdSring;
+    private final ArrayList<Point> pointsList;
+    private final ArrayList<IntersectionRecord> intersectionList = new ArrayList<IntersectionRecord>();
+    private final String groupName;
 
 //        private Point getIntersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
 //            double denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
