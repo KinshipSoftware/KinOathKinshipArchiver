@@ -255,7 +255,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.4.38271-testing</version>
+            <version>1.4.38281-testing</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
