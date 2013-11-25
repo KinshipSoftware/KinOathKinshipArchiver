@@ -8,7 +8,7 @@
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
     <!--<version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>-->
-    <version>${application.majorVersion}.${application.minorVersion}.38281-${application.branch}</version>
+    <version>${application.majorVersion}.${application.minorVersion}.39288-${application.branch}</version>
     <name>KinOath ${application.majorVersion}.${application.minorVersion}</name>
     <parent>
         <groupId>nl.mpi</groupId>
@@ -260,7 +260,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-localisation</artifactId>
-            <version>1.4.38271-testing</version>
+            <version>1.4.39288-testing</version>
         </dependency>
     </dependencies>
     <repositories>
