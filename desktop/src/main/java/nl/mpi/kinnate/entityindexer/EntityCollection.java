@@ -57,6 +57,7 @@ import org.basex.core.cmd.CreateDB;
 import org.basex.core.cmd.DropDB;
 import org.basex.core.cmd.List;
 import org.basex.core.cmd.Open;
+import org.basex.core.cmd.Optimize;
 import org.basex.core.cmd.Set;
 import org.basex.core.cmd.XQuery;
 import org.basex.query.QueryException;
@@ -338,7 +339,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
                         }
                     });
                 }
-//                new Optimize().execute(context);
+                new Optimize().execute(context);
                 if (progressBar != null) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
@@ -364,7 +365,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             synchronized (databaseLock) {
                 new Open(databaseName).execute(context);
                 addFileToDB(updatedFile, updatedFileIdentifier);
-//                new Optimize().execute(context);
+                new Optimize().execute(context);
                 new Close().execute(context);
             }
             updateProjectRecord(true, true);

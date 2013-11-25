@@ -181,6 +181,7 @@ public class KinTermPanel extends JPanel {
         optionsPanel.add(getDeleteKinTermGroupButton());
         final JButton deleteSeletedButton = new JButton(widgets.getString("DELETE SELECTED"));
         optionsPanel.add(deleteSeletedButton);
+        deleteSeletedButton.setEnabled(false);
         outerPanel.add(optionsPanel);
         kinTermTableModel = new KinTermTableModel(savePanel, kinTerms, deleteSeletedButton);
         final JTable kinTermTable = new JTable(kinTermTableModel);
@@ -430,7 +431,6 @@ public class KinTermPanel extends JPanel {
                         repaint();
                     }
                 });
-
 
                 colourChooser.setPreviewPanel(new JPanel());
                 colourChooser.getSelectionModel().addChangeListener(new ChangeListener() {
