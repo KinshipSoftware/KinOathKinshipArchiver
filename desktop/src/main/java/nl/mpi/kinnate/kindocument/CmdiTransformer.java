@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.kindocument;
 
@@ -32,12 +33,13 @@ import javax.xml.transform.stream.StreamSource;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.kinnate.KinOathVersion;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
- * Document : CmdiTransformer
- * Created on : Nov 17, 2011, 3:23:27 PM
- * Author : Peter Withers
+ * Document : CmdiTransformer Created on : Nov 17, 2011, 3:23:27 PM
+ *
+ * @author Peter Withers
  */
 public class CmdiTransformer {
 
@@ -51,9 +53,9 @@ public class CmdiTransformer {
         this.sessionStorage = sessionStorage;
     }
 
-    public URI getXsd(String profileId, boolean forceUpdate) throws KinXsdException {
+    public URI getXsd(String profileId, ProjectRecord projectRecord, boolean forceUpdate) throws KinXsdException {
         String profileFileName = profileId.replace(":", "_");
-        final File profilesDirectory = new File(sessionStorage.getProjectDirectory(), "KmdiProfiles");
+        final File profilesDirectory = new File(projectRecord.getProjectDirectory(), "KmdiProfiles");
         if (!profilesDirectory.exists()) {
             profilesDirectory.mkdir();
         }
@@ -72,7 +74,6 @@ public class CmdiTransformer {
 //        System.out.println(KinSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema-header.xsl", 1));
 //        System.out.println(KinSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/comp2schema.xsl", 1));
 //        System.out.println(KinSessionStorage.getSingleInstance().updateCache("http://www.clarin.eu/cmd/xslt/comp2schema-v2/cleanup-xsd.xsl", 1));
-
         // todo: it might be nicer to put these files into a specific directory or into a temp directory
         File xlsFile = sessionStorage.updateCache(component2SchemaXsl.toExternalForm(), 1, false);
         File xslHeader = sessionStorage.updateCache(component2SchemaXslHeader.toExternalForm(), 1, false);
@@ -112,13 +113,13 @@ public class CmdiTransformer {
         transformer.transform(new StreamSource(cmdiProfileXmlUrl), new StreamResult(new java.io.FileOutputStream(outputFile)));
     }
 
-    static public void main(String[] args) {
-        try {
-            String profileId = "clarin.eu:cr1:p_1320657629627";
-            final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
-            new CmdiTransformer(kinSessionStorage).getXsd(profileId, true);
-        } catch (KinXsdException exception) {
-            System.out.println("exception: " + exception.getMessage());
-        }
-    }
+//    static public void main(String[] args) {
+//        try {
+//            String profileId = "clarin.eu:cr1:p_1320657629627";
+//            final KinSessionStorage kinSessionStorage = new KinSessionStorage(new ApplicationVersionManager(new KinOathVersion()));
+//            new CmdiTransformer(kinSessionStorage).getXsd(profileId, true);
+//        } catch (KinXsdException exception) {
+//            System.out.println("exception: " + exception.getMessage());
+//        }
+//    }
 }

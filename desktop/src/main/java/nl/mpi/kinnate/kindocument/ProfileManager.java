@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.kindocument;
 
@@ -23,6 +24,7 @@ import nl.mpi.arbil.clarin.profiles.CmdiProfileReader.ProfileSelection;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.ui.entityprofiles.CmdiProfileSelectionPanel;
 import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
@@ -34,15 +36,17 @@ import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
  */
 public class ProfileManager {
 
-    private SessionStorage sessionStorage;
-    private MessageDialogHandler dialogHandler;
+    final private SessionStorage sessionStorage;
+    final private ProjectRecord projectRecord;
+    final private MessageDialogHandler dialogHandler;
     private GraphPanel graphPanel;
     private CmdiProfileSelectionPanel cmdiProfileSelectionPanel;
-    private ArrayList<nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile> cmdiProfileArray = new ArrayList<nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile>();
+    final private ArrayList<nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile> cmdiProfileArray = new ArrayList<nl.mpi.arbil.clarin.profiles.CmdiProfileReader.CmdiProfile>();
 
-    public ProfileManager(SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
+    public ProfileManager(SessionStorage sessionStorage, ProjectRecord projectRecord, MessageDialogHandler dialogHandler) {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
+        this.projectRecord = projectRecord;
     }
 
     public void loadProfiles(final boolean forceUpdate, final CmdiProfileSelectionPanel cmdiProfileSelectionPanel, final GraphPanel graphPanel) {
@@ -107,7 +111,7 @@ public class ProfileManager {
     private void preloadProfile(String profileId, boolean forceUpdate) throws KinXsdException {
 //        File xsdFile = new File(sessionStorage.getCacheDirectory(), "individual" + "-" + profileId + ".xsd");
 //        if (!xsdFile.exists() || forceUpdate) {
-        new CmdiTransformer(sessionStorage).getXsd(profileId, forceUpdate);
+        new CmdiTransformer(sessionStorage).getXsd(profileId, projectRecord, forceUpdate);
 //        }
     }
 
