@@ -81,7 +81,7 @@ public class EntityDocument {
             // construct the metadata file
             System.out.println("constructing the xsl file");
             long start1Time = System.currentTimeMillis();
-            URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false);
+            URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, projectRecord, false);
             long query1Mils = System.currentTimeMillis() - start1Time;
             System.out.println("Constructing the xsl file took: " + query1Mils + "ms");
             System.out.println("Creating the component file");
@@ -131,7 +131,7 @@ public class EntityDocument {
         subDirectory.mkdir();
         try {
             // construct the metadata file
-            URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, false);
+            URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileId, projectRecord, false);
             URI addedNodeUri = new ArbilComponentBuilder().createComponentFile(entityFile.toURI(), xsdUri, false);
             relativiseSchemaLocation(addedNodeUri);
         } catch (KinXsdException exception) {
