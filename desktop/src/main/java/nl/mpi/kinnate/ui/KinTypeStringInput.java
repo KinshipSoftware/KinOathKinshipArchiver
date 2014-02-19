@@ -86,6 +86,7 @@ public class KinTypeStringInput extends JTextPane implements KinTypeStringProvid
     private String getDefaultText() {
         StringBuilder defaultString = new StringBuilder();
         if (dataStore.diagramMode == DataStoreSvg.DiagramMode.FreeForm) {
+            // todo: add this text to the resource bundle
             defaultString.append("# The kin type strings entered in this text area will determine the diagram drawn below. For more information see the sample diagram \"Freeform Diagram Syntax\".\n");
             defaultString.append("# <KinType>:<id>;<label>;<label...>;<DOB>-<DOD>:<KinType...>");
 //        defaultString.append("# The tool tip over this text will give more information and details of any syntax errors.\n");

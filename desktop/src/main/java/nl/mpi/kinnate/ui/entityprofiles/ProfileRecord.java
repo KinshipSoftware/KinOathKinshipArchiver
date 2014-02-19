@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui.entityprofiles;
 
@@ -26,8 +27,8 @@ import javax.xml.bind.annotation.XmlAttribute;
  * @author Peter Withers
  */
 public class ProfileRecord {
-    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
     @XmlAttribute(name = "ProfileName", namespace = "http://mpi.nl/tla/kin")
     public String profileName;
     @XmlAttribute(name = "ProfileId", namespace = "http://mpi.nl/tla/kin")

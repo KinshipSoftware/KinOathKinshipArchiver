@@ -1,25 +1,28 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
 import java.awt.Rectangle;
 import java.io.File;
+import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
+import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersion;
@@ -41,6 +44,8 @@ import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
  * Created on : Aug 16, 2010, 5:20:20 PM
  */
 public class MainFrame extends javax.swing.JFrame {
+
+    private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
 
     /**
      * Creates new form MainFrame
@@ -75,6 +80,16 @@ public class MainFrame extends javax.swing.JFrame {
                 final ArbilWindowManager windowManager = injector.getWindowManager();
                 final SessionStorage sessionStorage = injector.getSessionStorage();
                 final ProjectManager projectManager = new ProjectManager(sessionStorage, windowManager);
+
+                final String availableLanguages = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/AvailableLanguages").getString("LANGUAGE CODES");
+                final LocalisationSelector localisationSelector = new LocalisationSelector(sessionStorage, availableLanguages.split(","));
+                if (!localisationSelector.hasSavedLocal()) {
+                    final String please_select_your_preferred_language = menus.getString("PLEASE SELECT YOUR PREFERRED LANGUAGE");
+                    final String language_Selection = menus.getString("LANGUAGE SELECTION");
+                    final String system_Default = menus.getString("SYSTEM DEFAULT");
+                    localisationSelector.askUser(null, ArbilIcons.getSingleInstance().linorgIcon, please_select_your_preferred_language, language_Selection, system_Default);
+                }
+                localisationSelector.setLanguageFromSaved();
 
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
