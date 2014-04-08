@@ -28,6 +28,7 @@ import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.arbilcommons.ui.LocalisationSelector;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.KinnateArbilInjector;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
