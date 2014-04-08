@@ -224,12 +224,8 @@
             <groupId>nl.mpi</groupId>
             <artifactId>arbil</artifactId>
             <!--when changing the Arbil version make sure that the JNLP dependencies are also updated--> 
-            <version>2.5.37662-stable</version>
+            <version>2.5.40297-testing</version>
             <exclusions>
-                <exclusion>
-                    <artifactId>plugins-core</artifactId>
-                    <groupId>nl.mpi</groupId>
-                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
