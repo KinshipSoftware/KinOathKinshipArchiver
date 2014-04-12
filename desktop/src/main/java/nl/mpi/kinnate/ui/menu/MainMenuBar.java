@@ -27,6 +27,7 @@ import javax.swing.JMenuBar;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.arbil.util.ArbilLogConfigurer;
 import nl.mpi.kinnate.plugins.KinOathPluginManager;
 import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
@@ -75,6 +76,6 @@ public class MainMenuBar extends JMenuBar {
         }
         this.add(new PluginMenu(new PluginService(pluginUlrs.toArray(new URL[0])), new KinOathPluginManager(abstractDiagramManager, dialogHandler, parentComponent), false));
         this.add(new WindowMenu(abstractDiagramManager, parentComponent));
-        this.add(new HelpMenu(abstractDiagramManager, dialogHandler, sessionStorage, versionManager, parentComponent));
+        this.add(new HelpMenu(abstractDiagramManager, dialogHandler, sessionStorage, versionManager, parentComponent, new ArbilLogConfigurer(versionManager.getApplicationVersion(), "kinoath-log-")));
     }
 }
