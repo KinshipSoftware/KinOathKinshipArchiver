@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate;
 
@@ -24,9 +25,7 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
-import nl.mpi.arbil.util.ArbilBugCatcher;
 import nl.mpi.arbil.util.ArbilMimeHashQueue;
-import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
@@ -63,8 +62,6 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
         sessionStorage = new KinSessionStorage(versionManager);
         injectSessionStorage(sessionStorage);
 
-        BugCatcherManager.setBugCatcher(new ArbilBugCatcher(sessionStorage, versionManager));
-
         windowManager = new ArbilWindowManager();
         windowManager.setSessionStorage(sessionStorage);
         windowManager.setVersionManager(versionManager);
@@ -75,10 +72,6 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
 
         sessionStorage.setWindowManager(windowManager);
         injectWindowManager(windowManager);
-
-        mimeHashQueue = new ArbilMimeHashQueue(windowManager, sessionStorage);
-        mimeHashQueue.setMessageDialogHandler(messageDialogHandler);
-        injectMimeHashQueue(mimeHashQueue);
 
         treeHelper = new ArbilTreeHelper(new ArbilSessionStorage(), messageDialogHandler); // here we need to use the arbil tree locations for the archive linker
         windowManager.setTreeHelper(treeHelper);
