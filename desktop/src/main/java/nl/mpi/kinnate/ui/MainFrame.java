@@ -127,7 +127,7 @@ public class MainFrame extends javax.swing.JFrame {
                             new File(globalDatabaseDirectory, ".basexhome").createNewFile();
                             Properties props = System.getProperties();
                             props.setProperty("org.basex.path", globalDatabaseDirectory.getAbsolutePath());
-                            EntityCollection.setGlobalDatabasePath(databaseDirectory);
+                            EntityCollection.testGlobalDatabasePath(databaseDirectory);
                             databaseDirectoryOk = true;
                         } catch (EntityServiceException entityServiceException) {
                             final String kinOath_Database_Directory = "KinOath Database Directory";

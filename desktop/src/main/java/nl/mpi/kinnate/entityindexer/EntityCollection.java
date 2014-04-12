@@ -90,7 +90,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
         public int resultCount = 0;
     }
 
-    static public void setGlobalDatabasePath(File databaseDirectory) throws EntityServiceException {
+    static public void testGlobalDatabasePath(File databaseDirectory) throws EntityServiceException {
         try {
             // the db path is now set with a java system property on start up, this location dbpath "Points to the directory in which ALL databases are located."
             logger.info(new Get("dbpath").execute(context));
