@@ -38,6 +38,7 @@ import nl.mpi.arbil.data.ArbilTreeHelper;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.arbil.util.ArbilLogConfigurer;
 import nl.mpi.kinnate.KinTermSavePanel;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
@@ -67,14 +68,16 @@ public abstract class AbstractDiagramManager {
     final private ArbilDataNodeLoader dataNodeLoader;
     final private ArbilTreeHelper treeHelper;
     final private ProjectManager projectManager;
+    final private ArbilLogConfigurer arbilLogConfigurer;
 
-    public AbstractDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager) {
+    public AbstractDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, ArbilLogConfigurer arbilLogConfigurer) {
         this.versionManager = versionManager;
         this.dialogHandler = dialogHandler;
         this.sessionStorage = sessionStorage;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
         this.projectManager = projectManager;
+        this.arbilLogConfigurer = arbilLogConfigurer;
     }
 
     abstract public void createApplicationWindow();
@@ -87,7 +90,7 @@ public abstract class AbstractDiagramManager {
             diagramFame = new JFrame();
         }
         setWindowTitle(diagramFame, diagramTitle);
-        diagramFame.setJMenuBar(new MainMenuBar(this, sessionStorage, dialogHandler, versionManager, diagramFame, projectManager));
+        diagramFame.setJMenuBar(new MainMenuBar(this, sessionStorage, dialogHandler, versionManager, diagramFame, projectManager, arbilLogConfigurer));
         if (diagramComponent != null) {
             diagramFame.setContentPane((Container) diagramComponent);
 //        } else {

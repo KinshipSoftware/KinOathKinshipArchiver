@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.entityindexer;
 
@@ -55,6 +56,7 @@ import org.basex.core.cmd.Add;
 import org.basex.core.cmd.Close;
 import org.basex.core.cmd.CreateDB;
 import org.basex.core.cmd.DropDB;
+import org.basex.core.cmd.Get;
 import org.basex.core.cmd.List;
 import org.basex.core.cmd.Open;
 import org.basex.core.cmd.Set;
@@ -63,6 +65,8 @@ import org.basex.query.QueryException;
 import org.basex.query.QueryProcessor;
 import org.basex.query.iter.Iter;
 import org.basex.query.value.item.Item;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created on : Feb 15, 2011, 5:37:06 PM
@@ -71,6 +75,7 @@ import org.basex.query.value.item.Item;
  */
 public class EntityCollection extends DatabaseUpdateHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(EntityCollection.class);
     final private String databaseName; // = "nl-mpi-kinnate";
     final private ProjectRecord projectRecord;
     final private ProjectManager projectManager;
@@ -87,12 +92,8 @@ public class EntityCollection extends DatabaseUpdateHandler {
 
     static public void setGlobalDatabasePath(File databaseDirectory) throws EntityServiceException {
         try {
-            final File globalDatabaseDirectory = new File(databaseDirectory, "BaseXData");
-            if (!globalDatabaseDirectory.exists()) {
-                globalDatabaseDirectory.mkdir();
-            }
-            // set db path cannot be changed when any database is open, but more importantly "Points to the directory in which ALL databases are located."
-            new Set("dbpath", globalDatabaseDirectory).execute(context);
+            // the db path is now set with a java system property on start up, this location dbpath "Points to the directory in which ALL databases are located."
+            logger.info(new Get("dbpath").execute(context));
             new CreateDB("test-db").execute(context);
             new Close().execute(context);
         } catch (BaseXException exception2) {

@@ -20,13 +20,17 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import nl.mpi.arbil.ArbilIcons;
+import nl.mpi.arbil.ArbilMain;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
+import nl.mpi.arbil.util.ArbilLogConfigurer;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbilcommons.ui.LocalisationSelector;
 import nl.mpi.kinnate.KinOathVersion;
@@ -38,6 +42,8 @@ import nl.mpi.kinnate.plugins.export.MigrationWizard;
 import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * Document : MainFrame
@@ -47,6 +53,7 @@ import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
 public class MainFrame extends javax.swing.JFrame {
 
     private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
+    private final static Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
     /**
      * Creates new form MainFrame
@@ -72,9 +79,16 @@ public class MainFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
+        final ArbilLogConfigurer logConfigurer = new ArbilLogConfigurer(versionManager.getApplicationVersion(), "kinoath-log-");
+        // See if a logging configuration has been specified manually
+        if (System.getProperty("java.util.logging.config.file") == null) {
+            // No logging configured, use built in initial logging properties
+            logConfigurer.configureLoggingFromResource(ArbilMain.class, "/logging-initial.properties");
+        }
+        logger.info("Starting KinOath");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                final ApplicationVersionManager versionManager = new ApplicationVersionManager(new KinOathVersion());
                 final KinnateArbilInjector injector = new KinnateArbilInjector();
                 injector.injectHandlers(versionManager);
                 final AbstractDiagramManager abstractDiagramManager;
@@ -94,7 +108,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
-                abstractDiagramManager = new WindowedDiagramManager(versionManager, windowManager, sessionStorage, injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager);
+                abstractDiagramManager = new WindowedDiagramManager(versionManager, windowManager, sessionStorage, injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager, logConfigurer);
                 try {
                     boolean databaseDirectoryOk = false;
                     while (!databaseDirectoryOk) {
@@ -106,6 +120,13 @@ public class MainFrame extends javax.swing.JFrame {
                             } else {
                                 databaseDirectory = new File(storedDatabasePath);
                             }
+                            final File globalDatabaseDirectory = new File(databaseDirectory, "BaseXData");
+                            if (!globalDatabaseDirectory.exists()) {
+                                globalDatabaseDirectory.mkdir();
+                            }
+                            new File(globalDatabaseDirectory, ".basexhome").createNewFile();
+                            Properties props = System.getProperties();
+                            props.setProperty("org.basex.path", globalDatabaseDirectory.getAbsolutePath());
                             EntityCollection.setGlobalDatabasePath(databaseDirectory);
                             databaseDirectoryOk = true;
                         } catch (EntityServiceException entityServiceException) {
@@ -118,6 +139,8 @@ public class MainFrame extends javax.swing.JFrame {
                                 System.exit(-1);
                             }
                             sessionStorage.saveString("KinOathDatabaseDirectory", databaseDirectorySelection[0].toString());
+                        } catch (IOException exception2) {
+                            logger.warn("Could not create the basexhome file: " + exception2.getMessage());
                         }
                     }
                     final KinDiagramPanel initialDiagram = abstractDiagramManager.newDiagram(new Rectangle(0, 0, 640, 480), null);
