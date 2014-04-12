@@ -143,16 +143,26 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <finalName>${output.jarname}</finalName>
                     <outputDirectory>${output.directory}</outputDirectory>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>nl.mpi.kinnate.ui.MainFrame</mainClass>
-                            <classpathPrefix>lib/</classpathPrefix>                            
+                            <mainClass>${application.mainClass}</mainClass>
+                            <classpathPrefix>lib/</classpathPrefix>                           
                         </manifest>
+                        <manifestEntries>
+                            <Permissions>all-permissions</Permissions>
+                        </manifestEntries>
                     </archive>
+                    <excludes>
+                        <!--	                        <exclude>nl/mpi/arbil/resources/**/readme.txt</exclude>
+                        <exclude>nl/mpi/arbil/resources/icons/svg-files/**</exclude>
+                        <exclude>nl/mpi/arbil/resources/icons/*.ico</exclude>
+                        <exclude>nl/mpi/arbil/resources/icons/*.icns</exclude>-->
+                    </excludes>
                 </configuration>
             </plugin>
             <!-- this mac installer plugin kept making a un deletable file breaking subsequent builds
