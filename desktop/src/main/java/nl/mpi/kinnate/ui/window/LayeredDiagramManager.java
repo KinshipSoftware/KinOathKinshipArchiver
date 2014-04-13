@@ -27,6 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.ui.ArbilTableController;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
@@ -45,8 +46,8 @@ public class LayeredDiagramManager extends AbstractDiagramManager {
     private ArrayList<Component> diagramArray = new ArrayList<Component>();
     private JFrame mainFrame;
 
-    public LayeredDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, ArbilLogConfigurer arbilLogConfigurer) {
-        super(versionManager, dialogHandler, sessionStorage, dataNodeLoader, treeHelper, projectManager, arbilLogConfigurer);
+    public LayeredDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, ArbilLogConfigurer arbilLogConfigurer, ArbilTableController arbilTableController, ArbilWindowManager windowManager) {
+        super(versionManager, dialogHandler, sessionStorage, dataNodeLoader, treeHelper, projectManager, arbilLogConfigurer, arbilTableController, windowManager);
         mainPanel = new javax.swing.JPanel(new BorderLayout());
     }
 

@@ -35,6 +35,7 @@ import javax.swing.filechooser.FileFilter;
 import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.ui.ArbilTableController;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
@@ -69,8 +70,10 @@ public abstract class AbstractDiagramManager {
     final private ArbilTreeHelper treeHelper;
     final private ProjectManager projectManager;
     final private ArbilLogConfigurer arbilLogConfigurer;
+    private final ArbilTableController arbilTableController;
+    private final ArbilWindowManager windowManager;
 
-    public AbstractDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, ArbilLogConfigurer arbilLogConfigurer) {
+    public AbstractDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, ArbilLogConfigurer arbilLogConfigurer, ArbilTableController arbilTableController, ArbilWindowManager windowManager) {
         this.versionManager = versionManager;
         this.dialogHandler = dialogHandler;
         this.sessionStorage = sessionStorage;
@@ -78,6 +81,8 @@ public abstract class AbstractDiagramManager {
         this.treeHelper = treeHelper;
         this.projectManager = projectManager;
         this.arbilLogConfigurer = arbilLogConfigurer;
+        this.arbilTableController = arbilTableController;
+        this.windowManager = windowManager;
     }
 
     abstract public void createApplicationWindow();
@@ -184,7 +189,7 @@ public abstract class AbstractDiagramManager {
                 defaultDiagramUri = KinDiagramPanel.getDefaultDiagramFile(projectRecord).toURI();
             }
         }
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, projectRecord, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(defaultDiagramUri, false, projectRecord, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this, arbilTableController, windowManager);
         egoSelectionTestPanel.setName(java.text.MessageFormat.format(widgets.getString("[{0}] UNSAVED DEFAULT DIAGRAM"), new Object[]{egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName()}));
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
 //        egoSelectionTestPanel.loadAllTrees();
@@ -192,14 +197,14 @@ public abstract class AbstractDiagramManager {
     }
 
     public void newDiagram(DocumentNewMenu.DocumentType documentType, ProjectRecord projectRecord, Rectangle preferredSizeLocation) throws EntityServiceException {
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, projectRecord, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(documentType, projectRecord, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this, arbilTableController, windowManager);
         egoSelectionTestPanel.setName(java.text.MessageFormat.format(widgets.getString("[{0}] UNSAVED {1}"), new Object[]{egoSelectionTestPanel.getGraphPanel().dataStoreSvg.projectRecord.getProjectName(), documentType.getDisplayName()}));
         createDiagramContainer(egoSelectionTestPanel, preferredSizeLocation);
 //        egoSelectionTestPanel.loadAllTrees();
     }
 
     public void openDiagram(String diagramTitle, URI selectedUri, boolean saveToRecentMenu, Rectangle preferredSizeLocation) throws EntityServiceException {
-        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, null, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this);
+        KinDiagramPanel egoSelectionTestPanel = new KinDiagramPanel(selectedUri, saveToRecentMenu, null, sessionStorage, dialogHandler, dataNodeLoader, treeHelper, projectManager, this, arbilTableController, windowManager);
         if (saveToRecentMenu) {
             // only save to the recent diagrams if there was no error opening it
             // prevent files from the samples menu being added to the recent files menu

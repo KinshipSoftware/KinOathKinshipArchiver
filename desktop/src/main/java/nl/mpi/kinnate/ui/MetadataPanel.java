@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui;
 
@@ -31,10 +32,13 @@ import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.ui.ArbilTable;
+import nl.mpi.arbil.ui.ArbilTableController;
 import nl.mpi.arbil.ui.ArbilTableModel;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.arbil.ui.ArbilTreeController;
+import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.ui.ImageBoxRenderer;
+import nl.mpi.arbil.ui.PreviewSplitPanel;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.arbil.util.TreeHelper;
@@ -69,8 +73,8 @@ public class MetadataPanel extends JPanel {
     final private MessageDialogHandler dialogHandler;
     final SessionStorage sessionStorage;
 
-    public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, final KinDiagramPanel kinDiagramPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer, final SessionStorage sessionStorage, final MessageDialogHandler dialogHandler, ArbilTreeController treeController, TreeHelper treeHelper) {
-        this.arbilTree = new ArbilTree(treeController, treeHelper, dialogHandler);
+    public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, final KinDiagramPanel kinDiagramPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer, final SessionStorage sessionStorage, final MessageDialogHandler dialogHandler, ArbilTreeController treeController, TreeHelper treeHelper, ArbilTableController arbilTableController, ArbilWindowManager windowManager) {
+        this.arbilTree = new ArbilTree(treeController, treeHelper, new PreviewSplitPanel(windowManager, arbilTableController));
         this.kinDiagramPanel = kinDiagramPanel;
         this.entityCollection = entityCollection;
         this.dialogHandler = dialogHandler;
@@ -81,56 +85,57 @@ public class MetadataPanel extends JPanel {
         this.archiveTableModel = new ArbilTableModel(imageBoxRenderer);
         this.dataNodeLoader = dataNodeLoader;
         //dateEditorPanel = new DateEditorPanel();
-        ArbilTable kinTable = new ArbilTable(kinTableModel, "Selected Nodes") {
+        ArbilTableController tableController = new ArbilTableController(treeHelper, dialogHandler, windowManager) {
+
             // checkPopup is used to replace the Arbil context menu, as a result this override needs to copy other things that are done in the super class. So it would be better in the future to make the menu more formally addable to the table. 
             @Override
             public void checkPopup(java.awt.event.MouseEvent evt, boolean checkSelection) {
-                if (evt.isPopupTrigger()) {
-                    java.awt.Point p = evt.getPoint();
-                    int clickedRow = rowAtPoint(p);
-                    int clickedColumn = columnAtPoint(p);
-                    // set the clicked cell selected
-                    boolean clickedRowAlreadySelected = isRowSelected(clickedRow);
+                final Object source = evt.getSource();
+                if (source instanceof ArbilTable) {
+                    ArbilTable targetTable = (ArbilTable) source;
+                    if (evt.isPopupTrigger()) {
+                        java.awt.Point p = evt.getPoint();
+                        int clickedRow = targetTable.rowAtPoint(p);
+                        int clickedColumn = targetTable.columnAtPoint(p);
+                        // set the clicked cell selected
+                        boolean clickedRowAlreadySelected = targetTable.isRowSelected(clickedRow);
 
-                    if (checkSelection && !evt.isShiftDown() && !evt.isControlDown()) {
-                        // if it is the right mouse button and there is already a selection then do not proceed in changing the selection
-                        if (!(((evt.isPopupTrigger() /* evt.getButton() == MouseEvent.BUTTON3 || evt.isMetaDown() */) && clickedRowAlreadySelected))) {
-                            if (clickedRow > -1 & clickedRow > -1) {
-                                // if the modifier keys are down then leave the selection alone for the sake of more normal behaviour
-                                getSelectionModel().clearSelection();
-                                // make sure the clicked cell is selected
+                        if (checkSelection && !evt.isShiftDown() && !evt.isControlDown()) {
+                            // if it is the right mouse button and there is already a selection then do not proceed in changing the selection
+                            if (!(((evt.isPopupTrigger() /* evt.getButton() == MouseEvent.BUTTON3 || evt.isMetaDown() */) && clickedRowAlreadySelected))) {
+                                if (clickedRow > -1 & clickedRow > -1) {
+                                    // if the modifier keys are down then leave the selection alone for the sake of more normal behaviour
+                                    targetTable.getSelectionModel().clearSelection();
+                                    // make sure the clicked cell is selected
 //                        System.out.println("clickedRow: " + clickedRow + " clickedRow: " + clickedRow);
 //                        getSelectionModel().addSelectionInterval(clickedRow, clickedRow);
 //                        getColumnModel().getSelectionModel().addSelectionInterval(clickedColumn, clickedColumn);
-                                changeSelection(clickedRow, clickedColumn, false, evt.isShiftDown());
-                                // make sure the clicked cell is the lead selection
+                                    targetTable.changeSelection(clickedRow, clickedColumn, false, evt.isShiftDown());
+                                    // make sure the clicked cell is the lead selection
 //                    getSelectionModel().setLeadSelectionIndex(rowIndex);
 //                    getColumnModel().getSelectionModel().setLeadSelectionIndex(colIndex);
+                                }
                             }
                         }
                     }
-                }
 
-                if (evt.isPopupTrigger() /* evt.getButton() == MouseEvent.BUTTON3 || evt.isMetaDown() */) {
+                    if (evt.isPopupTrigger() /* evt.getButton() == MouseEvent.BUTTON3 || evt.isMetaDown() */) {
 //                    targetTable = (JTable) evt.getComponent();
 //                    System.out.println("set the current table");
 
-                    TableCellEditor tableCellEditor = this.getCellEditor();
-                    if (tableCellEditor != null) {
-                        tableCellEditor.stopCellEditing();
-                    }
-                    new TableMenu(sessionStorage, dialogHandler, entityCollection, kinDiagramPanel, getSelectedRowsFromTable(), getSelectedFields()).show(this, evt.getX(), evt.getY());
+                        TableCellEditor tableCellEditor = targetTable.getCellEditor();
+                        if (tableCellEditor != null) {
+                            tableCellEditor.stopCellEditing();
+                        }
+                        new TableMenu(sessionStorage, dialogHandler, entityCollection, kinDiagramPanel, targetTable.getSelectedRowsFromTable(), targetTable.getSelectedFields()).show(targetTable, evt.getX(), evt.getY());
 //                    new TableContextMenu(this).show(evt.getX(), evt.getY());
-                    //new OldContextMenu().showTreePopup(evt.getSource(), evt.getX(), evt.getY());
+                        //new OldContextMenu().showTreePopup(evt.getSource(), evt.getX(), evt.getY());
+                    }
                 }
             }
         };
-        ArbilTable archiveTable = new ArbilTable(archiveTableModel, "Selected Nodes") {
-//            @Override
-//            public void checkPopup(MouseEvent evt, boolean checkSelection) {
-////                super.checkPopup(evt, checkSelection);
-//            }
-        };
+        ArbilTable kinTable = new ArbilTable(kinTableModel, tableController, "Selected Nodes");
+        ArbilTable archiveTable = new ArbilTable(archiveTableModel, arbilTableController, "Selected Nodes");
         this.arbilTree.setCustomPreviewTable(archiveTable);
         kinTable.setTransferHandler(tableCellDragHandler);
         kinTable.setDragEnabled(true);

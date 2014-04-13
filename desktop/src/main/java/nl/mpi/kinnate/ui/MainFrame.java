@@ -108,7 +108,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 //                abstractDiagramManager = new LayeredDiagramManager(versionManager);
 //                abstractDiagramManager = new TabbedDiagramManager(versionManager);
-                abstractDiagramManager = new WindowedDiagramManager(versionManager, windowManager, sessionStorage, injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager, logConfigurer);
+                abstractDiagramManager = new WindowedDiagramManager(versionManager, windowManager, sessionStorage, injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager, logConfigurer, injector.getArbilTableController(), injector.getWindowManager());
                 try {
                     boolean databaseDirectoryOk = false;
                     while (!databaseDirectoryOk) {

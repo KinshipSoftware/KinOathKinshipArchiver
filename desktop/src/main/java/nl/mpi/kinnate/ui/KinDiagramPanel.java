@@ -41,6 +41,7 @@ import nl.mpi.arbil.data.ArbilDataNodeContainer;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.ui.ArbilTableController;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
@@ -104,35 +105,43 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     private AbstractDiagramManager diagramWindowManager;
     private StatusBar statusBar;
     private TableCellDragHandler tableCellDragHandler = new TableCellDragHandler();
+    private final ArbilTableController arbilTableController;
+    private final ArbilWindowManager windowManager;
 
-    public KinDiagramPanel(URI existingFile, boolean savableType, ProjectRecord projectRecord, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
+    public KinDiagramPanel(URI existingFile, boolean savableType, ProjectRecord projectRecord, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager, ArbilTableController arbilTableController, ArbilWindowManager windowManager) throws EntityServiceException {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
         this.diagramWindowManager = diagramWindowManager;
         this.projectManager = projectManager;
+        this.arbilTableController = arbilTableController;
+        this.windowManager = windowManager;
         initKinDiagramPanel(existingFile, null, savableType, projectRecord);
     }
 
-    public KinDiagramPanel(DocumentType documentType, ProjectRecord projectRecord, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
+    public KinDiagramPanel(DocumentType documentType, ProjectRecord projectRecord, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, AbstractDiagramManager diagramWindowManager, ArbilTableController arbilTableController, ArbilWindowManager windowManager) throws EntityServiceException {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
         this.diagramWindowManager = diagramWindowManager;
         this.projectManager = projectManager;
+        this.arbilTableController = arbilTableController;
+        this.windowManager = windowManager;
         //ProjectRecord projectRecord, 
         initKinDiagramPanel(null, documentType, false, projectRecord);
     }
 
-    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager) throws EntityServiceException {
+    public KinDiagramPanel(DocumentType documentType, SessionStorage sessionStorage, ArbilWindowManager dialogHandler, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, EntityCollection entityCollection, AbstractDiagramManager diagramWindowManager, ArbilTableController arbilTableController, ArbilWindowManager windowManager) throws EntityServiceException {
         this.sessionStorage = sessionStorage;
         this.dialogHandler = dialogHandler;
         this.dataNodeLoader = dataNodeLoader;
         this.treeHelper = treeHelper;
         this.entityCollection = entityCollection; // we are setting the entity collection here because it has the project that has just been imported to and we want to show the results
         this.diagramWindowManager = diagramWindowManager;
+        this.arbilTableController = arbilTableController;
+        this.windowManager = windowManager;
         initKinDiagramPanel(null, documentType, false, null);
     }
 
@@ -246,14 +255,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         progressBar.setVisible(false);
         graphPanel.add(progressBar, BorderLayout.PAGE_START);
 
-
         registeredArbilDataNode = new HashMap<ArbilDataNode, UniqueIdentifier>();
         arbilDataNodesChangedStatus = new HashMap<ArbilNode, Boolean>();
         egoSelectionPanel = new EgoSelectionPanel(this, graphPanel, dialogHandler, entityCollection, dataNodeLoader);
 //        kinTermPanel = new KinTermTabPane(this, graphPanel.getkinTermGroups());
 
 //        kinTypeStringInput.setText(defaultString);
-
         JPanel kinGraphPanel = new JPanel(new BorderLayout());
 
         kinTypeHidePane = new HidePane(HidePane.HidePanePosition.top, 0);
@@ -275,7 +282,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 
         kinTermHidePane = new HidePane(HidePane.HidePanePosition.right, 0);
 
-        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, entityCollection, this, tableHidePane, tableCellDragHandler, dataNodeLoader, null, sessionStorage, dialogHandler, null, null)); // todo: pass a ImageBoxRenderer here if you want thumbnails
+        graphPanel.setArbilTableModel(new MetadataPanel(graphPanel, entityCollection, this, tableHidePane, tableCellDragHandler, dataNodeLoader, null, sessionStorage, dialogHandler, null, null, arbilTableController, windowManager)); // todo: pass a ImageBoxRenderer here if you want thumbnails
         // in some older files and non kinoath files these VisiblePanelSettings would not be set, so we make sure that they are here        
         for (PanelType panelType : PanelType.values()) {
             VisiblePanelSetting panelSetting = graphPanel.dataStoreSvg.getPanelSettingByType(panelType);
@@ -880,6 +887,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public boolean isFullyLoadedNodeRequired() {
-        throw new UnsupportedOperationException(widgets.getString("NOT SUPPORTED YET."));
+        return true;
     }
 }

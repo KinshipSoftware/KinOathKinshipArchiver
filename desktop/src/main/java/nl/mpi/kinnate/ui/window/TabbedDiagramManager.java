@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.awt.Rectangle;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.ui.ArbilTableController;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
@@ -37,8 +38,8 @@ public class TabbedDiagramManager extends AbstractDiagramManager {
 
     private javax.swing.JTabbedPane jTabbedPane1;
 
-    public TabbedDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, ArbilLogConfigurer arbilLogConfigurer) {
-        super(versionManager, dialogHandler, sessionStorage, dataNodeLoader, treeHelper, projectManager, arbilLogConfigurer);
+    public TabbedDiagramManager(ApplicationVersionManager versionManager, ArbilWindowManager dialogHandler, SessionStorage sessionStorage, ArbilDataNodeLoader dataNodeLoader, ArbilTreeHelper treeHelper, ProjectManager projectManager, ArbilLogConfigurer arbilLogConfigurer, ArbilTableController arbilTableController, ArbilWindowManager windowManager) {
+        super(versionManager, dialogHandler, sessionStorage, dataNodeLoader, treeHelper, projectManager, arbilLogConfigurer, arbilTableController, windowManager);
         jTabbedPane1 = new javax.swing.JTabbedPane();
     }
 

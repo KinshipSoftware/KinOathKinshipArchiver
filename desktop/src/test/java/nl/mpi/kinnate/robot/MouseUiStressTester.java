@@ -56,7 +56,7 @@ public class MouseUiStressTester {
         final AbstractDiagramManager abstractDiagramManager;
         final ProjectManager projectManager = new ProjectManager(injector.getSessionStorage(), injector.getWindowManager());
         final SessionStorage sessionStorage = injector.getSessionStorage();
-        abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), sessionStorage, injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager, new ArbilLogConfigurer(versionManager.getApplicationVersion(), "kinoath-mouse-stress-tester-"));
+        abstractDiagramManager = new WindowedDiagramManager(versionManager, injector.getWindowManager(), sessionStorage, injector.getDataNodeLoader(), injector.getTreeHelper(), projectManager, new ArbilLogConfigurer(versionManager.getApplicationVersion(), "kinoath-mouse-stress-tester-"), injector.getArbilTableController(), injector.getWindowManager());
 //        final File tempFile = File.createTempFile("MouseUiStressTester", ".temp");
         final File tempFile = new File("MouseUiStressTester");
         tempFile.mkdir();

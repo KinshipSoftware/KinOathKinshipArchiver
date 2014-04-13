@@ -30,6 +30,7 @@ import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.flap.model.DataNodeType;
 import nl.mpi.flap.model.FieldGroup;
+import nl.mpi.flap.model.PluginDataNode;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -115,8 +116,20 @@ public class KinTreeNode extends ArbilNode implements Comparable {
     }
 
     @Override
-    public void getAllChildren(Vector<ArbilDataNode> allChildren) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void getAllChildren(List<ArbilDataNode> list) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String getLabel() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<FieldGroup> getFieldGroups() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<? extends PluginDataNode> getChildList() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -167,11 +180,6 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public String getID() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<FieldGroup> getFieldGroups() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -267,41 +275,6 @@ public class KinTreeNode extends ArbilNode implements Comparable {
 
     @Override
     public boolean isResourceSet() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setID(String id) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setLabel(String label) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getLabel() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setFieldGroups(List<FieldGroup> fieldGroups) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setChildIds(List<String> idString) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<String> getChildIds() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setType(DataNodeType dataNodeType) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

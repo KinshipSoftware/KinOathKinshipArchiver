@@ -18,15 +18,19 @@
  */
 package nl.mpi.kinnate;
 
+import java.net.URI;
 import nl.mpi.arbil.ArbilSwingInjector;
+import nl.mpi.arbil.data.ArbilDataNode;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
+import nl.mpi.arbil.data.ArbilNode;
 import nl.mpi.arbil.data.ArbilTreeHelper;
+import nl.mpi.arbil.ui.ArbilTableController;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.ArbilSessionStorage;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.ApplicationVersionManager;
-import nl.mpi.arbil.util.ArbilMimeHashQueue;
 import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.arbil.util.MimeHashQueue;
 import nl.mpi.kinnate.userstorage.KinSessionStorage;
 
 /**
@@ -44,10 +48,11 @@ import nl.mpi.kinnate.userstorage.KinSessionStorage;
 public class KinnateArbilInjector extends ArbilSwingInjector {
 
     private ArbilTreeHelper treeHelper;
-    private ArbilMimeHashQueue mimeHashQueue;
+    private MimeHashQueue mimeHashQueue;
     private ArbilWindowManager windowManager;
     private ArbilDataNodeLoader dataNodeLoader;
     private KinSessionStorage sessionStorage;
+    private ArbilTableController arbilTableController;
 
     public synchronized void injectHandlers() {
         injectHandlers(new ApplicationVersionManager(new KinOathVersion()));
@@ -78,11 +83,58 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
         sessionStorage.setTreeHelper(treeHelper);
         injectTreeHelper(treeHelper);
 
+        mimeHashQueue = new MimeHashQueue() {
+
+            @Override
+            public void addToQueue(ArbilDataNode dataNode) {
+                // kinoath does not need the MimeHashQueue functionality
+            }
+
+            @Override
+            public void forceInQueue(ArbilDataNode dataNode) {
+                // kinoath does not need the MimeHashQueue functionality
+            }
+
+            @Override
+            public boolean isCheckResourcePermissions() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void setCheckResourcePermissions(boolean checkResourcePermissions) {
+                // kinoath does not need the MimeHashQueue functionality
+            }
+
+            @Override
+            public void startMimeHashQueueThread() {
+                // kinoath does not need the MimeHashQueue functionality
+            }
+
+            @Override
+            public void stopMimeHashQueueThread() {
+                // kinoath does not need the MimeHashQueue functionality
+            }
+
+            @Override
+            public String[] getMimeType(URI fileUri) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void terminateQueue() {
+                // kinoath does not need the MimeHashQueue functionality
+            }
+
+            @Override
+            public ArbilNode getActiveNode() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
         dataNodeLoader = new ArbilDataNodeLoader(messageDialogHandler, sessionStorage, mimeHashQueue, treeHelper);
         treeHelper.setDataNodeLoader(dataNodeLoader);
-        mimeHashQueue.setDataNodeLoader(dataNodeLoader);
         windowManager.setDataNodeLoader(dataNodeLoader);
         injectDataNodeLoader(dataNodeLoader);
+        arbilTableController = new ArbilTableController(treeHelper, messageDialogHandler, windowManager);
     }
 
     /**
@@ -94,15 +146,14 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
         return treeHelper;
     }
 
-    /**
-     * Should not be called before injectHandlers()!!
-     *
-     * @return the treeHelper
-     */
-    public ArbilMimeHashQueue getMimeHashQueue() {
-        return mimeHashQueue;
-    }
-
+//    /**
+//     * Should not be called before injectHandlers()!!
+//     *
+//     * @return the treeHelper
+//     */
+//    public ArbilMimeHashQueue getMimeHashQueue() {
+//        return mimeHashQueue;
+//    }
     /**
      * Should not be called before injectHandlers()!!
      *
@@ -123,5 +174,9 @@ public class KinnateArbilInjector extends ArbilSwingInjector {
 
     public SessionStorage getSessionStorage() {
         return sessionStorage;
+    }
+
+    public ArbilTableController getArbilTableController() {
+        return arbilTableController;
     }
 }
