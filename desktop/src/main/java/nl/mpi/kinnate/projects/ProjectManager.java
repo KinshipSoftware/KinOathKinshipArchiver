@@ -175,7 +175,12 @@ public class ProjectManager {
         } else {
             projectFile = new File(projectDirectory, kinoathproj);
         }
-        final ProjectRecord projectRecord = (ProjectRecord) unmarshaller.unmarshal(projectFile);
+        final ProjectRecord projectRecord;
+        if (projectFile.exists()) {
+            projectRecord = (ProjectRecord) unmarshaller.unmarshal(projectFile);
+        } else {
+            projectRecord = new ProjectRecord(projectDirectory, projectDirectory.getName());
+        }
         projectRecord.setProjectDirectory(projectFile.getParentFile());
         return projectRecord;
     }

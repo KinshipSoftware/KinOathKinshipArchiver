@@ -141,6 +141,12 @@ public class MouseUiStressTester {
         robot.delay(2000);
     }
 
+    public void waitForFocus() {
+        while (!diagramComponent.isFocused()) {
+            robot.delay(2000);
+        }
+    }
+
     public void selectAll() {
         robot.keyPress(KeyEvent.VK_CONTROL);
         robot.delay(200);
@@ -168,6 +174,7 @@ public class MouseUiStressTester {
                     mouseUiStressTester.dragDiagramAcross(100, 100);
                     mouseUiStressTester.dragDiagramAcross(100, 100);
                     for (int entityCount = 0; entityCount < 10000; entityCount++) {
+                        mouseUiStressTester.waitForFocus();
                         mouseUiStressTester.openContextMenu();
                         mouseUiStressTester.useAddMenu();
                         mouseUiStressTester.waitForEntityProcess();

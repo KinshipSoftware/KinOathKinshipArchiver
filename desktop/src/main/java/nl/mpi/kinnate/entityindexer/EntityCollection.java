@@ -487,7 +487,9 @@ public class EntityCollection extends DatabaseUpdateHandler {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             String queryResult;
             synchronized (databaseLock) {
+                new Open(databaseName).execute(context);
                 queryResult = new XQuery(query1String).execute(context);
+                new Close().execute(context);
             }
 //            System.out.println("queryResult: " + queryResult);
             EntityArray foundEntities = (EntityArray) unmarshaller.unmarshal(new StreamSource(new StringReader(queryResult)), EntityArray.class).getValue();
