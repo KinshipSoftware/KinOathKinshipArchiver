@@ -26,6 +26,7 @@
         <maven.build.timestamp.format>EEE MMM dd HH:mm:ss z yyyy</maven.build.timestamp.format><!--"Mon Dec 10 14:37:33 CET 2012"-->
         <application.build-date>${maven.build.timestamp}</application.build-date>  
         <parentpom.location>${project.parent.basedir}</parentpom.location>          
+        <application.version.committedRevision>${application.version.commit.id.describe}</application.version.committedRevision>
     </properties>
     <build>
         <resources>
@@ -42,7 +43,7 @@
             </resource> 
         </resources>
         <plugins>           
-            <plugin> 
+            <!-- <plugin> 
                 <groupId>com.google.code.maven-svn-revision-number-plugin</groupId> 
                 <artifactId>maven-svn-revision-number-plugin</artifactId> 
                 <version>1.7</version> 
@@ -57,11 +58,40 @@
                     <entries> 
                         <entry> 
                             <path>${basedir}/src</path> 
-                            <!-- this will populate "application.version.revision" --> 
                             <prefix>application.version</prefix> 
                         </entry> 
                     </entries> 
                 </configuration> 
+            </plugin> -->
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.1.9</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                         </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <prefix>application.version</prefix>
+                    <dateFormat>dd.MM.yyyy '@' HH:mm:ss z</dateFormat>
+                    <verbose>true</verbose>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <skipPoms>true</skipPoms>
+                    <generateGitPropertiesFile>false</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <skip>false</skip>
+                    <gitDescribe>
+                        <skip>false</skip>
+                        <always>false</always>
+                        <abbrev>7</abbrev>
+                        <dirty>-dirty</dirty>
+                        <forceLongFormat>false</forceLongFormat>
+                    </gitDescribe>
+                </configuration>
             </plugin>
             <!--            <plugin> this plugin seems not to be properly supported
                 <groupId>org.codehaus.mojo</groupId>
