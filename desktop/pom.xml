@@ -7,8 +7,8 @@
     <packaging>jar</packaging>
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
-    <version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>
-    <!--<version>${application.majorVersion}.${application.minorVersion}.33502-${application.branch}</version>-->
+    <!--<version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>-->
+    <version>${application.majorVersion}.${application.minorVersion}.33502-${application.branch}</version>
     <name>KinOath ${application.majorVersion}.${application.minorVersion}</name>
     <parent>
         <groupId>nl.mpi</groupId>
@@ -291,7 +291,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.5-pretesting-SNAPSHOT</version>
+            <version>1.5</version>
         </dependency>
         <!--        <dependency>
             <groupId>nl.mpi</groupId>
@@ -306,7 +306,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-localisation</artifactId>
-            <version>1.5-pretesting-SNAPSHOT</version>
+            <version>1.5</version>
         </dependency>
     </dependencies>
     <repositories>

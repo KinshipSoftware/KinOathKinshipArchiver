@@ -9,8 +9,8 @@
     </parent>
     <groupId>nl.mpi</groupId>
     <artifactId>kinoath-localisation</artifactId>
-    <version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>
-    <!--<version>${application.majorVersion}.${application.minorVersion}.33727-${application.branch}</version>-->
+<!--    <version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>-->
+    <version>${application.majorVersion}.${application.minorVersion}.33727-${application.branch}</version>
     
     <name>KinOath Localisation ${application.majorVersion}.${application.minorVersion}</name>
     <url>http://maven.apache.org</url>
