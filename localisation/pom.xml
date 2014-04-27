@@ -17,7 +17,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <parentpom.location>${project.parent.basedir}</parentpom.location>       
-    </properties>
+        <application.version.committedRevision>${application.version.commit.id.describe}</application.version.committedRevision>
+</properties>
     <build> 
         <resources>
             <resource>
@@ -68,7 +69,7 @@
                        </executions>
                    </plugin>
             -->   
-            <plugin>
+            <!--            <plugin>
                 <groupId>com.google.code.maven-svn-revision-number-plugin</groupId>
                 <artifactId>svn-revision-number-maven-plugin</artifactId>
                 <version>1.13</version>
@@ -83,10 +84,40 @@
                     <entries>
                         <entry>
                             <path>${basedir}/src</path>
-                            <!-- this will populate "plugin.version.revision" etc -->
+                             this will populate "plugin.version.revision" etc 
                             <prefix>plugin.version</prefix>
                         </entry>
                     </entries>
+                </configuration>
+            </plugin>-->
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.1.9</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <prefix>application.version</prefix>
+                    <dateFormat>dd.MM.yyyy '@' HH:mm:ss z</dateFormat>
+                    <verbose>true</verbose>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <skipPoms>true</skipPoms>
+                    <generateGitPropertiesFile>false</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <skip>false</skip>
+                    <gitDescribe>
+                        <skip>false</skip>
+                        <always>false</always>
+                        <abbrev>7</abbrev>
+                        <dirty>-dirty</dirty>
+                        <forceLongFormat>false</forceLongFormat>
+                    </gitDescribe>
                 </configuration>
             </plugin>
         </plugins>
