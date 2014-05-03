@@ -7,7 +7,7 @@
     <artifactId>kinoath-parent</artifactId>
     <name>KinOath Parent 1.5</name>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.5</version>
     <description>Parent pom for KinOath Kinship Archiver</description>
     <modules>
         <module>desktop</module>
@@ -22,11 +22,11 @@
     </organization>
     
     <scm>
-        <developerConnection>scm:svn:https://svn.mpi.nl/LAT/Kinnate/trunk/</developerConnection>
-        <url>https://trac.mpi.nl/wiki/KinOath</url>
+        <developerConnection>scm:mvn:https://github.com/KinshipSoftware/KinOathKinshipArchiver.git</developerConnection>
+        <url>https://github.com/KinshipSoftware/KinOathKinshipArchiver</url>
     </scm>
-
-    <properties>
+ 
+   <properties>
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>5</application.minorVersion> 
         <application.branch>pretesting</application.branch> 
@@ -101,6 +101,31 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>nl.mpi</groupId>
+                <artifactId>version-control-check</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <verbose>true</verbose>
+                    <vcsType>git</vcsType>
+                    <allowSnapshots>true</allowSnapshots>
+                    <projectDirectory>${project.basedir}</projectDirectory>
+                    <majorVersion>1</majorVersion>
+                    <minorVersion>5</minorVersion>
+                    <buildType>pretesting</buildType>
+                    <propertiesPrefix>application</propertiesPrefix>
+                    <shortVersionModules>
+                        <param>kinoath-parent</param>
+                    </shortVersionModules>
+                </configuration>
             </plugin>
         </plugins> 
     </build> 
