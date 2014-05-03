@@ -8,17 +8,17 @@
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
     <version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>
-    <!--<version>${application.majorVersion}.${application.minorVersion}.33502-${application.branch}</version>-->
+    <!--<version>${application.majorVersion}.${application.minorVersion}.2239-${application.branch}</version>-->
     <name>KinOath ${application.majorVersion}.${application.minorVersion}</name>
     <parent>
         <groupId>nl.mpi</groupId>
         <artifactId>kinoath-parent</artifactId>
-        <version>1.0</version>
+        <version>1.5</version>
     </parent> 
     <url>http://maven.apache.org</url>
     <scm>
-        <developerConnection>scm:svn:https://svn.mpi.nl/LAT/Kinnate/trunk/desktop</developerConnection>
-        <url>https://trac.mpi.nl/wiki/KinOath</url>
+        <developerConnection>scm:git:https://github.com/KinshipSoftware/KinOathKinshipArchiver.git</developerConnection>
+        <url>https://github.com/KinshipSoftware/KinOathKinshipArchiver</url>
     </scm>
     <properties>
         <output.jarname>${project.build.finalName}</output.jarname>
@@ -43,56 +43,6 @@
             </resource> 
         </resources>
         <plugins>           
-            <!-- <plugin> 
-                <groupId>com.google.code.maven-svn-revision-number-plugin</groupId> 
-                <artifactId>maven-svn-revision-number-plugin</artifactId> 
-                <version>1.7</version> 
-                <executions> 
-                    <execution> 
-                        <goals> 
-                            <goal>revision</goal> 
-                        </goals> 
-                    </execution> 
-                </executions> 
-                <configuration> 
-                    <entries> 
-                        <entry> 
-                            <path>${basedir}/src</path> 
-                            <prefix>application.version</prefix> 
-                        </entry> 
-                    </entries> 
-                </configuration> 
-            </plugin> -->
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.1.9</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>revision</goal>
-                         </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <prefix>application.version</prefix>
-                    <dateFormat>dd.MM.yyyy '@' HH:mm:ss z</dateFormat>
-                    <verbose>true</verbose>
-                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-                    <skipPoms>true</skipPoms>
-                    <generateGitPropertiesFile>false</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
-                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
-                    <skip>false</skip>
-                    <gitDescribe>
-                        <skip>false</skip>
-                        <always>false</always>
-                        <abbrev>7</abbrev>
-                        <dirty>-dirty</dirty>
-                        <forceLongFormat>false</forceLongFormat>
-                    </gitDescribe>
-                </configuration>
-            </plugin>
             <!--            <plugin> this plugin seems not to be properly supported
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>deb-maven-plugin</artifactId>
