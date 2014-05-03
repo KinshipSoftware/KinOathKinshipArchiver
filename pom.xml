@@ -116,7 +116,7 @@
                 <configuration>
                     <verbose>true</verbose>
                     <vcsType>git</vcsType>
-                    <allowSnapshots>true</allowSnapshots>
+                    <allowSnapshots>false</allowSnapshots>
                     <projectDirectory>${project.basedir}</projectDirectory>
                     <majorVersion>1</majorVersion>
                     <minorVersion>5</minorVersion>
