@@ -29,7 +29,7 @@
    <properties>
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>5</application.minorVersion> 
-        <application.branch>pretesting</application.branch> 
+        <application.branch>testing</application.branch> 
         <application.title>KinOath Kinship Archiver (pretesting)</application.title>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--<netbeans.hint.license>http://www.gnu.org/licenses/gpl-2.0.html</netbeans.hint.license>-->
@@ -120,7 +120,7 @@
                     <projectDirectory>${project.basedir}</projectDirectory>
                     <majorVersion>1</majorVersion>
                     <minorVersion>5</minorVersion>
-                    <buildType>pretesting</buildType>
+                    <buildType>testing</buildType>
                     <propertiesPrefix>application</propertiesPrefix>
                     <shortVersionModules>
                         <param>kinoath-parent</param>
