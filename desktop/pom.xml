@@ -233,7 +233,7 @@
             <groupId>nl.mpi</groupId>
             <artifactId>arbil</artifactId>
             <!--when changing the Arbil version make sure that the JNLP dependencies are also updated--> 
-            <version>2.5.1032-testing</version>
+            <version>2.5.40542-testing</version>
             <exclusions>
             </exclusions>
         </dependency>
