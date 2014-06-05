@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.mpi</groupId>
     <artifactId>kinoath-parent</artifactId>
-    <name>KinOath Parent 1.5</name>
+    <name>KinOath Parent 1.6</name>
     <packaging>pom</packaging>
-    <version>1.5</version>
+    <version>1.6</version>
     <description>Parent pom for KinOath Kinship Archiver</description>
     <modules>
         <module>desktop</module>
@@ -105,7 +105,7 @@
             <plugin>
                 <groupId>nl.mpi</groupId>
                 <artifactId>version-control-check</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.21-testing</version>
                 <executions>
                     <execution>
                         <goals>
@@ -119,7 +119,7 @@
                     <allowSnapshots>true</allowSnapshots>
                     <projectDirectory>${project.basedir}</projectDirectory>
                     <majorVersion>1</majorVersion>
-                    <minorVersion>5</minorVersion>
+                    <minorVersion>6</minorVersion>
                     <buildType>pretesting</buildType>
                     <propertiesPrefix>application</propertiesPrefix>
                     <shortVersionModules>

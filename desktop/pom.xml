@@ -7,13 +7,13 @@
     <packaging>jar</packaging>
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
-    <version>${application.majorVersion}.${application.minorVersion}-${application.branch}-SNAPSHOT</version>
+    <version>1.6-pretesting-SNAPSHOT</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.2239-${application.branch}</version>-->
     <name>KinOath ${application.majorVersion}.${application.minorVersion}</name>
     <parent>
         <groupId>nl.mpi</groupId>
         <artifactId>kinoath-parent</artifactId>
-        <version>1.5</version>
+        <version>1.6</version>
     </parent> 
     <url>http://maven.apache.org</url>
     <scm>
@@ -233,7 +233,7 @@
             <groupId>nl.mpi</groupId>
             <artifactId>arbil</artifactId>
             <!--when changing the Arbil version make sure that the JNLP dependencies are also updated--> 
-            <version>2.5.40297-testing</version>
+            <version>2.5.1032-testing</version>
             <exclusions>
             </exclusions>
         </dependency>
@@ -260,7 +260,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.5-pretesting-SNAPSHOT</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
         <!--        <dependency>
             <groupId>nl.mpi</groupId>
@@ -275,7 +275,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-localisation</artifactId>
-            <version>1.5-pretesting-SNAPSHOT</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <repositories>
