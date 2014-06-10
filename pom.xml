@@ -28,7 +28,7 @@
  
    <properties>
         <application.majorVersion>1</application.majorVersion> 
-        <application.minorVersion>5</application.minorVersion> 
+        <application.minorVersion>6</application.minorVersion> 
         <application.branch>pretesting</application.branch> 
         <application.title>KinOath Kinship Archiver (pretesting)</application.title>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
