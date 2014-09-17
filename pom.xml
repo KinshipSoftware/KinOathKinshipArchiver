@@ -105,7 +105,7 @@
             <plugin>
                 <groupId>nl.mpi</groupId>
                 <artifactId>version-control-check</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.21-testing</version>
                 <executions>
                     <execution>
                         <goals>
