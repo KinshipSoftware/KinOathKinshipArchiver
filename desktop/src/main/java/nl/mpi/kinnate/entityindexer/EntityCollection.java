@@ -186,7 +186,9 @@ public class EntityCollection extends DatabaseUpdateHandler {
             synchronized (databaseLock) {
                 new DropDB(databaseName).execute(context);
                 new Set("CREATEFILTER", "*.kmdi").execute(context);
-                new CreateDB(databaseName, projectRecord.getProjectDataFilesDirectory().toString()).execute(context);
+                final String dataFilesDirectory = projectRecord.getProjectDataFilesDirectory().toString();
+//                System.out.println("dataFilesDirectory: " + dataFilesDirectory);
+                new CreateDB(databaseName, dataFilesDirectory).execute(context);
 //            System.out.println("List: " + new List().execute(context));
 //            System.out.println("Find: " + new Find(databaseName).title());
 //            System.out.println("Info: " + new Info().execute(context));
