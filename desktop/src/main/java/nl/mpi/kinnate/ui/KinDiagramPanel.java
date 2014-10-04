@@ -406,7 +406,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         kinTypeStringProviders = new ArrayList<KinTypeStringProvider>();
         kinTypeStringProviders.add(kinTypeStringInput);
         kinTypeStringProviders.add(entitySearchPanel);
-        kinTypeStringProviders.addAll(Arrays.asList(graphPanel.getkinTermGroups()));
 //        graphPanel.svgUpdateHandler.updateEntities();
         loadAllTrees();
         try {
@@ -489,9 +488,12 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                         }
                                     }
                                 }
+                                final ArrayList<KinTypeStringProvider> kinTypeStringProvidersTemp = new ArrayList<KinTypeStringProvider>();
+                                kinTypeStringProvidersTemp.addAll(kinTypeStringProviders);
+                                kinTypeStringProvidersTemp.addAll(Arrays.asList(graphPanel.getkinTermGroups()));
                                 if (graphPanel.dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery) {
 //                                    diagramMode = DiagramMode.KinTypeQuery;
-                                    final EntityData[] graphNodes = entityIndex.processKinTypeStrings(kinTypeStringProviders, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
+                                    final EntityData[] graphNodes = entityIndex.processKinTypeStrings(kinTypeStringProvidersTemp, graphPanel.getIndexParameters(), graphPanel.dataStoreSvg, progressBar);
                                     SwingUtilities.invokeLater(new Runnable() {
                                         public void run() {
                                             progressBar.setIndeterminate(true);
@@ -510,7 +512,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                 } else {
 //                                    diagramMode = DiagramMode.FreeForm;
                                     KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg);
-                                    graphData.readKinTypes(kinTypeStringProviders, graphPanel.dataStoreSvg);
+                                    graphData.readKinTypes(kinTypeStringProvidersTemp, graphPanel.dataStoreSvg);
                                     graphPanel.drawNodes(graphData, resetZoom);
                                     egoSelectionPanel.setTreeNodes(graphPanel);
 //                KinDiagramPanel.this.doLayout();
@@ -610,7 +612,6 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                 panelSetting.addTargetPanel(new KinTermPanel(this, kinTermGroup, dialogHandler, graphPanel), true);
             }
         }
-        kinTypeStringProviders.add(kinTermGroup);
     }
 
     public void addPluginPanel(KinOathPanelPlugin kinOathPanelPlugin, boolean isVisible) throws PluginException {

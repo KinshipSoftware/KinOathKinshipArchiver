@@ -198,7 +198,8 @@ public class KinTermPanel extends JPanel {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 graphPanel.deleteKinTermGroup(kinTerms);
                 KinTermPanel.this.getParent().remove(KinTermPanel.this);
-                graphPanel.drawNodes(false);
+                savePanel.updateGraph();
+                savePanel.setRequiresSave();
             }
         });
         return deleteGroupButton;
@@ -430,7 +431,6 @@ public class KinTermPanel extends JPanel {
                         repaint();
                     }
                 });
-
 
                 colourChooser.setPreviewPanel(new JPanel());
                 colourChooser.getSelectionModel().addChangeListener(new ChangeListener() {
