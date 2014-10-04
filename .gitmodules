@@ -1,0 +1,3 @@
+[submodule "desktop/installer"]
+	path = desktop/installer
+	url = git://github.com/KinshipSoftware/DesktopInstaller.git

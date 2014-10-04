@@ -217,13 +217,13 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
                 EntityDocument entityDocument = new EntityDocument(EntityDocument.defaultDragType, importTranslator, sessionStorage, entityCollection.getProjectRecord());
                 entityDocument.insertValue("Name", draggedNode.toString());
                 if (draggedNode instanceof ArbilDataNode) {
-                    for (String fieldOfInterest : new String[]{"Sex", "BirthDate"}) {
+                    for (String fieldOfInterest : new String[]{"Sex", "BirthDate", "Code"}) {
                         final ArbilField[] arbilFeildsArray = ((ArbilDataNode) draggedNode).getFields().get(fieldOfInterest);
                         if (arbilFeildsArray != null && arbilFeildsArray.length > 0) {
                             entityDocument.insertValue(fieldOfInterest, arbilFeildsArray[0].getFieldValue().toLowerCase());
                         }
                     }
-                    entityDocument.entityData.addExternalLink(((ArbilDataNode) draggedNode).getURI(), ((ArbilDataNode) draggedNode).getID());
+//                    entityDocument.entityData.addExternalLink(((ArbilDataNode) draggedNode).getURI(), ((ArbilDataNode) draggedNode).getID());
                 }
                 // todo: based on the DCR entries the relevant data could be selected and inserted, or the user could specify which fields to insert
 //            entityDocument.insertDefaultMetadata(); // todo: insert copy of metadata from source node

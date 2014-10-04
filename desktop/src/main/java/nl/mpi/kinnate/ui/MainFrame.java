@@ -28,17 +28,13 @@ import nl.mpi.arbil.ArbilIcons;
 import nl.mpi.arbil.ArbilMain;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
-import nl.mpi.arbil.util.ApplicationVersion;
 import nl.mpi.arbil.util.ApplicationVersionManager;
 import nl.mpi.arbil.util.ArbilLogConfigurer;
-import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbilcommons.ui.LocalisationSelector;
 import nl.mpi.kinnate.KinOathVersion;
 import nl.mpi.kinnate.KinnateArbilInjector;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
-import nl.mpi.kinnate.gedcomimport.ImportException;
-import nl.mpi.kinnate.plugins.export.MigrationWizard;
 import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.ui.window.WindowedDiagramManager;
@@ -150,22 +146,22 @@ public class MainFrame extends javax.swing.JFrame {
                     ////////////////////////////////////////
                     // check for old data directories 1-0 and offer the user to export all the old data and import into the new version IF no entities exist in the new version, the user can always use the export plugin at a later date
                     // start handle any migration requirements
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            final ApplicationVersion applicationVersion = versionManager.getApplicationVersion();
-                            File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), windowManager, sessionStorage).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor));
-                            if (oldAppExportFile != null) {
-                                try {
-                                    abstractDiagramManager.openImportPanel(oldAppExportFile, initialDiagram, projectManager.getEntityCollectionForProject(projectManager.getDefaultProject(sessionStorage)));
-                                } catch (ImportException exception) {
-                                    windowManager.addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
-                                } catch (EntityServiceException exception) {
-                                    windowManager.addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
-                                }
-                            }
-                        }
-                    }.start();
+//                    new Thread() {
+//                        @Override
+//                        public void run() {
+//                            final ApplicationVersion applicationVersion = versionManager.getApplicationVersion();
+//                            File oldAppExportFile = new MigrationWizard(BugCatcherManager.getBugCatcher(), windowManager, sessionStorage).checkAndOfferMigration(Integer.parseInt(applicationVersion.currentMajor), Integer.parseInt(applicationVersion.currentMinor));
+//                            if (oldAppExportFile != null) {
+//                                try {
+//                                    abstractDiagramManager.openImportPanel(oldAppExportFile, initialDiagram, projectManager.getEntityCollectionForProject(projectManager.getDefaultProject(sessionStorage)));
+//                                } catch (ImportException exception) {
+//                                    windowManager.addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
+//                                } catch (EntityServiceException exception) {
+//                                    windowManager.addMessageDialogToQueue(exception.getMessage() + "\n" + oldAppExportFile.getAbsolutePath(), "Import Existing Data");
+//                                }
+//                            }
+//                        }
+//                    }.start();
                     // end handle any migration requirements
                     ////////////////////////////////////////
                 } catch (EntityServiceException entityServiceException) {
