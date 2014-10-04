@@ -24,7 +24,7 @@
     <resources>
         <java max-heap-size="1073741824" version="1.5+"/>
         <jar href="kinoath-testing-0-0-26381.jar" main="true" download="eager"/>
-        <jar href="lib/2.5.40297-testing" download="eager"/>
+        <jar href="lib/2.5.1039-stable" download="eager"/>
         <jar href="lib/batik-css-1.7.jar" download="eager"/>
         <jar href="lib/batik-svg-dom-1.7.jar" download="eager"/>
         <jar href="lib/colt-1.2.0.jar" download="eager"/>
