@@ -12,8 +12,9 @@
     <modules>
         <module>desktop</module>
         <module>kinoath-help</module>
-<!--        <module>rest</module>-->
+        <!--<module>rest</module>-->
         <module>localisation</module>
+        <module>diagram</module>
     </modules>
 
     <organization> 
