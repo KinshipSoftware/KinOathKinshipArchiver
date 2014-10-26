@@ -2,3 +2,7 @@
 /kinoath-help/target/
 /localisation/target/
 /desktop/target/
+/diagram/target/
+/batik-renderer/target/
+/graph-sorter/target/
+/graph-storage/target/
