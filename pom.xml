@@ -15,6 +15,9 @@
         <!--<module>rest</module>-->
         <module>localisation</module>
         <module>diagram</module>
+        <module>batik-renderer</module>
+        <module>graph-sorter</module>
+        <module>graph-storage</module>
     </modules>
 
     <organization> 
@@ -61,8 +64,9 @@
                         </goals> 
                     </execution> 
                 </executions> 
-            </plugin> <plugin>
-                <!--                                		 
+            </plugin> 
+            <plugin>
+                <!--                                                		 
 		    License plugin checks for presence of license header in all source files (with some exceptions, see excludes below).
 		    You can use this plugin to actually insert or fix the license headers by running maven with the following goal:
 
@@ -91,6 +95,7 @@
                         <exclude>**/*.txt</exclude>
                         <exclude>**/*.icns</exclude>
                         <exclude>**/*.php</exclude>
+                        <exclude>**/.gitignore</exclude>
                         <exclude>installer/**</exclude>
                         <exclude>**/src/main/docbook/**</exclude>
                     </excludes>
