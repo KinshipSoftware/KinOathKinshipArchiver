@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>nl.mpi</groupId>
+        <artifactId>kinoath-parent</artifactId>
+        <version>1.6</version>
+    </parent>
+    <groupId>nl.mpi</groupId>
+    <artifactId>graph-storage</artifactId>
+    <version>1.6-pretesting-SNAPSHOT</version>
+    <!--<version>${application.majorVersion}.${application.minorVersion}.62-${application.branch}</version>-->
+    
+    <name>KinOath Graph Storage ${application.majorVersion}.${application.minorVersion}</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <parentpom.location>${project.parent.basedir}</parentpom.location>       
+        <application.version.committedRevision>${application.version.commit.id.describe}</application.version.committedRevision>
+</properties>
+    <build> 
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/version.properties</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>plugins-core</artifactId>
+            <version>1.1.35861-stable</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.6</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
