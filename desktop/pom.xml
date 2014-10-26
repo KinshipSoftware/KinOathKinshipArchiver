@@ -9,7 +9,7 @@
     The build number is only required when depending on the output in other projects or building to the server.-->
     <version>1.6-pretesting-SNAPSHOT</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.2239-${application.branch}</version>-->
-    <name>KinOath ${application.majorVersion}.${application.minorVersion}</name>
+    <name>KinOath Desktop ${application.majorVersion}.${application.minorVersion}</name>
     <parent>
         <groupId>nl.mpi</groupId>
         <artifactId>kinoath-parent</artifactId>
@@ -294,6 +294,11 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-localisation</artifactId>
+            <version>1.6-pretesting-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>kinoath-diagram</artifactId>
             <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
     </dependencies>
