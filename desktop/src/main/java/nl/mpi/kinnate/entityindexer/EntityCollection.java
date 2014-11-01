@@ -323,7 +323,7 @@ public class EntityCollection extends DatabaseUpdateHandler {
             synchronized (databaseLock) {
                 new Open(databaseName).execute(context);
                 for (UniqueIdentifier updatedUniqueIdentifier : updatedFileArray) {
-                    addFileToDB(updatedUniqueIdentifier.getFileInProject(projectRecord).toURI(), updatedUniqueIdentifier);
+                    addFileToDB(projectRecord.getFileInProject(updatedUniqueIdentifier).toURI(), updatedUniqueIdentifier);
                     if (progressBar != null) {
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {

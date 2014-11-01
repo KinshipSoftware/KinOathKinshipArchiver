@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.kindocument;
 
@@ -52,14 +53,14 @@ public class DocumentLoader {
     }
 
     protected EntityDocument getEntityDocument(UniqueIdentifier selectedIdentifier) throws ImportException, URISyntaxException, EntityServiceException {
-        EntityDocument entityDocument = new EntityDocument(selectedIdentifier.getFileInProject(entityCollection.getProjectRecord()).toURI(), new ImportTranslator(true), sessionStorage, entityCollection.getProjectRecord());
+        EntityDocument entityDocument = new EntityDocument(entityCollection.getProjectRecord().getFileInProject(selectedIdentifier).toURI(), new ImportTranslator(true), sessionStorage, entityCollection.getProjectRecord());
 //        System.out.println("Loaded 1: " + entityDocument.entityData.getUniqueIdentifier().getAttributeIdentifier());
         entityMap.put(entityDocument.entityData.getUniqueIdentifier(), entityDocument);
         for (EntityRelation entityRelation : entityDocument.entityData.getAllRelations()) {
             EntityDocument relatedDocument = entityMap.get(entityRelation.alterUniqueIdentifier);
             if (relatedDocument == null) {
                 // get the path from the database
-                final URI entityUri = entityRelation.alterUniqueIdentifier.getFileInProject(entityCollection.getProjectRecord()).toURI();
+                final URI entityUri = entityCollection.getProjectRecord().getFileInProject(entityRelation.alterUniqueIdentifier).toURI();
                 relatedDocument = new EntityDocument(entityUri, new ImportTranslator(true), sessionStorage, entityCollection.getProjectRecord());
 //                System.out.println("Loaded 2: " + entityRelation.alterUniqueIdentifier.getAttributeIdentifier());
                 entityMap.put(entityRelation.alterUniqueIdentifier, relatedDocument);

@@ -126,7 +126,7 @@ public class EntityDocument {
         this.sessionStorage = sessionStorage;
         this.projectRecord = projectRecord;
         entityData = new EntityData(uniqueIdentifier);
-        entityFile = uniqueIdentifier.getFileInProject(projectRecord);
+        entityFile = projectRecord.getFileInProject(uniqueIdentifier);
         File subDirectory = entityFile.getParentFile();
         subDirectory.mkdir();
         try {
@@ -171,7 +171,7 @@ public class EntityDocument {
 
     private File assignIdentiferAndFile() {
         entityData = new EntityData(new UniqueIdentifier(UniqueIdentifier.IdentifierType.lid));
-        final File fileInProject = entityData.getUniqueIdentifier().getFileInProject(projectRecord);
+        final File fileInProject = projectRecord.getFileInProject(entityData.getUniqueIdentifier());
         File subDirectory = fileInProject.getParentFile();
         subDirectory.mkdir();
         return fileInProject;

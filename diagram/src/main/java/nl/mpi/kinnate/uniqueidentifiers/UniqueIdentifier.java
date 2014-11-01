@@ -23,8 +23,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
-import nl.mpi.arbil.data.ArbilField;
-import nl.mpi.kinnate.projects.ProjectRecord;
 
 /**
  * Document : UniqueIdentifier Created on : Jul 21, 2011, 3:23:17 PM
@@ -51,16 +49,16 @@ public class UniqueIdentifier {
         identifierString = UUID.randomUUID().toString();
     }
 
-    public UniqueIdentifier(ArbilField arbilField) {
-        if (arbilField.getFullXmlPath().endsWith(".UniqueIdentifier.LocalIdentifier")) {
-            identifierType = IdentifierType.lid;
-        } else if (arbilField.getFullXmlPath().endsWith(".UniqueIdentifier.PersistantIdentifier")) {
-            identifierType = IdentifierType.pid;
-        } else {
-            throw new UnsupportedOperationException("Incorrect ArbilField: " + arbilField.getFullXmlPath());
-        }
-        identifierString = arbilField.getFieldValue();
-    }
+//    public UniqueIdentifier(ArbilField arbilField) {
+//        if (arbilField.getFullXmlPath().endsWith(".UniqueIdentifier.LocalIdentifier")) {
+//            identifierType = IdentifierType.lid;
+//        } else if (arbilField.getFullXmlPath().endsWith(".UniqueIdentifier.PersistantIdentifier")) {
+//            identifierType = IdentifierType.pid;
+//        } else {
+//            throw new UnsupportedOperationException("Incorrect ArbilField: " + arbilField.getFullXmlPath());
+//        }
+//        identifierString = arbilField.getFieldValue();
+//    }
 
     public UniqueIdentifier(String attributeIdentifier) throws IdentifierException {
         // reconstruct the identifier from an attribte string originally obtained by getAttributeIdentifier
@@ -157,9 +155,5 @@ public class UniqueIdentifier {
     @Override
     public String toString() {
         throw new UnsupportedOperationException();
-    }
-
-    public File getFileInProject(ProjectRecord projectRecord) {
-        return new File(new File(projectRecord.getProjectDataFilesDirectory(), identifierString.substring(0, 3)), identifierString + ".kmdi");
     }
 }

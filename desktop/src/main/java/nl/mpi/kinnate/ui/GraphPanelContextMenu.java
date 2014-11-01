@@ -208,8 +208,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                                 try {
                                     final EntityMerger entityMerger = new EntityMerger(sessionStorage, arbilWindowManager, entityCollection);
                                     final UniqueIdentifier leadMergedEntity = entityMerger.mergeEntities(selectedIdentifiers);
-                                    dataNodeLoader.requestReload(dataNodeLoader.getArbilDataNode(null, leadMergedEntity.getFileInProject(
-                                            kinDiagramPanel.getEntityCollection().getProjectRecord()).toURI()));
+                                    dataNodeLoader.requestReload(dataNodeLoader.getArbilDataNode(null, kinDiagramPanel.getEntityCollection().getProjectRecord().getFileInProject(leadMergedEntity).toURI()));
                                     kinDiagramPanel.entityRelationsChanged(entityMerger.getAffectedIdentifiersArray());
                                     kinDiagramPanel.removeRequiredNodes(entityMerger.getDeletedIdentifiersArray());
                                 } catch (ImportException exception) {
