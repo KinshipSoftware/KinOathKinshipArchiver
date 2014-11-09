@@ -36,6 +36,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
 
@@ -50,6 +51,11 @@ public class EntitySvg {
     protected HashMap<UniqueIdentifier, Point> entityPositions = new HashMap<UniqueIdentifier, Point>();
     static final public int symbolSize = 15;
     static final protected int strokeWidth = 2;
+    final private EventListener mouseListenerSvg;
+
+    public EntitySvg(EventListener mouseListenerSvg) {
+        this.mouseListenerSvg = mouseListenerSvg;
+    }
 
     public void discardEntityPositions() {
         for (UniqueIdentifier uniqueIdentifier : entityPositions.keySet().toArray(new UniqueIdentifier[0])) {
@@ -539,12 +545,12 @@ public class EntitySvg {
 //        }
 //    }
 
-    public float[] moveEntity(GraphPanel graphPanel, UniqueIdentifier entityId, float shiftXfloat, float remainderAfterSnapX, float shiftYfloat, float remainderAfterSnapY, boolean snapToGrid, double scaleFactor, boolean allRealtionsSelected) {
+    public float[] moveEntity(SvgDiagram svgDiagram, UniqueIdentifier entityId, float shiftXfloat, float remainderAfterSnapX, float shiftYfloat, float remainderAfterSnapY, boolean snapToGrid, double scaleFactor, boolean allRealtionsSelected) {
 //        System.out.println("X: " + shiftXfloat + " Y: " + shiftYfloat + " scale: " + scaleFactor);
-        Element entitySymbol = graphPanel.doc.getElementById(entityId.getAttributeIdentifier());
+        Element entitySymbol = svgDiagram.doc.getElementById(entityId.getAttributeIdentifier());
         Element highlightGroup = null;
         if (entityId.isGraphicsIdentifier()) {
-            highlightGroup = graphPanel.doc.getElementById("highlight_" + entityId.getAttributeIdentifier());
+            highlightGroup = svgDiagram.doc.getElementById("highlight_" + entityId.getAttributeIdentifier());
         }
         double shiftXscaled;
         double shiftYscaled;
@@ -610,7 +616,7 @@ public class EntitySvg {
             // store the changed location as a preferred location
             final Point updatedLocationPoint = new Point((int) snappedPositionX, (int) snappedPositionY);
             entityPositions.put(entityId, updatedLocationPoint);
-            graphPanel.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{entityId}, updatedLocationPoint);
+            svgDiagram.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{entityId}, updatedLocationPoint);
             final String translateString = "translate(" + String.valueOf(updatedLocationPoint.x) + ", " + String.valueOf(updatedLocationPoint.y) + ")";
             ((Element) entitySymbol).setAttribute("transform", translateString);
             if (highlightGroup != null) {
@@ -622,29 +628,29 @@ public class EntitySvg {
         return new float[]{remainderAfterSnapX, remainderAfterSnapY};
     }
 
-    private int addTextLabel(GraphPanel graphPanel, Element groupNode, String currentTextLable, String textColour, int textSpanCounter) {
+    private int addTextLabel(SvgDiagram svgDiagram, Element groupNode, String currentTextLable, String textColour, int textSpanCounter) {
         int lineSpacing = 15;
-        Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
+        Element labelText = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "text");
         labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
         labelText.setAttribute("y", Integer.toString(textSpanCounter));
         labelText.setAttribute("fill", textColour);
         labelText.setAttribute("stroke-width", "0");
         labelText.setAttribute("font-size", "14");
-        Text textNode = graphPanel.doc.createTextNode(currentTextLable);
+        Text textNode = svgDiagram.doc.createTextNode(currentTextLable);
         labelText.appendChild(textNode);
         textSpanCounter += lineSpacing;
         groupNode.appendChild(labelText);
         return textSpanCounter;
     }
 
-    protected Element createEntitySymbol(GraphPanel graphPanel, EntityData currentNode) {
-        Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+    protected Element createEntitySymbol(SvgDiagram svgDiagram, EntityData currentNode) {
+        Element groupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
         groupNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier());
 //        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
         // the kin type strings are stored here so that on selection in the graph the add kin term panel can be pre populatedwith the kin type strings of the selection
-        groupNode.setAttributeNS(GraphPanel.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
+        groupNode.setAttributeNS(SvgDiagram.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
 //        counterTest++;
-        String[] symbolNames = currentNode.getSymbolNames(graphPanel.getDiagramSettings().defaultSymbol());
+        String[] symbolNames = currentNode.getSymbolNames(svgDiagram.getDiagramSettings().defaultSymbol());
         if (symbolNames == null || symbolNames.length == 0) {
             symbolNames = new String[]{"blank"};
         }
@@ -681,7 +687,7 @@ public class EntitySvg {
         }
         for (String currentSymbol : symbolNames) {
             Element symbolNode;
-            symbolNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
+            symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
 //            symbolNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier() + ":symbol:" + currentSymbol);
             symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + currentSymbol); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
 
@@ -736,13 +742,13 @@ public class EntitySvg {
 
 ////////////////////////////// alternate method ////////////////////////////////////////////////
         ArrayList<String> labelList = new ArrayList<String>();
-        if (graphPanel.getDiagramSettings().showIdLabels() && currentNode.customIdentifier != null) {
+        if (svgDiagram.getDiagramSettings().showIdLabels() && currentNode.customIdentifier != null) {
             labelList.add(currentNode.customIdentifier);
         }
-        if (graphPanel.getDiagramSettings().showLabels()) {
+        if (svgDiagram.getDiagramSettings().showLabels()) {
             labelList.addAll(Arrays.asList(currentNode.getLabel()));
         }
-        if (graphPanel.getDiagramSettings().showKinTypeLabels()) {
+        if (svgDiagram.getDiagramSettings().showKinTypeLabels()) {
             labelList.addAll(Arrays.asList(currentNode.getKinTypeStringArray()));
         }
         // this option has been hidden from the menu because it is not used here anymore, it has been replaced by the kin terms panel option to hide and show
@@ -753,17 +759,17 @@ public class EntitySvg {
         // todo: this method has the draw back that the text is not selectable as a block
         int textSpanCounter = 0;
         if (currentNode.metadataRequiresSave) {
-            textSpanCounter = addTextLabel(graphPanel, groupNode, "modified", "red", textSpanCounter);
+            textSpanCounter = addTextLabel(svgDiagram, groupNode, "modified", "red", textSpanCounter);
         }
         for (String currentTextLable : labelList) {
             if (!currentTextLable.isEmpty()) {
-                textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable, "black", textSpanCounter);
+                textSpanCounter = addTextLabel(svgDiagram, groupNode, currentTextLable, "black", textSpanCounter);
             }
         }
         for (GraphLabel currentTextLable : currentNode.getKinTermStrings()) {
-            textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable.getLabelString(), currentTextLable.getColourString(), textSpanCounter);
+            textSpanCounter = addTextLabel(svgDiagram, groupNode, currentTextLable.getLabelString(), currentTextLable.getColourString(), textSpanCounter);
         }
-        if (graphPanel.getDiagramSettings().showDateLabels()) {
+        if (svgDiagram.getDiagramSettings().showDateLabels()) {
 //            try {
             String dateColur = "blue"; // todo: allow this colour to be set by the user
             // add the date of birth/death string
@@ -784,7 +790,7 @@ public class EntitySvg {
                 }
             }
             if (dateString.length() > 0) {
-                textSpanCounter = addTextLabel(graphPanel, groupNode, dateString, dateColur, textSpanCounter);
+                textSpanCounter = addTextLabel(svgDiagram, groupNode, dateString, dateColur, textSpanCounter);
             }
 //            } catch (EntityDateException dateException) {
 //                textSpanCounter = addTextLabel(graphPanel, groupNode, dateException.getMessage(), "red", textSpanCounter);
@@ -792,20 +798,20 @@ public class EntitySvg {
             // end date of birth/death label
         }
         int linkCounter = 0;
-        if (graphPanel.getDiagramSettings().showExternalLinks() && currentNode.externalLinks != null) {
+        if (svgDiagram.getDiagramSettings().showExternalLinks() && currentNode.externalLinks != null) {
             // loop through the archive links and optionaly add href tags for each linked archive data <a xlink:href="http://www.mpi.nl/imdi-archive-link" target="_blank"></a>
-            Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
+            Element labelText = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "text");
             labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
             labelText.setAttribute("y", Integer.toString(textSpanCounter));
             labelText.setAttribute("fill", "black");
             labelText.setAttribute("stroke-width", "0");
             labelText.setAttribute("font-size", "14");
 
-            Text textNode = graphPanel.doc.createTextNode("archive ref: ");
+            Text textNode = svgDiagram.doc.createTextNode("archive ref: ");
             labelText.appendChild(textNode);
             for (ExternalLink linkURI : currentNode.externalLinks) {
                 linkCounter++;
-                Element labelTagA = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "a");
+                Element labelTagA = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "a");
                 String linkUrl;
                 if (linkURI.getPidString() != null) {
                     linkUrl = "http://corpus1.mpi.nl/ds/imdi_browser/?openpath=" + linkURI.getPidString();
@@ -817,9 +823,9 @@ public class EntitySvg {
 //11:20:01 AM Guilherme Silva: http://corpus1.mpi.nl/ds/imdi_browser/?openpath=MPI77915%23
                 labelTagA.setAttribute("target", "_blank");
                 if (linkCounter == 1) {
-                    labelTagA.appendChild(graphPanel.doc.createTextNode("" + linkCounter));
+                    labelTagA.appendChild(svgDiagram.doc.createTextNode("" + linkCounter));
                 } else {
-                    labelTagA.appendChild(graphPanel.doc.createTextNode(", " + linkCounter));
+                    labelTagA.appendChild(svgDiagram.doc.createTextNode(", " + linkCounter));
                 }
                 labelText.appendChild(labelTagA);
             }
@@ -827,7 +833,7 @@ public class EntitySvg {
 //            textSpanCounter += lineSpacing;
         }
 ////////////////////////////// end alternate method ////////////////////////////////////////////////
-        ((EventTarget) groupNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false); // todo: use capture (currently false) could be useful for the mouse events
+        ((EventTarget) groupNode).addEventListener("mousedown", mouseListenerSvg, false); // todo: use capture (currently false) could be useful for the mouse events
         return groupNode;
     }
 }
