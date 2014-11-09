@@ -66,21 +66,14 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class GraphPanel extends JPanel implements SavePanel {
 
-    static protected String kinDataNameSpace = "kin";
-    static protected String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
-
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
-    protected SVGDocument doc;
     public MetadataPanel metadataPanel;
     private boolean requiresSave = false;
     private File svgFile = null;
-    public GraphPanelSize graphPanelSize;
-    public GraphSorter graphData; // this is tested for null to determine if the diagram has been recalculated 
     protected ArrayList<UniqueIdentifier> selectedGroupId;
-    protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
+    private final SvgDiagram svgDiagram;
     public DataStoreSvg dataStoreSvg;
-    public EntitySvg entitySvg;
 //    private URI[] egoPathsTemp = null;
     public SvgUpdateHandler svgUpdateHandler;
     public MouseListenerSvg mouseListenerSvg;
@@ -98,11 +91,10 @@ public class GraphPanel extends JPanel implements SavePanel {
         this.dataNodeLoader = dataNodeLoader;
 //        this.entityCollection = entityCollection;
         dataStoreSvg = new DataStoreSvg();
-        entitySvg = new EntitySvg();
+        svgDiagram = new SvgDiagram(dataStoreSvg, new EntitySvg(mouseListenerSvg));
         dataStoreSvg.setDefaults();
         svgUpdateHandler = new SvgUpdateHandler(this, kinDiagramPanel, dialogHandler);
         selectedGroupId = new ArrayList<UniqueIdentifier>();
-        graphPanelSize = new GraphPanelSize();
         this.setLayout(new BorderLayout());
         boolean eventsEnabled = true;
         boolean selectableText = false;
@@ -167,11 +159,11 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        System.out.println("currentZoom: " + currentZoom);
 ////        svgCanvas.setRenderingTransform(scaleTransform);
 //        Rectangle canvasBounds = this.getBounds();
-//        SVGRect bbox = ((SVGLocatable) doc.getRootElement()).getBBox();
+//        SVGRect bbox = ((SVGLocatable) svgDiagram.doc.getRootElement()).getBBox();
 //        if (bbox != null) {
 //            System.out.println("previousZoomedWith: " + bbox.getWidth());
 //        }
-////        SVGElement rootElement = doc.getRootElement();
+////        SVGElement rootElement = svgDiagram.doc.getRootElement();
 ////        if (currentWidth < canvasBounds.width) {
 //        float drawingCenter = (currentWidth / 2);
 ////                float drawingCenter = (bbox.getX() + (bbox.getWidth() / 2));
@@ -195,19 +187,19 @@ public class GraphPanel extends JPanel implements SavePanel {
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
         try {
-            doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toString());
-            svgCanvas.setDocument(doc);
-            symbolGraphic = new SymbolGraphic(doc);
-            dataStoreSvg = DataStoreSvg.loadDataFromSvg(doc);
+            svgDiagram.doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toString());
+            svgCanvas.setDocument(svgDiagram.doc);
+            symbolGraphic = new SymbolGraphic(svgDiagram.doc);
+            dataStoreSvg = DataStoreSvg.loadDataFromSvg(svgDiagram.doc);
             if (dataStoreSvg.indexParameters == null) {
                 dataStoreSvg.setDefaults();
             }
             requiresSave = false;
-            entitySvg.readEntityPositions(doc.getElementById("EntityGroup"));
-            entitySvg.readEntityPositions(doc.getElementById("LabelsGroup"));
-            entitySvg.readEntityPositions(doc.getElementById("GraphicsGroup"));
+            svgDiagram.entitySvg.readEntityPositions(svgDiagram.doc.getElementById("EntityGroup"));
+            svgDiagram.entitySvg.readEntityPositions(svgDiagram.doc.getElementById("LabelsGroup"));
+            svgDiagram.entitySvg.readEntityPositions(svgDiagram.doc.getElementById("GraphicsGroup"));
             configureDiagramGroups();
-            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(svgDiagram.doc, this.svgDiagram.svgNameSpace));
 //            if (dataStoreSvg.graphData == null) {
 //                return null;
 //            }
@@ -221,11 +213,11 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     private void configureDiagramGroups() {
-        Element svgRoot = doc.getDocumentElement();
+        Element svgRoot = svgDiagram.doc.getDocumentElement();
         // make sure the diagram group exisits
-        Element diagramGroup = doc.getElementById("DiagramGroup");
+        Element diagramGroup = svgDiagram.doc.getElementById("DiagramGroup");
         if (diagramGroup == null) {
-            diagramGroup = doc.createElementNS(svgNameSpace, "g");
+            diagramGroup = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
             diagramGroup.setAttribute("id", "DiagramGroup");
             // add the diagram group to the root element (the 'svg' element)
             svgRoot.appendChild(diagramGroup);
@@ -237,9 +229,9 @@ public class GraphPanel extends JPanel implements SavePanel {
         // add the labels group on top, also added on svg load if missing
         for (String groupForMouseListener : new String[]{"LabelsGroup", "EntityGroup", "RelationGroup", "GraphicsGroup"}) {
             // add any groups that are required and add them in the required order
-            Element parentElement = doc.getElementById(groupForMouseListener);
+            Element parentElement = svgDiagram.doc.getElementById(groupForMouseListener);
             if (parentElement == null) {
-                parentElement = doc.createElementNS(svgNameSpace, "g");
+                parentElement = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
                 parentElement.setAttribute("id", groupForMouseListener);
                 diagramGroup.insertBefore(parentElement, previousElement);
             } else {
@@ -267,9 +259,9 @@ public class GraphPanel extends JPanel implements SavePanel {
             // other methods have been tried but this is the most readable and the only one that actually works
             // I think this is mainly due to the way the svg dom would otherwise be constructed
             // others include:
-            // doc.getDomConfig()
-            // doc.getDocumentElement().setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:version", "");
-            // doc.getDocumentElement().setAttribute("xmlns:" + DataStoreSvg.kinDataNameSpace, DataStoreSvg.kinDataNameSpaceLocation); // this method of declaring multiple namespaces looks to me to be wrong but it is the only method that does not get stripped out by the transformer on save
+            // svgDiagram.doc.getDomConfig()
+            // svgDiagram.doc.getDocumentElement().setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:version", "");
+            // svgDiagram.doc.getDocumentElement().setAttribute("xmlns:" + DataStoreSvg.kinDataNameSpace, DataStoreSvg.kinDataNameSpaceLocation); // this method of declaring multiple namespaces looks to me to be wrong but it is the only method that does not get stripped out by the transformer on save
             //        Document doc = impl.createDocument(svgNS, "svg", null);
             //        SVGDocument doc = svgCanvas.getSVGDocument();
             String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -278,16 +270,16 @@ public class GraphPanel extends JPanel implements SavePanel {
                     + " zoomAndPan=\"magnify\" contentStyleType=\"text/css\" "
                     + "preserveAspectRatio=\"xMidYMid meet\" version=\"1.0\"/>";
             // DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
-            // doc = (SVGDocument) impl.createDocument(svgNameSpace, "svg", null);
+            // doc = (SVGDocument) impl.createDocument(svgDiagram.svgNameSpace, "svg", null);
             String parser = XMLResourceDescriptor.getXMLParserClassName();
             SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
-            doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
-            entitySvg.updateSymbolsElement(doc, svgNameSpace);
+            svgDiagram.doc = (SVGDocument) documentFactory.createDocument(svgDiagram.svgNameSpace, new StringReader(templateXml));
+            svgDiagram.entitySvg.updateSymbolsElement(svgDiagram.doc, svgDiagram.svgNameSpace);
             configureDiagramGroups();
-            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
-            svgCanvas.setSVGDocument(doc);
-            symbolGraphic = new SymbolGraphic(doc);
-            graphData = new GraphSorter();
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(svgDiagram.doc, this.svgDiagram.svgNameSpace));
+            svgCanvas.setSVGDocument(svgDiagram.doc);
+            symbolGraphic = new SymbolGraphic(svgDiagram.doc);
+            svgDiagram.graphData = new GraphSorter();
         } catch (IOException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
         }
@@ -298,8 +290,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         selectedGroupId.clear();
         svgUpdateHandler.clearHighlights();
         // make sure that any data changes such as the title/description in the kin term groups get updated into the file on save
-        dataStoreSvg.storeAllData(doc);
-        ArbilComponentBuilder.savePrettyFormatting(doc, svgFile);
+        dataStoreSvg.storeAllData(svgDiagram.doc);
+        ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, svgFile);
         requiresSave = false;
     }
 
@@ -332,6 +324,10 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        }
 //        dataStoreSvg.kinTypeStrings = kinTypeStringSet.toArray(new String[]{});
         dataStoreSvg.kinTypeStrings = kinTypeStringArray;
+    }
+
+    public SvgDiagram getSVGDocument() {
+        return svgDiagram;
     }
 
     public IndexerParameters getIndexParameters() {
@@ -402,7 +398,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public EntityData getEntityForElementId(UniqueIdentifier uniqueIdentifier) {
-        for (EntityData entityData : graphData.getDataNodes()) {
+        for (EntityData entityData : svgDiagram.graphData.getDataNodes()) {
             if (uniqueIdentifier.equals(entityData.getUniqueIdentifier())) {
                 return entityData;
             }
@@ -413,7 +409,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     public HashMap<UniqueIdentifier, EntityData> getEntitiesById(UniqueIdentifier[] uniqueIdentifiers) {
         ArrayList<UniqueIdentifier> identifierList = new ArrayList<UniqueIdentifier>(Arrays.asList(uniqueIdentifiers));
         HashMap<UniqueIdentifier, EntityData> returnMap = new HashMap<UniqueIdentifier, EntityData>();
-        for (EntityData entityData : graphData.getDataNodes()) {
+        for (EntityData entityData : svgDiagram.graphData.getDataNodes()) {
             if (identifierList.contains(entityData.getUniqueIdentifier())) {
                 returnMap.put(entityData.getUniqueIdentifier(), entityData);
             }
@@ -430,23 +426,23 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        return false;
 //    }
 //    public String getPathForElementId(UniqueIdentifier elementId) {
-////        NamedNodeMap namedNodeMap = doc.getElementById(elementId).getAttributes();
+////        NamedNodeMap namedNodeMap = svgDiagram.doc.getElementById(elementId).getAttributes();
 ////        for (int attributeCounter = 0; attributeCounter < namedNodeMap.getLength(); attributeCounter++) {
 ////            System.out.println(namedNodeMap.item(attributeCounter).getNodeName());
 ////            System.out.println(namedNodeMap.item(attributeCounter).getNamespaceURI());
 ////            System.out.println(namedNodeMap.item(attributeCounter).getNodeValue());
 ////        }
-//        Element entityElement = doc.getElementById(elementId.getAttributeIdentifier());
+//        Element entityElement = svgDiagram.doc.getElementById(elementId.getAttributeIdentifier());
 //        if (entityElement == null) {
 //            return null;
 //        } else {
-//            return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "path");
+//            return entityElement.getAttributeNS(DataStoreSvg.svgDiagram.kinDataNameSpaceLocation, "path");
 //        }
 //    }
     public String getKinTypeForElementId(UniqueIdentifier elementId) {
-        Element entityElement = doc.getElementById(elementId.getAttributeIdentifier());
+        Element entityElement = svgDiagram.doc.getElementById(elementId.getAttributeIdentifier());
         if (entityElement != null) {
-            return entityElement.getAttributeNS(kinDataNameSpaceLocation, "kintype");
+            return entityElement.getAttributeNS(SvgDiagram.kinDataNameSpaceLocation, "kintype");
         } else {
             return "";
         }
@@ -454,7 +450,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public Dimension2D getDiagramSize() {
         return svgCanvas.getSVGDocumentSize();
-//    Element svgRoot = doc.getDocumentElement();
+//    Element svgRoot = svgDiagram.doc.getDocumentElement();
 //    String widthString = svgRoot.getAttribute("width");
 //    String heightString = svgRoot.getAttribute("height");
 //    return new Point(Integer.parseInt(widthString), Integer.parseInt(widthString));
@@ -466,11 +462,11 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void resetLayout(boolean resetZoom) {
         // this requires that the entity data is loaded by recalculating the diagram at least once
-        entitySvg.discardEntityPositions();
-        graphData.clearPreferredEntityLocations();
-        graphData.setEntitys(graphData.getDataNodes());
+        svgDiagram.entitySvg.discardEntityPositions();
+        svgDiagram.graphData.clearPreferredEntityLocations();
+        svgDiagram.graphData.setEntitys(svgDiagram.graphData.getDataNodes());
         try {
-            graphData.placeAllNodes(entitySvg.entityPositions);
+            svgDiagram.graphData.placeAllNodes(svgDiagram.entitySvg.entityPositions);
             drawNodes(resetZoom);
         } catch (GraphSorter.UnsortablePointsException exception) {
             dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
@@ -478,19 +474,19 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public UniqueIdentifier[] getDiagramUniqueIdentifiers() {
-        return entitySvg.entityPositions.keySet().toArray(new UniqueIdentifier[0]);
+        return svgDiagram.entitySvg.entityPositions.keySet().toArray(new UniqueIdentifier[0]);
     }
 
     public void clearEntityLocations(UniqueIdentifier[] selectedIdentifiers) {
         // all entity locations are now stored as preferred locations when the graph sorter completes
 //        // change the entities stored location into a preferred location rather than a fixed location
 //        for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
-//            final Point entityLocation = entitySvg.getEntityLocation(uniqueIdentifier);
+//            final Point entityLocation = svgDiagram.entitySvg.getEntityLocation(uniqueIdentifier);
 //            if (entityLocation != null) {
 //                dataStoreSvg.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{uniqueIdentifier}, entityLocation);
 //            }
 //        }
-        entitySvg.clearEntityLocations(selectedIdentifiers);
+        svgDiagram.entitySvg.clearEntityLocations(selectedIdentifiers);
     }
 
     public void drawNodes(boolean resetZoom) {
@@ -501,7 +497,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void drawNodes(GraphSorter graphDataLocal, boolean resetZoom) {
         kinDiagramPanel.setStatusBarText(graphDataLocal.getDataNodes().length + " entities shown");
-        graphData = graphDataLocal;
+        svgDiagram.graphData = graphDataLocal;
         drawNodes(resetZoom);
         if (graphDataLocal.getDataNodes().length == 0) {
             // if all entities have been removed then reset the zoom so that new nodes are going to been centered

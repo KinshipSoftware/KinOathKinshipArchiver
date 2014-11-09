@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg;
 
@@ -128,7 +129,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        if (graphPanel.graphData == null) {
+        if (graphPanel.getSVGDocument().graphData == null) {
 //        if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
             return;
         }
@@ -149,7 +150,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             startRectangleSelectPoint = null;
             Rectangle dragSelectionRectOnDocument = graphPanel.svgUpdateHandler.removeSelectionRect();
             // update the entity selection based on the drag selection rectangle
-            graphPanel.selectedGroupId.addAll(graphPanel.entitySvg.getEntitiesWithinRect(dragSelectionRectOnDocument));
+            graphPanel.selectedGroupId.addAll(graphPanel.getSVGDocument().entitySvg.getEntitiesWithinRect(dragSelectionRectOnDocument));
             updateSelectionDisplay();
         }
         mouseActionOnNode = false;
@@ -217,22 +218,22 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             if (evt instanceof DOMMouseEvent) {
                 // the entity group is no longer offset so we no longer need to subtract the entity group position here
                 SVGMatrix draggedElementScreenMatrix = ((SVGLocatable) currentDraggedElement).getScreenCTM();
-                SVGMatrix draggedElementMatrix = graphPanel.doc.getRootElement().getTransformToElement((SVGElement) currentDraggedElement);
+                SVGMatrix draggedElementMatrix = graphPanel.getSVGDocument().doc.getRootElement().getTransformToElement((SVGElement) currentDraggedElement);
                 float scaleFactor = draggedElementScreenMatrix.inverse().getA(); // the drawing is proportional so only using X is adequate here
                 float xTranslate = draggedElementMatrix.getE();
                 float yTranslate = draggedElementMatrix.getF();
 //                AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
                 if (targetIdString != null && targetIdString.length() > 0) {
-                    graphPanel.svgUpdateHandler.relationDragHandle =
+                    graphPanel.svgUpdateHandler.relationDragHandle = 
                             new GraphicsDragHandle(
-                            graphPanel.doc.getElementById(targetIdString),
-                            currentDraggedElement,
-                            (Element) currentDraggedElement.getParentNode().getFirstChild(), // this assumes that the rect is the first element in the highlight
-                            Float.valueOf(currentDraggedElement.getAttribute("cx")),
-                            Float.valueOf(currentDraggedElement.getAttribute("cy")),
-                            ((DOMMouseEvent) evt).getClientX(),
-                            ((DOMMouseEvent) evt).getClientY(),
-                            scaleFactor);
+                                    graphPanel.getSVGDocument().doc.getElementById(targetIdString),
+                                    currentDraggedElement,
+                                    (Element) currentDraggedElement.getParentNode().getFirstChild(), // this assumes that the rect is the first element in the highlight
+                                    Float.valueOf(currentDraggedElement.getAttribute("cx")),
+                                    Float.valueOf(currentDraggedElement.getAttribute("cy")),
+                                    ((DOMMouseEvent) evt).getClientX(),
+                                    ((DOMMouseEvent) evt).getClientY(),
+                                    scaleFactor);
                 } else {
                     RelationTypeDefinition customTypeDefinition = null;
                     DataTypes.RelationType relationType = null;
@@ -249,15 +250,15 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     } else {
                         relationType = DataTypes.RelationType.valueOf(handleTypeString);
                     }
-                    graphPanel.svgUpdateHandler.relationDragHandle =
+                    graphPanel.svgUpdateHandler.relationDragHandle = 
                             new RelationDragHandle(
-                            customTypeDefinition,
-                            relationType,
-                            Float.valueOf(currentDraggedElement.getAttribute("cx")) - xTranslate,
-                            Float.valueOf(currentDraggedElement.getAttribute("cy")) - yTranslate,
-                            ((DOMMouseEvent) evt).getClientX(),
-                            ((DOMMouseEvent) evt).getClientY(),
-                            scaleFactor);
+                                    customTypeDefinition,
+                                    relationType,
+                                    Float.valueOf(currentDraggedElement.getAttribute("cx")) - xTranslate,
+                                    Float.valueOf(currentDraggedElement.getAttribute("cy")) - yTranslate,
+                                    ((DOMMouseEvent) evt).getClientX(),
+                                    ((DOMMouseEvent) evt).getClientY(),
+                                    scaleFactor);
                 }
             }
         } else /* if (mouseDownButton1) */ {
@@ -300,7 +301,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 remainingEditors.remove(currentSelectedId);
                 if (currentSelectedId.isGraphicsIdentifier()) {
                     if (!shownGraphicsEditors.containsKey(currentSelectedId)) {
-                        Element graphicsElement = graphPanel.doc.getElementById(currentSelectedId.getAttributeIdentifier());
+                        Element graphicsElement = graphPanel.getSVGDocument().doc.getElementById(currentSelectedId.getAttributeIdentifier());
                         SvgElementEditor elementEditor = new SvgElementEditor(graphPanel.svgCanvas.getUpdateManager(), graphicsElement);
                         graphPanel.metadataPanel.addTab("Graphics Editor", elementEditor);
 //                            graphPanel.editorHidePane.setSelectedComponent(elementEditor);

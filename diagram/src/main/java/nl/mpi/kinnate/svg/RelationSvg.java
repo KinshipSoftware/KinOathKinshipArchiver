@@ -100,17 +100,17 @@ public class RelationSvg {
 //        }
 //
 //    }
-    public void createRelationElements(GraphPanel graphPanel, RelationRecordTable relationRecords, Element relationGroupNode) throws OldFormatException {
-        relationRecords.adjustLines(graphPanel);
+    public void createRelationElements(SvgDiagram svgDiagram, RelationRecordTable relationRecords, Element relationGroupNode) throws OldFormatException {
+        relationRecords.adjustLines(svgDiagram);
 
         for (RelationRecord relationRecord : relationRecords.getAllRecords()) {
-            Element groupNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
+            Element groupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
             groupNode.setAttribute("id", relationRecord.idString);
-            Element defsNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "defs");
+            Element defsNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "defs");
 //            new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, relationRecord.directedRelation, relationRecord.curveLineOrientation, relationRecord.leftEntity.getUniqueIdentifier(), relationRecord.rightEntity.getUniqueIdentifier());
             boolean addedRelationLine = false;
             Element linkLine;
-            linkLine = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "path");
+            linkLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "path");
             linkLine.setAttribute("d", relationRecord.getPathPointsString());
             if (relationRecord.lineDash > 0) {
                 linkLine.setAttribute("stroke-dasharray", Integer.toString(relationRecord.lineDash));
@@ -132,7 +132,7 @@ public class RelationSvg {
                 }
 //                System.out.println("lineMarkerOffset: " + lineMarkerOffset);
                 // add the start line marker
-                Element startMarker = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "marker");
+                Element startMarker = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "marker");
                 final String startMarkerId = relationRecord.lineIdString + "StartMarker";
                 startMarker.setAttribute("id", startMarkerId);
                 startMarker.setAttribute("fill", linkLine.getAttribute("stroke"));
@@ -142,12 +142,12 @@ public class RelationSvg {
                 startMarker.setAttribute("refY", "6");
                 startMarker.setAttribute("markerWidth", "3");
                 startMarker.setAttribute("markerHeight", "3");
-                Element startMarkerNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
+                Element startMarkerNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
                 startMarkerNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + "StartMarker");
                 startMarker.appendChild(startMarkerNode);
                 defsNode.appendChild(startMarker);
                 // add the end line marker
-                Element endMarker = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "marker");
+                Element endMarker = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "marker");
                 final String endMarkerId = relationRecord.lineIdString + "EndMarker";
                 endMarker.setAttribute("id", endMarkerId);
                 endMarker.setAttribute("fill", linkLine.getAttribute("stroke"));
@@ -158,7 +158,7 @@ public class RelationSvg {
                 endMarker.setAttribute("markerWidth", "4");
                 endMarker.setAttribute("markerHeight", "3");
                 endMarker.setAttribute("orient", "auto");
-                Element endMarkerNode = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "use");
+                Element endMarkerNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
                 endMarkerNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + "EndMarker");
                 endMarker.appendChild(endMarkerNode);
                 defsNode.appendChild(endMarker);
@@ -182,7 +182,7 @@ public class RelationSvg {
 
             if (addedRelationLine) {
                 // insert the node that uses the above definition
-                addUseNode(graphPanel.doc, graphPanel.svgNameSpace, groupNode, relationRecord.lineIdString);
+                addUseNode(svgDiagram.doc, svgDiagram.svgNameSpace, groupNode, relationRecord.lineIdString);
                 // add the relation label
                 // todo: the label on relation lines code is suppresed at the moment because it seems that there is a name space issue preventing the line labels to show, as exemplified by saving and reloading the document which will then show the labels correctly.
 //                if (relationRecord.lineLabel != null) {
@@ -210,15 +210,15 @@ public class RelationSvg {
         }
     }
 
-    public void updateRelationLines(GraphPanel graphPanel, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) throws OldFormatException {
+    public void updateRelationLines(SvgDiagram svgDiagram, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) throws OldFormatException {
         if (relationRecords == null) {
             // no relations therefore nothing to do here
             return;
         }
-        relationRecords.adjustLines(graphPanel);
+        relationRecords.adjustLines(svgDiagram);
 //        graphPanel.lineLookUpTable.addLoops();
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
-        Element relationGroup = graphPanel.doc.getElementById("RelationGroup");
+        Element relationGroup = svgDiagram.doc.getElementById("RelationGroup");
 //        createRelationElements(graphPanel, relationRecords, lineLookUpTable, relationGroup);
         for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
             if ("g".equals(currentChild.getLocalName())) {
@@ -234,7 +234,7 @@ public class RelationSvg {
                 // todo: update the relation lines
                 //System.out.println("needs update on: " + idAttrubite.getNodeValue());
                 String lineElementId = idAttrubite.getNodeValue() + "Line";
-                Element relationLineElement = graphPanel.doc.getElementById(lineElementId);
+                Element relationLineElement = svgDiagram.doc.getElementById(lineElementId);
                 if (relationLineElement != null) {
                     //System.out.println("type: " + relationLineElement.getLocalName());
 //                            float[] egoSymbolPoint;
@@ -271,7 +271,7 @@ public class RelationSvg {
                         RelationRecord relationRecord = relationRecords.getRecord(lineElementId); //new RelationRecord(graphRelationData.curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
                         relationLineElement.setAttribute("d", relationRecord.getPathPointsString());
                     }
-                    addUseNode(graphPanel.doc, graphPanel.svgNameSpace, (Element) currentChild, lineElementId);
+                    addUseNode(svgDiagram.doc, svgDiagram.svgNameSpace, (Element) currentChild, lineElementId);
 //                    updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
                 }
 //                    }

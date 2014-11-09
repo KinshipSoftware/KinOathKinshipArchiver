@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg.relationlines;
 
@@ -24,8 +25,8 @@ import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
-import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.OldFormatException;
+import nl.mpi.kinnate.svg.SvgDiagram;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -38,7 +39,7 @@ public class RelationRecord {
     private String groupName = null;
     public String idString;
     public String lineIdString;
-    public GraphPanel graphPanel;
+    public SvgDiagram svgDiagram;
     public EntityData leftEntity;
     public EntityData rightEntity;
     public DataTypes.RelationType directedRelation;
@@ -68,9 +69,9 @@ public class RelationRecord {
         curveLinePoints = setPathPointsAttribute(curveLineOrientation, hSpacing, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y);
     }
 
-    protected RelationRecord(String groupName, GraphPanel graphPanel, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, String dcrType, String customType, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
+    protected RelationRecord(String groupName, SvgDiagram svgDiagram, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, String dcrType, String customType, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
         this.groupName = groupName;
-        this.graphPanel = graphPanel;
+        this.svgDiagram = svgDiagram;
         this.leftEntity = leftEntity;
         this.rightEntity = rightEntity;
         this.directedRelation = directedRelation;
@@ -125,7 +126,7 @@ public class RelationRecord {
 //        final HashSet<UniqueIdentifier> parentIdSet = parentIdentifiers.get(entityId);
         if (parentIdSet != null) {
             for (UniqueIdentifier parentIdentifier : parentIdSet) {
-                Point parentLoc = graphPanel.entitySvg.getEntityLocationOffset(parentIdentifier);
+                Point parentLoc = svgDiagram.entitySvg.getEntityLocationOffset(parentIdentifier);
                 if (maxY == null) {
                     maxY = parentLoc.y;
                 } else {
@@ -165,14 +166,13 @@ public class RelationRecord {
         Point alterSymbolPoint;
         Point parentPoint = null;
         // the ancestral relations should already be unidirectional and duplicates should have been removed
-        egoSymbolPoint = graphPanel.entitySvg.getEntityLocationOffset(leftEntity.getUniqueIdentifier());
-        alterSymbolPoint = graphPanel.entitySvg.getEntityLocationOffset(rightEntity.getUniqueIdentifier());
+        egoSymbolPoint = svgDiagram.entitySvg.getEntityLocationOffset(leftEntity.getUniqueIdentifier());
+        alterSymbolPoint = svgDiagram.entitySvg.getEntityLocationOffset(rightEntity.getUniqueIdentifier());
         if (directedRelation != DataTypes.RelationType.sibling && directedRelation != DataTypes.RelationType.union) {
             parentPoint = getAverageParentLocation(leftEntity);
         }
 
 //            relationLineIndex = relationGroupNode.getChildNodes().getLength();
-
         // set the line end points
 //        int[] egoSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocationOffset(currentNode.getUniqueIdentifier());
 //        int[] alterSymbolPoint = graphPanel.dataStoreSvg.graphData.getEntityLocationOffset(graphLinkNode.getAlterNode().getUniqueIdentifier());

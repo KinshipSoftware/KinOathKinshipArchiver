@@ -27,8 +27,9 @@ import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
-import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.svg.DiagramSettings;
 import nl.mpi.kinnate.svg.OldFormatException;
+import nl.mpi.kinnate.svg.SvgDiagram;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
 /**
@@ -42,7 +43,7 @@ public class RelationRecordTable {
     LineLookUpTable lineLookUpTable;
     ArrayList<String> doneRelations = new ArrayList<String>();
 
-    public void addRecord(GraphPanel graphPanel, EntityData entityData, EntityRelation entityRelation, int hSpacing, int vSpacing, int lineWidth) throws OldFormatException {
+    public void addRecord(DiagramSettings diagramSettings, SvgDiagram svgDiagram, EntityData entityData, EntityRelation entityRelation, int hSpacing, int vSpacing, int lineWidth) throws OldFormatException {
         // make directed and exclude any lines that are already done
         DataTypes.RelationType directedRelation = entityRelation.getRelationType();
         EntityData leftEntity;
@@ -97,7 +98,7 @@ public class RelationRecordTable {
                 RelationTypeDefinition.CurveLineOrientation curveLineOrientation = RelationTypeDefinition.CurveLineOrientation.horizontal;
                 int lineDash = 0;
                 if (lineColour == null) {
-                    for (RelationTypeDefinition relationTypeDefinition : graphPanel.getDiagramSettings().getRelationTypeDefinitions()) {
+                    for (RelationTypeDefinition relationTypeDefinition : diagramSettings.getRelationTypeDefinitions()) {
                         if (relationTypeDefinition.matchesType(entityRelation)) {
                             lineColour = relationTypeDefinition.getLineColour();
                             lineWidth = relationTypeDefinition.getLineWidth();
@@ -115,7 +116,7 @@ public class RelationRecordTable {
                         labelString = labelString + " : " + entityRelation.labelString;
                     }
                 }
-                RelationRecord relationRecord = new RelationRecord(groupId, graphPanel, this.size(), leftEntity, rightEntity, directedRelation, entityRelation.dcrType, entityRelation.customType, lineWidth, lineDash, curveLineOrientation, lineColour, labelString, hSpacing, vSpacing);
+                RelationRecord relationRecord = new RelationRecord(groupId, svgDiagram, this.size(), leftEntity, rightEntity, directedRelation, entityRelation.dcrType, entityRelation.customType, lineWidth, lineDash, curveLineOrientation, lineColour, labelString, hSpacing, vSpacing);
                 recordStore.put(relationRecord.lineIdString, relationRecord);
             }
         }
@@ -195,12 +196,12 @@ public class RelationRecordTable {
         return recordStore.size();
     }
 
-    public void adjustLines(GraphPanel graphPanel) throws OldFormatException {
+    public void adjustLines(SvgDiagram svgDiagram) throws OldFormatException {
         lineLookUpTable = new LineLookUpTable();
         for (RelationRecord relationRecord : recordStore.values()) {
             relationRecord.updatePathPoints(lineLookUpTable);
         }
-        lineLookUpTable.separateLinesOverlappingEntities(graphPanel.entitySvg.getAllEntityLocations());
+        lineLookUpTable.separateLinesOverlappingEntities(svgDiagram.entitySvg.getAllEntityLocations());
         lineLookUpTable.separateOverlappingLines();
         lineLookUpTable.addLoops();
     }
