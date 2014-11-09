@@ -97,7 +97,7 @@ public class RelationRecordTable {
                 RelationTypeDefinition.CurveLineOrientation curveLineOrientation = RelationTypeDefinition.CurveLineOrientation.horizontal;
                 int lineDash = 0;
                 if (lineColour == null) {
-                    for (RelationTypeDefinition relationTypeDefinition : graphPanel.dataStoreSvg.getRelationTypeDefinitions()) {
+                    for (RelationTypeDefinition relationTypeDefinition : graphPanel.getDiagramSettings().getRelationTypeDefinitions()) {
                         if (relationTypeDefinition.matchesType(entityRelation)) {
                             lineColour = relationTypeDefinition.getLineColour();
                             lineWidth = relationTypeDefinition.getLineWidth();

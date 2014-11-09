@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg;
 
@@ -122,7 +123,7 @@ public class SvgUpdateHandler {
         // this must be only called from within a svg runnable
         removeRelationHighLights();
         if (relationRecords != null) {
-            if (graphPanel.dataStoreSvg.highlightRelationLines) {
+            if (graphPanel.getDiagramSettings().highlightRelationLines()) {
                 // add highlights for relation lines
                 Element relationHighlightGroup = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "g");
                 relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
@@ -582,7 +583,7 @@ public class SvgUpdateHandler {
                                     // make sure the rect is added before the drag handles, otherwise the rect can block the mouse actions
                                     highlightGroupNode.appendChild(symbolNode);
                                     if (!uniqueIdentifier.isTransientIdentifier() && !uniqueIdentifier.isGraphicsIdentifier()) {
-                                        addRelationDragHandles(graphPanel.dataStoreSvg.getRelationTypeDefinitions(), highlightGroupNode, bbox, paddingDistance);
+                                        addRelationDragHandles(graphPanel.getDiagramSettings().getRelationTypeDefinitions(), highlightGroupNode, bbox, paddingDistance);
                                     } else {
                                         if (uniqueIdentifier.isGraphicsIdentifier()) {
                                             if (!"text".equals(selectedGroup.getLocalName())) {
@@ -805,7 +806,7 @@ public class SvgUpdateHandler {
                                 synchronized (SvgUpdateHandler.this) {
                                     if (dragRemainders.length > dragCounter) {
 //                                        System.out.println("drag remainder: " + updateDragNodeXInner + " : " + dragRemainders[dragCounter][0]);
-                                        dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner, dragRemainders[dragCounter][0], updateDragNodeYInner, dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, dragScale, allRealtionsSelected);
+                                        dragRemainders[dragCounter] = graphPanel.entitySvg.moveEntity(graphPanel, entityId, updateDragNodeXInner, dragRemainders[dragCounter][0], updateDragNodeYInner, dragRemainders[dragCounter][1], graphPanel.getDiagramSettings().snapToGrid(), dragScale, allRealtionsSelected);
                                     }
                                 }
                                 dragCounter++;
@@ -839,7 +840,7 @@ public class SvgUpdateHandler {
 //                    } 
                             int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); // graphPanel.dataStoreSvg.graphData.gridHeight);
                             int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
-                            new RelationSvg(dialogHandler).updateRelationLines(graphPanel, relationRecords, graphPanel.selectedGroupId, hSpacing, vSpacing);
+                            new RelationSvg().updateRelationLines(graphPanel, relationRecords, graphPanel.selectedGroupId, hSpacing, vSpacing);
                             createRelationLineHighlights(entityGroup);
                             final Rectangle currentGraphRect = graphPanel.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
                             if (!initialGraphRect.contains(currentGraphRect)) {
@@ -905,7 +906,6 @@ public class SvgUpdateHandler {
 //        graphSize.x = graphSize.x + (int) bbox.getX();
 //        graphSize.y = graphSize.y + (int) bbox.getY();
 //        svgRoot.setAttribute("viewBox", Float.toString(bbox.getX()) + " " + Float.toString(bbox.getY()) + " " + Float.toString(bbox.getWidth()) + " " + Float.toString(bbox.getHeight()));
-
 //        viewBox="0.0 0.0 1024.0 768.0"
         // Set the width and height attributes on the root 'svg' element.
         System.out.println("graphSize: " + graphSize);
@@ -923,7 +923,7 @@ public class SvgUpdateHandler {
             emptyBorder = 0;
         }
         svgRoot.setAttribute("viewBox", (graphSize.x - 5 - emptyBorder) + " " + (graphSize.y - 5 - emptyBorder) + " " + (graphSize.width + 10 + emptyBorder * 2) + " " + (graphSize.height + 10 + emptyBorder * 2));
-        if (graphPanel.dataStoreSvg.showDiagramBorder) {
+        if (graphPanel.getDiagramSettings().showDiagramBorder()) {
             // draw a grey rectangle to show the diagram bounds
             Element pageBorderNode = graphPanel.doc.getElementById("PageBorder");
             if (pageBorderNode == null) {
@@ -1143,7 +1143,7 @@ public class SvgUpdateHandler {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getAllRelations()) {
                         if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.getRelationType() != DataTypes.RelationType.kinterm)
-                                && (graphPanel.dataStoreSvg.showSanguineLines || !DataTypes.isSanguinLine(graphLinkNode.getRelationType()))
+                                && (graphPanel.getDiagramSettings().showSanguineLines() || !DataTypes.isSanguinLine(graphLinkNode.getRelationType()))
                                 && (graphLinkNode.getAlterNode() != null && graphLinkNode.getAlterNode().isVisible)) {
                             try {
                                 relationRecords.addRecord(graphPanel, currentNode, graphLinkNode, hSpacing, vSpacing, EntitySvg.strokeWidth);
@@ -1157,7 +1157,7 @@ public class SvgUpdateHandler {
                     }
                 }
             }
-            new RelationSvg(dialogHandler).createRelationElements(graphPanel, relationRecords, relationGroupNode);
+            new RelationSvg().createRelationElements(graphPanel, relationRecords, relationGroupNode);
             // todo: allow the user to set an entity as the provider of new dat being entered, this selected user can then be added to each field that is updated as the providence for that data. this would be best done in a cascading fashon so that there is a default informant for the entity and if required for sub nodes and fields
 //            ArbilComponentBuilder.savePrettyFormatting(graphPanel.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
 //        svgCanvas.revalidate();

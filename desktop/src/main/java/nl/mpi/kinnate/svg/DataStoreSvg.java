@@ -167,11 +167,37 @@ public class DataStoreSvg implements DiagramSettings {
     }
 
     @Override
+    public boolean highlightRelationLines() {
+        return highlightRelationLines;
+    }
+
+    @Override
+    public boolean snapToGrid() {
+        return snapToGrid;
+    }
+
+    @Override
     public boolean showExternalLinks() {
         return showExternalLinks;
     }
 
+    @Override
+    public boolean showDiagramBorder() {
+        return showDiagramBorder;
+    }
+
+    @Override
+    public boolean showSanguineLines() {
+        return showSanguineLines;
+    }
+
+    @Override
+    public boolean showKinTermLines() {
+        return showKinTermLines;
+    }
+
     @XmlTransient
+    @Override
     public RelationTypeDefinition[] getRelationTypeDefinitions() {
         if (relationTypeDefinitions != null) {
             return relationTypeDefinitions;

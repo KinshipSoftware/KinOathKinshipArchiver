@@ -17,6 +17,8 @@
  */
 package nl.mpi.kinnate.svg;
 
+import nl.mpi.kinnate.kindata.RelationTypeDefinition;
+
 /**
  * @since Nov 9, 2014 8:36:05 AM (creation date)
  * @author petwit
@@ -34,4 +36,16 @@ public interface DiagramSettings {
     boolean showDateLabels();
 
     boolean showExternalLinks();
+
+    boolean highlightRelationLines();
+
+    boolean snapToGrid();
+
+    boolean showDiagramBorder();
+
+    boolean showSanguineLines();
+
+    boolean showKinTermLines();
+
+    RelationTypeDefinition[] getRelationTypeDefinitions();
 }

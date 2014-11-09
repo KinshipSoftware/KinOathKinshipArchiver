@@ -1,31 +1,30 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg;
 
 import java.util.ArrayList;
-import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
 import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.Text;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
@@ -34,12 +33,6 @@ import org.w3c.dom.svg.SVGDocument;
  * @author Peter Withers
  */
 public class RelationSvg {
-
-    private MessageDialogHandler dialogHandler;
-
-    public RelationSvg(MessageDialogHandler dialogHandler) {
-        this.dialogHandler = dialogHandler;
-    }
 
     private void addUseNode(SVGDocument doc, String svgNameSpace, Element targetGroup, String targetDefId) {
         String useNodeId = targetDefId + "use";
@@ -259,7 +252,6 @@ public class RelationSvg {
 //                            float egoY = egoSymbolPoint[1];
 //                            float alterX = alterSymbolPoint[0];
 //                            float alterY = alterSymbolPoint[1];
-
 //                        SVGRect egoSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.egoNodeId);
 //                        SVGRect alterSymbolRect = new EntitySvg().getEntityLocation(doc, graphRelationData.alterNodeId);
 //
@@ -267,7 +259,6 @@ public class RelationSvg {
 //                        float egoY = egoSymbolRect.getY() + egoSymbolRect.getHeight() / 2;
 //                        float alterX = alterSymbolRect.getX() + alterSymbolRect.getWidth() / 2;
 //                        float alterY = alterSymbolRect.getY() + alterSymbolRect.getHeight() / 2;
-
                     if ("polyline".equals(relationLineElement.getLocalName())) {
                         //System.out.println("polyline to update: " + lineElementId);
                         // todo: we need to be getting the record from the lineLookUpTable not creating a new one
