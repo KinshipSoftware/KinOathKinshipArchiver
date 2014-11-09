@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui.relationsettings;
 
@@ -39,6 +40,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.ui.kintypeeditor.ArrayListCellRenderer;
 import nl.mpi.kinnate.ui.kintypeeditor.CheckBoxRenderer;
 
@@ -48,15 +50,18 @@ import nl.mpi.kinnate.ui.kintypeeditor.CheckBoxRenderer;
  * Author : Peter Withers
  */
 public class RelationSettingsPanel extends JPanel implements ActionListener {
+
     private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
 
     private DataStoreSvg dataStoreSvg;
+    private GraphPanel graphPanel;
     private RelationTypesTableModel relationTypesTableModel;
     private ArbilWindowManager dialogHandler;
     private final String Scan_For_Types = widgets.getString("RelationSettings_SCAN FOR TYPES");
 
-    public RelationSettingsPanel(String panelName, SavePanel savePanel, DataStoreSvg dataStoreSvg, ArbilWindowManager dialogHandler) {
-        this.dataStoreSvg = dataStoreSvg;
+    public RelationSettingsPanel(String panelName, SavePanel savePanel, GraphPanel graphPanel, ArbilWindowManager dialogHandler) {
+        this.dataStoreSvg = graphPanel.dataStoreSvg;
+        this.graphPanel = graphPanel;
         this.dialogHandler = dialogHandler;
         this.setName(panelName);
         this.setLayout(new BorderLayout());
@@ -134,7 +139,7 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if ("scan".equals(e.getActionCommand())) {
             int initalTypeCount = dataStoreSvg.getRelationTypeDefinitions().length;
-            for (EntityData entityData : dataStoreSvg.graphData.getDataNodes()) {
+            for (EntityData entityData : graphPanel.graphData.getDataNodes()) {
                 for (EntityRelation entityRelation : entityData.getAllRelations()) {
                     dataStoreSvg.addRelationTypeDefinition(new RelationTypeDefinition(entityRelation.customType, entityRelation.dcrType, new DataTypes.RelationType[]{entityRelation.getRelationType()}, "#999999", 2, 0, RelationTypeDefinition.CurveLineOrientation.horizontal));
                 }
@@ -142,7 +147,7 @@ public class RelationSettingsPanel extends JPanel implements ActionListener {
             final int foundTypesCount = dataStoreSvg.getRelationTypeDefinitions().length - initalTypeCount;
             if (foundTypesCount > 0) {
                 relationTypesTableModel.fireTableDataChanged();
-                dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(widgets.getString("ADDED {0} NEW TYPES FROM THE DIAGRAM"), new Object[] {foundTypesCount}), Scan_For_Types);
+                dialogHandler.addMessageDialogToQueue(java.text.MessageFormat.format(widgets.getString("ADDED {0} NEW TYPES FROM THE DIAGRAM"), new Object[]{foundTypesCount}), Scan_For_Types);
             } else {
                 dialogHandler.addMessageDialogToQueue(widgets.getString("NO NEW TYPES FOUND ON THE DIAGRAM"), Scan_For_Types);
             }

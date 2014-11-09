@@ -47,7 +47,7 @@ public class ExportToR {
         PedigreePackageExport packageExport = new PedigreePackageExport(savePanel.getGraphPanel().dataStoreSvg.defaultSymbol);
         try {
             FileWriter fileWriter = new FileWriter(destinationFile, false);
-            final EntityData[] dataNodes = savePanel.getGraphPanel().dataStoreSvg.graphData.getDataNodes();
+            final EntityData[] dataNodes = savePanel.getGraphPanel().graphData.getDataNodes();
             ArrayList<EntityData> visibleEntities = new ArrayList<EntityData>();
             for (EntityData currentEntity : dataNodes) {
                 if (currentEntity.isVisible) {

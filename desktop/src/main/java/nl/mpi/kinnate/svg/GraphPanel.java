@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg;
 
@@ -65,6 +66,9 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class GraphPanel extends JPanel implements SavePanel {
 
+    static protected String kinDataNameSpace = "kin";
+    static protected String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
+
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
     protected SVGDocument doc;
@@ -72,6 +76,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private boolean requiresSave = false;
     private File svgFile = null;
     public GraphPanelSize graphPanelSize;
+    public GraphSorter graphData; // this is tested for null to determine if the diagram has been recalculated 
     protected ArrayList<UniqueIdentifier> selectedGroupId;
     protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
     public DataStoreSvg dataStoreSvg;
@@ -93,7 +98,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         this.dataNodeLoader = dataNodeLoader;
 //        this.entityCollection = entityCollection;
         dataStoreSvg = new DataStoreSvg();
-        entitySvg = new EntitySvg(dialogHandler);
+        entitySvg = new EntitySvg();
         dataStoreSvg.setDefaults();
         svgUpdateHandler = new SvgUpdateHandler(this, kinDiagramPanel, dialogHandler);
         selectedGroupId = new ArrayList<UniqueIdentifier>();
@@ -282,7 +287,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(entitySvg.listSymbolNames(doc, this.svgNameSpace));
             svgCanvas.setSVGDocument(doc);
             symbolGraphic = new SymbolGraphic(doc);
-            dataStoreSvg.graphData = new GraphSorter();
+            graphData = new GraphSorter();
         } catch (IOException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
         }
@@ -306,6 +311,10 @@ public class GraphPanel extends JPanel implements SavePanel {
             printNodeNames(childNode);
             childNode = childNode.getNextSibling();
         }
+    }
+
+    public DiagramSettings getDiagramSettings() {
+        return dataStoreSvg;
     }
 
     public String[] getKinTypeStrigs() {
@@ -393,7 +402,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public EntityData getEntityForElementId(UniqueIdentifier uniqueIdentifier) {
-        for (EntityData entityData : dataStoreSvg.graphData.getDataNodes()) {
+        for (EntityData entityData : graphData.getDataNodes()) {
             if (uniqueIdentifier.equals(entityData.getUniqueIdentifier())) {
                 return entityData;
             }
@@ -404,7 +413,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     public HashMap<UniqueIdentifier, EntityData> getEntitiesById(UniqueIdentifier[] uniqueIdentifiers) {
         ArrayList<UniqueIdentifier> identifierList = new ArrayList<UniqueIdentifier>(Arrays.asList(uniqueIdentifiers));
         HashMap<UniqueIdentifier, EntityData> returnMap = new HashMap<UniqueIdentifier, EntityData>();
-        for (EntityData entityData : dataStoreSvg.graphData.getDataNodes()) {
+        for (EntityData entityData : graphData.getDataNodes()) {
             if (identifierList.contains(entityData.getUniqueIdentifier())) {
                 returnMap.put(entityData.getUniqueIdentifier(), entityData);
             }
@@ -437,7 +446,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     public String getKinTypeForElementId(UniqueIdentifier elementId) {
         Element entityElement = doc.getElementById(elementId.getAttributeIdentifier());
         if (entityElement != null) {
-            return entityElement.getAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kintype");
+            return entityElement.getAttributeNS(kinDataNameSpaceLocation, "kintype");
         } else {
             return "";
         }
@@ -458,10 +467,10 @@ public class GraphPanel extends JPanel implements SavePanel {
     public void resetLayout(boolean resetZoom) {
         // this requires that the entity data is loaded by recalculating the diagram at least once
         entitySvg.discardEntityPositions();
-        dataStoreSvg.graphData.clearPreferredEntityLocations();
-        dataStoreSvg.graphData.setEntitys(dataStoreSvg.graphData.getDataNodes());
+        graphData.clearPreferredEntityLocations();
+        graphData.setEntitys(graphData.getDataNodes());
         try {
-            dataStoreSvg.graphData.placeAllNodes(entitySvg.entityPositions);
+            graphData.placeAllNodes(entitySvg.entityPositions);
             drawNodes(resetZoom);
         } catch (GraphSorter.UnsortablePointsException exception) {
             dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
@@ -492,7 +501,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void drawNodes(GraphSorter graphDataLocal, boolean resetZoom) {
         kinDiagramPanel.setStatusBarText(graphDataLocal.getDataNodes().length + " entities shown");
-        dataStoreSvg.graphData = graphDataLocal;
+        graphData = graphDataLocal;
         drawNodes(resetZoom);
         if (graphDataLocal.getDataNodes().length == 0) {
             // if all entities have been removed then reset the zoom so that new nodes are going to been centered

@@ -758,7 +758,7 @@ public class SvgUpdateHandler {
 //                    // remove the relation highlight group because lines will be out of date when the entities are moved
 //                    relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
 //                }
-                Rectangle initialGraphRect = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+                Rectangle initialGraphRect = graphPanel.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
                 Element entityGroup = graphPanel.doc.getElementById("EntityGroup");
                 try {
                     boolean continueUpdating = true;
@@ -775,7 +775,7 @@ public class SvgUpdateHandler {
                         }
 //                    System.out.println("updateDragNodeX: " + updateDragNodeXInner);
 //                    System.out.println("updateDragNodeY: " + updateDragNodeYInner);
-                        if (graphPanel.doc == null || graphPanel.dataStoreSvg.graphData == null) {
+                        if (graphPanel.doc == null || graphPanel.graphData == null) {
                             BugCatcherManager.getBugCatcher().logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
                         } else {
 //                        if (relationDragHandleType != null) {
@@ -787,7 +787,7 @@ public class SvgUpdateHandler {
                             // drag the entities
                             boolean allRealtionsSelected = true;
                             relationLoop:
-                            for (EntityData selectedEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+                            for (EntityData selectedEntity : graphPanel.graphData.getDataNodes()) {
                                 if (selectedEntity.isVisible
                                         && graphPanel.selectedGroupId.contains(selectedEntity.getUniqueIdentifier())) {
                                     for (EntityData relatedEntity : selectedEntity.getVisiblyRelated()) {
@@ -841,7 +841,7 @@ public class SvgUpdateHandler {
                             int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
                             new RelationSvg(dialogHandler).updateRelationLines(graphPanel, relationRecords, graphPanel.selectedGroupId, hSpacing, vSpacing);
                             createRelationLineHighlights(entityGroup);
-                            final Rectangle currentGraphRect = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+                            final Rectangle currentGraphRect = graphPanel.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
                             if (!initialGraphRect.contains(currentGraphRect)) {
                                 Element svgRoot = graphPanel.doc.getDocumentElement();
                                 Element diagramGroupNode = graphPanel.doc.getElementById("DiagramGroup");
@@ -891,7 +891,7 @@ public class SvgUpdateHandler {
             at.setToTranslation(1, 1);
             graphPanel.svgCanvas.setRenderingTransform(at);
         }
-        Rectangle graphSize = graphPanel.dataStoreSvg.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
+        Rectangle graphSize = graphPanel.graphData.getGraphSize(graphPanel.entitySvg.entityPositions);
         // set the diagram offset so that no element is less than zero
 //        diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(-graphSize.x) + ", " + Integer.toString(-graphSize.y) + ")");
         diagramGroupNode.removeAttribute("transform");
@@ -1082,7 +1082,7 @@ public class SvgUpdateHandler {
     }
 
     public void drawEntities(boolean resetZoom) { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
-        graphPanel.dataStoreSvg.graphData.setPadding(graphPanel.graphPanelSize);
+        graphPanel.graphData.setPadding(graphPanel.graphPanelSize);
         relationRecords = new RelationRecordTable();
         int vSpacing = graphPanel.graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);
         int hSpacing = graphPanel.graphPanelSize.getHorizontalSpacing(); //dataStoreSvg.graphData.gridWidth);
@@ -1126,7 +1126,7 @@ public class SvgUpdateHandler {
             if (entityGroupNodeOld != null) {
                 entityGroupNodeOld.getParentNode().removeChild(entityGroupNodeOld);
             }
-            graphPanel.dataStoreSvg.graphData.placeAllNodes(graphPanel.entitySvg.entityPositions);
+            graphPanel.graphData.placeAllNodes(graphPanel.entitySvg.entityPositions);
             resizeCanvas(svgRoot, diagramGroupNode, resetZoom);
 
 //            entitySvg.removeOldEntities(relationGroupNode);
@@ -1134,12 +1134,12 @@ public class SvgUpdateHandler {
             // store the selected kin type strings and other data in the dom
             graphPanel.dataStoreSvg.storeAllData(graphPanel.doc);
 //            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
-            for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+            for (EntityData currentNode : graphPanel.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     entityGroupNode.appendChild(graphPanel.entitySvg.createEntitySymbol(graphPanel, currentNode));
                 }
             }
-            for (EntityData currentNode : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+            for (EntityData currentNode : graphPanel.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getAllRelations()) {
                         if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.getRelationType() != DataTypes.RelationType.kinterm)

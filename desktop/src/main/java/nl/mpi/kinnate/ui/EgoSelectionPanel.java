@@ -132,8 +132,8 @@ public class EgoSelectionPanel extends JPanel implements ActionListener {
         HashSet<UniqueIdentifier> egoIdentifiers = graphPanel.dataStoreSvg.egoEntities;
         HashSet<UniqueIdentifier> requiredEntityIdentifiers = graphPanel.dataStoreSvg.requiredEntities;
         EntityData[] allEntities;
-        if (graphPanel.dataStoreSvg.graphData != null) {
-            allEntities = graphPanel.dataStoreSvg.graphData.getDataNodes();
+        if (graphPanel.graphData != null) {
+            allEntities = graphPanel.graphData.getDataNodes();
         } else {
             allEntities = new EntityData[0];
         }

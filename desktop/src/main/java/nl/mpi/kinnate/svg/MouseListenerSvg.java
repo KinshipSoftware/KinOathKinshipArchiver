@@ -34,6 +34,7 @@ import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindocument.RelationLinker;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
@@ -127,7 +128,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        if (graphPanel.dataStoreSvg.graphData == null) {
+        if (graphPanel.graphData == null) {
 //        if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
             return;
         }
@@ -337,13 +338,13 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         }
     }
 
-    public void performMenuAction(ActionCode commandCode) {
+    public void performMenuAction(ActionCode commandCode, GraphSorter graphData) {
         System.out.println("commandCode: " + commandCode.name());
         boolean addRecursively = true;
         switch (commandCode) {
             case selectAll:
                 graphPanel.selectedGroupId.clear();
-                for (EntityData currentEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+                for (EntityData currentEntity : graphData.getDataNodes()) {
                     if (currentEntity.isVisible) {
                         if (!graphPanel.selectedGroupId.contains(currentEntity.getUniqueIdentifier())) {
                             graphPanel.selectedGroupId.add(currentEntity.getUniqueIdentifier());
@@ -355,11 +356,11 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 addRecursively = false;
             case selectRelated:
                 HashSet<UniqueIdentifier> selectedIds = new HashSet<UniqueIdentifier>(graphPanel.selectedGroupId);
-                for (EntityData currentEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+                for (EntityData currentEntity : graphData.getDataNodes()) {
                     if (currentEntity.isVisible) {
                         // todo: continue here
                         if (graphPanel.selectedGroupId.contains(currentEntity.getUniqueIdentifier())) {
-                            expandSelectionByRelations(graphPanel.dataStoreSvg.graphData.getDataNodes().length, currentEntity, selectedIds, addRecursively);
+                            expandSelectionByRelations(graphData.getDataNodes().length, currentEntity, selectedIds, addRecursively);
                         }
                     }
                 }

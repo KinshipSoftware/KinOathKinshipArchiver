@@ -57,7 +57,7 @@ public class DiagramSettingsPanel extends JPanel {
         graphPanel.getIndexParameters().symbolFieldsFields.setParent(graphPanel.getIndexParameters());
         graphPanel.getIndexParameters().labelFields.setParent(graphPanel.getIndexParameters());
         jTabbedPane.addTab(widgets.getString("DiagramSettingsPanel_KIN TYPE DEFINITIONS"), new KinTypeDefinitions(widgets.getString("DiagramSettingsPanel_KIN TYPE DEFINITIONS"), kinDiagramPanel, graphPanel.dataStoreSvg));
-        jTabbedPane.addTab(widgets.getString("DiagramSettingsPanel_RELATION TYPE DEFINITIONS"), new RelationSettingsPanel(widgets.getString("DiagramSettingsPanel_RELATION TYPE DEFINITIONS"), kinDiagramPanel, graphPanel.dataStoreSvg, dialogHandler));
+        jTabbedPane.addTab(widgets.getString("DiagramSettingsPanel_RELATION TYPE DEFINITIONS"), new RelationSettingsPanel(widgets.getString("DiagramSettingsPanel_RELATION TYPE DEFINITIONS"), kinDiagramPanel, graphPanel, dialogHandler));
         if (graphPanel.dataStoreSvg.diagramMode != DataStoreSvg.DiagramMode.FreeForm) {
             // hide some of the settings panels from freeform diagrams
             final JScrollPane symbolFieldsPanel = new JScrollPane(new FieldSelectionList(entityCollection, kinDiagramPanel, graphPanel.getIndexParameters().symbolFieldsFields, tableCellDragHandler));

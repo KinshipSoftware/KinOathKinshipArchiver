@@ -383,8 +383,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         this.add(statusBar, BorderLayout.SOUTH);
 
         EntityData[] svgDataNodes;
-        if (graphPanel.dataStoreSvg.graphData != null) {
-            svgDataNodes = graphPanel.dataStoreSvg.graphData.getDataNodes();
+        if (graphPanel.graphData != null) {
+            svgDataNodes = graphPanel.graphData.getDataNodes();
         } else {
             // if the data has not been loaded from the svg then we do not need to pre load it so we cah just use an empty array
             svgDataNodes = new EntityData[]{};
@@ -440,7 +440,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     boolean graphUpdateRequired = false;
 
     public boolean verifyDiagramDataLoaded() {
-        if (graphPanel.dataStoreSvg.graphData == null) {
+        if (graphPanel.graphData == null) {
 //            // if the first draw has not occured then we must do this now
             if (dialogHandler.showConfirmDialogBox(widgets.getString("THE DIAGRAM NEEDS TO BE RECALCULATED BEFORE IT CAN BE INTERACTED WITH.RECALCULATE NOW?"), widgets.getString("RECALCULATE DIAGRAM"))) {
                 this.drawGraph(true);
@@ -499,16 +499,16 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                             progressBar.setIndeterminate(true);
                                         }
                                     });
-                                    if (graphPanel.dataStoreSvg.graphData == null) {
+                                    if (graphPanel.graphData == null) {
                                         // this will only be null when the diagram has been opened but not recalculated yet
-                                        graphPanel.dataStoreSvg.graphData = new GraphSorter();
+                                        graphPanel.graphData = new GraphSorter();
                                     }
-                                    graphPanel.dataStoreSvg.graphData.setEntitys(graphNodes);
+                                    graphPanel.graphData.setEntitys(graphNodes);
                                     // register interest Arbil updates and update the graph when data is edited in the table
 //                                registerCurrentNodes(graphSorter.getDataNodes());
-                                    graphPanel.drawNodes(graphPanel.dataStoreSvg.graphData, resetZoom);
+                                    graphPanel.drawNodes(graphPanel.graphData, resetZoom);
                                     egoSelectionPanel.setTreeNodes(graphPanel);
-                                    new KinTermCalculator().insertKinTerms(graphPanel.dataStoreSvg.graphData.getDataNodes(), graphPanel.getkinTermGroups());
+                                    new KinTermCalculator().insertKinTerms(graphPanel.graphData.getDataNodes(), graphPanel.getkinTermGroups());
                                 } else {
 //                                    diagramMode = DiagramMode.FreeForm;
                                     KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg);
@@ -632,7 +632,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray, Point screenLocation) {
         if (screenLocation != null) {
             Point defaultLocation = graphPanel.svgUpdateHandler.getEntityPointOnDocument(screenLocation);
-            graphPanel.dataStoreSvg.graphData.setPreferredEntityLocation(egoIdentifierArray, defaultLocation);
+            graphPanel.graphData.setPreferredEntityLocation(egoIdentifierArray, defaultLocation);
         }
         graphPanel.dataStoreSvg.requiredEntities.addAll(Arrays.asList(egoIdentifierArray));
         drawGraph(false);
@@ -722,7 +722,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void doActionCommand(MouseListenerSvg.ActionCode actionCode) {
-        graphPanel.mouseListenerSvg.performMenuAction(actionCode);
+        graphPanel.mouseListenerSvg.performMenuAction(actionCode, graphPanel.graphData);
     }
 
     public GraphPanel getGraphPanel() {
@@ -792,11 +792,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
 //        return kinTermHidePane.isHidden();
 //    }
     public EntityData[] getGraphEntities() {
-        if (graphPanel.dataStoreSvg.graphData == null) {
+        if (graphPanel.graphData == null) {
             // when the diagram has not yet been loaded the graphData will be null
             return new EntityData[0];
         }
-        return graphPanel.dataStoreSvg.graphData.getDataNodes();
+        return graphPanel.graphData.getDataNodes();
     }
 
     public void registerArbilNode(UniqueIdentifier uniqueIdentifier, ArbilDataNode arbilDataNode) {
@@ -852,7 +852,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     arbilDataNodesChangedStatus.put(arbilNode, currentlyNeedsSave);
                     UniqueIdentifier uniqueIdentifier = registeredArbilDataNode.get(arbilDataNode);
 //                     find the entity data for this arbil data node
-                    for (EntityData entityData : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
+                    for (EntityData entityData : graphPanel.graphData.getDataNodes()) {
                         if (entityData.getUniqueIdentifier().equals(uniqueIdentifier)) {
                             // clear or set the needs save flag
                             entityData.metadataRequiresSave = currentlyNeedsSave;

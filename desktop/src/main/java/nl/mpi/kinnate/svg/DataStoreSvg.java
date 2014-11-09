@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg;
 
@@ -53,10 +54,8 @@ import org.w3c.dom.svg.SVGDocument;
  * @author Peter Withers
  */
 @XmlRootElement(name = "KinDiagramData", namespace = "http://mpi.nl/tla/kin")
-public class DataStoreSvg {
+public class DataStoreSvg implements DiagramSettings {
 
-    static protected String kinDataNameSpace = "kin";
-    static protected String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
 //    @XmlElement(name = "EgoIdList", namespace = "http://mpi.nl/tla/kin")
 //    @XmlElementWrapper(name = "kin:EgoIdList")
     @XmlElement(name = "EgoId", namespace = "http://mpi.nl/tla/kin")
@@ -109,8 +108,8 @@ public class DataStoreSvg {
     public String defaultSymbol = "rhombus";
     // keeping the entity data in the svg allows fast response but also invites stale data and can make the svg quite large
     // refs: #1883 #1973
-    @XmlTransient // @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
-    public GraphSorter graphData; // this is tested for null to determine if the diagram has been recalculated 
+    //@XmlTransient // @XmlElement(name = "EntityData", namespace = "http://mpi.nl/tla/kin")
+    // moved to the graph panel : public GraphSorter graphData; // this is tested for null to determine if the diagram has been recalculated 
 
     public enum DiagramMode {
 
@@ -140,6 +139,36 @@ public class DataStoreSvg {
         // todo: it might be better not to add any kin group until the user explicitly adds one from the menu
         kinTermGroups = new ArrayList<KinTermGroup>(); //new KinTermGroup(0), new KinTermGroup(1)};
         indexParameters = new IndexerParameters();
+    }
+
+    @Override
+    public String defaultSymbol() {
+        return defaultSymbol;
+    }
+
+    @Override
+    public boolean showIdLabels() {
+        return showIdLabels;
+    }
+
+    @Override
+    public boolean showLabels() {
+        return showLabels;
+    }
+
+    @Override
+    public boolean showKinTypeLabels() {
+        return showKinTypeLabels;
+    }
+
+    @Override
+    public boolean showDateLabels() {
+        return showDateLabels;
+    }
+
+    @Override
+    public boolean showExternalLinks() {
+        return showExternalLinks;
     }
 
     @XmlTransient
@@ -330,7 +359,6 @@ public class DataStoreSvg {
 //        } catch (BaseXException exception) {
 //            new ArbilBugCatcher().logError(exception);
         }
-
 
 //        Element kinTypesRecordNode = doc.createElement(kinDataNameSpace + ":KinDiagramData");
 //        kinTypesRecordNode.setAttribute("xmlns:" + kinDataNameSpace, kinDataNameSpaceLocation); // todo: this surely is not the only nor the best way to st the namespace

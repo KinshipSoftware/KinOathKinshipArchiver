@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.svg;
 
@@ -24,14 +25,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import nl.mpi.arbil.util.BugCatcherManager;
-import nl.mpi.arbil.util.MessageDialogHandler;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityDate;
 import nl.mpi.kinnate.kindata.ExternalLink;
 import nl.mpi.kinnate.kindata.GraphLabel;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -46,14 +46,10 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class EntitySvg {
 
+    final private org.slf4j.Logger logger = LoggerFactory.getLogger(getClass());
     protected HashMap<UniqueIdentifier, Point> entityPositions = new HashMap<UniqueIdentifier, Point>();
     static final public int symbolSize = 15;
     static final protected int strokeWidth = 2;
-    private MessageDialogHandler dialogHandler;
-
-    public EntitySvg(MessageDialogHandler dialogHandler) {
-        this.dialogHandler = dialogHandler;
-    }
 
     public void discardEntityPositions() {
         for (UniqueIdentifier uniqueIdentifier : entityPositions.keySet().toArray(new UniqueIdentifier[0])) {
@@ -97,8 +93,7 @@ public class EntitySvg {
                         }
                     }
                 } catch (IdentifierException exception) {
-//                    GuiHelper.linorgBugCatcher.logError(exception);
-                    dialogHandler.addMessageDialogToQueue("Failed to read an entity position, layout might not be preserved", "Restore Layout");
+                    logger.warn("Failed to read an entity position.", exception);
                 }
             }
         }
@@ -615,7 +610,7 @@ public class EntitySvg {
             // store the changed location as a preferred location
             final Point updatedLocationPoint = new Point((int) snappedPositionX, (int) snappedPositionY);
             entityPositions.put(entityId, updatedLocationPoint);
-            graphPanel.dataStoreSvg.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{entityId}, updatedLocationPoint);
+            graphPanel.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{entityId}, updatedLocationPoint);
             final String translateString = "translate(" + String.valueOf(updatedLocationPoint.x) + ", " + String.valueOf(updatedLocationPoint.y) + ")";
             ((Element) entitySymbol).setAttribute("transform", translateString);
             if (highlightGroup != null) {
@@ -647,9 +642,9 @@ public class EntitySvg {
         groupNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier());
 //        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
         // the kin type strings are stored here so that on selection in the graph the add kin term panel can be pre populatedwith the kin type strings of the selection
-        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
+        groupNode.setAttributeNS(GraphPanel.kinDataNameSpaceLocation, "kin:kintype", currentNode.getKinTypeString());
 //        counterTest++;
-        String[] symbolNames = currentNode.getSymbolNames(graphPanel.dataStoreSvg.defaultSymbol);
+        String[] symbolNames = currentNode.getSymbolNames(graphPanel.getDiagramSettings().defaultSymbol());
         if (symbolNames == null || symbolNames.length == 0) {
             symbolNames = new String[]{"blank"};
         }
@@ -657,7 +652,7 @@ public class EntitySvg {
         // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
         Point storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
-            BugCatcherManager.getBugCatcher().logError(new Exception("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier()));
+            logger.debug("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier());
             storedPosition = new Point(0, 0);
             // todo: it looks like the stored positon can be null
 //            throw new Exception("Entity position should have been set in the graph sorter");
@@ -741,13 +736,13 @@ public class EntitySvg {
 
 ////////////////////////////// alternate method ////////////////////////////////////////////////
         ArrayList<String> labelList = new ArrayList<String>();
-        if (graphPanel.dataStoreSvg.showIdLabels && currentNode.customIdentifier != null) {
+        if (graphPanel.getDiagramSettings().showIdLabels() && currentNode.customIdentifier != null) {
             labelList.add(currentNode.customIdentifier);
         }
-        if (graphPanel.dataStoreSvg.showLabels) {
+        if (graphPanel.getDiagramSettings().showLabels()) {
             labelList.addAll(Arrays.asList(currentNode.getLabel()));
         }
-        if (graphPanel.dataStoreSvg.showKinTypeLabels) {
+        if (graphPanel.getDiagramSettings().showKinTypeLabels()) {
             labelList.addAll(Arrays.asList(currentNode.getKinTypeStringArray()));
         }
         // this option has been hidden from the menu because it is not used here anymore, it has been replaced by the kin terms panel option to hide and show
@@ -768,7 +763,7 @@ public class EntitySvg {
         for (GraphLabel currentTextLable : currentNode.getKinTermStrings()) {
             textSpanCounter = addTextLabel(graphPanel, groupNode, currentTextLable.getLabelString(), currentTextLable.getColourString(), textSpanCounter);
         }
-        if (graphPanel.dataStoreSvg.showDateLabels) {
+        if (graphPanel.getDiagramSettings().showDateLabels()) {
 //            try {
             String dateColur = "blue"; // todo: allow this colour to be set by the user
             // add the date of birth/death string
@@ -797,7 +792,7 @@ public class EntitySvg {
             // end date of birth/death label
         }
         int linkCounter = 0;
-        if (graphPanel.dataStoreSvg.showExternalLinks && currentNode.externalLinks != null) {
+        if (graphPanel.getDiagramSettings().showExternalLinks() && currentNode.externalLinks != null) {
             // loop through the archive links and optionaly add href tags for each linked archive data <a xlink:href="http://www.mpi.nl/imdi-archive-link" target="_blank"></a>
             Element labelText = graphPanel.doc.createElementNS(graphPanel.svgNameSpace, "text");
             labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
