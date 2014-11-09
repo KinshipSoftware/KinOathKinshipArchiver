@@ -359,7 +359,8 @@ public class DataStoreSvg implements DiagramSettings {
 //            dataStoreElement.appendChild(dataRecordNode);
 //        }
 //    }
-    protected void storeAllData(SVGDocument doc) {
+    @Override
+    public void storeAllData(SVGDocument doc) {
         // remove old kin diagram data
         System.out.println("Removing old KinDiagramData nodes from the SVG before updating");
         NodeList dataNodes = doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");

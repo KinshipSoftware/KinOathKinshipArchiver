@@ -1132,7 +1132,7 @@ public class SvgUpdateHandler {
 //            entitySvg.removeOldEntities(relationGroupNode);
             // todo: find the real text size from batik
             // store the selected kin type strings and other data in the dom
-            graphPanel.dataStoreSvg.storeAllData(graphPanel.doc);
+            graphPanel.getDiagramSettings().storeAllData(graphPanel.doc);
 //            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
             for (EntityData currentNode : graphPanel.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
@@ -1142,7 +1142,7 @@ public class SvgUpdateHandler {
             for (EntityData currentNode : graphPanel.graphData.getDataNodes()) {
                 if (currentNode.isVisible) {
                     for (EntityRelation graphLinkNode : currentNode.getAllRelations()) {
-                        if ((graphPanel.dataStoreSvg.showKinTermLines || graphLinkNode.getRelationType() != DataTypes.RelationType.kinterm)
+                        if ((graphPanel.getDiagramSettings().showKinTermLines() || graphLinkNode.getRelationType() != DataTypes.RelationType.kinterm)
                                 && (graphPanel.getDiagramSettings().showSanguineLines() || !DataTypes.isSanguinLine(graphLinkNode.getRelationType()))
                                 && (graphLinkNode.getAlterNode() != null && graphLinkNode.getAlterNode().isVisible)) {
                             try {
