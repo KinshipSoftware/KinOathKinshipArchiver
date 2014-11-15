@@ -55,6 +55,10 @@ public class SvgDiagram {
         graphPanelSize = new GraphPanelSize();
     }
 
+    public SVGDocument getDoc() {
+        return doc;
+    }
+
     public DiagramSettings getDiagramSettings() {
         return diagramSettings;
     }
