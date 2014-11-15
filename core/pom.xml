@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>nl.mpi</groupId>
-        <artifactId>kinoath-core</artifactId>
+        <artifactId>kinoath-parent</artifactId>
         <version>1.6</version>
     </parent>
     <groupId>nl.mpi</groupId>
@@ -12,7 +12,7 @@
     <version>1.6-pretesting-SNAPSHOT</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.62-${application.branch}</version>-->
     
-    <name>KinOath Graph Storage ${application.majorVersion}.${application.minorVersion}</name>
+    <name>KinOath Core Module ${application.majorVersion}.${application.minorVersion}</name>
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

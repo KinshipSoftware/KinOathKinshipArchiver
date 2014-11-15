@@ -6,3 +6,5 @@
 /batik-renderer/target/
 /graph-sorter/target/
 /graph-storage/target/
+/kin-type-string-parser/target/
+/core/target/

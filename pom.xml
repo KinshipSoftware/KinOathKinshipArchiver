@@ -12,7 +12,9 @@
     <modules>
         <module>desktop</module>
         <module>kinoath-help</module>
-        <!--<module>rest</module>-->
+        <module>rest</module>
+        <module>kin-type-string-parser</module>
+        <module>core</module>            
         <module>localisation</module>
         <module>diagram</module>
         <module>batik-renderer</module>
@@ -202,7 +204,13 @@
             </releases>
         </pluginRepository>
     </pluginRepositories>
-    
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kinaoth-core</artifactId>
+            <version>1.6-pretesting-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
     <distributionManagement>
         <snapshotRepository>
             <id>MPI-Snapshots</id>
