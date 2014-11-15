@@ -47,6 +47,7 @@ import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.projects.ProjectRecord;
+import nl.mpi.kinnate.svg.SaveExeption;
 import nl.mpi.kinnate.ui.EntityUploadPanel;
 import nl.mpi.kinnate.ui.GedcomImportPanel;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
@@ -322,8 +323,13 @@ public abstract class AbstractDiagramManager {
                 switch (dialogHandler.showDialogBox(java.text.MessageFormat.format(widgets.getString("THE PROJECT DATA HAS BEEN SAVED, HOWEVER THE CURRENT DIAGRAM HAS NOT: \"{0}\"DO YOU WANT TO SAVE THIS DIAGRAM BEFORE CLOSING?"), new Object[]{diagramName}), widgets.getString("CLOSE DIAGRAM"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE)) {
                     case JOptionPane.YES_OPTION:
                         if (savePanel.hasSaveFileName()) {
-                            savePanel.saveToFile();
-                            return false;
+                            try {
+                                savePanel.saveToFile();
+                                return false;
+                            } catch (SaveExeption exeption) {
+                                dialogHandler.addMessageDialogToQueue(widgets.getString("SAVE FILE ERROR"), widgets.getString("CLOSE DIAGRAM"));
+                                return true;
+                            }
                         } else {
                             fileSaved = null != saveDiagramAs(savePanel);
                         }
@@ -365,9 +371,14 @@ public abstract class AbstractDiagramManager {
             if (!svgFile.getName().toLowerCase().endsWith(".svg")) {
                 svgFile = new File(svgFile.getParentFile(), svgFile.getName() + ".svg");
             }
-            savePanel.saveToFile(svgFile);
-            RecentFileMenu.addRecentFile(sessionStorage, svgFile);
-            return svgFile.getName();
+            try {
+                savePanel.saveToFile(svgFile);
+                RecentFileMenu.addRecentFile(sessionStorage, svgFile);
+                return svgFile.getName();
+            } catch (SaveExeption exeption) {
+                dialogHandler.addMessageDialogToQueue(widgets.getString("SAVE FILE ERROR"), widgets.getString("SAVE DIAGRAM"));
+                return null;
+            }
         } else {
             // user canceled so there is no file selected and nothing to save
             return null;

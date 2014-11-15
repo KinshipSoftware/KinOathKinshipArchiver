@@ -17,38 +17,14 @@
  */
 package nl.mpi.kinnate.svg;
 
-import nl.mpi.kinnate.kindata.RelationTypeDefinition;
-import org.w3c.dom.svg.SVGDocument;
-
 /**
- * @since Nov 9, 2014 8:36:05 AM (creation date)
+ * @since Nov 15, 2014 12:59:22 PM (creation date)
  * @author Peter Withers
  */
-public interface DiagramSettings {
+public class SaveExeption extends Exception {
 
-    String defaultSymbol();
+    public SaveExeption(String message) {
+        super(message);
+    }
 
-    boolean showIdLabels();
-
-    boolean showLabels();
-
-    boolean showKinTypeLabels();
-
-    boolean showDateLabels();
-
-    boolean showExternalLinks();
-
-    boolean highlightRelationLines();
-
-    boolean snapToGrid();
-
-    boolean showDiagramBorder();
-
-    boolean showSanguineLines();
-
-    boolean showKinTermLines();
-
-    RelationTypeDefinition[] getRelationTypeDefinitions();
-
-    void storeAllData(SVGDocument doc);
 }

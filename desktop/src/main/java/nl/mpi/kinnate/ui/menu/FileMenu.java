@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.ui.menu;
 
@@ -38,6 +39,7 @@ import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.svg.DiagramTranscoder;
+import nl.mpi.kinnate.svg.SaveExeption;
 import nl.mpi.kinnate.ui.DiagramTranscoderPanel;
 import nl.mpi.kinnate.ui.ImportSamplesFileMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
@@ -52,7 +54,8 @@ import org.apache.batik.transcoder.TranscoderException;
 public class FileMenu extends javax.swing.JMenu {
 
     private static final ResourceBundle menus = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Menus");
-//    private javax.swing.JMenuItem importGedcomUrl;
+    private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
+    //    private javax.swing.JMenuItem importGedcomUrl;
     private javax.swing.JMenuItem importGedcomFile;
 //    private javax.swing.JMenuItem importCsvFile;
     private javax.swing.JMenuItem closeTabMenuItem;
@@ -116,7 +119,6 @@ public class FileMenu extends javax.swing.JMenu {
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         exitApplication = new javax.swing.JMenuItem();
 
-
         this.setText(menus.getString("FILE"));
         this.addMenuListener(new javax.swing.event.MenuListener() {
             public void menuSelected(javax.swing.event.MenuEvent evt) {
@@ -155,11 +157,9 @@ public class FileMenu extends javax.swing.JMenu {
 //            }
 //        });
 //        this.add(wizardMenuItem);
-
 //        JMenu freeformDiagramMenuItem = new DocumentNewMenu(diagramWindowManager, parentComponent, dialogHandler);
 //        freeformDiagramMenuItem.setText("New Freform Diagram");
 //        this.add(freeformDiagramMenuItem);
-
         JMenu projectDiagramMenuItem = new DocumentNewMenu(diagramWindowManager, parentComponent, dialogHandler);
         projectDiagramMenuItem.setText(menus.getString("NEW DIAGRAM OF TYPE"));
         this.add(projectDiagramMenuItem);
@@ -173,7 +173,6 @@ public class FileMenu extends javax.swing.JMenu {
             }
         });
         this.add(openDiagram);
-
 
         this.add(recentFileMenu);
 
@@ -193,7 +192,6 @@ public class FileMenu extends javax.swing.JMenu {
         this.add(projectRecentMenu);
 
 //        this.add(jSeparator1);
-
         importGedcomFile.setText(menus.getString("IMPORT GEDCOM / CSV / TIP FILE (INTO CURRENT PROJECT)"));
         importGedcomFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -210,7 +208,6 @@ public class FileMenu extends javax.swing.JMenu {
 //            }
 //        });
 //        this.add(importCsvFile);
-
         jMenu2.setText(menus.getString("IMPORT SAMPLE DATA (INTO CURRENT PROJECT)"));
         this.add(jMenu2);
 
@@ -237,7 +234,6 @@ public class FileMenu extends javax.swing.JMenu {
 //        });
 //        this.add(entityUploadMenuItem);
 //        this.add(jSeparator4);
-
         saveDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         saveDiagram.setText(menus.getString("SAVE"));
         saveDiagram.setActionCommand("save");
@@ -353,7 +349,11 @@ public class FileMenu extends javax.swing.JMenu {
     private void saveDiagramActionPerformed(java.awt.event.ActionEvent evt) {
         int tabIndex = Integer.valueOf(evt.getActionCommand());
         SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
-        savePanel.saveToFile();
+        try {
+            savePanel.saveToFile();
+        } catch (SaveExeption exeption) {
+            dialogHandler.addMessageDialogToQueue(widgets.getString("SAVE FILE ERROR"), widgets.getString("SAVE DIAGRAM"));
+        }
     }
 
     private void saveDiagramAsActionPerformed(java.awt.event.ActionEvent evt) {
@@ -365,9 +365,13 @@ public class FileMenu extends javax.swing.JMenu {
                 }
                 int tabIndex = Integer.valueOf(evt.getActionCommand());
                 SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
-                savePanel.saveToFile(selectedFile);
-                RecentFileMenu.addRecentFile(sessionStorage, selectedFile);
-                diagramWindowManager.setDiagramTitle(tabIndex, selectedFile.getName());
+                try {
+                    savePanel.saveToFile(selectedFile);
+                    RecentFileMenu.addRecentFile(sessionStorage, selectedFile);
+                    diagramWindowManager.setDiagramTitle(tabIndex, selectedFile.getName());
+                } catch (SaveExeption exeption) {
+                    dialogHandler.addMessageDialogToQueue(widgets.getString("SAVE FILE ERROR"), widgets.getString("SAVE DIAGRAM"));
+                }
             }
         }
     }
@@ -587,10 +591,14 @@ public class FileMenu extends javax.swing.JMenu {
     private void saveAsDefaultMenuItemActionPerformed(java.awt.event.ActionEvent evt, boolean saveAsGlobal) {
         int tabIndex = Integer.valueOf(evt.getActionCommand());
         SavePanel savePanel = diagramWindowManager.getSavePanel(tabIndex);
-        if (saveAsGlobal) {
-            savePanel.saveToFile(KinDiagramPanel.getGlobalDefaultDiagramFile(sessionStorage));
-        } else {
-            savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile(savePanel.getGraphPanel().dataStoreSvg.projectRecord));
+        try {
+            if (saveAsGlobal) {
+                savePanel.saveToFile(KinDiagramPanel.getGlobalDefaultDiagramFile(sessionStorage));
+            } else {
+                savePanel.saveToFile(KinDiagramPanel.getDefaultDiagramFile(savePanel.getGraphPanel().dataStoreSvg.projectRecord));
+            }
+        } catch (SaveExeption exeption) {
+            dialogHandler.addMessageDialogToQueue(widgets.getString("SAVE FILE ERROR"), widgets.getString("SAVE DIAGRAM"));
         }
     }
 

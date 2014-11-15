@@ -33,7 +33,7 @@ import org.w3c.dom.svg.SVGDocument;
 
 /**
  * @since Nov 9, 2014 2:51:21 PM (creation date)
- * @author petwit
+ * @author Peter Withers
  */
 public class SvgDiagram {
 

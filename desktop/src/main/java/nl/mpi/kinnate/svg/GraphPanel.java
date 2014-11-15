@@ -24,15 +24,20 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.JPanel;
-import javax.xml.parsers.DocumentBuilderFactory;
-import nl.mpi.arbil.data.ArbilComponentBuilder;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import nl.mpi.arbil.data.ArbilDataNodeLoader;
 import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
@@ -48,16 +53,13 @@ import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.MetadataPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.util.SAXIOException;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.JSVGScrollPane;
-import org.apache.batik.util.XMLResourceDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.svg.SVGDocument;
 
 /**
  * Document : GraphPanel Created on : Aug 16, 2010, 5:31:33 PM
@@ -66,6 +68,7 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class GraphPanel extends JPanel implements SavePanel {
 
+    private final static Logger logger = LoggerFactory.getLogger(GraphPanel.class);
     private JSVGScrollPane jSVGScrollPane;
     protected JSVGCanvas svgCanvas;
     public MetadataPanel metadataPanel;
@@ -218,14 +221,37 @@ public class GraphPanel extends JPanel implements SavePanel {
         }
     }
 
-    private void saveSvg(File svgFilePath) {
-        svgFile = svgFilePath;
-        selectedGroupId.clear();
-        svgUpdateHandler.clearHighlights();
-        // make sure that any data changes such as the title/description in the kin term groups get updated into the file on save
-        dataStoreSvg.storeAllData(svgDiagram.doc);
-        ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, svgFile);
-        requiresSave = false;
+    private void saveSvg(File svgFilePath) throws SaveExeption {
+        try {
+            svgFile = svgFilePath;
+            selectedGroupId.clear();
+            svgUpdateHandler.clearHighlights();
+            // make sure that any data changes such as the title/description in the kin term groups get updated into the file on save
+            dataStoreSvg.storeAllData(svgDiagram.doc);
+            // set up input and output
+            DOMSource dOMSource = new DOMSource(svgDiagram.doc);
+            FileOutputStream fileOutputStream = new FileOutputStream(svgFile);
+            StreamResult xmlOutput = new StreamResult(fileOutputStream);
+            // configure transformer
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.transform(dOMSource, xmlOutput);
+            xmlOutput.getOutputStream().close();
+            requiresSave = false;
+        } catch (IOException exception) {
+            logger.warn("failed to save svg", exception);
+            throw new SaveExeption(exception.getMessage());
+        } catch (IllegalArgumentException exception) {
+            logger.warn("failed to save svg", exception);
+            throw new SaveExeption(exception.getMessage());
+        } catch (TransformerException exception) {
+            logger.warn("failed to save svg", exception);
+            throw new SaveExeption(exception.getMessage());
+        } catch (TransformerFactoryConfigurationError exception) {
+            logger.warn("failed to save svg", exception);
+            throw new SaveExeption(exception.getMessage());
+        }
     }
 
     private void printNodeNames(Node nodeElement) {
@@ -455,11 +481,11 @@ public class GraphPanel extends JPanel implements SavePanel {
         requiresSave = true;
     }
 
-    public void saveToFile() {
+    public void saveToFile() throws SaveExeption {
         saveSvg(svgFile);
     }
 
-    public void saveToFile(File saveAsFile) {
+    public void saveToFile(File saveAsFile) throws SaveExeption {
         saveSvg(saveAsFile);
     }
 

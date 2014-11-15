@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 /**
  *  Document   : ImportTranslatorTest
  *  Created on : Dec 29, 2011, 13:41:44
- * @author petwit
+ * @author Peter Withers
  */
 public class ImportTranslatorTest extends TestCase {
 

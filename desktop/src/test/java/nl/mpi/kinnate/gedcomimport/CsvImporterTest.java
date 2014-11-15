@@ -33,7 +33,7 @@ import nl.mpi.kinnate.userstorage.KinSessionStorage;
 /**
  * Document : CsvImporterTest Created on : Dec 30, 2011, 10:11:44
  *
- * @author petwit
+ * @author Peter Withers
  */
 public class CsvImporterTest extends TestCase {
 

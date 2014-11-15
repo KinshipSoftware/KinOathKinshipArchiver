@@ -69,6 +69,7 @@ import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.GraphPanel;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
+import nl.mpi.kinnate.svg.SaveExeption;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -709,11 +710,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         graphPanel.setRequiresSave();
     }
 
-    public void saveToFile() {
+    public void saveToFile() throws SaveExeption {
         graphPanel.saveToFile();
     }
 
-    public void saveToFile(File saveFile) {
+    public void saveToFile(File saveFile) throws SaveExeption {
         graphPanel.saveToFile(saveFile);
     }
 
