@@ -57,16 +57,16 @@ import org.w3c.dom.svg.SVGMatrix;
 public class MouseListenerSvg extends MouseInputAdapter implements EventListener {
 
     private Cursor preDragCursor;
-    private KinDiagramPanel kinDiagramPanel;
-    private GraphPanel graphPanel;
+    private final KinDiagramPanel kinDiagramPanel;
+    private final GraphPanel graphPanel;
     private Point startDragPoint = null;
     private Point startRectangleSelectPoint = null;
     private boolean mouseActionOnNode = false;
     private boolean mouseActionIsPopupTrigger = false;
     private boolean mouseActionIsDrag = false;
     private UniqueIdentifier entityToToggle = null;
-    private HashMap<UniqueIdentifier, SvgElementEditor> shownGraphicsEditors;
-    private MessageDialogHandler dialogHandler;
+    private final HashMap<UniqueIdentifier, SvgElementEditor> shownGraphicsEditors;
+    private final MessageDialogHandler dialogHandler;
     final private SessionStorage sessionStorage;
     private EntityCollection entityCollection;
 
@@ -75,13 +75,16 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         selectAll, selectRelated, expandSelection, deselectAll
     }
 
-    public MouseListenerSvg(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, SessionStorage sessionStorage, MessageDialogHandler dialogHandler, EntityCollection entityCollection) {
+    public MouseListenerSvg(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
         this.kinDiagramPanel = kinDiagramPanel;
         this.graphPanel = graphPanel;
         this.dialogHandler = dialogHandler;
         this.sessionStorage = sessionStorage;
-        this.entityCollection = entityCollection;
         shownGraphicsEditors = new HashMap<UniqueIdentifier, SvgElementEditor>();
+    }
+
+    public void setEntityCollection(EntityCollection entityCollection) {
+        this.entityCollection = entityCollection;
     }
 
     @Override

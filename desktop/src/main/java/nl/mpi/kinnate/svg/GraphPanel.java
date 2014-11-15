@@ -91,6 +91,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         this.dataNodeLoader = dataNodeLoader;
 //        this.entityCollection = entityCollection;
         dataStoreSvg = new DataStoreSvg();
+        mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this, sessionStorage, dialogHandler);
         svgDiagram = new SvgDiagram(dataStoreSvg, new EntitySvg(mouseListenerSvg));
         dataStoreSvg.setDefaults();
         svgUpdateHandler = new SvgUpdateHandler(this, kinDiagramPanel, dialogHandler);
@@ -148,7 +149,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void setEntityCollection(EntityCollection entityCollection) {
-        mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this, sessionStorage, dialogHandler, entityCollection);
+        mouseListenerSvg.setEntityCollection(entityCollection);
         svgCanvas.addMouseListener(mouseListenerSvg);
         svgCanvas.addMouseMotionListener(mouseListenerSvg);
         svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, entityCollection, dialogHandler, dataNodeLoader, sessionStorage));
