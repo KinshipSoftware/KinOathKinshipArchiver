@@ -27,6 +27,7 @@ import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight.ParserHighlightType;
 import nl.mpi.kinnate.svg.DataStoreSvg;
+import nl.mpi.kinnate.svg.DiagramSettings;
 import nl.mpi.kinnate.ui.KinTypeStringProvider;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -37,9 +38,9 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class KinTypeStringConverter extends GraphSorter {
 
-    DataStoreSvg dataStoreSvg;
+    DiagramSettings dataStoreSvg;
 
-    public KinTypeStringConverter(DataStoreSvg dataStoreSvg) {
+    public KinTypeStringConverter(DiagramSettings dataStoreSvg) {
         this.dataStoreSvg = dataStoreSvg;
     }
 

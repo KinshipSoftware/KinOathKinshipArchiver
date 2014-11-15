@@ -205,11 +205,6 @@
         </pluginRepository>
     </pluginRepositories>
     <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>kinaoth-core</artifactId>
-            <version>1.6-pretesting-SNAPSHOT</version>
-        </dependency>
     </dependencies>
     <distributionManagement>
         <snapshotRepository>

@@ -301,6 +301,11 @@
             <artifactId>kinoath-diagram</artifactId>
             <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kin-type-string-parser</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
