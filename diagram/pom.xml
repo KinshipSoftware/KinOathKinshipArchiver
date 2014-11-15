@@ -53,5 +53,10 @@
             <artifactId>batik-svg-dom</artifactId>
             <version>1.7</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kinaoth-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

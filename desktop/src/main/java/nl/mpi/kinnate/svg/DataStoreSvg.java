@@ -36,7 +36,6 @@ import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
-import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition.CurveLineOrientation;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;

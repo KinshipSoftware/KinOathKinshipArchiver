@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.export;
 
@@ -169,7 +170,8 @@ public class PedigreePackageExport {
     }
 
     static public void main(String[] argsArray) {
-        KinTypeStringConverter graphData = new KinTypeStringConverter(new DataStoreSvg());
+        final DataStoreSvg dataStoreSvg = new DataStoreSvg();
+        KinTypeStringConverter graphData = new KinTypeStringConverter(dataStoreSvg.defaultSymbol(), dataStoreSvg.getKinTypeDefinitions());
         // // todo: an addition to KinTypeStringConverter: EmB does not have any parents but it could however just take the parnents of Em: String kinTypes = "EmB|EmZ|EmM|EmF|EmS|EmD";
         //String kinTypes = "EmM|EmF|EmS|EmD";        
         KinTypeStringProvider kinTypeStringProvider = new KinTypeStringProvider() {
@@ -187,7 +189,7 @@ public class PedigreePackageExport {
         };
         ArrayList<KinTypeStringProvider> kinTypeStringProviders = new ArrayList<KinTypeStringProvider>();
         kinTypeStringProviders.add(kinTypeStringProvider);
-        graphData.readKinTypes(kinTypeStringProviders, new DataStoreSvg());
+        graphData.readKinTypes(kinTypeStringProviders);
         System.out.println(new PedigreePackageExport("").createCsvContents(graphData.getDataNodes()));
     }
 }

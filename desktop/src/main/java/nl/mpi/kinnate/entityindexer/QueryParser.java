@@ -191,7 +191,7 @@ public class QueryParser implements EntityService {
         // todo: loadedGraphNodes can be replaced by the graph dump from the DB that is used in the project tree
         // todo: it would be better to store the matched entities in the respective kin type objects so that they can be removed if a latter query excludes them. after the query is complete all entities left in the kin types can be returned to the caller
         // todo: once the matched entites are stored in the kin type objects, a second pass in reverse order can be done so that ED[Aaa]W[Ccc] can find the required ego for example.
-        KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter(dataStoreSvg);
+        KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter(dataStoreSvg.defaultSymbol(),dataStoreSvg.getKinTypeDefinitions());
 //        kinTypeStringConverter.highlightComments(kinTypeStrings, parserHighlight);
 //        QueryParser queryParser = new QueryParser();
         for (EntityData graphDataNode : loadedGraphNodes.values()) {
@@ -258,7 +258,7 @@ public class QueryParser implements EntityService {
 //                        queryNode.appendTempLabel(kinTypeElement.kinType.getCodeString());
                                 if (kinTypeElement.kinType.isEgoType()) {
                                     queryNode.isEgo = true; // there might be multiple types for a single entitiy
-                                    new KinTypeStringConverter(dataStoreSvg).setEgoKinTypeString(queryNode);
+                                    kinTypeStringConverter.setEgoKinTypeString(queryNode);
                                 }
                             }
                         }
