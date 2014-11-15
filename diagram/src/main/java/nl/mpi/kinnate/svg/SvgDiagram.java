@@ -17,8 +17,18 @@
  */
 package nl.mpi.kinnate.svg;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URI;
+import javax.xml.parsers.DocumentBuilderFactory;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.util.XMLResourceDescriptor;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
@@ -47,5 +57,82 @@ public class SvgDiagram {
 
     public DiagramSettings getDiagramSettings() {
         return diagramSettings;
+    }
+
+    public void readSvg(URI svgFilePath, EventListener mouseListenerSvg) throws IOException {
+        String parser = XMLResourceDescriptor.getXMLParserClassName();
+        SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
+        doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toString());
+        entitySvg.readEntityPositions(doc.getElementById("EntityGroup"));
+        entitySvg.readEntityPositions(doc.getElementById("LabelsGroup"));
+        entitySvg.readEntityPositions(doc.getElementById("GraphicsGroup"));
+        configureDiagramGroups(mouseListenerSvg);
+    }
+
+    private void configureDiagramGroups(EventListener mouseListenerSvg) {
+        Element svgRoot = doc.getDocumentElement();
+        // make sure the diagram group exisits
+        Element diagramGroup = doc.getElementById("DiagramGroup");
+        if (diagramGroup == null) {
+            diagramGroup = doc.createElementNS(svgNameSpace, "g");
+            diagramGroup.setAttribute("id", "DiagramGroup");
+            // add the diagram group to the root element (the 'svg' element)
+            svgRoot.appendChild(diagramGroup);
+        }
+        Element previousElement = null;
+        // add the graphics group below the entities and relations
+        // add the relation symbols in a group below the relation lines
+        // add the entity symbols in a group on top of the relation lines
+        // add the labels group on top, also added on svg load if missing
+        for (String groupForMouseListener : new String[]{"LabelsGroup", "EntityGroup", "RelationGroup", "GraphicsGroup"}) {
+            // add any groups that are required and add them in the required order
+            Element parentElement = doc.getElementById(groupForMouseListener);
+            if (parentElement == null) {
+                parentElement = doc.createElementNS(svgNameSpace, "g");
+                parentElement.setAttribute("id", groupForMouseListener);
+                diagramGroup.insertBefore(parentElement, previousElement);
+            } else {
+                diagramGroup.insertBefore(parentElement, previousElement); // insert the node to make sure that it is in the diagram group and not in any other location
+                // set up the mouse listeners that were lost in the save/re-open process
+                if (!groupForMouseListener.equals("RelationGroup")) {
+                    // do not add mouse listeners to the relation group
+                    Node currentNode = parentElement.getFirstChild();
+                    while (currentNode != null) {
+                        ((EventTarget) currentNode).addEventListener("mousedown", mouseListenerSvg, false);
+                        currentNode = currentNode.getNextSibling();
+                    }
+                }
+            }
+            previousElement = parentElement;
+        }
+    }
+
+    public void generateDefaultSvg(EventListener mouseListenerSvg) throws IOException {
+//        try {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        // set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
+        // in order to add the extra namespaces to the svg document we use a string and parse it
+        // other methods have been tried but this is the most readable and the only one that actually works
+        // I think this is mainly due to the way the svg dom would otherwise be constructed
+        // others include:
+        // doc.getDomConfig()
+        // doc.getDocumentElement().setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:version", "");
+        // doc.getDocumentElement().setAttribute("xmlns:" + DataStoreSvg.kinDataNameSpace, DataStoreSvg.kinDataNameSpaceLocation); // this method of declaring multiple namespaces looks to me to be wrong but it is the only method that does not get stripped out by the transformer on save
+        //        Document doc = impl.createDocument(svgNS, "svg", null);
+        //        SVGDocument doc = svgCanvas.getSVGDocument();
+        String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<svg xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:kin=\"http://mpi.nl/tla/kin\" "
+                + "xmlns=\"http://www.w3.org/2000/svg\" contentScriptType=\"text/ecmascript\" "
+                + " zoomAndPan=\"magnify\" contentStyleType=\"text/css\" "
+                + "preserveAspectRatio=\"xMidYMid meet\" version=\"1.0\"/>";
+        // DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
+        // doc = (SVGDocument) impl.createDocument(svgNameSpace, "svg", null);
+        String parser = XMLResourceDescriptor.getXMLParserClassName();
+        SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
+        doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
+        entitySvg.updateSymbolsElement(doc, svgNameSpace);
+        configureDiagramGroups(mouseListenerSvg);
+        graphData = new GraphSorter();
     }
 }

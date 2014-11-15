@@ -184,10 +184,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         } else {
             svgFile = null;
         }
-        String parser = XMLResourceDescriptor.getXMLParserClassName();
-        SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
         try {
-            svgDiagram.doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toString());
+            svgDiagram.readSvg(svgFilePath, mouseListenerSvg);
             svgCanvas.setDocument(svgDiagram.doc);
             symbolGraphic = new SymbolGraphic(svgDiagram.doc);
             dataStoreSvg = DataStoreSvg.loadDataFromSvg(svgDiagram.doc);
@@ -195,10 +193,6 @@ public class GraphPanel extends JPanel implements SavePanel {
                 dataStoreSvg.setDefaults();
             }
             requiresSave = false;
-            svgDiagram.entitySvg.readEntityPositions(svgDiagram.doc.getElementById("EntityGroup"));
-            svgDiagram.entitySvg.readEntityPositions(svgDiagram.doc.getElementById("LabelsGroup"));
-            svgDiagram.entitySvg.readEntityPositions(svgDiagram.doc.getElementById("GraphicsGroup"));
-            configureDiagramGroups();
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(svgDiagram.doc, this.svgDiagram.svgNameSpace));
 //            if (dataStoreSvg.graphData == null) {
 //                return null;
@@ -212,74 +206,12 @@ public class GraphPanel extends JPanel implements SavePanel {
         return; // dataStoreSvg.graphData.getDataNodes();
     }
 
-    private void configureDiagramGroups() {
-        Element svgRoot = svgDiagram.doc.getDocumentElement();
-        // make sure the diagram group exisits
-        Element diagramGroup = svgDiagram.doc.getElementById("DiagramGroup");
-        if (diagramGroup == null) {
-            diagramGroup = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
-            diagramGroup.setAttribute("id", "DiagramGroup");
-            // add the diagram group to the root element (the 'svg' element)
-            svgRoot.appendChild(diagramGroup);
-        }
-        Element previousElement = null;
-        // add the graphics group below the entities and relations
-        // add the relation symbols in a group below the relation lines
-        // add the entity symbols in a group on top of the relation lines
-        // add the labels group on top, also added on svg load if missing
-        for (String groupForMouseListener : new String[]{"LabelsGroup", "EntityGroup", "RelationGroup", "GraphicsGroup"}) {
-            // add any groups that are required and add them in the required order
-            Element parentElement = svgDiagram.doc.getElementById(groupForMouseListener);
-            if (parentElement == null) {
-                parentElement = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
-                parentElement.setAttribute("id", groupForMouseListener);
-                diagramGroup.insertBefore(parentElement, previousElement);
-            } else {
-                diagramGroup.insertBefore(parentElement, previousElement); // insert the node to make sure that it is in the diagram group and not in any other location
-                // set up the mouse listeners that were lost in the save/re-open process
-                if (!groupForMouseListener.equals("RelationGroup")) {
-                    // do not add mouse listeners to the relation group
-                    Node currentNode = parentElement.getFirstChild();
-                    while (currentNode != null) {
-                        ((EventTarget) currentNode).addEventListener("mousedown", mouseListenerSvg, false);
-                        currentNode = currentNode.getNextSibling();
-                    }
-                }
-            }
-            previousElement = parentElement;
-        }
-    }
-
     public void generateDefaultSvg() {
         try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            documentBuilderFactory.setNamespaceAware(true);
-            // set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
-            // in order to add the extra namespaces to the svg document we use a string and parse it
-            // other methods have been tried but this is the most readable and the only one that actually works
-            // I think this is mainly due to the way the svg dom would otherwise be constructed
-            // others include:
-            // svgDiagram.doc.getDomConfig()
-            // svgDiagram.doc.getDocumentElement().setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:version", "");
-            // svgDiagram.doc.getDocumentElement().setAttribute("xmlns:" + DataStoreSvg.kinDataNameSpace, DataStoreSvg.kinDataNameSpaceLocation); // this method of declaring multiple namespaces looks to me to be wrong but it is the only method that does not get stripped out by the transformer on save
-            //        Document doc = impl.createDocument(svgNS, "svg", null);
-            //        SVGDocument doc = svgCanvas.getSVGDocument();
-            String templateXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                    + "<svg xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:kin=\"http://mpi.nl/tla/kin\" "
-                    + "xmlns=\"http://www.w3.org/2000/svg\" contentScriptType=\"text/ecmascript\" "
-                    + " zoomAndPan=\"magnify\" contentStyleType=\"text/css\" "
-                    + "preserveAspectRatio=\"xMidYMid meet\" version=\"1.0\"/>";
-            // DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
-            // doc = (SVGDocument) impl.createDocument(svgDiagram.svgNameSpace, "svg", null);
-            String parser = XMLResourceDescriptor.getXMLParserClassName();
-            SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
-            svgDiagram.doc = (SVGDocument) documentFactory.createDocument(svgDiagram.svgNameSpace, new StringReader(templateXml));
-            svgDiagram.entitySvg.updateSymbolsElement(svgDiagram.doc, svgDiagram.svgNameSpace);
-            configureDiagramGroups();
-            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(svgDiagram.doc, this.svgDiagram.svgNameSpace));
+            svgDiagram.generateDefaultSvg(mouseListenerSvg);
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(svgDiagram.doc, svgDiagram.svgNameSpace));
             svgCanvas.setSVGDocument(svgDiagram.doc);
             symbolGraphic = new SymbolGraphic(svgDiagram.doc);
-            svgDiagram.graphData = new GraphSorter();
         } catch (IOException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
         }
