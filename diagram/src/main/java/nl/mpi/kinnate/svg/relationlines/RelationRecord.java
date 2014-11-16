@@ -28,6 +28,8 @@ import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.svg.SvgDiagram;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Document : RelationRecord Created on : Jun 29, 2012, 2:18:15 PM
@@ -36,6 +38,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class RelationRecord {
 
+    private final static Logger logger = LoggerFactory.getLogger(RelationRecord.class);
     private String groupName = null;
     public String idString;
     public String lineIdString;
@@ -57,7 +60,7 @@ public class RelationRecord {
     final private String dcrType;
     final private String customType;
 
-    public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, Point egoPoint, Point alterPoint, Point averageParentPassed) throws OldFormatException {
+    public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, Point egoPoint, Point alterPoint, Point averageParentPassed) {
         this.dcrType = null;
         this.customType = null;
         lineRecord = setPolylinePointsAttribute(lineIdString, relationType, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y, averageParentPassed);
@@ -69,7 +72,7 @@ public class RelationRecord {
         curveLinePoints = setPathPointsAttribute(curveLineOrientation, hSpacing, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y);
     }
 
-    protected RelationRecord(String groupName, SvgDiagram svgDiagram, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, String dcrType, String customType, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) throws OldFormatException {
+    protected RelationRecord(String groupName, SvgDiagram svgDiagram, int relationLineIndex, EntityData leftEntity, EntityData rightEntity, DataTypes.RelationType directedRelation, String dcrType, String customType, int lineWidth, int lineDash, RelationTypeDefinition.CurveLineOrientation curveLineOrientation, String lineColour, String lineLabel, int hSpacing, int vSpacing) {
         this.groupName = groupName;
         this.svgDiagram = svgDiagram;
         this.leftEntity = leftEntity;
@@ -161,7 +164,7 @@ public class RelationRecord {
     }
     // end caclulate the average parent position
 
-    public void updatePathPoints(LineLookUpTable lineLookUpTable) throws OldFormatException {
+    public void updatePathPoints(LineLookUpTable lineLookUpTable) {
         Point egoSymbolPoint;
         Point alterSymbolPoint;
         Point parentPoint = null;
@@ -234,7 +237,7 @@ public class RelationRecord {
 
     }
 
-    private LineRecord setPolylinePointsAttribute(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, Point averageParentPassed) throws OldFormatException {
+    private LineRecord setPolylinePointsAttribute(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, Point averageParentPassed) {
         //float midY = (egoY + alterY) / 2;
         // todo: Ticket #1064 when an entity is above one that it should be below the line should make a zigzag to indicate it        
         ArrayList<Point> initialPointsList = new ArrayList<Point>();
@@ -267,7 +270,7 @@ public class RelationRecord {
 //                alterX = tempX;
 //                alterY = tempY;
             case descendant:
-                throw new OldFormatException("This diagram needs to be updated, select recalculate diagram from the edit menu before continuing.");
+                logger.warn("Found descendant in LineRecord", new OldFormatException("This diagram needs to be updated, select recalculate diagram from the edit menu before continuing."));
 //                targetNode.getParentNode().getParentNode().getParentNode().getParentNode().removeChild(targetNode.getParentNode().getParentNode().getParentNode());
 //                throw new UnsupportedOperationException("in order to simplify section, the ancestor relations should be swapped so that ego is the parent");
 //                return;

@@ -43,7 +43,7 @@ public class RelationRecordTable {
     LineLookUpTable lineLookUpTable;
     ArrayList<String> doneRelations = new ArrayList<String>();
 
-    public void addRecord(DiagramSettings diagramSettings, SvgDiagram svgDiagram, EntityData entityData, EntityRelation entityRelation, int hSpacing, int vSpacing, int lineWidth) throws OldFormatException {
+    public void addRecord(DiagramSettings diagramSettings, SvgDiagram svgDiagram, EntityData entityData, EntityRelation entityRelation, int hSpacing, int vSpacing, int lineWidth) {
         // make directed and exclude any lines that are already done
         DataTypes.RelationType directedRelation = entityRelation.getRelationType();
         EntityData leftEntity;
@@ -196,7 +196,7 @@ public class RelationRecordTable {
         return recordStore.size();
     }
 
-    public void adjustLines(SvgDiagram svgDiagram) throws OldFormatException {
+    public void adjustLines(SvgDiagram svgDiagram)  {
         lineLookUpTable = new LineLookUpTable();
         for (RelationRecord relationRecord : recordStore.values()) {
             relationRecord.updatePathPoints(lineLookUpTable);

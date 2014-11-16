@@ -210,7 +210,7 @@ public class RelationSvg {
         }
     }
 
-    public void updateRelationLines(SvgDiagram svgDiagram, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) throws OldFormatException {
+    public void updateRelationLines(SvgDiagram svgDiagram, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) {
         if (relationRecords == null) {
             // no relations therefore nothing to do here
             return;

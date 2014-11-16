@@ -67,7 +67,6 @@ public class SvgUpdateHandler {
     protected RelationDragHandle relationDragHandle = null;
     private HashSet<UniqueIdentifier> highlightedIdentifiers = new HashSet<UniqueIdentifier>();
     public RelationRecordTable relationRecords;
-    private boolean oldFormatWarningShown = false;
     private int paddingDistance = 20;
     private Rectangle dragSelectionRectOnDocument = null;
 
@@ -82,6 +81,10 @@ public class SvgUpdateHandler {
 //                        * Polygon <polygon>
 //                        * Path <path>
     }
+//    GraphPanel graphPanel;
+//public SvgUpdateHandler(GraphPanel graphPanel) {
+//        this.svgDiagram = graphPanel.getSVGDocument();
+//        this.graphPanel = graphPanel;
 
     public SvgUpdateHandler(SvgDiagram svgDiagram) {
         this.svgDiagram = svgDiagram;
@@ -205,31 +208,24 @@ public class SvgUpdateHandler {
                     highlightBackgroundLine.setAttribute("fill", "none");
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
                     highlightBackgroundLine.setAttribute("stroke", "white");
-                    try {
-                        RelationRecord relationRecord;
-                        if (DataTypes.isSanguinLine(directedRelation)) {
-                            relationRecord = new RelationRecord(dragLineElementId, directedRelation, vSpacing, egoSymbolPoint, dragPoint, parentPoint);
-                        } else {
-                            relationRecord = new RelationRecord(localRelationDragHandle.getCurveLineOrientation(), hSpacing, vSpacing, egoSymbolPoint, dragPoint);
-                        }
-                        highlightBackgroundLine.setAttribute("d", relationRecord.getPathPointsString());
-                        relationHighlightGroup.appendChild(highlightBackgroundLine);
-                        // add a blue dotted line
-                        Element highlightLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, svgLineType);
-                        highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
-                        highlightLine.setAttribute("fill", "none");
-//            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
-                        highlightLine.setAttribute("d", relationRecord.getPathPointsString());
-                        highlightLine.setAttribute("stroke", localRelationDragHandle.getRelationColour());
-                        highlightLine.setAttribute("stroke-dasharray", "3");
-                        highlightLine.setAttribute("stroke-dashoffset", "0");
-                        relationHighlightGroup.appendChild(highlightLine);
-                    } catch (OldFormatException exception) {
-                        if (!oldFormatWarningShown) {
-                            dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
-                            oldFormatWarningShown = true;
-                        }
+                    RelationRecord relationRecord;
+                    if (DataTypes.isSanguinLine(directedRelation)) {
+                        relationRecord = new RelationRecord(dragLineElementId, directedRelation, vSpacing, egoSymbolPoint, dragPoint, parentPoint);
+                    } else {
+                        relationRecord = new RelationRecord(localRelationDragHandle.getCurveLineOrientation(), hSpacing, vSpacing, egoSymbolPoint, dragPoint);
                     }
+                    highlightBackgroundLine.setAttribute("d", relationRecord.getPathPointsString());
+                    relationHighlightGroup.appendChild(highlightBackgroundLine);
+                    // add a blue dotted line
+                    Element highlightLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, svgLineType);
+                    highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
+                    highlightLine.setAttribute("fill", "none");
+//            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
+                    highlightLine.setAttribute("d", relationRecord.getPathPointsString());
+                    highlightLine.setAttribute("stroke", localRelationDragHandle.getRelationColour());
+                    highlightLine.setAttribute("stroke-dasharray", "3");
+                    highlightLine.setAttribute("stroke-dashoffset", "0");
+                    relationHighlightGroup.appendChild(highlightLine);
                 }
                 Element symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
                 symbolNode.setAttribute("cx", Float.toString(dragNodeX));
@@ -757,56 +753,55 @@ public class SvgUpdateHandler {
 //                }
                 Rectangle initialGraphRect = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
                 Element entityGroup = svgDiagram.doc.getElementById("EntityGroup");
-                try {
-                    boolean continueUpdating = true;
-                    while (continueUpdating) {
-                        continueUpdating = false;
-                        int updateDragNodeXInner;
-                        int updateDragNodeYInner;
-                        synchronized (SvgUpdateHandler.this) {
-                            dragUpdateRequired = false;
-                            updateDragNodeXInner = updateDragNodeX;
-                            updateDragNodeYInner = updateDragNodeY;
-                            updateDragNodeX = 0;
-                            updateDragNodeY = 0;
-                        }
+                boolean continueUpdating = true;
+                while (continueUpdating) {
+                    continueUpdating = false;
+                    int updateDragNodeXInner;
+                    int updateDragNodeYInner;
+                    synchronized (SvgUpdateHandler.this) {
+                        dragUpdateRequired = false;
+                        updateDragNodeXInner = updateDragNodeX;
+                        updateDragNodeYInner = updateDragNodeY;
+                        updateDragNodeX = 0;
+                        updateDragNodeY = 0;
+                    }
 //                    System.out.println("updateDragNodeX: " + updateDragNodeXInner);
 //                    System.out.println("updateDragNodeY: " + updateDragNodeYInner);
-                        if (svgDiagram.doc == null || svgDiagram.graphData == null) {
-                            BugCatcherManager.getBugCatcher().logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
-                        } else {
+                    if (svgDiagram.doc == null || svgDiagram.graphData == null) {
+                        BugCatcherManager.getBugCatcher().logError(new Exception("graphData or the svg document is null, is this an old file format? try redrawing before draging."));
+                    } else {
 //                        if (relationDragHandleType != null) {
 //                            // drag relation handles
 ////                            updateSanguineHighlights(entityGroup);
 //                            removeHighLights();
 //                            updateDragRelationLines(entityGroup, updateDragNodeXInner, updateDragNodeYInner);
 //                        } else {
-                            // drag the entities
-                            boolean allRealtionsSelected = true;
-                            relationLoop:
-                            for (EntityData selectedEntity : svgDiagram.graphData.getDataNodes()) {
-                                if (selectedEntity.isVisible
-                                        && graphPanel.selectedGroupId.contains(selectedEntity.getUniqueIdentifier())) {
-                                    for (EntityData relatedEntity : selectedEntity.getVisiblyRelated()) {
-                                        if (relatedEntity.isVisible && !graphPanel.selectedGroupId.contains(relatedEntity.getUniqueIdentifier())) {
-                                            allRealtionsSelected = false;
-                                            break relationLoop;
-                                        }
+                        // drag the entities
+                        boolean allRealtionsSelected = true;
+                        relationLoop:
+                        for (EntityData selectedEntity : svgDiagram.graphData.getDataNodes()) {
+                            if (selectedEntity.isVisible
+                                    && graphPanel.selectedGroupId.contains(selectedEntity.getUniqueIdentifier())) {
+                                for (EntityData relatedEntity : selectedEntity.getVisiblyRelated()) {
+                                    if (relatedEntity.isVisible && !graphPanel.selectedGroupId.contains(relatedEntity.getUniqueIdentifier())) {
+                                        allRealtionsSelected = false;
+                                        break relationLoop;
                                     }
                                 }
                             }
-                            int dragCounter = 0;
-                            // todo: concurent modification issue here in graphPanel.selectedGroupId when debugging
-                            for (UniqueIdentifier entityId : graphPanel.selectedGroupId) {
-                                // store the remainder after snap for re use on each update
-                                synchronized (SvgUpdateHandler.this) {
-                                    if (dragRemainders.length > dragCounter) {
+                        }
+                        int dragCounter = 0;
+                        // todo: concurent modification issue here in graphPanel.selectedGroupId when debugging
+                        for (UniqueIdentifier entityId : graphPanel.selectedGroupId) {
+                            // store the remainder after snap for re use on each update
+                            synchronized (SvgUpdateHandler.this) {
+                                if (dragRemainders.length > dragCounter) {
 //                                        System.out.println("drag remainder: " + updateDragNodeXInner + " : " + dragRemainders[dragCounter][0]);
-                                        dragRemainders[dragCounter] = svgDiagram.entitySvg.moveEntity(svgDiagram, entityId, updateDragNodeXInner, dragRemainders[dragCounter][0], updateDragNodeYInner, dragRemainders[dragCounter][1], svgDiagram.getDiagramSettings().snapToGrid(), dragScale, allRealtionsSelected);
-                                    }
+                                    dragRemainders[dragCounter] = svgDiagram.entitySvg.moveEntity(svgDiagram, entityId, updateDragNodeXInner, dragRemainders[dragCounter][0], updateDragNodeYInner, dragRemainders[dragCounter][1], svgDiagram.getDiagramSettings().snapToGrid(), dragScale, allRealtionsSelected);
                                 }
-                                dragCounter++;
                             }
+                            dragCounter++;
+                        }
 //                    Element entityGroup = doc.getElementById("EntityGroup");
 //                    for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
 //                        if ("g".equals(currentChild.getLocalName())) {
@@ -834,42 +829,33 @@ public class SvgUpdateHandler {
 //                            }
 //                        }
 //                    } 
-                            int vSpacing = svgDiagram.graphPanelSize.getVerticalSpacing(); // graphPanel.dataStoreSvg.graphData.gridHeight);
-                            int hSpacing = svgDiagram.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
-                            new RelationSvg().updateRelationLines(svgDiagram, relationRecords, graphPanel.selectedGroupId, hSpacing, vSpacing);
-                            createRelationLineHighlights(entityGroup);
-                            final Rectangle currentGraphRect = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
-                            if (!initialGraphRect.contains(currentGraphRect)) {
-                                Element svgRoot = svgDiagram.doc.getDocumentElement();
-                                Element diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
-                                resizeCanvas(svgRoot, diagramGroupNode, false);
-                            }
-                            //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+                        int vSpacing = svgDiagram.graphPanelSize.getVerticalSpacing(); // graphPanel.dataStoreSvg.graphData.gridHeight);
+                        int hSpacing = svgDiagram.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
+                        new RelationSvg().updateRelationLines(svgDiagram, relationRecords, graphPanel.selectedGroupId, hSpacing, vSpacing);
+                        createRelationLineHighlights(entityGroup);
+                        final Rectangle currentGraphRect = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
+                        if (!initialGraphRect.contains(currentGraphRect)) {
+                            Element svgRoot = svgDiagram.doc.getDocumentElement();
+                            Element diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
+                            resizeCanvas(svgRoot, diagramGroupNode, false);
                         }
-                        // graphPanel.updateCanvasSize(); // updating the canvas size here is too slow so it is moved into the drag ended 
+                        //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
+                    }
+                    // graphPanel.updateCanvasSize(); // updating the canvas size here is too slow so it is moved into the drag ended 
 //                    if (graphPanel.dataStoreSvg.graphData.isRedrawRequired()) { // this has been abandoned in favour of preventing dragging past zero
-                        // todo: update the position of all nodes
-                        // todo: any labels and other non entity graphics must also be taken into account here
+                    // todo: update the position of all nodes
+                    // todo: any labels and other non entity graphics must also be taken into account here
 //                        for (EntityData selectedEntity : graphPanel.dataStoreSvg.graphData.getDataNodes()) {
 //                            if (selectedEntity.isVisible) {
 //                                svgDiagram.entitySvg.moveEntity(graphPanel, selectedEntity.getUniqueIdentifier(), updateDragNodeXInner + dragRemainders[dragCounter][0], updateDragNodeYInner + dragRemainders[dragCounter][1], graphPanel.dataStoreSvg.snapToGrid, true);
 //                            }
 //                        }
 //                    }
-                        synchronized (SvgUpdateHandler.this) {
-                            continueUpdating = dragUpdateRequired;
-                            if (!continueUpdating) {
-                                threadRunning = false;
-                            }
-                        }
-                    }
-                } catch (OldFormatException exception) {
                     synchronized (SvgUpdateHandler.this) {
-                        threadRunning = false;
-                    }
-                    if (!oldFormatWarningShown) {
-                        dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
-                        oldFormatWarningShown = true;
+                        continueUpdating = dragUpdateRequired;
+                        if (!continueUpdating) {
+                            threadRunning = false;
+                        }
                     }
                 }
                 graphPanel.setRequiresSave();
@@ -1126,14 +1112,7 @@ public class SvgUpdateHandler {
                     if ((svgDiagram.getDiagramSettings().showKinTermLines() || graphLinkNode.getRelationType() != DataTypes.RelationType.kinterm)
                             && (svgDiagram.getDiagramSettings().showSanguineLines() || !DataTypes.isSanguinLine(graphLinkNode.getRelationType()))
                             && (graphLinkNode.getAlterNode() != null && graphLinkNode.getAlterNode().isVisible)) {
-                        try {
-                            relationRecords.addRecord(svgDiagram.getDiagramSettings(), svgDiagram, currentNode, graphLinkNode, hSpacing, vSpacing, EntitySvg.strokeWidth);
-                        } catch (OldFormatException exception) {
-                            if (!oldFormatWarningShown) {
-                                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
-                                oldFormatWarningShown = true;
-                            }
-                        }
+                        relationRecords.addRecord(svgDiagram.getDiagramSettings(), svgDiagram, currentNode, graphLinkNode, hSpacing, vSpacing, EntitySvg.strokeWidth);
                     }
                 }
             }
