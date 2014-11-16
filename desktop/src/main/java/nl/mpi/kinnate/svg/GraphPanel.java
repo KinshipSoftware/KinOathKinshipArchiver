@@ -48,6 +48,7 @@ import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
+import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.MetadataPanel;
@@ -344,10 +345,34 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    public void removeEgo(String[] egoIdentifierArray) {
 //        dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
 //    }
+    protected void updateSvgSelectionHighlights() {
+        if (kinDiagramPanel != null) {
+            kinDiagramPanel.setStatusBarText(selectedGroupId.size() + " selected of " + kinDiagramPanel.getGraphEntities().length + "");
+            String kinTypeStrings = "";
+            for (UniqueIdentifier entityID : selectedGroupId) {
+                if (kinTypeStrings.length() != 0) {
+                    kinTypeStrings = kinTypeStrings + KinType.separator;
+                }
+                kinTypeStrings = kinTypeStrings + getKinTypeForElementId(entityID);
+            }
+            if (kinTypeStrings != null) {
+                kinDiagramPanel.setSelectedKinTypeSting(kinTypeStrings);
+            }
+        }
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        if (updateManager != null) { // todo: there may be issues related to the updateManager being null, this should be looked into if symptoms arise.
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    svgUpdateHandler.updateSvgSelectionHighlights();
+                }
+            });
+        }
+    }
+
     public void setSelectedIds(UniqueIdentifier[] uniqueIdentifiers) {
         selectedGroupId.clear();
         selectedGroupId.addAll(Arrays.asList(uniqueIdentifiers));
-        svgUpdateHandler.updateSvgSelectionHighlights();
+        updateSvgSelectionHighlights();
         // pan the diagram so that the selected are in the center
         svgUpdateHandler.panToSelected(uniqueIdentifiers);
 //        mouseListenerSvg.updateSelectionDisplay();

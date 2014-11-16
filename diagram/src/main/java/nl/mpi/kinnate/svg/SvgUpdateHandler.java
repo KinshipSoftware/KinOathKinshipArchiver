@@ -468,41 +468,24 @@ public class SvgUpdateHandler {
     }
 
     protected void updateSvgSelectionHighlights() {
-        if (kinTermSavePanel != null) {
-            kinTermSavePanel.setStatusBarText(graphPanel.selectedGroupId.size() + " selected of " + kinTermSavePanel.getGraphEntities().length + "");
-            String kinTypeStrings = "";
-            for (UniqueIdentifier entityID : graphPanel.selectedGroupId) {
-                if (kinTypeStrings.length() != 0) {
-                    kinTypeStrings = kinTypeStrings + KinType.separator;
-                }
-                kinTypeStrings = kinTypeStrings + graphPanel.getKinTypeForElementId(entityID);
-            }
-            if (kinTypeStrings != null) {
-                kinTermSavePanel.setSelectedKinTypeSting(kinTypeStrings);
-            }
-        }
-        UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
-        if (updateManager != null) { // todo: there may be issues related to the updateManager being null, this should be looked into if symptoms arise.
-            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
-                public void run() {
-                    if (svgDiagram.doc != null) {
+        if (svgDiagram.doc != null) {
 //                        for (String groupString : new String[]{"EntityGroup", "LabelsGroup"}) {
 //                            Element entityGroup = svgDiagram.doc.getElementById(groupString);
-                        {
-                            boolean isLeadSelection = true;
-                            for (UniqueIdentifier currentIdentifier : highlightedIdentifiers.toArray(new UniqueIdentifier[]{})) {
-                                // remove old highlights but leave existing selections
-                                if (!graphPanel.selectedGroupId.contains(currentIdentifier)) {
-                                    Element existingHighlight = svgDiagram.doc.getElementById("highlight_" + currentIdentifier.getAttributeIdentifier());
-                                    if (existingHighlight != null) {
-                                        existingHighlight.getParentNode().removeChild(existingHighlight);
-                                    }
-                                    highlightedIdentifiers.remove(currentIdentifier);
-                                }
-                            }
-                            for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId.toArray(new UniqueIdentifier[0])) {
-                                Element selectedGroup = svgDiagram.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
-                                Element existingHighlight = svgDiagram.doc.getElementById("highlight_" + uniqueIdentifier.getAttributeIdentifier());
+            {
+                boolean isLeadSelection = true;
+                for (UniqueIdentifier currentIdentifier : highlightedIdentifiers.toArray(new UniqueIdentifier[]{})) {
+                    // remove old highlights but leave existing selections
+                    if (!graphPanel.selectedGroupId.contains(currentIdentifier)) {
+                        Element existingHighlight = svgDiagram.doc.getElementById("highlight_" + currentIdentifier.getAttributeIdentifier());
+                        if (existingHighlight != null) {
+                            existingHighlight.getParentNode().removeChild(existingHighlight);
+                        }
+                        highlightedIdentifiers.remove(currentIdentifier);
+                    }
+                }
+                for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId.toArray(new UniqueIdentifier[0])) {
+                    Element selectedGroup = svgDiagram.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
+                    Element existingHighlight = svgDiagram.doc.getElementById("highlight_" + uniqueIdentifier.getAttributeIdentifier());
 //                            for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
 //                                if ("g".equals(currentChild.getLocalName())) {
 //                                    Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
@@ -510,7 +493,7 @@ public class SvgUpdateHandler {
 //                                        UniqueIdentifier entityId = new UniqueIdentifier(idAttrubite.getTextContent());
 //                                        System.out.println("group id: " + entityId.getAttributeIdentifier());
 //                                        Node existingHighlight = null;
-                                // find any existing highlight
+                    // find any existing highlight
 //                                        for (Node subGoupNode = currentChild.getFirstChild(); subGoupNode != null; subGoupNode = subGoupNode.getNextSibling()) {
 //                                            if ("g".equals(subGoupNode.getLocalName())) {
 //                                                Node subGroupIdAttrubite = subGoupNode.getAttributes().getNamedItem("id");
@@ -522,35 +505,35 @@ public class SvgUpdateHandler {
 //                                            }
 //                                        }
 //                                        if (!graphPanel.selectedGroupId.contains(entityId)) {
-                                // remove all old highlights
+                    // remove all old highlights
 //                                            if (existingHighlight != null) {
 //                                                currentChild.removeChild(existingHighlight);
 //                                            }
-                                // add the current highlights
+                    // add the current highlights
 //                                        } else {
-                                if (existingHighlight == null && selectedGroup != null) {
+                    if (existingHighlight == null && selectedGroup != null) {
 //                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                                    SVGRect bbox = ((SVGLocatable) selectedGroup).getBBox();
-                                    Element highlightGroupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
-                                    ((EventTarget) highlightGroupNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
-                                    highlightGroupNode.setAttribute("id", "highlight_" + uniqueIdentifier.getAttributeIdentifier());
-                                    Element symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
-                                    symbolNode.setAttribute("x", Float.toString(bbox.getX() - paddingDistance));
-                                    symbolNode.setAttribute("y", Float.toString(bbox.getY() - paddingDistance));
-                                    symbolNode.setAttribute("width", Float.toString(bbox.getWidth() + paddingDistance * 2));
-                                    symbolNode.setAttribute("height", Float.toString(bbox.getHeight() + paddingDistance * 2));
-                                    symbolNode.setAttribute("fill", "#999999"); // provide a fill so that the mouse selection extends to the bounding box, but but make it transparent
-                                    symbolNode.setAttribute("fill-opacity", "0");
-                                    symbolNode.setAttribute("stroke-width", "1");
-                                    //if (graphPanel.selectedGroupId.indexOf(entityId) == 0) {
-                                    if (isLeadSelection) {
-                                        symbolNode.setAttribute("stroke-dasharray", "3");
-                                        symbolNode.setAttribute("stroke-dashoffset", "0");
-                                    } else {
-                                        symbolNode.setAttribute("stroke-dasharray", "6");
-                                        symbolNode.setAttribute("stroke-dashoffset", "0");
-                                    }
-                                    symbolNode.setAttribute("stroke", "blue");
+                        SVGRect bbox = ((SVGLocatable) selectedGroup).getBBox();
+                        Element highlightGroupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
+                        ((EventTarget) highlightGroupNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
+                        highlightGroupNode.setAttribute("id", "highlight_" + uniqueIdentifier.getAttributeIdentifier());
+                        Element symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
+                        symbolNode.setAttribute("x", Float.toString(bbox.getX() - paddingDistance));
+                        symbolNode.setAttribute("y", Float.toString(bbox.getY() - paddingDistance));
+                        symbolNode.setAttribute("width", Float.toString(bbox.getWidth() + paddingDistance * 2));
+                        symbolNode.setAttribute("height", Float.toString(bbox.getHeight() + paddingDistance * 2));
+                        symbolNode.setAttribute("fill", "#999999"); // provide a fill so that the mouse selection extends to the bounding box, but but make it transparent
+                        symbolNode.setAttribute("fill-opacity", "0");
+                        symbolNode.setAttribute("stroke-width", "1");
+                        //if (graphPanel.selectedGroupId.indexOf(entityId) == 0) {
+                        if (isLeadSelection) {
+                            symbolNode.setAttribute("stroke-dasharray", "3");
+                            symbolNode.setAttribute("stroke-dashoffset", "0");
+                        } else {
+                            symbolNode.setAttribute("stroke-dasharray", "6");
+                            symbolNode.setAttribute("stroke-dashoffset", "0");
+                        }
+                        symbolNode.setAttribute("stroke", "blue");
 //                                                if (graphPanel.dataStoreSvg.highlightRelationLines) {
 //                                                    // add highlights for relation lines
 //                                                    Element relationsGroup = svgDiagram.doc.getElementById("RelationGroup");
@@ -572,38 +555,35 @@ public class SvgUpdateHandler {
 //                                                        }
 //                                                    }
 //                                                }
-                                    // make sure the rect is added before the drag handles, otherwise the rect can block the mouse actions
-                                    highlightGroupNode.appendChild(symbolNode);
-                                    if (!uniqueIdentifier.isTransientIdentifier() && !uniqueIdentifier.isGraphicsIdentifier()) {
-                                        addRelationDragHandles(svgDiagram.getDiagramSettings().getRelationTypeDefinitions(), highlightGroupNode, bbox, paddingDistance);
-                                    } else {
-                                        if (uniqueIdentifier.isGraphicsIdentifier()) {
-                                            if (!"text".equals(selectedGroup.getLocalName())) {
-                                                // add a drag handle for all graphics but not text nodes
-                                                addGraphicsDragHandles(highlightGroupNode, uniqueIdentifier, bbox, paddingDistance);
-                                            }
-                                        }
-                                    }
-                                    if ("g".equals(selectedGroup.getLocalName())) {
-                                        selectedGroup.appendChild(highlightGroupNode);
-                                    } else {
-                                        highlightGroupNode.setAttribute("transform", selectedGroup.getAttribute("transform"));
-                                        selectedGroup.getParentNode().appendChild(highlightGroupNode);
-                                    }
-                                    highlightedIdentifiers.add(uniqueIdentifier);
+                        // make sure the rect is added before the drag handles, otherwise the rect can block the mouse actions
+                        highlightGroupNode.appendChild(symbolNode);
+                        if (!uniqueIdentifier.isTransientIdentifier() && !uniqueIdentifier.isGraphicsIdentifier()) {
+                            addRelationDragHandles(svgDiagram.getDiagramSettings().getRelationTypeDefinitions(), highlightGroupNode, bbox, paddingDistance);
+                        } else {
+                            if (uniqueIdentifier.isGraphicsIdentifier()) {
+                                if (!"text".equals(selectedGroup.getLocalName())) {
+                                    // add a drag handle for all graphics but not text nodes
+                                    addGraphicsDragHandles(highlightGroupNode, uniqueIdentifier, bbox, paddingDistance);
+                                }
+                            }
+                        }
+                        if ("g".equals(selectedGroup.getLocalName())) {
+                            selectedGroup.appendChild(highlightGroupNode);
+                        } else {
+                            highlightGroupNode.setAttribute("transform", selectedGroup.getAttribute("transform"));
+                            selectedGroup.getParentNode().appendChild(highlightGroupNode);
+                        }
+                        highlightedIdentifiers.add(uniqueIdentifier);
 //                                            }
 //                                        }
-                                }
-                                isLeadSelection = false;
-                            }
-                            createRelationLineHighlights(svgDiagram.doc.getElementById("EntityGroup"));
-                        }
                     }
-                    // Em:1:FMDH:1:
-//                    ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
+                    isLeadSelection = false;
                 }
-            });
+                createRelationLineHighlights(svgDiagram.doc.getElementById("EntityGroup"));
+            }
         }
+        // Em:1:FMDH:1:
+//                    ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
     protected void dragCanvas(int updateDragNodeXLocal, int updateDragNodeYLocal) {
