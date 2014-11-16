@@ -19,6 +19,8 @@
 package nl.mpi.kinnate.svg;
 
 import java.awt.BorderLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -54,6 +56,7 @@ import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.MetadataPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.apache.batik.bridge.UpdateManager;
+import org.apache.batik.dom.svg.SVGOMPoint;
 import org.apache.batik.dom.util.SAXIOException;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.JSVGScrollPane;
@@ -62,6 +65,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.svg.SVGLocatable;
 
 /**
  * Document : GraphPanel Created on : Aug 16, 2010, 5:31:33 PM
@@ -80,7 +84,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     private final SvgDiagram svgDiagram;
     public DataStoreSvg dataStoreSvg;
 //    private URI[] egoPathsTemp = null;
-    public SvgUpdateHandler svgUpdateHandler;
+    public final SvgUpdateHandler svgUpdateHandler;
     public MouseListenerSvg mouseListenerSvg;
     final private ArbilWindowManager dialogHandler;
     final private ArbilDataNodeLoader dataNodeLoader;
@@ -309,6 +313,203 @@ public class GraphPanel extends JPanel implements SavePanel {
         dataStoreSvg.kinTermGroups.remove(kinTermGroup);
     }
 
+    public void panToSelected(UniqueIdentifier[] targetIdentifiers) {
+        Rectangle selectionSize = null;
+        for (UniqueIdentifier currentIdentifier : targetIdentifiers) {
+            Point currentPoint = svgDiagram.entitySvg.getEntityLocationOffset(currentIdentifier);
+            if (currentPoint != null) {
+                if (selectionSize == null) {
+                    selectionSize = new Rectangle(currentPoint.x, currentPoint.y, 1, 1);
+                } else {
+                    selectionSize.add(currentPoint);
+                }
+            }
+        }
+        final Rectangle selectionRect = selectionSize;
+//        if (selectionRect != null) {
+//            System.out.println("selectionRect: " + selectionRect.toString());
+//            addTestRect(selectionRect, 0);
+//        }
+        Rectangle renderRectScreen = svgCanvas.getBounds();
+//        System.out.println("getBounds: "+graphPanel.svgCanvas.getBounds().toString());
+//        System.out.println("getRenderRect: "+graphPanel.svgCanvas.getRenderRect().toString());
+//        System.out.println("getVisibleRect: "+graphPanel.svgCanvas.getVisibleRect().toString());
+//        System.out.println("renderRectScreen:" + renderRectScreen.toString());
+
+        Element labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
+        final SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
+        // todo: should this be moved into the svg thread?
+        final Rectangle renderRectDocument = svgUpdateHandler.getRectOnDocument(renderRectScreen, labelGroupLocatable);
+//        System.out.println("renderRectDocument: " + renderRectDocument);
+
+//        SVGOMPoint pointOnDocument = getPointOnDocument(new Point(0, 0), labelGroupLocatable);
+//        renderRect.translate((int) pointOnDocument.getX(), (int) pointOnDocument.getY());
+//        addTestRect(renderRectDocument, 1);
+        if (selectionRect != null && selectionRect != null && !renderRectDocument.contains(selectionRect)) {
+            UpdateManager updateManager = svgCanvas.getUpdateManager();
+            if (updateManager != null) {
+                updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                    public void run() {
+                        SVGLocatable diagramGroupLocatable = (SVGLocatable) svgDiagram.doc.getElementById("DiagramGroup");
+                        final double scaleFactor = diagramGroupLocatable.getScreenCTM().getA();
+//                        final double scaleFactor = graphPanel.svgCanvas.getRenderingTransform().getScaleX();
+//                        System.out.println("scaleFactor: " + scaleFactor);
+                        AffineTransform at = new AffineTransform();
+                        final double offsetX = renderRectDocument.getCenterX() - selectionRect.getCenterX();
+                        final double offsetY = renderRectDocument.getCenterY() - selectionRect.getCenterY();
+//                        System.out.println("offset: " + offsetX + ":" + offsetY);
+//                        SVGOMPoint offsetOnScreen = getPointOnDocument(new Point((int) offsetX, (int) offsetY), labelGroupLocatable);
+//                        System.out.println("screen offset: " + offsetOnScreen.getX() + " : " + offsetOnScreen.getY());
+//                        at.translate(offsetOnScreen.getX(), offsetOnScreen.getY());
+                        at.translate((offsetX / 2) * scaleFactor, (offsetY / 2) * scaleFactor);
+//                        at.scale(scaleFactor, scaleFactor);
+                        at.concatenate(svgCanvas.getRenderingTransform());
+                        svgCanvas.setRenderingTransform(at);
+                        //... at.concatenate(diagramGroupLocatable.getTransformToElement(null));
+                        //... graphPanel.svgCanvas.setRenderingTransform(at);
+                    }
+                });
+            }
+        }
+    }
+
+    public void addTestRect(final Rectangle testRect, int rectangleID) {
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        final String rectangleName = "SelectionBorder" + rectangleID;
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    System.out.println("selectionRect: " + testRect);
+                    Element pageBorderNode = svgDiagram.doc.getElementById(rectangleName);
+                    if (pageBorderNode == null) {
+                        Element labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
+                        pageBorderNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
+                        pageBorderNode.setAttribute("id", rectangleName);
+                        pageBorderNode.setAttribute("fill", "none");
+                        pageBorderNode.setAttribute("x", Float.toString(testRect.x - 20));
+                        pageBorderNode.setAttribute("y", Float.toString(testRect.y - 20));
+                        pageBorderNode.setAttribute("width", Float.toString(testRect.width + 40));
+                        pageBorderNode.setAttribute("height", Float.toString(testRect.height + 40));
+                        pageBorderNode.setAttribute("stroke-width", "1");
+                        pageBorderNode.setAttribute("stroke", "green");
+                        labelGroup.appendChild(pageBorderNode);
+                    }
+                    pageBorderNode.setAttribute("x", Float.toString(testRect.x - 20));
+                    pageBorderNode.setAttribute("y", Float.toString(testRect.y - 20));
+                    pageBorderNode.setAttribute("width", Float.toString(testRect.width + 40));
+                    pageBorderNode.setAttribute("height", Float.toString(testRect.height + 40));
+                    System.out.println("pageBorderNode:" + pageBorderNode);
+                }
+            });
+        }
+    }
+
+    public void updateMouseDot(final Point currentLocation) {
+//        this is only used to test the screen to document transform
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    Element labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
+                    Element mouseDotElement = svgDiagram.doc.getElementById("MouseDot");
+                    if (mouseDotElement == null) {
+                        mouseDotElement = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
+                        mouseDotElement.setAttribute("id", "MouseDot");
+                        mouseDotElement.setAttribute("r", "5");
+                        mouseDotElement.setAttribute("fill", "blue");
+                        mouseDotElement.setAttribute("stroke", "none");
+                        labelGroup.appendChild(mouseDotElement);
+                    }
+                    SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
+                    SVGOMPoint pointOnDocument = svgUpdateHandler.getPointOnDocument(currentLocation, labelGroupLocatable);
+                    mouseDotElement.setAttribute("cx", Float.toString(pointOnDocument.getX()));
+                    mouseDotElement.setAttribute("cy", Float.toString(pointOnDocument.getY()));
+                }
+            });
+        }
+    }
+
+    protected void dragCanvas(int updateDragNodeXLocal, int updateDragNodeYLocal) {
+        AffineTransform at = new AffineTransform();
+        at.translate(updateDragNodeXLocal, updateDragNodeYLocal);
+        at.concatenate(svgCanvas.getRenderingTransform());
+//        System.out.println("offset: " + at.getTranslateX());
+        svgCanvas.setRenderingTransform(at);
+    }
+
+    protected void updateDragRelation(int updateDragNodeXLocal, int updateDragNodeYLocal) {
+//        System.out.println("updateDragRelation: " + updateDragNodeXLocal + " : " + updateDragNodeYLocal);
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        synchronized (svgUpdateHandler) {
+            svgUpdateHandler.updateDragRelationX = updateDragNodeXLocal;
+            svgUpdateHandler.updateDragRelationY = updateDragNodeYLocal;
+            if (!svgUpdateHandler.relationThreadRunning) {
+
+                svgUpdateHandler.relationThreadRunning = true;
+                updateManager.getUpdateRunnableQueue().invokeLater(svgUpdateHandler.getRelationRunnable(selectedGroupId));
+            }
+        }
+    }
+
+    public void removeSelectionRect() {
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    svgUpdateHandler.removeSelectionRectA();
+                }
+            });
+        }
+    }
+
+    protected void updateDragNode(final int updateDragNodeXLocal, final int updateDragNodeYLocal) {
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        synchronized (svgUpdateHandler) {
+            if (!svgUpdateHandler.threadRunning) {
+                svgUpdateHandler.threadRunning = true;
+                updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                    public void run() {
+                        svgUpdateHandler.updateDragNode(selectedGroupId, updateDragNodeXLocal, updateDragNodeYLocal);
+                        setRequiresSave();
+                    }
+                });
+            }
+        }
+    }
+
+    public void addGraphics(final SvgUpdateHandler.GraphicsTypes graphicsType, final Point locationOnScreen) {
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    svgUpdateHandler.addGraphics(graphicsType, locationOnScreen, mouseListenerSvg);
+                }
+            });
+        }
+    }
+
+    public void deleteGraphics(final UniqueIdentifier uniqueIdentifier) {
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    svgUpdateHandler.deleteGraphics(uniqueIdentifier);
+                    setRequiresSave();
+                }
+            });
+        }
+    }
+
+    protected void drawSelectionRect(final Point startLocation, final Point currentLocation) {
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    svgUpdateHandler.drawSelectionRect(startLocation, currentLocation);
+                }
+            });
+        }
+    }
 //    public String[] getEgoUniquiIdentifiersList() {
 //        return dataStoreSvg.egoIdentifierSet.toArray(new String[]{});
 //    }
@@ -345,6 +546,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    public void removeEgo(String[] egoIdentifierArray) {
 //        dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
 //    }
+
     protected void updateSvgSelectionHighlights() {
         if (kinDiagramPanel != null) {
             kinDiagramPanel.setStatusBarText(selectedGroupId.size() + " selected of " + kinDiagramPanel.getGraphEntities().length + "");
@@ -363,7 +565,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (updateManager != null) { // todo: there may be issues related to the updateManager being null, this should be looked into if symptoms arise.
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    svgUpdateHandler.updateSvgSelectionHighlights(selectedGroupId);
+                    svgUpdateHandler.updateSvgSelectionHighlights(selectedGroupId, mouseListenerSvg);
                 }
             });
         }
@@ -374,7 +576,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         selectedGroupId.addAll(Arrays.asList(uniqueIdentifiers));
         updateSvgSelectionHighlights();
         // pan the diagram so that the selected are in the center
-        svgUpdateHandler.panToSelected(uniqueIdentifiers);
+        panToSelected(uniqueIdentifiers);
 //        mouseListenerSvg.updateSelectionDisplay();
     }
 

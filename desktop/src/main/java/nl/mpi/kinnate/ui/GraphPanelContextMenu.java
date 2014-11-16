@@ -461,7 +461,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         new Thread(new Runnable() {
             public void run() {
                 kinDiagramPanel.showProgressBar();
-                graphPanel.svgUpdateHandler.addGraphics(SvgUpdateHandler.GraphicsTypes.valueOf(e.getActionCommand()), eventLocation);
+                graphPanel.svgUpdateHandler.addGraphics(SvgUpdateHandler.GraphicsTypes.valueOf(e.getActionCommand()), eventLocation, graphPanel.mouseListenerSvg);
                 kinDiagramPanel.clearProgressBar();
             }
         }).start();

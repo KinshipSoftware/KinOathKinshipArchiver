@@ -91,12 +91,12 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     public void mouseDragged(MouseEvent me) {
         // todo: this shold probably be put into the svg canvas thread
         if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
-            graphPanel.svgUpdateHandler.updateDragRelation(me.getPoint().x, me.getPoint().y);
+            graphPanel.updateDragRelation(me.getPoint().x, me.getPoint().y);
         } else {
             if (startDragPoint != null) {
 //            System.out.println("mouseDragged: " + me.toString());
                 if (SwingUtilities.isMiddleMouseButton(me)) {
-                    graphPanel.svgUpdateHandler.dragCanvas(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
+                    graphPanel.dragCanvas(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
                 } else if (SwingUtilities.isLeftMouseButton(me)) {
                     // we check and clear the selection here on the drag because on mouse down it is not known if an svg element was the target of the click
                     checkSelectionClearRequired(me);
@@ -109,12 +109,12 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     } else if (graphPanel.selectedGroupId.size() > 0) {
                         graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                         // limit the drag to the distance draged not the location
-                        graphPanel.svgUpdateHandler.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
+                        graphPanel.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
                     }
                 }
                 mouseActionIsDrag = true;
             } else {
-                graphPanel.svgUpdateHandler.startDrag();
+                graphPanel.svgUpdateHandler.startDrag(graphPanel.selectedGroupId);
             }
             startDragPoint = me.getPoint();
         }
@@ -151,7 +151,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         checkSelectionClearRequired(me);
         if (startRectangleSelectPoint != null) {
             startRectangleSelectPoint = null;
-            Rectangle dragSelectionRectOnDocument = graphPanel.svgUpdateHandler.removeSelectionRect();
+            graphPanel.removeSelectionRect();
+            Rectangle dragSelectionRectOnDocument = graphPanel.svgUpdateHandler.getSelectionRect();
             // update the entity selection based on the drag selection rectangle
             graphPanel.selectedGroupId.addAll(graphPanel.getSVGDocument().entitySvg.getEntitiesWithinRect(dragSelectionRectOnDocument));
             updateSelectionDisplay();
@@ -227,8 +228,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                 float yTranslate = draggedElementMatrix.getF();
 //                AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
                 if (targetIdString != null && targetIdString.length() > 0) {
-                    graphPanel.svgUpdateHandler.relationDragHandle = 
-                            new GraphicsDragHandle(
+                    graphPanel.svgUpdateHandler.relationDragHandle
+                            = new GraphicsDragHandle(
                                     graphPanel.getSVGDocument().doc.getElementById(targetIdString),
                                     currentDraggedElement,
                                     (Element) currentDraggedElement.getParentNode().getFirstChild(), // this assumes that the rect is the first element in the highlight
@@ -253,8 +254,8 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                     } else {
                         relationType = DataTypes.RelationType.valueOf(handleTypeString);
                     }
-                    graphPanel.svgUpdateHandler.relationDragHandle = 
-                            new RelationDragHandle(
+                    graphPanel.svgUpdateHandler.relationDragHandle
+                            = new RelationDragHandle(
                                     customTypeDefinition,
                                     relationType,
                                     Float.valueOf(currentDraggedElement.getAttribute("cx")) - xTranslate,
@@ -293,7 +294,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     }
 
     protected void updateSelectionDisplay() {
-        graphPanel.svgUpdateHandler.updateSvgSelectionHighlights(graphPanel.selectedGroupId);
+        graphPanel.updateSvgSelectionHighlights();
         // update the table selection
         // todo: #1099	Labels should show the blue highlight
         if (graphPanel.metadataPanel != null) {
