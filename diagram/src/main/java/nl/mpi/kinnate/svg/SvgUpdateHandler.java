@@ -39,6 +39,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGMatrix;
@@ -247,7 +248,7 @@ public class SvgUpdateHandler {
 //        ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
-    protected void addRelationDragHandles(RelationTypeDefinition[] relationTypeDefinitions, Element highlightGroupNode, SVGRect bbox, int paddingDistance) {
+    protected void addRelationDragHandles(RelationTypeDefinition[] relationTypeDefinitions, Element highlightGroupNode, SVGRect bbox, int paddingDistance, EventListener mouseListenerSvg) {
         // add the standard relation types
         for (DataTypes.RelationType relationType : new DataTypes.RelationType[]{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant, DataTypes.RelationType.union, DataTypes.RelationType.sibling}) {
             Element symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
@@ -273,7 +274,7 @@ public class SvgUpdateHandler {
             symbolNode.setAttribute("handletype", relationType.name());
             symbolNode.setAttribute("fill", "blue");
             symbolNode.setAttribute("stroke", "none");
-            ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
+            ((EventTarget) symbolNode).addEventListener("mousedown", mouseListenerSvg, false);
             highlightGroupNode.appendChild(symbolNode);
         }
         // add the custom relation types
@@ -299,14 +300,14 @@ public class SvgUpdateHandler {
                     symbolNode.setAttribute("handletype", "custom:" + relationType + ":" + typeDefinition.hashCode());
                     symbolNode.setAttribute("fill", typeDefinition.getLineColour());
                     symbolNode.setAttribute("stroke", "none");
-                    ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
+                    ((EventTarget) symbolNode).addEventListener("mousedown", mouseListenerSvg, false);
                     highlightGroupNode.appendChild(symbolNode);
                 }
             }
         }
     }
 
-    protected void addGraphicsDragHandles(Element highlightGroupNode, UniqueIdentifier targetIdentifier, SVGRect bbox, int paddingDistance) {
+    protected void addGraphicsDragHandles(Element highlightGroupNode, UniqueIdentifier targetIdentifier, SVGRect bbox, int paddingDistance, EventListener mouseListenerSvg) {
         Element symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
         symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() + paddingDistance));
         symbolNode.setAttribute("cy", Float.toString(bbox.getY() + bbox.getHeight() + paddingDistance));
@@ -314,7 +315,7 @@ public class SvgUpdateHandler {
         symbolNode.setAttribute("target", targetIdentifier.getAttributeIdentifier());
         symbolNode.setAttribute("fill", "blue");
         symbolNode.setAttribute("stroke", "none");
-        ((EventTarget) symbolNode).addEventListener("mousedown", graphPanel.mouseListenerSvg, false);
+        ((EventTarget) symbolNode).addEventListener("mousedown", mouseListenerSvg, false);
         highlightGroupNode.appendChild(symbolNode);
     }
 
@@ -558,12 +559,12 @@ public class SvgUpdateHandler {
                         // make sure the rect is added before the drag handles, otherwise the rect can block the mouse actions
                         highlightGroupNode.appendChild(symbolNode);
                         if (!uniqueIdentifier.isTransientIdentifier() && !uniqueIdentifier.isGraphicsIdentifier()) {
-                            addRelationDragHandles(svgDiagram.getDiagramSettings().getRelationTypeDefinitions(), highlightGroupNode, bbox, paddingDistance);
+                            addRelationDragHandles(svgDiagram.getDiagramSettings().getRelationTypeDefinitions(), highlightGroupNode, bbox, paddingDistance, graphPanel.mouseListenerSvg);
                         } else {
                             if (uniqueIdentifier.isGraphicsIdentifier()) {
                                 if (!"text".equals(selectedGroup.getLocalName())) {
                                     // add a drag handle for all graphics but not text nodes
-                                    addGraphicsDragHandles(highlightGroupNode, uniqueIdentifier, bbox, paddingDistance);
+                                    addGraphicsDragHandles(highlightGroupNode, uniqueIdentifier, bbox, paddingDistance, graphPanel.mouseListenerSvg);
                                 }
                             }
                         }
