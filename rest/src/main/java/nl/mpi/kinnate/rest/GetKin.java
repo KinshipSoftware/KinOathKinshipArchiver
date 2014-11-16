@@ -23,6 +23,7 @@ package nl.mpi.kinnate.rest;
  *  Created on : Jun 21, 2011, 11:55:37 AM
  *  Author     : Peter Withers
  */
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,11 +33,21 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import nl.mpi.kinnate.export.PedigreePackageExport;
+import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
+import nl.mpi.kinnate.svg.DiagramSettings;
+import nl.mpi.kinnate.svg.EntitySvg;
+import nl.mpi.kinnate.svg.SvgDiagram;
 import nl.mpi.kinnate.ui.KinTypeStringProvider;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.svg.SVGDocument;
 
 //@Stateless
 @Path("/getkin")
@@ -76,9 +87,110 @@ public class GetKin {
     }
 
     @GET
+    @Produces("text/svg")
+    @Path("/svg")
+    public Document getSVG(@QueryParam("kts") List<String> kintypeStrings) throws IOException {
+        EntityData[] entiryData = getEntityNodes(kintypeStrings);
+//        for (String kts : kintypeStrings) {
+//            System.out.println("kts" + kts);
+//        }
+        final EventListener eventListener = new EventListener() {
+
+            @Override
+            public void handleEvent(Event evt) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
+        final EntitySvg entitySvg = new EntitySvg(eventListener);
+        SvgDiagram svgDiagram = new SvgDiagram(new DiagramSettings() {
+
+            @Override
+            public String defaultSymbol() {
+                return RHOMBUS;
+            }
+
+            @Override
+            public boolean showIdLabels() {
+                return true;
+            }
+
+            @Override
+            public boolean showLabels() {
+                return true;
+            }
+
+            @Override
+            public boolean showKinTypeLabels() {
+                return true;
+            }
+
+            @Override
+            public boolean showDateLabels() {
+                return true;
+            }
+
+            @Override
+            public boolean showExternalLinks() {
+                return true;
+            }
+
+            @Override
+            public boolean highlightRelationLines() {
+                return true;
+            }
+
+            @Override
+            public boolean snapToGrid() {
+                return true;
+            }
+
+            @Override
+            public boolean showDiagramBorder() {
+                return true;
+            }
+
+            @Override
+            public boolean showSanguineLines() {
+                return true;
+            }
+
+            @Override
+            public boolean showKinTermLines() {
+                return true;
+            }
+
+            @Override
+            public RelationTypeDefinition[] getRelationTypeDefinitions() {
+                return new DataTypes().getReferenceRelations();
+            }
+
+            @Override
+            public void storeAllData(SVGDocument doc) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        }, entitySvg);
+        svgDiagram.generateDefaultSvg(eventListener);
+//        printNodeNames(svgDiagram.getDoc().getRootElement());
+        return svgDiagram.getDoc();
+    }
+
+//    private void printNodeNames(Node nodeElement) {
+//        System.out.println(nodeElement.getLocalName());
+//        System.out.println(nodeElement.getNamespaceURI());
+//        Node childNode = nodeElement.getFirstChild();
+//        while (childNode != null) {
+//            printNodeNames(childNode);
+//            childNode = childNode.getNextSibling();
+//        }
+//    }
+
+    @GET
     @Produces("text/html")
     @Path("/view") // todo: Ticket #1103 view fails
     public String getHtml(@QueryParam("kts") List<String> kintypeStrings) {
+//        for (String kts : kintypeStrings) {
+//            System.out.println("kts" + kts);
+//        }
         StringBuilder stringBuilder = new StringBuilder();
         EntityData[] entiryData = getEntityNodes(kintypeStrings);
         stringBuilder.append("<table>");

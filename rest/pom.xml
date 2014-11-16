@@ -88,6 +88,11 @@
             <artifactId>kin-type-string-parser</artifactId>
             <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>kinoath-diagram</artifactId>
+            <version>1.6-pretesting-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <properties>
         <jersey.version>1.18.2</jersey.version>

@@ -30,6 +30,11 @@
         <p>
             <a href="<%= htmlUrlString %>"><%= htmlUrlString %></a>
         </p>
+        <b>SVG output for viewing</b><br>
+        <% String svgUrlString = "kinoath/getkin/svg?kts=" + kinTypeString; %>
+        <p>
+            <a href="<%= svgUrlString %>"><%= svgUrlString %></a>
+        </p>
         <b>CSV output for use in R</b><br>
         <% // String csvUrlString = "kinoath/getkin/csv?kts=EmB&kts=EmZ&kts=EmM&kts=EmF&kts=EmS&kts=EmD"; %>
         <% String csvUrlString = "kinoath/getkin/csv?kts=" + kinTypeString; %>
