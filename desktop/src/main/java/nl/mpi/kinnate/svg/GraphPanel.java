@@ -58,6 +58,7 @@ import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.swing.JSVGScrollPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -97,7 +98,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this, sessionStorage, dialogHandler);
         svgDiagram = new SvgDiagram(dataStoreSvg, new EntitySvg(mouseListenerSvg));
         dataStoreSvg.setDefaults();
-        svgUpdateHandler = new SvgUpdateHandler(this, kinDiagramPanel, dialogHandler);
+        svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
         selectedGroupId = new ArrayList<UniqueIdentifier>();
         this.setLayout(new BorderLayout());
         boolean eventsEnabled = true;
@@ -451,7 +452,41 @@ public class GraphPanel extends JPanel implements SavePanel {
     public void drawNodes(boolean resetZoom) {
         requiresSave = true;
         selectedGroupId.clear();
-        svgUpdateHandler.updateEntities(resetZoom);
+        updateEntities(resetZoom);
+    }
+
+    public void updateEntities(final boolean resetZoom) {
+        UpdateManager updateManager = svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    try {
+                        svgUpdateHandler.drawEntities(resetZoom);
+                    } catch (DOMException exception) {
+                        BugCatcherManager.getBugCatcher().logError(exception);
+                        dialogHandler.addMessageDialogToQueue(exception.getMessage(), "SVG Error");
+                    } catch (OldFormatException exception) {
+                        dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
+                    } catch (GraphSorter.UnsortablePointsException exception) {
+                        dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
+                    }
+                    // todo: this repaint might not resolve all cases of redraw issues
+                    svgCanvas.repaint(); // make sure no remnants are left over after the last redraw
+                }
+            });
+        } else {
+            try {   // on the first draw there will be on update manager
+                svgUpdateHandler.drawEntities(resetZoom);
+            } catch (DOMException exception) {
+                BugCatcherManager.getBugCatcher().logError(exception);
+                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "SVG Error");
+            } catch (OldFormatException exception) {
+                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
+            } catch (GraphSorter.UnsortablePointsException exception) {
+                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
+            }// todo: this repaint might not resolve all cases of redraw issues
+            svgCanvas.repaint(); // make sure no remnants are left over after the last redraw
+        }
     }
 
     public void drawNodes(GraphSorter graphDataLocal, boolean resetZoom) {
