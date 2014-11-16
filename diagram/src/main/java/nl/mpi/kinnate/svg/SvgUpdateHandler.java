@@ -21,13 +21,13 @@ package nl.mpi.kinnate.svg;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
-import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
 import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
@@ -117,7 +117,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void createRelationLineHighlights(Element entityGroup) {
+    private void createRelationLineHighlights(Element entityGroup, ArrayList<UniqueIdentifier> selectedGroupId) {
         // this is used to draw the highlighted relations for the selected entities
         // this must be only called from within a svg runnable
         removeRelationHighLights();
@@ -128,7 +128,7 @@ public class SvgUpdateHandler {
                 relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
                 entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
                 // create new relation lines for each highlight in a separate group so that they can all be removed after the drag
-                for (RelationRecord relationRecord : relationRecords.getRecordsForSelection(graphPanel.selectedGroupId)) {
+                for (RelationRecord relationRecord : relationRecords.getRecordsForSelection(selectedGroupId)) {
                     final String lineWidth = Integer.toString(relationRecord.lineWidth);
                     final String pathPointsString = relationRecord.getPathPointsString();
                     // add a white background
@@ -152,7 +152,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void updateDragRelationLines(Element entityGroup, float localDragNodeX, float localDragNodeY) {
+    private void updateDragRelationLines(Element entityGroup, float localDragNodeX, float localDragNodeY, ArrayList<UniqueIdentifier> selectedGroupId) {
         // this is used to draw the lines for the drag handles when the user is creating relations
         // this must be only called from within a svg runnable
         RelationDragHandle localRelationDragHandle = relationDragHandle;
@@ -164,7 +164,7 @@ public class SvgUpdateHandler {
                 float dragNodeX = localRelationDragHandle.getTranslatedX(localDragNodeX);
                 float dragNodeY = localRelationDragHandle.getTranslatedY(localDragNodeY);
                 boolean entityConnection = false;
-                localRelationDragHandle.targetIdentifier = svgDiagram.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30, graphPanel.selectedGroupId);
+                localRelationDragHandle.targetIdentifier = svgDiagram.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30, selectedGroupId);
                 if (localRelationDragHandle.targetIdentifier != null) {
                     Point closestEntityPoint = svgDiagram.entitySvg.getEntityLocationOffset(localRelationDragHandle.targetIdentifier);
                     dragNodeX = closestEntityPoint.x;
@@ -177,7 +177,7 @@ public class SvgUpdateHandler {
                 entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
                 float vSpacing = svgDiagram.graphPanelSize.getVerticalSpacing();
                 float hSpacing = svgDiagram.graphPanelSize.getHorizontalSpacing();
-                for (UniqueIdentifier uniqueIdentifier : graphPanel.selectedGroupId) {
+                for (UniqueIdentifier uniqueIdentifier : selectedGroupId) {
                     String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
                     Point egoSymbolPoint;// = svgDiagram.entitySvg.getEntityLocationOffset(uniqueIdentifier);
                     Point parentPoint = null; // = svgDiagram.entitySvg.getAverageParentLocation(uniqueIdentifier);
@@ -467,7 +467,7 @@ public class SvgUpdateHandler {
         return new Rectangle((int) pointOnDocument.getX(), (int) pointOnDocument.getY(), (int) sizeOnDocument.getX(), (int) sizeOnDocument.getY());
     }
 
-    protected void updateSvgSelectionHighlights() {
+    protected void updateSvgSelectionHighlights(ArrayList<UniqueIdentifier> selectedGroupId) {
         if (svgDiagram.doc != null) {
 //                        for (String groupString : new String[]{"EntityGroup", "LabelsGroup"}) {
 //                            Element entityGroup = svgDiagram.doc.getElementById(groupString);
@@ -579,7 +579,7 @@ public class SvgUpdateHandler {
                     }
                     isLeadSelection = false;
                 }
-                createRelationLineHighlights(svgDiagram.doc.getElementById("EntityGroup"));
+                createRelationLineHighlights(svgDiagram.doc.getElementById("EntityGroup"), selectedGroupId);
             }
         }
         // Em:1:FMDH:1:
@@ -621,7 +621,7 @@ public class SvgUpdateHandler {
                     }
                     removeRelationHighLights();
                     removeEntityHighLights();
-                    updateDragRelationLines(entityGroup, updateDragNodeXLocal, updateDragNodeYLocal);
+                    updateDragRelationLines(entityGroup, updateDragNodeXLocal, updateDragNodeYLocal, graphPanel.selectedGroupId);
                 }
                 synchronized (SvgUpdateHandler.this) {
                     relationThreadRunning = false;
@@ -812,7 +812,7 @@ public class SvgUpdateHandler {
                         int vSpacing = svgDiagram.graphPanelSize.getVerticalSpacing(); // graphPanel.dataStoreSvg.graphData.gridHeight);
                         int hSpacing = svgDiagram.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
                         new RelationSvg().updateRelationLines(svgDiagram, relationRecords, graphPanel.selectedGroupId, hSpacing, vSpacing);
-                        createRelationLineHighlights(entityGroup);
+                        createRelationLineHighlights(entityGroup, graphPanel.selectedGroupId);
                         final Rectangle currentGraphRect = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
                         if (!initialGraphRect.contains(currentGraphRect)) {
                             Element svgRoot = svgDiagram.doc.getDocumentElement();

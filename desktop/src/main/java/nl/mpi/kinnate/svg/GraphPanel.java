@@ -363,7 +363,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (updateManager != null) { // todo: there may be issues related to the updateManager being null, this should be looked into if symptoms arise.
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    svgUpdateHandler.updateSvgSelectionHighlights();
+                    svgUpdateHandler.updateSvgSelectionHighlights(selectedGroupId);
                 }
             });
         }

@@ -293,7 +293,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
     }
 
     protected void updateSelectionDisplay() {
-        graphPanel.svgUpdateHandler.updateSvgSelectionHighlights();
+        graphPanel.svgUpdateHandler.updateSvgSelectionHighlights(graphPanel.selectedGroupId);
         // update the table selection
         // todo: #1099	Labels should show the blue highlight
         if (graphPanel.metadataPanel != null) {
