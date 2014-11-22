@@ -51,7 +51,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.svg.SVGDocument;
 
 //@Stateless
@@ -63,9 +62,9 @@ public class GetKin {
 //    @EJB
 //    private EntityStorageBean entityStorage;
 //    @Path("/kintypes/{kintypeStrings: [a-zA-Z0-9]}")
-    private EntityData[] getEntityNodes(final List<String> kintypeStrings) {
+    private EntityData[] getEntityNodes(List<String> kintypeStrings) {
         KinTypeStringConverter graphData = new KinTypeStringConverter(RHOMBUS, KinType.getReferenceKinTypes());
-        HashSet<String> kinTypeAllStrings = new HashSet<String>();
+        final HashSet<String> kinTypeAllStrings = new HashSet<String>();
         // loop each and split any pipe chars | into lines
         for (String currentKinType : kintypeStrings) {
             kinTypeAllStrings.addAll(Arrays.asList(currentKinType.split("\\|")));
@@ -75,12 +74,12 @@ public class GetKin {
 
             @Override
             public String[] getCurrentStrings() {
-                return kintypeStrings.toArray(new String[kintypeStrings.size()]);
+                return kinTypeAllStrings.toArray(new String[kinTypeAllStrings.size()]);
             }
 
             @Override
             public int getTotalLength() {
-                return kintypeStrings.size();
+                return kinTypeAllStrings.size();
             }
 
             @Override
@@ -191,7 +190,6 @@ public class GetKin {
 //            childNode = childNode.getNextSibling();
 //        }
 //    }
-
     @GET
     @Produces("text/html")
     @Path("/view") // todo: Ticket #1103 view fails
