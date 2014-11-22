@@ -56,8 +56,6 @@ public class SvgUpdateHandler {
     private final static Logger logger = LoggerFactory.getLogger(SvgUpdateHandler.class);
     private SvgDiagram svgDiagram;
     private boolean dragUpdateRequired = false;
-    private boolean threadRunning = false;
-    private boolean relationThreadRunning = false;
     private int updateDragNodeX = 0;
     private int updateDragNodeY = 0;
     private int updateDragRelationX = 0;
@@ -352,7 +350,7 @@ public class SvgUpdateHandler {
         return new Rectangle((int) pointOnDocument.getX(), (int) pointOnDocument.getY(), (int) sizeOnDocument.getX(), (int) sizeOnDocument.getY());
     }
 
-    protected void updateSvgSelectionHighlights(ArrayList<UniqueIdentifier> selectedGroupId, EventListener mouseListenerSvg) {
+    protected void updateSvgSelectionHighlightsI(ArrayList<UniqueIdentifier> selectedGroupId, EventListener mouseListenerSvg) {
         if (svgDiagram.doc != null) {
 //                        for (String groupString : new String[]{"EntityGroup", "LabelsGroup"}) {
 //                            Element entityGroup = svgDiagram.doc.getElementById(groupString);
@@ -471,26 +469,21 @@ public class SvgUpdateHandler {
 //                    ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
-    public Runnable getRelationRunnable(final ArrayList<UniqueIdentifier> selectedGroupId) {
-        return new Runnable() {
-            public void run() {
-                Element entityGroup = svgDiagram.doc.getElementById("EntityGroup");
-                int updateDragNodeXLocal = 0;
-                int updateDragNodeYLocal = 0;
-                while (updateDragNodeXLocal != updateDragRelationX && updateDragNodeYLocal != updateDragRelationY) {
-                    synchronized (SvgUpdateHandler.this) {
-                        updateDragNodeXLocal = updateDragRelationX;
-                        updateDragNodeYLocal = updateDragRelationY;
-                    }
-                    removeRelationHighLights();
-                    removeEntityHighLights();
-                    updateDragRelationLines(entityGroup, updateDragNodeXLocal, updateDragNodeYLocal, selectedGroupId);
-                }
-                synchronized (SvgUpdateHandler.this) {
-                    relationThreadRunning = false;
-                }
+    public void updateMouseDrag(final ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal) {
+        this.updateDragRelationX = updateDragNodeXLocal;
+        this.updateDragRelationY = updateDragNodeYLocal;
+        Element entityGroup = svgDiagram.doc.getElementById("EntityGroup");
+        updateDragNodeXLocal = 0;
+        updateDragNodeYLocal = 0;
+        while (updateDragNodeXLocal != updateDragRelationX && updateDragNodeYLocal != updateDragRelationY) {
+            synchronized (SvgUpdateHandler.this) {
+                updateDragNodeXLocal = updateDragRelationX;
+                updateDragNodeYLocal = updateDragRelationY;
             }
-        };
+            removeRelationHighLights();
+            removeEntityHighLights();
+            updateDragRelationLines(entityGroup, updateDragNodeXLocal, updateDragNodeYLocal, selectedGroupId);
+        }
     }
 
     protected void startDrag(ArrayList<UniqueIdentifier> selectedGroupId) {
@@ -518,7 +511,7 @@ public class SvgUpdateHandler {
         return dragSelectionRectOnDocument;
     }
 
-    protected void drawSelectionRect(final Point startLocation, final Point currentLocation) {
+    protected void drawSelectionRectI(final Point startLocation, final Point currentLocation) {
         Element labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
         SVGOMPoint startOnDocument = getPointOnDocument(startLocation, (SVGLocatable) labelGroup);
         SVGOMPoint currentOnDocument = getPointOnDocument(currentLocation, (SVGLocatable) labelGroup);
@@ -561,7 +554,7 @@ public class SvgUpdateHandler {
 //                    System.out.println("pageBorderNode:" + selectionBorderNode);
     }
 
-    protected void updateDragNode(ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal) {
+    protected void updateDragNodeI(ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal, final Rectangle panelBounds) {
         resizeRequired = true;
         dragUpdateRequired = true;
         updateDragNodeX += updateDragNodeXLocal;
@@ -657,7 +650,7 @@ public class SvgUpdateHandler {
                 if (!initialGraphRect.contains(currentGraphRect)) {
                     Element svgRoot = svgDiagram.doc.getDocumentElement();
                     Element diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
-                    resizeCanvas(svgRoot, diagramGroupNode, false);
+                    resizeCanvas(svgRoot, diagramGroupNode, panelBounds);
                 }
                 //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
             }
@@ -673,24 +666,14 @@ public class SvgUpdateHandler {
 //                    }
             synchronized (SvgUpdateHandler.this) {
                 continueUpdating = dragUpdateRequired;
-                if (!continueUpdating) {
-                    threadRunning = false;
-                }
             }
         }
     }
 
-    private void resizeCanvas(Element svgRoot, Element diagramGroupNode, boolean resetZoom) {
+    private void resizeCanvas(Element svgRoot, Element diagramGroupNode, final Rectangle panelBounds) {
 //        svgRoot.setAttribute("width", "100%");
 //        svgRoot.setAttribute("height", "100%");
-//        diagramGroupNode.setAttribute("transform", null);
-        System.out.println("resetZoom: " + resetZoom);
-        if (resetZoom) {
-            AffineTransform at = new AffineTransform();
-            at.scale(1, 1);
-            at.setToTranslation(1, 1);
-            graphPanel.svgCanvas.setRenderingTransform(at);
-        }
+//        diagramGroupNode.setAttribute("transform", null);       
         Rectangle graphSize = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
         // set the diagram offset so that no element is less than zero
 //        diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(-graphSize.x) + ", " + Integer.toString(-graphSize.y) + ")");
@@ -714,7 +697,6 @@ public class SvgUpdateHandler {
         svgRoot.removeAttribute("width");
         svgRoot.removeAttribute("height");
         final int maxAutoScale = 2;
-        final Rectangle panelBounds = graphPanel.svgCanvas.getBounds();
         final int horizontalGap = panelBounds.width / maxAutoScale - graphSize.width;
         final int verticalGap = panelBounds.height / maxAutoScale - graphSize.height;
         int emptyBorder = (horizontalGap < verticalGap) ? horizontalGap : verticalGap;
@@ -751,28 +733,16 @@ public class SvgUpdateHandler {
         }
     }
 
-    public void requestResize() {
-        resizeRequired = true;
-        updateCanvasSize(true);
-    }
-
-    public void updateCanvasSize(final boolean resetZoom) {
-        UpdateManager updateManager = graphPanel.svgCanvas.getUpdateManager();
-        if (updateManager != null) {
-            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
-                public void run() {
-                    if (resizeRequired) {
-                        resizeRequired = false;
-                        Element svgRoot = svgDiagram.doc.getDocumentElement();
-                        Element diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
-                        resizeCanvas(svgRoot, diagramGroupNode, resetZoom);
-                    }
-                }
-            });
+    public void updateCanvasSizeI(final boolean required, final Rectangle panelBounds) {
+        if (resizeRequired || required) { // todo: check the use of resizeRequired here
+            this.resizeRequired = false;
+            Element svgRoot = svgDiagram.doc.getDocumentElement();
+            Element diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
+            resizeCanvas(svgRoot, diagramGroupNode, panelBounds);
         }
     }
 
-    public void deleteGraphics(UniqueIdentifier uniqueIdentifier) {
+    public void deleteGraphicsI(UniqueIdentifier uniqueIdentifier) {
         final Element graphicsElement = svgDiagram.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
         final Element existingHighlight = svgDiagram.doc.getElementById("highlight_" + uniqueIdentifier.getAttributeIdentifier());
         final Node parentElement = graphicsElement.getParentNode();
@@ -783,7 +753,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    public void addGraphics(final GraphicsTypes graphicsType, final Point locationOnScreen, EventListener mouseListenerSvg) {
+    public void addGraphicsI(final GraphicsTypes graphicsType, final Point locationOnScreen, EventListener mouseListenerSvg, final Rectangle panelBounds) {
         Element labelText;
         switch (graphicsType) {
             case Circle:
@@ -848,10 +818,10 @@ public class SvgUpdateHandler {
         targetGroup.appendChild(labelText);
         svgDiagram.entitySvg.entityPositions.put(labelId, new Point(labelPosition));
         ((EventTarget) labelText).addEventListener("mousedown", mouseListenerSvg, false);
-        resizeCanvas(svgDiagram.doc.getDocumentElement(), svgDiagram.doc.getElementById("DiagramGroup"), false);
+        resizeCanvas(svgDiagram.doc.getDocumentElement(), svgDiagram.doc.getElementById("DiagramGroup"), panelBounds);
     }
 
-    public void drawEntities(boolean resetZoom) throws DOMException, OldFormatException, GraphSorter.UnsortablePointsException { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
+    public void drawEntities(final Rectangle panelBounds) throws DOMException, OldFormatException, GraphSorter.UnsortablePointsException { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
         svgDiagram.graphData.setPadding(svgDiagram.graphPanelSize);
         relationRecords = new RelationRecordTable();
         int vSpacing = svgDiagram.graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);
@@ -896,7 +866,7 @@ public class SvgUpdateHandler {
             entityGroupNodeOld.getParentNode().removeChild(entityGroupNodeOld);
         }
         svgDiagram.graphData.placeAllNodes(svgDiagram.entitySvg.entityPositions);
-        resizeCanvas(svgRoot, diagramGroupNode, resetZoom);
+        resizeCanvas(svgRoot, diagramGroupNode, panelBounds);
 
 //            entitySvg.removeOldEntities(relationGroupNode);
         // todo: find the real text size from batik

@@ -170,7 +170,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
                                 ArrayList<UniqueIdentifier> affectedIdentifiers = new ArrayList<UniqueIdentifier>();
                                 for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
                                     if (uniqueIdentifier.isGraphicsIdentifier()) {
-                                        graphPanel.svgUpdateHandler.deleteGraphics(uniqueIdentifier);
+                                        graphPanel.deleteGraphics(uniqueIdentifier);
                                     } else if (uniqueIdentifier.isTransientIdentifier()) {
                                         kinDiagramPanel.clearProgressBar();
                                         throw new UnsupportedOperationException(menus.getString("CANNOT DELETE TRANSIENT ENTITIES."));
@@ -461,7 +461,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
         new Thread(new Runnable() {
             public void run() {
                 kinDiagramPanel.showProgressBar();
-                graphPanel.svgUpdateHandler.addGraphics(SvgUpdateHandler.GraphicsTypes.valueOf(e.getActionCommand()), eventLocation, graphPanel.mouseListenerSvg);
+                graphPanel.addGraphics(SvgUpdateHandler.GraphicsTypes.valueOf(e.getActionCommand()), eventLocation);
                 kinDiagramPanel.clearProgressBar();
             }
         }).start();

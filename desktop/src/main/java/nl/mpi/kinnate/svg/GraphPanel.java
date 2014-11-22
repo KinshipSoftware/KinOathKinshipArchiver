@@ -437,16 +437,24 @@ public class GraphPanel extends JPanel implements SavePanel {
         svgCanvas.setRenderingTransform(at);
     }
 
-    protected void updateDragRelation(int updateDragNodeXLocal, int updateDragNodeYLocal) {
+    private boolean relationThreadRunning = false;
+
+    protected void updateDragRelation(final int updateDragNodeXLocal, final int updateDragNodeYLocal) {
 //        System.out.println("updateDragRelation: " + updateDragNodeXLocal + " : " + updateDragNodeYLocal);
         UpdateManager updateManager = svgCanvas.getUpdateManager();
         synchronized (svgUpdateHandler) {
-            svgUpdateHandler.updateDragRelationX = updateDragNodeXLocal;
-            svgUpdateHandler.updateDragRelationY = updateDragNodeYLocal;
-            if (!svgUpdateHandler.relationThreadRunning) {
-
-                svgUpdateHandler.relationThreadRunning = true;
-                updateManager.getUpdateRunnableQueue().invokeLater(svgUpdateHandler.getRelationRunnable(selectedGroupId));
+            if (!relationThreadRunning) {
+                relationThreadRunning = true;
+                updateManager.getUpdateRunnableQueue().invokeLater(
+                        new Runnable() {
+                            public void run() {
+                                svgUpdateHandler.updateMouseDrag(selectedGroupId, updateDragNodeXLocal, updateDragNodeYLocal);
+                                synchronized (svgUpdateHandler) {
+                                    relationThreadRunning = false;
+                                }
+                            }
+                        }
+                );
             }
         }
     }
@@ -462,18 +470,37 @@ public class GraphPanel extends JPanel implements SavePanel {
         }
     }
 
+    private boolean threadRunning = false;
+
     protected void updateDragNode(final int updateDragNodeXLocal, final int updateDragNodeYLocal) {
         UpdateManager updateManager = svgCanvas.getUpdateManager();
         synchronized (svgUpdateHandler) {
-            if (!svgUpdateHandler.threadRunning) {
-                svgUpdateHandler.threadRunning = true;
+            if (!threadRunning) {
+                threadRunning = true;
                 updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                     public void run() {
-                        svgUpdateHandler.updateDragNode(selectedGroupId, updateDragNodeXLocal, updateDragNodeYLocal);
+
+                        final Rectangle panelBounds = svgCanvas.getBounds();
+                        svgUpdateHandler.updateDragNodeI(selectedGroupId, updateDragNodeXLocal, updateDragNodeYLocal, panelBounds);
+                        synchronized (svgUpdateHandler) {
+                            threadRunning = false;
+                        }
                         setRequiresSave();
                     }
                 });
             }
+        }
+    }
+
+    public void updateCanvasSize(final boolean resetZoom) {
+        UpdateManager updateManager = this.svgCanvas.getUpdateManager();
+        if (updateManager != null) {
+            updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
+                public void run() {
+                    final Rectangle panelBounds = svgCanvas.getBounds();
+                    svgUpdateHandler.updateCanvasSizeI(resetZoom, panelBounds);
+                }
+            });
         }
     }
 
@@ -482,7 +509,8 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    svgUpdateHandler.addGraphics(graphicsType, locationOnScreen, mouseListenerSvg);
+                    final Rectangle panelBounds = svgCanvas.getBounds();
+                    svgUpdateHandler.addGraphicsI(graphicsType, locationOnScreen, mouseListenerSvg, panelBounds);
                 }
             });
         }
@@ -493,7 +521,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    svgUpdateHandler.deleteGraphics(uniqueIdentifier);
+                    svgUpdateHandler.deleteGraphicsI(uniqueIdentifier);
                     setRequiresSave();
                 }
             });
@@ -505,7 +533,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    svgUpdateHandler.drawSelectionRect(startLocation, currentLocation);
+                    svgUpdateHandler.drawSelectionRectI(startLocation, currentLocation);
                 }
             });
         }
@@ -565,7 +593,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (updateManager != null) { // todo: there may be issues related to the updateManager being null, this should be looked into if symptoms arise.
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    svgUpdateHandler.updateSvgSelectionHighlights(selectedGroupId, mouseListenerSvg);
+                    svgUpdateHandler.updateSvgSelectionHighlightsI(selectedGroupId, mouseListenerSvg);
                 }
             });
         }
@@ -644,7 +672,17 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void resetZoom() {
-        svgUpdateHandler.requestResize();
+        updateCanvasSize(true);
+    }
+
+    public void resetZoom(boolean resetZoom) {
+        System.out.println("resetZoom: " + resetZoom);
+        if (resetZoom) {
+            AffineTransform at = new AffineTransform();
+            at.scale(1, 1);
+            at.setToTranslation(1, 1);
+            this.svgCanvas.setRenderingTransform(at);
+        }
     }
 
     public void resetLayout(boolean resetZoom) {
@@ -688,7 +726,9 @@ public class GraphPanel extends JPanel implements SavePanel {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
                     try {
-                        svgUpdateHandler.drawEntities(resetZoom);
+                        final Rectangle panelBounds = svgCanvas.getBounds();
+                        svgUpdateHandler.drawEntities(panelBounds);
+                        resetZoom(resetZoom);
                     } catch (DOMException exception) {
                         BugCatcherManager.getBugCatcher().logError(exception);
                         dialogHandler.addMessageDialogToQueue(exception.getMessage(), "SVG Error");
@@ -703,7 +743,9 @@ public class GraphPanel extends JPanel implements SavePanel {
             });
         } else {
             try {   // on the first draw there will be on update manager
-                svgUpdateHandler.drawEntities(resetZoom);
+                final Rectangle panelBounds = svgCanvas.getBounds();
+                svgUpdateHandler.drawEntities(panelBounds);
+                resetLayout(resetZoom);
             } catch (DOMException exception) {
                 BugCatcherManager.getBugCatcher().logError(exception);
                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "SVG Error");

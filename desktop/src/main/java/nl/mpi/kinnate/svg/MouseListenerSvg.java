@@ -105,7 +105,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
                         if (startRectangleSelectPoint == null) {
                             startRectangleSelectPoint = me.getPoint();
                         }
-                        graphPanel.svgUpdateHandler.drawSelectionRect(new Point(startRectangleSelectPoint.x, startRectangleSelectPoint.y), new Point(me.getPoint().x, me.getPoint().y));
+                        graphPanel.drawSelectionRect(new Point(startRectangleSelectPoint.x, startRectangleSelectPoint.y), new Point(me.getPoint().x, me.getPoint().y));
                     } else if (graphPanel.selectedGroupId.size() > 0) {
                         graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                         // limit the drag to the distance draged not the location
@@ -139,7 +139,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
 //        System.out.println("mouseReleased: " + me.toString());
         graphPanel.svgCanvas.setCursor(preDragCursor);
         if (mouseActionIsDrag) {
-            graphPanel.svgUpdateHandler.updateCanvasSize(false);
+            graphPanel.updateCanvasSize(false);
         }
         startDragPoint = null;
         if (!mouseActionIsDrag && entityToToggle != null && graphPanel.svgUpdateHandler.relationDragHandle == null) {
