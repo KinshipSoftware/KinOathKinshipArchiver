@@ -23,6 +23,7 @@ package nl.mpi.kinnate.rest;
  *  Created on : Jun 21, 2011, 11:55:37 AM
  *  Author     : Peter Withers
  */
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,14 +36,18 @@ import javax.ws.rs.QueryParam;
 import nl.mpi.kinnate.export.PedigreePackageExport;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.DiagramSettings;
 import nl.mpi.kinnate.svg.EntitySvg;
+import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.svg.SvgDiagram;
+import nl.mpi.kinnate.svg.SvgUpdateHandler;
 import nl.mpi.kinnate.ui.KinTypeStringProvider;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.Document;
@@ -87,9 +92,9 @@ public class GetKin {
     }
 
     @GET
-    @Produces("text/svg")
+    @Produces("text/xml")
     @Path("/svg")
-    public Document getSVG(@QueryParam("kts") List<String> kintypeStrings) throws IOException {
+    public Document getSVG(@QueryParam("kts") List<String> kintypeStrings) throws IOException, DOMException, OldFormatException, GraphSorter.UnsortablePointsException {
         EntityData[] entiryData = getEntityNodes(kintypeStrings);
 //        for (String kts : kintypeStrings) {
 //            System.out.println("kts" + kts);
@@ -170,6 +175,9 @@ public class GetKin {
             }
         }, entitySvg);
         svgDiagram.generateDefaultSvg(eventListener);
+        final SvgUpdateHandler svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
+        svgDiagram.graphData.setEntitys(entiryData);
+        svgUpdateHandler.drawEntities(new Rectangle(800, 600));
 //        printNodeNames(svgDiagram.getDoc().getRootElement());
         return svgDiagram.getDoc();
     }
