@@ -513,8 +513,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                     new KinTermCalculator().insertKinTerms(graphPanel.getSVGDocument().graphData.getDataNodes(), graphPanel.getkinTermGroups());
                                 } else {
 //                                    diagramMode = DiagramMode.FreeForm;
-                                    KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg.defaultSymbol(), graphPanel.dataStoreSvg.getKinTypeDefinitions());
-                                    graphData.readKinTypes(kinTypeStringProvidersTemp);
+                                    KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter(graphPanel.dataStoreSvg.defaultSymbol(), graphPanel.dataStoreSvg.getKinTypeDefinitions());
+                                    final DefaultSorter graphData = new DefaultSorter();
+                                    kinTypeStringConverter.readKinTypes(kinTypeStringProvidersTemp, graphData);
                                     graphPanel.drawNodes(graphData, resetZoom);
                                     egoSelectionPanel.setTreeNodes(graphPanel);
 //                KinDiagramPanel.this.doLayout();

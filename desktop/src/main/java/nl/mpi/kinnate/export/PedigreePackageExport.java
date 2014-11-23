@@ -28,6 +28,7 @@ import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.DataStoreSvg;
 import nl.mpi.kinnate.ui.KinTypeStringProvider;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import nl.mpi.kinoath.graph.DefaultSorter;
 
 /**
  * Created on : Jun 27, 2011, 12:06:30 PM
@@ -171,7 +172,7 @@ public class PedigreePackageExport {
 
     static public void main(String[] argsArray) {
         final DataStoreSvg dataStoreSvg = new DataStoreSvg();
-        KinTypeStringConverter graphData = new KinTypeStringConverter(dataStoreSvg.defaultSymbol(), dataStoreSvg.getKinTypeDefinitions());
+        KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter(dataStoreSvg.defaultSymbol(), dataStoreSvg.getKinTypeDefinitions());
         // // todo: an addition to KinTypeStringConverter: EmB does not have any parents but it could however just take the parnents of Em: String kinTypes = "EmB|EmZ|EmM|EmF|EmS|EmD";
         //String kinTypes = "EmM|EmF|EmS|EmD";        
         KinTypeStringProvider kinTypeStringProvider = new KinTypeStringProvider() {
@@ -189,7 +190,8 @@ public class PedigreePackageExport {
         };
         ArrayList<KinTypeStringProvider> kinTypeStringProviders = new ArrayList<KinTypeStringProvider>();
         kinTypeStringProviders.add(kinTypeStringProvider);
-        graphData.readKinTypes(kinTypeStringProviders);
+        final DefaultSorter graphData = new DefaultSorter();
+        kinTypeStringConverter.readKinTypes(kinTypeStringProviders, graphData);
         System.out.println(new PedigreePackageExport("").createCsvContents(graphData.getDataNodes()));
     }
 }

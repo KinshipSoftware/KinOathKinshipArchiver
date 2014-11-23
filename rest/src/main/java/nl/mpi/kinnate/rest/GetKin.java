@@ -64,7 +64,7 @@ public class GetKin {
 //    private EntityStorageBean entityStorage;
 //    @Path("/kintypes/{kintypeStrings: [a-zA-Z0-9]}")
     private EntityData[] getEntityNodes(List<String> kintypeStrings) {
-        KinTypeStringConverter graphData = new KinTypeStringConverter(RHOMBUS, KinType.getReferenceKinTypes());
+        KinTypeStringConverter kinTypeStringConverter = new KinTypeStringConverter(RHOMBUS, KinType.getReferenceKinTypes());
         final HashSet<String> kinTypeAllStrings = new HashSet<String>();
         // loop each and split any pipe chars | into lines
         for (String currentKinType : kintypeStrings) {
@@ -87,7 +87,8 @@ public class GetKin {
             public void highlightKinTypeStrings(ParserHighlight[] parserHighlight, String[] kinTypeStrings) {
             }
         });
-        graphData.readKinTypes(arrayList);
+        final DefaultSorter graphData = new DefaultSorter();
+        kinTypeStringConverter.readKinTypes(arrayList, graphData);
         return graphData.getDataNodes();
     }
 

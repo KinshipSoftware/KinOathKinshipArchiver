@@ -35,7 +35,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  *
  * @author Peter Withers
  */
-public class KinTypeStringConverter extends GraphSorter {
+public class KinTypeStringConverter {
 
     public enum QueryType {
 
@@ -180,7 +180,7 @@ public class KinTypeStringConverter extends GraphSorter {
         return kinTypeList;
     }
 
-    public void readKinTypes(ArrayList<KinTypeStringProvider> kinTypeStringProviders) {
+    public void readKinTypes(ArrayList<KinTypeStringProvider> kinTypeStringProviders, GraphSorter graphSorter) {
         HashMap<UniqueIdentifier, EntityData> namedEntitiesMap = new HashMap<UniqueIdentifier, EntityData>();
         HashSet<EntityData> allEntitiesSet = new HashSet<EntityData>();
 //        EntityData egoDataNode = new EntityData("E", "E", "E", EntityData.SymbolType.square, new String[]{}, true);
@@ -332,7 +332,7 @@ public class KinTypeStringConverter extends GraphSorter {
             kinTypeStringProvider.highlightKinTypeStrings(parserHighlightArray, kinTypeStrings);
         }
         // make sure that no duplicates are returned, these duplicates may exist from strings like EmMS|EmB which map to the same individual but there are two kin type strings for it and hence two entries
-        super.setEntitys(allEntitiesSet.toArray(new EntityData[]{}));
+        graphSorter.setEntitys(allEntitiesSet.toArray(new EntityData[]{}));
     }
 
     private void generateNeededEntities(EntityData currentParentNode, LabelStringsParser labelStringsParser, HashSet<EntityData> parentDataNodes, KinType currentReferenceKinType, HashSet<EntityData> currentGraphDataNodeSet, String kinTypeModifier, String fullKinTypeString, ArrayList<EntityData> egoDataNodeList, HashMap<UniqueIdentifier, EntityData> namedEntitiesMap, HashSet<EntityData> allEntitiesSet) {
