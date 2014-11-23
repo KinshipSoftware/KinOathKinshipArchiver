@@ -73,6 +73,7 @@ import nl.mpi.kinnate.svg.SaveExeption;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import nl.mpi.kinoath.graph.DefaultSorter;
 
 /**
  * Document : KinTypeStringTestPanel Created on : Sep 29, 2010, 12:52:01 PM
@@ -502,7 +503,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                     });
                                     if (graphPanel.getSVGDocument().graphData == null) {
                                         // this will only be null when the diagram has been opened but not recalculated yet
-                                        graphPanel.getSVGDocument().graphData = new GraphSorter();
+                                        graphPanel.getSVGDocument().graphData = new DefaultSorter();
                                     }
                                     graphPanel.getSVGDocument().graphData.setEntitys(graphNodes);
                                     // register interest Arbil updates and update the graph when data is edited in the table
@@ -512,7 +513,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                                     new KinTermCalculator().insertKinTerms(graphPanel.getSVGDocument().graphData.getDataNodes(), graphPanel.getkinTermGroups());
                                 } else {
 //                                    diagramMode = DiagramMode.FreeForm;
-                                    KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg.defaultSymbol(),graphPanel.dataStoreSvg.getKinTypeDefinitions());
+                                    KinTypeStringConverter graphData = new KinTypeStringConverter(graphPanel.dataStoreSvg.defaultSymbol(), graphPanel.dataStoreSvg.getKinTypeDefinitions());
                                     graphData.readKinTypes(kinTypeStringProvidersTemp);
                                     graphPanel.drawNodes(graphData, resetZoom);
                                     egoSelectionPanel.setTreeNodes(graphPanel);

@@ -111,7 +111,7 @@ public class SvgDiagram {
         }
     }
 
-    public void generateDefaultSvg(EventListener mouseListenerSvg) throws IOException {
+    public void generateDefaultSvg(EventListener mouseListenerSvg, GraphSorter graphSorter) throws IOException {
 //        try {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
@@ -137,6 +137,6 @@ public class SvgDiagram {
         doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
         entitySvg.updateSymbolsElement(doc, svgNameSpace);
         configureDiagramGroups(mouseListenerSvg);
-        graphData = new GraphSorter();
+        graphData = graphSorter;
     }
 }

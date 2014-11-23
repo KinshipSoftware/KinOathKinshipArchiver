@@ -311,6 +311,16 @@
             <artifactId>kinaoth-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>batik-renderer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>graph-sorter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>

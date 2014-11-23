@@ -33,7 +33,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  *
  * @author Peter Withers
  */
-public class GraphSorter {
+public abstract class GraphSorter {
 
     static int sortCounter = 0; // for testing only
     @XmlElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
@@ -46,14 +46,7 @@ public class GraphSorter {
 //    private boolean requiresRedraw = false;
 //    , int hSpacing, int vSpacing
 //
-
-    public class UnsortablePointsException extends Exception {
-
-        public UnsortablePointsException(String string) {
-            super(string);
-        }
-    }
-
+    
     public void setPadding(GraphPanelSize graphPanelSize) {
         xPadding = graphPanelSize.getHorizontalSpacing();
         yPadding = graphPanelSize.getVerticalSpacing();

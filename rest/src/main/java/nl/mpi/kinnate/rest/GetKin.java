@@ -36,8 +36,8 @@ import javax.ws.rs.QueryParam;
 import nl.mpi.kinnate.export.PedigreePackageExport;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
-import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
+import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
@@ -47,6 +47,7 @@ import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.svg.SvgDiagram;
 import nl.mpi.kinnate.svg.SvgUpdateHandler;
 import nl.mpi.kinnate.ui.KinTypeStringProvider;
+import nl.mpi.kinoath.graph.DefaultSorter;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
@@ -93,7 +94,7 @@ public class GetKin {
     @GET
     @Produces("text/xml")
     @Path("/svg")
-    public Document getSVG(@QueryParam("kts") List<String> kintypeStrings) throws IOException, DOMException, OldFormatException, GraphSorter.UnsortablePointsException {
+    public Document getSVG(@QueryParam("kts") List<String> kintypeStrings) throws IOException, DOMException, OldFormatException, UnsortablePointsException {
         EntityData[] entiryData = getEntityNodes(kintypeStrings);
 //        for (String kts : kintypeStrings) {
 //            System.out.println("kts" + kts);
@@ -173,7 +174,7 @@ public class GetKin {
 //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         }, entitySvg);
-        svgDiagram.generateDefaultSvg(eventListener);
+        svgDiagram.generateDefaultSvg(eventListener, new DefaultSorter());
         final SvgUpdateHandler svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
         svgDiagram.graphData.setEntitys(entiryData);
         svgUpdateHandler.drawEntities(new Rectangle(800, 600));

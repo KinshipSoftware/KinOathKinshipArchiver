@@ -20,18 +20,16 @@ package nl.mpi.kinnate.svg;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
-import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
+import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
 import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import org.apache.batik.bridge.UpdateManager;
 import org.apache.batik.dom.svg.SVGOMPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -821,7 +819,7 @@ public class SvgUpdateHandler {
         resizeCanvas(svgDiagram.doc.getDocumentElement(), svgDiagram.doc.getElementById("DiagramGroup"), panelBounds);
     }
 
-    public void drawEntities(final Rectangle panelBounds) throws DOMException, OldFormatException, GraphSorter.UnsortablePointsException { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
+    public void drawEntities(final Rectangle panelBounds) throws DOMException, OldFormatException, UnsortablePointsException { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
         svgDiagram.graphData.setPadding(svgDiagram.graphPanelSize);
         relationRecords = new RelationRecordTable();
         int vSpacing = svgDiagram.graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);

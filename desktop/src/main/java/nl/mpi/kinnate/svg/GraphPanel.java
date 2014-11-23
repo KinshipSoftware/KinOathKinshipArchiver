@@ -49,17 +49,19 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.MetadataPanel;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import nl.mpi.kinoath.graph.DefaultSorter;
+import nl.mpi.kinoath.svg.DiagramScrollPanel;
 import org.apache.batik.bridge.UpdateManager;
 import org.apache.batik.dom.svg.SVGOMPoint;
 import org.apache.batik.dom.util.SAXIOException;
 import org.apache.batik.swing.JSVGCanvas;
-import org.apache.batik.swing.JSVGScrollPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
@@ -218,7 +220,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void generateDefaultSvg() {
         try {
-            svgDiagram.generateDefaultSvg(mouseListenerSvg);
+            svgDiagram.generateDefaultSvg(mouseListenerSvg, new DefaultSorter());
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(svgDiagram.doc, svgDiagram.svgNameSpace));
             svgCanvas.setSVGDocument(svgDiagram.doc);
             symbolGraphic = new SymbolGraphic(svgDiagram.doc);
@@ -693,7 +695,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         try {
             svgDiagram.graphData.placeAllNodes(svgDiagram.entitySvg.entityPositions);
             drawNodes(resetZoom);
-        } catch (GraphSorter.UnsortablePointsException exception) {
+        } catch (UnsortablePointsException exception) {
             dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
         }
     }
@@ -734,7 +736,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                         dialogHandler.addMessageDialogToQueue(exception.getMessage(), "SVG Error");
                     } catch (OldFormatException exception) {
                         dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
-                    } catch (GraphSorter.UnsortablePointsException exception) {
+                    } catch (UnsortablePointsException exception) {
                         dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
                     }
                     // todo: this repaint might not resolve all cases of redraw issues
@@ -751,7 +753,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "SVG Error");
             } catch (OldFormatException exception) {
                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
-            } catch (GraphSorter.UnsortablePointsException exception) {
+            } catch (UnsortablePointsException exception) {
                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
             }// todo: this repaint might not resolve all cases of redraw issues
             svgCanvas.repaint(); // make sure no remnants are left over after the last redraw
