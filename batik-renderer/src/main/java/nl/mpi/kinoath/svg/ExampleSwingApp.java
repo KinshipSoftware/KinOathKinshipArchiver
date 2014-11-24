@@ -78,7 +78,7 @@ public class ExampleSwingApp {
         return new EntityData[]{entityData1, entityData2, entityData3};
     }
 
-    public Document getSVG() throws IOException, DOMException, OldFormatException, UnsortablePointsException {
+    private Document getSVG() throws IOException, DOMException, OldFormatException, UnsortablePointsException {
         EntityData[] entiryData = getEntityNodes();
         final EventListener eventListener = new EventListener() {
 
@@ -173,6 +173,7 @@ public class ExampleSwingApp {
 
         // Display the frame.
         jFrame.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
