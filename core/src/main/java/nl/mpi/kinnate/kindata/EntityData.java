@@ -1,19 +1,20 @@
 /**
- * Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+ * Copyright (C) 2013 The Language Archive, Max Planck Institute for
+ * Psycholinguistics
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 package nl.mpi.kinnate.kindata;
 
@@ -106,6 +107,21 @@ public class EntityData {
 //        labelStringArray = labelStringLocal;
 //        isEgo = isEgoLocal;
 //    }
+    public EntityData(int identifier, String[] labels, SymbolType symbolIndex, boolean isEgoLocal, EntityDate dateOfBirth, EntityDate dateOfDeath) {
+        // this is used to enable transient entities to have the same identifier on each redraw and on loading a saved document, otherwise the entity positions on the graph get lost
+        uniqueIdentifier = new UniqueIdentifier(Integer.toString(identifier), UniqueIdentifier.IdentifierType.tid);
+//        entityPath = null;
+        kinTypeArray = new String[]{};
+        symbolNames = new String[]{symbolIndex.name()};
+        labelStringArray = labels;
+        isEgo = isEgoLocal;
+        this.dateOfBirth = dateOfBirth;
+        this.dateOfDeath = dateOfDeath;
+        this.isVisible = true;
+        this.isRequired = true;
+//        customIdentifier = labelStringsParser.uidString;
+    }
+
     public EntityData(LabelStringsParser labelStringsParser, EntityData parentEntity, String kinTypeStringLocal, SymbolType symbolIndex, boolean isEgoLocal) {
         // this is used to enable transient entities to have the same identifier on each redraw and on loading a saved document, otherwise the entity positions on the graph get lost
         uniqueIdentifier = labelStringsParser.getUniqueIdentifier(parentEntity, kinTypeStringLocal, symbolIndex);

@@ -54,5 +54,15 @@
             <version>1.7</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kinoath-diagram</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>graph-sorter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
