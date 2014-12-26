@@ -77,7 +77,7 @@ import org.w3c.dom.svg.SVGLocatable;
 public class GraphPanel extends JPanel implements SavePanel {
 
     private final static Logger logger = LoggerFactory.getLogger(GraphPanel.class);
-    private JSVGScrollPane jSVGScrollPane;
+    private final DiagramScrollPanel diagramScrollPanel;
     protected JSVGCanvas svgCanvas;
     public MetadataPanel metadataPanel;
     private boolean requiresSave = false;
@@ -154,9 +154,9 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        svgCanvas.setEnableResetTransformInteractor(true);
 //        svgCanvas.setDoubleBufferedRendering(true); // todo: look into reducing the noticable aliasing on the canvas
 
-        jSVGScrollPane = new JSVGScrollPane(svgCanvas);
+        diagramScrollPanel = new DiagramScrollPanel(svgCanvas);
 //        svgCanvas.setBackground(Color.LIGHT_GRAY);
-        this.add(BorderLayout.CENTER, jSVGScrollPane);
+        this.add(BorderLayout.CENTER, diagramScrollPanel);
     }
 
     public void setEntityCollection(EntityCollection entityCollection) {
