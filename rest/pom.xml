@@ -6,12 +6,18 @@
         <groupId>nl.mpi</groupId>
         <artifactId>kinoath-parent</artifactId>
         <version>1.6</version>
-    </parent> 
-    <groupId>nl.mpi.kinnate</groupId>
+    </parent>  
+    <groupId>nl.mpi</groupId>
     <artifactId>kinoath-rest</artifactId>
     <packaging>war</packaging>
     <version>1.6-pretesting-SNAPSHOT</version>
-    <name>kinoath-rest</name>
+    <name>KinOath Rest ${application.majorVersion}.${application.minorVersion}</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <parentpom.location>${project.parent.basedir}</parentpom.location> 
+        <jersey.version>1.18.2</jersey.version>
+        <glassfish.version>3.1.1</glassfish.version>
+    </properties>
     <build>
         <finalName>kinoath-rest</finalName>
         <plugins>
@@ -99,9 +105,4 @@
             <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
     </dependencies>
-    <properties>
-        <jersey.version>1.18.2</jersey.version>
-        <glassfish.version>3.1.1</glassfish.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 </project>

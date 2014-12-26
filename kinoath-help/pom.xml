@@ -1,6 +1,11 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>nl.mpi</groupId>
+        <artifactId>kinoath-parent</artifactId>
+        <version>1.6</version>
+    </parent> 
     <groupId>nl.mpi</groupId>
     <artifactId>kinoath-help</artifactId>
     <packaging>jar</packaging>
@@ -9,11 +14,6 @@
     <version>1.6-pretesting-SNAPSHOT</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.23-${application.branch}</version>-->
     <name>KinOath Help ${application.majorVersion}.${application.minorVersion}</name>
-    <parent>
-        <groupId>nl.mpi</groupId>
-        <artifactId>kinoath-parent</artifactId>
-        <version>1.6</version>
-    </parent> 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <output.jarname>${project.build.finalName}</output.jarname>
