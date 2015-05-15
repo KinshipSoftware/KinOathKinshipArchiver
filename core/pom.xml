@@ -8,7 +8,7 @@
         <version>1.6</version>
     </parent>
     <groupId>nl.mpi</groupId>
-    <artifactId>kinaoth-core</artifactId>
+    <artifactId>kinoath-core</artifactId>
     <version>1.6-pretesting-SNAPSHOT</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.62-${application.branch}</version>-->
     
