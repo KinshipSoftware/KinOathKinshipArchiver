@@ -21,10 +21,10 @@
     <body>
         <% String kinTypeString = "EmMD:1:|EmFD:1:|EmS:2:|EmWD:3:|EmD:3:|EmWS:2:|EmZ:1:"; %>
         <h2>KinOath Web Application Example Page</h2>
-        <b>Workspaces and Uploaded Files</b><br>
+<!--        <b>Workspaces and Uploaded Files</b><br>
         <p>
             <a href="kinoath/kinspace">list work spaces</a>
-        </p>
+        </p>-->
         <b>HTML output for viewing</b><br>
         <% String htmlUrlString = "kinoath/getkin/view?kts=" + kinTypeString; %>
         <p>
