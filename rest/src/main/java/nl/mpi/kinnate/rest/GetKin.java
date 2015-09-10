@@ -33,6 +33,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 import nl.mpi.kinnate.export.PedigreePackageExport;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -95,7 +96,7 @@ public class GetKin {
     @GET
     @Produces("text/xml")
     @Path("/svg")
-    public Document getSVG(@QueryParam("kts") List<String> kintypeStrings) throws IOException, DOMException, OldFormatException, UnsortablePointsException {
+    public Response getSVG(@QueryParam("kts") List<String> kintypeStrings) throws IOException, DOMException, OldFormatException, UnsortablePointsException {
         EntityData[] entiryData = getEntityNodes(kintypeStrings);
 //        for (String kts : kintypeStrings) {
 //            System.out.println("kts" + kts);
@@ -180,7 +181,7 @@ public class GetKin {
         svgDiagram.graphData.setEntitys(entiryData);
         svgUpdateHandler.drawEntities(new Rectangle(800, 600));
 //        printNodeNames(svgDiagram.getDoc().getRootElement());
-        return svgDiagram.getDoc();
+        return Response.ok(svgDiagram.getDoc()).header("Access-Control-Allow-Origin", "*").build();
     }
 
 //    private void printNodeNames(Node nodeElement) {

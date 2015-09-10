@@ -79,6 +79,7 @@ public class FileMenu extends javax.swing.JMenu {
     private javax.swing.JMenuItem saveAsProjectDefaultMenuItem;
     private javax.swing.JMenuItem saveDiagram;
     private javax.swing.JMenuItem saveDiagramAs;
+    private javax.swing.JMenuItem captureDiagram;
     private javax.swing.JMenuItem savePdfMenuItem;
     private AbstractDiagramManager diagramWindowManager;
     private SessionStorage sessionStorage;
@@ -110,6 +111,7 @@ public class FileMenu extends javax.swing.JMenu {
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         saveDiagram = new javax.swing.JMenuItem();
         saveDiagramAs = new javax.swing.JMenuItem();
+        captureDiagram = new javax.swing.JMenuItem();
         savePdfMenuItem = new javax.swing.JMenuItem();
         exportToR = new javax.swing.JMenuItem();
         closeTabMenuItem = new javax.swing.JMenuItem();
@@ -254,6 +256,16 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(saveDiagramAs);
 
+        captureDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        captureDiagram.setText(menus.getString("CAPTUREDIAGRAM"));
+        captureDiagram.setActionCommand("capture");
+        captureDiagram.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                captureDiagramActionPerformed(evt);
+            }
+        });
+        this.add(captureDiagram);
+
         savePdfMenuItem.setText(menus.getString("EXPORT AS PDF/JPEG/PNG/TIFF"));
         savePdfMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -356,6 +368,15 @@ public class FileMenu extends javax.swing.JMenu {
         }
     }
 
+    private void captureDiagramActionPerformed(java.awt.event.ActionEvent evt) {
+        SavePanel savePanel = diagramWindowManager.getCurrentSavePanel(parentComponent);
+        try {
+            savePanel.getGraphPanel().captureDiagramSvg();
+        } catch (SaveExeption exeption) {
+            dialogHandler.addMessageDialogToQueue(widgets.getString("SAVE FILE ERROR") + "\n" + exeption.getMessage(), widgets.getString("SAVE DIAGRAM"));
+        }
+    }
+
     private void saveDiagramAsActionPerformed(java.awt.event.ActionEvent evt) {
         final File[] selectedFilesArray = dialogHandler.showFileSelectBox(menus.getString("SAVE DIAGRAM AS"), false, false, getSvgFileFilter(), MessageDialogHandler.DialogueType.save, null);
         if (selectedFilesArray != null) {
@@ -393,6 +414,7 @@ public class FileMenu extends javax.swing.JMenu {
             saveDiagramAs.setActionCommand(Integer.toString(selectedIndex));
             saveDiagram.setText(java.text.MessageFormat.format(menus.getString("SAVE ({0})"), new Object[]{currentTabText}));
             saveDiagram.setActionCommand(Integer.toString(selectedIndex));
+            captureDiagram.setActionCommand(Integer.toString(selectedIndex));
             closeTabMenuItem.setText(java.text.MessageFormat.format(menus.getString("CLOSE ({0})"), new Object[]{currentTabText}));
             closeTabMenuItem.setActionCommand(Integer.toString(selectedIndex));
             saveAsGlobalDefaultMenuItem.setText(java.text.MessageFormat.format(menus.getString("SET GLOBAL DEFAULT DIAGRAM AS ({0})"), new Object[]{currentTabText}));
@@ -403,6 +425,7 @@ public class FileMenu extends javax.swing.JMenu {
         if (savePanel != null) {
             saveDiagram.setEnabled(savePanel.hasSaveFileName() && savePanel.requiresSave());
             saveDiagramAs.setEnabled(true);
+            captureDiagram.setEnabled(true);
             exportToR.setEnabled(true);
             closeTabMenuItem.setEnabled(true);
             saveAsGlobalDefaultMenuItem.setEnabled(true);
@@ -411,6 +434,7 @@ public class FileMenu extends javax.swing.JMenu {
         } else {
             saveDiagramAs.setEnabled(false);
             saveDiagram.setEnabled(false);
+            captureDiagram.setEnabled(false);
             exportToR.setEnabled(false);
             closeTabMenuItem.setEnabled(false);
             saveAsGlobalDefaultMenuItem.setEnabled(true);

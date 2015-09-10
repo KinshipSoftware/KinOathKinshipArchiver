@@ -29,8 +29,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import javax.swing.JPanel;
 import javax.xml.transform.OutputKeys;
@@ -239,6 +241,39 @@ public class GraphPanel extends JPanel implements SavePanel {
             // set up input and output
             DOMSource dOMSource = new DOMSource(svgDiagram.doc);
             FileOutputStream fileOutputStream = new FileOutputStream(svgFile);
+            StreamResult xmlOutput = new StreamResult(fileOutputStream);
+            // configure transformer
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.transform(dOMSource, xmlOutput);
+            xmlOutput.getOutputStream().close();
+            requiresSave = false;
+        } catch (IOException exception) {
+            logger.warn("failed to save svg", exception);
+            throw new SaveExeption(exception.getMessage());
+        } catch (IllegalArgumentException exception) {
+            logger.warn("failed to save svg", exception);
+            throw new SaveExeption(exception.getMessage());
+        } catch (TransformerException exception) {
+            logger.warn("failed to save svg", exception);
+            throw new SaveExeption(exception.getMessage());
+        } catch (TransformerFactoryConfigurationError exception) {
+            logger.warn("failed to save svg", exception);
+            throw new SaveExeption(exception.getMessage());
+        }
+    }
+
+    public void captureDiagramSvg() throws SaveExeption {
+        try {
+            if (svgFile == null) {
+                logger.warn("Digram must be saved before screenshots can be made.");
+                throw new SaveExeption("Digram must be saved before screenshots can be made.");
+            }
+            // set up input and output
+            DOMSource dOMSource = new DOMSource(svgDiagram.doc);
+            final File captureSvgFile = new File(svgFile.getParentFile(), svgFile.getName().substring(0, svgFile.getName().length() - 4) + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".svg");
+            FileOutputStream fileOutputStream = new FileOutputStream(captureSvgFile);
             StreamResult xmlOutput = new StreamResult(fileOutputStream);
             // configure transformer
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
