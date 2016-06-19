@@ -125,7 +125,7 @@ public class DiagramTranscoder {
     }
 
     private void transcodeDom(Transcoder transcoder) throws IOException, TranscoderException {
-        TranscoderInput transcoderInput = new TranscoderInput(savePanel.getGraphPanel().getSVGDocument().doc);
+        TranscoderInput transcoderInput = new TranscoderInput(((KinDocumentImpl) savePanel.getGraphPanel().getSVGDocument().doc).getDoc());
         OutputStream outputStream = new java.io.FileOutputStream(outputFile);
         outputStream = new java.io.BufferedOutputStream(outputStream);
         try {

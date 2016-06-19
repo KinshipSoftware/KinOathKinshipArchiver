@@ -36,9 +36,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.svg.SVGDocument;
 
 /**
  * Document : EntitySvg Created on : Mar 9, 2011, 3:20:56 PM
@@ -51,11 +48,6 @@ public class EntitySvg {
     protected HashMap<UniqueIdentifier, Point> entityPositions = new HashMap<UniqueIdentifier, Point>();
     static final public int symbolSize = 15;
     static final protected int strokeWidth = 2;
-    final private EventListener mouseListenerSvg;
-
-    public EntitySvg(EventListener mouseListenerSvg) {
-        this.mouseListenerSvg = mouseListenerSvg;
-    }
 
     public void discardEntityPositions() {
         for (UniqueIdentifier uniqueIdentifier : entityPositions.keySet().toArray(new UniqueIdentifier[0])) {
@@ -120,7 +112,7 @@ public class EntitySvg {
         }
     }
 
-    public Element updateSymbolsElement(SVGDocument doc, String svgNameSpace) {
+    public Element updateSymbolsElement(KinDocument doc, String svgNameSpace) {
         Element svgRoot = doc.getDocumentElement();
         Element lineMarkerDefsNode = doc.getElementById("LineMarkerSymbols");
         if (lineMarkerDefsNode == null) {
@@ -439,7 +431,7 @@ public class EntitySvg {
         return kinSymbols;
     }
 
-    public String[] listSymbolNames(SVGDocument doc, String svgNameSpace) {
+    public String[] listSymbolNames(KinDocumentImpl doc, String svgNameSpace) {
         // get the symbol list from the dom
         ArrayList<String> symbolArray = new ArrayList<String>();
 
@@ -833,7 +825,7 @@ public class EntitySvg {
 //            textSpanCounter += lineSpacing;
         }
 ////////////////////////////// end alternate method ////////////////////////////////////////////////
-        ((EventTarget) groupNode).addEventListener("mousedown", mouseListenerSvg, false); // todo: use capture (currently false) could be useful for the mouse events
+        svgDiagram.getDoc().addEventListener(groupNode);
         return groupNode;
     }
 }

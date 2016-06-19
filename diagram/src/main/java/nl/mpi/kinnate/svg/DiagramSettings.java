@@ -18,7 +18,6 @@
 package nl.mpi.kinnate.svg;
 
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
-import org.w3c.dom.svg.SVGDocument;
 
 /**
  * @since Nov 9, 2014 8:36:05 AM (creation date)
@@ -50,5 +49,5 @@ public interface DiagramSettings {
 
     RelationTypeDefinition[] getRelationTypeDefinitions();
 
-    void storeAllData(SVGDocument doc);
+    void storeAllData();
 }

@@ -222,7 +222,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
             if (evt instanceof DOMMouseEvent) {
                 // the entity group is no longer offset so we no longer need to subtract the entity group position here
                 SVGMatrix draggedElementScreenMatrix = ((SVGLocatable) currentDraggedElement).getScreenCTM();
-                SVGMatrix draggedElementMatrix = graphPanel.getSVGDocument().doc.getRootElement().getTransformToElement((SVGElement) currentDraggedElement);
+                SVGMatrix draggedElementMatrix = ((KinDocumentImpl) graphPanel.getSVGDocument().doc).getDoc().getRootElement().getTransformToElement((SVGElement) currentDraggedElement);
                 float scaleFactor = draggedElementScreenMatrix.inverse().getA(); // the drawing is proportional so only using X is adequate here
                 float xTranslate = draggedElementMatrix.getE();
                 float yTranslate = draggedElementMatrix.getF();

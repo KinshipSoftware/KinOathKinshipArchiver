@@ -25,7 +25,6 @@ import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.svg.SVGDocument;
 
 /**
  * Created on : Mar 9, 2011, 3:21:16 PM
@@ -34,7 +33,7 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class RelationSvg {
 
-    private void addUseNode(SVGDocument doc, String svgNameSpace, Element targetGroup, String targetDefId) {
+    private void addUseNode(KinDocument doc, String svgNameSpace, Element targetGroup, String targetDefId) {
         String useNodeId = targetDefId + "use";
         // todo: look into this ConcurrentModificationException
         /*

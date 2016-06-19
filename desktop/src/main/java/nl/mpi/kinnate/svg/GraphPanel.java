@@ -105,7 +105,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        this.entityCollection = entityCollection;
         dataStoreSvg = new DataStoreSvg();
         mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this, sessionStorage, dialogHandler);
-        svgDiagram = new SvgDiagram(dataStoreSvg, new EntitySvg(mouseListenerSvg));
+        svgDiagram = new SvgDiagram(dataStoreSvg, new EntitySvg());
         dataStoreSvg.setDefaults();
         svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
         selectedGroupId = new ArrayList<UniqueIdentifier>();
@@ -199,15 +199,15 @@ public class GraphPanel extends JPanel implements SavePanel {
             svgFile = null;
         }
         try {
-            svgDiagram.readSvg(svgFilePath, mouseListenerSvg);
-            svgCanvas.setDocument(svgDiagram.doc);
-            symbolGraphic = new SymbolGraphic(svgDiagram.doc);
-            dataStoreSvg = DataStoreSvg.loadDataFromSvg(svgDiagram.doc);
+            svgDiagram.readSvg(svgFilePath.toString());
+            svgCanvas.setDocument(((KinDocumentImpl)svgDiagram.doc).getDoc());
+            symbolGraphic = new SymbolGraphic(((KinDocumentImpl)svgDiagram.doc).getDoc());
+            dataStoreSvg = DataStoreSvg.loadDataFromSvg(((KinDocumentImpl)svgDiagram.doc).getDoc());
             if (dataStoreSvg.indexParameters == null) {
                 dataStoreSvg.setDefaults();
             }
             requiresSave = false;
-            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(svgDiagram.doc, this.svgDiagram.svgNameSpace));
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(((KinDocumentImpl)svgDiagram.doc), this.svgDiagram.svgNameSpace));
 //            if (dataStoreSvg.graphData == null) {
 //                return null;
 //            }
@@ -222,10 +222,10 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void generateDefaultSvg() {
         try {
-            svgDiagram.generateDefaultSvg(mouseListenerSvg, new DefaultSorter());
-            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(svgDiagram.doc, svgDiagram.svgNameSpace));
-            svgCanvas.setSVGDocument(svgDiagram.doc);
-            symbolGraphic = new SymbolGraphic(svgDiagram.doc);
+            svgDiagram.generateDefaultSvg(new DefaultSorter());
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(((KinDocumentImpl)svgDiagram.doc), svgDiagram.svgNameSpace));
+            svgCanvas.setSVGDocument(((KinDocumentImpl)svgDiagram.doc).getDoc());
+            symbolGraphic = new SymbolGraphic(((KinDocumentImpl)svgDiagram.doc).getDoc());
         } catch (IOException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
         }
@@ -237,9 +237,9 @@ public class GraphPanel extends JPanel implements SavePanel {
             selectedGroupId.clear();
             svgUpdateHandler.clearHighlights();
             // make sure that any data changes such as the title/description in the kin term groups get updated into the file on save
-            dataStoreSvg.storeAllData(svgDiagram.doc);
+            dataStoreSvg.storeAllData(((KinDocumentImpl)svgDiagram.doc).getDoc());
             // set up input and output
-            DOMSource dOMSource = new DOMSource(svgDiagram.doc);
+            DOMSource dOMSource = new DOMSource(((KinDocumentImpl)svgDiagram.doc).getDoc());
             FileOutputStream fileOutputStream = new FileOutputStream(svgFile);
             StreamResult xmlOutput = new StreamResult(fileOutputStream);
             // configure transformer
@@ -271,7 +271,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                 throw new SaveExeption("Digram must be saved before screenshots can be made.");
             }
             // set up input and output
-            DOMSource dOMSource = new DOMSource(svgDiagram.doc);
+            DOMSource dOMSource = new DOMSource(((KinDocumentImpl)svgDiagram.doc).getDoc());
             final File captureSvgFile = new File(svgFile.getParentFile(), svgFile.getName().substring(0, svgFile.getName().length() - 4) + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".svg");
             FileOutputStream fileOutputStream = new FileOutputStream(captureSvgFile);
             StreamResult xmlOutput = new StreamResult(fileOutputStream);

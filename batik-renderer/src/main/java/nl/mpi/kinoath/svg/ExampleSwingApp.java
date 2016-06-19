@@ -30,6 +30,8 @@ import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.svg.DiagramSettings;
 import nl.mpi.kinnate.svg.EntitySvg;
+import nl.mpi.kinnate.svg.KinDocument;
+import nl.mpi.kinnate.svg.KinDocumentImpl;
 import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.svg.SvgDiagram;
 import nl.mpi.kinnate.svg.SvgUpdateHandler;
@@ -87,7 +89,7 @@ public class ExampleSwingApp {
 //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
-        final EntitySvg entitySvg = new EntitySvg(eventListener);
+        final EntitySvg entitySvg = new EntitySvg();
         SvgDiagram svgDiagram = new SvgDiagram(new DiagramSettings() {
 
             @Override
@@ -151,16 +153,16 @@ public class ExampleSwingApp {
             }
 
             @Override
-            public void storeAllData(SVGDocument doc) {
+            public void storeAllData() {
 //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         }, entitySvg);
-        svgDiagram.generateDefaultSvg(eventListener, new DefaultSorter());
+        svgDiagram.generateDefaultSvg(new DefaultSorter());
         final SvgUpdateHandler svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
         svgDiagram.graphData.setEntitys(entiryData);
         svgUpdateHandler.drawEntities(new Rectangle(800, 600));
 //        printNodeNames(svgDiagram.getDoc().getRootElement());
-        return svgDiagram.getDoc();
+        return ((KinDocumentImpl) svgDiagram.getDoc()).getDoc();
     }
 
     public static void main(String[] args) throws AbstractMethodError, DOMException, HeadlessException, IOException, OldFormatException, UnsortablePointsException {

@@ -869,7 +869,7 @@ public class SvgUpdateHandler {
 //            entitySvg.removeOldEntities(relationGroupNode);
         // todo: find the real text size from batik
         // store the selected kin type strings and other data in the dom
-        svgDiagram.getDiagramSettings().storeAllData(svgDiagram.doc);
+        svgDiagram.getDiagramSettings().storeAllData(/*svgDiagram.doc*/);
 //            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
         for (EntityData currentNode : svgDiagram.graphData.getDataNodes()) {
             if (currentNode.isVisible) {

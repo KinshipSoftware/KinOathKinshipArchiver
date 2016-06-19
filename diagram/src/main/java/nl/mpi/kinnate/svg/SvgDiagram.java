@@ -18,34 +18,25 @@
 package nl.mpi.kinnate.svg;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.net.URI;
-import javax.xml.parsers.DocumentBuilderFactory;
 import nl.mpi.kinnate.kindata.GraphSorter;
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.svg.SVGDocument;
 
 /**
  * @since Nov 9, 2014 2:51:21 PM (creation date)
  * @author Peter Withers
  */
-public class SvgDiagram {
+public class SvgDiagram extends KinDiagram {
 
     final DiagramSettings diagramSettings;
     final public EntitySvg entitySvg;
 
-    protected String svgNameSpace = SVGDOMImplementation.SVG_NAMESPACE_URI;
+    protected String svgNameSpace = "http://www.w3.org/2000/svg";
 
     static public String kinDataNameSpace = "kin";
     static public String kinDataNameSpaceLocation = "http://mpi.nl/tla/kin";
 
-    protected SVGDocument doc;
+    protected KinDocument doc;
     public GraphPanelSize graphPanelSize;
     public GraphSorter graphData; // this is tested for null to determine if the diagram has been recalculated 
 
@@ -55,7 +46,7 @@ public class SvgDiagram {
         graphPanelSize = new GraphPanelSize();
     }
 
-    public SVGDocument getDoc() {
+    public KinDocument getDoc() {
         return doc;
     }
 
@@ -63,17 +54,17 @@ public class SvgDiagram {
         return diagramSettings;
     }
 
-    public void readSvg(URI svgFilePath, EventListener mouseListenerSvg) throws IOException {
-        String parser = XMLResourceDescriptor.getXMLParserClassName();
-        SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
-        doc = (SVGDocument) documentFactory.createDocument(svgFilePath.toString());
+    public void readSvg(String svgFilePath) throws IOException {
+        KinDocumentImpl tempDoc = new KinDocumentImpl();
+        tempDoc.createDocument(svgFilePath); //(SVGDocument) documentFactory.createDocument(svgFilePath.toString());
+        doc = tempDoc;
         entitySvg.readEntityPositions(doc.getElementById("EntityGroup"));
         entitySvg.readEntityPositions(doc.getElementById("LabelsGroup"));
         entitySvg.readEntityPositions(doc.getElementById("GraphicsGroup"));
-        configureDiagramGroups(mouseListenerSvg);
+        configureDiagramGroups();
     }
 
-    private void configureDiagramGroups(EventListener mouseListenerSvg) {
+    private void configureDiagramGroups() {
         Element svgRoot = doc.getDocumentElement();
         // make sure the diagram group exisits
         Element diagramGroup = doc.getElementById("DiagramGroup");
@@ -102,7 +93,7 @@ public class SvgDiagram {
                     // do not add mouse listeners to the relation group
                     Node currentNode = parentElement.getFirstChild();
                     while (currentNode != null) {
-                        ((EventTarget) currentNode).addEventListener("mousedown", mouseListenerSvg, false);
+                        doc.addEventListener(currentNode);
                         currentNode = currentNode.getNextSibling();
                     }
                 }
@@ -111,10 +102,8 @@ public class SvgDiagram {
         }
     }
 
-    public void generateDefaultSvg(EventListener mouseListenerSvg, GraphSorter graphSorter) throws IOException {
+    public void generateDefaultSvg(GraphSorter graphSorter) throws IOException {
 //        try {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
         // set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
         // in order to add the extra namespaces to the svg document we use a string and parse it
         // other methods have been tried but this is the most readable and the only one that actually works
@@ -132,11 +121,13 @@ public class SvgDiagram {
                 + "preserveAspectRatio=\"xMidYMid meet\" version=\"1.0\"/>";
         // DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         // doc = (SVGDocument) impl.createDocument(svgNameSpace, "svg", null);
-        String parser = XMLResourceDescriptor.getXMLParserClassName();
-        SAXSVGDocumentFactory documentFactory = new SAXSVGDocumentFactory(parser);
-        doc = (SVGDocument) documentFactory.createDocument(svgNameSpace, new StringReader(templateXml));
+
+        KinDocumentImpl tempDoc = new KinDocumentImpl();
+        tempDoc.readDocument(svgNameSpace, templateXml);
+        doc = tempDoc;
+
         entitySvg.updateSymbolsElement(doc, svgNameSpace);
-        configureDiagramGroups(mouseListenerSvg);
+        configureDiagramGroups();
         graphData = graphSorter;
     }
 }

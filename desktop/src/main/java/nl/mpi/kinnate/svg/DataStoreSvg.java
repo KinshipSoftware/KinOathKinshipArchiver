@@ -359,6 +359,10 @@ public class DataStoreSvg implements DiagramSettings {
 //        }
 //    }
     @Override
+    public void storeAllData() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public void storeAllData(SVGDocument doc) {
         // remove old kin diagram data
         System.out.println("Removing old KinDiagramData nodes from the SVG before updating");
@@ -371,9 +375,9 @@ public class DataStoreSvg implements DiagramSettings {
 //        for (URI currentEgoUri : egoPathSet) {
 //            egoStringArray.add(currentEgoUri.toASCIIString());
 //        }
-        // store the selected kin type strings and other data in the dom
-        //        Namespace sNS = Namespace.getNamespace("someNS", "someNamespace");
-        //        Element element = new Element("SomeElement", sNS);
+// store the selected kin type strings and other data in the dom
+//        Namespace sNS = Namespace.getNamespace("someNS", "someNamespace");
+//        Element element = new Element("SomeElement", sNS);
 //        Element kinTypesRecordNode = doc.createElementNS(kinDataNameSpaceLocation, "kin:KinDiagramData");
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(DataStoreSvg.class);
@@ -396,7 +400,7 @@ public class DataStoreSvg implements DiagramSettings {
 //        storeParameter(doc, kinTypesRecordNode, "LabelFields", indexParameters.labelFields.getValues());
 //        storeParameter(doc, kinTypesRecordNode, "SymbolFieldsFields", indexParameters.symbolFieldsFields.getValues());
 //        doc.getRootElement().appendChild(kinTypesRecordNode);
-        // end store the selected kin type strings and other data in the dom
+// end store the selected kin type strings and other data in the dom
     }
 
 //    private String[] getSingleParametersFromDom(SVGDocument doc, String parameterName) {
