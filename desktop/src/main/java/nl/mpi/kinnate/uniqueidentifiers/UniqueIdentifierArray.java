@@ -18,6 +18,7 @@
 package nl.mpi.kinnate.uniqueidentifiers;
 
 import java.io.StringWriter;
+import java.util.UUID;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -38,7 +39,7 @@ public class UniqueIdentifierArray {
     public static void main(String[] Args) {
         try {
             UniqueIdentifierArray identifierArray = new UniqueIdentifierArray();
-            identifierArray.testIdentifiers = new UniqueIdentifier[]{new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid), new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid)};
+            identifierArray.testIdentifiers = new UniqueIdentifier[]{new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid, UUID.randomUUID().toString()), new UniqueIdentifier(UniqueIdentifier.IdentifierType.tid, UUID.randomUUID().toString())};
 
             JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifierArray.class);
             Marshaller marshaller = jaxbContext.createMarshaller();

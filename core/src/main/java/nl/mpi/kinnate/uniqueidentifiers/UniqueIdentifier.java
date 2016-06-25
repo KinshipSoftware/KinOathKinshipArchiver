@@ -17,10 +17,8 @@
  */
 package nl.mpi.kinnate.uniqueidentifiers;
 
-import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
@@ -44,9 +42,9 @@ public class UniqueIdentifier {
     private UniqueIdentifier() {
     }
 
-    public UniqueIdentifier(IdentifierType identifierTypeLocal) {
+    public UniqueIdentifier(IdentifierType identifierTypeLocal, String randomUUID) {
         identifierType = identifierTypeLocal;
-        identifierString = UUID.randomUUID().toString();
+        identifierString = randomUUID;
     }
 
 //    public UniqueIdentifier(ArbilField arbilField) {

@@ -426,7 +426,7 @@ public class EntitySvg {
         return kinSymbols;
     }
 
-    public String[] listSymbolNames(KinDocumentImpl doc, String svgNameSpace) throws KinElementException {
+    public String[] listSymbolNames(KinDocument doc, String svgNameSpace) throws KinElementException {
         // get the symbol list from the dom
         ArrayList<String> symbolArray = new ArrayList<String>();
 
@@ -808,7 +808,7 @@ public class EntitySvg {
                 if (linkURI.getPidString() != null) {
                     linkUrl = "http://corpus1.mpi.nl/ds/imdi_browser/?openpath=" + linkURI.getPidString();
                 } else {
-                    linkUrl = linkURI.getLinkUri().toASCIIString();
+                    linkUrl = linkURI.getLinkUri();
                 }
                 labelTagA.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", linkUrl);
 //11:19:24 AM Peter: http://corpus1.mpi.nl/ds/imdi_browser/viewcontroller?nodeid=MPI77915%23&action=ViewNode

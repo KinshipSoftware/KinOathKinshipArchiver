@@ -46,6 +46,7 @@ import nl.mpi.arbil.ui.ArbilWindowManager;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.kinnate.SavePanel;
+import nl.mpi.kinnate.dom.KinDocumentImpl;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -67,7 +68,6 @@ import org.apache.batik.swing.JSVGCanvas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.svg.SVGLocatable;
 
@@ -199,7 +199,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             svgFile = null;
         }
         try {
-            svgDiagram.readSvg(svgFilePath.toString());
+            svgDiagram.readSvg(new KinDocumentImpl(), svgFilePath.toString());
             svgCanvas.setDocument(((KinDocumentImpl) svgDiagram.doc).getDoc());
             symbolGraphic = new SymbolGraphic(((KinDocumentImpl) svgDiagram.doc).getDoc());
             dataStoreSvg = DataStoreSvg.loadDataFromSvg(((KinDocumentImpl) svgDiagram.doc).getDoc());
@@ -224,7 +224,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void generateDefaultSvg() {
         try {
-            svgDiagram.generateDefaultSvg(new DefaultSorter());
+            svgDiagram.generateDefaultSvg(new KinDocumentImpl(), new DefaultSorter());
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(((KinDocumentImpl) svgDiagram.doc), svgDiagram.svgNameSpace));
             svgCanvas.setSVGDocument(((KinDocumentImpl) svgDiagram.doc).getDoc());
             symbolGraphic = new SymbolGraphic(((KinDocumentImpl) svgDiagram.doc).getDoc());

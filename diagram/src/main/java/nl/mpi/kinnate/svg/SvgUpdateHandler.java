@@ -18,8 +18,10 @@
  */
 package nl.mpi.kinnate.svg;
 
+import nl.mpi.kinnate.dom.KinElementImpl;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.UUID;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
@@ -794,7 +796,7 @@ public class SvgUpdateHandler {
 //                        * Polygon <polygon>
 //                        * Path <path>
 
-        UniqueIdentifier labelId = new UniqueIdentifier(UniqueIdentifier.IdentifierType.gid);
+        UniqueIdentifier labelId = new UniqueIdentifier(UniqueIdentifier.IdentifierType.gid, UUID.randomUUID().toString());
         labelText.setAttribute("id", labelId.getAttributeIdentifier());
         // put this into the geometry group or the label group depending on its type so that labels sit above entitis and graphics sit below entities
         KinElement targetGroup;

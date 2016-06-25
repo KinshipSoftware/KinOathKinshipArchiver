@@ -17,8 +17,6 @@
  */
 package nl.mpi.kinnate.svg;
 
-import org.w3c.dom.Element;
-
 /**
  * Created on : Oct 5, 2011, 6:47:21 PM
  *

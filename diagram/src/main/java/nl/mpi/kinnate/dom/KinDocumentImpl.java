@@ -15,11 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package nl.mpi.kinnate.svg;
+package nl.mpi.kinnate.dom;
 
 import java.io.IOException;
 import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilderFactory;
+import nl.mpi.kinnate.svg.KinDocument;
+import nl.mpi.kinnate.svg.KinElement;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.DOMException;

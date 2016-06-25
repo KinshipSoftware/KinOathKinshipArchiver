@@ -27,24 +27,24 @@ import javax.xml.bind.annotation.XmlAttribute;
  */
 public class ExternalLink {
 
-    private URI LinkUri;
+    private String linkUriString;
     private String pidString;
 
     public ExternalLink() {
     }
 
-    public ExternalLink(URI LinkUri, String pidString) {
-        this.LinkUri = LinkUri;
+    public ExternalLink(String linkUriString, String pidString) {
+        this.linkUriString = linkUriString;
         this.pidString = pidString;
     }
 
-    public URI getLinkUri() {
-        return LinkUri;
+    public String getLinkUri() {
+        return linkUriString;
     }
 
     @XmlAttribute(name = "url")
-    public void setLinkUri(URI LinkUri) {
-        this.LinkUri = LinkUri;
+    public void setLinkUri(String linkUriString) {
+        this.linkUriString = linkUriString;
     }
 
     public String getPidString() {

@@ -251,7 +251,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
     private boolean attachMetadata(EntityData entityData) {
         for (ArbilNode currentArbilNode : selectedNodes) {
             final ArbilDataNode currentArbilDataNode = (ArbilDataNode) currentArbilNode;
-            entityData.addExternalLink(currentArbilDataNode.getURI(), currentArbilDataNode.getID());
+            entityData.addExternalLink(currentArbilDataNode.getURI().toASCIIString(), currentArbilDataNode.getID());
             // todo: insert the archive handle here also
             // todo: insert the entity identifier into the attached metadata
 

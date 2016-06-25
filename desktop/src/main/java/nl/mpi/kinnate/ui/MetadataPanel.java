@@ -21,6 +21,8 @@ package nl.mpi.kinnate.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -184,12 +186,16 @@ public class MetadataPanel extends JPanel {
             // add the corpus links to the other table
             if (entityData.externalLinks != null) {
                 for (ExternalLink archiveLink : entityData.externalLinks) {
-                    ArbilDataNode archiveLinkNode = dataNodeLoader.getArbilDataNode(null, archiveLink.getLinkUri());
-                    // todo: we do not register this node with the graph panel because it is not rendered on the graph, but if the name of the node changes then it should be updated in the tree which is not yet handled
-                    archiveTableModel.addSingleArbilDataNode(archiveLinkNode);
-                    archiveTreeNodes.add(archiveLinkNode);
-                    archiveRootNodes.add(archiveLinkNode.getParentDomNode());
-                    metadataNodes.add(archiveLinkNode);
+                    try {
+                        ArbilDataNode archiveLinkNode = dataNodeLoader.getArbilDataNode(null, new URI(archiveLink.getLinkUri()));
+                        // todo: we do not register this node with the graph panel because it is not rendered on the graph, but if the name of the node changes then it should be updated in the tree which is not yet handled
+                        archiveTableModel.addSingleArbilDataNode(archiveLinkNode);
+                        archiveTreeNodes.add(archiveLinkNode);
+                        archiveRootNodes.add(archiveLinkNode.getParentDomNode());
+                        metadataNodes.add(archiveLinkNode);
+                    } catch (URISyntaxException exception) {
+                        dialogHandler.addMessageDialogToQueue("Could not parse the URI.", "Table View");
+                    }
                 }
             }
         } else {

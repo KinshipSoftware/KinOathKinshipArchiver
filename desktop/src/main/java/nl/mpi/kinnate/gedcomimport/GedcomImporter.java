@@ -270,7 +270,7 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                                             } else {
                                                 resolvedUri = inputFileUri.resolve(lineStructure.getLineContents());
                                             }
-                                            currentEntity.entityData.addExternalLink(resolvedUri, null);
+                                            currentEntity.entityData.addExternalLink(resolvedUri.toASCIIString(), null);
                                             notConsumed = false;
                                         } catch (java.lang.IllegalArgumentException exception) {
                                             appendToTaskOutput("Unsupported File Path: " + lineStructure.getLineContents());
@@ -355,12 +355,10 @@ public class GedcomImporter extends EntityImporter implements GenericImporter {
                             } else {
                                 innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.ancestor, null, null, null, null);
                             }
+                        } else if (outerMemberElement.typeString.equals("FAMC") || outerMemberElement.typeString.equals("CHIL")) {
+                            innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.descendant, null, null, null, null);
                         } else {
-                            if (outerMemberElement.typeString.equals("FAMC") || outerMemberElement.typeString.equals("CHIL")) {
-                                innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.descendant, null, null, null, null);
-                            } else {
-                                innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.union, null, null, null, null);
-                            }
+                            innerMemberElement.memberEntity.addRelatedNode(outerMemberElement.memberEntity, RelationType.union, null, null, null, null);
                         }
 //                            appendToTaskOutput("--> adding sanguine relation");
                     }

@@ -18,7 +18,6 @@
  */
 package nl.mpi.kinnate.kindata;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -161,11 +160,11 @@ public class EntityData {
 //        this.dateOfDeath = new EntityDate(dateOfDeath);
 //    }
     // end code used for importing gedcom and other file types
-    public void addExternalLink(URI resourceUri, String pidString) {
+    public void addExternalLink(String resourceUriString, String pidString) {
         if (externalLinks == null) {
             externalLinks = new ArrayList<ExternalLink>();
         }
-        externalLinks.add(new ExternalLink(resourceUri, pidString));
+        externalLinks.add(new ExternalLink(resourceUriString, pidString));
     }
 
     public String[] getSymbolNames(String defaultSymbol) {

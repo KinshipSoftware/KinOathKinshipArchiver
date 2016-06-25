@@ -31,7 +31,7 @@ import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.svg.DiagramSettings;
 import nl.mpi.kinnate.svg.EntitySvg;
 import nl.mpi.kinnate.svg.KinDocument;
-import nl.mpi.kinnate.svg.KinDocumentImpl;
+import nl.mpi.kinnate.dom.KinDocumentImpl;
 import nl.mpi.kinnate.svg.KinElementException;
 import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.svg.SvgDiagram;
@@ -157,7 +157,7 @@ public class ExampleSwingApp {
 //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         }, entitySvg);
-        svgDiagram.generateDefaultSvg(new DefaultSorter());
+        svgDiagram.generateDefaultSvg(new KinDocumentImpl(), new DefaultSorter());
         final SvgUpdateHandler svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
         svgDiagram.graphData.setEntitys(entiryData);
         svgUpdateHandler.drawEntities(new KinRectangle(800, 600));

@@ -52,8 +52,8 @@ public class SvgDiagram extends KinDiagram {
         return diagramSettings;
     }
 
-    public void readSvg(String svgFilePath) throws IOException, KinElementException {
-        KinDocumentImpl tempDoc = new KinDocumentImpl();
+    public void readSvg(KinDocument tempDoc, String svgFilePath) throws IOException, KinElementException {
+//        KinDocumentImpl tempDoc = new KinDocumentImpl();
         tempDoc.createDocument(svgFilePath); //(SVGDocument) documentFactory.createDocument(svgFilePath.toString());
         doc = tempDoc;
         entitySvg.readEntityPositions(doc.getElementById("EntityGroup"));
@@ -72,7 +72,7 @@ public class SvgDiagram extends KinDiagram {
             // add the diagram group to the root element (the 'svg' element)
             svgRoot.appendChild(diagramGroup);
         }
-        KinElement previousElement = new KinElementImpl(null);
+        KinElement previousElement = null;
         // add the graphics group below the entities and relations
         // add the relation symbols in a group below the relation lines
         // add the entity symbols in a group on top of the relation lines
@@ -83,9 +83,17 @@ public class SvgDiagram extends KinDiagram {
             if (parentElement == null) {
                 parentElement = doc.createElementNS(svgNameSpace, "g");
                 parentElement.setAttribute("id", groupForMouseListener);
-                diagramGroup.insertBefore(parentElement, previousElement);
+                if (previousElement != null) {
+                    diagramGroup.insertBefore(parentElement, previousElement);
+                } else {
+                    diagramGroup.appendChild(parentElement);
+                }
             } else {
-                diagramGroup.insertBefore(parentElement, previousElement); // insert the node to make sure that it is in the diagram group and not in any other location
+                if (previousElement != null) {
+                    diagramGroup.insertBefore(parentElement, previousElement); // insert the node to make sure that it is in the diagram group and not in any other location
+                } else {
+                    diagramGroup.appendChild(parentElement);
+                }
                 // set up the mouse listeners that were lost in the save/re-open process
                 if (!groupForMouseListener.equals("RelationGroup")) {
                     // do not add mouse listeners to the relation group
@@ -100,7 +108,7 @@ public class SvgDiagram extends KinDiagram {
         }
     }
 
-    public void generateDefaultSvg(GraphSorter graphSorter) throws IOException, KinElementException {
+    public void generateDefaultSvg(KinDocument tempDoc, GraphSorter graphSorter) throws IOException, KinElementException {
 //        try {
         // set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
         // in order to add the extra namespaces to the svg document we use a string and parse it
@@ -120,7 +128,6 @@ public class SvgDiagram extends KinDiagram {
         // DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         // doc = (SVGDocument) impl.createDocument(svgNameSpace, "svg", null);
 
-        KinDocumentImpl tempDoc = new KinDocumentImpl();
         tempDoc.readDocument(svgNameSpace, templateXml);
         doc = tempDoc;
 

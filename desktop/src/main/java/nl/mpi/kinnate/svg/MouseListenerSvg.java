@@ -28,6 +28,8 @@ import javax.swing.event.MouseInputAdapter;
 import nl.mpi.arbil.userstorage.SessionStorage;
 import nl.mpi.arbil.util.BugCatcherManager;
 import nl.mpi.arbil.util.MessageDialogHandler;
+import nl.mpi.kinnate.dom.KinDocumentImpl;
+import nl.mpi.kinnate.dom.KinElementImpl;
 import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes;

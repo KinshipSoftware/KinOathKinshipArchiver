@@ -17,6 +17,8 @@
  */
 package nl.mpi.kinnate.data;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -158,8 +160,12 @@ public class KinTreeNode extends ArbilNode implements Comparable {
         if (entityData.externalLinks != null) {
             HashSet<ArbilDataNode> relationList = new HashSet<ArbilDataNode>();
             for (ExternalLink externalLink : entityData.externalLinks) {
-                ArbilDataNode linkedArbilDataNode = dataNodeLoader.getArbilDataNode(null, externalLink.getLinkUri());
-                relationList.add(linkedArbilDataNode);
+                try {
+                    ArbilDataNode linkedArbilDataNode = dataNodeLoader.getArbilDataNode(null, new URI(externalLink.getLinkUri()));
+                    relationList.add(linkedArbilDataNode);
+                } catch (URISyntaxException exception) {
+                    exception.printStackTrace();
+                }
             }
             kinTreeMetaNodes.add(new ContainerNode(null, "External Links", null, relationList.toArray(new ArbilDataNode[]{})));
         }

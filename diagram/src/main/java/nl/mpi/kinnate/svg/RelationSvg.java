@@ -23,8 +23,6 @@ import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
 import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * Created on : Mar 9, 2011, 3:21:16 PM
