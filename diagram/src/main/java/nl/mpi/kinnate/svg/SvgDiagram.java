@@ -19,8 +19,6 @@ package nl.mpi.kinnate.svg;
 
 import java.io.IOException;
 import nl.mpi.kinnate.kindata.GraphSorter;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * @since Nov 9, 2014 2:51:21 PM (creation date)
@@ -54,7 +52,7 @@ public class SvgDiagram extends KinDiagram {
         return diagramSettings;
     }
 
-    public void readSvg(String svgFilePath) throws IOException {
+    public void readSvg(String svgFilePath) throws IOException, KinElementException {
         KinDocumentImpl tempDoc = new KinDocumentImpl();
         tempDoc.createDocument(svgFilePath); //(SVGDocument) documentFactory.createDocument(svgFilePath.toString());
         doc = tempDoc;
@@ -64,24 +62,24 @@ public class SvgDiagram extends KinDiagram {
         configureDiagramGroups();
     }
 
-    private void configureDiagramGroups() {
-        Element svgRoot = doc.getDocumentElement();
+    private void configureDiagramGroups() throws KinElementException {
+        KinElement svgRoot = doc.getDocumentElement();
         // make sure the diagram group exisits
-        Element diagramGroup = doc.getElementById("DiagramGroup");
+        KinElement diagramGroup = doc.getElementById("DiagramGroup");
         if (diagramGroup == null) {
             diagramGroup = doc.createElementNS(svgNameSpace, "g");
             diagramGroup.setAttribute("id", "DiagramGroup");
             // add the diagram group to the root element (the 'svg' element)
             svgRoot.appendChild(diagramGroup);
         }
-        Element previousElement = null;
+        KinElement previousElement = new KinElementImpl(null);
         // add the graphics group below the entities and relations
         // add the relation symbols in a group below the relation lines
         // add the entity symbols in a group on top of the relation lines
         // add the labels group on top, also added on svg load if missing
         for (String groupForMouseListener : new String[]{"LabelsGroup", "EntityGroup", "RelationGroup", "GraphicsGroup"}) {
             // add any groups that are required and add them in the required order
-            Element parentElement = doc.getElementById(groupForMouseListener);
+            KinElement parentElement = doc.getElementById(groupForMouseListener);
             if (parentElement == null) {
                 parentElement = doc.createElementNS(svgNameSpace, "g");
                 parentElement.setAttribute("id", groupForMouseListener);
@@ -91,7 +89,7 @@ public class SvgDiagram extends KinDiagram {
                 // set up the mouse listeners that were lost in the save/re-open process
                 if (!groupForMouseListener.equals("RelationGroup")) {
                     // do not add mouse listeners to the relation group
-                    Node currentNode = parentElement.getFirstChild();
+                    KinElement currentNode = parentElement.getFirstChild();
                     while (currentNode != null) {
                         doc.addEventListener(currentNode);
                         currentNode = currentNode.getNextSibling();
@@ -102,7 +100,7 @@ public class SvgDiagram extends KinDiagram {
         }
     }
 
-    public void generateDefaultSvg(GraphSorter graphSorter) throws IOException {
+    public void generateDefaultSvg(GraphSorter graphSorter) throws IOException, KinElementException {
 //        try {
         // set up a kinnate namespace so that the ego list and kin type strings can have more permanent storage places
         // in order to add the extra namespaces to the svg document we use a string and parse it

@@ -19,7 +19,6 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.Component;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
@@ -40,6 +39,7 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.DataTypes.RelationType;
+import nl.mpi.kinnate.kindata.KinPoint;
 import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.kindocument.EntityMerger;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
@@ -75,7 +75,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
     final JSeparator jSeparator2 = new JSeparator();
     final JSeparator jSeparator3 = new JSeparator();
     private UniqueIdentifier[] selectedIdentifiers = null; // keep the selected paths as shown at the time of the menu intereaction
-    private Point eventLocation;
+    private KinPoint eventLocation;
     private ArbilDataNodeLoader dataNodeLoader;
 
     public GraphPanelContextMenu(KinDiagramPanel egoSelectionPanelLocal, final GraphPanel graphPanelLocal, final EntityCollection entityCollection, final ArbilWindowManager arbilWindowManager, ArbilDataNodeLoader dataNodeLoaderL, final SessionStorage sessionStorage) {
@@ -403,7 +403,7 @@ public class GraphPanelContextMenu extends JPopupMenu implements ActionListener 
 //    }
     @Override
     public void show(Component cmpnt, int i, int i1) {
-        eventLocation = new Point(i, i1);
+        eventLocation = new KinPoint(i, i1);
 //        System.out.println("ContextMenu: " + i + ":" + i1);
         selectedIdentifiers = graphPanel.getSelectedIds();
         int nonTransientNodeCount = 0;

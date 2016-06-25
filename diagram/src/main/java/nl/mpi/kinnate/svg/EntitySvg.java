@@ -18,8 +18,8 @@
  */
 package nl.mpi.kinnate.svg;
 
-import java.awt.Point;
-import java.awt.Rectangle;
+import nl.mpi.kinnate.kindata.KinRectangle;
+import nl.mpi.kinnate.kindata.KinPoint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,11 +31,6 @@ import nl.mpi.kinnate.kindata.ExternalLink;
 import nl.mpi.kinnate.kindata.GraphLabel;
 import nl.mpi.kinnate.uniqueidentifiers.IdentifierException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
 
 /**
  * Document : EntitySvg Created on : Mar 9, 2011, 3:20:56 PM
@@ -44,8 +39,8 @@ import org.w3c.dom.Text;
  */
 public class EntitySvg {
 
-    final private org.slf4j.Logger logger = LoggerFactory.getLogger(getClass());
-    protected HashMap<UniqueIdentifier, Point> entityPositions = new HashMap<UniqueIdentifier, Point>();
+//    final private org.slf4j.Logger logger = LoggerFactory.getLogger(getClass());
+    protected HashMap<UniqueIdentifier, KinPoint> entityPositions = new HashMap<UniqueIdentifier, KinPoint>();
     static final public int symbolSize = 15;
     static final protected int strokeWidth = 2;
 
@@ -57,28 +52,27 @@ public class EntitySvg {
         }
     }
 
-    public void readEntityPositions(Node entityGroup) {
+    public void readEntityPositions(KinElement entityGroup) throws KinElementException {
         // read the entity positions from the existing dom
         // this now replaces the position values in the entity data and the entity position is now stored in the svg entity visual not the entity data 
         if (entityGroup != null) {
-            for (Node entityNode = entityGroup.getFirstChild(); entityNode != null; entityNode = entityNode.getNextSibling()) {
+            for (KinElement entityNode = entityGroup.getFirstChild(); entityNode != null; entityNode = entityNode.getNextSibling()) {
                 try {
-                    NamedNodeMap nodeMap = entityNode.getAttributes();
-                    if (nodeMap != null) {
-                        Node idNode = nodeMap.getNamedItem("id");
-                        Node transformNode = nodeMap.getNamedItem("transform");
-                        if (idNode != null && transformNode != null) {
-                            UniqueIdentifier entityId = new UniqueIdentifier(idNode.getNodeValue());
-                            //transform="translate(300.0, 192.5)"
-                            // because the svg dom has not been rendered we cannot get any of the screen data, so we must parse the transform tag
-                            String transformString = transformNode.getNodeValue();
-                            transformString = transformString.replaceAll("\\s", "");
-                            transformString = transformString.replace("translate(", "");
-                            transformString = transformString.replace(")", "");
-                            String[] stringPos = transformString.split(",");
+//                    NamedNodeMap nodeMap = entityNode.getAttribute();
+//                    if (nodeMap != null) {
+                    String idNode = entityNode.getAttribute("id");
+                    String transformString = entityNode.getAttribute("transform");
+                    if (idNode != null && transformString != null) {
+                        UniqueIdentifier entityId = new UniqueIdentifier(idNode);
+                        //transform="translate(300.0, 192.5)"
+                        // because the svg dom has not been rendered we cannot get any of the screen data, so we must parse the transform tag
+                        transformString = transformString.replaceAll("\\s", "");
+                        transformString = transformString.replace("translate(", "");
+                        transformString = transformString.replace(")", "");
+                        String[] stringPos = transformString.split(",");
 //                        System.out.println("entityId: " + entityId);
 //                        System.out.println("transformString: " + transformString);
-                            entityPositions.put(entityId, new Point((int) Float.parseFloat(stringPos[0]), (int) Float.parseFloat(stringPos[1]))); // the input data here could be in float format
+                        entityPositions.put(entityId, new KinPoint((int) Float.parseFloat(stringPos[0]), (int) Float.parseFloat(stringPos[1]))); // the input data here could be in float format
 //                      SVGRect bbox = ((SVGLocatable) entityNode).getBBox();
 //                      SVGMatrix sVGMatrix = ((SVGLocatable) entityNode).getCTM();
 //                      System.out.println("getE: " + sVGMatrix.getE());
@@ -88,23 +82,24 @@ public class EntitySvg {
 ////                    System.out.println("bbox W: " + bbox.getWidth());
 ////                    System.out.println("bbox H: " + bbox.getHeight());
 //                      new float[]{sVGMatrix.getE() + bbox.getWidth() / 2, sVGMatrix.getF() + bbox.getHeight() / 2};
-                        }
                     }
+//                    }
                 } catch (IdentifierException exception) {
-                    logger.warn("Failed to read an entity position.", exception);
+                    // todo: handle logging abstractly
+//                    logger.warn("Failed to read an entity position.", exception);
                 }
             }
         }
     }
 
-    private void removeAttributeStrokeBlack(Node symbolNode) {
+    private void removeAttributeStrokeBlack(KinElement symbolNode) throws KinElementException {
         // remove all child attributes that set the stroke to black so that existing svg files are updated and the stroke can be changed on composing the diagram
-        if (symbolNode instanceof Element) {
-            final Element symbolElement = (Element) symbolNode;
+        if (symbolNode.isElement()) {
+            final KinElement symbolElement = (KinElement) symbolNode;
             if (symbolElement.getAttribute("stroke").contentEquals("black")) {
                 symbolElement.removeAttribute("stroke");
             }
-            Node childNode = symbolNode.getFirstChild();
+            KinElement childNode = symbolNode.getFirstChild();
             while (childNode != null) {
                 removeAttributeStrokeBlack(childNode);
                 childNode = childNode.getNextSibling();
@@ -112,16 +107,16 @@ public class EntitySvg {
         }
     }
 
-    public Element updateSymbolsElement(KinDocument doc, String svgNameSpace) {
-        Element svgRoot = doc.getDocumentElement();
-        Element lineMarkerDefsNode = doc.getElementById("LineMarkerSymbols");
+    public KinElement updateSymbolsElement(KinDocument doc, String svgNameSpace) throws KinElementException {
+        KinElement svgRoot = doc.getDocumentElement();
+        KinElement lineMarkerDefsNode = doc.getElementById("LineMarkerSymbols");
         if (lineMarkerDefsNode == null) {
             lineMarkerDefsNode = doc.createElementNS(svgNameSpace, "defs");
             lineMarkerDefsNode.setAttribute("id", "LineMarkerSymbols");
             svgRoot.appendChild(lineMarkerDefsNode);
         }
         // add the start line marker
-        Element startMarker = doc.getElementById("StartMarker");
+        KinElement startMarker = doc.getElementById("StartMarker");
         if (startMarker == null) {
             startMarker = doc.createElementNS(svgNameSpace, "circle");
             startMarker.setAttribute("id", "StartMarker");
@@ -131,14 +126,14 @@ public class EntitySvg {
             lineMarkerDefsNode.appendChild(startMarker);
         }
         // add the end line marker
-        Element endMarker = doc.getElementById("EndMarker");
+        KinElement endMarker = doc.getElementById("EndMarker");
         if (endMarker == null) {
             endMarker = doc.createElementNS(svgNameSpace, "path");
             endMarker.setAttribute("id", "EndMarker");
             endMarker.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
             lineMarkerDefsNode.appendChild(endMarker);
         }
-        Element kinSymbols = doc.getElementById("KinSymbols");
+        KinElement kinSymbols = doc.getElementById("KinSymbols");
         if (kinSymbols == null) {
             kinSymbols = doc.createElementNS(svgNameSpace, "defs");
             kinSymbols.setAttribute("id", "KinSymbols");
@@ -146,11 +141,11 @@ public class EntitySvg {
         }
 
         // add the blank symbol
-        Element blankGroup = doc.getElementById("blank");
+        KinElement blankGroup = doc.getElementById("blank");
         if (blankGroup == null) {
             blankGroup = doc.createElementNS(svgNameSpace, "g");
             blankGroup.setAttribute("id", "blank");
-            Element blankNode = doc.createElementNS(svgNameSpace, "circle");
+            KinElement blankNode = doc.createElementNS(svgNameSpace, "circle");
             blankNode.setAttribute("cx", Float.toString(symbolSize + strokeWidth / 4f));
             blankNode.setAttribute("cy", Float.toString(symbolSize + strokeWidth / 4f));
             blankNode.setAttribute("r", Integer.toString((symbolSize - strokeWidth / 2)));
@@ -161,11 +156,11 @@ public class EntitySvg {
             kinSymbols.appendChild(blankGroup);
         }
         // add the circle symbol
-        Element circleGroup = doc.getElementById("circle");
+        KinElement circleGroup = doc.getElementById("circle");
         if (circleGroup == null) {
             circleGroup = doc.createElementNS(svgNameSpace, "g");
             circleGroup.setAttribute("id", "circle");
-            Element circleNode = doc.createElementNS(svgNameSpace, "circle");
+            KinElement circleNode = doc.createElementNS(svgNameSpace, "circle");
             circleNode.setAttribute("cx", Float.toString(symbolSize / 2 + strokeWidth / 4f));
             circleNode.setAttribute("cy", Float.toString(symbolSize / 2 + strokeWidth / 4f));
             circleNode.setAttribute("r", Integer.toString((symbolSize - strokeWidth) / 2));
@@ -178,11 +173,11 @@ public class EntitySvg {
             removeAttributeStrokeBlack(circleGroup);
         }
         // add the square symbol
-        Element squareGroup = doc.getElementById("square");
+        KinElement squareGroup = doc.getElementById("square");
         if (squareGroup == null) {
             squareGroup = doc.createElementNS(svgNameSpace, "g");
             squareGroup.setAttribute("id", "square");
-            Element squareNode = doc.createElementNS(svgNameSpace, "rect");
+            KinElement squareNode = doc.createElementNS(svgNameSpace, "rect");
             squareNode.setAttribute("x", Integer.toString(strokeWidth));
             squareNode.setAttribute("y", Integer.toString(strokeWidth));
             squareNode.setAttribute("width", Integer.toString(symbolSize - strokeWidth * 2));
@@ -195,11 +190,11 @@ public class EntitySvg {
             removeAttributeStrokeBlack(squareGroup);
         }
         // add the square symbol
-        Element squareGroup45 = doc.getElementById("square-45");
+        KinElement squareGroup45 = doc.getElementById("square-45");
         if (squareGroup45 == null) {
             squareGroup45 = doc.createElementNS(svgNameSpace, "g");
             squareGroup45.setAttribute("id", "square-45");
-            Element squareNode45 = doc.createElementNS(svgNameSpace, "rect");
+            KinElement squareNode45 = doc.createElementNS(svgNameSpace, "rect");
             squareNode45.setAttribute("transform", "rotate(-45 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
             squareNode45.setAttribute("x", Integer.toString(strokeWidth));
             squareNode45.setAttribute("y", Integer.toString(strokeWidth));
@@ -213,11 +208,11 @@ public class EntitySvg {
             removeAttributeStrokeBlack(squareGroup45);
         }
         // add the rhombus symbol
-        Element rhombusGroup = doc.getElementById("rhombus");
+        KinElement rhombusGroup = doc.getElementById("rhombus");
         if (rhombusGroup == null) {
             rhombusGroup = doc.createElementNS(svgNameSpace, "g");
             rhombusGroup.setAttribute("id", "rhombus");
-            Element rhombusNode = doc.createElementNS(svgNameSpace, "rect");
+            KinElement rhombusNode = doc.createElementNS(svgNameSpace, "rect");
             rhombusNode.setAttribute("transform", "translate(0, " + Integer.toString(symbolSize / 3) + "), scale(1,0.5), rotate(-45 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
             rhombusNode.setAttribute("x", Integer.toString(strokeWidth));
             rhombusNode.setAttribute("y", Integer.toString(strokeWidth));
@@ -245,12 +240,12 @@ public class EntitySvg {
 //        defsNode.appendChild(rhombusGroup90);
 
         // add the union symbol
-        Element unionGroup = doc.getElementById("union");
+        KinElement unionGroup = doc.getElementById("union");
         if (unionGroup == null) {
             unionGroup = doc.createElementNS(svgNameSpace, "g");
             unionGroup.setAttribute("id", "union");
-            Element upperNode = doc.createElementNS(svgNameSpace, "line");
-            Element lowerNode = doc.createElementNS(svgNameSpace, "line");
+            KinElement upperNode = doc.createElementNS(svgNameSpace, "line");
+            KinElement lowerNode = doc.createElementNS(svgNameSpace, "line");
             upperNode.setAttribute("x1", Integer.toString(0));
             upperNode.setAttribute("y1", Integer.toString((symbolSize / 6)));
             upperNode.setAttribute("x2", Integer.toString(symbolSize));
@@ -264,7 +259,7 @@ public class EntitySvg {
             lowerNode.setAttribute("stroke-width", Integer.toString(symbolSize / 3));
 //            lowerNode.setAttribute("stroke", "black");
             // add a background for selecting and draging
-            Element backgroundNode = doc.createElementNS(svgNameSpace, "rect");
+            KinElement backgroundNode = doc.createElementNS(svgNameSpace, "rect");
             backgroundNode.setAttribute("x", "0");
             backgroundNode.setAttribute("y", "0");
             backgroundNode.setAttribute("width", Integer.toString(symbolSize));
@@ -281,11 +276,11 @@ public class EntitySvg {
         // add the triangle symbol        
         int triangleSize = symbolSize - strokeWidth / 2;
         int triangleHeight = (int) (Math.sqrt(3) * triangleSize / 2);
-        Element triangle = doc.getElementById("triangle");
+        KinElement triangle = doc.getElementById("triangle");
         if (triangle == null) {
-            Element triangleGroup = doc.createElementNS(svgNameSpace, "g");
+            KinElement triangleGroup = doc.createElementNS(svgNameSpace, "g");
             triangleGroup.setAttribute("id", "triangle");
-            Element triangleNode = doc.createElementNS(svgNameSpace, "polygon");
+            KinElement triangleNode = doc.createElementNS(svgNameSpace, "polygon");
             triangleNode.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
                     + strokeWidth / 2 + "," + triangleHeight
                     + " " + triangleSize + "," + triangleHeight);
@@ -297,11 +292,11 @@ public class EntitySvg {
             removeAttributeStrokeBlack(triangle);
         }
         // add the triangle symbol
-        Element triangleGroup1 = doc.getElementById("triangle-270");
+        KinElement triangleGroup1 = doc.getElementById("triangle-270");
         if (triangleGroup1 == null) {
             triangleGroup1 = doc.createElementNS(svgNameSpace, "g");
             triangleGroup1.setAttribute("id", "triangle-270");
-            Element triangleNode1 = doc.createElementNS(svgNameSpace, "polygon");
+            KinElement triangleNode1 = doc.createElementNS(svgNameSpace, "polygon");
             triangleNode1.setAttribute("transform", "rotate(-90 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
             triangleNode1.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
                     + strokeWidth / 2 + "," + triangleHeight
@@ -314,12 +309,12 @@ public class EntitySvg {
             removeAttributeStrokeBlack(triangleGroup1);
         }
         // add the triangle symbol
-        Element triangleGroup2 = doc.getElementById("triangle-180");
+        KinElement triangleGroup2 = doc.getElementById("triangle-180");
         if (triangleGroup2 == null) {
             triangleGroup2 = doc.createElementNS(svgNameSpace, "g");
             triangleGroup2.setAttribute("id", "triangle-180");
             triangleGroup2.setAttribute("transform", "rotate(180 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
-            Element triangleNode2 = doc.createElementNS(svgNameSpace, "polygon");
+            KinElement triangleNode2 = doc.createElementNS(svgNameSpace, "polygon");
             triangleNode2.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
                     + strokeWidth / 2 + "," + triangleHeight
                     + " " + triangleSize + "," + triangleHeight);
@@ -331,12 +326,12 @@ public class EntitySvg {
             removeAttributeStrokeBlack(triangleGroup2);
         }
         // add the triangle symbol
-        Element triangleGroup3 = doc.getElementById("triangle-90");
+        KinElement triangleGroup3 = doc.getElementById("triangle-90");
         if (triangleGroup3 == null) {
             triangleGroup3 = doc.createElementNS(svgNameSpace, "g");
             triangleGroup3.setAttribute("id", "triangle-90");
             triangleGroup3.setAttribute("transform", "rotate(90 " + Integer.toString(symbolSize / 2) + " " + Integer.toString(symbolSize / 2) + ")");
-            Element triangleNode3 = doc.createElementNS(svgNameSpace, "polygon");
+            KinElement triangleNode3 = doc.createElementNS(svgNameSpace, "polygon");
             triangleNode3.setAttribute("points", (symbolSize / 2) + "," + strokeWidth / 2 + " "
                     + strokeWidth / 2 + "," + triangleHeight
                     + " " + triangleSize + "," + triangleHeight);
@@ -348,9 +343,9 @@ public class EntitySvg {
             removeAttributeStrokeBlack(triangleGroup3);
         }
 //        // add the equals symbol
-//        Element equalsGroup = doc.createElementNS(svgNameSpace, "g");
+//        KinElement equalsGroup = doc.createElementNS(svgNameSpace, "g");
 //        equalsGroup.setAttribute("id", "equals");
-//        Element equalsNode = doc.createElementNS(svgNameSpace, "polyline");
+//        KinElement equalsNode = doc.createElementNS(svgNameSpace, "polyline");
 //        int offsetAmounta = symbolSize / 2;
 //        int posXa = 0;
 //        int posYa = +symbolSize / 2;
@@ -362,11 +357,11 @@ public class EntitySvg {
 //        defsNode.appendChild(equalsGroup);
 
         // add the error symbol
-        Element noneGroup = doc.getElementById("error");
+        KinElement noneGroup = doc.getElementById("error");
         if (noneGroup == null) {
             noneGroup = doc.createElementNS(svgNameSpace, "g");
             noneGroup.setAttribute("id", "error");
-            Element noneNode = doc.createElementNS(svgNameSpace, "polyline");
+            KinElement noneNode = doc.createElementNS(svgNameSpace, "polyline");
             int posXnone = symbolSize / 2;
             int posYnone = symbolSize / 2;
             int offsetNoneAmount = symbolSize;
@@ -384,11 +379,11 @@ public class EntitySvg {
         }
         for (String markerColour : new String[]{"black", "orange", "cyan", "purple", "red", "green", "blue"}) {// todo: add a few more colours
             // add the marker symbols
-            Element markerGroup = doc.getElementById(markerColour + "marker");
+            KinElement markerGroup = doc.getElementById(markerColour + "marker");
             if (markerGroup == null) {
                 markerGroup = doc.createElementNS(svgNameSpace, "g");
                 markerGroup.setAttribute("id", markerColour + "marker");
-                Element markerNode = doc.createElementNS(svgNameSpace, "circle");
+                KinElement markerNode = doc.createElementNS(svgNameSpace, "circle");
                 markerNode.setAttribute("cx", Integer.toString(symbolSize));
                 markerNode.setAttribute("cy", "0");
                 markerNode.setAttribute("r", Integer.toString((symbolSize) / 4));
@@ -399,11 +394,11 @@ public class EntitySvg {
                 kinSymbols.appendChild(markerGroup);
             }
             // add the strike through symbol
-            Element lineGroup = doc.getElementById(markerColour + "strikethrough");
+            KinElement lineGroup = doc.getElementById(markerColour + "strikethrough");
             if (lineGroup == null) {
                 lineGroup = doc.createElementNS(svgNameSpace, "g");
                 lineGroup.setAttribute("id", markerColour + "strikethrough");
-                Element lineNode = doc.createElementNS(svgNameSpace, "polyline");
+                KinElement lineNode = doc.createElementNS(svgNameSpace, "polyline");
                 lineNode.setAttribute("points", "0," + (symbolSize) + " " + (symbolSize) + ",0");
                 lineNode.setAttribute("fill", "none");
                 lineNode.setAttribute("stroke", markerColour);
@@ -412,11 +407,11 @@ public class EntitySvg {
                 kinSymbols.appendChild(lineGroup);
             }
             // add the cross symbol
-            Element crossGroup = doc.getElementById(markerColour + "cross");
+            KinElement crossGroup = doc.getElementById(markerColour + "cross");
             if (crossGroup == null) {
                 crossGroup = doc.createElementNS(svgNameSpace, "g");
                 crossGroup.setAttribute("id", markerColour + "cross");
-                Element crossNode = doc.createElementNS(svgNameSpace, "polyline");
+                KinElement crossNode = doc.createElementNS(svgNameSpace, "polyline");
                 int posX = symbolSize / 2;
                 int posY = symbolSize / 2;
                 int offsetAmount = symbolSize / 2;
@@ -431,18 +426,22 @@ public class EntitySvg {
         return kinSymbols;
     }
 
-    public String[] listSymbolNames(KinDocumentImpl doc, String svgNameSpace) {
+    public String[] listSymbolNames(KinDocumentImpl doc, String svgNameSpace) throws KinElementException {
         // get the symbol list from the dom
         ArrayList<String> symbolArray = new ArrayList<String>();
 
-        Element kinSymbols = updateSymbolsElement(doc, svgNameSpace);
-        for (Node kinSymbolNode = kinSymbols.getFirstChild(); kinSymbolNode != null; kinSymbolNode = kinSymbolNode.getNextSibling()) {
-            NamedNodeMap attributesMap = kinSymbolNode.getAttributes();
-            if (attributesMap != null) {
-                Node idNode = attributesMap.getNamedItem("id");
-                if (idNode != null) {
-                    symbolArray.add(idNode.getNodeValue());
-                }
+        KinElement kinSymbols = updateSymbolsElement(doc, svgNameSpace);
+        for (KinElement kinSymbolNode = kinSymbols.getFirstChild(); kinSymbolNode != null; kinSymbolNode = kinSymbolNode.getNextSibling()) {
+//            NamedNodeMap attributesMap = kinSymbolNode.getAttributes();
+//            if (attributesMap != null) {
+//                Node idNode = attributesMap.getNamedItem("id");
+//                if (idNode != null) {
+//                    symbolArray.add(idNode.getNodeValue());
+//                }
+//            }
+            String attributesValue = kinSymbolNode.getAttribute("id");
+            if (attributesValue != null) {
+                symbolArray.add(attributesValue);
             }
         }
         return symbolArray.toArray(new String[]{});
@@ -457,7 +456,7 @@ public class EntitySvg {
     public UniqueIdentifier getClosestEntity(float[] locationArray, int maximumDistance, ArrayList<UniqueIdentifier> excludeIdentifiers) {
         double closestDistance = -1;
         UniqueIdentifier closestIdentifier = null;
-        for (Entry<UniqueIdentifier, Point> currentEntry : entityPositions.entrySet()) {
+        for (Entry<UniqueIdentifier, KinPoint> currentEntry : entityPositions.entrySet()) {
             if (!currentEntry.getKey().isGraphicsIdentifier()) {
                 if (!excludeIdentifiers.contains(currentEntry.getKey())) {
                     float hDistance = locationArray[0] - currentEntry.getValue().x;
@@ -481,25 +480,25 @@ public class EntitySvg {
         return closestIdentifier;
     }
 
-    public Point[] getAllEntityLocations() {
-        return entityPositions.values().toArray(new Point[0]);
+    public KinPoint[] getAllEntityLocations() {
+        return entityPositions.values().toArray(new KinPoint[0]);
     }
 
-    public Point getEntityLocationOffset(UniqueIdentifier entityId) {
+    public KinPoint getEntityLocationOffset(UniqueIdentifier entityId) {
 //         this offset is added so that the relation lines meet to the center of the symbols, however the symbols should be updated so that they are centered on 0
-        Point returnLoc = entityPositions.get(entityId);
+        KinPoint returnLoc = entityPositions.get(entityId);
         if (returnLoc != null) {
             int xPos = returnLoc.x + (symbolSize / 2);
             int yPos = returnLoc.y + (symbolSize / 2);
-            return new Point(xPos, yPos);
+            return new KinPoint(xPos, yPos);
         } else {
             return null;
         }
     }
 
-    public List<UniqueIdentifier> getEntitiesWithinRect(Rectangle rectangle) {
+    public List<UniqueIdentifier> getEntitiesWithinRect(KinRectangle rectangle) {
         ArrayList<UniqueIdentifier> selectedIdentifiers = new ArrayList<UniqueIdentifier>();
-        for (Entry<UniqueIdentifier, Point> entry : entityPositions.entrySet()) {
+        for (Entry<UniqueIdentifier, KinPoint> entry : entityPositions.entrySet()) {
             if (rectangle.contains(entry.getValue())) {
                 selectedIdentifiers.add(entry.getKey());
             }
@@ -507,13 +506,13 @@ public class EntitySvg {
         return selectedIdentifiers;
     }
 
-    public Point getEntityLocation(UniqueIdentifier entityId) {
-        Point returnLoc = entityPositions.get(entityId);
+    public KinPoint getEntityLocation(UniqueIdentifier entityId) {
+        KinPoint returnLoc = entityPositions.get(entityId);
         return returnLoc;
     }
 //    public float[] getEntityLocationOffset(SVGDocument doc, String entityId) {
-//        Element entitySymbol = doc.getElementById(entityId + "symbol");
-////        Element entitySymbol = doc.getElementById(entityId); // the sybol group node
+//        KinElement entitySymbol = doc.getElementById(entityId + "symbol");
+////        KinElement entitySymbol = doc.getElementById(entityId); // the sybol group node
 //        if (entitySymbol != null) {
 //            SVGRect bbox = ((SVGLocatable) entitySymbol).getBBox();
 //            SVGMatrix sVGMatrix = ((SVGLocatable) entitySymbol).getCTM();
@@ -537,10 +536,10 @@ public class EntitySvg {
 //        }
 //    }
 
-    public float[] moveEntity(SvgDiagram svgDiagram, UniqueIdentifier entityId, float shiftXfloat, float remainderAfterSnapX, float shiftYfloat, float remainderAfterSnapY, boolean snapToGrid, double scaleFactor, boolean allRealtionsSelected) {
+    public float[] moveEntity(SvgDiagram svgDiagram, UniqueIdentifier entityId, float shiftXfloat, float remainderAfterSnapX, float shiftYfloat, float remainderAfterSnapY, boolean snapToGrid, double scaleFactor, boolean allRealtionsSelected) throws KinElementException {
 //        System.out.println("X: " + shiftXfloat + " Y: " + shiftYfloat + " scale: " + scaleFactor);
-        Element entitySymbol = svgDiagram.doc.getElementById(entityId.getAttributeIdentifier());
-        Element highlightGroup = null;
+        KinElement entitySymbol = svgDiagram.doc.getElementById(entityId.getAttributeIdentifier());
+        KinElement highlightGroup = null;
         if (entityId.isGraphicsIdentifier()) {
             highlightGroup = svgDiagram.doc.getElementById("highlight_" + entityId.getAttributeIdentifier());
         }
@@ -550,7 +549,7 @@ public class EntitySvg {
             boolean allowYshift = true; //entitySymbol.getLocalName().equals("text");
             shiftXscaled = shiftXfloat * scaleFactor;
             shiftYscaled = shiftYfloat * scaleFactor;
-            Point entityPosition = entityPositions.get(entityId);
+            KinPoint entityPosition = entityPositions.get(entityId);
             final float updatedPositionX = entityPosition.x + (float) shiftXscaled + remainderAfterSnapX;
             final float updatedPositionY = entityPosition.y + (float) shiftYscaled + remainderAfterSnapY;
             int snappedPositionX;
@@ -573,7 +572,7 @@ public class EntitySvg {
             boolean collisionFound = true;
             while (collisionFound) {
                 collisionFound = false;
-                for (Point currentEntity : entityPositions.values()) {
+                for (KinPoint currentEntity : entityPositions.values()) {
                     if (currentEntity != entityPosition) { // if looped over the point is not the point that is being moved
                         if (currentEntity.distance(snappedPositionX, snappedPositionY) < EntitySvg.symbolSize) {
                             collisionFound = true;
@@ -606,11 +605,11 @@ public class EntitySvg {
 //            entityPositions.put(entityId, new float[]{(float) at.getTranslateX(), (float) at.getTranslateY()});
 //            ((Element) entitySymbol).setAttribute("transform", "translate(" + String.valueOf(at.getTranslateX()) + ", " + String.valueOf(at.getTranslateY()) + ")");
             // store the changed location as a preferred location
-            final Point updatedLocationPoint = new Point((int) snappedPositionX, (int) snappedPositionY);
+            final KinPoint updatedLocationPoint = new KinPoint((int) snappedPositionX, (int) snappedPositionY);
             entityPositions.put(entityId, updatedLocationPoint);
             svgDiagram.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{entityId}, updatedLocationPoint);
             final String translateString = "translate(" + String.valueOf(updatedLocationPoint.x) + ", " + String.valueOf(updatedLocationPoint.y) + ")";
-            ((Element) entitySymbol).setAttribute("transform", translateString);
+            ((KinElement) entitySymbol).setAttribute("transform", translateString);
             if (highlightGroup != null) {
                 highlightGroup.setAttribute("transform", translateString);
             }
@@ -620,23 +619,23 @@ public class EntitySvg {
         return new float[]{remainderAfterSnapX, remainderAfterSnapY};
     }
 
-    private int addTextLabel(SvgDiagram svgDiagram, Element groupNode, String currentTextLable, String textColour, int textSpanCounter) {
+    private int addTextLabel(SvgDiagram svgDiagram, KinElement groupNode, String currentTextLable, String textColour, int textSpanCounter) throws KinElementException {
         int lineSpacing = 15;
-        Element labelText = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "text");
+        KinElement labelText = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "text");
         labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
         labelText.setAttribute("y", Integer.toString(textSpanCounter));
         labelText.setAttribute("fill", textColour);
         labelText.setAttribute("stroke-width", "0");
         labelText.setAttribute("font-size", "14");
-        Text textNode = svgDiagram.doc.createTextNode(currentTextLable);
+        KinElement textNode = svgDiagram.doc.createTextNode(currentTextLable);
         labelText.appendChild(textNode);
         textSpanCounter += lineSpacing;
         groupNode.appendChild(labelText);
         return textSpanCounter;
     }
 
-    protected Element createEntitySymbol(SvgDiagram svgDiagram, EntityData currentNode) {
-        Element groupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
+    protected KinElement createEntitySymbol(SvgDiagram svgDiagram, EntityData currentNode) throws KinElementException {
+        KinElement groupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
         groupNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier());
 //        groupNode.setAttributeNS(DataStoreSvg.kinDataNameSpaceLocation, "kin:path", currentNode.getEntityPath());
         // the kin type strings are stored here so that on selection in the graph the add kin term panel can be pre populatedwith the kin type strings of the selection
@@ -648,10 +647,11 @@ public class EntitySvg {
         }
         // todo: check that if an entity is already placed in which case do not recreate
         // todo: do not create a new dom each time but reuse it instead, or due to the need to keep things up to date maybe just store an array of entity locations instead
-        Point storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
+        KinPoint storedPosition = entityPositions.get(currentNode.getUniqueIdentifier());
         if (storedPosition == null) {
-            logger.debug("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier());
-            storedPosition = new Point(0, 0);
+            // todo: handle logging abstractly
+//            logger.debug("No storedPosition found for: " + currentNode.getUniqueIdentifier().getAttributeIdentifier());
+            storedPosition = new KinPoint(0, 0);
             // todo: it looks like the stored positon can be null
 //            throw new Exception("Entity position should have been set in the graph sorter");
 //            // loop through the filled locations and move to the right or left if not empty required
@@ -678,7 +678,7 @@ public class EntitySvg {
 //            storedPosition[1] = currentNode.getyPos() * vSpacing + vSpacing - symbolSize / 2.0f;
         }
         for (String currentSymbol : symbolNames) {
-            Element symbolNode;
+            KinElement symbolNode;
             symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
 //            symbolNode.setAttribute("id", currentNode.getUniqueIdentifier().getAttributeIdentifier() + ":symbol:" + currentSymbol);
             symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + currentSymbol); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
@@ -705,7 +705,7 @@ public class EntitySvg {
             groupNode.appendChild(symbolNode);
         }
 ////////////////////////////// tspan method appears to fail in batik rendering process unless saved and reloaded ////////////////////////////////////////////////
-//            Element labelText = doc.createElementNS(svgNS, "text");
+//            KinElement labelText = doc.createElementNS(svgNS, "text");
 ////            labelText.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
 ////            labelText.setAttribute("y", Integer.toString(currentNode.yPos * vSpacing + vSpacing - symbolSize / 2));
 //            labelText.setAttribute("fill", "black");
@@ -721,7 +721,7 @@ public class EntitySvg {
 //            int lineSpacing = 10;
 //            for (String currentTextLable : currentNode.getLabel()) {
 //                Text textNode = doc.createTextNode(currentTextLable);
-//                Element tspanElement = doc.createElement("tspan");
+//                KinElement tspanElement = doc.createElement("tspan");
 //                tspanElement.setAttribute("x", Integer.toString(currentNode.xPos * hSpacing + hSpacing + symbolSize / 2));
 //                tspanElement.setAttribute("y", Integer.toString((currentNode.yPos * vSpacing + vSpacing - symbolSize / 2) + textSpanCounter));
 ////                tspanElement.setAttribute("y", Integer.toString(textSpanCounter * lineSpacing));
@@ -792,18 +792,18 @@ public class EntitySvg {
         int linkCounter = 0;
         if (svgDiagram.getDiagramSettings().showExternalLinks() && currentNode.externalLinks != null) {
             // loop through the archive links and optionaly add href tags for each linked archive data <a xlink:href="http://www.mpi.nl/imdi-archive-link" target="_blank"></a>
-            Element labelText = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "text");
+            KinElement labelText = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "text");
             labelText.setAttribute("x", Double.toString(symbolSize * 1.5));
             labelText.setAttribute("y", Integer.toString(textSpanCounter));
             labelText.setAttribute("fill", "black");
             labelText.setAttribute("stroke-width", "0");
             labelText.setAttribute("font-size", "14");
 
-            Text textNode = svgDiagram.doc.createTextNode("archive ref: ");
+            KinElement textNode = svgDiagram.doc.createTextNode("archive ref: ");
             labelText.appendChild(textNode);
             for (ExternalLink linkURI : currentNode.externalLinks) {
                 linkCounter++;
-                Element labelTagA = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "a");
+                KinElement labelTagA = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "a");
                 String linkUrl;
                 if (linkURI.getPidString() != null) {
                     linkUrl = "http://corpus1.mpi.nl/ds/imdi_browser/?openpath=" + linkURI.getPidString();

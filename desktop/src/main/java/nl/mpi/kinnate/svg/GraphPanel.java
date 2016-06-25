@@ -18,9 +18,8 @@
  */
 package nl.mpi.kinnate.svg;
 
+import nl.mpi.kinnate.kindata.KinPoint;
 import java.awt.BorderLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -51,6 +50,7 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.IndexerParameters;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import nl.mpi.kinnate.kindata.KinRectangle;
 import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinType;
@@ -200,20 +200,22 @@ public class GraphPanel extends JPanel implements SavePanel {
         }
         try {
             svgDiagram.readSvg(svgFilePath.toString());
-            svgCanvas.setDocument(((KinDocumentImpl)svgDiagram.doc).getDoc());
-            symbolGraphic = new SymbolGraphic(((KinDocumentImpl)svgDiagram.doc).getDoc());
-            dataStoreSvg = DataStoreSvg.loadDataFromSvg(((KinDocumentImpl)svgDiagram.doc).getDoc());
+            svgCanvas.setDocument(((KinDocumentImpl) svgDiagram.doc).getDoc());
+            symbolGraphic = new SymbolGraphic(((KinDocumentImpl) svgDiagram.doc).getDoc());
+            dataStoreSvg = DataStoreSvg.loadDataFromSvg(((KinDocumentImpl) svgDiagram.doc).getDoc());
             if (dataStoreSvg.indexParameters == null) {
                 dataStoreSvg.setDefaults();
             }
             requiresSave = false;
-            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(((KinDocumentImpl)svgDiagram.doc), this.svgDiagram.svgNameSpace));
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(((KinDocumentImpl) svgDiagram.doc), this.svgDiagram.svgNameSpace));
 //            if (dataStoreSvg.graphData == null) {
 //                return null;
 //            }
         } catch (SAXIOException exception) {
             dialogHandler.addMessageDialogToQueue("Cannot open the diagram: " + exception.getMessage(), "Open Diagram");
         } catch (IOException exception) {
+            dialogHandler.addMessageDialogToQueue("Cannot open the diagram: " + exception.getMessage(), "Open Diagram");
+        } catch (KinElementException exception) {
             dialogHandler.addMessageDialogToQueue("Cannot open the diagram: " + exception.getMessage(), "Open Diagram");
         }
 //        svgCanvas.setSVGDocument(doc);
@@ -223,10 +225,12 @@ public class GraphPanel extends JPanel implements SavePanel {
     public void generateDefaultSvg() {
         try {
             svgDiagram.generateDefaultSvg(new DefaultSorter());
-            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(((KinDocumentImpl)svgDiagram.doc), svgDiagram.svgNameSpace));
-            svgCanvas.setSVGDocument(((KinDocumentImpl)svgDiagram.doc).getDoc());
-            symbolGraphic = new SymbolGraphic(((KinDocumentImpl)svgDiagram.doc).getDoc());
+            dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(((KinDocumentImpl) svgDiagram.doc), svgDiagram.svgNameSpace));
+            svgCanvas.setSVGDocument(((KinDocumentImpl) svgDiagram.doc).getDoc());
+            symbolGraphic = new SymbolGraphic(((KinDocumentImpl) svgDiagram.doc).getDoc());
         } catch (IOException exception) {
+            BugCatcherManager.getBugCatcher().logError(exception);
+        } catch (KinElementException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
         }
     }
@@ -237,9 +241,9 @@ public class GraphPanel extends JPanel implements SavePanel {
             selectedGroupId.clear();
             svgUpdateHandler.clearHighlights();
             // make sure that any data changes such as the title/description in the kin term groups get updated into the file on save
-            dataStoreSvg.storeAllData(((KinDocumentImpl)svgDiagram.doc).getDoc());
+            dataStoreSvg.storeAllData(svgDiagram.doc);
             // set up input and output
-            DOMSource dOMSource = new DOMSource(((KinDocumentImpl)svgDiagram.doc).getDoc());
+            DOMSource dOMSource = new DOMSource(((KinDocumentImpl) svgDiagram.doc).getDoc());
             FileOutputStream fileOutputStream = new FileOutputStream(svgFile);
             StreamResult xmlOutput = new StreamResult(fileOutputStream);
             // configure transformer
@@ -261,6 +265,9 @@ public class GraphPanel extends JPanel implements SavePanel {
         } catch (TransformerFactoryConfigurationError exception) {
             logger.warn("failed to save svg", exception);
             throw new SaveExeption(exception.getMessage());
+        } catch (KinElementException exception) {
+            logger.warn("failed to save svg", exception);
+            throw new SaveExeption(exception.getMessage());
         }
     }
 
@@ -271,7 +278,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                 throw new SaveExeption("Digram must be saved before screenshots can be made.");
             }
             // set up input and output
-            DOMSource dOMSource = new DOMSource(((KinDocumentImpl)svgDiagram.doc).getDoc());
+            DOMSource dOMSource = new DOMSource(((KinDocumentImpl) svgDiagram.doc).getDoc());
             final File captureSvgFile = new File(svgFile.getParentFile(), svgFile.getName().substring(0, svgFile.getName().length() - 4) + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".svg");
             FileOutputStream fileOutputStream = new FileOutputStream(captureSvgFile);
             StreamResult xmlOutput = new StreamResult(fileOutputStream);
@@ -351,32 +358,32 @@ public class GraphPanel extends JPanel implements SavePanel {
     }
 
     public void panToSelected(UniqueIdentifier[] targetIdentifiers) {
-        Rectangle selectionSize = null;
+        KinRectangle selectionSize = null;
         for (UniqueIdentifier currentIdentifier : targetIdentifiers) {
-            Point currentPoint = svgDiagram.entitySvg.getEntityLocationOffset(currentIdentifier);
+            KinPoint currentPoint = svgDiagram.entitySvg.getEntityLocationOffset(currentIdentifier);
             if (currentPoint != null) {
                 if (selectionSize == null) {
-                    selectionSize = new Rectangle(currentPoint.x, currentPoint.y, 1, 1);
+                    selectionSize = new KinRectangle(currentPoint.x, currentPoint.y, 1, 1);
                 } else {
                     selectionSize.add(currentPoint);
                 }
             }
         }
-        final Rectangle selectionRect = selectionSize;
+        final KinRectangle selectionRect = selectionSize;
 //        if (selectionRect != null) {
 //            System.out.println("selectionRect: " + selectionRect.toString());
 //            addTestRect(selectionRect, 0);
 //        }
-        Rectangle renderRectScreen = svgCanvas.getBounds();
+        KinRectangle renderRectScreen = new KinRectangle(svgCanvas.getBounds().x, svgCanvas.getBounds().y, svgCanvas.getBounds().width, svgCanvas.getBounds().height);
 //        System.out.println("getBounds: "+graphPanel.svgCanvas.getBounds().toString());
 //        System.out.println("getRenderRect: "+graphPanel.svgCanvas.getRenderRect().toString());
 //        System.out.println("getVisibleRect: "+graphPanel.svgCanvas.getVisibleRect().toString());
 //        System.out.println("renderRectScreen:" + renderRectScreen.toString());
 
-        Element labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
-        final SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
+        KinElement labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
+//        final SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
         // todo: should this be moved into the svg thread?
-        final Rectangle renderRectDocument = svgUpdateHandler.getRectOnDocument(renderRectScreen, labelGroupLocatable);
+        final KinRectangle renderRectDocument = svgUpdateHandler.getRectOnDocument(renderRectScreen, labelGroup);
 //        System.out.println("renderRectDocument: " + renderRectDocument);
 
 //        SVGOMPoint pointOnDocument = getPointOnDocument(new Point(0, 0), labelGroupLocatable);
@@ -395,7 +402,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                         final double offsetX = renderRectDocument.getCenterX() - selectionRect.getCenterX();
                         final double offsetY = renderRectDocument.getCenterY() - selectionRect.getCenterY();
 //                        System.out.println("offset: " + offsetX + ":" + offsetY);
-//                        SVGOMPoint offsetOnScreen = getPointOnDocument(new Point((int) offsetX, (int) offsetY), labelGroupLocatable);
+//                        SVGOMPoint offsetOnScreen = getPointOnDocument(new KinPoint((int) offsetX, (int) offsetY), labelGroupLocatable);
 //                        System.out.println("screen offset: " + offsetOnScreen.getX() + " : " + offsetOnScreen.getY());
 //                        at.translate(offsetOnScreen.getX(), offsetOnScreen.getY());
                         at.translate((offsetX / 2) * scaleFactor, (offsetY / 2) * scaleFactor);
@@ -410,57 +417,65 @@ public class GraphPanel extends JPanel implements SavePanel {
         }
     }
 
-    public void addTestRect(final Rectangle testRect, int rectangleID) {
+    public void addTestRect(final KinRectangle testRect, int rectangleID) {
         UpdateManager updateManager = svgCanvas.getUpdateManager();
         final String rectangleName = "SelectionBorder" + rectangleID;
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    System.out.println("selectionRect: " + testRect);
-                    Element pageBorderNode = svgDiagram.doc.getElementById(rectangleName);
-                    if (pageBorderNode == null) {
-                        Element labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
-                        pageBorderNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
-                        pageBorderNode.setAttribute("id", rectangleName);
-                        pageBorderNode.setAttribute("fill", "none");
+                    try {
+                        System.out.println("selectionRect: " + testRect);
+                        KinElement pageBorderNode = svgDiagram.doc.getElementById(rectangleName);
+                        if (pageBorderNode == null) {
+                            KinElement labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
+                            pageBorderNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
+                            pageBorderNode.setAttribute("id", rectangleName);
+                            pageBorderNode.setAttribute("fill", "none");
+                            pageBorderNode.setAttribute("x", Float.toString(testRect.x - 20));
+                            pageBorderNode.setAttribute("y", Float.toString(testRect.y - 20));
+                            pageBorderNode.setAttribute("width", Float.toString(testRect.width + 40));
+                            pageBorderNode.setAttribute("height", Float.toString(testRect.height + 40));
+                            pageBorderNode.setAttribute("stroke-width", "1");
+                            pageBorderNode.setAttribute("stroke", "green");
+                            labelGroup.appendChild(pageBorderNode);
+                        }
                         pageBorderNode.setAttribute("x", Float.toString(testRect.x - 20));
                         pageBorderNode.setAttribute("y", Float.toString(testRect.y - 20));
                         pageBorderNode.setAttribute("width", Float.toString(testRect.width + 40));
                         pageBorderNode.setAttribute("height", Float.toString(testRect.height + 40));
-                        pageBorderNode.setAttribute("stroke-width", "1");
-                        pageBorderNode.setAttribute("stroke", "green");
-                        labelGroup.appendChild(pageBorderNode);
+                        System.out.println("pageBorderNode:" + pageBorderNode);
+                    } catch (KinElementException exception) {
+                        logger.warn("Error, modifying the SVG.", exception);
                     }
-                    pageBorderNode.setAttribute("x", Float.toString(testRect.x - 20));
-                    pageBorderNode.setAttribute("y", Float.toString(testRect.y - 20));
-                    pageBorderNode.setAttribute("width", Float.toString(testRect.width + 40));
-                    pageBorderNode.setAttribute("height", Float.toString(testRect.height + 40));
-                    System.out.println("pageBorderNode:" + pageBorderNode);
                 }
             });
         }
     }
 
-    public void updateMouseDot(final Point currentLocation) {
+    public void updateMouseDot(final KinPoint currentLocation) {
 //        this is only used to test the screen to document transform
         UpdateManager updateManager = svgCanvas.getUpdateManager();
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    Element labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
-                    Element mouseDotElement = svgDiagram.doc.getElementById("MouseDot");
-                    if (mouseDotElement == null) {
-                        mouseDotElement = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
-                        mouseDotElement.setAttribute("id", "MouseDot");
-                        mouseDotElement.setAttribute("r", "5");
-                        mouseDotElement.setAttribute("fill", "blue");
-                        mouseDotElement.setAttribute("stroke", "none");
-                        labelGroup.appendChild(mouseDotElement);
+                    try {
+                        KinElement labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
+                        KinElement mouseDotElement = svgDiagram.doc.getElementById("MouseDot");
+                        if (mouseDotElement == null) {
+                            mouseDotElement = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
+                            mouseDotElement.setAttribute("id", "MouseDot");
+                            mouseDotElement.setAttribute("r", "5");
+                            mouseDotElement.setAttribute("fill", "blue");
+                            mouseDotElement.setAttribute("stroke", "none");
+                            labelGroup.appendChild(mouseDotElement);
+                        }
+//                        SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
+                        SVGOMPoint pointOnDocument = svgUpdateHandler.getPointOnDocument(currentLocation, labelGroup);
+                        mouseDotElement.setAttribute("cx", Float.toString(pointOnDocument.getX()));
+                        mouseDotElement.setAttribute("cy", Float.toString(pointOnDocument.getY()));
+                    } catch (KinElementException exception) {
+                        logger.warn("Error, modifying the SVG.", exception);
                     }
-                    SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
-                    SVGOMPoint pointOnDocument = svgUpdateHandler.getPointOnDocument(currentLocation, labelGroupLocatable);
-                    mouseDotElement.setAttribute("cx", Float.toString(pointOnDocument.getX()));
-                    mouseDotElement.setAttribute("cy", Float.toString(pointOnDocument.getY()));
                 }
             });
         }
@@ -484,13 +499,17 @@ public class GraphPanel extends JPanel implements SavePanel {
                 relationThreadRunning = true;
                 updateManager.getUpdateRunnableQueue().invokeLater(
                         new Runnable() {
-                            public void run() {
-                                svgUpdateHandler.updateMouseDrag(selectedGroupId, updateDragNodeXLocal, updateDragNodeYLocal);
-                                synchronized (svgUpdateHandler) {
-                                    relationThreadRunning = false;
-                                }
-                            }
+                    public void run() {
+                        try {
+                            svgUpdateHandler.updateMouseDrag(selectedGroupId, updateDragNodeXLocal, updateDragNodeYLocal);
+                        } catch (KinElementException exception) {
+                            logger.warn("Error, modifying the SVG.", exception);
                         }
+                        synchronized (svgUpdateHandler) {
+                            relationThreadRunning = false;
+                        }
+                    }
+                }
                 );
             }
         }
@@ -501,7 +520,11 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    svgUpdateHandler.removeSelectionRectA();
+                    try {
+                        svgUpdateHandler.removeSelectionRectA();
+                    } catch (KinElementException exception) {
+                        logger.warn("Error, modifying the SVG.", exception);
+                    }
                 }
             });
         }
@@ -516,9 +539,12 @@ public class GraphPanel extends JPanel implements SavePanel {
                 threadRunning = true;
                 updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                     public void run() {
-
-                        final Rectangle panelBounds = svgCanvas.getBounds();
-                        svgUpdateHandler.updateDragNodeI(selectedGroupId, updateDragNodeXLocal, updateDragNodeYLocal, panelBounds);
+                        try {
+                            final KinRectangle panelBounds = new KinRectangle(svgCanvas.getBounds().x, svgCanvas.getBounds().y, svgCanvas.getBounds().width, svgCanvas.getBounds().height);
+                            svgUpdateHandler.updateDragNodeI(selectedGroupId, updateDragNodeXLocal, updateDragNodeYLocal, panelBounds);
+                        } catch (KinElementException exception) {
+                            logger.warn("Error, modifying the SVG.", exception);
+                        }
                         synchronized (svgUpdateHandler) {
                             threadRunning = false;
                         }
@@ -534,20 +560,28 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    final Rectangle panelBounds = svgCanvas.getBounds();
-                    svgUpdateHandler.updateCanvasSizeI(resetZoom, panelBounds);
+                    try {
+                        final KinRectangle panelBounds = new KinRectangle(svgCanvas.getBounds().x, svgCanvas.getBounds().y, svgCanvas.getBounds().width, svgCanvas.getBounds().height);
+                        svgUpdateHandler.updateCanvasSizeI(resetZoom, panelBounds);
+                    } catch (KinElementException exception) {
+                        logger.warn("Error, modifying the SVG.", exception);
+                    }
                 }
             });
         }
     }
 
-    public void addGraphics(final SvgUpdateHandler.GraphicsTypes graphicsType, final Point locationOnScreen) {
+    public void addGraphics(final SvgUpdateHandler.GraphicsTypes graphicsType, final KinPoint locationOnScreen) {
         UpdateManager updateManager = svgCanvas.getUpdateManager();
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    final Rectangle panelBounds = svgCanvas.getBounds();
-                    svgUpdateHandler.addGraphicsI(graphicsType, locationOnScreen, mouseListenerSvg, panelBounds);
+                    try {
+                        final KinRectangle panelBounds = new KinRectangle(svgCanvas.getBounds().x, svgCanvas.getBounds().y, svgCanvas.getBounds().width, svgCanvas.getBounds().height);
+                        svgUpdateHandler.addGraphicsI(graphicsType, locationOnScreen, mouseListenerSvg, panelBounds);
+                    } catch (KinElementException exception) {
+                        logger.warn("Error, modifying the SVG.", exception);
+                    }
                 }
             });
         }
@@ -558,19 +592,27 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    svgUpdateHandler.deleteGraphicsI(uniqueIdentifier);
+                    try {
+                        svgUpdateHandler.deleteGraphicsI(uniqueIdentifier);
+                    } catch (KinElementException exception) {
+                        logger.warn("Error, modifying the SVG.", exception);
+                    }
                     setRequiresSave();
                 }
             });
         }
     }
 
-    protected void drawSelectionRect(final Point startLocation, final Point currentLocation) {
+    protected void drawSelectionRect(final KinPoint startLocation, final KinPoint currentLocation) {
         UpdateManager updateManager = svgCanvas.getUpdateManager();
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    svgUpdateHandler.drawSelectionRectI(startLocation, currentLocation);
+                    try {
+                        svgUpdateHandler.drawSelectionRectI(startLocation, currentLocation);
+                    } catch (KinElementException exception) {
+                        logger.warn("Error, modifying the SVG.", exception);
+                    }
                 }
             });
         }
@@ -612,7 +654,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //        dataStoreSvg.egoIdentifierSet.removeAll(Arrays.asList(egoIdentifierArray));
 //    }
 
-    protected void updateSvgSelectionHighlights() {
+    protected void updateSvgSelectionHighlights() throws KinElementException {
         if (kinDiagramPanel != null) {
             kinDiagramPanel.setStatusBarText(selectedGroupId.size() + " selected of " + kinDiagramPanel.getGraphEntities().length + "");
             String kinTypeStrings = "";
@@ -630,13 +672,17 @@ public class GraphPanel extends JPanel implements SavePanel {
         if (updateManager != null) { // todo: there may be issues related to the updateManager being null, this should be looked into if symptoms arise.
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    svgUpdateHandler.updateSvgSelectionHighlightsI(selectedGroupId, mouseListenerSvg);
+                    try {
+                        svgUpdateHandler.updateSvgSelectionHighlightsI(selectedGroupId, mouseListenerSvg);
+                    } catch (KinElementException exception) {
+                        logger.warn("Error, modifying the SVG.", exception);
+                    }
                 }
             });
         }
     }
 
-    public void setSelectedIds(UniqueIdentifier[] uniqueIdentifiers) {
+    public void setSelectedIds(UniqueIdentifier[] uniqueIdentifiers) throws KinElementException {
         selectedGroupId.clear();
         selectedGroupId.addAll(Arrays.asList(uniqueIdentifiers));
         updateSvgSelectionHighlights();
@@ -691,8 +737,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 //            return entityElement.getAttributeNS(DataStoreSvg.svgDiagram.kinDataNameSpaceLocation, "path");
 //        }
 //    }
-    public String getKinTypeForElementId(UniqueIdentifier elementId) {
-        Element entityElement = svgDiagram.doc.getElementById(elementId.getAttributeIdentifier());
+    public String getKinTypeForElementId(UniqueIdentifier elementId) throws KinElementException {
+        KinElement entityElement = svgDiagram.doc.getElementById(elementId.getAttributeIdentifier());
         if (entityElement != null) {
             return entityElement.getAttributeNS(SvgDiagram.kinDataNameSpaceLocation, "kintype");
         } else {
@@ -705,7 +751,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 //    Element svgRoot = svgDiagram.doc.getDocumentElement();
 //    String widthString = svgRoot.getAttribute("width");
 //    String heightString = svgRoot.getAttribute("height");
-//    return new Point(Integer.parseInt(widthString), Integer.parseInt(widthString));
+//    return new KinPoint(Integer.parseInt(widthString), Integer.parseInt(widthString));
     }
 
     public void resetZoom() {
@@ -743,7 +789,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         // all entity locations are now stored as preferred locations when the graph sorter completes
 //        // change the entities stored location into a preferred location rather than a fixed location
 //        for (UniqueIdentifier uniqueIdentifier : selectedIdentifiers) {
-//            final Point entityLocation = svgDiagram.entitySvg.getEntityLocation(uniqueIdentifier);
+//            final KinPoint entityLocation = svgDiagram.entitySvg.getEntityLocation(uniqueIdentifier);
 //            if (entityLocation != null) {
 //                dataStoreSvg.graphData.setPreferredEntityLocation(new UniqueIdentifier[]{uniqueIdentifier}, entityLocation);
 //            }
@@ -763,7 +809,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
                     try {
-                        final Rectangle panelBounds = svgCanvas.getBounds();
+                        final KinRectangle panelBounds = new KinRectangle(svgCanvas.getBounds().x, svgCanvas.getBounds().y, svgCanvas.getBounds().width, svgCanvas.getBounds().height);
                         svgUpdateHandler.drawEntities(panelBounds);
                         resetZoom(resetZoom);
                     } catch (DOMException exception) {
@@ -773,6 +819,8 @@ public class GraphPanel extends JPanel implements SavePanel {
                         dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
                     } catch (UnsortablePointsException exception) {
                         dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
+                    } catch (KinElementException exception) {
+                        dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, modifying the SVG.");
                     }
                     // todo: this repaint might not resolve all cases of redraw issues
                     svgCanvas.repaint(); // make sure no remnants are left over after the last redraw
@@ -780,7 +828,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             });
         } else {
             try {   // on the first draw there will be on update manager
-                final Rectangle panelBounds = svgCanvas.getBounds();
+                final KinRectangle panelBounds = new KinRectangle(svgCanvas.getBounds().x, svgCanvas.getBounds().y, svgCanvas.getBounds().width, svgCanvas.getBounds().height);
                 svgUpdateHandler.drawEntities(panelBounds);
                 resetLayout(resetZoom);
             } catch (DOMException exception) {
@@ -790,6 +838,8 @@ public class GraphPanel extends JPanel implements SavePanel {
                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Old or erroneous format detected");
             } catch (UnsortablePointsException exception) {
                 dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, the graph is unsortable.");
+            } catch (KinElementException exception) {
+                dialogHandler.addMessageDialogToQueue(exception.getMessage(), "Error, modifying the SVG.");
             }// todo: this repaint might not resolve all cases of redraw issues
             svgCanvas.repaint(); // make sure no remnants are left over after the last redraw
         }

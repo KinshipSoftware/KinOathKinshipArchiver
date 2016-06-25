@@ -33,7 +33,7 @@ import org.w3c.dom.Node;
  */
 public class RelationSvg {
 
-    private void addUseNode(KinDocument doc, String svgNameSpace, Element targetGroup, String targetDefId) {
+    private void addUseNode(KinDocument doc, String svgNameSpace, KinElement targetGroup, String targetDefId) throws KinElementException {
         String useNodeId = targetDefId + "use";
         // todo: look into this ConcurrentModificationException
         /*
@@ -48,11 +48,11 @@ public class RelationSvg {
          at org.apache.batik.util.RunnableQueue.run(RunnableQueue.java:237)
          at java.lang.Thread.run(Thread.java:680)
          */
-        Node useNodeOld = doc.getElementById(useNodeId);
+        KinElement useNodeOld = doc.getElementById(useNodeId);
         if (useNodeOld != null) {
             useNodeOld.getParentNode().removeChild(useNodeOld);
         }
-        Element useNode = doc.createElementNS(svgNameSpace, "use");
+        KinElement useNode = doc.createElementNS(svgNameSpace, "use");
         useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + targetDefId); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
         //                    useNode.setAttribute("href", "#" + lineIdString);
         useNode.setAttribute("id", useNodeId);
@@ -99,16 +99,16 @@ public class RelationSvg {
 //        }
 //
 //    }
-    public void createRelationElements(SvgDiagram svgDiagram, RelationRecordTable relationRecords, Element relationGroupNode) throws OldFormatException {
+    public void createRelationElements(SvgDiagram svgDiagram, RelationRecordTable relationRecords, KinElement relationGroupNode) throws OldFormatException, KinElementException {
         relationRecords.adjustLines(svgDiagram);
 
         for (RelationRecord relationRecord : relationRecords.getAllRecords()) {
-            Element groupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
+            KinElement groupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
             groupNode.setAttribute("id", relationRecord.idString);
-            Element defsNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "defs");
+            KinElement defsNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "defs");
 //            new DataStoreSvg().storeRelationParameters(graphPanel.doc, groupNode, relationRecord.directedRelation, relationRecord.curveLineOrientation, relationRecord.leftEntity.getUniqueIdentifier(), relationRecord.rightEntity.getUniqueIdentifier());
             boolean addedRelationLine = false;
-            Element linkLine;
+            KinElement linkLine;
             linkLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "path");
             linkLine.setAttribute("d", relationRecord.getPathPointsString());
             if (relationRecord.lineDash > 0) {
@@ -131,7 +131,7 @@ public class RelationSvg {
                 }
 //                System.out.println("lineMarkerOffset: " + lineMarkerOffset);
                 // add the start line marker
-                Element startMarker = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "marker");
+                KinElement startMarker = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "marker");
                 final String startMarkerId = relationRecord.lineIdString + "StartMarker";
                 startMarker.setAttribute("id", startMarkerId);
                 startMarker.setAttribute("fill", linkLine.getAttribute("stroke"));
@@ -141,12 +141,12 @@ public class RelationSvg {
                 startMarker.setAttribute("refY", "6");
                 startMarker.setAttribute("markerWidth", "3");
                 startMarker.setAttribute("markerHeight", "3");
-                Element startMarkerNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
+                KinElement startMarkerNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
                 startMarkerNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + "StartMarker");
                 startMarker.appendChild(startMarkerNode);
                 defsNode.appendChild(startMarker);
                 // add the end line marker
-                Element endMarker = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "marker");
+                KinElement endMarker = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "marker");
                 final String endMarkerId = relationRecord.lineIdString + "EndMarker";
                 endMarker.setAttribute("id", endMarkerId);
                 endMarker.setAttribute("fill", linkLine.getAttribute("stroke"));
@@ -157,7 +157,7 @@ public class RelationSvg {
                 endMarker.setAttribute("markerWidth", "4");
                 endMarker.setAttribute("markerHeight", "3");
                 endMarker.setAttribute("orient", "auto");
-                Element endMarkerNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
+                KinElement endMarkerNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
                 endMarkerNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + "EndMarker");
                 endMarker.appendChild(endMarkerNode);
                 defsNode.appendChild(endMarker);
@@ -209,7 +209,7 @@ public class RelationSvg {
         }
     }
 
-    public void updateRelationLines(SvgDiagram svgDiagram, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) {
+    public void updateRelationLines(SvgDiagram svgDiagram, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) throws KinElementException {
         if (relationRecords == null) {
             // no relations therefore nothing to do here
             return;
@@ -217,11 +217,11 @@ public class RelationSvg {
         relationRecords.adjustLines(svgDiagram);
 //        graphPanel.lineLookUpTable.addLoops();
         // todo: if an entity is above its ancestor then this must be corrected, if the ancestor data is stored in the relationLine attributes then this would be a good place to correct this
-        Element relationGroup = svgDiagram.doc.getElementById("RelationGroup");
+        KinElement relationGroup = svgDiagram.doc.getElementById("RelationGroup");
 //        createRelationElements(graphPanel, relationRecords, lineLookUpTable, relationGroup);
-        for (Node currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
+        for (KinElement currentChild = relationGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
             if ("g".equals(currentChild.getLocalName())) {
-                Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
+                String idAttrubite = currentChild.getAttribute("id");
                 //System.out.println("idAttrubite: " + idAttrubite.getNodeValue());
 //                try {
 //                    DataStoreSvg.GraphRelationData graphRelationData = new DataStoreSvg().getEntitiesForRelations(currentChild);
@@ -232,8 +232,8 @@ public class RelationSvg {
 //                        if (draggedNodeIds.contains(graphRelationData.egoNodeId) || draggedNodeIds.contains(graphRelationData.alterNodeId)) {
                 // todo: update the relation lines
                 //System.out.println("needs update on: " + idAttrubite.getNodeValue());
-                String lineElementId = idAttrubite.getNodeValue() + "Line";
-                Element relationLineElement = svgDiagram.doc.getElementById(lineElementId);
+                String lineElementId = idAttrubite + "Line";
+                KinElement relationLineElement = svgDiagram.doc.getElementById(lineElementId);
                 if (relationLineElement != null) {
                     //System.out.println("type: " + relationLineElement.getLocalName());
 //                            float[] egoSymbolPoint;
@@ -270,7 +270,7 @@ public class RelationSvg {
                         RelationRecord relationRecord = relationRecords.getRecord(lineElementId); //new RelationRecord(graphRelationData.curveLineOrientation, hSpacing, vSpacing, egoX, egoY, alterX, alterY);
                         relationLineElement.setAttribute("d", relationRecord.getPathPointsString());
                     }
-                    addUseNode(svgDiagram.doc, svgDiagram.svgNameSpace, (Element) currentChild, lineElementId);
+                    addUseNode(svgDiagram.doc, svgDiagram.svgNameSpace, (KinElement) currentChild, lineElementId);
 //                    updateLabelNode(graphPanel.doc, graphPanel.svgNameSpace, lineElementId, idAttrubite.getNodeValue());
                 }
 //                    }

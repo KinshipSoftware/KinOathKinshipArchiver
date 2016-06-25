@@ -20,7 +20,6 @@ package nl.mpi.kinnate.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -58,6 +57,7 @@ import nl.mpi.kinnate.entityindexer.QueryParser;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import nl.mpi.kinnate.kindata.KinPoint;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting;
 import nl.mpi.kinnate.kindata.VisiblePanelSetting.PanelType;
 import nl.mpi.kinnate.kintypestrings.ImportRequiredException;
@@ -68,12 +68,15 @@ import nl.mpi.kinnate.projects.ProjectManager;
 import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.svg.DataStoreSvg.DiagramMode;
 import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.svg.KinElementException;
 import nl.mpi.kinnate.svg.MouseListenerSvg;
 import nl.mpi.kinnate.svg.SaveExeption;
 import nl.mpi.kinnate.ui.menu.DocumentNewMenu.DocumentType;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinoath.graph.DefaultSorter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Document : KinTypeStringTestPanel Created on : Sep 29, 2010, 12:52:01 PM
@@ -81,6 +84,7 @@ import nl.mpi.kinoath.graph.DefaultSorter;
  */
 public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePanel, ArbilDataNodeContainer {
 
+    private final static Logger logger = LoggerFactory.getLogger(GraphPanel.class);
     private static final ResourceBundle widgets = ResourceBundle.getBundle("nl/mpi/kinoath/localisation/Widgets");
     private ProjectManager projectManager;
     private EntityCollection entityCollection;
@@ -559,7 +563,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                     });
                     graphThreadRunning = false;
                     if (uniqueIdentifiers != null) {
-                        graphPanel.setSelectedIds(uniqueIdentifiers);
+                        try {
+                            graphPanel.setSelectedIds(uniqueIdentifiers);
+                        } catch (KinElementException exception) {
+                            logger.warn("Error, modifying the SVG.", exception);
+                        }
                     }
                 }
             }.start();
@@ -632,9 +640,9 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
         }
     }
 
-    public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray, Point screenLocation) {
+    public void addRequiredNodes(UniqueIdentifier[] egoIdentifierArray, KinPoint screenLocation) {
         if (screenLocation != null) {
-            Point defaultLocation = graphPanel.svgUpdateHandler.getEntityPointOnDocument(screenLocation);
+            KinPoint defaultLocation = graphPanel.svgUpdateHandler.getEntityPointOnDocument(screenLocation);
             graphPanel.getSVGDocument().graphData.setPreferredEntityLocation(egoIdentifierArray, defaultLocation);
         }
         graphPanel.dataStoreSvg.requiredEntities.addAll(Arrays.asList(egoIdentifierArray));
@@ -725,7 +733,11 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
     }
 
     public void doActionCommand(MouseListenerSvg.ActionCode actionCode) {
-        graphPanel.mouseListenerSvg.performMenuAction(actionCode, graphPanel.getSVGDocument().graphData);
+        try {
+            graphPanel.mouseListenerSvg.performMenuAction(actionCode, graphPanel.getSVGDocument().graphData);
+        } catch (KinElementException exception) {
+            logger.warn("Error, modifying the SVG.", exception);
+        }
     }
 
     public GraphPanel getGraphPanel() {

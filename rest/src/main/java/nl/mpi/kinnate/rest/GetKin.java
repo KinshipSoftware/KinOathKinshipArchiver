@@ -23,7 +23,6 @@ package nl.mpi.kinnate.rest;
  *  Created on : Jun 21, 2011, 11:55:37 AM
  *  Author     : Peter Withers
  */
-import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +36,7 @@ import javax.ws.rs.core.Response;
 import nl.mpi.kinnate.export.PedigreePackageExport;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.KinRectangle;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.kintypestrings.KinType;
@@ -44,6 +44,8 @@ import nl.mpi.kinnate.kintypestrings.KinTypeStringConverter;
 import nl.mpi.kinnate.kintypestrings.ParserHighlight;
 import nl.mpi.kinnate.svg.DiagramSettings;
 import nl.mpi.kinnate.svg.EntitySvg;
+import nl.mpi.kinnate.svg.KinDocument;
+import nl.mpi.kinnate.svg.KinElementException;
 import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.svg.SvgDiagram;
 import nl.mpi.kinnate.svg.SvgUpdateHandler;
@@ -52,8 +54,6 @@ import nl.mpi.kinoath.graph.DefaultSorter;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
-import org.w3c.dom.Document;
-import org.w3c.dom.svg.SVGDocument;
 
 //@Stateless
 @Path("/getkin")
@@ -96,7 +96,7 @@ public class GetKin {
     @GET
     @Produces("text/xml")
     @Path("/svg")
-    public Response getSVG(@QueryParam("kts") List<String> kintypeStrings) throws IOException, DOMException, OldFormatException, UnsortablePointsException {
+    public Response getSVG(@QueryParam("kts") List<String> kintypeStrings) throws IOException, DOMException, OldFormatException, UnsortablePointsException, KinElementException {
         EntityData[] entiryData = getEntityNodes(kintypeStrings);
 //        for (String kts : kintypeStrings) {
 //            System.out.println("kts" + kts);
@@ -172,14 +172,14 @@ public class GetKin {
             }
 
             @Override
-            public void storeAllData() {
+            public void storeAllData(KinDocument kinDocument) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         }, entitySvg);
         svgDiagram.generateDefaultSvg(new DefaultSorter());
         final SvgUpdateHandler svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
         svgDiagram.graphData.setEntitys(entiryData);
-        svgUpdateHandler.drawEntities(new Rectangle(800, 600));
+        svgUpdateHandler.drawEntities(new KinRectangle(800, 600));
 //        printNodeNames(svgDiagram.getDoc().getRootElement());
         return Response.ok(svgDiagram.getDoc()).header("Access-Control-Allow-Origin", "*").build();
     }

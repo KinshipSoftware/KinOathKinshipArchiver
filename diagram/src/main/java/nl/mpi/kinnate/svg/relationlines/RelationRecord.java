@@ -18,12 +18,12 @@
  */
 package nl.mpi.kinnate.svg.relationlines;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindata.KinPoint;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.svg.SvgDiagram;
@@ -60,13 +60,13 @@ public class RelationRecord {
     final private String dcrType;
     final private String customType;
 
-    public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, Point egoPoint, Point alterPoint, Point averageParentPassed) {
+    public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, KinPoint egoPoint, KinPoint alterPoint, KinPoint averageParentPassed) {
         this.dcrType = null;
         this.customType = null;
         lineRecord = setPolylinePointsAttribute(lineIdString, relationType, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y, averageParentPassed);
     }
 
-    public RelationRecord(RelationTypeDefinition.CurveLineOrientation curveLineOrientation, float hSpacing, float vSpacing, Point egoPoint, Point alterPoint) {
+    public RelationRecord(RelationTypeDefinition.CurveLineOrientation curveLineOrientation, float hSpacing, float vSpacing, KinPoint egoPoint, KinPoint alterPoint) {
         this.dcrType = null;
         this.customType = null;
         curveLinePoints = setPathPointsAttribute(curveLineOrientation, hSpacing, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y);
@@ -121,7 +121,7 @@ public class RelationRecord {
     // start caclulate the average parent position
 //    private HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>> parentIdentifiers = new HashMap<UniqueIdentifier, HashSet<UniqueIdentifier>>();
 
-    public Point getAverageParentLocation(HashSet<UniqueIdentifier> parentIdSet) {
+    public KinPoint getAverageParentLocation(HashSet<UniqueIdentifier> parentIdSet) {
         // note that getAverageParentLocation(EntityData entityData) must be called at least once for each entity to poputlate parentIdentifiers
         Integer maxY = null;
         int averageX = 0;
@@ -129,7 +129,7 @@ public class RelationRecord {
 //        final HashSet<UniqueIdentifier> parentIdSet = parentIdentifiers.get(entityId);
         if (parentIdSet != null) {
             for (UniqueIdentifier parentIdentifier : parentIdSet) {
-                Point parentLoc = svgDiagram.entitySvg.getEntityLocationOffset(parentIdentifier);
+                KinPoint parentLoc = svgDiagram.entitySvg.getEntityLocationOffset(parentIdentifier);
                 if (maxY == null) {
                     maxY = parentLoc.y;
                 } else {
@@ -143,11 +143,11 @@ public class RelationRecord {
         if (maxY == null) {
             return null;
         } else {
-            return new Point(averageX, maxY);
+            return new KinPoint(averageX, maxY);
         }
     }
 
-    public Point getAverageParentLocation(EntityData entityData) {
+    public KinPoint getAverageParentLocation(EntityData entityData) {
         HashSet<UniqueIdentifier> identifierSet = new HashSet<UniqueIdentifier>();
         for (EntityRelation entityRelation : entityData.getAllRelations()) {
             if (entityRelation.getAlterNode() != null && entityRelation.getAlterNode().isVisible) {
@@ -165,9 +165,9 @@ public class RelationRecord {
     // end caclulate the average parent position
 
     public void updatePathPoints(LineLookUpTable lineLookUpTable) {
-        Point egoSymbolPoint;
-        Point alterSymbolPoint;
-        Point parentPoint = null;
+        KinPoint egoSymbolPoint;
+        KinPoint alterSymbolPoint;
+        KinPoint parentPoint = null;
         // the ancestral relations should already be unidirectional and duplicates should have been removed
         egoSymbolPoint = svgDiagram.entitySvg.getEntityLocationOffset(leftEntity.getUniqueIdentifier());
         alterSymbolPoint = svgDiagram.entitySvg.getEntityLocationOffset(rightEntity.getUniqueIdentifier());
@@ -230,18 +230,18 @@ public class RelationRecord {
 //                return new LineRecord(lineIdString, initialPointsList);
 //            } else {
 //                // this version is used when the relation drag handles are used
-////           return new LineLookUpTable.LineRecord(lineIdString, initialPointsList.toArray(new Point[]{}));
+////           return new LineLookUpTable.LineRecord(lineIdString, initialPointsList.toArray(new KinPoint[]{}));
 //                throw new UnsupportedOperationException("lineLookUpTable == null, this is not yet supported");
 //            } 
         }
 
     }
 
-    private LineRecord setPolylinePointsAttribute(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, Point averageParentPassed) {
+    private LineRecord setPolylinePointsAttribute(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, KinPoint averageParentPassed) {
         //float midY = (egoY + alterY) / 2;
         // todo: Ticket #1064 when an entity is above one that it should be below the line should make a zigzag to indicate it        
-        ArrayList<Point> initialPointsList = new ArrayList<Point>();
-        Point averageParent = null;
+        ArrayList<KinPoint> initialPointsList = new ArrayList<KinPoint>();
+        KinPoint averageParent = null;
         float midSpacing = vSpacing / 2;
 //        float parentSpacing = 10;
         float egoYmid;
@@ -251,7 +251,7 @@ public class RelationRecord {
             case ancestor:
                 if (averageParentPassed == null) {
                     // if no parent location has been provided then just use the current parent
-                    averageParent = new Point((int) alterX, (int) alterY);
+                    averageParent = new KinPoint((int) alterX, (int) alterY);
                 } else {
                     // todo: this is filtering out the parent location for non ancestor relations, but it would be more efficient to no get the parent location unless required
                     averageParent = averageParentPassed;
@@ -317,8 +317,8 @@ public class RelationRecord {
 //            }
 //        }
 
-        initialPointsList.add(new Point((int) egoX, (int) egoY));
-        initialPointsList.add(new Point((int) egoX, (int) egoYmid));
+        initialPointsList.add(new KinPoint((int) egoX, (int) egoY));
+        initialPointsList.add(new KinPoint((int) egoX, (int) egoYmid));
 
         if (averageParent != null) {
             // alter is the parent
@@ -328,22 +328,22 @@ public class RelationRecord {
             float lowerParentLineY = averageParent.y + midSpacing + 10;
 
             if (egoY >= averageParent.y + vSpacing) {
-                initialPointsList.add(new Point((int) egoX, (int) lowerParentLineY));
-                initialPointsList.add(new Point((int) averageParentX, (int) lowerParentLineY));
-                initialPointsList.add(new Point((int) averageParentX, (int) alterYmid));
+                initialPointsList.add(new KinPoint((int) egoX, (int) lowerParentLineY));
+                initialPointsList.add(new KinPoint((int) averageParentX, (int) lowerParentLineY));
+                initialPointsList.add(new KinPoint((int) averageParentX, (int) alterYmid));
             } else {
-                initialPointsList.add(new Point((int) centerParentX, (int) egoYmid));
-                initialPointsList.add(new Point((int) centerParentX, (int) lowerParentLineY));
-                initialPointsList.add(new Point((int) averageParentX, (int) lowerParentLineY));
-                initialPointsList.add(new Point((int) averageParentX, (int) alterYmid));
+                initialPointsList.add(new KinPoint((int) centerParentX, (int) egoYmid));
+                initialPointsList.add(new KinPoint((int) centerParentX, (int) lowerParentLineY));
+                initialPointsList.add(new KinPoint((int) averageParentX, (int) lowerParentLineY));
+                initialPointsList.add(new KinPoint((int) averageParentX, (int) alterYmid));
             }
         } else {
-            initialPointsList.add(new Point((int) centerX, (int) egoYmid));
-            initialPointsList.add(new Point((int) centerX, (int) alterYmid));
+            initialPointsList.add(new KinPoint((int) centerX, (int) egoYmid));
+            initialPointsList.add(new KinPoint((int) centerX, (int) alterYmid));
         }
         if (averageParentPassed == null) {
-            initialPointsList.add(new Point((int) alterX, (int) alterYmid));
-            initialPointsList.add(new Point((int) alterX, (int) alterY));
+            initialPointsList.add(new KinPoint((int) alterX, (int) alterYmid));
+            initialPointsList.add(new KinPoint((int) alterX, (int) alterY));
         } else {
             // the first and last segments are not moved when they overlap, so we add a final segment here so that the parent point line will be moved when overlapping 
             initialPointsList.add(initialPointsList.get(initialPointsList.size() - 1));

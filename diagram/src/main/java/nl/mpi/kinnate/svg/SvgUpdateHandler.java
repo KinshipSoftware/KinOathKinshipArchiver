@@ -18,13 +18,13 @@
  */
 package nl.mpi.kinnate.svg;
 
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashSet;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
+import nl.mpi.kinnate.kindata.KinPoint;
+import nl.mpi.kinnate.kindata.KinRectangle;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
@@ -34,9 +34,6 @@ import org.apache.batik.dom.svg.SVGOMPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGLocatable;
@@ -65,7 +62,7 @@ public class SvgUpdateHandler {
     private HashSet<UniqueIdentifier> highlightedIdentifiers = new HashSet<UniqueIdentifier>();
     public RelationRecordTable relationRecords;
     private int paddingDistance = 20;
-    private Rectangle dragSelectionRectOnDocument = null;
+    private KinRectangle dragSelectionRectOnDocument = null;
 
     public enum GraphicsTypes {
 
@@ -87,11 +84,11 @@ public class SvgUpdateHandler {
         this.svgDiagram = svgDiagram;
     }
 
-    public void clearHighlights() {
+    public void clearHighlights() throws KinElementException {
         removeRelationHighLights();
         for (UniqueIdentifier currentIdentifier : highlightedIdentifiers.toArray(new UniqueIdentifier[]{})) {
             // remove old highlights
-            Element existingHighlight = svgDiagram.doc.getElementById("highlight_" + currentIdentifier.getAttributeIdentifier());
+            KinElement existingHighlight = svgDiagram.doc.getElementById("highlight_" + currentIdentifier.getAttributeIdentifier());
             if (existingHighlight != null) {
                 existingHighlight.getParentNode().removeChild(existingHighlight);
             }
@@ -99,29 +96,29 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void removeRelationHighLights() {
+    private void removeRelationHighLights() throws KinElementException {
         // this must be only called from within a svg runnable
-        Element relationOldHighlightGroup = svgDiagram.doc.getElementById("RelationHighlightGroup");
+        KinElement relationOldHighlightGroup = svgDiagram.doc.getElementById("RelationHighlightGroup");
         if (relationOldHighlightGroup != null) {
             // remove the relation highlight group
             relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
         }
     }
 
-    private void removeEntityHighLights() {
-        for (Element entityHighlightGroup = svgDiagram.doc.getElementById("highlight"); entityHighlightGroup != null; entityHighlightGroup = svgDiagram.doc.getElementById("highlight")) {
+    private void removeEntityHighLights() throws KinElementException {
+        for (KinElement entityHighlightGroup = svgDiagram.doc.getElementById("highlight"); entityHighlightGroup != null; entityHighlightGroup = svgDiagram.doc.getElementById("highlight")) {
             entityHighlightGroup.getParentNode().removeChild(entityHighlightGroup);
         }
     }
 
-    private void createRelationLineHighlights(Element entityGroup, ArrayList<UniqueIdentifier> selectedGroupId) {
+    private void createRelationLineHighlights(KinElement entityGroup, ArrayList<UniqueIdentifier> selectedGroupId) throws KinElementException {
         // this is used to draw the highlighted relations for the selected entities
         // this must be only called from within a svg runnable
         removeRelationHighLights();
         if (relationRecords != null) {
             if (svgDiagram.getDiagramSettings().highlightRelationLines()) {
                 // add highlights for relation lines
-                Element relationHighlightGroup = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
+                KinElement relationHighlightGroup = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
                 relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
                 entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
                 // create new relation lines for each highlight in a separate group so that they can all be removed after the drag
@@ -129,14 +126,14 @@ public class SvgUpdateHandler {
                     final String lineWidth = Integer.toString(relationRecord.lineWidth);
                     final String pathPointsString = relationRecord.getPathPointsString();
                     // add a white background
-                    Element highlightBackgroundLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "path");
+                    KinElement highlightBackgroundLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "path");
                     highlightBackgroundLine.setAttribute("stroke-width", lineWidth);
                     highlightBackgroundLine.setAttribute("fill", "none");
                     highlightBackgroundLine.setAttribute("d", pathPointsString);
                     highlightBackgroundLine.setAttribute("stroke", "white");
                     relationHighlightGroup.appendChild(highlightBackgroundLine);
                     // add a blue dotted line
-                    Element highlightLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "path");
+                    KinElement highlightLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "path");
                     highlightLine.setAttribute("stroke-width", lineWidth);
                     highlightLine.setAttribute("fill", "none");
                     highlightLine.setAttribute("d", pathPointsString);
@@ -149,7 +146,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void updateDragRelationLines(Element entityGroup, float localDragNodeX, float localDragNodeY, ArrayList<UniqueIdentifier> selectedGroupId) {
+    private void updateDragRelationLines(KinElement entityGroup, float localDragNodeX, float localDragNodeY, ArrayList<UniqueIdentifier> selectedGroupId) throws KinElementException {
         // this is used to draw the lines for the drag handles when the user is creating relations
         // this must be only called from within a svg runnable
         RelationDragHandle localRelationDragHandle = relationDragHandle;
@@ -163,35 +160,35 @@ public class SvgUpdateHandler {
                 boolean entityConnection = false;
                 localRelationDragHandle.targetIdentifier = svgDiagram.entitySvg.getClosestEntity(new float[]{dragNodeX, dragNodeY}, 30, selectedGroupId);
                 if (localRelationDragHandle.targetIdentifier != null) {
-                    Point closestEntityPoint = svgDiagram.entitySvg.getEntityLocationOffset(localRelationDragHandle.targetIdentifier);
+                    KinPoint closestEntityPoint = svgDiagram.entitySvg.getEntityLocationOffset(localRelationDragHandle.targetIdentifier);
                     dragNodeX = closestEntityPoint.x;
                     dragNodeY = closestEntityPoint.y;
                     entityConnection = true;
                 }
 
-                Element relationHighlightGroup = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
+                KinElement relationHighlightGroup = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
                 relationHighlightGroup.setAttribute("id", "RelationHighlightGroup");
                 entityGroup.getParentNode().insertBefore(relationHighlightGroup, entityGroup);
                 float vSpacing = svgDiagram.graphPanelSize.getVerticalSpacing();
                 float hSpacing = svgDiagram.graphPanelSize.getHorizontalSpacing();
                 for (UniqueIdentifier uniqueIdentifier : selectedGroupId) {
                     String dragLineElementId = "dragLine-" + uniqueIdentifier.getAttributeIdentifier();
-                    Point egoSymbolPoint;// = svgDiagram.entitySvg.getEntityLocationOffset(uniqueIdentifier);
-                    Point parentPoint = null; // = svgDiagram.entitySvg.getAverageParentLocation(uniqueIdentifier);
-                    Point dragPoint;
+                    KinPoint egoSymbolPoint;// = svgDiagram.entitySvg.getEntityLocationOffset(uniqueIdentifier);
+                    KinPoint parentPoint = null; // = svgDiagram.entitySvg.getAverageParentLocation(uniqueIdentifier);
+                    KinPoint dragPoint;
 //
                     DataTypes.RelationType directedRelation = localRelationDragHandle.getRelationType();
                     if (directedRelation == DataTypes.RelationType.descendant) { // make sure the ancestral relations are unidirectional
-                        egoSymbolPoint = new Point((int) dragNodeX, (int) dragNodeY);
+                        egoSymbolPoint = new KinPoint((int) dragNodeX, (int) dragNodeY);
                         dragPoint = svgDiagram.entitySvg.getEntityLocationOffset(uniqueIdentifier);
 //                        parentPoint = dragPoint;
                         directedRelation = DataTypes.RelationType.ancestor;
                     } else {
                         egoSymbolPoint = svgDiagram.entitySvg.getEntityLocationOffset(uniqueIdentifier);
-                        dragPoint = new Point((int) dragNodeX, (int) dragNodeY);
+                        dragPoint = new KinPoint((int) dragNodeX, (int) dragNodeY);
                     }
                     // try creating a use node for the highlight (these use nodes do not get updated when a node is dragged and the colour attribute is ignored)
-//                                            Element useNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
+//                                            KinElement useNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
 //                                            useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
 //                                            useNode.setAttributeNS(null, "stroke", "blue");
 //                                            relationHighlightGroup.appendChild(useNode);
@@ -200,7 +197,7 @@ public class SvgUpdateHandler {
                     // as a comprimise these highlighs can be removed when a node is dragged
                     String svgLineType = "path"; // (DataTypes.isSanguinLine(directedRelation)) ? "polyline" : "path";
                     // add a white background
-                    Element highlightBackgroundLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, svgLineType);
+                    KinElement highlightBackgroundLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, svgLineType);
                     highlightBackgroundLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                     highlightBackgroundLine.setAttribute("fill", "none");
 //            highlightBackgroundLine.setAttribute("points", polyLineElement.getAttribute("points"));
@@ -214,7 +211,7 @@ public class SvgUpdateHandler {
                     highlightBackgroundLine.setAttribute("d", relationRecord.getPathPointsString());
                     relationHighlightGroup.appendChild(highlightBackgroundLine);
                     // add a blue dotted line
-                    Element highlightLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, svgLineType);
+                    KinElement highlightLine = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, svgLineType);
                     highlightLine.setAttribute("stroke-width", Integer.toString(EntitySvg.strokeWidth));
                     highlightLine.setAttribute("fill", "none");
 //            highlightLine.setAttribute("points", highlightBackgroundLine.getAttribute("points"));
@@ -224,7 +221,7 @@ public class SvgUpdateHandler {
                     highlightLine.setAttribute("stroke-dashoffset", "0");
                     relationHighlightGroup.appendChild(highlightLine);
                 }
-                Element symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
+                KinElement symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
                 symbolNode.setAttribute("cx", Float.toString(dragNodeX));
                 symbolNode.setAttribute("cy", Float.toString(dragNodeY));
                 if (entityConnection) {
@@ -244,10 +241,10 @@ public class SvgUpdateHandler {
 //        ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
-    protected void addRelationDragHandles(RelationTypeDefinition[] relationTypeDefinitions, Element highlightGroupNode, SVGRect bbox, int paddingDistance, EventListener mouseListenerSvg) {
+    protected void addRelationDragHandles(RelationTypeDefinition[] relationTypeDefinitions, KinElement highlightGroupNode, SVGRect bbox, int paddingDistance, EventListener mouseListenerSvg) throws KinElementException {
         // add the standard relation types
         for (DataTypes.RelationType relationType : new DataTypes.RelationType[]{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant, DataTypes.RelationType.union, DataTypes.RelationType.sibling}) {
-            Element symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
+            KinElement symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
             switch (relationType) {
                 case ancestor:
                     symbolNode.setAttribute("cy", Float.toString(bbox.getY() - paddingDistance));
@@ -270,7 +267,7 @@ public class SvgUpdateHandler {
             symbolNode.setAttribute("handletype", relationType.name());
             symbolNode.setAttribute("fill", "blue");
             symbolNode.setAttribute("stroke", "none");
-            ((EventTarget) symbolNode).addEventListener("mousedown", mouseListenerSvg, false);
+            ((EventTarget) ((KinElementImpl) symbolNode).getNode()).addEventListener("mousedown", mouseListenerSvg, false);
             highlightGroupNode.appendChild(symbolNode);
         }
         // add the custom relation types
@@ -284,7 +281,7 @@ public class SvgUpdateHandler {
             if (typeDefinition != null) {
                 for (DataTypes.RelationType relationType : typeDefinition.getRelationType()) {
                     // use a constant spacing between the drag handle dots and to start a new column when each line is full
-                    Element symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
+                    KinElement symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
                     symbolNode.setAttribute("cx", Float.toString(currentCX));
                     symbolNode.setAttribute("cy", Float.toString(currentCY));
                     currentCY += stepC;
@@ -296,48 +293,48 @@ public class SvgUpdateHandler {
                     symbolNode.setAttribute("handletype", "custom:" + relationType + ":" + typeDefinition.hashCode());
                     symbolNode.setAttribute("fill", typeDefinition.getLineColour());
                     symbolNode.setAttribute("stroke", "none");
-                    ((EventTarget) symbolNode).addEventListener("mousedown", mouseListenerSvg, false);
+                    ((EventTarget) ((KinElementImpl) symbolNode).getNode()).addEventListener("mousedown", mouseListenerSvg, false);
                     highlightGroupNode.appendChild(symbolNode);
                 }
             }
         }
     }
 
-    protected void addGraphicsDragHandles(Element highlightGroupNode, UniqueIdentifier targetIdentifier, SVGRect bbox, int paddingDistance, EventListener mouseListenerSvg) {
-        Element symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
+    protected void addGraphicsDragHandles(KinElement highlightGroupNode, UniqueIdentifier targetIdentifier, SVGRect bbox, int paddingDistance, EventListener mouseListenerSvg) throws KinElementException {
+        KinElement symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
         symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() + paddingDistance));
         symbolNode.setAttribute("cy", Float.toString(bbox.getY() + bbox.getHeight() + paddingDistance));
         symbolNode.setAttribute("r", "5");
         symbolNode.setAttribute("target", targetIdentifier.getAttributeIdentifier());
         symbolNode.setAttribute("fill", "blue");
         symbolNode.setAttribute("stroke", "none");
-        ((EventTarget) symbolNode).addEventListener("mousedown", mouseListenerSvg, false);
+        ((EventTarget) ((KinElementImpl) symbolNode).getNode()).addEventListener("mousedown", mouseListenerSvg, false);
         highlightGroupNode.appendChild(symbolNode);
     }
 
-    public Point getEntityPointOnDocument(final Point screenLocation) {
-        Element etityGroup = svgDiagram.doc.getElementById("EntityGroup");
-        SVGOMPoint pointOnDocument = getPointOnDocument(screenLocation, (SVGLocatable) etityGroup);
-        return new Point((int) pointOnDocument.getX(), (int) pointOnDocument.getY()); // we discard the float precision because the diagram does not need that level of resolution 
+    public KinPoint getEntityPointOnDocument(final KinPoint screenLocation) {
+        KinElement etityGroup = svgDiagram.doc.getElementById("EntityGroup");
+        SVGOMPoint pointOnDocument = getPointOnDocument(screenLocation, etityGroup);
+        return new KinPoint((int) pointOnDocument.getX(), (int) pointOnDocument.getY()); // we discard the float precision because the diagram does not need that level of resolution 
     }
 
-    public SVGOMPoint getPointOnScreen(final Point documentLocation, SVGLocatable targetGroupElement) {
+    public SVGOMPoint getPointOnScreen(final KinPoint documentLocation, KinElement targetGroupElement) {
         SVGOMPoint pointOnDocument = new SVGOMPoint(documentLocation.x, documentLocation.y);
-        SVGMatrix mat = targetGroupElement.getScreenCTM();  // this gives us the element to screen transform
+        SVGMatrix mat = ((SVGLocatable) ((KinElementImpl) targetGroupElement).getNode()).getScreenCTM();  // this gives us the element to screen transform
         return (SVGOMPoint) pointOnDocument.matrixTransform(mat);
     }
 
-    public SVGOMPoint getPointOnDocument(final Point screenLocation, SVGLocatable targetGroupElement) {
+    public SVGOMPoint getPointOnDocument(final KinPoint screenLocation, KinElement targetGroupElement) {
         SVGOMPoint pointOnScreen = new SVGOMPoint(screenLocation.x, screenLocation.y);
-        SVGMatrix mat = targetGroupElement.getScreenCTM();  // this gives us the element to screen transform
+        SVGMatrix mat = ((SVGLocatable) ((KinElementImpl) targetGroupElement).getNode()).getScreenCTM();  // this gives us the element to screen transform
         mat = mat.inverse();                                // this converts that into the screen to element transform
         return (SVGOMPoint) pointOnScreen.matrixTransform(mat);
     }
 
-    public Rectangle getRectOnDocument(final Rectangle screenRectangle, SVGLocatable targetGroupElement) {
+    public KinRectangle getRectOnDocument(final KinRectangle screenRectangle, KinElement targetGroupElement) {
         SVGOMPoint pointOnScreen = new SVGOMPoint(screenRectangle.x, screenRectangle.y);
         SVGOMPoint sizeOnScreen = new SVGOMPoint(screenRectangle.width, screenRectangle.height);
-        SVGMatrix mat = targetGroupElement.getScreenCTM();  // this gives us the element to screen transform
+        SVGMatrix mat = ((SVGLocatable) ((KinElementImpl) targetGroupElement).getNode()).getScreenCTM();  // this gives us the element to screen transform
         // todo: mat can be null
         mat = mat.inverse();                                // this converts that into the screen to element transform
         SVGPoint pointOnDocument = pointOnScreen.matrixTransform(mat);
@@ -345,19 +342,19 @@ public class SvgUpdateHandler {
         SVGPoint sizeOnDocument = new SVGOMPoint(sizeOnScreen.getX() * mat.getA(), sizeOnScreen.getY() * mat.getA());
         System.out.println("sizeOnScreen: " + sizeOnScreen);
         System.out.println("sizeOnDocument: " + sizeOnDocument);
-        return new Rectangle((int) pointOnDocument.getX(), (int) pointOnDocument.getY(), (int) sizeOnDocument.getX(), (int) sizeOnDocument.getY());
+        return new KinRectangle((int) pointOnDocument.getX(), (int) pointOnDocument.getY(), (int) sizeOnDocument.getX(), (int) sizeOnDocument.getY());
     }
 
-    protected void updateSvgSelectionHighlightsI(ArrayList<UniqueIdentifier> selectedGroupId, EventListener mouseListenerSvg) {
+    protected void updateSvgSelectionHighlightsI(ArrayList<UniqueIdentifier> selectedGroupId, EventListener mouseListenerSvg) throws KinElementException {
         if (svgDiagram.doc != null) {
 //                        for (String groupString : new String[]{"EntityGroup", "LabelsGroup"}) {
-//                            Element entityGroup = svgDiagram.doc.getElementById(groupString);
+//                            KinElement entityGroup = svgDiagram.doc.getElementById(groupString);
             {
                 boolean isLeadSelection = true;
                 for (UniqueIdentifier currentIdentifier : highlightedIdentifiers.toArray(new UniqueIdentifier[]{})) {
                     // remove old highlights but leave existing selections
                     if (!selectedGroupId.contains(currentIdentifier)) {
-                        Element existingHighlight = svgDiagram.doc.getElementById("highlight_" + currentIdentifier.getAttributeIdentifier());
+                        KinElement existingHighlight = svgDiagram.doc.getElementById("highlight_" + currentIdentifier.getAttributeIdentifier());
                         if (existingHighlight != null) {
                             existingHighlight.getParentNode().removeChild(existingHighlight);
                         }
@@ -365,8 +362,8 @@ public class SvgUpdateHandler {
                     }
                 }
                 for (UniqueIdentifier uniqueIdentifier : selectedGroupId.toArray(new UniqueIdentifier[0])) {
-                    Element selectedGroup = svgDiagram.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
-                    Element existingHighlight = svgDiagram.doc.getElementById("highlight_" + uniqueIdentifier.getAttributeIdentifier());
+                    KinElement selectedGroup = svgDiagram.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
+                    KinElement existingHighlight = svgDiagram.doc.getElementById("highlight_" + uniqueIdentifier.getAttributeIdentifier());
 //                            for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
 //                                if ("g".equals(currentChild.getLocalName())) {
 //                                    Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
@@ -394,11 +391,11 @@ public class SvgUpdateHandler {
 //                                        } else {
                     if (existingHighlight == null && selectedGroup != null) {
 //                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                        SVGRect bbox = ((SVGLocatable) selectedGroup).getBBox();
-                        Element highlightGroupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
-                        ((EventTarget) highlightGroupNode).addEventListener("mousedown", mouseListenerSvg, false);
+                        SVGRect bbox = ((SVGLocatable) ((KinElementImpl) selectedGroup).getNode()).getBBox();
+                        KinElement highlightGroupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
+                        ((EventTarget) ((KinElementImpl) highlightGroupNode).getNode()).addEventListener("mousedown", mouseListenerSvg, false);
                         highlightGroupNode.setAttribute("id", "highlight_" + uniqueIdentifier.getAttributeIdentifier());
-                        Element symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
+                        KinElement symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
                         symbolNode.setAttribute("x", Float.toString(bbox.getX() - paddingDistance));
                         symbolNode.setAttribute("y", Float.toString(bbox.getY() - paddingDistance));
                         symbolNode.setAttribute("width", Float.toString(bbox.getWidth() + paddingDistance * 2));
@@ -417,7 +414,7 @@ public class SvgUpdateHandler {
                         symbolNode.setAttribute("stroke", "blue");
 //                                                if (graphPanel.dataStoreSvg.highlightRelationLines) {
 //                                                    // add highlights for relation lines
-//                                                    Element relationsGroup = svgDiagram.doc.getElementById("RelationGroup");
+//                                                    KinElement relationsGroup = svgDiagram.doc.getElementById("RelationGroup");
 //                                                    for (Node currentRelation = relationsGroup.getFirstChild(); currentRelation != null; currentRelation = currentRelation.getNextSibling()) {
 //                                                        Node dataElement = currentRelation.getFirstChild();
 //                                                        NamedNodeMap dataAttributes = dataElement.getAttributes();
@@ -425,10 +422,10 @@ public class SvgUpdateHandler {
 //
 ////
 //                                                            if (entityId.equals(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "ego").getNodeValue()) || entityId.equals(dataAttributes.getNamedItemNS(DataStoreSvg.kinDataNameSpace, "alter").getNodeValue())) {
-//                                                                Element polyLineElement = (Element) dataElement.getNextSibling().getFirstChild();
+//                                                                KinElement  polyLineElement = (KinElement ) dataElement.getNextSibling().getFirstChild();
 //
 //
-//                                                                Element useNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
+//                                                                KinElement  useNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
 //                                                                useNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + polyLineElement.getAttribute("id"));
 //                                                                useNode.setAttributeNS(null, "stroke", "blue");
 //                                                                highlightGroupNode.appendChild(useNode);
@@ -440,12 +437,10 @@ public class SvgUpdateHandler {
                         highlightGroupNode.appendChild(symbolNode);
                         if (!uniqueIdentifier.isTransientIdentifier() && !uniqueIdentifier.isGraphicsIdentifier()) {
                             addRelationDragHandles(svgDiagram.getDiagramSettings().getRelationTypeDefinitions(), highlightGroupNode, bbox, paddingDistance, mouseListenerSvg);
-                        } else {
-                            if (uniqueIdentifier.isGraphicsIdentifier()) {
-                                if (!"text".equals(selectedGroup.getLocalName())) {
-                                    // add a drag handle for all graphics but not text nodes
-                                    addGraphicsDragHandles(highlightGroupNode, uniqueIdentifier, bbox, paddingDistance, mouseListenerSvg);
-                                }
+                        } else if (uniqueIdentifier.isGraphicsIdentifier()) {
+                            if (!"text".equals(selectedGroup.getLocalName())) {
+                                // add a drag handle for all graphics but not text nodes
+                                addGraphicsDragHandles(highlightGroupNode, uniqueIdentifier, bbox, paddingDistance, mouseListenerSvg);
                             }
                         }
                         if ("g".equals(selectedGroup.getLocalName())) {
@@ -467,10 +462,10 @@ public class SvgUpdateHandler {
 //                    ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
-    public void updateMouseDrag(final ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal) {
+    public void updateMouseDrag(final ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal) throws KinElementException {
         this.updateDragRelationX = updateDragNodeXLocal;
         this.updateDragRelationY = updateDragNodeYLocal;
-        Element entityGroup = svgDiagram.doc.getElementById("EntityGroup");
+        KinElement entityGroup = svgDiagram.doc.getElementById("EntityGroup");
         updateDragNodeXLocal = 0;
         updateDragNodeYLocal = 0;
         while (updateDragNodeXLocal != updateDragRelationX && updateDragNodeYLocal != updateDragRelationY) {
@@ -493,27 +488,27 @@ public class SvgUpdateHandler {
         }
         synchronized (SvgUpdateHandler.this) {
             dragRemainders = tempRemainders;
-//            Element entityGroup = svgDiagram.doc.getElementById("EntityGroup");
-            SVGMatrix draggedElementScreenMatrix = ((SVGLocatable) svgDiagram.doc.getDocumentElement()).getScreenCTM().inverse();
+//            KinElement  entityGroup = svgDiagram.doc.getElementById("EntityGroup");
+            SVGMatrix draggedElementScreenMatrix = ((SVGLocatable) ((KinElementImpl) svgDiagram.doc.getDocumentElement()).getNode()).getScreenCTM().inverse();
             dragScale = draggedElementScreenMatrix.getA(); // the drawing is proportional so only using X is adequate here         
         }
     }
 
-    protected void removeSelectionRectA() {
-        Element labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
-        Element selectionBorderNode = svgDiagram.doc.getElementById("drag_select_highlight");
+    protected void removeSelectionRectA() throws KinElementException {
+        KinElement labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
+        KinElement selectionBorderNode = svgDiagram.doc.getElementById("drag_select_highlight");
         labelGroup.removeChild(selectionBorderNode);
     }
 
-    public Rectangle getSelectionRect() {
+    public KinRectangle getSelectionRect() {
         return dragSelectionRectOnDocument;
     }
 
-    protected void drawSelectionRectI(final Point startLocation, final Point currentLocation) {
-        Element labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
-        SVGOMPoint startOnDocument = getPointOnDocument(startLocation, (SVGLocatable) labelGroup);
-        SVGOMPoint currentOnDocument = getPointOnDocument(currentLocation, (SVGLocatable) labelGroup);
-        Element selectionBorderNode = svgDiagram.doc.getElementById("drag_select_highlight");
+    protected void drawSelectionRectI(final KinPoint startLocation, final KinPoint currentLocation) throws KinElementException {
+        KinElement labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
+        SVGOMPoint startOnDocument = getPointOnDocument(startLocation, labelGroup);
+        SVGOMPoint currentOnDocument = getPointOnDocument(currentLocation, labelGroup);
+        KinElement selectionBorderNode = svgDiagram.doc.getElementById("drag_select_highlight");
         float highlightX = startOnDocument.getX();
         float highlightY = startOnDocument.getY();
         float highlightWidth = currentOnDocument.getX();
@@ -530,7 +525,7 @@ public class SvgUpdateHandler {
         }
         highlightHeight = highlightHeight - highlightY;
         highlightWidth = highlightWidth - highlightX;
-        dragSelectionRectOnDocument = new Rectangle((int) highlightX, (int) highlightY, (int) highlightWidth, (int) highlightHeight);
+        dragSelectionRectOnDocument = new KinRectangle((int) highlightX, (int) highlightY, (int) highlightWidth, (int) highlightHeight);
         if (selectionBorderNode == null) {
             selectionBorderNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
             selectionBorderNode.setAttribute("id", "drag_select_highlight");
@@ -552,18 +547,18 @@ public class SvgUpdateHandler {
 //                    System.out.println("pageBorderNode:" + selectionBorderNode);
     }
 
-    protected void updateDragNodeI(ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal, final Rectangle panelBounds) {
+    protected void updateDragNodeI(ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal, final KinRectangle panelBounds) throws KinElementException {
         resizeRequired = true;
         dragUpdateRequired = true;
         updateDragNodeX += updateDragNodeXLocal;
         updateDragNodeY += updateDragNodeYLocal;
-//                Element relationOldHighlightGroup = svgDiagram.doc.getElementById("RelationHighlightGroup");
+//                KinElement  relationOldHighlightGroup = svgDiagram.doc.getElementById("RelationHighlightGroup");
 //                if (relationOldHighlightGroup != null) {
 //                    // remove the relation highlight group because lines will be out of date when the entities are moved
 //                    relationOldHighlightGroup.getParentNode().removeChild(relationOldHighlightGroup);
 //                }
-        Rectangle initialGraphRect = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
-        Element entityGroup = svgDiagram.doc.getElementById("EntityGroup");
+        KinRectangle initialGraphRect = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
+        KinElement entityGroup = svgDiagram.doc.getElementById("EntityGroup");
         boolean continueUpdating = true;
         while (continueUpdating) {
             continueUpdating = false;
@@ -613,7 +608,7 @@ public class SvgUpdateHandler {
                     }
                     dragCounter++;
                 }
-//                    Element entityGroup = doc.getElementById("EntityGroup");
+//                    KinElement  entityGroup = doc.getElementById("EntityGroup");
 //                    for (Node currentChild = entityGroup.getFirstChild(); currentChild != null; currentChild = currentChild.getNextSibling()) {
 //                        if ("g".equals(currentChild.getLocalName())) {
 //                            Node idAttrubite = currentChild.getAttributes().getNamedItem("id");
@@ -644,10 +639,10 @@ public class SvgUpdateHandler {
                 int hSpacing = svgDiagram.graphPanelSize.getHorizontalSpacing(); // graphPanel.dataStoreSvg.graphData.gridWidth);
                 new RelationSvg().updateRelationLines(svgDiagram, relationRecords, selectedGroupId, hSpacing, vSpacing);
                 createRelationLineHighlights(entityGroup, selectedGroupId);
-                final Rectangle currentGraphRect = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
+                final KinRectangle currentGraphRect = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
                 if (!initialGraphRect.contains(currentGraphRect)) {
-                    Element svgRoot = svgDiagram.doc.getDocumentElement();
-                    Element diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
+                    KinElement svgRoot = svgDiagram.doc.getDocumentElement();
+                    KinElement diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
                     resizeCanvas(svgRoot, diagramGroupNode, panelBounds);
                 }
                 //new CmdiComponentBuilder().savePrettyFormatting(doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/src/main/resources/output.svg"));
@@ -668,11 +663,11 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void resizeCanvas(Element svgRoot, Element diagramGroupNode, final Rectangle panelBounds) {
+    private void resizeCanvas(KinElement svgRoot, KinElement diagramGroupNode, final KinRectangle panelBounds) throws KinElementException {
 //        svgRoot.setAttribute("width", "100%");
 //        svgRoot.setAttribute("height", "100%");
 //        diagramGroupNode.setAttribute("transform", null);       
-        Rectangle graphSize = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
+        KinRectangle graphSize = svgDiagram.graphData.getGraphSize(svgDiagram.entitySvg.entityPositions);
         // set the diagram offset so that no element is less than zero
 //        diagramGroupNode.setAttribute("transform", "translate(" + Integer.toString(-graphSize.x) + ", " + Integer.toString(-graphSize.y) + ")");
         diagramGroupNode.removeAttribute("transform");
@@ -704,7 +699,7 @@ public class SvgUpdateHandler {
         svgRoot.setAttribute("viewBox", (graphSize.x - 5 - emptyBorder) + " " + (graphSize.y - 5 - emptyBorder) + " " + (graphSize.width + 10 + emptyBorder * 2) + " " + (graphSize.height + 10 + emptyBorder * 2));
         if (svgDiagram.getDiagramSettings().showDiagramBorder()) {
             // draw a grey rectangle to show the diagram bounds
-            Element pageBorderNode = svgDiagram.doc.getElementById("PageBorder");
+            KinElement pageBorderNode = svgDiagram.doc.getElementById("PageBorder");
             if (pageBorderNode == null) {
                 pageBorderNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
                 pageBorderNode.setAttribute("id", "PageBorder");
@@ -724,26 +719,26 @@ public class SvgUpdateHandler {
             }
             // end draw a grey rectangle to show the diagram bounds
         } else {
-            Element pageBorderNode = svgDiagram.doc.getElementById("PageBorder");
+            KinElement pageBorderNode = svgDiagram.doc.getElementById("PageBorder");
             if (pageBorderNode != null) {
                 pageBorderNode.getParentNode().removeChild(pageBorderNode);
             }
         }
     }
 
-    public void updateCanvasSizeI(final boolean required, final Rectangle panelBounds) {
+    public void updateCanvasSizeI(final boolean required, final KinRectangle panelBounds) throws KinElementException {
         if (resizeRequired || required) { // todo: check the use of resizeRequired here
             this.resizeRequired = false;
-            Element svgRoot = svgDiagram.doc.getDocumentElement();
-            Element diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
+            KinElement svgRoot = svgDiagram.doc.getDocumentElement();
+            KinElement diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
             resizeCanvas(svgRoot, diagramGroupNode, panelBounds);
         }
     }
 
-    public void deleteGraphicsI(UniqueIdentifier uniqueIdentifier) {
-        final Element graphicsElement = svgDiagram.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
-        final Element existingHighlight = svgDiagram.doc.getElementById("highlight_" + uniqueIdentifier.getAttributeIdentifier());
-        final Node parentElement = graphicsElement.getParentNode();
+    public void deleteGraphicsI(UniqueIdentifier uniqueIdentifier) throws KinElementException {
+        final KinElement graphicsElement = svgDiagram.doc.getElementById(uniqueIdentifier.getAttributeIdentifier());
+        final KinElement existingHighlight = svgDiagram.doc.getElementById("highlight_" + uniqueIdentifier.getAttributeIdentifier());
+        final KinElement parentElement = graphicsElement.getParentNode();
         svgDiagram.entitySvg.entityPositions.remove(uniqueIdentifier);
         parentElement.removeChild(graphicsElement);
         if (existingHighlight != null) {
@@ -751,8 +746,8 @@ public class SvgUpdateHandler {
         }
     }
 
-    public void addGraphicsI(final GraphicsTypes graphicsType, final Point locationOnScreen, EventListener mouseListenerSvg, final Rectangle panelBounds) {
-        Element labelText;
+    public void addGraphicsI(final GraphicsTypes graphicsType, final KinPoint locationOnScreen, EventListener mouseListenerSvg, final KinRectangle panelBounds) throws KinElementException {
+        KinElement labelText;
         switch (graphicsType) {
             case Circle:
                 labelText = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
@@ -774,7 +769,7 @@ public class SvgUpdateHandler {
                 labelText.setAttribute("fill", "#000000");
                 labelText.setAttribute("stroke-width", "0");
                 labelText.setAttribute("font-size", "28");
-                Text textNode = svgDiagram.doc.createTextNode("Label");
+                KinElement textNode = svgDiagram.doc.createTextNode("Label");
                 labelText.appendChild(textNode);
                 break;
             case Polyline:
@@ -802,24 +797,24 @@ public class SvgUpdateHandler {
         UniqueIdentifier labelId = new UniqueIdentifier(UniqueIdentifier.IdentifierType.gid);
         labelText.setAttribute("id", labelId.getAttributeIdentifier());
         // put this into the geometry group or the label group depending on its type so that labels sit above entitis and graphics sit below entities
-        Element targetGroup;
+        KinElement targetGroup;
         if (graphicsType.equals(GraphicsTypes.Label)) {
             targetGroup = svgDiagram.doc.getElementById("LabelsGroup");
         } else {
             targetGroup = svgDiagram.doc.getElementById("GraphicsGroup");
         }
-        SVGOMPoint pointOnDocument = getPointOnDocument(locationOnScreen, (SVGLocatable) targetGroup);
-        Point labelPosition = new Point((int) pointOnDocument.getX(), (int) pointOnDocument.getY()); // we discard the float precision because the diagram does not need that level of resolution 
+        SVGOMPoint pointOnDocument = getPointOnDocument(locationOnScreen, targetGroup);
+        KinPoint labelPosition = new KinPoint((int) pointOnDocument.getX(), (int) pointOnDocument.getY()); // we discard the float precision because the diagram does not need that level of resolution 
         final String transformAttribute = "translate(" + Integer.toString(labelPosition.x) + ", " + Integer.toString(labelPosition.y) + ")";
         System.out.println("transformAttribute:" + transformAttribute);
         labelText.setAttribute("transform", transformAttribute);
         targetGroup.appendChild(labelText);
-        svgDiagram.entitySvg.entityPositions.put(labelId, new Point(labelPosition));
-        ((EventTarget) labelText).addEventListener("mousedown", mouseListenerSvg, false);
+        svgDiagram.entitySvg.entityPositions.put(labelId, new KinPoint(labelPosition));
+        ((EventTarget) ((KinElementImpl) labelText).getNode()).addEventListener("mousedown", mouseListenerSvg, false);
         resizeCanvas(svgDiagram.doc.getDocumentElement(), svgDiagram.doc.getElementById("DiagramGroup"), panelBounds);
     }
 
-    public void drawEntities(final Rectangle panelBounds) throws DOMException, OldFormatException, UnsortablePointsException { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
+    public void drawEntities(final KinRectangle panelBounds) throws DOMException, OldFormatException, UnsortablePointsException, KinElementException { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
         svgDiagram.graphData.setPadding(svgDiagram.graphPanelSize);
         relationRecords = new RelationRecordTable();
         int vSpacing = svgDiagram.graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);
@@ -827,14 +822,14 @@ public class SvgUpdateHandler {
 //        currentWidth = graphPanelSize.getWidth(dataStoreSvg.graphData.gridWidth, hSpacing);
 //        currentHeight = graphPanelSize.getHeight(dataStoreSvg.graphData.gridHeight, vSpacing);
         removeRelationHighLights();
-        Element svgRoot = svgDiagram.doc.getDocumentElement();
-        Element diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
+        KinElement svgRoot = svgDiagram.doc.getDocumentElement();
+        KinElement diagramGroupNode = svgDiagram.doc.getElementById("DiagramGroup");
         if (diagramGroupNode == null) { // make sure the diagram group exists
             diagramGroupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
             diagramGroupNode.setAttribute("id", "DiagramGroup");
             svgRoot.appendChild(diagramGroupNode);
         }
-        Element labelsGroup = svgDiagram.doc.getElementById("LabelsGroup");
+        KinElement labelsGroup = svgDiagram.doc.getElementById("LabelsGroup");
         if (labelsGroup == null) {
             labelsGroup = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
             labelsGroup.setAttribute("id", "LabelsGroup");
@@ -843,12 +838,12 @@ public class SvgUpdateHandler {
             labelsGroup.getParentNode().removeChild(labelsGroup);
             diagramGroupNode.appendChild(labelsGroup);
         }
-        Element relationGroupNode;
-        Element entityGroupNode;
+        KinElement relationGroupNode;
+        KinElement entityGroupNode;
 //            if (doc == null) {
 //            } else {
-        Node relationGroupNodeOld = svgDiagram.doc.getElementById("RelationGroup");
-        Node entityGroupNodeOld = svgDiagram.doc.getElementById("EntityGroup");
+        KinElement relationGroupNodeOld = svgDiagram.doc.getElementById("RelationGroup");
+        KinElement entityGroupNodeOld = svgDiagram.doc.getElementById("EntityGroup");
         // remove the old relation lines
         relationGroupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
         relationGroupNode.setAttribute("id", "RelationGroup");
@@ -869,7 +864,7 @@ public class SvgUpdateHandler {
 //            entitySvg.removeOldEntities(relationGroupNode);
         // todo: find the real text size from batik
         // store the selected kin type strings and other data in the dom
-        svgDiagram.getDiagramSettings().storeAllData(/*svgDiagram.doc*/);
+        svgDiagram.getDiagramSettings().storeAllData(svgDiagram.doc);
 //            new GraphPlacementHandler().placeAllNodes(this, dataStoreSvg.graphData.getDataNodes(), entityGroupNode, hSpacing, vSpacing);
         for (EntityData currentNode : svgDiagram.graphData.getDataNodes()) {
             if (currentNode.isVisible) {

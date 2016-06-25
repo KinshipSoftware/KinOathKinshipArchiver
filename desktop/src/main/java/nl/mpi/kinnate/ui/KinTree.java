@@ -26,7 +26,10 @@ import nl.mpi.arbil.data.ContainerNode;
 import nl.mpi.arbil.ui.ArbilTree;
 import nl.mpi.kinnate.data.KinTreeNode;
 import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.svg.KinElementException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created on : Aug 25, 2011, 11:44:11 AM
@@ -35,6 +38,7 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
  */
 public class KinTree extends ArbilTree {
 
+    private final static Logger logger = LoggerFactory.getLogger(GraphPanel.class);
     private KinDiagramPanel kinDiagramPanel;
     private GraphPanel graphPanel;
     private ArbilNode[] selectedNodeArray = new ArbilNode[]{};
@@ -75,7 +79,11 @@ public class KinTree extends ArbilTree {
         if (updateGraphOnSelectionChange) {
             kinDiagramPanel.drawGraph(identifierList.toArray(new UniqueIdentifier[]{}), true);
         } else {
-            graphPanel.setSelectedIds(identifierList.toArray(new UniqueIdentifier[]{}));
+            try {
+                graphPanel.setSelectedIds(identifierList.toArray(new UniqueIdentifier[]{}));
+            } catch (KinElementException exception) {
+                logger.warn("Error, modifying the SVG.", exception);
+            }
         }
     }
 

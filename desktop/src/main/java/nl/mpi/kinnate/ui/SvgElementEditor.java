@@ -37,7 +37,12 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import nl.mpi.arbil.util.BugCatcherManager;
+import nl.mpi.kinnate.svg.GraphPanel;
+import nl.mpi.kinnate.svg.KinElement;
+import nl.mpi.kinnate.svg.KinElementException;
 import org.apache.batik.bridge.UpdateManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -47,11 +52,12 @@ import org.w3c.dom.Element;
  */
 public class SvgElementEditor extends JPanel {
 
+    private final static Logger logger = LoggerFactory.getLogger(GraphPanel.class);
     final UpdateManager updateManager;
 //    final GraphPanel graphPanel;
 //    final UniqueIdentifier uniqueIdentifier;
 
-    public SvgElementEditor(/*final GraphPanel graphPanel, final UniqueIdentifier uniqueIdentifier, */final UpdateManager updateManager, final Element svgElement) {
+    public SvgElementEditor(/*final GraphPanel graphPanel, final UniqueIdentifier uniqueIdentifier, */final UpdateManager updateManager, final KinElement svgElement) {
         this.updateManager = updateManager;
 //        this.graphPanel = graphPanel;
 //        this.uniqueIdentifier = uniqueIdentifier;
@@ -64,30 +70,34 @@ public class SvgElementEditor extends JPanel {
         sideWrapperPanel.add(sidePanel, BorderLayout.PAGE_START);
         pickerWrapperPanel.add(pickerPanel, BorderLayout.CENTER);
         pickerWrapperPanel.add(sideWrapperPanel, BorderLayout.LINE_END);
-        String editorMode = svgElement.getTagName();
-        if (editorMode.equals("text")) {
+        try {
+            String editorMode = svgElement.getTagName();
+            if (editorMode.equals("text")) {
 //            this.add(new JLabel("Label Text:"));
-            final JTextArea textArea = new JTextArea(svgElement.getTextContent());
-            textArea.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {
-                }
+                final JTextArea textArea = new JTextArea(svgElement.getTextContent());
+                textArea.addFocusListener(new FocusListener() {
+                    public void focusGained(FocusEvent e) {
+                    }
 
-                public void focusLost(FocusEvent e) {
-                    updateValue(svgElement, textArea.getText());
+                    public void focusLost(FocusEvent e) {
+                        updateValue(svgElement, textArea.getText());
+                    }
+                });
+                addColourInput(svgElement, sidePanel, pickerPanel, "fill");
+                addNumberSpinner(svgElement, sidePanel, "font size", "font-size", 1, 100);
+                outerPanel.add(textArea, BorderLayout.CENTER);
+                outerPanel.add(pickerWrapperPanel, BorderLayout.LINE_END);
+            } else {
+                addColourInput(svgElement, sidePanel, pickerPanel, "fill");
+                addColourInput(svgElement, sidePanel, pickerPanel, "stroke");
+                addNumberSpinner(svgElement, sidePanel, "stroke width", "stroke-width", 1, 100);
+                if (editorMode.equals("rect")) {
+                    addNumberSpinner(svgElement, sidePanel, "corner radius", "rx", 0, 100);
                 }
-            });
-            addColourInput(svgElement, sidePanel, pickerPanel, "fill");
-            addNumberSpinner(svgElement, sidePanel, "font size", "font-size", 1, 100);
-            outerPanel.add(textArea, BorderLayout.CENTER);
-            outerPanel.add(pickerWrapperPanel, BorderLayout.LINE_END);
-        } else {
-            addColourInput(svgElement, sidePanel, pickerPanel, "fill");
-            addColourInput(svgElement, sidePanel, pickerPanel, "stroke");
-            addNumberSpinner(svgElement, sidePanel, "stroke width", "stroke-width", 1, 100);
-            if (editorMode.equals("rect")) {
-                addNumberSpinner(svgElement, sidePanel, "corner radius", "rx", 0, 100);
+                outerPanel.add(pickerWrapperPanel, BorderLayout.LINE_END);
             }
-            outerPanel.add(pickerWrapperPanel, BorderLayout.LINE_END);
+        } catch (KinElementException exception) {
+            logger.warn("Error, modifying the SVG.", exception);
         }
 //        addDeleteButton(svgElement, sidePanel);
         this.add(new JScrollPane(outerPanel));
@@ -115,8 +125,7 @@ public class SvgElementEditor extends JPanel {
 //            }
 //        });
 //    }
-
-    private void addNumberSpinner(final Element svgElement, JPanel sidePanel, String labelString, final String attributeString, int minValue, int maxValue) {
+    private void addNumberSpinner(final KinElement svgElement, JPanel sidePanel, String labelString, final String attributeString, int minValue, int maxValue) throws KinElementException {
         int initialValue = 0;
         try {
             final String initialValueString = svgElement.getAttribute(attributeString).trim();
@@ -127,8 +136,8 @@ public class SvgElementEditor extends JPanel {
             BugCatcherManager.getBugCatcher().logError(exception);
         }
         sidePanel.add(new JLabel(labelString));
-        SpinnerModel spinnerModel =
-                new SpinnerNumberModel(initialValue, minValue, maxValue, 1);
+        SpinnerModel spinnerModel
+                = new SpinnerNumberModel(initialValue, minValue, maxValue, 1);
         final JSpinner numberSpinner = new JSpinner(spinnerModel);
         numberSpinner.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -138,7 +147,7 @@ public class SvgElementEditor extends JPanel {
         sidePanel.add(numberSpinner);
     }
 
-    private void addColourInput(final Element svgElement, JPanel sidePanel, final JPanel pickerPanel, final String attributeString) {
+    private void addColourInput(final KinElement svgElement, JPanel sidePanel, final JPanel pickerPanel, final String attributeString) throws KinElementException {
         Color initialColour = Color.white;
         try {
             final String attributeValue = svgElement.getAttribute(attributeString).trim();
@@ -198,7 +207,6 @@ public class SvgElementEditor extends JPanel {
                     }
                 });
 
-
                 colourChooser.setPreviewPanel(new JPanel());
                 colourChooser.getSelectionModel().addChangeListener(new ChangeListener() {
                     public void stateChanged(ChangeEvent e) {
@@ -215,21 +223,29 @@ public class SvgElementEditor extends JPanel {
         sidePanel.add(colourSquare);
     }
 
-    protected void updateValue(final Element changeTarget, final String attributeName, final String changeValue) {
+    protected void updateValue(final KinElement changeTarget, final String attributeName, final String changeValue) {
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    changeTarget.setAttribute(attributeName, changeValue);
+                    try {
+                        changeTarget.setAttribute(attributeName, changeValue);
+                    } catch (KinElementException exception) {
+                        logger.warn("Error, modifying the SVG.", exception);
+                    }
                 }
             });
         }
     }
 
-    protected void updateValue(final Element changeTarget, final String changeValue) {
+    protected void updateValue(final KinElement changeTarget, final String changeValue) {
         if (updateManager != null) {
             updateManager.getUpdateRunnableQueue().invokeLater(new Runnable() {
                 public void run() {
-                    changeTarget.setTextContent(changeValue);
+                    try {
+                        changeTarget.setTextContent(changeValue);
+                    } catch (KinElementException exception) {
+                        logger.warn("Error, modifying the SVG.", exception);
+                    }
                 }
             });
         }

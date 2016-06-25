@@ -19,13 +19,11 @@
 package nl.mpi.kinnate.ui;
 
 import java.awt.Component;
-import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -43,6 +41,7 @@ import nl.mpi.kinnate.entityindexer.EntityCollection;
 import nl.mpi.kinnate.entityindexer.EntityServiceException;
 import nl.mpi.kinnate.gedcomimport.ImportException;
 import nl.mpi.kinnate.kindata.EntityData;
+import nl.mpi.kinnate.kindata.KinPoint;
 import nl.mpi.kinnate.kindocument.EntityDocument;
 import nl.mpi.kinnate.kindocument.ImportTranslator;
 import nl.mpi.kinnate.svg.GraphPanel;
@@ -158,7 +157,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         return false;
     }
 
-    private boolean addEntitiesToGraph(Point defaultLocation) {
+    private boolean addEntitiesToGraph(KinPoint defaultLocation) {
         ArrayList<UniqueIdentifier> slectedIdentifiers = new ArrayList<UniqueIdentifier>();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(UniqueIdentifier.class);
@@ -205,7 +204,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         return true;
     }
 
-    private boolean importMetadata(Point defaultLocation) {
+    private boolean importMetadata(KinPoint defaultLocation) {
         System.out.println("importMetadata");
         final ImportTranslator importTranslator = new ImportTranslator(true);
         importTranslator.addTranslationEntry("Sex", "Male", "Gender", "Male");
@@ -314,7 +313,7 @@ public class KinDragTransferHandler extends TransferHandler implements Transfera
         // todo: in the case of dropping to the required tree add the entity to the required list and remove from the ego list (if in that list)
         // todo: in the case of dragging from the transient tree offer to make the entity permanent and create metadata
         if (dropLocation instanceof GraphPanel) {
-            Point defaultLocation = support.getDropLocation().getDropPoint();
+            KinPoint defaultLocation = new KinPoint(support.getDropLocation().getDropPoint().x, support.getDropLocation().getDropPoint().y);
             System.out.println("dropped to GraphPanel");
             if (isImportingMetadata) {
                 return importMetadata(defaultLocation);

@@ -27,14 +27,14 @@ import org.w3c.dom.Element;
 public class GraphicsDragHandle extends RelationDragHandle {
 
 //     protected UniqueIdentifier graphicsIdentifier;
-    protected Element graphicsElement;
-    protected Element highlightElement;
-    protected Element highlightRectElement;
+    protected KinElement graphicsElement;
+    protected KinElement highlightElement;
+    protected KinElement highlightRectElement;
     private String xAttribute;
     private String yAttribute;
     private boolean isCenteredElement = false;
 
-    public GraphicsDragHandle(Element graphicsElement, Element highlightElement, Element highlightRectElement, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) {
+    public GraphicsDragHandle(KinElement graphicsElement, KinElement highlightElement, KinElement highlightRectElement, float elementStartX, float elementStartY, float mouseStartX, float mouseStartY, double diagramScaleFactor) throws KinElementException {
         super(null, null, elementStartX, elementStartY, mouseStartX, mouseStartY, diagramScaleFactor);
         this.graphicsElement = graphicsElement;
         this.highlightElement = highlightElement;
@@ -55,7 +55,7 @@ public class GraphicsDragHandle extends RelationDragHandle {
         }
     }
 
-    protected void updatedElement(float localDragNodeX, float localDragNodeY, int paddingDistance) {
+    protected void updatedElement(float localDragNodeX, float localDragNodeY, int paddingDistance) throws KinElementException {
         // this must be only called from within a svg runnable
 
         float dragNodeX = getTranslatedX(localDragNodeX);

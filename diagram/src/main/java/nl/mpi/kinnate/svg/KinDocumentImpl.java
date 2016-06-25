@@ -24,8 +24,6 @@ import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.svg.SVGDocument;
@@ -54,24 +52,26 @@ public class KinDocumentImpl implements KinDocument {
         doc = (SVGDocument) documentFactory.createDocument(uri);
     }
 
-    public Element getElementById(String elementId) {
-        return doc.getElementById(elementId);
+    public KinElement getElementById(String elementId) {
+        final Element elementById = doc.getElementById(elementId);
+        return (elementById == null) ? null : new KinElementImpl(elementById);
     }
 
-    public Element getDocumentElement() {
-        return doc.getDocumentElement();
+    public KinElement getDocumentElement() {
+        final Element documentElement = doc.getDocumentElement();
+        return (documentElement == null) ? null : new KinElementImpl(documentElement);
     }
 
-    public Element createElementNS(String namespaceURI, String qualifiedName) throws DOMException {
-        return doc.createElementNS(namespaceURI, qualifiedName);
+    public KinElement createElementNS(String namespaceURI, String qualifiedName) throws DOMException {
+        return new KinElementImpl(doc.createElementNS(namespaceURI, qualifiedName));
     }
 
-    public Text createTextNode(String data) {
-        return doc.createTextNode(data);
+    public KinElement createTextNode(String data) {
+        return new KinElementImpl(doc.createTextNode(data));
     }
 
-    public void addEventListener(Node targetNode) {
-        ((EventTarget) targetNode).addEventListener("mousedown", mouseListenerSvg, false); // todo: use capture (currently false) could be useful for the mouse events    }
+    public void addEventListener(KinElement targetNode) {
+        ((EventTarget) ((KinElementImpl) targetNode).getNode()).addEventListener("mousedown", mouseListenerSvg, false); // todo: use capture (currently false) could be useful for the mouse events    }
     }
 
     public SVGDocument getDoc() {

@@ -18,9 +18,6 @@
  */
 package nl.mpi.kinnate.kindata;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.bind.annotation.XmlElement;
 import nl.mpi.kinnate.svg.GraphPanelSize;
@@ -36,7 +33,7 @@ public abstract class GraphSorter {
     static int sortCounter = 0; // for testing only
     @XmlElement(name = "Entity", namespace = "http://mpi.nl/tla/kin")
     public EntityData[] graphDataNodeArray = new EntityData[]{};
-    public HashMap<UniqueIdentifier, Point> preferredLocations = new HashMap<UniqueIdentifier, Point>();
+    public HashMap<UniqueIdentifier, KinPoint> preferredLocations = new HashMap<UniqueIdentifier, KinPoint>();
     // todo: should these padding vars be stored in the svg, currently they are stored
     public int xPadding = 100; // todo sort out one place for this var
     public int yPadding = 100; // todo sort out one place for this var
@@ -50,29 +47,29 @@ public abstract class GraphSorter {
     }
 
     public void clearPreferredEntityLocations() {
-        preferredLocations = new HashMap<UniqueIdentifier, Point>();
+        preferredLocations = new HashMap<UniqueIdentifier, KinPoint>();
     }
 
-    public void setPreferredEntityLocation(UniqueIdentifier[] egoIdentifierArray, Point defaultLocation) {
+    public void setPreferredEntityLocation(UniqueIdentifier[] egoIdentifierArray, KinPoint defaultLocation) {
         if (preferredLocations == null) {
-            preferredLocations = new HashMap<UniqueIdentifier, Point>();
+            preferredLocations = new HashMap<UniqueIdentifier, KinPoint>();
         }
         for (UniqueIdentifier uniqueIdentifier : egoIdentifierArray) {
-            preferredLocations.put(uniqueIdentifier, new Point(defaultLocation));
+            preferredLocations.put(uniqueIdentifier, new KinPoint(defaultLocation));
         }
     }
 
-    public Point getDefaultPosition(HashMap<UniqueIdentifier, Point> entityPositions, UniqueIdentifier uniqueIdentifier) {
+    public KinPoint getDefaultPosition(HashMap<UniqueIdentifier, KinPoint> entityPositions, UniqueIdentifier uniqueIdentifier) {
         if (preferredLocations != null) {
-            Point preferredPoint = preferredLocations.get(uniqueIdentifier);
+            KinPoint preferredPoint = preferredLocations.get(uniqueIdentifier);
             if (preferredPoint != null) {
                 return preferredPoint;
             }
         }
-        Rectangle rectangle = getGraphSize(entityPositions);
-        Point defaultPosition = new Point(rectangle.x + rectangle.width + xPadding, rectangle.y + rectangle.height + yPadding);
+        KinRectangle rectangle = getGraphSize(entityPositions);
+        KinPoint defaultPosition = new KinPoint(rectangle.x + rectangle.width + xPadding, rectangle.y + rectangle.height + yPadding);
 //                            Point defaultPosition = new Point(rectangle.width, rectangle.height);
-        return new Point(defaultPosition.x, 0);
+        return new KinPoint(defaultPosition.x, 0);
 //        return new Point(0, 0);
     }
 
@@ -91,12 +88,12 @@ public abstract class GraphSorter {
 //
 //        }
 //    }
-    public Rectangle getGraphSize(HashMap<UniqueIdentifier, Point> entityPositions) {
+    public KinRectangle getGraphSize(HashMap<UniqueIdentifier, KinPoint> entityPositions) {
         // get min positions
         // this should also take into account any graphics such as labels, although the border provided should be adequate, in other situations the page size could be set, in which case maybe an align option would be helpful
         int[] minPostion = null;
         int[] maxPostion = null;
-        for (Point currentPosition : entityPositions.values()) {
+        for (KinPoint currentPosition : entityPositions.values()) {
             if (minPostion == null) {
                 minPostion = new int[]{Math.round(currentPosition.x), Math.round(currentPosition.y)};
                 maxPostion = new int[]{Math.round(currentPosition.x), Math.round(currentPosition.y)};
@@ -116,10 +113,10 @@ public abstract class GraphSorter {
         int yOffset = minPostion[1] - yPadding;
         int graphWidth = maxPostion[0] + xPadding - xOffset;
         int graphHeight = maxPostion[1] + yPadding - yOffset;
-        return new Rectangle(xOffset, yOffset, graphWidth, graphHeight);
+        return new KinRectangle(xOffset, yOffset, graphWidth, graphHeight);
     }
 
-    abstract public void placeAllNodes(HashMap<UniqueIdentifier, Point> entityPositions) throws UnsortablePointsException;
+    abstract public void placeAllNodes(HashMap<UniqueIdentifier, KinPoint> entityPositions) throws UnsortablePointsException;
 
 //    // todo: look into http://www.jgraph.com/jgraph.html
 //    // todo: and http://books.google.nl/books?id=diqHjRjMhW0C&pg=PA138&lpg=PA138&dq=SVGDOMImplementation+add+namespace&source=bl&ots=IuqzAz7dsz&sig=e5FW_B1bQbhnth6i2rifalv2LuQ&hl=nl&ei=zYpnTYD3E4KVOuPF2YoL&sa=X&oi=book_result&ct=result&resnum=3&ved=0CC0Q6AEwAg#v=onepage&q&f=false

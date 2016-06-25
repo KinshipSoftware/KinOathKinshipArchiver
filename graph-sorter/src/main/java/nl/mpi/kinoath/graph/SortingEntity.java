@@ -17,7 +17,6 @@
  */
 package nl.mpi.kinoath.graph;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +26,7 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityDate;
 import nl.mpi.kinnate.kindata.EntityRelation;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import nl.mpi.kinnate.kindata.KinPoint;
 import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -43,7 +43,7 @@ public class SortingEntity implements Comparable<SortingEntity> {
     ArrayList<SortingEntity> mustBeNextTo;
     ArrayList<SortingEntity> couldBeNextTo;
     EntityRelation[] allRelateNodes;
-    Point calculatedPosition = null;
+    KinPoint calculatedPosition = null;
 //        StringBuilder tempLabels = new StringBuilder(); // for testing only
     EntityData entityData; // for testing only
 
@@ -104,10 +104,10 @@ public class SortingEntity implements Comparable<SortingEntity> {
         Collections.sort(couldBeNextTo);
     }
 
-    private boolean positionIsFree(UniqueIdentifier currentIdentifier, Point targetPosition, HashMap<UniqueIdentifier, Point> entityPositions) throws UnsortablePointsException {
+    private boolean positionIsFree(UniqueIdentifier currentIdentifier, KinPoint targetPosition, HashMap<UniqueIdentifier, KinPoint> entityPositions) throws UnsortablePointsException {
         int useCount = 0;
         int pointUseCount = 0;
-        for (Point currentPosition : entityPositions.values()) {
+        for (KinPoint currentPosition : entityPositions.values()) {
             if (targetPosition == currentPosition) {
                 pointUseCount++;
             }
@@ -122,7 +122,7 @@ public class SortingEntity implements Comparable<SortingEntity> {
             return true;
         }
         if (useCount == 1) {
-            Point entityPosition = entityPositions.get(currentIdentifier);
+            KinPoint entityPosition = entityPositions.get(currentIdentifier);
             if (entityPosition != null) {
                 // todo: change this to compare distance not exact location
                 if (entityPosition.x == targetPosition.x && entityPosition.y == targetPosition.y) {
@@ -134,14 +134,14 @@ public class SortingEntity implements Comparable<SortingEntity> {
         return false;
     }
 
-    protected Point getPosition(HashMap<UniqueIdentifier, Point> entityPositions) throws UnsortablePointsException {
+    protected KinPoint getPosition(HashMap<UniqueIdentifier, KinPoint> entityPositions) throws UnsortablePointsException {
 //            System.out.println("getPosition: " + selfEntityId.getAttributeIdentifier());
 //        addLabel("Sorting:" + sortCounter++); // for testing only
         calculatedPosition = entityPositions.get(selfEntityId);
         if (calculatedPosition == null) {
             for (SortingEntity sortingEntity : mustBeBelow) {
                 // note that this does not set the position and the result can be null
-                Point nextAbovePos = entityPositions.get(sortingEntity.selfEntityId);
+                KinPoint nextAbovePos = entityPositions.get(sortingEntity.selfEntityId);
                 // this should not be called until all parents have locations set, hence nextAbovePos should never be null
                 if (calculatedPosition == null && nextAbovePos != null) {
                     // calculate the parent average position
@@ -149,7 +149,7 @@ public class SortingEntity implements Comparable<SortingEntity> {
                     // nextAbovePos has been observed being null here after importing a CSV from Halle
                     int maxParentY = nextAbovePos.y;
                     for (SortingEntity sortingEntityInner : mustBeBelow) {
-                        final Point parentPosition = entityPositions.get(sortingEntityInner.selfEntityId);
+                        final KinPoint parentPosition = entityPositions.get(sortingEntityInner.selfEntityId);
                         averageX = averageX + parentPosition.x;
 //                                addLabel("TotalX:" + averageX);
                         if (maxParentY < parentPosition.y) {
@@ -169,7 +169,7 @@ public class SortingEntity implements Comparable<SortingEntity> {
                     addLabel("NumberOfSiblings:" + unionOfSiblings.size());
                     averageX = averageX - graphSorter.xPadding * (unionOfSiblings.size() - 1) / 2;
 //                            addLabel("AverageX2:" + averageX);
-                    calculatedPosition = new Point((int) averageX, maxParentY + graphSorter.yPadding);
+                    calculatedPosition = new KinPoint((int) averageX, maxParentY + graphSorter.yPadding);
                     addLabel(":mustBeBelow");
                 }
                 break;
@@ -177,9 +177,9 @@ public class SortingEntity implements Comparable<SortingEntity> {
             if (calculatedPosition == null) {
                 for (SortingEntity sortingEntity : couldBeNextTo) {
                     // note that this does not set the position and the result can be null
-                    Point nextToPos = entityPositions.get(sortingEntity.selfEntityId);
+                    KinPoint nextToPos = entityPositions.get(sortingEntity.selfEntityId);
                     if (calculatedPosition == null && nextToPos != null) {
-                        calculatedPosition = new Point(nextToPos.x, nextToPos.y);
+                        calculatedPosition = new KinPoint(nextToPos.x, nextToPos.y);
                         addLabel(":couldBeNextTo");
                         break;
                     }
@@ -188,12 +188,12 @@ public class SortingEntity implements Comparable<SortingEntity> {
             if (calculatedPosition == null) {
                 for (SortingEntity sortingEntity : mustBeAbove) {
                     // note that this does not set the position and the result can be null
-                    Point nextBelowPos = entityPositions.get(sortingEntity.selfEntityId);
+                    KinPoint nextBelowPos = entityPositions.get(sortingEntity.selfEntityId);
                     if (nextBelowPos != null) {
                         // offset by the number of children
                         float averageX = nextBelowPos.x + graphSorter.xPadding * (mustBeAbove.size() - 1) / 2.0f;
                         if (calculatedPosition == null) {
-                            calculatedPosition = new Point((int) averageX, nextBelowPos.y);
+                            calculatedPosition = new KinPoint((int) averageX, nextBelowPos.y);
                             addLabel(":mustBeAbove");
                         }
                         if (nextBelowPos.y < calculatedPosition.y + graphSorter.yPadding) {
@@ -214,18 +214,18 @@ public class SortingEntity implements Comparable<SortingEntity> {
             // todo: this should probably be moved into a separate action and when a move is made then move in sequence the entities that are below and to the right
             // todo: mustBeNextTo could be sorted first 
 //                for (SortingEntity sortingEntity : mustBeNextTo) {
-//                    Point nextToPos = entityPositions.get(sortingEntity.selfEntityId);
+//                    KinPoint nextToPos = entityPositions.get(sortingEntity.selfEntityId);
 //                    if (nextToPos != null) {
 //                        if (nextToPos.y > calculatedPosition.y) {
-//                            calculatedPosition = new Point(nextToPos.x, nextToPos.y);
+//                            calculatedPosition = new KinPoint(nextToPos.x, nextToPos.y);
 //                            addLabel(":mustBeNextTo");
 //                        }
 //
 //
-////                    Point nextToPos = entityPositions.get(sortingEntity.selfEntityId);
+////                    KinPoint nextToPos = entityPositions.get(sortingEntity.selfEntityId);
 ////                    if (nextToPos != null) {
 ////                        if (nextToPos.y > calculatedPosition.y) {
-////                            calculatedPosition = new Point(nextToPos.x, nextToPos.y);
+////                            calculatedPosition = new KinPoint(nextToPos.x, nextToPos.y);
 ////                            addLabel(":mustBeNextTo");
 ////                        }
 //////                    } else {
@@ -258,7 +258,7 @@ public class SortingEntity implements Comparable<SortingEntity> {
         return calculatedPosition;
     }
 
-    protected void getRelatedPositions(HashMap<UniqueIdentifier, Point> entityPositions) throws UnsortablePointsException {
+    protected void getRelatedPositions(HashMap<UniqueIdentifier, KinPoint> entityPositions) throws UnsortablePointsException {
         ArrayList<SortingEntity> allRelations = new ArrayList<SortingEntity>();
         allRelations.addAll(mustBeBelow);
         allRelations.add(this);

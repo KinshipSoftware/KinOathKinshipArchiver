@@ -49,5 +49,5 @@ public interface DiagramSettings {
 
     RelationTypeDefinition[] getRelationTypeDefinitions();
 
-    void storeAllData();
+    void storeAllData(KinDocument kinDocument);
 }

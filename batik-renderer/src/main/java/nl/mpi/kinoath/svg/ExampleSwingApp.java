@@ -18,7 +18,6 @@
 package nl.mpi.kinoath.svg;
 
 import java.awt.HeadlessException;
-import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -26,12 +25,14 @@ import javax.swing.JFrame;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityData.SymbolType;
+import nl.mpi.kinnate.kindata.KinRectangle;
 import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.svg.DiagramSettings;
 import nl.mpi.kinnate.svg.EntitySvg;
 import nl.mpi.kinnate.svg.KinDocument;
 import nl.mpi.kinnate.svg.KinDocumentImpl;
+import nl.mpi.kinnate.svg.KinElementException;
 import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.svg.SvgDiagram;
 import nl.mpi.kinnate.svg.SvgUpdateHandler;
@@ -41,7 +42,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
-import org.w3c.dom.svg.SVGDocument;
 
 /**
  * @since Nov 24, 2014 7:55:16 PM (creation date)
@@ -53,7 +53,7 @@ public class ExampleSwingApp {
     protected final JSVGCanvas svgCanvas = new JSVGCanvas();
     private static final String RHOMBUS = "rhombus";
 
-    public ExampleSwingApp() throws DOMException, IOException, OldFormatException, UnsortablePointsException, AbstractMethodError {
+    public ExampleSwingApp() throws DOMException, IOException, OldFormatException, UnsortablePointsException, AbstractMethodError, KinElementException {
         svgCanvas.setDocument(getSVG());
         this.diagramScrollPanel = new DiagramScrollPanel(svgCanvas);
         svgCanvas.setEnableImageZoomInteractor(true);
@@ -80,7 +80,7 @@ public class ExampleSwingApp {
         return new EntityData[]{entityData1, entityData2, entityData3};
     }
 
-    private Document getSVG() throws IOException, DOMException, OldFormatException, UnsortablePointsException {
+    private Document getSVG() throws IOException, DOMException, OldFormatException, UnsortablePointsException, KinElementException {
         EntityData[] entiryData = getEntityNodes();
         final EventListener eventListener = new EventListener() {
 
@@ -153,19 +153,19 @@ public class ExampleSwingApp {
             }
 
             @Override
-            public void storeAllData() {
+            public void storeAllData(KinDocument kinDocument) {
 //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         }, entitySvg);
         svgDiagram.generateDefaultSvg(new DefaultSorter());
         final SvgUpdateHandler svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
         svgDiagram.graphData.setEntitys(entiryData);
-        svgUpdateHandler.drawEntities(new Rectangle(800, 600));
+        svgUpdateHandler.drawEntities(new KinRectangle(800, 600));
 //        printNodeNames(svgDiagram.getDoc().getRootElement());
         return ((KinDocumentImpl) svgDiagram.getDoc()).getDoc();
     }
 
-    public static void main(String[] args) throws AbstractMethodError, DOMException, HeadlessException, IOException, OldFormatException, UnsortablePointsException {
+    public static void main(String[] args) throws AbstractMethodError, DOMException, HeadlessException, IOException, OldFormatException, UnsortablePointsException, KinElementException {
         // Create a new JFrame.
         JFrame jFrame = new JFrame("KinOath Swing Example: shift+l=pan, shift+r=zoom, ctrl+l=box, ctrl+r=rotate");
         final ExampleSwingApp exampleSwingApp = new ExampleSwingApp();

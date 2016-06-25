@@ -17,9 +17,9 @@
  */
 package nl.mpi.kinnate.svg.relationlines;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
+import nl.mpi.kinnate.kindata.KinPoint;
 
 /**
  * Document : LineRecord Created on : Jun 29, 2012, 2:19:43 PM
@@ -36,10 +36,10 @@ public class LineRecord {
     private class IntersectionRecord implements Comparable<IntersectionRecord> {
 
         int lineSegment;
-        Point intersectionPoint;
+        KinPoint intersectionPoint;
         boolean isLeftHand;
 
-        public IntersectionRecord(int lineSegment, Point intersectionPoint, boolean isLeftHand) {
+        public IntersectionRecord(int lineSegment, KinPoint intersectionPoint, boolean isLeftHand) {
             this.lineSegment = lineSegment;
             this.intersectionPoint = intersectionPoint;
             this.isLeftHand = isLeftHand;
@@ -48,27 +48,25 @@ public class LineRecord {
         public int compareTo(IntersectionRecord o) {
             if (lineSegment != o.lineSegment) {
                 return lineSegment - o.lineSegment;
+            } else if (!this.isLeftHand) {
+                return intersectionPoint.x - o.intersectionPoint.x;
             } else {
-                if (!this.isLeftHand) {
-                    return intersectionPoint.x - o.intersectionPoint.x;
-                } else {
-                    return o.intersectionPoint.x - intersectionPoint.x;
-                }
+                return o.intersectionPoint.x - intersectionPoint.x;
             }
         }
     }
 
-    public LineRecord(String groupName, String lineIdString, ArrayList<Point> pointsList) {
+    public LineRecord(String groupName, String lineIdString, ArrayList<KinPoint> pointsList) {
         this.groupName = groupName;
         this.lineIdSring = lineIdString;
         this.pointsList = pointsList;
     }
     private final String lineIdSring;
-    private final ArrayList<Point> pointsList;
+    private final ArrayList<KinPoint> pointsList;
     private final ArrayList<IntersectionRecord> intersectionList = new ArrayList<IntersectionRecord>();
     private final String groupName;
 
-//        private Point getIntersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+//        private KinPoint getIntersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
 //            double denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
 //            if (denominator == 0.0) { // Lines are parallel.
 //                return null;
@@ -77,7 +75,7 @@ public class LineRecord {
 //            double ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator;
 //            if (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f) {
 //                // Get the intersection point.
-//                return new Point((int) (x1 + ua * (x2 - x1)), (int) (y1 + ua * (y2 - y1)));
+//                return new KinPoint((int) (x1 + ua * (x2 - x1)), (int) (y1 + ua * (y2 - y1)));
 //            }
 //            return null;
 //        }
@@ -112,8 +110,8 @@ public class LineRecord {
 
     private int getPrev(int current, Orientation orientation) {
         for (int currentIndex = current - 1; currentIndex > 0; currentIndex--) {
-            Point startPoint = pointsList.get(currentIndex);
-            Point endPoint = pointsList.get(currentIndex + 1);
+            KinPoint startPoint = pointsList.get(currentIndex);
+            KinPoint endPoint = pointsList.get(currentIndex + 1);
             switch (orientation) {
                 case horizontal:
                     if (startPoint.x != endPoint.x) {
@@ -132,8 +130,8 @@ public class LineRecord {
 
     private int getNext(int current, Orientation orientation) {
         for (int currentIndex = current + 1; currentIndex < pointsList.size() - 1; currentIndex++) {
-            Point startPoint = pointsList.get(currentIndex);
-            Point endPoint = pointsList.get(currentIndex + 1);
+            KinPoint startPoint = pointsList.get(currentIndex);
+            KinPoint endPoint = pointsList.get(currentIndex + 1);
             switch (orientation) {
                 case horizontal:
                     if (startPoint.x != endPoint.x) {
@@ -150,18 +148,18 @@ public class LineRecord {
         return -1;
     }
 
-    protected Point[] getSegment(int segmentIndex) {
-        return new Point[]{pointsList.get(segmentIndex), pointsList.get(segmentIndex + 1)};
+    protected KinPoint[] getSegment(int segmentIndex) {
+        return new KinPoint[]{pointsList.get(segmentIndex), pointsList.get(segmentIndex + 1)};
     }
 
-//    protected Point getIntersection(LineRecord lineRecord) {
+//    protected KinPoint getIntersection(LineRecord lineRecord) {
 //        return null; //Point((lineRecord.startPoint.x + lineRecord.endPoint.x) / 2, (lineRecord.startPoint.y + lineRecord.endPoint.y) / 2);
 //        // todo: get the actual intersections and insert loops
 //        // todo: in RelationSVG on first load the lineLookUpTable is null and loops will not be drawn
 //    }
     public void moveAside(int linePart, int distance) {
-        Point startPoint = this.pointsList.get(linePart);
-        Point endPoint = this.pointsList.get(linePart + 1);
+        KinPoint startPoint = this.pointsList.get(linePart);
+        KinPoint endPoint = this.pointsList.get(linePart + 1);
 //        System.out.println("line parts: " + this.pointsList.size());
         if (startPoint.x == endPoint.x) {
             if (linePart > 1) { // never horizontally move the first segment from above its entity
@@ -170,11 +168,11 @@ public class LineRecord {
                 endPoint.setLocation(endPoint.x - distance, endPoint.y);
             }
         } else {
-            final Point movedStartPoint = new Point(startPoint.x, startPoint.y - distance);
-            final Point movedEndPoint = new Point(endPoint.x, endPoint.y - distance);
+            final KinPoint movedStartPoint = new KinPoint(startPoint.x, startPoint.y - distance);
+            final KinPoint movedEndPoint = new KinPoint(endPoint.x, endPoint.y - distance);
             // only shift previous/next if it is a horizontal line
             // find and update all points before this one that are in the exact location
-            Point oldStartPoint = new Point(startPoint);
+            KinPoint oldStartPoint = new KinPoint(startPoint);
             for (int linePartPrev = linePart; linePartPrev > 0; linePartPrev--) {
                 if (oldStartPoint.equals(this.pointsList.get(linePartPrev))) {
                     this.pointsList.get(linePartPrev).setLocation(movedStartPoint);
@@ -184,7 +182,7 @@ public class LineRecord {
                 }
             }
             // find and update all points after this one that are in the exact location
-            Point oldEndPoint = new Point(endPoint);
+            KinPoint oldEndPoint = new KinPoint(endPoint);
             for (int linePartNext = linePart + 1; linePartNext < this.pointsList.size() - 1; linePartNext++) {
 //                System.out.println("linePartNext: " + linePartNext);
 //                System.out.println(this.pointsList.get(linePartNext));
@@ -203,15 +201,15 @@ public class LineRecord {
     }
 
     public void insertLoop(int linePart, int positionX, boolean isLeftHand) {
-        Point startPoint = this.pointsList.get(linePart);
+        KinPoint startPoint = this.pointsList.get(linePart);
         int centerX = positionX;
         int centerY = startPoint.y;
-        Point intersectionPoint = new Point(centerX, centerY);
+        KinPoint intersectionPoint = new KinPoint(centerX, centerY);
         intersectionList.add(new IntersectionRecord(linePart, intersectionPoint, isLeftHand));
 //        System.out.println("insertLoop");
         // todo: this is test needs to be extended to place the loops in the correct locations and to produce pretty curved loops
 //        
-//        Point endPoint = this.pointsList.get(linePart + 1);
+//        KinPoint endPoint = this.pointsList.get(linePart + 1);
 //        int startOffset = -5;
 //        int endOffset = +5;
 //        int loopHeight = -10;
@@ -221,27 +219,27 @@ public class LineRecord {
 ////                    startOffset = +5;
 ////                    endOffset = -5;
 ////                }
-////                this.pointsList.add(linePart + 1, new Point(centerX, centerY + startOffset));
-////                this.pointsList.add(linePart + 1, new Point(centerX + loopHeight, centerY + startOffset));
-////                this.pointsList.add(linePart + 1, new Point(centerX + loopHeight, centerY + endOffset));
-////                this.pointsList.add(linePart + 1, new Point(centerX, centerY + endOffset));
+////                this.pointsList.add(linePart + 1, new KinPoint(centerX, centerY + startOffset));
+////                this.pointsList.add(linePart + 1, new KinPoint(centerX + loopHeight, centerY + startOffset));
+////                this.pointsList.add(linePart + 1, new KinPoint(centerX + loopHeight, centerY + endOffset));
+////                this.pointsList.add(linePart + 1, new KinPoint(centerX, centerY + endOffset));
 ////            } else {
 //        // vertical lines
 //        if (startPoint.x < endPoint.x) {
 //            startOffset = +5;
 //            endOffset = -5;
 //        }
-//        this.pointsList.add(linePart + 1, new Point(centerX + startOffset, centerY));
-//        this.pointsList.add(linePart + 1, new Point(centerX + startOffset, centerY + loopHeight));
-//        this.pointsList.add(linePart + 1, new Point(centerX + endOffset, centerY + loopHeight));
-//        this.pointsList.add(linePart + 1, new Point(centerX + endOffset, centerY));
+//        this.pointsList.add(linePart + 1, new KinPoint(centerX + startOffset, centerY));
+//        this.pointsList.add(linePart + 1, new KinPoint(centerX + startOffset, centerY + loopHeight));
+//        this.pointsList.add(linePart + 1, new KinPoint(centerX + endOffset, centerY + loopHeight));
+//        this.pointsList.add(linePart + 1, new KinPoint(centerX + endOffset, centerY));
 //            }
     }
 
     private boolean addCurveLoops(StringBuilder stringBuilder, int segmentIndex, int separationDistance) {
         // add loops in the correct direction for the line
         boolean lineToRequired = false;
-        Point lastPoint = null;
+        KinPoint lastPoint = null;
         for (IntersectionRecord intersectionRecord : intersectionList) {
             // prevent two loops being placed over the top in the same spot
             if (lastPoint == null || !lastPoint.equals(intersectionRecord.intersectionPoint)) {
@@ -281,8 +279,8 @@ public class LineRecord {
         boolean moveRequired = true;
         boolean lineToRequired = true;
         for (int segmentIndex = 0; segmentIndex < this.pointsList.size(); segmentIndex++) {
-//        for (Point currentPoint : this.pointsList.toArray(new Point[]{})) {
-            Point currentPoint = this.pointsList.get(segmentIndex);
+//        for (Point currentPoint : this.pointsList.toArray(new KinPoint[]{})) {
+            KinPoint currentPoint = this.pointsList.get(segmentIndex);
             if (moveRequired) {
                 moveRequired = false;
                 stringBuilder.append("M ");

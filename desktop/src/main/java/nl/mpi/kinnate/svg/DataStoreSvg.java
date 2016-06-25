@@ -359,11 +359,8 @@ public class DataStoreSvg implements DiagramSettings {
 //        }
 //    }
     @Override
-    public void storeAllData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void storeAllData(SVGDocument doc) {
+    public void storeAllData(KinDocument kinDocument) {
+        SVGDocument doc = ((KinDocumentImpl) kinDocument).getDoc();
         // remove old kin diagram data
         System.out.println("Removing old KinDiagramData nodes from the SVG before updating");
         NodeList dataNodes = doc.getElementsByTagNameNS("http://mpi.nl/tla/kin", "KinDiagramData");

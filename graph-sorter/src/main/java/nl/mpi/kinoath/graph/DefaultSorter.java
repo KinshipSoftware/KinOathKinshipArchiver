@@ -17,11 +17,11 @@
  */
 package nl.mpi.kinoath.graph;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphSorter;
+import nl.mpi.kinnate.kindata.KinPoint;
 import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 
@@ -51,7 +51,7 @@ public class DefaultSorter extends GraphSorter {
         //printLocations(); // todo: remove this and maybe add a label of x,y post for each node to better see the sorting
     }
 
-    public void placeAllNodes(HashMap<UniqueIdentifier, Point> entityPositions) throws UnsortablePointsException {
+    public void placeAllNodes(HashMap<UniqueIdentifier, KinPoint> entityPositions) throws UnsortablePointsException {
         // make a has table of all entites
         // find the first ego node
         // place it and all its immediate relatives onto the graph, each time checking that the space is free

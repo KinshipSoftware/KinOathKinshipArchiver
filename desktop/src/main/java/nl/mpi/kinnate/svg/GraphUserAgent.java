@@ -71,11 +71,13 @@ public class GraphUserAgent extends SVGUserAgentGUIAdapter {
             // put link target into the table
             final ArbilDataNode arbilDataNode = dataNodeLoader.getArbilDataNode(null, new URI(targetUri));
             graphPanel.metadataPanel.addArbilDataNode(arbilDataNode);
+            // set the graph selection
+            graphPanel.setSelectedIds(new UniqueIdentifier[]{});
         } catch (URISyntaxException urise) {
             BugCatcherManager.getBugCatcher().logError(urise);
+        } catch (KinElementException urise) {
+            BugCatcherManager.getBugCatcher().logError(urise);
         }
-        // set the graph selection
-        graphPanel.setSelectedIds(new UniqueIdentifier[]{});
         graphPanel.metadataPanel.updateEditorPane();
         // todo: provide a url for the imdiviewer or to launch arbil
 //        try {

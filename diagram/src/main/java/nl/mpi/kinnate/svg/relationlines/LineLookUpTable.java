@@ -18,8 +18,8 @@
  */
 package nl.mpi.kinnate.svg.relationlines;
 
-import java.awt.Point;
 import java.util.HashSet;
+import nl.mpi.kinnate.kindata.KinPoint;
 import nl.mpi.kinnate.svg.EntitySvg;
 
 /**
@@ -42,24 +42,24 @@ public class LineLookUpTable {
     public void getOverlapsOtherLine() {
     }
 
-    protected Point[] getLineDirected(Point[] undirectedLine) {
+    protected KinPoint[] getLineDirected(KinPoint[] undirectedLine) {
         // this method is not intended to handle diagonal lines
-        Point[] lineDirected;
+        KinPoint[] lineDirected;
         if (undirectedLine[0].y == undirectedLine[1].y) {
             if (undirectedLine[0].x <= undirectedLine[1].x) {
                 lineDirected = undirectedLine;
             } else {
-                lineDirected = new Point[]{undirectedLine[1], undirectedLine[0]};
+                lineDirected = new KinPoint[]{undirectedLine[1], undirectedLine[0]};
             }
         } else if (undirectedLine[0].y <= undirectedLine[1].y) {
             lineDirected = undirectedLine;
         } else {
-            lineDirected = new Point[]{undirectedLine[1], undirectedLine[0]};
+            lineDirected = new KinPoint[]{undirectedLine[1], undirectedLine[0]};
         }
         return lineDirected;
     }
 
-    protected boolean intersectsPoint(Point entityPoint, Point[] relationLine) {
+    protected boolean intersectsPoint(KinPoint entityPoint, KinPoint[] relationLine) {
 //        System.out.println("entityPoint:" + entityPoint);
 //        System.out.println("segment: " + relationLine[0] + relationLine[1]);
         boolean startsBefore = relationLine[0].x <= entityPoint.x + EntitySvg.symbolSize;
@@ -73,8 +73,8 @@ public class LineLookUpTable {
         return (intersectsResult);
     }
 
-    protected boolean intersects(Point[] horizontalLine, Point[] verticalLine) {
-        Point[] horizontalLineDirected = getLineDirected(horizontalLine);
+    protected boolean intersects(KinPoint[] horizontalLine, KinPoint[] verticalLine) {
+        KinPoint[] horizontalLineDirected = getLineDirected(horizontalLine);
         boolean startsBefore = horizontalLineDirected[0].x < verticalLine[0].x;
         boolean endsBefore = horizontalLineDirected[1].x <= verticalLine[0].x;
         boolean startsAbove = verticalLine[0].y < horizontalLineDirected[0].y;
@@ -83,9 +83,9 @@ public class LineLookUpTable {
         return (intersectsResult);
     }
 
-    protected boolean overlaps(Point[] lineA, Point[] lineB) {
-        Point[] lineDirectedA = getLineDirected(lineA);
-        Point[] lineDirectedB = getLineDirected(lineB);
+    protected boolean overlaps(KinPoint[] lineA, KinPoint[] lineB) {
+        KinPoint[] lineDirectedA = getLineDirected(lineA);
+        KinPoint[] lineDirectedB = getLineDirected(lineB);
         boolean verticalMatch = lineDirectedA[0].x == lineDirectedB[0].x && lineDirectedA[0].x == lineDirectedB[1].x && lineDirectedA[0].x == lineDirectedA[1].x;
         boolean horizontalMatch = lineDirectedA[0].y == lineDirectedB[0].y && lineDirectedA[0].y == lineDirectedB[1].y && lineDirectedA[0].y == lineDirectedA[1].y;
         // horizontalMatch
@@ -130,7 +130,7 @@ public class LineLookUpTable {
     }
     boolean excludeFirstLastSegments = true;
 
-    public void separateLinesOverlappingEntities(Point[] allEntityLocations) {
+    public void separateLinesOverlappingEntities(KinPoint[] allEntityLocations) {
         int offset = 0;
         if (excludeFirstLastSegments) {
             offset = 1;
@@ -140,9 +140,9 @@ public class LineLookUpTable {
 //            System.out.print("lineRecordCount: "+lineRecordCount);
             LineRecord lineRecordOuter = lineRecordArray[lineRecordCount];
             for (int currentIndexA = 0 + offset; currentIndexA <= lineRecordOuter.getLastSegment() - offset; currentIndexA++) {
-                Point[] currentSegmentA = lineRecordOuter.getSegment(currentIndexA);
+                KinPoint[] currentSegmentA = lineRecordOuter.getSegment(currentIndexA);
 //                System.out.print("[" + lineRecordCount + ":" + currentIndexA + "]");
-                for (Point entityLocation : allEntityLocations) {
+                for (KinPoint entityLocation : allEntityLocations) {
 //                    System.out.println("entityLocation:" + entityLocation);
                     if (intersectsPoint(entityLocation, currentSegmentA)) {
 //                        System.out.print(" intersects,");
@@ -167,7 +167,7 @@ public class LineLookUpTable {
 //            System.out.print(lineRecordCount + ": ");
             LineRecord lineRecordOuter = lineRecordArray[lineRecordCount];
             for (int currentIndexA = 0 + offset; currentIndexA <= lineRecordOuter.getLastSegment() - offset; currentIndexA++) {
-                Point[] currentSegmentA = lineRecordOuter.getSegment(currentIndexA);
+                KinPoint[] currentSegmentA = lineRecordOuter.getSegment(currentIndexA);
 //                System.out.print("[a" + currentIndexA + "]");
                 for (int lineRecordInnerCount = lineRecordCount + 1; lineRecordInnerCount < lineRecordArray.length; lineRecordInnerCount++) {
                     if (lineRecordCount != lineRecordInnerCount) {
@@ -176,7 +176,7 @@ public class LineLookUpTable {
                             // todo: hide lines that are overlapped by lines in the same group
                         } else {
                             for (int currentIndexB = 0 + offset; currentIndexB <= lineRecordInner.getLastSegment() - offset; currentIndexB++) {
-                                Point[] otherHorizontalLine = lineRecordInner.getSegment(currentIndexB);
+                                KinPoint[] otherHorizontalLine = lineRecordInner.getSegment(currentIndexB);
 //                            System.out.print("[b" + currentIndexB + "]");
                                 if (overlaps(currentSegmentA, otherHorizontalLine)) {
 //                                System.out.print(" overlaps,");
@@ -197,7 +197,7 @@ public class LineLookUpTable {
         for (LineRecord lineRecordForLoops : lineRecords) {
             int currentHorizontal = lineRecordForLoops.getLastHorizontal();
             while (currentHorizontal > -1) {
-                Point[] currentHorizontalLine = lineRecordForLoops.getSegment(currentHorizontal);
+                KinPoint[] currentHorizontalLine = lineRecordForLoops.getSegment(currentHorizontal);
 //                System.out.println("currentHorizontal: " + currentHorizontal);
                 for (LineRecord lineRecord : lineRecords) {
                     if (lineRecord != lineRecordForLoops) {
@@ -205,7 +205,7 @@ public class LineLookUpTable {
                             int currentVertical = lineRecord.getFirstVertical();
 //                        System.out.println("currentVertical: " + currentVertical);
                             while (currentVertical > -1) {
-                                Point[] currentVerticalLine = lineRecord.getSegment(currentVertical);
+                                KinPoint[] currentVerticalLine = lineRecord.getSegment(currentVertical);
                                 if (intersects(currentHorizontalLine, currentVerticalLine)) {
                                     boolean isLeftHand = currentHorizontalLine[0].x > currentHorizontalLine[1].x;
                                     lineRecordForLoops.insertLoop(currentHorizontal, currentVerticalLine[0].x, isLeftHand);

@@ -17,25 +17,13 @@
  */
 package nl.mpi.kinnate.svg;
 
-import java.io.IOException;
-
 /**
- * @since Jun 17, 2016 18:29:13 PM (creation date)
+ * @since Jun 22, 2016 19:24:08 PM (creation date)
  * @author Peter Withers <peter.withers@mpi.nl>
  */
-public interface KinDocument {
+public class KinElementException extends Exception {
 
-    public void readDocument(String uri, String templateXml) throws IOException;
-
-    public void createDocument(String uri) throws IOException;
-
-    public KinElement getElementById(String elementId);
-
-    public KinElement getDocumentElement();
-
-    public KinElement createElementNS(String namespaceURI, String qualifiedName) throws KinElementException;
-
-    public KinElement createTextNode(String data);
-
-    public void addEventListener(KinElement targetNode);
+    public KinElementException(String message) {
+        super(message);
+    }
 }
