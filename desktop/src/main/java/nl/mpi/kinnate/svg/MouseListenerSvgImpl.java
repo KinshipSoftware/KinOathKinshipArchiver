@@ -55,10 +55,10 @@ import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGMatrix;
 
 /**
- * Document : MouseListenerSvg Created on : Mar 9, 2011, 3:21:53 PM Author :
- * Peter Withers
+ * Document : MouseListenerSvgImpl Created on : Mar 9, 2011, 3:21:53 PM Author :
+ Peter Withers
  */
-public class MouseListenerSvg extends MouseInputAdapter implements EventListener {
+public class MouseListenerSvgImpl extends MouseInputAdapter implements EventListener {
 
     private final static Logger logger = LoggerFactory.getLogger(GraphPanel.class);
     private Cursor preDragCursor;
@@ -80,7 +80,7 @@ public class MouseListenerSvg extends MouseInputAdapter implements EventListener
         selectAll, selectRelated, expandSelection, deselectAll
     }
 
-    public MouseListenerSvg(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
+    public MouseListenerSvgImpl(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
         this.kinDiagramPanel = kinDiagramPanel;
         this.graphPanel = graphPanel;
         this.dialogHandler = dialogHandler;

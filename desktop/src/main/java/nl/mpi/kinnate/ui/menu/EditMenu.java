@@ -26,7 +26,7 @@ import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import nl.mpi.kinnate.SavePanel;
-import nl.mpi.kinnate.svg.MouseListenerSvg;
+import nl.mpi.kinnate.svg.MouseListenerSvgImpl;
 import nl.mpi.kinnate.ui.window.AbstractDiagramManager;
 
 /**
@@ -69,20 +69,20 @@ public class EditMenu extends JMenu implements ActionListener {
             }
         });
         selectAllMenu = new JMenuItem(menus.getString("SELECT ALL"));
-        selectAllMenu.setActionCommand(MouseListenerSvg.ActionCode.selectAll.name());
+        selectAllMenu.setActionCommand(MouseListenerSvgImpl.ActionCode.selectAll.name());
         selectAllMenu.addActionListener(EditMenu.this);
         selectAllMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
         selectRelatedMenu = new JMenuItem(menus.getString("SELECT RELATED"));
-        selectRelatedMenu.setActionCommand(MouseListenerSvg.ActionCode.selectRelated.name());
+        selectRelatedMenu.setActionCommand(MouseListenerSvgImpl.ActionCode.selectRelated.name());
         selectRelatedMenu.addActionListener(EditMenu.this);
         selectRelatedMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         expandSelectionMenu = new JMenuItem(menus.getString("EXPAND SELECTION"));
-        expandSelectionMenu.setActionCommand(MouseListenerSvg.ActionCode.expandSelection.name());
+        expandSelectionMenu.setActionCommand(MouseListenerSvgImpl.ActionCode.expandSelection.name());
         expandSelectionMenu.addActionListener(EditMenu.this);
         expandSelectionMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         
         deselectAllMenu = new JMenuItem(menus.getString("DESELECT ALL"));
-        deselectAllMenu.setActionCommand(MouseListenerSvg.ActionCode.deselectAll.name());
+        deselectAllMenu.setActionCommand(MouseListenerSvgImpl.ActionCode.deselectAll.name());
         deselectAllMenu.addActionListener(EditMenu.this);
         deselectAllMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
         
@@ -142,7 +142,7 @@ public class EditMenu extends JMenu implements ActionListener {
             if (e.getActionCommand().equals("RecalculateDiagram")) {
                 menuSavePanel.updateGraph();
             } else {
-                menuSavePanel.doActionCommand(MouseListenerSvg.ActionCode.valueOf(e.getActionCommand()));
+                menuSavePanel.doActionCommand(MouseListenerSvgImpl.ActionCode.valueOf(e.getActionCommand()));
             }
         }
         enableMenuKeys();

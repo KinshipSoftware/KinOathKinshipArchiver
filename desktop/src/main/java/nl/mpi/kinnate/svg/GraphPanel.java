@@ -89,7 +89,7 @@ public class GraphPanel extends JPanel implements SavePanel {
     public DataStoreSvg dataStoreSvg;
 //    private URI[] egoPathsTemp = null;
     public final SvgUpdateHandler svgUpdateHandler;
-    public MouseListenerSvg mouseListenerSvg;
+    public MouseListenerSvgImpl mouseListenerSvg;
     final private ArbilWindowManager dialogHandler;
     final private ArbilDataNodeLoader dataNodeLoader;
     final private SessionStorage sessionStorage;
@@ -104,7 +104,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         this.dataNodeLoader = dataNodeLoader;
 //        this.entityCollection = entityCollection;
         dataStoreSvg = new DataStoreSvg();
-        mouseListenerSvg = new MouseListenerSvg(kinDiagramPanel, this, sessionStorage, dialogHandler);
+        mouseListenerSvg = new MouseListenerSvgImpl(kinDiagramPanel, this, sessionStorage, dialogHandler);
         svgDiagram = new SvgDiagram(dataStoreSvg, new EntitySvg());
         dataStoreSvg.setDefaults();
         svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
@@ -884,7 +884,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void doActionCommand(MouseListenerSvg.ActionCode actionCode) {
+    public void doActionCommand(MouseListenerSvgImpl.ActionCode actionCode) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
