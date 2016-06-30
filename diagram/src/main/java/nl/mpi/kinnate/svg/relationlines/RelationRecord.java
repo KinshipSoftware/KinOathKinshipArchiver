@@ -28,8 +28,6 @@ import nl.mpi.kinnate.kindata.RelationTypeDefinition;
 import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.svg.SvgDiagram;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Document : RelationRecord Created on : Jun 29, 2012, 2:18:15 PM
@@ -38,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RelationRecord {
 
-    private final static Logger logger = LoggerFactory.getLogger(RelationRecord.class);
+//    private final static Logger logger = LoggerFactory.getLogger(RelationRecord.class);
     private String groupName = null;
     public String idString;
     public String lineIdString;
@@ -60,7 +58,7 @@ public class RelationRecord {
     final private String dcrType;
     final private String customType;
 
-    public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, KinPoint egoPoint, KinPoint alterPoint, KinPoint averageParentPassed) {
+    public RelationRecord(String lineIdString, DataTypes.RelationType relationType, float vSpacing, KinPoint egoPoint, KinPoint alterPoint, KinPoint averageParentPassed) throws OldFormatException {
         this.dcrType = null;
         this.customType = null;
         lineRecord = setPolylinePointsAttribute(lineIdString, relationType, vSpacing, egoPoint.x, egoPoint.y, alterPoint.x, alterPoint.y, averageParentPassed);
@@ -164,7 +162,7 @@ public class RelationRecord {
     }
     // end caclulate the average parent position
 
-    public void updatePathPoints(LineLookUpTable lineLookUpTable) {
+    public void updatePathPoints(LineLookUpTable lineLookUpTable) throws OldFormatException {
         KinPoint egoSymbolPoint;
         KinPoint alterSymbolPoint;
         KinPoint parentPoint = null;
@@ -237,7 +235,7 @@ public class RelationRecord {
 
     }
 
-    private LineRecord setPolylinePointsAttribute(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, KinPoint averageParentPassed) {
+    private LineRecord setPolylinePointsAttribute(String lineIdString, DataTypes.RelationType relationType, float vSpacing, float egoX, float egoY, float alterX, float alterY, KinPoint averageParentPassed) throws OldFormatException {
         //float midY = (egoY + alterY) / 2;
         // todo: Ticket #1064 when an entity is above one that it should be below the line should make a zigzag to indicate it        
         ArrayList<KinPoint> initialPointsList = new ArrayList<KinPoint>();
@@ -270,7 +268,8 @@ public class RelationRecord {
 //                alterX = tempX;
 //                alterY = tempY;
             case descendant:
-                logger.warn("Found descendant in LineRecord", new OldFormatException("This diagram needs to be updated, select recalculate diagram from the edit menu before continuing."));
+                System.out.println("Found descendant in LineRecord");
+                throw new OldFormatException("This diagram needs to be updated, select recalculate diagram from the edit menu before continuing.");
 //                targetNode.getParentNode().getParentNode().getParentNode().getParentNode().removeChild(targetNode.getParentNode().getParentNode().getParentNode());
 //                throw new UnsupportedOperationException("in order to simplify section, the ancestor relations should be swapped so that ego is the parent");
 //                return;
@@ -390,14 +389,12 @@ public class RelationRecord {
                     fromBezY = (egoY - alterY) / 2 + alterY;
                     toBezY = (egoY - alterY) / 2 + alterY;
                 }
+            } else if (alterY - egoY < hSpacing / 4) {
+                fromBezY = egoY + hSpacing / 4;
+                toBezY = alterY + hSpacing / 4;
             } else {
-                if (alterY - egoY < hSpacing / 4) {
-                    fromBezY = egoY + hSpacing / 4;
-                    toBezY = alterY + hSpacing / 4;
-                } else {
-                    fromBezY = (alterY - egoY) / 2 + egoY;
-                    toBezY = (alterY - egoY) / 2 + egoY;
-                }
+                fromBezY = (alterY - egoY) / 2 + egoY;
+                toBezY = (alterY - egoY) / 2 + egoY;
             }
 //            System.out.println("egoY: " + egoY + " alterY: " + alterY);
             final float distanceX = Math.abs(egoX - alterX);
@@ -426,14 +423,12 @@ public class RelationRecord {
                     fromBezX = (egoX - alterX) / 2 + alterX;
                     toBezX = (egoX - alterX) / 2 + alterX;
                 }
+            } else if (alterX - egoX < hSpacing / 4) {
+                fromBezX = egoX + hSpacing / 4;
+                toBezX = alterX + hSpacing / 4;
             } else {
-                if (alterX - egoX < hSpacing / 4) {
-                    fromBezX = egoX + hSpacing / 4;
-                    toBezX = alterX + hSpacing / 4;
-                } else {
-                    fromBezX = (alterX - egoX) / 2 + egoX;
-                    toBezX = (alterX - egoX) / 2 + egoX;
-                }
+                fromBezX = (alterX - egoX) / 2 + egoX;
+                toBezX = (alterX - egoX) / 2 + egoX;
             }
 //            System.out.println("egoY: " + egoY + " alterY: " + alterY);
             final float distanceY = Math.abs(egoY - alterY);

@@ -41,8 +41,10 @@
         <!--<netbeans.hint.license>http://www.gnu.org/licenses/gpl-2.0.html</netbeans.hint.license>-->
         <netbeans.hint.license>gpl20</netbeans.hint.license> 
         <application.license.copyrightYear>2013</application.license.copyrightYear>    
-        <parentpom.location>${project.basedir}</parentpom.location>       
-    </properties>
+        <parentpom.location>${project.basedir}</parentpom.location>
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
+   </properties>
     <build> 
         <plugins> 
             <plugin> 

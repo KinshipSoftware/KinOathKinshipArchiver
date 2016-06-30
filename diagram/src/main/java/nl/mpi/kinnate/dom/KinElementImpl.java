@@ -19,10 +19,13 @@ package nl.mpi.kinnate.dom;
 
 import nl.mpi.kinnate.svg.KinElement;
 import nl.mpi.kinnate.svg.KinElementException;
+import nl.mpi.kinnate.svg.MouseListenerSvg;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 
 /**
  * @since Jun 22, 2016 19:43:36 PM (creation date)
@@ -97,6 +100,10 @@ public class KinElementImpl implements KinElement {
             }
             return null;
         }
+    }
+
+    public void addEventListener(MouseListenerSvg mouseListenerSvg) {
+        ((EventTarget) node).addEventListener("mousedown", (EventListener) mouseListenerSvg, false);
     }
 
     public KinElement getParentNode() {

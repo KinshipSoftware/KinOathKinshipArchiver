@@ -196,7 +196,7 @@ public class RelationRecordTable {
         return recordStore.size();
     }
 
-    public void adjustLines(SvgDiagram svgDiagram)  {
+    public void adjustLines(SvgDiagram svgDiagram) throws OldFormatException {
         lineLookUpTable = new LineLookUpTable();
         for (RelationRecord relationRecord : recordStore.values()) {
             relationRecord.updatePathPoints(lineLookUpTable);

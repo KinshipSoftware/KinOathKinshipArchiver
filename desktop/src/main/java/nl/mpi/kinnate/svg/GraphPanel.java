@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import javax.swing.JPanel;
+import javax.swing.event.MouseInputAdapter;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -62,7 +63,6 @@ import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinoath.graph.DefaultSorter;
 import nl.mpi.kinoath.svg.DiagramScrollPanel;
 import org.apache.batik.bridge.UpdateManager;
-import org.apache.batik.dom.svg.SVGOMPoint;
 import org.apache.batik.dom.util.SAXIOException;
 import org.apache.batik.swing.JSVGCanvas;
 import org.slf4j.Logger;
@@ -163,8 +163,8 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void setEntityCollection(EntityCollection entityCollection) {
         mouseListenerSvg.setEntityCollection(entityCollection);
-        svgCanvas.addMouseListener(mouseListenerSvg);
-        svgCanvas.addMouseMotionListener(mouseListenerSvg);
+        svgCanvas.addMouseListener((MouseInputAdapter) mouseListenerSvg);
+        svgCanvas.addMouseMotionListener((MouseInputAdapter) mouseListenerSvg);
         svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, entityCollection, dialogHandler, dataNodeLoader, sessionStorage));
     }
 //    private void zoomDrawing() {
@@ -383,7 +383,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         KinElement labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
 //        final SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
         // todo: should this be moved into the svg thread?
-        final KinRectangle renderRectDocument = svgUpdateHandler.getRectOnDocument(renderRectScreen, labelGroup);
+        final KinRectangle renderRectDocument = svgDiagram.doc.getRectOnDocument(renderRectScreen, labelGroup);
 //        System.out.println("renderRectDocument: " + renderRectDocument);
 
 //        SVGOMPoint pointOnDocument = getPointOnDocument(new Point(0, 0), labelGroupLocatable);
@@ -470,7 +470,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                             labelGroup.appendChild(mouseDotElement);
                         }
 //                        SVGLocatable labelGroupLocatable = (SVGLocatable) labelGroup;
-                        SVGOMPoint pointOnDocument = svgUpdateHandler.getPointOnDocument(currentLocation, labelGroup);
+                        KinPoint pointOnDocument = svgDiagram.doc.getPointOnDocument(currentLocation, labelGroup);
                         mouseDotElement.setAttribute("cx", Float.toString(pointOnDocument.getX()));
                         mouseDotElement.setAttribute("cy", Float.toString(pointOnDocument.getY()));
                     } catch (KinElementException exception) {
@@ -502,7 +502,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                     public void run() {
                         try {
                             svgUpdateHandler.updateMouseDrag(selectedGroupId, updateDragNodeXLocal, updateDragNodeYLocal);
-                        } catch (KinElementException exception) {
+                        } catch (KinElementException | OldFormatException exception) {
                             logger.warn("Error, modifying the SVG.", exception);
                         }
                         synchronized (svgUpdateHandler) {
@@ -542,7 +542,7 @@ public class GraphPanel extends JPanel implements SavePanel {
                         try {
                             final KinRectangle panelBounds = new KinRectangle(svgCanvas.getBounds().x, svgCanvas.getBounds().y, svgCanvas.getBounds().width, svgCanvas.getBounds().height);
                             svgUpdateHandler.updateDragNodeI(selectedGroupId, updateDragNodeXLocal, updateDragNodeYLocal, panelBounds);
-                        } catch (KinElementException exception) {
+                        } catch (KinElementException | OldFormatException exception) {
                             logger.warn("Error, modifying the SVG.", exception);
                         }
                         synchronized (svgUpdateHandler) {
@@ -884,7 +884,7 @@ public class GraphPanel extends JPanel implements SavePanel {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void doActionCommand(MouseListenerSvgImpl.ActionCode actionCode) {
+    public void doActionCommand(MouseListenerSvg.ActionCode actionCode) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

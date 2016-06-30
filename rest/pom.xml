@@ -10,7 +10,7 @@
     <groupId>nl.mpi</groupId>
     <artifactId>kinoath-rest</artifactId>
     <packaging>war</packaging>
-    <version>1.6.41-pretesting</version>
+    <version>1.6.43-pretesting</version>
     <name>KinOath Rest ${application.majorVersion}.${application.minorVersion}</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

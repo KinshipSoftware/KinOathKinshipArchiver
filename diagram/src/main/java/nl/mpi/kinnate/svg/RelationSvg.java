@@ -207,7 +207,7 @@ public class RelationSvg {
         }
     }
 
-    public void updateRelationLines(SvgDiagram svgDiagram, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) throws KinElementException {
+    public void updateRelationLines(SvgDiagram svgDiagram, RelationRecordTable relationRecords, ArrayList<UniqueIdentifier> draggedNodeIds, int hSpacing, int vSpacing) throws KinElementException, OldFormatException {
         if (relationRecords == null) {
             // no relations therefore nothing to do here
             return;

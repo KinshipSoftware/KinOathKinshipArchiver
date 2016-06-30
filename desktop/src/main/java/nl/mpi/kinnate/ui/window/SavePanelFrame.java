@@ -23,7 +23,7 @@ import java.io.File;
 import javax.swing.JFrame;
 import nl.mpi.kinnate.SavePanel;
 import nl.mpi.kinnate.svg.GraphPanel;
-import nl.mpi.kinnate.svg.MouseListenerSvgImpl.ActionCode;
+import nl.mpi.kinnate.svg.MouseListenerSvg.ActionCode;
 import nl.mpi.kinnate.svg.SaveExeption;
 
 /**

@@ -18,6 +18,8 @@
 package nl.mpi.kinnate.svg;
 
 import java.io.IOException;
+import nl.mpi.kinnate.kindata.KinPoint;
+import nl.mpi.kinnate.kindata.KinRectangle;
 
 /**
  * @since Jun 17, 2016 18:29:13 PM (creation date)
@@ -38,4 +40,16 @@ public interface KinDocument {
     public KinElement createTextNode(String data);
 
     public void addEventListener(KinElement targetNode);
+
+    public KinPoint getPointOnDocument(final KinPoint screenLocation, KinElement targetGroupElement);
+
+    public KinPoint getPointOnScreen(final KinPoint documentLocation, KinElement targetGroupElement);
+
+    public KinRectangle getRectOnDocument(final KinRectangle screenRectangle, KinElement targetGroupElement);
+
+    public KinRectangle getBoundingBox(KinElement selectedGroup);
+
+    public float getDragScale(KinElement kinElement);
+
+    public String getUUID();
 }

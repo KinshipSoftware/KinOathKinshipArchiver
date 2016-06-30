@@ -20,7 +20,7 @@ package nl.mpi.kinnate;
 
 import java.io.File;
 import nl.mpi.kinnate.svg.GraphPanel;
-import nl.mpi.kinnate.svg.MouseListenerSvgImpl;
+import nl.mpi.kinnate.svg.MouseListenerSvg;
 import nl.mpi.kinnate.svg.SaveExeption;
 
 /**
@@ -44,7 +44,7 @@ public interface SavePanel {
 
     public void updateGraph();
 
-    public void doActionCommand(MouseListenerSvgImpl.ActionCode actionCode);
+    public void doActionCommand(MouseListenerSvg.ActionCode actionCode);
 
     public GraphPanel getGraphPanel();
 

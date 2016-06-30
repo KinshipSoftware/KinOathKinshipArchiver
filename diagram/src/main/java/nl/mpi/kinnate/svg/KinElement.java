@@ -37,6 +37,8 @@ public interface KinElement {
 
     public KinElement getParentNode();
 
+    public void addEventListener(MouseListenerSvg mouseListenerSvg);
+
     public void setAttributeNS(String namespaceURI, String qualifiedName, String value) throws KinElementException;
 
     public String getAttributeNS(String namespaceURI, String localName) throws KinElementException;

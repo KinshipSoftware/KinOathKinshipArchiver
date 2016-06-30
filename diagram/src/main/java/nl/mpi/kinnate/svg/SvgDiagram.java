@@ -24,7 +24,7 @@ import nl.mpi.kinnate.kindata.GraphSorter;
  * @since Nov 9, 2014 2:51:21 PM (creation date)
  * @author Peter Withers
  */
-public class SvgDiagram extends KinDiagram {
+public class SvgDiagram {
 
     final DiagramSettings diagramSettings;
     final public EntitySvg entitySvg;

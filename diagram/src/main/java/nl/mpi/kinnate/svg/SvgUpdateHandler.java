@@ -18,10 +18,8 @@
  */
 package nl.mpi.kinnate.svg;
 
-import nl.mpi.kinnate.dom.KinElementImpl;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.UUID;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.EntityRelation;
@@ -32,16 +30,6 @@ import nl.mpi.kinnate.kindata.UnsortablePointsException;
 import nl.mpi.kinnate.svg.relationlines.RelationRecord;
 import nl.mpi.kinnate.svg.relationlines.RelationRecordTable;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
-import org.apache.batik.dom.svg.SVGOMPoint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.svg.SVGLocatable;
-import org.w3c.dom.svg.SVGMatrix;
-import org.w3c.dom.svg.SVGPoint;
-import org.w3c.dom.svg.SVGRect;
 
 /**
  * Document : DragHandler Created on : Mar 31, 2011, 12:52:12 PM
@@ -50,7 +38,7 @@ import org.w3c.dom.svg.SVGRect;
  */
 public class SvgUpdateHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(SvgUpdateHandler.class);
+//    private final static Logger logger = LoggerFactory.getLogger(SvgUpdateHandler.class);
     private SvgDiagram svgDiagram;
     private boolean dragUpdateRequired = false;
     private int updateDragNodeX = 0;
@@ -148,7 +136,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void updateDragRelationLines(KinElement entityGroup, float localDragNodeX, float localDragNodeY, ArrayList<UniqueIdentifier> selectedGroupId) throws KinElementException {
+    private void updateDragRelationLines(KinElement entityGroup, float localDragNodeX, float localDragNodeY, ArrayList<UniqueIdentifier> selectedGroupId) throws KinElementException, OldFormatException {
         // this is used to draw the lines for the drag handles when the user is creating relations
         // this must be only called from within a svg runnable
         RelationDragHandle localRelationDragHandle = relationDragHandle;
@@ -243,7 +231,7 @@ public class SvgUpdateHandler {
 //        ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
-    protected void addRelationDragHandles(RelationTypeDefinition[] relationTypeDefinitions, KinElement highlightGroupNode, SVGRect bbox, int paddingDistance, EventListener mouseListenerSvg) throws KinElementException {
+    protected void addRelationDragHandles(RelationTypeDefinition[] relationTypeDefinitions, KinElement highlightGroupNode, KinRectangle bbox, int paddingDistance, MouseListenerSvg mouseListenerSvg) throws KinElementException {
         // add the standard relation types
         for (DataTypes.RelationType relationType : new DataTypes.RelationType[]{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant, DataTypes.RelationType.union, DataTypes.RelationType.sibling}) {
             KinElement symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
@@ -269,7 +257,7 @@ public class SvgUpdateHandler {
             symbolNode.setAttribute("handletype", relationType.name());
             symbolNode.setAttribute("fill", "blue");
             symbolNode.setAttribute("stroke", "none");
-            ((EventTarget) ((KinElementImpl) symbolNode).getNode()).addEventListener("mousedown", mouseListenerSvg, false);
+            symbolNode.addEventListener(mouseListenerSvg);
             highlightGroupNode.appendChild(symbolNode);
         }
         // add the custom relation types
@@ -295,14 +283,14 @@ public class SvgUpdateHandler {
                     symbolNode.setAttribute("handletype", "custom:" + relationType + ":" + typeDefinition.hashCode());
                     symbolNode.setAttribute("fill", typeDefinition.getLineColour());
                     symbolNode.setAttribute("stroke", "none");
-                    ((EventTarget) ((KinElementImpl) symbolNode).getNode()).addEventListener("mousedown", mouseListenerSvg, false);
+                    symbolNode.addEventListener(mouseListenerSvg);
                     highlightGroupNode.appendChild(symbolNode);
                 }
             }
         }
     }
 
-    protected void addGraphicsDragHandles(KinElement highlightGroupNode, UniqueIdentifier targetIdentifier, SVGRect bbox, int paddingDistance, EventListener mouseListenerSvg) throws KinElementException {
+    protected void addGraphicsDragHandles(KinElement highlightGroupNode, UniqueIdentifier targetIdentifier, KinRectangle bbox, int paddingDistance, MouseListenerSvg mouseListenerSvg) throws KinElementException {
         KinElement symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
         symbolNode.setAttribute("cx", Float.toString(bbox.getX() + bbox.getWidth() + paddingDistance));
         symbolNode.setAttribute("cy", Float.toString(bbox.getY() + bbox.getHeight() + paddingDistance));
@@ -310,44 +298,17 @@ public class SvgUpdateHandler {
         symbolNode.setAttribute("target", targetIdentifier.getAttributeIdentifier());
         symbolNode.setAttribute("fill", "blue");
         symbolNode.setAttribute("stroke", "none");
-        ((EventTarget) ((KinElementImpl) symbolNode).getNode()).addEventListener("mousedown", mouseListenerSvg, false);
+        symbolNode.addEventListener(mouseListenerSvg);
         highlightGroupNode.appendChild(symbolNode);
     }
 
     public KinPoint getEntityPointOnDocument(final KinPoint screenLocation) {
         KinElement etityGroup = svgDiagram.doc.getElementById("EntityGroup");
-        SVGOMPoint pointOnDocument = getPointOnDocument(screenLocation, etityGroup);
-        return new KinPoint((int) pointOnDocument.getX(), (int) pointOnDocument.getY()); // we discard the float precision because the diagram does not need that level of resolution 
+        KinPoint pointOnDocument = svgDiagram.doc.getPointOnDocument(screenLocation, etityGroup);
+        return pointOnDocument;
     }
 
-    public SVGOMPoint getPointOnScreen(final KinPoint documentLocation, KinElement targetGroupElement) {
-        SVGOMPoint pointOnDocument = new SVGOMPoint(documentLocation.x, documentLocation.y);
-        SVGMatrix mat = ((SVGLocatable) ((KinElementImpl) targetGroupElement).getNode()).getScreenCTM();  // this gives us the element to screen transform
-        return (SVGOMPoint) pointOnDocument.matrixTransform(mat);
-    }
-
-    public SVGOMPoint getPointOnDocument(final KinPoint screenLocation, KinElement targetGroupElement) {
-        SVGOMPoint pointOnScreen = new SVGOMPoint(screenLocation.x, screenLocation.y);
-        SVGMatrix mat = ((SVGLocatable) ((KinElementImpl) targetGroupElement).getNode()).getScreenCTM();  // this gives us the element to screen transform
-        mat = mat.inverse();                                // this converts that into the screen to element transform
-        return (SVGOMPoint) pointOnScreen.matrixTransform(mat);
-    }
-
-    public KinRectangle getRectOnDocument(final KinRectangle screenRectangle, KinElement targetGroupElement) {
-        SVGOMPoint pointOnScreen = new SVGOMPoint(screenRectangle.x, screenRectangle.y);
-        SVGOMPoint sizeOnScreen = new SVGOMPoint(screenRectangle.width, screenRectangle.height);
-        SVGMatrix mat = ((SVGLocatable) ((KinElementImpl) targetGroupElement).getNode()).getScreenCTM();  // this gives us the element to screen transform
-        // todo: mat can be null
-        mat = mat.inverse();                                // this converts that into the screen to element transform
-        SVGPoint pointOnDocument = pointOnScreen.matrixTransform(mat);
-        // the diagram keeps the x and y scale equal so we can just use getA here
-        SVGPoint sizeOnDocument = new SVGOMPoint(sizeOnScreen.getX() * mat.getA(), sizeOnScreen.getY() * mat.getA());
-        System.out.println("sizeOnScreen: " + sizeOnScreen);
-        System.out.println("sizeOnDocument: " + sizeOnDocument);
-        return new KinRectangle((int) pointOnDocument.getX(), (int) pointOnDocument.getY(), (int) sizeOnDocument.getX(), (int) sizeOnDocument.getY());
-    }
-
-    protected void updateSvgSelectionHighlightsI(ArrayList<UniqueIdentifier> selectedGroupId, EventListener mouseListenerSvg) throws KinElementException {
+    protected void updateSvgSelectionHighlightsI(ArrayList<UniqueIdentifier> selectedGroupId, MouseListenerSvg mouseListenerSvg) throws KinElementException {
         if (svgDiagram.doc != null) {
 //                        for (String groupString : new String[]{"EntityGroup", "LabelsGroup"}) {
 //                            KinElement entityGroup = svgDiagram.doc.getElementById(groupString);
@@ -393,9 +354,9 @@ public class SvgUpdateHandler {
 //                                        } else {
                     if (existingHighlight == null && selectedGroup != null) {
 //                                        svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                        SVGRect bbox = ((SVGLocatable) ((KinElementImpl) selectedGroup).getNode()).getBBox();
+                        KinRectangle bbox = svgDiagram.doc.getBoundingBox(selectedGroup);
                         KinElement highlightGroupNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "g");
-                        ((EventTarget) ((KinElementImpl) highlightGroupNode).getNode()).addEventListener("mousedown", mouseListenerSvg, false);
+                        highlightGroupNode.addEventListener(mouseListenerSvg);
                         highlightGroupNode.setAttribute("id", "highlight_" + uniqueIdentifier.getAttributeIdentifier());
                         KinElement symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
                         symbolNode.setAttribute("x", Float.toString(bbox.getX() - paddingDistance));
@@ -464,7 +425,7 @@ public class SvgUpdateHandler {
 //                    ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
-    public void updateMouseDrag(final ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal) throws KinElementException {
+    public void updateMouseDrag(final ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal) throws KinElementException, OldFormatException {
         this.updateDragRelationX = updateDragNodeXLocal;
         this.updateDragRelationY = updateDragNodeYLocal;
         KinElement entityGroup = svgDiagram.doc.getElementById("EntityGroup");
@@ -490,9 +451,7 @@ public class SvgUpdateHandler {
         }
         synchronized (SvgUpdateHandler.this) {
             dragRemainders = tempRemainders;
-//            KinElement  entityGroup = svgDiagram.doc.getElementById("EntityGroup");
-            SVGMatrix draggedElementScreenMatrix = ((SVGLocatable) ((KinElementImpl) svgDiagram.doc.getDocumentElement()).getNode()).getScreenCTM().inverse();
-            dragScale = draggedElementScreenMatrix.getA(); // the drawing is proportional so only using X is adequate here         
+            dragScale = svgDiagram.doc.getDragScale(svgDiagram.doc.getDocumentElement());
         }
     }
 
@@ -508,8 +467,8 @@ public class SvgUpdateHandler {
 
     protected void drawSelectionRectI(final KinPoint startLocation, final KinPoint currentLocation) throws KinElementException {
         KinElement labelGroup = svgDiagram.doc.getElementById("LabelsGroup");
-        SVGOMPoint startOnDocument = getPointOnDocument(startLocation, labelGroup);
-        SVGOMPoint currentOnDocument = getPointOnDocument(currentLocation, labelGroup);
+        KinPoint startOnDocument = svgDiagram.doc.getPointOnDocument(startLocation, labelGroup);
+        KinPoint currentOnDocument = svgDiagram.doc.getPointOnDocument(currentLocation, labelGroup);
         KinElement selectionBorderNode = svgDiagram.doc.getElementById("drag_select_highlight");
         float highlightX = startOnDocument.getX();
         float highlightY = startOnDocument.getY();
@@ -549,7 +508,7 @@ public class SvgUpdateHandler {
 //                    System.out.println("pageBorderNode:" + selectionBorderNode);
     }
 
-    protected void updateDragNodeI(ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal, final KinRectangle panelBounds) throws KinElementException {
+    protected void updateDragNodeI(ArrayList<UniqueIdentifier> selectedGroupId, int updateDragNodeXLocal, int updateDragNodeYLocal, final KinRectangle panelBounds) throws KinElementException, OldFormatException {
         resizeRequired = true;
         dragUpdateRequired = true;
         updateDragNodeX += updateDragNodeXLocal;
@@ -576,7 +535,7 @@ public class SvgUpdateHandler {
 //                    System.out.println("updateDragNodeX: " + updateDragNodeXInner);
 //                    System.out.println("updateDragNodeY: " + updateDragNodeYInner);
             if (svgDiagram.doc == null || svgDiagram.graphData == null) {
-                logger.error("graphData or the svg document is null, is this an old file format? try redrawing before draging.");
+                System.out.println("graphData or the svg document is null, is this an old file format? try redrawing before draging.");
             } else {
 //                        if (relationDragHandleType != null) {
 //                            // drag relation handles
@@ -748,7 +707,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    public void addGraphicsI(final GraphicsTypes graphicsType, final KinPoint locationOnScreen, EventListener mouseListenerSvg, final KinRectangle panelBounds) throws KinElementException {
+    public void addGraphicsI(final GraphicsTypes graphicsType, final KinPoint locationOnScreen, MouseListenerSvg mouseListenerSvg, final KinRectangle panelBounds) throws KinElementException {
         KinElement labelText;
         switch (graphicsType) {
             case Circle:
@@ -796,7 +755,7 @@ public class SvgUpdateHandler {
 //                        * Polygon <polygon>
 //                        * Path <path>
 
-        UniqueIdentifier labelId = new UniqueIdentifier(UniqueIdentifier.IdentifierType.gid, UUID.randomUUID().toString());
+        UniqueIdentifier labelId = new UniqueIdentifier(UniqueIdentifier.IdentifierType.gid, svgDiagram.doc.getUUID());
         labelText.setAttribute("id", labelId.getAttributeIdentifier());
         // put this into the geometry group or the label group depending on its type so that labels sit above entitis and graphics sit below entities
         KinElement targetGroup;
@@ -805,18 +764,17 @@ public class SvgUpdateHandler {
         } else {
             targetGroup = svgDiagram.doc.getElementById("GraphicsGroup");
         }
-        SVGOMPoint pointOnDocument = getPointOnDocument(locationOnScreen, targetGroup);
-        KinPoint labelPosition = new KinPoint((int) pointOnDocument.getX(), (int) pointOnDocument.getY()); // we discard the float precision because the diagram does not need that level of resolution 
+        KinPoint labelPosition = svgDiagram.doc.getPointOnDocument(locationOnScreen, targetGroup);
         final String transformAttribute = "translate(" + Integer.toString(labelPosition.x) + ", " + Integer.toString(labelPosition.y) + ")";
         System.out.println("transformAttribute:" + transformAttribute);
         labelText.setAttribute("transform", transformAttribute);
         targetGroup.appendChild(labelText);
         svgDiagram.entitySvg.entityPositions.put(labelId, new KinPoint(labelPosition));
-        ((EventTarget) ((KinElementImpl) labelText).getNode()).addEventListener("mousedown", mouseListenerSvg, false);
+        labelText.addEventListener(mouseListenerSvg);
         resizeCanvas(svgDiagram.doc.getDocumentElement(), svgDiagram.doc.getElementById("DiagramGroup"), panelBounds);
     }
 
-    public void drawEntities(final KinRectangle panelBounds) throws DOMException, OldFormatException, UnsortablePointsException, KinElementException { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
+    public void drawEntities(final KinRectangle panelBounds) throws OldFormatException, UnsortablePointsException, KinElementException { // todo: this is public due to the requirements of saving files by users, but this should be done in a more thread safe way.
         svgDiagram.graphData.setPadding(svgDiagram.graphPanelSize);
         relationRecords = new RelationRecordTable();
         int vSpacing = svgDiagram.graphPanelSize.getVerticalSpacing(); //dataStoreSvg.graphData.gridHeight);

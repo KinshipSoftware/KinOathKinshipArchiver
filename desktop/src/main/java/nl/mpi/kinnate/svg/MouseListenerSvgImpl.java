@@ -55,10 +55,10 @@ import org.w3c.dom.svg.SVGLocatable;
 import org.w3c.dom.svg.SVGMatrix;
 
 /**
- * Document : MouseListenerSvgImpl Created on : Mar 9, 2011, 3:21:53 PM Author :
- Peter Withers
+ * Document : MouseListenerSvgImpl Created on : Mar 9, 2011, 3:21:53 PM 
+ * Author   : Peter Withers
  */
-public class MouseListenerSvgImpl extends MouseInputAdapter implements EventListener {
+public class MouseListenerSvgImpl extends MouseInputAdapter implements EventListener, MouseListenerSvg {
 
     private final static Logger logger = LoggerFactory.getLogger(GraphPanel.class);
     private Cursor preDragCursor;
@@ -74,11 +74,6 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
     private final MessageDialogHandler dialogHandler;
     final private SessionStorage sessionStorage;
     private EntityCollection entityCollection;
-
-    public enum ActionCode {
-
-        selectAll, selectRelated, expandSelection, deselectAll
-    }
 
     public MouseListenerSvgImpl(KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, SessionStorage sessionStorage, MessageDialogHandler dialogHandler) {
         this.kinDiagramPanel = kinDiagramPanel;
@@ -294,13 +289,15 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
                         graphPanel.selectedGroupId.clear();
                         graphPanel.selectedGroupId.add(entityIdentifier);
                     } else // toggle the highlight
-                     if (shiftDown && nodeAlreadySelected) {
+                    {
+                        if (shiftDown && nodeAlreadySelected) {
                             // postpone until after a drag action can be tested for and only deselect if not draged
                             entityToToggle = entityIdentifier;
                             // graphPanel.selectedGroupId.remove(entityIdentifier);
                         } else if (!nodeAlreadySelected) {
                             graphPanel.selectedGroupId.add(entityIdentifier);
                         }
+                    }
                     updateSelectionDisplay();
                 } catch (IdentifierException exception) {
                     BugCatcherManager.getBugCatcher().logError(exception);

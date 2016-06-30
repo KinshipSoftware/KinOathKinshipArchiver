@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <parentpom.location>${project.parent.basedir}</parentpom.location>       
         <application.version.committedRevision>${application.version.commit.id.describe}</application.version.committedRevision>
-</properties>
+    </properties>
     <build> 
         <resources>
             <resource>
@@ -30,6 +30,14 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>**/version.properties</include>
+                </includes>
+            </resource>            
+            <resource>
+                <directory>src/main/java</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.gwt.xml</include>
+                    <include>**/*.java</include>
                 </includes>
             </resource>
         </resources>
