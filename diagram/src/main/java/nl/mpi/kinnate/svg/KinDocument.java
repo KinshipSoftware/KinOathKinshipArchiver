@@ -39,7 +39,7 @@ public interface KinDocument {
 
     public KinElement createTextNode(String data);
 
-    public void addEventListener(KinElement targetNode);
+    public void addEventListener(final KinElement targetNode);
 
     public KinPoint getPointOnDocument(final KinPoint screenLocation, KinElement targetGroupElement);
 

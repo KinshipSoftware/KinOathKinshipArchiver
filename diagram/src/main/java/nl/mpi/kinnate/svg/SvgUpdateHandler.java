@@ -231,7 +231,7 @@ public class SvgUpdateHandler {
 //        ArbilComponentBuilder.savePrettyFormatting(svgDiagram.doc, new File("/Users/petwit/Documents/SharedInVirtualBox/mpi-co-svn-mpi-nl/LAT/Kinnate/trunk/desktop/src/main/resources/output.svg"));
     }
 
-    protected void addRelationDragHandles(RelationTypeDefinition[] relationTypeDefinitions, KinElement highlightGroupNode, KinRectangle bbox, int paddingDistance, MouseListenerSvg mouseListenerSvg) throws KinElementException {
+    public void addRelationDragHandles(RelationTypeDefinition[] relationTypeDefinitions, KinElement highlightGroupNode, KinRectangle bbox, int paddingDistance, MouseListenerSvg mouseListenerSvg) throws KinElementException {
         // add the standard relation types
         for (DataTypes.RelationType relationType : new DataTypes.RelationType[]{DataTypes.RelationType.ancestor, DataTypes.RelationType.descendant, DataTypes.RelationType.union, DataTypes.RelationType.sibling}) {
             KinElement symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "circle");
@@ -308,7 +308,7 @@ public class SvgUpdateHandler {
         return pointOnDocument;
     }
 
-    protected void updateSvgSelectionHighlightsI(ArrayList<UniqueIdentifier> selectedGroupId, MouseListenerSvg mouseListenerSvg) throws KinElementException {
+    public void updateSvgSelectionHighlightsI(ArrayList<UniqueIdentifier> selectedGroupId, MouseListenerSvg mouseListenerSvg) throws KinElementException {
         if (svgDiagram.doc != null) {
 //                        for (String groupString : new String[]{"EntityGroup", "LabelsGroup"}) {
 //                            KinElement entityGroup = svgDiagram.doc.getElementById(groupString);

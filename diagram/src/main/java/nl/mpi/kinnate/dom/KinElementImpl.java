@@ -102,6 +102,7 @@ public class KinElementImpl implements KinElement {
         }
     }
 
+    @Override
     public void addEventListener(MouseListenerSvg mouseListenerSvg) {
         ((EventTarget) node).addEventListener("mousedown", (EventListener) mouseListenerSvg, false);
     }

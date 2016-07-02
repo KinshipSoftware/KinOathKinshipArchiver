@@ -89,45 +89,49 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
 
     @Override
     public void mouseDragged(MouseEvent me) {
+        mouseDragged(new KinPoint(me.getPoint().x, me.getPoint().y), SwingUtilities.isMiddleMouseButton(me), SwingUtilities.isLeftMouseButton(me), me.isShiftDown());
+    }
+
+    @Override
+    public void mouseDragged(final KinPoint kinPoint, final Boolean isMiddleMouseButton, final Boolean isLeftMouseButton, final Boolean shiftDown) {
         // todo: this shold probably be put into the svg canvas thread
         if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
-            graphPanel.updateDragRelation(me.getPoint().x, me.getPoint().y);
+            graphPanel.updateDragRelation(kinPoint.x, kinPoint.y);
         } else {
             try {
                 if (startDragPoint != null) {
 //            System.out.println("mouseDragged: " + me.toString());
-                    if (SwingUtilities.isMiddleMouseButton(me)) {
-                        graphPanel.dragCanvas(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
-                    } else if (SwingUtilities.isLeftMouseButton(me)) {
+                    if (isMiddleMouseButton) {
+                        graphPanel.dragCanvas(kinPoint.x - startDragPoint.x, kinPoint.y - startDragPoint.y);
+                    } else if (isLeftMouseButton) {
                         // we check and clear the selection here on the drag because on mouse down it is not known if an svg element was the target of the click
-                        checkSelectionClearRequired(me);
+                        checkSelectionClearRequired(isLeftMouseButton, shiftDown);
                         if (!mouseActionOnNode) {
                             // draw selection rectangle                        
                             if (startRectangleSelectPoint == null) {
-                                startRectangleSelectPoint = new KinPoint(me.getPoint().x, me.getPoint().y);
+                                startRectangleSelectPoint = new KinPoint(kinPoint.x, kinPoint.y);
                             }
-                            graphPanel.drawSelectionRect(new KinPoint(startRectangleSelectPoint.x, startRectangleSelectPoint.y), new KinPoint(me.getPoint().x, me.getPoint().y));
+                            graphPanel.drawSelectionRect(new KinPoint(startRectangleSelectPoint.x, startRectangleSelectPoint.y), kinPoint);
                         } else if (graphPanel.selectedGroupId.size() > 0) {
                             graphPanel.svgCanvas.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                             // limit the drag to the distance draged not the location
-                            graphPanel.updateDragNode(me.getPoint().x - startDragPoint.x, me.getPoint().y - startDragPoint.y);
+                            graphPanel.updateDragNode(kinPoint.x - startDragPoint.x, kinPoint.y - startDragPoint.y);
                         }
                     }
                     mouseActionIsDrag = true;
                 } else {
                     graphPanel.svgUpdateHandler.startDrag(graphPanel.selectedGroupId);
                 }
-                startDragPoint = new KinPoint(me.getPoint().x, me.getPoint().y);
+                startDragPoint = new KinPoint(kinPoint.x, kinPoint.y);
             } catch (KinElementException exception) {
                 logger.warn("Error, modifying the SVG.", exception);
             }
         }
     }
 
-    private void checkSelectionClearRequired(MouseEvent me) throws KinElementException {
-        boolean shiftDown = me.isShiftDown();
+    private void checkSelectionClearRequired(final boolean isLeftMouseButton, final boolean shiftDown) throws KinElementException {
         if (!shiftDown && /* !mouseActionIsDrag && */ !mouseActionIsPopupTrigger && !mouseActionOnNode
-                && SwingUtilities.isLeftMouseButton(me)) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
+                && isLeftMouseButton) { // todo: button1 could cause issues for left handed people with swapped mouse buttons
             System.out.println("Clear selection");
             graphPanel.selectedGroupId.clear();
             updateSelectionDisplay();
@@ -136,6 +140,11 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
 
     @Override
     public void mouseReleased(MouseEvent me) {
+        mouseReleased(SwingUtilities.isLeftMouseButton(me), me.isShiftDown());
+    }
+
+    @Override
+    public void mouseReleased(Boolean isLeftMouseButton, Boolean shiftDown) {
         if (graphPanel.getSVGDocument().graphData == null) {
 //        if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
             return;
@@ -153,7 +162,7 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
                 entityToToggle = null;
                 updateSelectionDisplay();
             }
-            checkSelectionClearRequired(me);
+            checkSelectionClearRequired(isLeftMouseButton, shiftDown);
             if (startRectangleSelectPoint != null) {
                 startRectangleSelectPoint = null;
                 graphPanel.removeSelectionRect();
@@ -194,11 +203,16 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
 
     @Override
     public void mousePressed(MouseEvent e) {
+        mousePressed(e.isPopupTrigger());
+    }
+
+    @Override
+    public void mousePressed(final Boolean isPopupTrigger) {
         if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
             return;
         }
         mouseActionIsDrag = false;
-        mouseActionIsPopupTrigger = e.isPopupTrigger();
+        mouseActionIsPopupTrigger = isPopupTrigger;
     }
 
     @Override

@@ -17,6 +17,8 @@
  */
 package nl.mpi.kinnate.svg;
 
+import nl.mpi.kinnate.kindata.KinPoint;
+
 /**
  * @since Jun 30, 2016 19:12:52 PM (creation date)
  * @author Peter Withers <peter.withers@mpi.nl>
@@ -28,5 +30,9 @@ public interface MouseListenerSvg {
         selectAll, selectRelated, expandSelection, deselectAll
     }
 
-    public void mouseDown();
+    public void mousePressed(final Boolean isPopupTrigger);
+
+    public void mouseDragged(final KinPoint kinPoint, final Boolean isMiddleMouseButton, final Boolean isLeftMouseButton, final Boolean shiftDown);
+
+    public void mouseReleased(Boolean isLeftMouseButton, Boolean shiftDown);
 }
