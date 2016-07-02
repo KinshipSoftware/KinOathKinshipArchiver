@@ -48,7 +48,7 @@ public class SvgUpdateHandler {
     private float[][] dragRemainders = null;
     private float dragScale;
     private boolean resizeRequired = false;
-    protected RelationDragHandle relationDragHandle = null;
+    private RelationDragHandle relationDragHandle = null;
     private HashSet<UniqueIdentifier> highlightedIdentifiers = new HashSet<UniqueIdentifier>();
     public RelationRecordTable relationRecords;
     private int paddingDistance = 20;
@@ -132,6 +132,53 @@ public class SvgUpdateHandler {
                     highlightLine.setAttribute("stroke-dashoffset", "0");
                     relationHighlightGroup.appendChild(highlightLine);
                 }
+            }
+        }
+    }
+
+    public void setRelationDragHandle(RelationDragHandle relationDragHandle) {
+        this.relationDragHandle = relationDragHandle;
+    }
+
+    public RelationDragHandle getRelationDragHandle() {
+        return relationDragHandle;
+    }
+
+    public boolean dragHandlesShowing() {
+        return relationDragHandle != null;
+    }
+
+    public boolean dropTargetDefined() {
+        return relationDragHandle.targetIdentifier != null;
+    }
+
+    public void showAddEntityBox(float localDragNodeX, float localDragNodeY) throws KinElementException {
+        float dragNodeX = relationDragHandle.getTranslatedX(localDragNodeX);
+        float dragNodeY = relationDragHandle.getTranslatedY(localDragNodeY);
+        KinElement relationHighlightGroup = svgDiagram.doc.getElementById("RelationHighlightGroup");
+//        KinElement entityBoxElement = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "rect");
+//        entityBoxElement.setAttribute("x", Float.toString(dragNodeX - paddingDistance));
+//        entityBoxElement.setAttribute("y", Float.toString(dragNodeY - paddingDistance));
+//        entityBoxElement.setAttribute("width", Float.toString(paddingDistance * 2));
+//        entityBoxElement.setAttribute("height", Float.toString(paddingDistance * 2));
+//        entityBoxElement.setAttribute("fill", "#999999"); // provide a fill so that the mouse selection extends to the bounding box, but but make it transparent
+//        entityBoxElement.setAttribute("fill-opacity", "0");
+//        entityBoxElement.setAttribute("stroke-width", "1");
+//        entityBoxElement.setAttribute("stroke", "green");
+//        relationHighlightGroup.appendChild(entityBoxElement);
+
+        for (int isEgo = 0; isEgo < 2; isEgo++) {
+            int offset = 0;
+            for (String currentSymbol : new String[]{"circle", "square", "triangle"}) {
+                KinElement symbolNode = svgDiagram.doc.createElementNS(svgDiagram.svgNameSpace, "use");
+                symbolNode.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + currentSymbol); // the xlink: of "xlink:href" is required for some svg viewers to render correctly
+//            groupNode.setAttribute("transform", "translate(" + Float.toString(dragNodeX) + ", " + Float.toString(dragNodeX) + ")");
+                symbolNode.setAttribute("transform", "translate(" + Float.toString(dragNodeX + (isEgo * 25) - 20) + ", " + Float.toString(dragNodeY + offset - 20) + ")");
+                symbolNode.setAttribute("stroke", "blue");
+                symbolNode.setAttribute("fill", (isEgo > 0) ? "blue" : "white");
+                symbolNode.setAttribute("stroke-width", "2");
+                relationHighlightGroup.appendChild(symbolNode);
+                offset += 15;
             }
         }
     }
@@ -442,7 +489,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    protected void startDrag(ArrayList<UniqueIdentifier> selectedGroupId) {
+    public void startDrag(ArrayList<UniqueIdentifier> selectedGroupId) {
         // dragRemainders is used to store the remainder after snap between drag updates
         // reset all remainders
         float[][] tempRemainders = new float[selectedGroupId.size()][];

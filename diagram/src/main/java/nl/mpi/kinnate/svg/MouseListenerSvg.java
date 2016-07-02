@@ -34,5 +34,5 @@ public interface MouseListenerSvg {
 
     public void mouseDragged(final KinPoint kinPoint, final Boolean isMiddleMouseButton, final Boolean isLeftMouseButton, final Boolean shiftDown);
 
-    public void mouseReleased(Boolean isLeftMouseButton, Boolean shiftDown);
+    public void mouseReleased(final KinPoint kinPoint, Boolean isLeftMouseButton, Boolean shiftDown);
 }

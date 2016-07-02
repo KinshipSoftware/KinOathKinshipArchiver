@@ -21,6 +21,9 @@ import java.awt.HeadlessException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JFrame;
 import nl.mpi.kinnate.kindata.DataTypes;
 import nl.mpi.kinnate.kindata.EntityData;
@@ -32,10 +35,13 @@ import nl.mpi.kinnate.svg.DiagramSettings;
 import nl.mpi.kinnate.svg.EntitySvg;
 import nl.mpi.kinnate.svg.KinDocument;
 import nl.mpi.kinnate.dom.KinDocumentImpl;
+import nl.mpi.kinnate.svg.GraphicsDragHandle;
+import nl.mpi.kinnate.svg.KinElement;
 import nl.mpi.kinnate.svg.KinElementException;
 import nl.mpi.kinnate.svg.OldFormatException;
 import nl.mpi.kinnate.svg.SvgDiagram;
 import nl.mpi.kinnate.svg.SvgUpdateHandler;
+import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinoath.graph.DefaultSorter;
 import org.apache.batik.swing.JSVGCanvas;
 import org.w3c.dom.DOMException;
@@ -52,6 +58,9 @@ public class ExampleSwingApp {
     private final DiagramScrollPanel diagramScrollPanel;
     protected final JSVGCanvas svgCanvas = new JSVGCanvas();
     private static final String RHOMBUS = "rhombus";
+    private SvgUpdateHandler svgUpdateHandler;
+    private final EntityData[] entiryData = getEntityNodes();
+    final KinDocumentImpl kinDocumentImpl = new KinDocumentImpl();
 
     public ExampleSwingApp() throws DOMException, IOException, OldFormatException, UnsortablePointsException, AbstractMethodError, KinElementException {
         svgCanvas.setDocument(getSVG());
@@ -81,7 +90,6 @@ public class ExampleSwingApp {
     }
 
     private Document getSVG() throws IOException, DOMException, OldFormatException, UnsortablePointsException, KinElementException {
-        EntityData[] entiryData = getEntityNodes();
         final EventListener eventListener = new EventListener() {
 
             @Override
@@ -157,12 +165,33 @@ public class ExampleSwingApp {
 //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         }, entitySvg);
-        svgDiagram.generateDefaultSvg(new KinDocumentImpl(), new DefaultSorter());
-        final SvgUpdateHandler svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
+
+        svgDiagram.generateDefaultSvg(kinDocumentImpl, new DefaultSorter());
+        svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
         svgDiagram.graphData.setEntitys(entiryData);
         svgUpdateHandler.drawEntities(new KinRectangle(800, 600));
 //        printNodeNames(svgDiagram.getDoc().getRootElement());
         return ((KinDocumentImpl) svgDiagram.getDoc()).getDoc();
+    }
+
+    public void showDragGraphics() throws KinElementException, OldFormatException {
+        // todo: this does not yet show the required drag graphics
+        String targetIdString = entiryData[1].getUniqueIdentifier().getAttributeIdentifier();
+        final KinElement currentDraggedElement = kinDocumentImpl.getElementById(targetIdString);
+        final ArrayList<UniqueIdentifier> arrayList = new ArrayList<>();
+        arrayList.add(entiryData[0].getUniqueIdentifier());
+        svgUpdateHandler.startDrag(arrayList);
+        svgUpdateHandler.updateMouseDrag(arrayList, 100, 100);
+        svgUpdateHandler.setRelationDragHandle(new GraphicsDragHandle(
+                currentDraggedElement, currentDraggedElement,
+                currentDraggedElement.getParentNode().getFirstChild(), // this assumes that the rect is the first element in the highlight
+                Float.valueOf(currentDraggedElement.getAttribute("cx")),
+                Float.valueOf(currentDraggedElement.getAttribute("cy")),
+                100,
+                100,
+                1));
+//        
+        svgUpdateHandler.showAddEntityBox(100, 100);
     }
 
     public static void main(String[] args) throws AbstractMethodError, DOMException, HeadlessException, IOException, OldFormatException, UnsortablePointsException, KinElementException {
@@ -182,5 +211,17 @@ public class ExampleSwingApp {
         });
         jFrame.setSize(800, 400);
         jFrame.setVisible(true);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    System.out.println("showDragGraphics");
+                    exampleSwingApp.showDragGraphics();
+                } catch (KinElementException | OldFormatException exception) {
+                    exception.printStackTrace();
+                }
+            }
+        }, 2 * 1000);
     }
 }

@@ -95,7 +95,7 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
     @Override
     public void mouseDragged(final KinPoint kinPoint, final Boolean isMiddleMouseButton, final Boolean isLeftMouseButton, final Boolean shiftDown) {
         // todo: this shold probably be put into the svg canvas thread
-        if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
+        if (graphPanel.svgUpdateHandler.dragHandlesShowing()) {
             graphPanel.updateDragRelation(kinPoint.x, kinPoint.y);
         } else {
             try {
@@ -140,11 +140,11 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        mouseReleased(SwingUtilities.isLeftMouseButton(me), me.isShiftDown());
+        mouseReleased(new KinPoint(me.getPoint().x, me.getPoint().y), SwingUtilities.isLeftMouseButton(me), me.isShiftDown());
     }
 
     @Override
-    public void mouseReleased(Boolean isLeftMouseButton, Boolean shiftDown) {
+    public void mouseReleased(final KinPoint kinPoint, Boolean isLeftMouseButton, Boolean shiftDown) {
         if (graphPanel.getSVGDocument().graphData == null) {
 //        if (!kinDiagramPanel.verifyDiagramDataLoaded()) {
             return;
@@ -156,7 +156,7 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
         }
         startDragPoint = null;
         try {
-            if (!mouseActionIsDrag && entityToToggle != null && graphPanel.svgUpdateHandler.relationDragHandle == null) {
+            if (!mouseActionIsDrag && entityToToggle != null && !graphPanel.svgUpdateHandler.dragHandlesShowing()) {
                 // toggle the highlight
                 graphPanel.selectedGroupId.remove(entityToToggle);
                 entityToToggle = null;
@@ -172,23 +172,30 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
                 updateSelectionDisplay();
             }
             mouseActionOnNode = false;
-            if (graphPanel.svgUpdateHandler.relationDragHandle != null) {
+            if (graphPanel.svgUpdateHandler.dragHandlesShowing()) {
+                // act on the realation drag
                 new Thread(new Runnable() {
                     public void run() {
                         try {
-                            if (graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier != null) {
+                            if (graphPanel.svgUpdateHandler.dropTargetDefined()) {
                                 kinDiagramPanel.showProgressBar();
                                 try {
                                     // if a relation has been set by this drag action then it is created here.
-                                    final RelationType relationType = DataTypes.getOpposingRelationType(graphPanel.svgUpdateHandler.relationDragHandle.getRelationType());
-                                    UniqueIdentifier[] changedIdentifiers = new RelationLinker(sessionStorage, dialogHandler, entityCollection).linkEntities(graphPanel.svgUpdateHandler.relationDragHandle.targetIdentifier, graphPanel.getSelectedIds(), relationType, graphPanel.svgUpdateHandler.relationDragHandle.getDataCategory(), graphPanel.svgUpdateHandler.relationDragHandle.getDisplayName());
+                                    final RelationType relationType = DataTypes.getOpposingRelationType(graphPanel.svgUpdateHandler.getRelationDragHandle().getRelationType());
+                                    UniqueIdentifier[] changedIdentifiers = new RelationLinker(sessionStorage, dialogHandler, entityCollection).linkEntities(graphPanel.svgUpdateHandler.getRelationDragHandle().targetIdentifier, graphPanel.getSelectedIds(), relationType, graphPanel.svgUpdateHandler.getRelationDragHandle().getDataCategory(), graphPanel.svgUpdateHandler.getRelationDragHandle().getDisplayName());
                                     kinDiagramPanel.entityRelationsChanged(changedIdentifiers);
                                 } catch (ImportException exception) {
                                     dialogHandler.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
                                 }
                                 kinDiagramPanel.clearProgressBar();
+//                            } else {
+//                                // show add entity
+//                                System.out.println("add entity menu here");
+//
+////                            graphPanel.svgUpdateHandler.relationDragHandle = null;
+//                                graphPanel.svgUpdateHandler.showAddEntityBox(kinPoint.x, kinPoint.y);
                             }
-                            graphPanel.svgUpdateHandler.relationDragHandle = null;
+                            graphPanel.svgUpdateHandler.setRelationDragHandle(null);
                             updateSelectionDisplay();
                         } catch (KinElementException exception) {
                             logger.warn("Error, modifying the SVG.", exception);
@@ -255,8 +262,8 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
                     float yTranslate = draggedElementMatrix.getF();
 //                AffineTransform affineTransform = graphPanel.svgCanvas.getRenderingTransform();
                     if (targetIdString != null && targetIdString.length() > 0) {
-                        graphPanel.svgUpdateHandler.relationDragHandle
-                                = new GraphicsDragHandle(
+                        graphPanel.svgUpdateHandler.setRelationDragHandle(
+                                new GraphicsDragHandle(
                                         graphPanel.getSVGDocument().doc.getElementById(targetIdString),
                                         new KinElementImpl(currentDraggedElement),
                                         new KinElementImpl(currentDraggedElement.getParentNode().getFirstChild()), // this assumes that the rect is the first element in the highlight
@@ -264,7 +271,7 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
                                         Float.valueOf(currentDraggedElement.getAttribute("cy")),
                                         ((DOMMouseEvent) evt).getClientX(),
                                         ((DOMMouseEvent) evt).getClientY(),
-                                        scaleFactor);
+                                        scaleFactor));
                     } else {
                         RelationTypeDefinition customTypeDefinition = null;
                         DataTypes.RelationType relationType = null;
@@ -281,15 +288,15 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
                         } else {
                             relationType = DataTypes.RelationType.valueOf(handleTypeString);
                         }
-                        graphPanel.svgUpdateHandler.relationDragHandle
-                                = new RelationDragHandle(
+                        graphPanel.svgUpdateHandler.setRelationDragHandle(
+                                new RelationDragHandle(
                                         customTypeDefinition,
                                         relationType,
                                         Float.valueOf(currentDraggedElement.getAttribute("cx")) - xTranslate,
                                         Float.valueOf(currentDraggedElement.getAttribute("cy")) - yTranslate,
                                         ((DOMMouseEvent) evt).getClientX(),
                                         ((DOMMouseEvent) evt).getClientY(),
-                                        scaleFactor);
+                                        scaleFactor));
                     }
                 }
             } else /* if (mouseDownButton1) */ {
@@ -303,15 +310,13 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
                         graphPanel.selectedGroupId.clear();
                         graphPanel.selectedGroupId.add(entityIdentifier);
                     } else // toggle the highlight
-                    {
-                        if (shiftDown && nodeAlreadySelected) {
+                     if (shiftDown && nodeAlreadySelected) {
                             // postpone until after a drag action can be tested for and only deselect if not draged
                             entityToToggle = entityIdentifier;
                             // graphPanel.selectedGroupId.remove(entityIdentifier);
                         } else if (!nodeAlreadySelected) {
                             graphPanel.selectedGroupId.add(entityIdentifier);
                         }
-                    }
                     updateSelectionDisplay();
                 } catch (IdentifierException exception) {
                     BugCatcherManager.getBugCatcher().logError(exception);
