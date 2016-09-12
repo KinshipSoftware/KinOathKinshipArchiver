@@ -149,7 +149,7 @@ public class SvgUpdateHandler {
     }
 
     public boolean dropTargetDefined() {
-        return relationDragHandle.targetIdentifier != null;
+        return relationDragHandle != null && relationDragHandle.targetIdentifier != null;
     }
 
     public void showAddEntityBox(float localDragNodeX, float localDragNodeY) throws KinElementException {
@@ -183,7 +183,7 @@ public class SvgUpdateHandler {
         }
     }
 
-    private void updateDragRelationLines(KinElement entityGroup, float localDragNodeX, float localDragNodeY, ArrayList<UniqueIdentifier> selectedGroupId) throws KinElementException, OldFormatException {
+    public void updateDragRelationLines(KinElement entityGroup, float localDragNodeX, float localDragNodeY, ArrayList<UniqueIdentifier> selectedGroupId) throws KinElementException, OldFormatException {
         // this is used to draw the lines for the drag handles when the user is creating relations
         // this must be only called from within a svg runnable
         RelationDragHandle localRelationDragHandle = relationDragHandle;
