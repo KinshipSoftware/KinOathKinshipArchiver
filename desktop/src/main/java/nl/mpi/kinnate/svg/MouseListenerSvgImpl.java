@@ -188,15 +188,13 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
                                     dialogHandler.addMessageDialogToQueue("Failed to create relation: " + exception.getMessage(), "Drag Relation");
                                 }
                                 kinDiagramPanel.clearProgressBar();
-//                            } else {
-//                                // show add entity
-//                                System.out.println("add entity menu here");
-//
-////                            graphPanel.svgUpdateHandler.relationDragHandle = null;
-//                                graphPanel.svgUpdateHandler.showAddEntityBox(kinPoint.x, kinPoint.y);
+                            } else if (graphPanel.svgUpdateHandler.dragHandlesShowing() && !graphPanel.svgUpdateHandler.dropTargetDefined()) {
+                                // show add entity
+                                graphPanel.svgUpdateHandler.showAddEntityBox(kinPoint.x, kinPoint.y);
+                            } else {
+                                graphPanel.svgUpdateHandler.setRelationDragHandle(null);
+                                updateSelectionDisplay();
                             }
-                            graphPanel.svgUpdateHandler.setRelationDragHandle(null);
-                            updateSelectionDisplay();
                         } catch (KinElementException exception) {
                             logger.warn("Error, modifying the SVG.", exception);
                         }
