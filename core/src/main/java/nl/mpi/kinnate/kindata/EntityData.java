@@ -152,6 +152,18 @@ public class EntityData {
         isEgo = false;
     }
 
+    public EntityData(UniqueIdentifier uniqueIdentifierLocal, String[] labels, SymbolType symbolIndex, boolean isEgoLocal, EntityDate dateOfBirth, EntityDate dateOfDeath) {
+        uniqueIdentifier = uniqueIdentifierLocal;
+        kinTypeArray = new String[]{};
+        symbolNames = new String[]{symbolIndex.name()};
+        labelStringArray = labels;
+        isEgo = isEgoLocal;
+        this.dateOfBirth = dateOfBirth;
+        this.dateOfDeath = dateOfDeath;
+        this.isVisible = true;
+        this.isRequired = true;
+    }
+
 //    public void setDateOfBirth(String dateOfBirth) throws EntityDateException {
 //        this.dateOfBirth = new EntityDate(dateOfBirth);
 //    }
