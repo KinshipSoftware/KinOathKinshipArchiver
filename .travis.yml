@@ -3,3 +3,18 @@ jdk:
   - oraclejdk8
 git:
   depth: 3000
+script:
+  - pwd
+  - mvn deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots
+  - ls .
+  - ls ../snapshots
+cache:
+  directories:
+  - $HOME/.m2
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  local_dir: ../snapshots
+  on:
+    branch: kinnate.1.6.separate-diagram-library
