@@ -58,12 +58,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>kinoath-diagram</artifactId>
-            <version>1.6.32-pretesting</version>
+            <version>1.6.34-pretesting</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>graph-sorter</artifactId>
-            <version>1.6.6-pretesting</version>
+            <version>1.6.8-pretesting</version>
         </dependency>
     </dependencies>
 </project>

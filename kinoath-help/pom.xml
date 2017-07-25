@@ -12,7 +12,7 @@
     <!--    Either use the snapshot version of manually enter the current build number. 
     The build number is only required when depending on the output in other projects or building to the server.-->
     <!--    <version>1.6-pretesting-SNAPSHOT</version>-->
-    <version>1.6.26-pretesting</version>
+    <version>1.6.28-pretesting</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.23-${application.branch}</version>-->
     <name>KinOath Help ${application.majorVersion}.${application.minorVersion}</name>
     <properties>

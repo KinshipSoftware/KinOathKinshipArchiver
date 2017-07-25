@@ -10,7 +10,7 @@
     <groupId>nl.mpi</groupId>
     <artifactId>kinoath-rest</artifactId>
     <packaging>war</packaging>
-    <version>1.6.45-pretesting</version>
+    <version>1.6.47-pretesting</version>
     <name>KinOath Rest ${application.majorVersion}.${application.minorVersion}</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -62,17 +62,17 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kin-type-string-parser</artifactId>
-            <version>1.6.6-pretesting</version>
+            <version>1.6.8-pretesting</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-diagram</artifactId>
-            <version>1.6.32-pretesting</version>
+            <version>1.6.34-pretesting</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>graph-sorter</artifactId>
-            <version>1.6.6-pretesting</version>
+            <version>1.6.8-pretesting</version>
         </dependency>
     </dependencies>
 </project>

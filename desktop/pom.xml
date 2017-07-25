@@ -8,7 +8,7 @@
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
     <!--<version>1.6-pretesting-SNAPSHOT</version>-->
-    <version>1.6.2281-pretesting</version>
+    <version>1.6.2283-pretesting</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.2239-${application.branch}</version>-->
     <name>KinOath Desktop ${application.majorVersion}.${application.minorVersion}</name>
     <parent>
@@ -280,7 +280,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-help</artifactId>
-            <version>1.6.26-pretesting</version>
+            <version>1.6.28-pretesting</version>
         </dependency>
         <!--        <dependency>
             <groupId>nl.mpi</groupId>
@@ -295,22 +295,22 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-localisation</artifactId>
-            <version>1.6.66-pretesting</version>
+            <version>1.6.68-pretesting</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-diagram</artifactId>
-            <version>1.6.32-pretesting</version>
+            <version>1.6.34-pretesting</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>kin-type-string-parser</artifactId>
-            <version>1.6.6-pretesting</version>
+            <version>1.6.8-pretesting</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>kinoath-core</artifactId>
-            <version>1.6.12-pretesting</version>
+            <version>1.6.14-pretesting</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -320,7 +320,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>graph-sorter</artifactId>
-            <version>1.6.6-pretesting</version>
+            <version>1.6.8-pretesting</version>
         </dependency>
     </dependencies>
     <repositories>
