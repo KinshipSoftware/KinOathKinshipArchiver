@@ -105,7 +105,7 @@
             <plugin>
                 <groupId>nl.mpi</groupId>
                 <artifactId>version-control-check</artifactId>
-                <version>1.0.21-testing</version>
+                <version>1.0.27-testing</version>
                 <executions>
                     <execution>
                         <goals>
@@ -163,16 +163,36 @@
             </plugin>
         </plugins>
     </reporting>
-    
     <repositories>
         <repository>
             <id>MPI</id>
             <name>MPI LAT Repository</name>
             <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
         </repository>
-    </repositories>
-    
+	<repository>
+            <id>FLAP</id>
+            <name>FLAP Repository</name>
+            <url>https://kinshipsoftware.github.io/FLAP/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>    
     <pluginRepositories>
+    <pluginRepository>
+            <id>VersionControlCheck</id>
+            <name>VersionControlCheck Repository</name>
+            <url>http://kinshipsoftware.github.io/VersionControlCheck/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
         <pluginRepository>
             <id>MPI</id>
             <name>MPI LAT Repository</name>
@@ -196,7 +216,6 @@
             </releases>
         </pluginRepository>
     </pluginRepositories>
-    
     <distributionManagement>
         <snapshotRepository>
             <id>MPI-Snapshots</id>
