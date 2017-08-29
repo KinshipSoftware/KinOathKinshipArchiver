@@ -10,7 +10,7 @@
     <groupId>nl.mpi</groupId>
     <artifactId>kinoath-diagram</artifactId>
     <!--<version>1.6-pretesting-SNAPSHOT</version>-->
-    <version>1.6.34-pretesting</version>
+    <version>1.6.36-pretesting</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.62-${application.branch}</version>-->
     
     <name>KinOath Diagram ${application.majorVersion}.${application.minorVersion}</name>
