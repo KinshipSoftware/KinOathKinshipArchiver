@@ -5,7 +5,11 @@ git:
   depth: 3000
 script:
   - pwd
-  - mvn deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots
+#  - mvn deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots
+
+# ignore lux 15 nexus certificate date validity for one build
+  - mvn deploy -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots
+
   - ls .
   - ls ../snapshots
 cache:
