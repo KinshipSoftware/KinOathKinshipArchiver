@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>nl.mpi</groupId>
+    <artifactId>kinoath-parent</artifactId>
+    <name>KinOath Parent 1.6</name>
+    <packaging>pom</packaging>
+    <version>1.6</version>
+    <description>Parent pom for KinOath Kinship Archiver</description>
+    <modules>
+        <!--<module>desktop</module>-->
+        <!--<module>kinoath-help</module>-->
+        <module>rest</module>
+        <module>kin-type-string-parser</module>
+        <module>core</module>            
+        <module>localisation</module>
+        <module>diagram</module>
+        <module>batik-renderer</module>
+        <module>graph-sorter</module>
+        <module>graph-storage</module>
+    </modules>
+
+    <organization> 
+        <name>The Language Archive, Max Planck Institute for Psycholinguistics</name> 
+        <url>http://tla.mpi.nl/tools/tla-tools</url>
+    </organization>
+    
+    <scm>
+        <developerConnection>scm:mvn:https://github.com/KinshipSoftware/KinOathKinshipArchiver.git</developerConnection>
+        <url>https://github.com/KinshipSoftware/KinOathKinshipArchiver</url>
+    </scm>
+ 
+   <properties>
+        <application.majorVersion>1</application.majorVersion> 
+        <application.minorVersion>6</application.minorVersion> 
+        <application.branch>pretesting</application.branch> 
+        <application.title>KinOath Kinship Archiver (pretesting)</application.title>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--<netbeans.hint.license>http://www.gnu.org/licenses/gpl-2.0.html</netbeans.hint.license>-->
+        <netbeans.hint.license>gpl20</netbeans.hint.license> 
+        <application.license.copyrightYear>2013</application.license.copyrightYear>    
+        <parentpom.location>${project.basedir}</parentpom.location>
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
+   </properties>
+    <build> 
+        <plugins> 
+            <plugin> 
+                <artifactId>maven-assembly-plugin</artifactId> 
+                <version>2.4</version> 
+                <inherited>false</inherited> 
+                <configuration> 
+                    <encoding>UTF-8</encoding> 
+                    <finalName>kinoath</finalName> 
+                    <descriptors> 
+                        <descriptor>sources-assembly.xml</descriptor> 
+                    </descriptors> 
+                    <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot> 
+                </configuration> 
+                <executions> 
+                    <execution> 
+                        <id>standalone</id> 
+                        <phase>package</phase> 
+                        <goals> 
+                            <goal>single</goal> 
+                        </goals> 
+                    </execution> 
+                </executions> 
+            </plugin> 
+            <plugin>
+                <!--                                                		 
+		    License plugin checks for presence of license header in all source files (with some exceptions, see excludes below).
+		    You can use this plugin to actually insert or fix the license headers by running maven with the following goal:
+
+		    mvn license:format
+
+                    For more info, see <http://mathieu.carbou.free.fr/p/maven-license-plugin/>.
+                -->
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.9.0</version> 
+                <configuration>
+                    <header>${parentpom.location}/license-header.txt</header>
+                    <strictCheck>false</strictCheck>
+                    <properties>
+                        <year>${application.license.copyrightYear}</year>
+                        <organization>${project.organization.name}</organization>
+                    </properties>
+                    <mapping>
+                        <svg>XML_STYLE</svg>
+                        <imdi>XML_STYLE</imdi>
+                        <cmdi>XML_STYLE</cmdi>
+                    </mapping>
+                    <excludes>
+                        <exclude>**/nbactions.xml</exclude>
+                        <exclude>**/nb-configuration.xml</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.icns</exclude>
+                        <exclude>**/*.php</exclude>
+                        <exclude>**/.gitignore</exclude>
+                        <exclude>installer/**</exclude>
+                        <exclude>**/src/main/docbook/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>nl.mpi</groupId>
+                <artifactId>version-control-check</artifactId>
+                <version>1.0.27-testing</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <verbose>true</verbose>
+                    <vcsType>git</vcsType>
+                    <allowSnapshots>true</allowSnapshots>
+                    <projectDirectory>${project.basedir}</projectDirectory>
+                    <majorVersion>1</majorVersion>
+                    <minorVersion>6</minorVersion>
+                    <buildType>pretesting</buildType>
+                    <propertiesPrefix>application</propertiesPrefix>
+                    <shortVersionModules>
+                        <param>kinoath-parent</param>
+                    </shortVersionModules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins> 
+    </build> 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.7.2</version>
+                <configuration>
+                    <forkMode>never</forkMode>
+                    <argLine>-Dwt.headless</argLine>
+                    <argLine>-Djava.awt.headless=true</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <findbugsXmlOutput>True</findbugsXmlOutput>
+                    <threshold>Normal</threshold>
+                    <effort>Min</effort>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+    
+    <repositories>
+        <repository>
+            <id>MPI</id>
+            <name>MPI LAT Repository</name>
+            <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
+        </repository>
+	<repository>
+            <id>FLAP</id>
+            <name>FLAP Repository</name>
+            <url>https://kinshipsoftware.github.io/FLAP/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+      </repository>
+    </repositories>
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>MPI</id>
+            <name>MPI LAT Repository</name>
+            <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>mc-release</id>
+            <name>Local Maven repository of releases</name>
+            <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>VersionControlCheck</id>
+            <name>VersionControlCheck Repository</name>
+            <url>http://kinshipsoftware.github.io/VersionControlCheck/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    <dependencies>
+    </dependencies>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>MPI-Snapshots</id>
+            <url>https://lux15.mpi.nl/nexus/content/repositories/MPI-Snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>MPI</id>
+            <name>MPI Repository</name>
+            <url>https://lux15.mpi.nl/nexus/content/repositories/MPI</url>
+        </repository>
+    </distributionManagement>
+</project>

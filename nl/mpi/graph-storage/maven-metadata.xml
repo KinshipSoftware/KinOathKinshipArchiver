@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>nl.mpi</groupId>
+  <artifactId>graph-storage</artifactId>
+  <versioning>
+    <release>1.6.4-pretesting</release>
+    <versions>
+      <version>1.6.4-pretesting</version>
+    </versions>
+    <lastUpdated>20170829121037</lastUpdated>
+  </versioning>
+</metadata>
