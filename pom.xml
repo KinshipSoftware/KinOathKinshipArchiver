@@ -193,6 +193,17 @@
             <name>MPI LAT Repository</name>
             <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
         </repository>
+	<repository>
+            <id>FLAP</id>
+            <name>FLAP Repository</name>
+            <url>https://kinshipsoftware.github.io/FLAP/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+      </repository>
     </repositories>
     
     <pluginRepositories>
