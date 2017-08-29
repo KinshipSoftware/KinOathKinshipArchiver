@@ -10,8 +10,8 @@
     <version>1.6</version>
     <description>Parent pom for KinOath Kinship Archiver</description>
     <modules>
-        <!--<module>desktop</module>-->
-        <!--<module>kinoath-help</module>-->
+        <module>desktop</module>
+        <module>kinoath-help</module>
         <module>rest</module>
         <module>kin-type-string-parser</module>
         <module>core</module>            
@@ -193,7 +193,7 @@
             <name>MPI LAT Repository</name>
             <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
         </repository>
-	<repository>
+        <repository>
             <id>FLAP</id>
             <name>FLAP Repository</name>
             <url>https://kinshipsoftware.github.io/FLAP/</url>
@@ -203,7 +203,7 @@
             <releases>
                 <enabled>true</enabled>
             </releases>
-      </repository>
+        </repository>
     </repositories>
     
     <pluginRepositories>
