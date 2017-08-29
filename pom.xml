@@ -115,7 +115,7 @@
             <plugin>
                 <groupId>nl.mpi</groupId>
                 <artifactId>version-control-check</artifactId>
-                <version>1.0.21-testing</version>
+                <version>1.0.27-testing</version>
                 <executions>
                     <execution>
                         <goals>
@@ -211,6 +211,17 @@
             <id>mc-release</id>
             <name>Local Maven repository of releases</name>
             <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>VersionControlCheck</id>
+            <name>VersionControlCheck Repository</name>
+            <url>http://kinshipsoftware.github.io/VersionControlCheck/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
