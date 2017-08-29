@@ -10,7 +10,7 @@
     <groupId>nl.mpi</groupId>
     <artifactId>graph-sorter</artifactId>
     <!--<version>1.6-pretesting-SNAPSHOT</version>-->
-    <version>1.6.8-pretesting</version>
+    <version>1.6.9-pretesting</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.62-${application.branch}</version>-->
     
     <name>KinOath Graph Sorter ${application.majorVersion}.${application.minorVersion}</name>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>plugins-core</artifactId>
-            <version>1.1.35861-stable</version>
+            <version>1.2.87-stable</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>kinoath-core</artifactId>
-            <version>1.6.14-pretesting</version>
+            <version>1.6.15-pretesting</version>
         </dependency>
     </dependencies>
 </project>

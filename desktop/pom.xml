@@ -8,7 +8,7 @@
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
     <!--<version>1.6-pretesting-SNAPSHOT</version>-->
-    <version>1.6.2284-pretesting</version>
+    <version>1.6.2285-pretesting</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.2239-${application.branch}</version>-->
     <name>KinOath Desktop ${application.majorVersion}.${application.minorVersion}</name>
     <parent>
@@ -295,32 +295,32 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-localisation</artifactId>
-            <version>1.6.68-pretesting</version>
+            <version>1.6.69-pretesting</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-diagram</artifactId>
-            <version>1.6.34-pretesting</version>
+            <version>1.6.37-pretesting</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>kin-type-string-parser</artifactId>
-            <version>1.6.8-pretesting</version>
+            <version>1.6.9-pretesting</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>kinoath-core</artifactId>
-            <version>1.6.14-pretesting</version>
+            <version>1.6.15-pretesting</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>batik-renderer</artifactId>
-            <version>1.6.14-pretesting</version>
+            <version>1.6.15-pretesting</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>graph-sorter</artifactId>
-            <version>1.6.8-pretesting</version>
+            <version>1.6.9-pretesting</version>
         </dependency>
     </dependencies>
     <repositories>
