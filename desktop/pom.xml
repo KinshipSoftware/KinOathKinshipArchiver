@@ -242,7 +242,7 @@
         <dependency>
             <groupId>org.basex</groupId>
             <artifactId>basex</artifactId>
-            <version>7.8.2</version>
+            <version>9.2.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
@@ -324,15 +324,15 @@
         </dependency>
     </dependencies>
     <repositories>
-        <repository>
+        <!-- <repository>
             <id>MPI</id>
             <name>MPI LAT Repository</name>
             <url>http://lux15.mpi.nl/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
+        </repository> -->
+        <!--        <repository>
             <id>basex</id>
             <name>BaseX Maven Repository</name>
-            <url>http://files.basex.org/maven</url>
-        </repository>
+            <url>https://files.basex.org/maven</url>
+        </repository>-->
     </repositories>
 </project>

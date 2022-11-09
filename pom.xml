@@ -188,11 +188,11 @@
     </reporting>
     
     <repositories>
-        <repository>
+        <!-- <repository>
             <id>MPI</id>
             <name>MPI LAT Repository</name>
             <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
-        </repository>
+        </repository> -->
         <repository>
             <id>FLAP</id>
             <name>FLAP Repository</name>
@@ -204,10 +204,21 @@
                 <enabled>true</enabled>
             </releases>
         </repository>
+        <repository>
+            <id>kindata-export-plugin</id>
+            <name>kindata-export-plugin Repository</name>
+            <url>https://kinshipsoftware.github.io/kindata-export-plugin/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
     </repositories>
     
     <pluginRepositories>
-        <pluginRepository>
+        <!-- <pluginRepository>
             <id>MPI</id>
             <name>MPI LAT Repository</name>
             <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
@@ -217,7 +228,7 @@
             <releases>
                 <enabled>true</enabled>
             </releases>
-        </pluginRepository>
+        </pluginRepository> -->
         <pluginRepository>
             <id>mc-release</id>
             <name>Local Maven repository of releases</name>
@@ -232,7 +243,7 @@
         <pluginRepository>
             <id>VersionControlCheck</id>
             <name>VersionControlCheck Repository</name>
-            <url>http://kinshipsoftware.github.io/VersionControlCheck/</url>
+            <url>https://kinshipsoftware.github.io/VersionControlCheck/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -244,14 +255,14 @@
     <dependencies>
     </dependencies>
     <distributionManagement>
-        <snapshotRepository>
+<!--        <snapshotRepository>
             <id>MPI-Snapshots</id>
             <url>https://lux15.mpi.nl/nexus/content/repositories/MPI-Snapshots</url>
-        </snapshotRepository>
-        <repository>
+        </snapshotRepository>-->
+<!--        <repository>
             <id>MPI</id>
             <name>MPI Repository</name>
             <url>https://lux15.mpi.nl/nexus/content/repositories/MPI</url>
-        </repository>
+        </repository>-->
     </distributionManagement>
 </project>

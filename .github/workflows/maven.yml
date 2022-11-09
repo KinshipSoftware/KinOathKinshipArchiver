@@ -1,0 +1,49 @@
+name: MVN Run Tests and Publish Artifacts
+on:
+  push:
+    #branches-ignore:
+    #  - '**' # disables this job
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 30000
+        ref: master
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
+    - name: clean test deploy
+      # sed -i 's|<versionCheck.allowSnapshots>true</versionCheck.allowSnapshots>|<versionCheck.allowSnapshots>false</versionCheck.allowSnapshots>|g' ./pom.xml;
+      run: pwd;
+            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
+            git status;
+            ls -l;
+            sed -i 's|<versionCheck.buildType>pretesting</versionCheck.buildType>|<versionCheck.buildType>stable</versionCheck.buildType>|g' ./pom.xml;
+            sed -i 's|-pretesting-SNAPSHOT|-stable-SNAPSHOT|g' ./pom.xml ./*/pom.xml;           
+            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
+            git rev-list --count --all desktop;
+            sed -i '/batik-renderer/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all batik-renderer)'-stable/}' ./batik-renderer/pom.xml;
+            sed -i '/desktop/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all desktop)'-stable/}' ./desktop/pom.xml;
+            sed -i '/graph-sorter/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all graph-sorter)'-stable/}' ./graph-sorter/pom.xml;
+            sed -i '/kin-type-string-parser/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kin-type-string-parser)'-stable/}' ./kin-type-string-parser/pom.xml;
+            sed -i '/core/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./core/pom.xml;
+            sed -i '/diagram/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all diagram)'-stable/}' ./diagram/pom.xml;
+            sed -i '/graph-storage/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all graph-storage)'-stable/}' ./graph-storage/pom.xml;
+            sed -i '/kinoath-help/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kinoath-help)'-stable/}' ./kinoath-help/pom.xml;
+            sed -i '/localisation/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all localisation)'-stable/}' ./localisation/pom.xml;
+            sed -i '/rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./rest/pom.xml;
+            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ../snapshots
+        keep_files: true
