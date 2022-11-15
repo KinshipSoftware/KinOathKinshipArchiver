@@ -11,7 +11,7 @@
     <description>Parent pom for KinOath Kinship Archiver</description>
     <modules>
         <module>desktop</module>
-        <module>kinoath-help</module>
+        <!--<module>kinoath-help</module>-->
         <module>rest</module>
         <module>kin-type-string-parser</module>
         <module>core</module>            
