@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>nl.mpi</groupId>
+  <artifactId>arbil-commons</artifactId>
+  <versioning>
+    <release>2.5.39-stable</release>
+    <versions>
+      <version>2.5.35829</version>
+      <version>2.5.39-stable</version>
+      <version>2.5.35829-stable</version>
+    </versions>
+    <lastUpdated>20221115165225</lastUpdated>
+  </versioning>
+</metadata>

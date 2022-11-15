@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>nl.mpi</groupId>
+  <artifactId>pluginloader</artifactId>
+  <versioning>
+    <release>1.1.35804-stable</release>
+    <versions>
+      <version>1.1.35804-stable</version>
+    </versions>
+    <lastUpdated>20221115165231</lastUpdated>
+  </versioning>
+</metadata>

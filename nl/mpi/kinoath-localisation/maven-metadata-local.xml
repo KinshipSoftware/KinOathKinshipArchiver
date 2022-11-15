@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>nl.mpi</groupId>
+  <artifactId>kinoath-localisation</artifactId>
+  <versioning>
+    <release>1.5.67-testing</release>
+    <versions>
+      <version>1.4.39338-stable</version>
+      <version>1.5.67-testing</version>
+    </versions>
+    <lastUpdated>20221115165228</lastUpdated>
+  </versioning>
+</metadata>

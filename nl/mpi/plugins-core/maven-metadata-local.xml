@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>nl.mpi</groupId>
+  <artifactId>plugins-core</artifactId>
+  <versioning>
+    <release>1.2.113-stable</release>
+    <versions>
+      <version>1.1.35861-stable</version>
+      <version>1.2.113-stable</version>
+    </versions>
+    <lastUpdated>20221115165232</lastUpdated>
+  </versioning>
+</metadata>

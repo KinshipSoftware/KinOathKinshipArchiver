@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>nl.mpi</groupId>
+  <artifactId>corpusstructure</artifactId>
+  <versioning>
+    <release>api-1.8.1</release>
+    <versions>
+      <version>api-1.8.1</version>
+    </versions>
+    <lastUpdated>20221115165233</lastUpdated>
+  </versioning>
+</metadata>

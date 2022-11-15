@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>nl.mpi</groupId>
+  <artifactId>kinnate-plugins-export</artifactId>
+  <versioning>
+    <release>1.1.42-testing</release>
+    <versions>
+      <version>1.0.37446</version>
+      <version>1.1.42-testing</version>
+      <version>1.0.37446-stable</version>
+    </versions>
+    <lastUpdated>20221115165224</lastUpdated>
+  </versioning>
+</metadata>

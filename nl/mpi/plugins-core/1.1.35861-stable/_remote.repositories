@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Nov 15 17:52:16 CET 2022
+plugins-core-1.1.35861-stable.jar>=
+plugins-core-1.1.35861-stable.pom>=
