@@ -62,5 +62,11 @@
             <artifactId>kinoath-core</artifactId>
             <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>arbil</artifactId>
+            <version>2.5.1039-stable</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

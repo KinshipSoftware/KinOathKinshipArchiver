@@ -32,7 +32,7 @@
         <url>https://github.com/KinshipSoftware/KinOathKinshipArchiver</url>
     </scm>
  
-   <properties>
+    <properties>
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>6</application.minorVersion> 
         <application.branch>pretesting</application.branch> 
@@ -42,9 +42,9 @@
         <netbeans.hint.license>gpl20</netbeans.hint.license> 
         <application.license.copyrightYear>2013</application.license.copyrightYear>    
         <parentpom.location>${project.basedir}</parentpom.location>
-      <maven.compiler.source>1.8</maven.compiler.source>
-      <maven.compiler.target>1.8</maven.compiler.target>
-   </properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
     <build> 
         <plugins> 
             <plugin> 
@@ -71,10 +71,10 @@
             </plugin> 
             <plugin>
                 <!--                                                		 
-		    License plugin checks for presence of license header in all source files (with some exceptions, see excludes below).
-		    You can use this plugin to actually insert or fix the license headers by running maven with the following goal:
+                    License plugin checks for presence of license header in all source files (with some exceptions, see excludes below).
+                    You can use this plugin to actually insert or fix the license headers by running maven with the following goal:
 
-		    mvn license:format
+                    mvn license:format
 
                     For more info, see <http://mathieu.carbou.free.fr/p/maven-license-plugin/>.
                 -->
@@ -205,6 +205,17 @@
             </releases>
         </repository>
         <repository>
+            <id>KinOathKinshipArchiver</id>
+            <name>KinOathKinshipArchiver Repository</name>
+            <url>https://kinshipsoftware.github.io/KinOathKinshipArchiver/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
             <id>kindata-export-plugin</id>
             <name>kindata-export-plugin Repository</name>
             <url>https://kinshipsoftware.github.io/kindata-export-plugin/</url>
@@ -255,11 +266,11 @@
     <dependencies>
     </dependencies>
     <distributionManagement>
-<!--        <snapshotRepository>
+        <!-- <snapshotRepository>
             <id>MPI-Snapshots</id>
             <url>https://lux15.mpi.nl/nexus/content/repositories/MPI-Snapshots</url>
         </snapshotRepository>-->
-<!--        <repository>
+        <!-- <repository>
             <id>MPI</id>
             <name>MPI Repository</name>
             <url>https://lux15.mpi.nl/nexus/content/repositories/MPI</url>
