@@ -26,7 +26,7 @@ jobs:
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             git status;
             ls -l;
-            sed -i 's|<versionCheck.buildType>pretesting</versionCheck.buildType>|<versionCheck.buildType>stable</versionCheck.buildType>|g' ./pom.xml;
+            sed -i 's|<application.branch>pretesting</application.branch>|<application.branch>stable</application.branch>|g' ./pom.xml;
             sed -i 's|-pretesting-SNAPSHOT|-stable-SNAPSHOT|g' ./pom.xml ./*/pom.xml;           
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             git rev-list --count --all desktop;

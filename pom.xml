@@ -128,9 +128,9 @@
                     <vcsType>git</vcsType>
                     <allowSnapshots>true</allowSnapshots>
                     <projectDirectory>${project.basedir}</projectDirectory>
-                    <majorVersion>1</majorVersion>
-                    <minorVersion>6</minorVersion>
-                    <buildType>pretesting</buildType>
+                    <majorVersion>${application.majorVersion}</majorVersion>
+                    <minorVersion>${application.minorVersion}</minorVersion>
+                    <buildType>${application.branch}</buildType>
                     <propertiesPrefix>application</propertiesPrefix>
                     <shortVersionModules>
                         <param>kinoath-parent</param>
