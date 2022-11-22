@@ -31,7 +31,7 @@ jobs:
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             git rev-list --count --all desktop;
             sed -i '/batik-renderer/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all batik-renderer)'-stable/}' ./batik-renderer/pom.xml;
-            sed -i '/kinoath-core/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./*/pom.xml;
+            sed -i '/kinoath-core/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./*/pom.xml;
             sed -i '/1.6-pretesting-SNAPSHOT/'1.6.$(git rev-list --count --all desktop)'-stable/}' ./desktop/pom.xml;
             sed -i '/graph-sorter/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all graph-sorter)'-stable/}' ./graph-sorter/pom.xml;
             sed -i '/kin-type-string-parser/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kin-type-string-parser)'-stable/}' ./kin-type-string-parser/pom.xml;
@@ -41,6 +41,7 @@ jobs:
             sed -i '/kinoath-help/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kinoath-help)'-stable/}' ./kinoath-help/pom.xml;
             sed -i '/localisation/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all localisation)'-stable/}' ./localisation/pom.xml;
             sed -i '/rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./rest/pom.xml;
+            git diff;
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3

@@ -9,7 +9,7 @@
     </parent>
     <groupId>nl.mpi</groupId>
     <artifactId>kinoath-core</artifactId>
-    <version>1.6-testing-SNAPSHOT</version>
+    <version>1.6-pretesting-SNAPSHOT</version>
     <!-- <version>1.6.15-pretesting</version> -->
     <!--<version>${application.majorVersion}.${application.minorVersion}.62-${application.branch}</version>-->
     

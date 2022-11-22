@@ -65,7 +65,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>kinoath-core</artifactId>
-            <version>1.6-testing-SNAPSHOT</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
