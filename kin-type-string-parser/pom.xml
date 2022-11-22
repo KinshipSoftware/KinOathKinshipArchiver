@@ -9,8 +9,8 @@
     </parent>
     <groupId>nl.mpi</groupId>
     <artifactId>kin-type-string-parser</artifactId>
-    <!--<version>1.6-pretesting-SNAPSHOT</version>-->
-    <version>1.6.9-pretesting</version>
+    <version>1.6-pretesting-SNAPSHOT</version>
+    <!-- <version>1.6.9-pretesting</version> -->
     <!--<version>${application.majorVersion}.${application.minorVersion}.62-${application.branch}</version>-->
     
     <name>KinOath Kin Type String Parser ${application.majorVersion}.${application.minorVersion}</name>

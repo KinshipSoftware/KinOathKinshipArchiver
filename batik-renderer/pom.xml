@@ -9,8 +9,8 @@
     </parent>
     <groupId>nl.mpi</groupId>
     <artifactId>batik-renderer</artifactId>
-    <!--<version>1.6-pretesting-SNAPSHOT</version>-->
-    <version>1.6.15-pretesting</version>
+    <version>1.6-pretesting-SNAPSHOT</version>
+    <!-- <version>1.6.15-pretesting</version> -->
     <!--<version>${application.majorVersion}.${application.minorVersion}.62-${application.branch}</version>-->
     
     <name>KinOath Batik Renderer ${application.majorVersion}.${application.minorVersion}</name>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>graph-sorter</artifactId>
-            <version>1.6.9-pretesting</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

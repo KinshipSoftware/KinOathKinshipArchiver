@@ -62,7 +62,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kin-type-string-parser</artifactId>
-            <version>1.6.9-pretesting</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>graph-sorter</artifactId>
-            <version>1.6.9-pretesting</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

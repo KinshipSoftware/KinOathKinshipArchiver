@@ -305,7 +305,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>kin-type-string-parser</artifactId>
-            <version>1.6.9-pretesting</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -315,12 +315,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>batik-renderer</artifactId>
-            <version>1.6.15-pretesting</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>graph-sorter</artifactId>
-            <version>1.6.9-pretesting</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
