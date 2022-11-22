@@ -300,7 +300,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-diagram</artifactId>
-            <version>1.6.37-pretesting</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
