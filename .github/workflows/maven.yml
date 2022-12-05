@@ -39,7 +39,7 @@ jobs:
             sed -i '/kin-type-string-parser/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all kin-type-string-parser)'-stable/}' ./*/pom.xml;
             sed -i '/core/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./core/pom.xml;
             sed -i '/diagram/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all diagram)'-stable/}' ./diagram/pom.xml;
-            sed -i '/graph-storage/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all graph-storage)'-stable/}' ./graph-storage/pom.xml;
+            sed -i '/graph-storage/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all graph-storage)'-stable/}' ./graph-storage/pom.xml;
             sed -i '/kinoath-help/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kinoath-help)'-stable/}' ./kinoath-help/pom.xml;
             sed -i '/localisation/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all localisation)'-stable/}' ./localisation/pom.xml;
             sed -i '/rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./rest/pom.xml;
