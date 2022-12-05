@@ -295,7 +295,7 @@
         <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>kinoath-localisation</artifactId>
-            <version>1.6.69-pretesting</version>
+            <version>1.6-pretesting-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
