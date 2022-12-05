@@ -358,10 +358,26 @@
             <artifactId>arbil-help</artifactId>
             <version>2.5.32-stable</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.7</version>
+        </dependency> -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>plugins-core</artifactId>
+            <version>1.2.113-stable</version>
+        </dependency>
+        <!-- <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>3.0.2</version>
+        </dependency> -->
+        <dependency>
+            <groupId>org.apache.tomee.bom</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>8.0.13</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
     <repositories>

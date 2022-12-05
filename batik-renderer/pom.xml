@@ -41,7 +41,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>plugins-core</artifactId>
-            <version>1.2.87-stable</version>
+            <version>1.2.113-stable</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
