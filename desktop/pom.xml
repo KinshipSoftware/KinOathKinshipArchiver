@@ -7,6 +7,7 @@
     <packaging>jar</packaging>
     <!-- Either use the snapshot version of manually enter the current build number.
     The build number is only required when depending on the output in other projects or building to the server.-->
+    <!-- kinoath-desktop -->
     <version>1.6-pretesting-SNAPSHOT</version>
     <!-- <version>1.6.2285-pretesting</version> -->
     <!--<version>${application.majorVersion}.${application.minorVersion}.2239-${application.branch}</version>-->

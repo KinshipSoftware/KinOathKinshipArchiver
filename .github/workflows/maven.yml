@@ -34,7 +34,7 @@ jobs:
             sed -i '/kinoath-rest/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./*/pom.xml;
             sed -i '/kinoath-core/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./*/pom.xml;
             sed -i '/kinoath-diagram/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all diagram)'-stable/}' ./*/pom.xml;
-            sed -i '/1.6-pretesting-SNAPSHOT/'1.6.$(git rev-list --count --all desktop)'-stable/}' ./desktop/pom.xml;
+            sed -i '/kinoath-desktop/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all desktop)'-stable/}' ./desktop/pom.xml;
             sed -i '/graph-sorter/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all graph-sorter)'-stable/}' ./*/pom.xml;
             sed -i '/kin-type-string-parser/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all kin-type-string-parser)'-stable/}' ./*/pom.xml;
             sed -i '/core/{n;s/-pretesting-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./core/pom.xml;
