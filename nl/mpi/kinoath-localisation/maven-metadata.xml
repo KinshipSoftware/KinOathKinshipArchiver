@@ -3,10 +3,12 @@
   <groupId>nl.mpi</groupId>
   <artifactId>kinoath-localisation</artifactId>
   <versioning>
+    <release>1.6.71-stable</release>
     <versions>
       <version>1.6-pretesting-SNAPSHOT</version>
       <version>1.6-stable-SNAPSHOT</version>
+      <version>1.6.71-stable</version>
     </versions>
-    <lastUpdated>20221206103059</lastUpdated>
+    <lastUpdated>20221206114805</lastUpdated>
   </versioning>
 </metadata>
