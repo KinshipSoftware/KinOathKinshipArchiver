@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>nl.mpi</groupId>
+  <artifactId>kinoath-localisation</artifactId>
+  <versioning>
+    <lastUpdated>20221206102914</lastUpdated>
+    <snapshot>
+      <timestamp>20221206.102914</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>1.6-pretesting-20221206.102914-1</value>
+        <updated>20221206102914</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.6-pretesting-20221206.102914-1</value>
+        <updated>20221206102914</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <classifier>sources</classifier>
+        <extension>jar</extension>
+        <value>1.6-pretesting-20221206.102914-1</value>
+        <updated>20221206102914</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+  <version>1.6-pretesting-SNAPSHOT</version>
+</metadata>

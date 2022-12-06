@@ -10,7 +10,7 @@
     <version>1.6</version>
     <description>Parent pom for KinOath Kinship Archiver</description>
     <modules>
-        <!--<module>desktop</module>-->
+        <module>desktop</module>
         <!--<module>kinoath-help</module>-->
         <module>rest</module>
         <module>kin-type-string-parser</module>
@@ -32,19 +32,19 @@
         <url>https://github.com/KinshipSoftware/KinOathKinshipArchiver</url>
     </scm>
  
-   <properties>
+    <properties>
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>6</application.minorVersion> 
-        <application.branch>pretesting</application.branch> 
+        <application.branch>stable</application.branch> 
         <application.title>KinOath Kinship Archiver (pretesting)</application.title>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--<netbeans.hint.license>http://www.gnu.org/licenses/gpl-2.0.html</netbeans.hint.license>-->
         <netbeans.hint.license>gpl20</netbeans.hint.license> 
         <application.license.copyrightYear>2013</application.license.copyrightYear>    
         <parentpom.location>${project.basedir}</parentpom.location>
-      <maven.compiler.source>1.8</maven.compiler.source>
-      <maven.compiler.target>1.8</maven.compiler.target>
-   </properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
     <build> 
         <plugins> 
             <plugin> 
@@ -71,10 +71,10 @@
             </plugin> 
             <plugin>
                 <!--                                                		 
-		    License plugin checks for presence of license header in all source files (with some exceptions, see excludes below).
-		    You can use this plugin to actually insert or fix the license headers by running maven with the following goal:
+                    License plugin checks for presence of license header in all source files (with some exceptions, see excludes below).
+                    You can use this plugin to actually insert or fix the license headers by running maven with the following goal:
 
-		    mvn license:format
+                    mvn license:format
 
                     For more info, see <http://mathieu.carbou.free.fr/p/maven-license-plugin/>.
                 -->
@@ -128,9 +128,9 @@
                     <vcsType>git</vcsType>
                     <allowSnapshots>true</allowSnapshots>
                     <projectDirectory>${project.basedir}</projectDirectory>
-                    <majorVersion>1</majorVersion>
-                    <minorVersion>6</minorVersion>
-                    <buildType>pretesting</buildType>
+                    <majorVersion>${application.majorVersion}</majorVersion>
+                    <minorVersion>${application.minorVersion}</minorVersion>
+                    <buildType>${application.branch}</buildType>
                     <propertiesPrefix>application</propertiesPrefix>
                     <shortVersionModules>
                         <param>kinoath-parent</param>
@@ -188,12 +188,12 @@
     </reporting>
     
     <repositories>
-        <repository>
+        <!-- <repository>
             <id>MPI</id>
             <name>MPI LAT Repository</name>
             <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
-        </repository>
-	<repository>
+        </repository> -->
+        <repository>
             <id>FLAP</id>
             <name>FLAP Repository</name>
             <url>https://kinshipsoftware.github.io/FLAP/</url>
@@ -203,11 +203,33 @@
             <releases>
                 <enabled>true</enabled>
             </releases>
-      </repository>
+        </repository>
+        <repository>
+            <id>KinOathKinshipArchiver</id>
+            <name>KinOathKinshipArchiver Repository</name>
+            <url>https://kinshipsoftware.github.io/KinOathKinshipArchiver/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>kindata-export-plugin</id>
+            <name>kindata-export-plugin Repository</name>
+            <url>https://kinshipsoftware.github.io/kindata-export-plugin/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
     </repositories>
     
     <pluginRepositories>
-        <pluginRepository>
+        <!-- <pluginRepository>
             <id>MPI</id>
             <name>MPI LAT Repository</name>
             <url>https://lux15.mpi.nl/nexus/content/groups/public/</url>
@@ -217,7 +239,7 @@
             <releases>
                 <enabled>true</enabled>
             </releases>
-        </pluginRepository>
+        </pluginRepository> -->
         <pluginRepository>
             <id>mc-release</id>
             <name>Local Maven repository of releases</name>
@@ -232,7 +254,7 @@
         <pluginRepository>
             <id>VersionControlCheck</id>
             <name>VersionControlCheck Repository</name>
-            <url>http://kinshipsoftware.github.io/VersionControlCheck/</url>
+            <url>https://kinshipsoftware.github.io/VersionControlCheck/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -242,16 +264,21 @@
         </pluginRepository>
     </pluginRepositories>
     <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.23</version>
+        </dependency>
     </dependencies>
     <distributionManagement>
-        <snapshotRepository>
+        <!-- <snapshotRepository>
             <id>MPI-Snapshots</id>
             <url>https://lux15.mpi.nl/nexus/content/repositories/MPI-Snapshots</url>
-        </snapshotRepository>
-        <repository>
+        </snapshotRepository>-->
+        <!-- <repository>
             <id>MPI</id>
             <name>MPI Repository</name>
             <url>https://lux15.mpi.nl/nexus/content/repositories/MPI</url>
-        </repository>
+        </repository>-->
     </distributionManagement>
 </project>

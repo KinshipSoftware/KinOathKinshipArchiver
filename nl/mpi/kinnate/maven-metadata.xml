@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>nl.mpi</groupId>
+  <artifactId>kinnate</artifactId>
+  <versioning>
+    <versions>
+      <version>1.6-pretesting-SNAPSHOT</version>
+      <version>1.6-stable-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20221206103059</lastUpdated>
+  </versioning>
+</metadata>

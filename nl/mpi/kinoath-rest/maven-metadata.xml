@@ -3,10 +3,10 @@
   <groupId>nl.mpi</groupId>
   <artifactId>kinoath-rest</artifactId>
   <versioning>
-    <release>1.6.48-pretesting</release>
     <versions>
-      <version>1.6.48-pretesting</version>
+      <version>1.6-pretesting-SNAPSHOT</version>
+      <version>1.6-stable-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20170829121034</lastUpdated>
+    <lastUpdated>20221206103059</lastUpdated>
   </versioning>
 </metadata>
