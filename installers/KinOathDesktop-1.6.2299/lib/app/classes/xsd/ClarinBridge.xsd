@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+-->
+This is no longer used
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cmd="http://www.clarin.eu/cmd/"
+           xmlns:kin="http://mpi.nl/tla/kin"
+           targetNamespace="http://mpi.nl/tla/kin"
+           elementFormDefault="qualified">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+            schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    <xs:import namespace="http://www.clarin.eu/cmd/"
+            schemaLocation="http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1320657629627/xsd"/>
+    <xs:simpleType name="simpletype-UniqueIdentifier">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{9}-[0-9A-F]{12}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="complextype-UniqueIdentifier">
+        <xs:simpleContent>
+            <xs:extension base="kin:simpletype-UniqueIdentifier">
+                <xs:attribute name="type">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:pattern value="[a-z]{3}"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="simpletype-DateType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{4}(/[0-9]{2}){0,2}(abt|bef|aft){0,1}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="Kinnate">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Entity">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Identifier" type="kin:complextype-UniqueIdentifier" minOccurs="1" maxOccurs="1" />
+                            <xs:element maxOccurs="1" minOccurs="0" type="xs:boolean" name="Ego"/>
+                            <xs:element name="Resources">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" type="xs:anyURI" name="ExternalLink"/>
+                            <xs:element maxOccurs="1" minOccurs="0" type="xs:boolean" name="Visible"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Identifier" minOccurs="1" maxOccurs="1"
+                      type="cmd:complextype-Identifier-1---"/>
+            </xs:sequence>
+            <xs:attribute name="KmdiVersion" fixed="1.1" use="required"/>
+            <xs:attribute name="CMDVersion" fixed="1.1" use="required"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+
+
+
+

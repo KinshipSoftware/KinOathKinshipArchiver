@@ -1,0 +1,1679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:kin="http://mpi.nl/tla/kin"
+     contentScriptType="text/ecmascript"
+     zoomAndPan="magnify"
+     contentStyleType="text/css"
+     viewBox="-255 -355 1810 1060"
+     preserveAspectRatio="xMidYMid meet"
+     version="1.0">
+  <defs id="KinSymbols">
+      <g id="circle">
+         <circle r="6" stroke-width="2" cx="7.5" cy="7.5" stroke="black"/>
+      </g>
+      <g id="square">
+         <rect x="2"
+               width="11"
+               y="2"
+               height="11"
+               stroke-width="2"
+               stroke="black"/>
+      </g>
+      <g id="square-45">
+         <rect x="2"
+               y="2"
+               transform="rotate(-45 7 7)"
+               width="11"
+               height="11"
+               stroke="black"
+               stroke-width="2"/>
+      </g>
+      <g id="rhombus">
+         <rect x="2"
+               y="2"
+               transform="scale(1,0.5), rotate(-45 7 7)"
+               width="11"
+               height="11"
+               stroke="black"
+               stroke-width="2"/>
+      </g>
+      <g id="union">
+         <rect fill="white"
+               x="0"
+               width="15"
+               y="0"
+               height="15"
+               stroke="none"/>
+         <line y2="2"
+               stroke-width="5"
+               x1="0"
+               x2="15"
+               y1="2"
+               stroke="black"/>
+         <line y2="13"
+               stroke-width="5"
+               x1="0"
+               x2="15"
+               y1="13"
+               stroke="black"/>
+      </g>
+      <g id="triangle">
+         <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+      </g>
+      <g id="triangle-270">
+         <polygon stroke-width="2"
+                  points="7,1 1,12 14,12"
+                  transform="rotate(-90 7 7)"
+                  stroke="black"/>
+      </g>
+      <g id="triangle-180" transform="rotate(180 7 7)">
+         <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+      </g>
+      <g id="triangle-90" transform="rotate(90 7 7)">
+         <polygon points="7,1 1,12 14,12" stroke-width="2" stroke="black"/>
+      </g>
+      <g id="cross">
+         <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="black"/>
+      </g>
+      <g id="error">
+         <polyline fill="none"
+                   stroke-width="2"
+                   points="0,0 14,14 7,7 0,14 14,0"
+                   stroke="red"/>
+      </g>
+      <g id="blackmarker">
+         <circle fill="black" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="blackstrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="black"/>
+      </g>
+      <g id="orangemarker">
+         <circle fill="orange" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="orangestrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="orange"/>
+      </g>
+      <g id="cyanmarker">
+         <circle fill="cyan" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="cyanstrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="cyan"/>
+      </g>
+      <g id="purplemarker">
+         <circle fill="purple" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="purplestrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="purple"/>
+      </g>
+      <g id="redmarker">
+         <circle fill="red" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="redstrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="red"/>
+      </g>
+      <g id="greenmarker">
+         <circle fill="green" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="greenstrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="green"/>
+      </g>
+      <g id="bluemarker">
+         <circle fill="blue" r="3" cx="15" cy="0" stroke="none"/>
+      </g>
+      <g id="bluestrikethrough">
+         <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="blue"/>
+      </g>
+  </defs>
+  <g id="DiagramGroup">
+    
+    
+    
+    
+      <rect x="-248.0"
+            y="-348.0"
+            fill="none"
+            width="1796.0"
+            id="PageBorder"
+            height="1046.0"
+            stroke="grey"
+            stroke-width="2"/>
+      <g id="GraphicsGroup"/>
+      <g id="RelationGroup">
+         <g id="relation0">
+            <defs>
+               <path fill="none"
+                     id="relation0Line"
+                     stroke-width="2"
+                     d="M 407,157 L 407,117 407,117 407,117 557,117 557,157 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation0Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation0Line"/>
+         </g>
+         <g id="relation9">
+            <defs>
+               <path fill="none"
+                     id="relation9Line"
+                     stroke-width="2"
+                     d="M 957,507 L 957,467 957,467 957,467 757,467 757,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation9Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation9Line"/>
+         </g>
+         <g id="relation36">
+            <defs>
+               <path fill="none"
+                     id="relation36Line"
+                     stroke-width="2"
+                     d="M 407,357 L 407,317 407,317 357,317 357,287 357,287 357,257 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation36Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation36Line"/>
+         </g>
+         <g id="relation13">
+            <defs>
+               <path fill="none"
+                     id="relation13Line"
+                     stroke-width="2"
+                     d="M 657,257 L 657,223 657,223 657,223 957,223 957,257 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation13Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation13Line"/>
+         </g>
+         <g id="relation45">
+            <defs>
+               <path fill="none"
+                     id="relation45Line"
+                     stroke-width="2"
+                     d="M 757,607 L 757,573 757,573 757,573 657,573 657,607 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation45Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation45Line"/>
+         </g>
+         <g id="relation2">
+            <defs>
+               <path fill="none"
+                     id="relation2Line"
+                     stroke-width="2"
+                     d="M 657,257 L 657,217 657,217 657,217 657,187 657,187 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation2Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation2Line"/>
+         </g>
+         <g id="relation41">
+            <defs>
+               <path fill="none"
+                     id="relation41Line"
+                     stroke-width="2"
+                     d="M 907,607 L 907,567 907,567 957,567 957,537 957,537 957,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation41Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation41Line"/>
+         </g>
+         <g id="relation28">
+            <defs>
+               <path fill="none"
+                     id="relation28Line"
+                     stroke-width="2"
+                     d="M 657,7 L 657,-27 657,-27 657,-27 757,-27 757,7 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation28Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation28Line"/>
+         </g>
+         <g id="relation8">
+            <defs>
+               <path fill="none"
+                     id="relation8Line"
+                     stroke-width="2"
+                     d="M 557,507 L 557,537 757,537 757,537 757,537 757,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation8Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation8Line"/>
+         </g>
+         <g id="relation11">
+            <defs>
+               <path fill="none"
+                     id="relation11Line"
+                     stroke-width="2"
+                     d="M 257,607 L 257,567 257,567 357,567 357,537 357,537 357,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation11Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation11Line"/>
+         </g>
+         <g id="relation15">
+            <defs>
+               <path fill="none"
+                     id="relation15Line"
+                     stroke-width="2"
+                     d="M 1057,357 L 1057,317 1057,317 957,317 957,287 957,287 957,257 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation15Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation15Line"/>
+         </g>
+         <g id="relation37">
+            <defs>
+               <path fill="none"
+                     id="relation37Line"
+                     stroke-width="2"
+                     d="M 407,607 L 407,567 407,567 357,567 357,537 357,537 357,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation37Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation37Line"/>
+         </g>
+         <g id="relation26">
+            <defs>
+               <path fill="none"
+                     id="relation26Line"
+                     stroke-width="2"
+                     d="M 557,507 L 557,473 557,473 557,473 357,473 357,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation26Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation26Line"/>
+         </g>
+         <g id="relation17">
+            <defs>
+               <path fill="none"
+                     id="relation17Line"
+                     stroke-width="2"
+                     d="M -43,607 L -43,567 -43,567 57,567 57,537 57,537 57,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation17Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation17Line"/>
+         </g>
+         <g id="relation34">
+            <defs>
+               <path fill="none"
+                     id="relation34Line"
+                     stroke-width="2"
+                     d="M 657,257 L 657,223 657,223 657,223 357,223 357,257 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation34Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation34Line"/>
+         </g>
+         <g id="relation16">
+            <defs>
+               <path fill="none"
+                     id="relation16Line"
+                     stroke-width="2"
+                     d="M 1357,607 L 1357,567 1357,567 1257,567 1257,537 1257,537 1257,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation16Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation16Line"/>
+         </g>
+         <g id="relation43">
+            <defs>
+               <path fill="none"
+                     id="relation43Line"
+                     stroke-width="2"
+                     d="M 57,-93 L 57,-133 57,-133 57,-133 557,-133 557,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation43Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation43Line"/>
+         </g>
+         <g id="relation42">
+            <defs>
+               <path fill="none"
+                     id="relation42Line"
+                     stroke-width="2"
+                     d="M 557,357 L 557,317 557,317 657,317 657,287 657,287 657,257 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation42Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation42Line"/>
+         </g>
+         <g id="relation27">
+            <defs>
+               <path fill="none"
+                     id="relation27Line"
+                     stroke-width="2"
+                     d="M 657,7 L 657,-33 657,-33 657,-33 657,-63 657,-63 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation27Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation27Line"/>
+         </g>
+         <g id="relation20">
+            <defs>
+               <path fill="none"
+                     id="relation20Line"
+                     stroke-width="2"
+                     d="M 357,-93 L 357,-127 357,-127 357,-127 557,-127 557,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation20Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation20Line"/>
+         </g>
+         <g id="relation21">
+            <defs>
+               <path fill="none"
+                     id="relation21Line"
+                     stroke-width="2"
+                     d="M 257,7 L 257,-33 257,-33 357,-33 357,-63 357,-63 357,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation21Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation21Line"/>
+         </g>
+         <g id="relation33">
+            <defs>
+               <path fill="none"
+                     id="relation33Line"
+                     stroke-width="2"
+                     d="M 757,-93 L 757,-63 557,-63 557,-63 557,-63 557,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation33Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation33Line"/>
+         </g>
+         <g id="relation12">
+            <defs>
+               <path fill="none"
+                     id="relation12Line"
+                     stroke-width="2"
+                     d="M 1207,607 L 1207,567 1207,567 1257,567 1257,537 1257,537 1257,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation12Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation12Line"/>
+         </g>
+         <g id="relation40">
+            <defs>
+               <path fill="none"
+                     id="relation40Line"
+                     stroke-width="2"
+                     d="M 107,607 L 107,567 107,567 57,567 57,537 57,537 57,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation40Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation40Line"/>
+         </g>
+         <g id="relation25">
+            <defs>
+               <path fill="none"
+                     id="relation25Line"
+                     stroke-width="2"
+                     d="M 557,507 L 557,467 557,467 557,467 57,467 57,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation25Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation25Line"/>
+         </g>
+         <g id="relation38">
+            <defs>
+               <path fill="none"
+                     id="relation38Line"
+                     stroke-width="2"
+                     d="M 257,157 L 257,123 257,123 257,123 403,123 s 4,-8 8,0 L 557,123 557,157 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation38Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation38Line"/>
+         </g>
+         <g id="relation5">
+            <defs>
+               <path fill="none"
+                     id="relation5Line"
+                     stroke-width="2"
+                     d="M 1057,157 L 1057,123 1057,123 1057,123 911,123 s -4,-8 -8,0 L 757,123 757,157 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation5Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation5Line"/>
+         </g>
+         <g id="relation10">
+            <defs>
+               <path fill="none"
+                     id="relation10Line"
+                     stroke-width="2"
+                     d="M 1257,507 L 1257,473 1257,473 1257,473 961,473 s -4,-8 -8,0 L 757,473 757,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation10Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation10Line"/>
+         </g>
+         <g id="relation19">
+            <defs>
+               <path fill="none"
+                     id="relation19Line"
+                     stroke-width="2"
+                     d="M 407,7 L 407,-33 407,-33 357,-33 357,-63 357,-63 357,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation19Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation19Line"/>
+         </g>
+         <g id="relation30">
+            <defs>
+               <path fill="none"
+                     id="relation30Line"
+                     stroke-width="2"
+                     d="M -43,7 L -43,-33 -43,-33 57,-33 57,-63 57,-63 57,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation30Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation30Line"/>
+         </g>
+         <g id="relation1">
+            <defs>
+               <path fill="none"
+                     id="relation1Line"
+                     stroke-width="2"
+                     d="M 107,7 L 107,-33 107,-33 57,-33 57,-63 57,-63 57,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation1Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation1Line"/>
+         </g>
+         <g id="relation39">
+            <defs>
+               <path fill="none"
+                     id="relation39Line"
+                     stroke-width="2"
+                     d="M 657,7 L 657,-27 657,-27 657,-27 557,-27 557,7 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation39Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation39Line"/>
+         </g>
+         <g id="relation31">
+            <defs>
+               <path fill="none"
+                     id="relation31Line"
+                     stroke-width="2"
+                     d="M 557,607 L 557,573 557,573 557,573 657,573 657,607 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation31Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation31Line"/>
+         </g>
+         <g id="relation24">
+            <defs>
+               <path fill="none"
+                     id="relation24Line"
+                     stroke-width="2"
+                     d="M 1057,7 L 1057,-33 1057,-33 957,-33 957,-63 957,-63 957,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation24Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation24Line"/>
+         </g>
+         <g id="relation6">
+            <defs>
+               <path fill="none"
+                     id="relation6Line"
+                     stroke-width="2"
+                     d="M 1207,7 L 1207,-33 1207,-33 1257,-33 1257,-63 1257,-63 1257,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation6Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation6Line"/>
+         </g>
+         <g id="relation23">
+            <defs>
+               <path fill="none"
+                     id="relation23Line"
+                     stroke-width="2"
+                     d="M 907,7 L 907,-33 907,-33 957,-33 957,-63 957,-63 957,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation23Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation23Line"/>
+         </g>
+         <g id="relation44">
+            <defs>
+               <path fill="none"
+                     id="relation44Line"
+                     stroke-width="2"
+                     d="M 757,357 L 757,317 757,317 657,317 657,287 657,287 657,257 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation44Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation44Line"/>
+         </g>
+         <g id="relation32">
+            <defs>
+               <path fill="none"
+                     id="relation32Line"
+                     stroke-width="2"
+                     d="M 1257,-93 L 1257,-133 1257,-133 1257,-133 757,-133 757,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation32Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation32Line"/>
+         </g>
+         <g id="relation3">
+            <defs>
+               <path fill="none"
+                     id="relation3Line"
+                     stroke-width="2"
+                     d="M 907,157 L 907,117 907,117 907,117 757,117 757,157 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation3Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation3Line"/>
+         </g>
+         <g id="relation22">
+            <defs>
+               <path fill="none"
+                     id="relation22Line"
+                     stroke-width="2"
+                     d="M 757,-93 L 757,-127 757,-127 757,-127 957,-127 957,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation22Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation22Line"/>
+         </g>
+         <g id="relation4">
+            <defs>
+               <path fill="none"
+                     id="relation4Line"
+                     stroke-width="2"
+                     d="M 757,157 L 757,187 557,187 557,187 557,187 557,157 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation4Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation4Line"/>
+         </g>
+         <g id="relation35">
+            <defs>
+               <path fill="none"
+                     id="relation35Line"
+                     stroke-width="2"
+                     d="M 257,357 L 257,317 257,317 357,317 357,287 357,287 357,257 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation35Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation35Line"/>
+         </g>
+         <g id="relation14">
+            <defs>
+               <path fill="none"
+                     id="relation14Line"
+                     stroke-width="2"
+                     d="M 907,357 L 907,317 907,317 957,317 957,287 957,287 957,257 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation14Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation14Line"/>
+         </g>
+         <g id="relation29">
+            <defs>
+               <path fill="none"
+                     id="relation29Line"
+                     stroke-width="2"
+                     d="M 1357,7 L 1357,-33 1357,-33 1257,-33 1257,-63 1257,-63 1257,-93 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation29Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation29Line"/>
+         </g>
+         <g id="relation7">
+            <defs>
+               <path fill="none"
+                     id="relation7Line"
+                     stroke-width="2"
+                     d="M 657,607 L 657,567 657,567 657,567 657,537 657,537 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation7Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation7Line"/>
+         </g>
+         <g id="relation18">
+            <defs>
+               <path fill="none"
+                     id="relation18Line"
+                     stroke-width="2"
+                     d="M 1057,607 L 1057,567 1057,567 957,567 957,537 957,537 957,507 "
+                     stroke="grey"/>
+            </defs>
+            <use xlink:actuate="onLoad"
+                 xlink:type="simple"
+                 id="relation18Lineuse"
+                 xlink:show="embed"
+                 xlink:href="#relation18Line"/>
+         </g>
+      </g>
+      <g id="EntityGroup">
+         <g id="tid_86f1dfff0f007cb2005badf4c52f6433"
+            kin:kintype="EMB"
+            transform="translate(400, 150)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Makuakane</text>
+         </g>
+         <g id="tid_eb1136fc2869b9dd5d8697672e17b801"
+            kin:kintype="EmMZD"
+            transform="translate(100, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikuane</text>
+         </g>
+         <g id="tid_87f07086c70190f0cd552fcf00eb1b4a"
+            kin:kintype="EF"
+            transform="translate(750, 150)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Makuakane</text>
+         </g>
+         <g id="tid_4284e34c6db1f57f563c8aa54c29796c"
+            kin:kintype="EmFZS"
+            transform="translate(1200, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikua'ana</text>
+         </g>
+         <g id="tid_b4bc725b69633e0dc3077b68bdd6eae2"
+            kin:kintype="EfM"
+            transform="translate(750, 500)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_3a8c27179a1215ddf0c792e2745669b7"
+            kin:kintype="EfFZD"
+            transform="translate(250, 600)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikua'ana</text>
+         </g>
+         <g id="tid_9aac18a18f261d507f0e77f8a464f48f"
+            kin:kintype="EfMZD"
+            transform="translate(1200, 600)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikua'ana</text>
+         </g>
+         <g id="tid_d2f91080671679b7e662b585ab24eb7f"
+            kin:kintype="EZ"
+            transform="translate(950, 250)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_f4dbcbca4f9befcd3f8fd87f41844b36"
+            kin:kintype="EfMZS"
+            transform="translate(1350, 600)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikuane</text>
+         </g>
+         <g id="tid_172cac50cd65e09acb42647e1abbf095"
+            kin:kintype="EfFBD"
+            transform="translate(-50, 600)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikua'ana</text>
+         </g>
+         <g id="tid_7c8312987ba4d14e8b322083d2eacf1b"
+            kin:kintype="EfMZ"
+            transform="translate(1250, 500)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_e8fcb18a35bf87271606b6c966e6dc64"
+            kin:kintype="EfMBS"
+            transform="translate(1050, 600)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikuane</text>
+         </g>
+         <g id="tid_f0aa7d12ee43eb8c33604ea14337c6dd"
+            kin:kintype="EmMBS"
+            transform="translate(400, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikua'ana</text>
+         </g>
+         <g id="tid_745fb47695cd2d35aa627c008f414b02"
+            kin:kintype="EmMB"
+            transform="translate(350, -100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_d600d10b1ee6aa454a3aed55e02ce18b"
+            kin:kintype="EZD"
+            transform="translate(1050, 350)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Keikamahini</text>
+         </g>
+         <g id="tid_bbd042caeb8621c7db71efd73756ecee"
+            kin:kintype="EmFB"
+            transform="translate(950, -100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_1a70cccb7a37fdb72fe3abec5b06bbe8"
+            kin:kintype="EfF"
+            transform="translate(550, 500)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_37ea920e97460621817fbe90202d6d22"
+            kin:kintype="Em"
+            transform="translate(650, 0)"
+            kin:path="">
+            <use fill="black"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_847b26a7c71be495e9852159447d9f4f"
+            kin:kintype="EmZ"
+            transform="translate(750, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikuane</text>
+         </g>
+         <g id="tid_cf3562e8493080006b3edacc23d61b27"
+            kin:kintype="Ef"
+            transform="translate(650, 600)"
+            kin:path="">
+            <use fill="black"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_e975750060bbaa837e085d375ef28917"
+            kin:kintype="EmFZD"
+            transform="translate(1350, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikuane</text>
+         </g>
+         <g id="tid_3d85bcaea7cf4bb0e8aff1da717ec26b"
+            kin:kintype="EmMZS"
+            transform="translate(-50, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikua'ana</text>
+         </g>
+         <g id="tid_323acadb82ef505fe29107a372544c45"
+            kin:kintype="EfZ"
+            transform="translate(550, 600)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikua'ana</text>
+         </g>
+         <g id="tid_04df6dd9f685dfc91ccdbfd2c1ec3cc4"
+            kin:kintype="EmFBS"
+            transform="translate(900, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikua'ana</text>
+         </g>
+         <g id="tid_3d3bdc3176ee290bbb87cccf87968ac2"
+            kin:kintype="EmF"
+            transform="translate(750, -100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_c4aecde32faac89a72e85852ebe3af64"
+            kin:kintype="EB"
+            transform="translate(350, 250)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_85fef0353b12db8ed3f476d6d823e376"
+            kin:kintype="EfFZ"
+            transform="translate(350, 500)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_064331353bd6065c7df474b35bb7b0a2"
+            kin:kintype="EmFBD"
+            transform="translate(1050, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikuane</text>
+         </g>
+         <g id="tid_782d4fb25b0323d5fd1fbd111c3f6f43"
+            kin:kintype="EFZ"
+            transform="translate(1050, 150)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Makuahini</text>
+         </g>
+         <g id="tid_447fe2740672da1bf046bf2ea363274a"
+            kin:kintype="EBD"
+            transform="translate(400, 350)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Keikamahini</text>
+         </g>
+         <g id="tid_e49b289d6cf1b1350acec0741afba06a"
+            kin:kintype="EMZ"
+            transform="translate(250, 150)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Makuahini</text>
+         </g>
+         <g id="tid_805269e379269b64e07c16756f6384de"
+            kin:kintype="EmB"
+            transform="translate(550, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikua'ana</text>
+         </g>
+         <g id="tid_93d95cc1c6b39522ee2d0cd12ea6d1cb"
+            kin:kintype="EZS"
+            transform="translate(900, 350)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Keikikane</text>
+         </g>
+         <g id="tid_5541229c23f03e3cad445e8a8d6ba8d6"
+            kin:kintype="EfFB"
+            transform="translate(50, 500)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_1d54c86bb6554d68afce40c2cc67dbd5"
+            kin:kintype="EmFZ"
+            transform="translate(1250, -100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_b3e08f9911edf86d624d4f85c19b5e0a"
+            kin:kintype="EfMB"
+            transform="translate(950, 500)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_2a93d09e68151f1211e5ba06930f2cc7"
+            kin:kintype="EfMBD"
+            transform="translate(900, 600)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikua'ana</text>
+         </g>
+         <g id="tid_3ce3348cea653644efa54450715dd230"
+            kin:kintype="EBS"
+            transform="translate(250, 350)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Keikikane</text>
+         </g>
+         <g id="tid_dde90a573a68a709575f3af15fdd37a8"
+            kin:kintype="ED"
+            transform="translate(550, 350)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Keikamahini</text>
+         </g>
+         <g id="tid_7f3b83b7a0b61095f5e3fc872d56ce3c"
+            kin:kintype="EfFZS"
+            transform="translate(400, 600)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikuane</text>
+         </g>
+         <g id="tid_5e51683011c50a8ebffc95aab29f2aef"
+            kin:kintype="EfFBS"
+            transform="translate(100, 600)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikuane</text>
+         </g>
+         <g id="tid_bda6e002771c787bb79a95dfd0c84526"
+            kin:kintype="EmM"
+            transform="translate(550, -100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_8ebae61bc8ae781c07d8974ba0f9054f"
+            kin:kintype="E"
+            transform="translate(650, 250)"
+            kin:path="">
+            <use fill="black"
+                 xlink:href="#square"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_edaa4f518dfe544217956969cc71db53"
+            kin:kintype="ES"
+            transform="translate(750, 350)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Keikikane</text>
+         </g>
+         <g id="tid_f4bd057954a3f2a35fec8fd82dd2da1d"
+            kin:kintype="EM"
+            transform="translate(550, 150)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Makuahini</text>
+         </g>
+         <g id="tid_1b27134b4490e11b3c3f4570207652e7"
+            kin:kintype="EFB"
+            transform="translate(900, 150)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Makuakane</text>
+         </g>
+         <g id="tid_0094526d401d5daba4d372d0b484e4ca"
+            kin:kintype="EmMZ"
+            transform="translate(50, -100)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+         </g>
+         <g id="tid_54d474d26e00af624c8a5f0fece207b9"
+            kin:kintype="EfB"
+            transform="translate(750, 600)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#triangle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikuane</text>
+         </g>
+         <g id="tid_1de2c99e12186f75e9a6b349165d3b43"
+            kin:kintype="EmMBD"
+            transform="translate(250, 0)"
+            kin:path="">
+            <use fill="white"
+                 xlink:href="#circle"
+                 xlink:type="simple"
+                 xlink:actuate="onLoad"
+                 stroke="black"
+                 xlink:show="embed"
+                 stroke-width="2"/>
+            <text x="22.5"
+                  fill="#0000FF"
+                  font-size="14"
+                  stroke-width="0"
+                  y="0">Kaikuane</text>
+         </g>
+      </g>
+      <g id="LabelsGroup">
+         <text fill="#000000"
+               stroke-width="0"
+               font-size="70"
+               id="gid_e60943b7-54c5-4ead-ab6e-27de4785d9dc"
+               transform="translate(-50.0, -250.0)">Hawaiian Kin Terms</text>
+      </g>
+   </g>
+  
+   <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+      <kin:IndexParameters>
+         <kin:DateOfBirthFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfBirth"/>
+         </kin:DateOfBirthFields>
+         <kin:DateOfDeathFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfDeath"/>
+         </kin:DateOfDeathFields>
+         <kin:LabelFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:INDI/*:NAME/*:NAME"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:INDI/*:NAME"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Type"/>
+         </kin:LabelFields>
+         <kin:SymbolFieldsFields>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Male']"
+                              kin:Value="triangle"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='Female']"
+                              kin:Value="circle"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Gender='']" kin:Value="square"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:DateOfDeath!='']"
+                              kin:Value="blackstrikethrough"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='Xx']"
+                              kin:Value="redstrikethrough"/>
+            <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='xY']"
+                              kin:Value="redstrikethrough"/>
+         </kin:SymbolFieldsFields>
+      </kin:IndexParameters>
+      <kin:KinTermGroup kin:Show="true"
+                        kin:GroupColour="#0000FF"
+                        kin:GroupName="Hawaiian Kin Terms"
+                        kin:GroupDescription="http://umanitoba.ca/faculties/arts/anthropology/tutor/kinterms/hawaiian.html"
+                        kin:Generate="true">
+         <kin:KinTerm kin:Referent="EF,EFB,EMB"
+                      kin:Term="Makuakane"
+                      kin:Propositus=""
+                      kin:Description="Father, Uncle"/>
+         <kin:KinTerm kin:Referent="EM,EMZ,EFZ"
+                      kin:Term="Makuahini"
+                      kin:Propositus=""
+                      kin:Description="Mother, Aunt"/>
+         <kin:KinTerm kin:Referent="EmB,EmFBS,EmFZS,EmMBS,EmMZS"
+                      kin:Term="Kaikua'ana"
+                      kin:Propositus=""
+                      kin:Description=""/>
+         <kin:KinTerm kin:Referent="EfZ,EfFBD,EfFZD,EfMBD,EfMZD"
+                      kin:Term="Kaikua'ana"
+                      kin:Propositus=""
+                      kin:Description="Brother/Sister, Cousin"/>
+         <kin:KinTerm kin:Referent="EfB,EfFBS,EfFZS,EfMBS,EfMZS"
+                      kin:Term="Kaikuane"
+                      kin:Propositus=""
+                      kin:Description="Brother, Cousin"/>
+         <kin:KinTerm kin:Referent="EmZ,EmFBD,EmFZD,EmMBD,EmMZD"
+                      kin:Term="Kaikuane"
+                      kin:Propositus=""
+                      kin:Description="Sister, Cousin"/>
+         <kin:KinTerm kin:Referent="ES,EBS,EZS"
+                      kin:Term="Keikikane"
+                      kin:Propositus=""
+                      kin:Description="Son, Nephew"/>
+         <kin:KinTerm kin:Referent="ED,EBD,EZD"
+                      kin:Term="Keikamahini"
+                      kin:Propositus=""
+                      kin:Description="Daughter, Niece"/>
+      </kin:KinTermGroup>
+      <SelectedProfiles>
+         <kin:Profile kin:ProfileName="Individual"
+                      kin:ProfileId="clarin.eu:cr1:p_1320657629627"/>
+         <kin:Profile kin:ProfileName="Chromosome_Example"
+                      kin:ProfileId="clarin.eu:cr1:p_1332345811038"/>
+         <kin:Profile kin:ProfileName="Gedcom_Entity"
+                      kin:ProfileId="clarin.eu:cr1:p_1332345811039"/>
+      </SelectedProfiles>
+      <kin:ShowLabels>true</kin:ShowLabels>
+      <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
+      <kin:ShowIdLabels>false</kin:ShowIdLabels>
+      <kin:ShowDateLabels>false</kin:ShowDateLabels>
+      <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
+      <kin:SnapToGrid>true</kin:SnapToGrid>
+      <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
+      <kin:ShowArchiveLinks>true</kin:ShowArchiveLinks>
+      <kin:HighlightRelationLines>true</kin:HighlightRelationLines>
+      <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
+      <kin:DiagramMode>FreeForm</kin:DiagramMode>
+      <kin:DiagramPanel kin:type="KinTerms" kin:show="true" kin:width="247">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="PluginPanel" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="ExportPanel" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="DiagramTree" kin:show="false" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="KinTypeStrings" kin:show="false" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="IndexerSettings" kin:show="false" kin:width="150">
+         <menuEnabled>true</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="ArchiveLinker" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+      <kin:DiagramPanel kin:type="EntitySearch" kin:show="false" kin:width="150">
+         <menuEnabled>false</menuEnabled>
+      </kin:DiagramPanel>
+   </kin:KinDiagramData>
+</svg>

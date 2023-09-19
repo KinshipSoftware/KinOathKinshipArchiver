@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 The Language Archive, Max Planck Institute for Psycholinguistics
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:kin="http://mpi.nl/tla/kin"
+     contentScriptType="text/ecmascript"
+     zoomAndPan="magnify"
+     contentStyleType="text/css"
+     viewBox="-1055 -455 3020 1510"
+     preserveAspectRatio="xMidYMid meet"
+     version="1.0">
+    <defs id="LineMarkerSymbols">
+        <circle r="5" id="StartMarker" cx="6" cy="6"/>
+        <path id="EndMarker" d="M 0 0 L 10 5 L 0 10 z"/>
+    </defs>
+    <defs id="KinSymbols">
+        <g id="blank">
+            <circle fill="none" r="14" cx="15.5" cy="15.5" stroke="none"/>
+        </g>
+        <g id="circle">
+            <circle r="6" stroke-width="2" cx="7.5" cy="7.5"/>
+        </g>
+        <g id="circlefilled">
+            <circle fill="black"
+                    r="6"
+                    stroke-width="2"
+                    cx="7.5"
+                    cy="7.5"
+                    stroke="black"/>
+        </g>
+        <g id="square">
+            <rect x="2" width="11" y="2" height="11" stroke-width="2"/>
+        </g>
+        <g id="squarefilled">
+            <rect x="2"
+                  y="2"
+                  fill="black"
+                  width="11"
+                  height="11"
+                  stroke="black"
+                  stroke-width="2"/>
+        </g>
+        <g id="square-45">
+            <rect x="2"
+                  width="11"
+                  stroke-width="2"
+                  height="11"
+                  y="2"
+                  transform="rotate(-45 7 7)"/>
+        </g>
+        <g id="rhombus">
+            <rect x="2"
+                  width="11"
+                  stroke-width="2"
+                  height="11"
+                  y="2"
+                  transform="scale(1,0.5), rotate(-45 7 7)"/>
+        </g>
+        <g id="union">
+            <rect fill="white"
+                  x="0"
+                  width="15"
+                  y="0"
+                  height="15"
+                  stroke="none"/>
+            <line y2="2" stroke-width="5" x1="0" x2="15" y1="2"/>
+            <line y2="13" stroke-width="5" x1="0" x2="15" y1="13"/>
+        </g>
+        <g id="triangle">
+            <polygon points="7,1 1,12 14,12" stroke-width="2"/>
+        </g>
+        <g id="triangle-270">
+            <polygon points="7,1 1,12 14,12"
+                     stroke-width="2"
+                     transform="rotate(-90 7 7)"/>
+        </g>
+        <g id="triangle-180" transform="rotate(180 7 7)">
+            <polygon points="7,1 1,12 14,12" stroke-width="2"/>
+        </g>
+        <g id="triangle-90" transform="rotate(90 7 7)">
+            <polygon points="7,1 1,12 14,12" stroke-width="2"/>
+        </g>
+        <g id="error">
+            <polyline fill="none"
+                      stroke-width="2"
+                      points="-8,-8 22,22 7,7 -8,22 22,-8 -8,-8 -8,22 22,22 22,-8"
+                      stroke="red"/>
+        </g>
+        <g id="blackmarker">
+            <circle fill="black" r="3" cx="15" cy="0" stroke="none"/>
+        </g>
+        <g id="blackstrikethrough">
+            <polyline fill="none"
+                      stroke-width="2"
+                      points="-2,17 17,-2"
+                      stroke="black"/>
+        </g>
+        <g id="blackcross">
+            <polyline fill="none"
+                      stroke-width="2"
+                      points="0,0 14,14 7,7 0,14 14,0"
+                      stroke="black"/>
+        </g>
+        <g id="orangemarker">
+            <circle fill="orange" r="3" cx="15" cy="0" stroke="none"/>
+        </g>
+        <g id="orangestrikethrough">
+            <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="orange"/>
+        </g>
+        <g id="orangecross">
+            <polyline fill="none"
+                      stroke-width="2"
+                      points="0,0 14,14 7,7 0,14 14,0"
+                      stroke="orange"/>
+        </g>
+        <g id="cyanmarker">
+            <circle fill="cyan" r="3" cx="15" cy="0" stroke="none"/>
+        </g>
+        <g id="cyanstrikethrough">
+            <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="cyan"/>
+        </g>
+        <g id="cyancross">
+            <polyline fill="none"
+                      stroke-width="2"
+                      points="0,0 14,14 7,7 0,14 14,0"
+                      stroke="cyan"/>
+        </g>
+        <g id="purplemarker">
+            <circle fill="purple" r="3" cx="15" cy="0" stroke="none"/>
+        </g>
+        <g id="purplestrikethrough">
+            <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="purple"/>
+        </g>
+        <g id="purplecross">
+            <polyline fill="none"
+                      stroke-width="2"
+                      points="0,0 14,14 7,7 0,14 14,0"
+                      stroke="purple"/>
+        </g>
+        <g id="redmarker">
+            <circle fill="red" r="3" cx="15" cy="0" stroke="none"/>
+        </g>
+        <g id="redstrikethrough">
+            <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="red"/>
+        </g>
+        <g id="redcross">
+            <polyline fill="none"
+                      stroke-width="2"
+                      points="0,0 14,14 7,7 0,14 14,0"
+                      stroke="red"/>
+        </g>
+        <g id="greenmarker">
+            <circle fill="green" r="3" cx="15" cy="0" stroke="none"/>
+        </g>
+        <g id="greenstrikethrough">
+            <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="green"/>
+        </g>
+        <g id="greencross">
+            <polyline fill="none"
+                      stroke-width="2"
+                      points="0,0 14,14 7,7 0,14 14,0"
+                      stroke="green"/>
+        </g> 
+        <g id="dnamarker">
+            <circle fill="black" r="3" cx="7" cy="18" stroke="none"/>
+        </g>  
+        <g id="astrixmarker">
+            <text x="10" fill="black" y="28" stroke-width="0" font-size="14">*</text>
+        </g>
+        <g id="bluemarker">
+            <circle fill="blue" r="3" cx="15" cy="0" stroke="none"/>
+        </g>
+        <g id="bluestrikethrough">
+            <polyline fill="none" stroke-width="2" points="0,15 15,0" stroke="blue"/>
+        </g>
+        <g id="bluecross">
+            <polyline fill="none"
+                      stroke-width="2"
+                      points="0,0 14,14 7,7 0,14 14,0"
+                      stroke="blue"/>
+        </g>
+    </defs>
+    <g id="DiagramGroup">
+        <g id="GraphicsGroup"/>
+        <g id="LabelsGroup"/>
+    </g>
+    <kin:KinDiagramData xmlns="" xmlns:ns4="http://www.w3.org/2000/svg">
+        <kin:KinTypeString></kin:KinTypeString>
+        <kin:IndexParameters>
+            <kin:DateOfBirthFields kin:DefaultFormat="*:Kinnate/*:CustomData/*:%s">
+                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfBirth"/>
+            </kin:DateOfBirthFields>
+            <kin:DateOfDeathFields kin:DefaultFormat="*:Kinnate/*:CustomData/*:%s">
+                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:DateOfDeath"/>
+            </kin:DateOfDeathFields>
+            <kin:LabelFields kin:DefaultFormat="*:Kinnate/*:CustomData/*:%s">
+                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Type"/>
+                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*[starts-with(local-name(), 'Name')]"/>
+                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Subject_ID"/>
+                <kin:IndexerParam kin:XPath="*:Kinnate/*:CustomData/*:Multiple"/>
+            </kin:LabelFields>
+            <kin:SymbolFieldsFields kin:DefaultFormat="*:Kinnate/*:CustomData[*:%s='']">
+                <kin:IndexerParam kin:Value="square" kin:XPath="*:Kinnate/*:CustomData[*:Gender='Male']"/>
+                <kin:IndexerParam kin:Value="circle"
+                                  kin:XPath="*:Kinnate/*:CustomData[*:Gender='Female']"/>
+                <kin:IndexerParam kin:Value="blackcross"
+                                  kin:XPath="*:Kinnate/*:CustomData[*:Gender='' and count(*:Multiple) =0]"/>
+                <kin:IndexerParam kin:Value="blackstrikethrough"
+                                  kin:XPath="*:Kinnate/*:CustomData[*:DateOfDeath!='']"/>
+                <kin:IndexerParam kin:Value="redmarker"
+                                  kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='Xx']"/>
+                <kin:IndexerParam kin:Value="redmarker"
+                                  kin:XPath="*:Kinnate/*:CustomData[*:Chromosome='xY']"/>
+                <kin:IndexerParam kin:Value="squarefilled"
+                                  kin:XPath="*:Kinnate/*:CustomData[*:Deafness='yes'  and *:Gender='Male']"/>
+                <kin:IndexerParam kin:Value="circlefilled"
+                                  kin:XPath="*:Kinnate/*:CustomData[*:Deafness='yes'  and *:Gender='Female']"/>
+                <kin:IndexerParam kin:Value="square-45"
+                                  kin:XPath="*:Kinnate/*:CustomData[*:Multiple !='']"/>
+                <kin:IndexerParam kin:Value="astrixmarker"
+                                  kin:XPath="*:Kinnate/*:CustomData[*:astrixmarker='yes']"/>
+                <kin:IndexerParam kin:Value="dnamarker"
+                                  kin:XPath="*:Kinnate/*:CustomData[*:DNA_sample_obtained='yes']"/>
+            </kin:SymbolFieldsFields>
+        </kin:IndexParameters>
+        <kin:ProjectRecord RelationCount="0"
+                           ProjectUUID="91e51ca5-fcf2-4b35-adfe-3cefcf77a47c"
+                           EntityCount="0"
+                           ProjectName="Custom Symbols Sample">
+            <LastChangeTime>2013-07-10T13:46:52.498+02:00</LastChangeTime>
+            <LastChangeId>91e51ca5-fcf2-4b35-adfe-3cefcf77a47c</LastChangeId>
+            <ProjectDirectory>./Custom Symbols Sample</ProjectDirectory>
+        </kin:ProjectRecord>
+        <SelectedProfiles>
+            <kin:Profile kin:ProfileName="Individual"
+                         kin:ProfileId="clarin.eu:cr1:p_1320657629627"/>
+            <kin:Profile kin:ProfileName="Chromosome_Example"
+                         kin:ProfileId="clarin.eu:cr1:p_1332345811038"/>
+            <kin:Profile kin:ProfileName="Clan_Example"
+                         kin:ProfileId="clarin.eu:cr1:p_1337778924934"/>
+            <kin:Profile kin:ProfileName="KinTerm" kin:ProfileId="clarin.eu:cr1:p_1337778924930"/>
+            <kin:Profile kin:ProfileName="Social_Event"
+                         kin:ProfileId="clarin.eu:cr1:p_1357720977500"/>
+        </SelectedProfiles>
+        <kin:ShowLabels>true</kin:ShowLabels>
+        <kin:ShowKinTypeLabels>false</kin:ShowKinTypeLabels>
+        <kin:ShowIdLabels>false</kin:ShowIdLabels>
+        <kin:ShowDateLabels>false</kin:ShowDateLabels>
+        <kin:ShowKinTermLines>true</kin:ShowKinTermLines>
+        <kin:SnapToGrid>true</kin:SnapToGrid>
+        <kin:ShowSanguineLines>true</kin:ShowSanguineLines>
+        <kin:ShowExternalLinks>true</kin:ShowExternalLinks>
+        <kin:HighlightRelationLines>true</kin:HighlightRelationLines>
+        <kin:ShowDiagramBorder>true</kin:ShowDiagramBorder>
+        <kin:DefaultSymbol>rhombus</kin:DefaultSymbol>
+        <kin:DiagramMode>KinTypeQuery</kin:DiagramMode>
+        <kin:DiagramPanel kin:width="150" kin:show="false" kin:type="KinTerms">
+            <menuEnabled>false</menuEnabled>
+        </kin:DiagramPanel>
+        <kin:DiagramPanel kin:width="150" kin:show="true" kin:type="DiagramTree">
+            <menuEnabled>true</menuEnabled>
+        </kin:DiagramPanel>
+        <kin:DiagramPanel kin:width="365" kin:show="false" kin:type="IndexerSettings">
+            <menuEnabled>true</menuEnabled>
+        </kin:DiagramPanel>
+        <kin:DiagramPanel kin:width="90" kin:show="true" kin:type="KinTypeStrings">
+            <menuEnabled>true</menuEnabled>
+        </kin:DiagramPanel>
+        <kin:DiagramPanel kin:width="150" kin:show="false" kin:type="ArchiveLinker">
+            <menuEnabled>true</menuEnabled>
+        </kin:DiagramPanel>
+        <kin:DiagramPanel kin:width="150" kin:show="true" kin:type="EntitySearch">
+            <menuEnabled>true</menuEnabled>
+        </kin:DiagramPanel>
+        <kin:DiagramPanel kin:width="150" kin:show="false" kin:type="ExportPanel">
+            <menuEnabled>false</menuEnabled>
+        </kin:DiagramPanel>
+        <kin:DiagramPanel kin:width="150" kin:show="false" kin:type="PluginPanel">
+            <menuEnabled>false</menuEnabled>
+        </kin:DiagramPanel>
+    </kin:KinDiagramData>
+</svg>

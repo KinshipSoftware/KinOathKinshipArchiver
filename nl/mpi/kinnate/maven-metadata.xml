@@ -3,12 +3,12 @@
   <groupId>nl.mpi</groupId>
   <artifactId>kinnate</artifactId>
   <versioning>
-    <release>1.6.2298-stable</release>
+    <release>1.6.2299-stable</release>
     <versions>
       <version>1.6-pretesting-SNAPSHOT</version>
       <version>1.6-stable-SNAPSHOT</version>
-      <version>1.6.2298-stable</version>
+      <version>1.6.2299-stable</version>
     </versions>
-    <lastUpdated>20221206114805</lastUpdated>
+    <lastUpdated>20230919153502</lastUpdated>
   </versioning>
 </metadata>
