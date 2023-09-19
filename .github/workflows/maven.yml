@@ -45,8 +45,14 @@ jobs:
             sed -i '/rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./rest/pom.xml;
             git diff;
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
+            echo "target"
+            ls -l desktop/target
+            echo "snapshots"
+            ls -l ../snapshots
             jpackage --input desktop/target/ --type app-image --name KinOathDesktop --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
+            echo "KinOathDesktop"
+            ls -l KinOathDesktop;
             mkdir ../snapshots/installers;
             cp KinOathDesktop-1.6.* ../snapshots/installers/;
     - name: Deploy
