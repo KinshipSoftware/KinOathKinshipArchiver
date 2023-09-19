@@ -49,7 +49,7 @@ jobs:
             ls -l desktop/target;
             echo "snapshots";
             ls -l ../snapshots;
-            jpackage --input desktop/target/ --type app-image --name KinOathDesktop --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input desktop/target/ --type app-image --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
             echo "KinOathDesktop/lib";
             ls -l KinOathDesktop/lib;
@@ -58,7 +58,7 @@ jobs:
             echo "KinOathDesktop/bin/KinOathDesktop";
             ls -l KinOathDesktop/bin/KinOathDesktop;
             mkdir ../snapshots/installers;
-            cp KinOathDesktop-1.6.* ../snapshots/installers/;
+            cp KinOathDesktop/bin/KinOathDesktop-1.6.* ../snapshots/installers/;
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
