@@ -55,6 +55,8 @@ jobs:
             ls -l KinOathDesktop/lib;
             echo "KinOathDesktop/bin";
             ls -l KinOathDesktop/bin;
+            echo "KinOathDesktop/bin/KinOathDesktop";
+            ls -l KinOathDesktop/bin/KinOathDesktop;
             mkdir ../snapshots/installers;
             cp KinOathDesktop-1.6.* ../snapshots/installers/;
     - name: Deploy
