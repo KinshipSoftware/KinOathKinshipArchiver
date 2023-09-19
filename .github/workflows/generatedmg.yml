@@ -24,7 +24,9 @@ jobs:
         run: pwd;
               jpackage --app-image ../snapshots/installers/1.6.$(git rev-list --count --all desktop) --type dmg --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns;
               ls -l;
-              cp -r KinOathDesktop-1.6.* ../snapshots/installers/;
+              ls -l *;
+              ls -l */*;
+              #cp -r KinOathDesktop-1.6.* ../snapshots/installers/;
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
