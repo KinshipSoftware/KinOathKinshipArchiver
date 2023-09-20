@@ -78,7 +78,6 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-          cache: maven
       - name: Download snapshot output
         uses: actions/download-artifact@v3
         with:
