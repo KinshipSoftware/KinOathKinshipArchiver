@@ -5,8 +5,8 @@ on:
   #   types:
   #     - completed
   push:
-    # branches-ignore:
-    #  - '**' # disables this job
+    branches-ignore:
+     - '**' # disables this job
     branches: [ kinnate.1.6.separate-diagram-library ]
 jobs:
   build_dmg:
