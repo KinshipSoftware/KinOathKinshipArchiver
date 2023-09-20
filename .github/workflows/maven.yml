@@ -53,7 +53,14 @@ jobs:
             ls -l;
             mkdir ../snapshots/installers;
             cp -r KinOathDesktop-1.6.* ../snapshots/installers/;
-    - name: BuildDMG
+      - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ../snapshots
+        keep_files: true
+    packageDMG:
+      - name: BuildDMG
       runs-on: macos-latest
       run: pwd;
             ls -l desktop/target/
@@ -61,9 +68,3 @@ jobs:
             ls -l;
             ls -l *;
             ls -l */*;
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ../snapshots
-        keep_files: true
