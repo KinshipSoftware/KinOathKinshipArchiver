@@ -53,7 +53,7 @@ jobs:
             ls -l;
             mkdir ../snapshots/installers;
             cp -r KinOathDesktop-1.6.* ../snapshots/installers/;
-      - name: Deploy
+    - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
