@@ -20,17 +20,17 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-      - name: Generate DMG
-        run: pwd;
-              echo "Generate_DMG"
-              ls -l;
-              ls -l *;
-              ls -l */*;
-              jpackage --app-image ../snapshots/installers/KinOathDesktop-1.6.* --type dmg --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns;
-              ls -l;
-              ls -l *;
-              ls -l */*;
-              #cp -r KinOathDesktop-1.6.* ../snapshots/installers/;
+    - name: Generate DMG
+      run: pwd;
+            echo "Generate_DMG"
+            ls -l;
+            ls -l *;
+            ls -l */*;
+            jpackage --app-image ../snapshots/installers/KinOathDesktop-1.6.* --type dmg --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns;
+            ls -l;
+            ls -l *;
+            ls -l */*;
+            #cp -r KinOathDesktop-1.6.* ../snapshots/installers/;
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
