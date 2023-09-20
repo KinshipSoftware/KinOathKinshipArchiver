@@ -86,6 +86,7 @@ jobs:
       - name: Generate MSI
         run: pwd;
               echo "Generate_MSI"
+              ls -l *;
               ls -l stored_data/*;
               ls -l stored_data/public/*;
               ls -l stored_data/target/*;
