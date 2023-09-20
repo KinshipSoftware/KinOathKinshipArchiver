@@ -3,27 +3,27 @@
   <groupId>nl.mpi</groupId>
   <artifactId>kin-type-string-parser</artifactId>
   <versioning>
-    <lastUpdated>20230920142132</lastUpdated>
+    <lastUpdated>20230920143311</lastUpdated>
     <snapshot>
-      <timestamp>20230920.142132</timestamp>
+      <timestamp>20230920.143311</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>1.6-stable-20230920.142132-1</value>
-        <updated>20230920142132</updated>
+        <value>1.6-stable-20230920.143311-1</value>
+        <updated>20230920143311</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.6-stable-20230920.142132-1</value>
-        <updated>20230920142132</updated>
+        <value>1.6-stable-20230920.143311-1</value>
+        <updated>20230920143311</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>1.6-stable-20230920.142132-1</value>
-        <updated>20230920142132</updated>
+        <value>1.6-stable-20230920.143311-1</value>
+        <updated>20230920143311</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
