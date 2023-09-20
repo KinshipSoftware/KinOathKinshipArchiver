@@ -54,6 +54,7 @@ jobs:
             mkdir stored_data;
             mkdir stored_data/public;
             mkdir stored_data/public/installers;
+            cp -r desktop/target stored_data/
             cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
     - name: Store output
       uses: actions/upload-artifact@v3
@@ -85,23 +86,23 @@ jobs:
         run: pwd;
               echo "Generate_MSI"
               ls -l stored_data/public/installers/;
-              jpackage --app-image stored_data/public/installers/KinOathDesktop-1.6.* --type msi;
+              jpackage --input stored_data/target/ --type msi;
               ls -l;
               ls -l *;
               ls -l */*;
               ls -l */*/*;
               ls -l */*/*/*;
-      - name: Store generated MSI
-        uses: actions/upload-artifact@v3
-        with:
-          name: stored_data
-          path: stored_data
-      - name: Deploy installers
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: stored_data/public
-          keep_files: true
+      # - name: Store generated MSI
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: stored_data
+      #     path: stored_data
+      # - name: Deploy installers
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: stored_data/public
+      #     keep_files: true
     # packageDMG:
     #   - name: BuildDMG
     #   runs-on: macos-latest
