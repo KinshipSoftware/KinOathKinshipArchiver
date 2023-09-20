@@ -59,12 +59,12 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ../snapshots
         keep_files: true
-    packageDMG:
-      - name: BuildDMG
-      runs-on: macos-latest
-      run: pwd;
-            ls -l desktop/target/
-            jpackage --app-image desktop/target/ --type dmg --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
-            ls -l;
-            ls -l *;
-            ls -l */*;
+    # packageDMG:
+    #   - name: BuildDMG
+    #   runs-on: macos-latest
+    #   run: pwd;
+    #         ls -l desktop/target/
+    #         jpackage --app-image desktop/target/ --type dmg --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+    #         ls -l;
+    #         ls -l *;
+    #         ls -l */*;
