@@ -23,12 +23,12 @@ jobs:
     - name: clean_test_deploy
       # sed -i 's|<versionCheck.allowSnapshots>true</versionCheck.allowSnapshots>|<versionCheck.allowSnapshots>false</versionCheck.allowSnapshots>|g' ./pom.xml;
       run: pwd;
-            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:./snapshots;
+            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             git status;
             ls -l;
             sed -i 's|<application.branch>pretesting</application.branch>|<application.branch>stable</application.branch>|g' ./pom.xml;
             sed -i 's|-pretesting-SNAPSHOT|-stable-SNAPSHOT|g' ./pom.xml ./*/pom.xml;           
-            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:./snapshots;
+            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             git rev-list --count --all desktop;
             sed -i '/batik-renderer/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all batik-renderer)'-stable/}' ./*/pom.xml;
             sed -i '/kinoath-rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./*/pom.xml;
@@ -44,20 +44,28 @@ jobs:
             sed -i '/localisation/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all localisation)'-stable/}' ./localisation/pom.xml;
             sed -i '/rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./rest/pom.xml;
             git diff;
-            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:./snapshots;
+            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             echo "target";
             ls -l desktop/target;
             echo "snapshots";
-            ls -l ./snapshots;
+            ls -l ../snapshots;
             jpackage --input desktop/target/ --type app-image --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
-            mkdir ./snapshots/installers;
-            cp -r KinOathDesktop-1.6.* ./snapshots/installers/;
-    - name: Store snapshot output
+            mkdir stored_data;
+            mkdir stored_data/public;
+            mkdir stored_data/public/installers;
+            cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
+    - name: Store output
       uses: actions/upload-artifact@v3
       with:
-        name: snapshots
-        path: snapshots
+        name: stored_data
+        path: stored_data
+    - name: Deploy snapshots
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ../snapshots
+        keep_files: true
   packageMSI:
     name: packageMSI
     needs: buildJDK
@@ -72,25 +80,27 @@ jobs:
       - name: Download snapshot output
         uses: actions/download-artifact@v3
         with:
-          name: snapshots
+          name: stored_data
       - name: Generate MSI
         run: pwd;
               echo "Generate_MSI"
-              ls -l ./snapshots/installers/;
-              jpackage --app-image ./snapshots/installers/KinOathDesktop-1.6.* --type msi;
+              ls -l stored_data/public/installers/;
+              jpackage --app-image stored_data/public/installers/KinOathDesktop-1.6.* --type msi;
               ls -l;
               ls -l *;
               ls -l */*;
+              ls -l */*/*;
+              ls -l */*/*/*;
       - name: Store generated MSI
         uses: actions/upload-artifact@v3
         with:
-          name: snapshots
-          path: snapshots
-      - name: Deploy pages
+          name: stored_data
+          path: stored_data
+      - name: Deploy installers
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./snapshots
+          publish_dir: stored_data/public
           keep_files: true
     # packageDMG:
     #   - name: BuildDMG
