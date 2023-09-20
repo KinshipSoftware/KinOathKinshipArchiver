@@ -55,7 +55,7 @@ jobs:
             mkdir stored_data/public;
             mkdir stored_data/public/installers;
             pwd;
-            cp -r desktop/target stored_data/
+            cp -r desktop/target stored_data/;
             cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
     - name: Store output
       uses: actions/upload-artifact@v3
