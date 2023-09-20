@@ -86,8 +86,10 @@ jobs:
       - name: Generate MSI
         run: pwd;
               echo "Generate_MSI"
-              ls -l stored_data/public/installers/;
-              jpackage --input stored_data/target/ --type msi;
+              ls -l stored_data/*;
+              ls -l stored_data/public/*;
+              ls -l stored_data/target/*;
+              jpackage --input stored_data/target/ --type msi --main-jar kinnate-1.6.*-stable.jar;
               ls -l;
               ls -l *;
               ls -l */*;
