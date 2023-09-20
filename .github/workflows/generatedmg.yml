@@ -1,7 +1,7 @@
 name: generate DMG
 on:
   workflow_run:
-    workflows: [clean test deploy]
+    workflows: [clean_test_deploy]
     types:
       - completed
 jobs:

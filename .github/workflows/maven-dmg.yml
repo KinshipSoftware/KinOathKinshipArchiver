@@ -20,7 +20,7 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-    - name: clean test deploy
+    - name: clean_test_deploy_DMG
       # sed -i -E 's|<versionCheck.allowSnapshots>true</versionCheck.allowSnapshots>|<versionCheck.allowSnapshots>false</versionCheck.allowSnapshots>|g' ./pom.xml;
       run: pwd;
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
