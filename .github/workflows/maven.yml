@@ -84,8 +84,9 @@ jobs:
         with:
           name: stored_data
       - name: Generate MSI
+        shell: bash
         run: pwd;
-              dir *;
+              ls -l *;
               # ls -l */*;
               # ls -l */*/*/*;
               jpackage --input stored_data\target\ --type msi --main-jar kinnate-1.6.*-stable.jar;
