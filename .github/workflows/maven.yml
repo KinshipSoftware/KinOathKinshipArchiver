@@ -23,51 +23,51 @@ jobs:
     - name: clean_test_deploy
       # sed -i 's|<versionCheck.allowSnapshots>true</versionCheck.allowSnapshots>|<versionCheck.allowSnapshots>false</versionCheck.allowSnapshots>|g' ./pom.xml;
       run: pwd; ls -l *;
-    #         mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
-    #         git status;
-    #         ls -l;
-    #         sed -i 's|<application.branch>pretesting</application.branch>|<application.branch>stable</application.branch>|g' ./pom.xml;
-    #         sed -i 's|-pretesting-SNAPSHOT|-stable-SNAPSHOT|g' ./pom.xml ./*/pom.xml;           
-    #         mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
-    #         git rev-list --count --all desktop;
-    #         sed -i '/batik-renderer/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all batik-renderer)'-stable/}' ./*/pom.xml;
-    #         sed -i '/kinoath-rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./*/pom.xml;
-    #         sed -i '/kinoath-core/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./*/pom.xml;
-    #         sed -i '/kinoath-diagram/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all diagram)'-stable/}' ./*/pom.xml;
-    #         sed -i '/kinoath-desktop/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all desktop)'-stable/}' ./desktop/pom.xml;
-    #         sed -i '/graph-sorter/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all graph-sorter)'-stable/}' ./*/pom.xml;
-    #         sed -i '/kin-type-string-parser/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kin-type-string-parser)'-stable/}' ./*/pom.xml;
-    #         sed -i '/core/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./core/pom.xml;
-    #         sed -i '/diagram/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all diagram)'-stable/}' ./diagram/pom.xml;
-    #         sed -i '/graph-storage/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all graph-storage)'-stable/}' ./graph-storage/pom.xml;
-    #         sed -i '/kinoath-help/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kinoath-help)'-stable/}' ./kinoath-help/pom.xml;
-    #         sed -i '/localisation/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all localisation)'-stable/}' ./localisation/pom.xml;
-    #         sed -i '/rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./rest/pom.xml;
-    #         git diff;
-    #         mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
-    #         echo "target";
-    #         ls -l desktop/target;
-    #         echo "snapshots";
-    #         ls -l ../snapshots;
-    #         jpackage --input desktop/target/ --type app-image --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
-    #         ls -l;
-    #         mkdir stored_data;
-    #         mkdir stored_data/public;
-    #         mkdir stored_data/public/installers;
-    #         pwd;
-    #         cp -r desktop/target stored_data/;
-    #         cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
-    # - name: Store output
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: stored_data
-    #     path: stored_data
-    # - name: Deploy snapshots
-    #   uses: peaceiris/actions-gh-pages@v3
-    #   with:
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
-    #     publish_dir: ../snapshots
-    #     keep_files: true
+            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
+            git status;
+            ls -l;
+            sed -i 's|<application.branch>pretesting</application.branch>|<application.branch>stable</application.branch>|g' ./pom.xml;
+            sed -i 's|-pretesting-SNAPSHOT|-stable-SNAPSHOT|g' ./pom.xml ./*/pom.xml;           
+            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
+            git rev-list --count --all desktop;
+            sed -i '/batik-renderer/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all batik-renderer)'-stable/}' ./*/pom.xml;
+            sed -i '/kinoath-rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./*/pom.xml;
+            sed -i '/kinoath-core/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./*/pom.xml;
+            sed -i '/kinoath-diagram/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all diagram)'-stable/}' ./*/pom.xml;
+            sed -i '/kinoath-desktop/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all desktop)'-stable/}' ./desktop/pom.xml;
+            sed -i '/graph-sorter/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all graph-sorter)'-stable/}' ./*/pom.xml;
+            sed -i '/kin-type-string-parser/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kin-type-string-parser)'-stable/}' ./*/pom.xml;
+            sed -i '/core/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./core/pom.xml;
+            sed -i '/diagram/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all diagram)'-stable/}' ./diagram/pom.xml;
+            sed -i '/graph-storage/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all graph-storage)'-stable/}' ./graph-storage/pom.xml;
+            sed -i '/kinoath-help/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kinoath-help)'-stable/}' ./kinoath-help/pom.xml;
+            sed -i '/localisation/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all localisation)'-stable/}' ./localisation/pom.xml;
+            sed -i '/rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./rest/pom.xml;
+            git diff;
+            mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
+            echo "target";
+            ls -l desktop/target;
+            echo "snapshots";
+            ls -l ../snapshots;
+            jpackage --input desktop/target/ --type app-image --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            ls -l;
+            mkdir stored_data;
+            mkdir stored_data/public;
+            mkdir stored_data/public/installers;
+            pwd;
+            cp -r desktop/target stored_data/;
+            cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
+    - name: Store output
+      uses: actions/upload-artifact@v3
+      with:
+        name: stored_data
+        path: stored_data
+    - name: Deploy snapshots
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ../snapshots
+        keep_files: true
   packageMSI:
     name: packageMSI
     needs: buildJDK
