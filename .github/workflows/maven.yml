@@ -22,7 +22,7 @@ jobs:
         cache: maven
     - name: clean_test_deploy
       # sed -i 's|<versionCheck.allowSnapshots>true</versionCheck.allowSnapshots>|<versionCheck.allowSnapshots>false</versionCheck.allowSnapshots>|g' ./pom.xml;
-      run: pwd; ls -l *;
+      run: pwd;
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             git status;
             ls -l;
@@ -87,14 +87,14 @@ jobs:
         shell: bash
         run: pwd;
               ls -l *;
-              # ls -l */*;
-              # ls -l */*/*/*;
-              jpackage --input stored_data\target\ --type msi --main-jar kinnate-1.6.*-stable.jar;
-              # ls -l;
-              # ls -l *;
-              # ls -l */*;
-              # ls -l */*/*;
-              # ls -l */*/*/*;
+              ls -l */*;
+              ls -l */*/*/*;
+              jpackage --input stored_data/target/ --type msi --main-jar kinnate-1.6.*-stable.jar;
+              ls -l;
+              ls -l *;
+              ls -l */*;
+              ls -l */*/*;
+              ls -l */*/*/*;
       # - name: Store generated MSI
       #   uses: actions/upload-artifact@v3
       #   with:
