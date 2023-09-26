@@ -49,14 +49,14 @@ jobs:
             ls -l desktop/target;
             echo "snapshots";
             ls -l ../snapshots;
-            jpackage --input desktop/target/ --type app-image --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input desktop/target/ --type deb --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
             mkdir stored_data;
             mkdir stored_data/public;
-            mkdir stored_data/public/installers;
+            mkdir ../snapshots/installers;
             pwd;
             cp -r desktop/target stored_data/;
-            cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
+            cp -r KinOathDesktop-1.6.*.deb ../snapshots/installers/;
     - name: Store build output
       uses: actions/upload-artifact@v3
       with:
@@ -93,9 +93,15 @@ jobs:
             java --version;
             jpackage --input stored_data/target/ --type dmg  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
-            cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
+            cp -r KinOathDesktop-1.6.*.dmg stored_data/public/installers/;
             ls -l stored_data/public/installers/;
             ls -l stored_data/public/installers/*;
+    - name: Deploy DMG installer
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: stored_data/public
+        keep_files: true
   packageMSI:
     name: packageMSI
     needs: build
@@ -121,20 +127,20 @@ jobs:
             java --version;
             jpackage --input stored_data/target --type msi  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
-            cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
+            cp -r KinOathDesktop-1.6.*.msi stored_data/public/installers/;
             ls -l stored_data/public/installers/;
             ls -l stored_data/public/installers/*;
+    - name: Deploy MSI installer
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: stored_data/public
+        keep_files: true
       # - name: Store generated MSI
       #   uses: actions/upload-artifact@v3
       #   with:
       #     name: stored_data
       #     path: stored_data
-      # - name: Deploy installers
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: stored_data/public
-      #     keep_files: true
     # packageDMG:
     #   - name: BuildDMG
     #   runs-on: macos-latest
