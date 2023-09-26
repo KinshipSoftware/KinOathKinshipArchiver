@@ -90,13 +90,8 @@ jobs:
         path: stored_data
     - name: Generate DMG
       run: pwd;
-            ls -l;
-            ls -l *;
-            ls -l */*;
-            ls -l */*/*;
-            ls -l */*/*/*;
             java --version;
-            jpackage --input stored_data/target/ --type msi --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input stored_data/target/ --type dmg  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
             ls -l *;
             ls -l */*;
@@ -125,7 +120,12 @@ jobs:
     - name: Generate MSI
       run: pwd;
             java --version;
-            jpackage --input stored_data/target --type msi --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input stored_data/target --type msi  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            ls -l;
+            ls -l *;
+            ls -l */*;
+            ls -l */*/*;
+            ls -l */*/*/*;
       # - name: Store generated MSI
       #   uses: actions/upload-artifact@v3
       #   with:
