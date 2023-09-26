@@ -54,6 +54,7 @@ jobs:
             ls -l;
             mkdir stored_data;
             mkdir stored_data/public;
+            mkdir stored_data/public/installers;
             mkdir ../snapshots/installers;
             pwd;
             cp -r desktop/target stored_data/;
