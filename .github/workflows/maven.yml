@@ -92,8 +92,10 @@ jobs:
       run: pwd;
             java --version;
             jpackage --input stored_data/target/ --type dmg  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input stored_data/target/ --type rpm  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
             cp -r kinoathdesktop-1.6.*.dmg stored_data/public/installers/;
+            cp -r kinoathdesktop-1.6.*.rpm stored_data/public/installers/;
             ls -l stored_data/public/installers/;
             ls -l stored_data/public/installers/*;
     - name: Deploy DMG installer
@@ -126,8 +128,9 @@ jobs:
       run: pwd;
             java --version;
             jpackage --input stored_data/target --type msi  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
-            ls -l;
+            jpackage --input stored_data/target --type exe  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             cp -r kinoathdesktop-1.6.*.msi stored_data/public/installers/;
+            cp -r kinoathdesktop-1.6.*.exe stored_data/public/installers/;
             ls -l stored_data/public/installers/;
             ls -l stored_data/public/installers/*;
     - name: Deploy MSI installer
