@@ -19,10 +19,6 @@ jobs:
         distribution: 'temurin'
         java-version: '11'
         cache: maven
-    - name: Retrieve build output
-      uses: actions/download-artifact@v3
-      with:
-        name: stored_data
     - name: Generate DMG
       run: pwd;
             java --version
