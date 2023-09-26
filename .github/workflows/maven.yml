@@ -22,7 +22,7 @@ jobs:
     - name: Generate MSI
       run: pwd;
             java --version;
-            jpackage --input stored_data\target\ --type msi --main-jar kinnate-1.6.*-stable.jar;
+            jpackage --input stored_data\target --type msi --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
   build:
     runs-on: ubuntu-latest
     needs: packageMSI
@@ -105,7 +105,7 @@ jobs:
     - name: Generate DMG
       run: pwd;
             java --version;
-            jpackage --input stored_data/target/ --type msi --main-jar kinnate-1.6.*-stable.jar;
+            jpackage --input stored_data/target/ --type msi --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
             ls -l *;
             ls -l */*;
