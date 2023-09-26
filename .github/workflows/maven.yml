@@ -97,6 +97,7 @@ jobs:
             ls -l */*;
             ls -l */*/*;
             ls -l */*/*/*;
+            cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
   packageMSI:
     name: packageMSI
     needs: build
@@ -126,6 +127,7 @@ jobs:
             ls -l */*;
             ls -l */*/*;
             ls -l */*/*/*;
+            cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
       # - name: Store generated MSI
       #   uses: actions/upload-artifact@v3
       #   with:
