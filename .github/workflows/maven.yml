@@ -89,6 +89,11 @@ jobs:
         name: stored_data
     - name: Generate DMG
       run: pwd;
+            ls -l;
+            ls -l *;
+            ls -l */*;
+            ls -l */*/*;
+            ls -l */*/*/*;
             java --version;
             jpackage --input stored_data/target/ --type msi --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
@@ -118,7 +123,7 @@ jobs:
     - name: Generate MSI
       run: pwd;
             java --version;
-            jpackage --input stored_data\target --type msi --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input stored_data/target --type msi --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
       # - name: Store generated MSI
       #   uses: actions/upload-artifact@v3
       #   with:
