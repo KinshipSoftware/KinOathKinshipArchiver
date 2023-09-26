@@ -3,27 +3,27 @@
   <groupId>nl.mpi</groupId>
   <artifactId>kinoath-localisation</artifactId>
   <versioning>
-    <lastUpdated>20230926151625</lastUpdated>
+    <lastUpdated>20230926155222</lastUpdated>
     <snapshot>
-      <timestamp>20230926.151625</timestamp>
+      <timestamp>20230926.155222</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>1.6-pretesting-20230926.151625-1</value>
-        <updated>20230926151625</updated>
+        <value>1.6-pretesting-20230926.155222-1</value>
+        <updated>20230926155222</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.6-pretesting-20230926.151625-1</value>
-        <updated>20230926151625</updated>
+        <value>1.6-pretesting-20230926.155222-1</value>
+        <updated>20230926155222</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>1.6-pretesting-20230926.151625-1</value>
-        <updated>20230926151625</updated>
+        <value>1.6-pretesting-20230926.155222-1</value>
+        <updated>20230926155222</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
