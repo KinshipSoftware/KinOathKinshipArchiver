@@ -87,6 +87,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: stored_data
+        path: stored_data
     - name: Generate DMG
       run: pwd;
             ls -l;
@@ -120,6 +121,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: stored_data
+        path: stored_data
     - name: Generate MSI
       run: pwd;
             java --version;
