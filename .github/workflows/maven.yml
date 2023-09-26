@@ -93,7 +93,7 @@ jobs:
             ls -l *;
             ls -l */*;
             ls -l */*/*/*;
-            ls "C:\Program Files\Java\*\*\*";
+            ls "C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\11.0.20-101\x64\bin\jpackage.exe";
             ls "C:\Program Files\Java\jdk-11.0.20*\bin\jpackage.exe";
             jpackage --input stored_data/target/ --type msi --main-jar kinnate-1.6.*-stable.jar;
             ls -l;
