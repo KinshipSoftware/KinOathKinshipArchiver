@@ -3,27 +3,27 @@
   <groupId>nl.mpi</groupId>
   <artifactId>kinoath-rest</artifactId>
   <versioning>
-    <lastUpdated>20230926143016</lastUpdated>
+    <lastUpdated>20230926144632</lastUpdated>
     <snapshot>
-      <timestamp>20230926.143016</timestamp>
+      <timestamp>20230926.144632</timestamp>
       <buildNumber>2</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>war</extension>
-        <value>1.6-stable-20230926.143016-2</value>
-        <updated>20230926143016</updated>
+        <value>1.6-stable-20230926.144632-2</value>
+        <updated>20230926144632</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.6-stable-20230926.143016-2</value>
-        <updated>20230926143016</updated>
+        <value>1.6-stable-20230926.144632-2</value>
+        <updated>20230926144632</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>1.6-stable-20230926.143016-2</value>
-        <updated>20230926143016</updated>
+        <value>1.6-stable-20230926.144632-2</value>
+        <updated>20230926144632</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
