@@ -136,8 +136,6 @@ jobs:
             mkdir stored_data/public/installers;
             cp -r KinOathDesktop-1.6.*.msi stored_data/public/installers/;
             cp -r KinOathDesktop-1.6.*.exe stored_data/public/installers/;
-            ls -l stored_data/public/installers/;
-            ls -l stored_data/public/installers/*;
     - name: Deploy MSI installer
       uses: peaceiris/actions-gh-pages@v3
       with:
