@@ -19,11 +19,12 @@ jobs:
         distribution: 'temurin'
         java-version: '11'
         cache: maven
+    - name: Retrieve build output
+      uses: actions/download-artifact@v3
+      with:
+        name: stored_data
     - name: Generate DMG
       run: pwd;
-            ls -l *;
-            ls -l */*;
-            ls -l */*/*/*;
             java --version
             jpackage --input stored_data/target/ --type msi --main-jar kinnate-1.6.*-stable.jar;
             ls -l;
@@ -84,7 +85,7 @@ jobs:
             pwd;
             cp -r desktop/target stored_data/;
             cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
-    - name: Store output
+    - name: Store build output
       uses: actions/upload-artifact@v3
       with:
         name: stored_data
@@ -110,7 +111,7 @@ jobs:
         distribution: 'microsoft'
         java-version: '11'
         cache: maven
-    - name: Download snapshot output
+    - name: Retrieve build output
       uses: actions/download-artifact@v3
       with:
         name: stored_data
