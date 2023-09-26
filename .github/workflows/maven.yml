@@ -58,11 +58,13 @@ jobs:
             cp -r desktop/target stored_data/;
             cp -r KinOathDesktop-1.6.* stored_data/public/installers/;
     - name: Store build output
+      needs: buildJDK
       uses: actions/upload-artifact@v3
       with:
         name: stored_data
         path: stored_data
     - name: Deploy snapshots
+      needs: buildJDK
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
