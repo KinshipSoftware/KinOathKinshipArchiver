@@ -7,7 +7,6 @@ on:
 jobs:
   buildJDK:
     runs-on: ubuntu-latest
-    needs: packageDMG
     permissions:
       contents: write
     steps:
