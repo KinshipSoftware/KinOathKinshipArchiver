@@ -60,7 +60,7 @@ jobs:
             cp -r desktop/target stored_data/;
             cp -r kinoathdesktop-1.6.*.deb stored_data/public/installers/;
             cp -r kinoathdesktop-1.6.*.rpm stored_data/public/installers/;
-            cp -r ../snapshots/nl stored_data/public/
+            cp -r ../snapshots/nl stored_data/public/;
             ls -l stored_data/*;
     - name: Store build output
       uses: actions/upload-artifact@v3
@@ -132,6 +132,21 @@ jobs:
             mkdir stored_data/public/installers;
             cp -r KinOathDesktop-1.6.*.msi stored_data/public/installers/;
             cp -r KinOathDesktop-1.6.*.exe stored_data/public/installers/;
+    - name: Store build output
+      uses: actions/upload-artifact@v3
+      with:
+        name: stored_data
+        path: stored_data
+  deploySnapshotsInstallers:
+    name: deploySnapshotsInstallers
+    needs: packageMSI
+    runs-on: ubuntu-latest
+    steps:
+    - name: Retrieve build output
+      uses: actions/download-artifact@v3
+      with:
+        name: stored_data
+        path: stored_data
     - name: Deploy Snapshots Installers
       uses: peaceiris/actions-gh-pages@v3
       with:
