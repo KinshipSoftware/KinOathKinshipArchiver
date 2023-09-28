@@ -28,5 +28,5 @@ mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/arbil-loc
 mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/mpi-util-1.2.3.jar -DgroupId=nl.mpi -DartifactId=mpi-util -Dversion=1.2.3 -Dpackaging=jar -Dmaven.repo.local=$pwd;
 mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/pluginloader-1.1.35804-stable.jar -DgroupId=nl.mpi -DartifactId=pluginloader -Dversion=1.1.35804-stable -Dpackaging=jar -Dmaven.repo.local=$pwd;
 mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/plugins-core-1.2.113-stable.jar -DgroupId=nl.mpi -DartifactId=plugins-core -Dversion=1.2.113-stable -Dpackaging=jar -Dmaven.repo.local=$pwd;
-mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/corpusstructure-api-1.8.1.jar -DgroupId=nl.mpi -DartifactId=corpusstructure -Dversion=api-1.8.1 -Dpackaging=jar -Dmaven.repo.local=$pwd;
+mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/corpusstructure-api-1.8.1.jar -DgroupId=nl.mpi -DartifactId=corpusstructure-api -Dversion=api-1.8.1 -Dpackaging=jar -Dmaven.repo.local=$pwd;
 mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/slcshttps-0.2.jar -DgroupId=nl.nikhef -DartifactId=slcshttps -Dversion=0.2 -Dpackaging=jar -Dmaven.repo.local=$pwd;

@@ -3,10 +3,11 @@
   <groupId>nl.mpi</groupId>
   <artifactId>corpusstructure-api</artifactId>
   <versioning>
-    <release>1.7.3</release>
+    <release>api-1.8.1</release>
     <versions>
       <version>1.7.3</version>
+      <version>api-1.8.1</version>
     </versions>
-    <lastUpdated>20221115165214</lastUpdated>
+    <lastUpdated>20230928151440</lastUpdated>
   </versioning>
 </metadata>
