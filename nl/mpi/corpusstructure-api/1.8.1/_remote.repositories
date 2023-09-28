@@ -1,4 +1,4 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Thu Sep 28 17:14:41 CEST 2023
-corpusstructure-api-api-1.8.1.jar>=
-corpusstructure-api-api-1.8.1.pom>=
+#Thu Sep 28 17:23:00 CEST 2023
+corpusstructure-api-1.8.1.jar>=
+corpusstructure-api-1.8.1.pom>=
