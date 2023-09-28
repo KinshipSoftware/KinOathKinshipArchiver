@@ -30,3 +30,4 @@ mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/pluginloa
 mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/plugins-core-1.2.113-stable.jar -DgroupId=nl.mpi -DartifactId=plugins-core -Dversion=1.2.113-stable -Dpackaging=jar -Dmaven.repo.local=$pwd;
 mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/corpusstructure-api-1.8.1.jar -DgroupId=nl.mpi -DartifactId=corpusstructure-api -Dversion=1.8.1 -Dpackaging=jar -Dmaven.repo.local=$pwd;
 mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/slcshttps-0.2.jar -DgroupId=nl.nikhef -DartifactId=slcshttps -Dversion=0.2 -Dpackaging=jar -Dmaven.repo.local=$pwd;
+mvn install:install-file -Dfile=kinoath-testing.app/Contents/MacOS/lib/handle-6.1.jar -DgroupId=net.handle -DartifactId=handle -Dversion=6.1 -Dpackaging=jar -Dmaven.repo.local=$pwd;
