@@ -2,7 +2,7 @@ name: MVN Run Tests and Publish Artifacts
 on:
   push:
     #branches-ignore:
-    #  - '**' # disables this job
+    #  - '**' # disables this job 
     branches: [ kinnate.1.6.separate-diagram-library ]
 jobs:
   build:
