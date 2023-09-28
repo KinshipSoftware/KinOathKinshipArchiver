@@ -405,6 +405,37 @@
             <artifactId>slcshttps</artifactId>
             <version>0.2</version>
         </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.12.2</version>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>corpusstructure-api</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.handle</groupId>
+            <artifactId>handle</artifactId>
+            <version>6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>typechecker</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>5.1.1</version>
+            <type>pom.sha512</type>
+        </dependency>
     </dependencies>
     <repositories>
         <!-- <repository>
