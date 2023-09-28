@@ -400,6 +400,11 @@
             <artifactId>mpi-util</artifactId>
             <version>1.2.3</version>
         </dependency>
+        <dependency>
+            <groupId>nl.nikhef</groupId>
+            <artifactId>slcshttps</artifactId>
+            <version>0.2</version>
+        </dependency>
     </dependencies>
     <repositories>
         <!-- <repository>
