@@ -436,6 +436,11 @@
             <version>5.1.1</version>
             <type>pom.sha512</type>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>corpusstructure-api</artifactId>
+            <version>1.8.1</version>
+        </dependency>
     </dependencies>
     <repositories>
         <!-- <repository>
