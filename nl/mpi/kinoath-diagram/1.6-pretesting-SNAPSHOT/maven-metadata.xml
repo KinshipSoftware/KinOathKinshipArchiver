@@ -3,27 +3,27 @@
   <groupId>nl.mpi</groupId>
   <artifactId>kinoath-diagram</artifactId>
   <versioning>
-    <lastUpdated>20230928135059</lastUpdated>
+    <lastUpdated>20231005154354</lastUpdated>
     <snapshot>
-      <timestamp>20230928.135059</timestamp>
+      <timestamp>20231005.154354</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>1.6-pretesting-20230928.135059-1</value>
-        <updated>20230928135059</updated>
+        <value>1.6-pretesting-20231005.154354-1</value>
+        <updated>20231005154354</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.6-pretesting-20230928.135059-1</value>
-        <updated>20230928135059</updated>
+        <value>1.6-pretesting-20231005.154354-1</value>
+        <updated>20231005154354</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>1.6-pretesting-20230928.135059-1</value>
-        <updated>20230928135059</updated>
+        <value>1.6-pretesting-20231005.154354-1</value>
+        <updated>20231005154354</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
