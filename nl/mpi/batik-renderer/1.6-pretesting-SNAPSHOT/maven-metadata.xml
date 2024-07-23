@@ -3,27 +3,27 @@
   <groupId>nl.mpi</groupId>
   <artifactId>batik-renderer</artifactId>
   <versioning>
-    <lastUpdated>20240723141652</lastUpdated>
+    <lastUpdated>20240723150927</lastUpdated>
     <snapshot>
-      <timestamp>20240723.141652</timestamp>
+      <timestamp>20240723.150927</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>1.6-pretesting-20240723.141652-1</value>
-        <updated>20240723141652</updated>
+        <value>1.6-pretesting-20240723.150927-1</value>
+        <updated>20240723150927</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.6-pretesting-20240723.141652-1</value>
-        <updated>20240723141652</updated>
+        <value>1.6-pretesting-20240723.150927-1</value>
+        <updated>20240723150927</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>1.6-pretesting-20240723.141652-1</value>
-        <updated>20240723141652</updated>
+        <value>1.6-pretesting-20240723.150927-1</value>
+        <updated>20240723150927</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
