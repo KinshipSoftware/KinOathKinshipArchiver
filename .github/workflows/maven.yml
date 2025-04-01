@@ -90,7 +90,8 @@ jobs:
     - name: Generate DMG
       run: pwd;
             java --version;
-            jpackage --input stored_data/target/ --type dmg  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input stored_data/target/ --type dmg --target-arch x64 --name KinOathDesktop-1.6.$(git rev-list --count --all desktop)-x64 --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input stored_data/target/ --type dmg --target-arch arm64 --name KinOathDesktop-1.6.$(git rev-list --count --all desktop)-arm64 --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
             cp -r KinOathDesktop-1.6.*.dmg stored_data/public/installers/;
             ls -l stored_data/public/installers/;
