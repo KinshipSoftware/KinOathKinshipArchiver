@@ -92,7 +92,7 @@ jobs:
             java --version;
             jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-$(uname -m)-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
-            cp -r KinOathDesktop-1.6.*.dmg stored_data/public/installers/;
+            cp -r KinOathDesktop-*-1.6.*.dmg stored_data/public/installers/;
             ls -l stored_data/public/installers/;
             ls -l stored_data/public/installers/*;
             ls -l stored_data/*;
@@ -126,7 +126,7 @@ jobs:
             java --version;
             jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-$(uname -m)-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
-            cp -r KinOathDesktop-1.6.*.dmg stored_data/public/installers/;
+            cp -r KinOathDesktop-*-1.6.*.dmg stored_data/public/installers/;
             ls -l stored_data/public/installers/;
             ls -l stored_data/public/installers/*;
             ls -l stored_data/*;
