@@ -99,11 +99,9 @@ jobs:
             ls -l stored_data/*;
             ls -l stored_data/public/installers/;
             ls -l stored_data/public/installers/*;
-            ls -l stored_data/public/installers/*/*;
             ls -l more_stored_data/*;
             ls -l more_stored_data/public/installers/;
             ls -l more_stored_data/public/installers/*;
-            ls -l more_stored_data/public/installers/*/*;
     - name: Store build output
       uses: actions/upload-artifact@v4
       with:
@@ -141,11 +139,9 @@ jobs:
             ls -l stored_data/*;
             ls -l stored_data/public/installers/;
             ls -l stored_data/public/installers/*;
-            ls -l stored_data/public/installers/*/*;
             ls -l more_stored_data/*;
             ls -l more_stored_data/public/installers/;
             ls -l more_stored_data/public/installers/*;
-            ls -l more_stored_data/public/installers/*/*;
     - name: Store build output
       uses: actions/upload-artifact@v4
       with:
