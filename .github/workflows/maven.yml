@@ -63,7 +63,7 @@ jobs:
             cp -r ../snapshots/nl stored_data/public/;
             ls -l stored_data/*;
     - name: Store build output
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: stored_data
         path: stored_data
@@ -98,7 +98,7 @@ jobs:
             ls -l stored_data/public/installers/*;
             ls -l stored_data/*;
     - name: Store build output
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: stored_data
         path: stored_data
@@ -130,7 +130,7 @@ jobs:
             cp -r KinOathDesktop-1.6.*.msi stored_data/public/installers/;
             cp -r KinOathDesktop-1.6.*.exe stored_data/public/installers/;
     - name: Store build output
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: stored_data
         path: stored_data
