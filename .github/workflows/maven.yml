@@ -106,7 +106,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: stored_data
-        path: stored_data/public/installers/KinOathDesktop-*-1.6.*.dmg
+        path: more_stored_data
   packageDMG_ARM64:
     name: packageDMG_ARM64
     needs: packageDMG_X86
