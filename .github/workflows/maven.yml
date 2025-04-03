@@ -77,6 +77,9 @@ jobs:
         fetch-depth: 30000
         ref: kinnate.1.6.separate-diagram-library
     - name: Set up JDK 21
+      # https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.6%2B7
+      # https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.6%2B7/OpenJDK21U-jdk_aarch64_mac_hotspot_21.0.6_7.tar.gz
+      # https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.6%2B7/OpenJDK21U-jdk_x64_mac_hotspot_21.0.6_7.tar.gz
       uses: actions/setup-java@v4
       with:
         java-version: '21'
@@ -91,8 +94,8 @@ jobs:
     - name: Generate DMG
       run: pwd;
             java --version;
-            jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-$(uname -m)-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
-            arch -x86_64 jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-$(uname -m)-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-arm64-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            arch -x86_64 jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-x64-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
             cp -r KinOathDesktop-*-1.6.*.dmg stored_data/public/installers/;
             ls -l stored_data/*;
