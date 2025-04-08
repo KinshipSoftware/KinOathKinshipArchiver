@@ -93,6 +93,7 @@ jobs:
             cp -r kinoathdesktop-1.6.*.deb stored_data/public/installers/;
             cp -r kinoathdesktop-1.6.*.rpm stored_data/public/installers/;
             cp -r ../snapshots/nl stored_data/public/;
+            echo "1.6.$(git rev-list --count --all desktop)" > stored_data/public/kinoath-stable-current.txt
             ls -l stored_data/*;
     - name: Store build output
       uses: actions/upload-artifact@v4
@@ -126,8 +127,9 @@ jobs:
     - name: Generate DMG
       run: pwd;
             java --version;
-            jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-arm64-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
-            arch -x86_64 jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-x64-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            # jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-arm64-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            # arch -x86_64 jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-x64-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
             ls -l;
             cp -r KinOathDesktop-*-1.6.*.dmg stored_data/public/installers/;
             ls -l stored_data/*;
