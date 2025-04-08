@@ -58,31 +58,31 @@ jobs:
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             git status;
             ls -l;
-            sed -i 's|<application.branch>pretesting</application.branch>|<application.branch>stable</application.branch>|g' ./pom.xml;
-            sed -i 's|-pretesting-SNAPSHOT|-stable-SNAPSHOT|g' ./pom.xml ./*/pom.xml;           
+            sed -i 's|<application.branch>pretesting</application.branch>|<application.branch>testing</application.branch>|g' ./pom.xml;
+            sed -i 's|-pretesting-SNAPSHOT|-testing-SNAPSHOT|g' ./pom.xml ./*/pom.xml;           
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             git rev-list --count --all desktop;
-            sed -i '/batik-renderer/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all batik-renderer)'-stable/}' ./*/pom.xml;
-            sed -i '/kinoath-rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./*/pom.xml;
-            sed -i '/kinoath-core/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./*/pom.xml;
-            sed -i '/kinoath-diagram/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all diagram)'-stable/}' ./*/pom.xml;
-            sed -i '/kinoath-desktop/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all desktop)'-stable/}' ./desktop/pom.xml;
-            sed -i '/graph-sorter/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all graph-sorter)'-stable/}' ./*/pom.xml;
-            sed -i '/kin-type-string-parser/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kin-type-string-parser)'-stable/}' ./*/pom.xml;
-            sed -i '/core/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all core)'-stable/}' ./core/pom.xml;
-            sed -i '/diagram/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all diagram)'-stable/}' ./diagram/pom.xml;
-            sed -i '/graph-storage/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all graph-storage)'-stable/}' ./graph-storage/pom.xml;
-            sed -i '/kinoath-help/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all kinoath-help)'-stable/}' ./kinoath-help/pom.xml;
-            sed -i '/localisation/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all localisation)'-stable/}' ./localisation/pom.xml;
-            sed -i '/rest/{n;s/-stable-SNAPSHOT/.'$(git rev-list --count --all rest)'-stable/}' ./rest/pom.xml;
+            sed -i '/batik-renderer/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all batik-renderer)'-testing/}' ./*/pom.xml;
+            sed -i '/kinoath-rest/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all rest)'-testing/}' ./*/pom.xml;
+            sed -i '/kinoath-core/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all core)'-testing/}' ./*/pom.xml;
+            sed -i '/kinoath-diagram/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all diagram)'-testing/}' ./*/pom.xml;
+            sed -i '/kinoath-desktop/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all desktop)'-testing/}' ./desktop/pom.xml;
+            sed -i '/graph-sorter/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all graph-sorter)'-testing/}' ./*/pom.xml;
+            sed -i '/kin-type-string-parser/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all kin-type-string-parser)'-testing/}' ./*/pom.xml;
+            sed -i '/core/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all core)'-testing/}' ./core/pom.xml;
+            sed -i '/diagram/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all diagram)'-testing/}' ./diagram/pom.xml;
+            sed -i '/graph-storage/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all graph-storage)'-testing/}' ./graph-storage/pom.xml;
+            sed -i '/kinoath-help/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all kinoath-help)'-testing/}' ./kinoath-help/pom.xml;
+            sed -i '/localisation/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all localisation)'-testing/}' ./localisation/pom.xml;
+            sed -i '/rest/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all rest)'-testing/}' ./rest/pom.xml;
             git diff;
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             echo "target";
             ls -l desktop/target;
             echo "snapshots";
             ls -l ../snapshots;
-            jpackage --input desktop/target/ --type deb --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
-            jpackage --input desktop/target/ --type rpm --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input desktop/target/ --type deb --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-testing.jar;
+            jpackage --input desktop/target/ --type rpm --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-testing.jar;
             ls -l;
             mkdir stored_data;
             mkdir stored_data/public;
@@ -93,7 +93,7 @@ jobs:
             cp -r kinoathdesktop-1.6.*.deb stored_data/public/installers/;
             cp -r kinoathdesktop-1.6.*.rpm stored_data/public/installers/;
             cp -r ../snapshots/nl stored_data/public/;
-            echo "1.6.$(git rev-list --count --all desktop)" > stored_data/public/kinoath-stable-current.txt;
+            echo "1.6.$(git rev-list --count --all desktop)" > stored_data/public/kinoath-testing-current.txt;
             ls -l stored_data/*;
     - name: Store build output
       uses: actions/upload-artifact@v4
@@ -125,11 +125,11 @@ jobs:
         name: stored_data
         path: stored_data
     - name: Generate DMG
-      # jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-arm64-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
-      # arch -x86_64 jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-x64-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+      # jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-arm64-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-testing.jar;
+      # arch -x86_64 jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-x64-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-testing.jar;
       run: pwd;
             java --version;
-            jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-stable.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing.icns --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-testing.jar;
             ls -l;
             cp -r KinOathDesktop-*-1.6.*.dmg stored_data/public/installers/;
             ls -l stored_data/*;
@@ -164,8 +164,8 @@ jobs:
     - name: Generate MSI
       run: pwd;
             java --version;
-            jpackage --input stored_data/target --type msi  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
-            jpackage --input stored_data/target --type exe  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-stable.jar;
+            jpackage --input stored_data/target --type msi  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-testing.jar;
+            jpackage --input stored_data/target --type exe  --name KinOathDesktop-1.6.$(git rev-list --count --all desktop) --app-version 1.6.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.6.$(git rev-list --count --all desktop)-testing.jar;
             cp -r KinOathDesktop-1.6.*.msi stored_data/public/installers/;
             cp -r KinOathDesktop-1.6.*.exe stored_data/public/installers/;
     - name: Store build output
