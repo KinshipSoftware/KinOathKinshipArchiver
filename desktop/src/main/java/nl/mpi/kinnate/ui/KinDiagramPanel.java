@@ -307,8 +307,8 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
                         archiveEntityLinkerPanelLocal = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.LocalTree, treeHelper, dataNodeLoader);
                         panelSetting.addTargetPanel(archiveEntityLinkerPanelLocal, false);
                     }
-                    archiveEntityLinkerPanelMpiRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree, treeHelper, dataNodeLoader);
-                    panelSetting.addTargetPanel(archiveEntityLinkerPanelMpiRemote, false);
+                    // archiveEntityLinkerPanelMpiRemote = new ArchiveEntityLinkerPanel(panelSetting, this, graphPanel, dragTransferHandler, ArchiveEntityLinkerPanel.TreeType.MpiTree, treeHelper, dataNodeLoader);
+                    // panelSetting.addTargetPanel(archiveEntityLinkerPanelMpiRemote, false);
                     panelSetting.setMenuEnabled(graphPanel.dataStoreSvg.diagramMode == DiagramMode.KinTypeQuery);
                     break;
                 case DiagramTree:

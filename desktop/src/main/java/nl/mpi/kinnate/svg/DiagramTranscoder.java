@@ -94,7 +94,7 @@ public class DiagramTranscoder {
             case JPEG:
                 fixSuffix(".jpg");
                 transcoder = new JPEGTranscoder();
-                transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(.8));
+                transcoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, 0.8);
                 break;
             case PNG:
                 fixSuffix(".png");

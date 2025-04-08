@@ -210,6 +210,12 @@ public class EntityDocument {
             throw new ImportException("Error: " + exception.getMessage());
         } catch (SAXException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);
+            if (entityFile.exists()) {
+                if (entityFile.length() == 0) {
+                    BugCatcherManager.getBugCatcher().logError("deleting empty file");
+                    entityFile.delete();
+                }
+            }
             throw new ImportException("Error: " + exception.getMessage());
         } catch (IOException exception) {
             BugCatcherManager.getBugCatcher().logError(exception);

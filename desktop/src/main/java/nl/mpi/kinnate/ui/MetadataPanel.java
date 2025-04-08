@@ -57,7 +57,7 @@ import nl.mpi.kinnate.ui.menu.TableMenu;
  */
 public class MetadataPanel extends JPanel {
 
-    private ArbilTree arbilTree;
+//    private ArbilTree arbilTree;
 //    JScrollPane tableScrollPane;
     private ArbilTableModel kinTableModel;
     private ArbilTableModel archiveTableModel;
@@ -76,13 +76,13 @@ public class MetadataPanel extends JPanel {
     final SessionStorage sessionStorage;
 
     public MetadataPanel(GraphPanel graphPanel, final EntityCollection entityCollection, final KinDiagramPanel kinDiagramPanel, HidePane editorHidePane, TableCellDragHandler tableCellDragHandler, ArbilDataNodeLoader dataNodeLoader, ImageBoxRenderer imageBoxRenderer, final SessionStorage sessionStorage, final MessageDialogHandler dialogHandler, ArbilTreeController treeController, TreeHelper treeHelper, ArbilTableController arbilTableController, ArbilWindowManager windowManager) {
-        this.arbilTree = new ArbilTree(treeController, treeHelper, new PreviewSplitPanel(windowManager, arbilTableController));
+//        this.arbilTree = new ArbilTree(treeController, treeHelper, new PreviewSplitPanel(windowManager, arbilTableController));
         this.kinDiagramPanel = kinDiagramPanel;
         this.entityCollection = entityCollection;
         this.dialogHandler = dialogHandler;
         this.sessionStorage = sessionStorage;
         rootNode = new ContainerNode(null, "links", null, new ArbilNode[]{});
-        arbilTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode)));
+//        arbilTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(rootNode)));
         this.kinTableModel = new ArbilTableModel(imageBoxRenderer);
         this.archiveTableModel = new ArbilTableModel(imageBoxRenderer);
         this.dataNodeLoader = dataNodeLoader;
@@ -138,7 +138,7 @@ public class MetadataPanel extends JPanel {
         };
         ArbilTable kinTable = new ArbilTable(kinTableModel, tableController, "Selected Nodes");
         ArbilTable archiveTable = new ArbilTable(archiveTableModel, arbilTableController, "Selected Nodes");
-        this.arbilTree.setCustomPreviewTable(archiveTable);
+//        this.arbilTree.setCustomPreviewTable(archiveTable);
         kinTable.setTransferHandler(tableCellDragHandler);
         kinTable.setDragEnabled(true);
 
@@ -147,7 +147,7 @@ public class MetadataPanel extends JPanel {
         kinTableScrollPane = new JScrollPane(kinTable);
         JScrollPane archiveTableScrollPane = new JScrollPane(archiveTable);
         this.add(archiveTableScrollPane, BorderLayout.CENTER);
-        this.add(arbilTree, BorderLayout.LINE_START);
+//        this.add(arbilTree, BorderLayout.LINE_START);
     }
 
     public void removeAllEditors() {
@@ -237,9 +237,9 @@ public class MetadataPanel extends JPanel {
         if (!archiveRootNodes.isEmpty()) {
             // todo: highlight or select the sub nodes that are actually linked
             rootNode.setChildNodes(archiveRootNodes.toArray(new ArbilNode[]{}));
-            arbilTree.requestResort();
+//            arbilTree.requestResort();
         }
-        arbilTree.setVisible(!archiveRootNodes.isEmpty());
+//        arbilTree.setVisible(!archiveRootNodes.isEmpty());
         editorHidePane.setHiddeState();
     }
 }

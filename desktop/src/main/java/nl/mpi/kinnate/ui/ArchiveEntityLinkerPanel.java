@@ -52,7 +52,7 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
 
     public enum TreeType {
 
-        RemoteTree, LocalTree, MpiTree
+        RemoteTree, LocalTree //, MpiTree
     }
 
     public ArchiveEntityLinkerPanel(VisiblePanelSetting panelSetting, KinDiagramPanel kinDiagramPanel, GraphPanel graphPanel, KinDragTransferHandler dragTransferHandler, TreeType treeType, ArbilTreeHelper treeHelper, ArbilDataNodeLoader dataNodeLoader) {
@@ -78,7 +78,7 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
     }
 
     public void loadTreeNodes() {
-        try {
+//        try {
             treeHelper.loadLocationsList();
             ArbilNode[] allEntities;
             switch (treeType) {
@@ -87,21 +87,22 @@ public class ArchiveEntityLinkerPanel extends JPanel implements ActionListener {
                     this.setName("Arbil Local Corpus");
                     break;
                 case RemoteTree:
+                default:
                     allEntities = treeHelper.getRemoteCorpusNodes();
                     this.setName("Arbil Remote Corpus");
                     break;
-                case MpiTree:
-                default:
-                    ArbilNode imdiCorporaNode = dataNodeLoader.getArbilDataNode(null, new URI("http://corpus1.mpi.nl/IMDI/metadata/IMDI.imdi"));
-                    allEntities = new ArbilNode[]{imdiCorporaNode};
-                    this.setName("The TLA Language Archive");
-                    break;
+                // case MpiTree:
+                // default:
+                //     ArbilNode imdiCorporaNode = dataNodeLoader.getArbilDataNode(null, new URI("http://corpus1.mpi.nl/IMDI/metadata/IMDI.imdi"));
+                //     allEntities = new ArbilNode[]{imdiCorporaNode};
+                //     this.setName("The TLA Language Archive");
+                //     break;
             }
             rootNode.setChildNodes(allEntities);
             archiveTree.requestResort();
-        } catch (URISyntaxException exception) {
-            BugCatcherManager.getBugCatcher().logError(exception);
-        }
+//        } catch (URISyntaxException exception) {
+//            BugCatcherManager.getBugCatcher().logError(exception);
+//        }
     }
 
     private void getSeachPanel() {

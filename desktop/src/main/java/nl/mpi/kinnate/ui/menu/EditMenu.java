@@ -71,20 +71,20 @@ public class EditMenu extends JMenu implements ActionListener {
         selectAllMenu = new JMenuItem(menus.getString("SELECT ALL"));
         selectAllMenu.setActionCommand(MouseListenerSvg.ActionCode.selectAll.name());
         selectAllMenu.addActionListener(EditMenu.this);
-        selectAllMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        selectAllMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         selectRelatedMenu = new JMenuItem(menus.getString("SELECT RELATED"));
         selectRelatedMenu.setActionCommand(MouseListenerSvg.ActionCode.selectRelated.name());
         selectRelatedMenu.addActionListener(EditMenu.this);
-        selectRelatedMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        selectRelatedMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         expandSelectionMenu = new JMenuItem(menus.getString("EXPAND SELECTION"));
         expandSelectionMenu.setActionCommand(MouseListenerSvg.ActionCode.expandSelection.name());
         expandSelectionMenu.addActionListener(EditMenu.this);
-        expandSelectionMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
+        expandSelectionMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         
         deselectAllMenu = new JMenuItem(menus.getString("DESELECT ALL"));
         deselectAllMenu.setActionCommand(MouseListenerSvg.ActionCode.deselectAll.name());
         deselectAllMenu.addActionListener(EditMenu.this);
-        deselectAllMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+        deselectAllMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         
         recalculateDiagramMenuItem = new JMenuItem(menus.getString("RECALCULATE THE DIAGRAM"));
         recalculateDiagramMenuItem.setActionCommand("RecalculateDiagram");

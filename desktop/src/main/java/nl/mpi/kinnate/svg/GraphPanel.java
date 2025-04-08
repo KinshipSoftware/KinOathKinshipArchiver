@@ -54,11 +54,14 @@ import nl.mpi.kinnate.kindata.EntityData;
 import nl.mpi.kinnate.kindata.GraphSorter;
 import nl.mpi.kinnate.kindata.KinRectangle;
 import nl.mpi.kinnate.kindata.UnsortablePointsException;
+import nl.mpi.kinnate.kindocument.CmdiTransformer;
+import nl.mpi.kinnate.kindocument.KinXsdException;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinType;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.MetadataPanel;
+import nl.mpi.kinnate.ui.entityprofiles.ProfileRecord;
 import nl.mpi.kinnate.uniqueidentifiers.UniqueIdentifier;
 import nl.mpi.kinoath.graph.DefaultSorter;
 import nl.mpi.kinoath.svg.DiagramScrollPanel;
@@ -165,6 +168,18 @@ public class GraphPanel extends JPanel implements SavePanel {
         mouseListenerSvg.setEntityCollection(entityCollection);
         svgCanvas.addMouseListener((MouseInputAdapter) mouseListenerSvg);
         svgCanvas.addMouseMotionListener((MouseInputAdapter) mouseListenerSvg);
+        for (ProfileRecord profileRecord : this.dataStoreSvg.selectedProfiles) {
+            try {
+                // preload the XSD files for each menu item
+                System.out.println("constructing the XSD file");
+                long start1Time = System.currentTimeMillis();
+                URI xsdUri = new CmdiTransformer(sessionStorage).getXsd(profileRecord.profileId, entityCollection.getProjectRecord(), false);
+                long query1Mils = System.currentTimeMillis() - start1Time;
+                System.out.println("Constructing the XSD file took: " + query1Mils + "ms");
+            } catch (KinXsdException exception) {
+                BugCatcherManager.getBugCatcher().logError(exception);
+            }
+        }
         svgCanvas.setComponentPopupMenu(new GraphPanelContextMenu(kinDiagramPanel, this, entityCollection, dialogHandler, dataNodeLoader, sessionStorage));
     }
 //    private void zoomDrawing() {

@@ -139,7 +139,7 @@ public class FileMenu extends javax.swing.JMenu {
             }
         });
 
-        newDiagramMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        newDiagramMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         newDiagramMenuItem.setText(menus.getString("NEW (DEFAULT DIAGRAM)"));
         newDiagramMenuItem.setEnabled(KinDiagramPanel.getGlobalDefaultDiagramFile(sessionStorage).exists());
         newDiagramMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -166,7 +166,7 @@ public class FileMenu extends javax.swing.JMenu {
         projectDiagramMenuItem.setText(menus.getString("NEW DIAGRAM OF TYPE"));
         this.add(projectDiagramMenuItem);
 
-        openDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        openDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         openDiagram.setText(menus.getString("OPEN DIAGRAM"));
         openDiagram.setActionCommand("open");
         openDiagram.addActionListener(new java.awt.event.ActionListener() {
@@ -236,7 +236,7 @@ public class FileMenu extends javax.swing.JMenu {
 //        });
 //        this.add(entityUploadMenuItem);
 //        this.add(jSeparator4);
-        saveDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        saveDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         saveDiagram.setText(menus.getString("SAVE"));
         saveDiagram.setActionCommand("save");
         saveDiagram.addActionListener(new java.awt.event.ActionListener() {
@@ -246,7 +246,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(saveDiagram);
 
-        saveDiagramAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        saveDiagramAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
         saveDiagramAs.setText(menus.getString("SAVE AS"));
         saveDiagramAs.setActionCommand("saveas");
         saveDiagramAs.addActionListener(new java.awt.event.ActionListener() {
@@ -256,7 +256,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(saveDiagramAs);
 
-        captureDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        captureDiagram.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
         captureDiagram.setText(menus.getString("CAPTUREDIAGRAM"));
         captureDiagram.setActionCommand("capture");
         captureDiagram.addActionListener(new java.awt.event.ActionListener() {
@@ -282,7 +282,7 @@ public class FileMenu extends javax.swing.JMenu {
         });
         this.add(exportToR);
 
-        closeTabMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
+        closeTabMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         closeTabMenuItem.setText(menus.getString("CLOSE"));
         closeTabMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
