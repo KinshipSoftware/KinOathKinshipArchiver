@@ -35,7 +35,7 @@
     <properties>
         <application.majorVersion>1</application.majorVersion> 
         <application.minorVersion>6</application.minorVersion> 
-        <application.branch>stable</application.branch> 
+        <application.branch>testing</application.branch> 
         <application.title>KinOath Kinship Archiver (pretesting)</application.title>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--<netbeans.hint.license>http://www.gnu.org/licenses/gpl-2.0.html</netbeans.hint.license>-->
