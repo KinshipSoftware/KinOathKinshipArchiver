@@ -212,7 +212,7 @@ public class EntityDocument {
             BugCatcherManager.getBugCatcher().logError(exception);
             if (entityFile.exists()) {
                 if (entityFile.length() == 0) {
-                    BugCatcherManager.getBugCatcher().logError("deleting empty file");
+                    BugCatcherManager.getBugCatcher().logError(new Exception("deleting empty file"));
                     entityFile.delete();
                 }
             }
