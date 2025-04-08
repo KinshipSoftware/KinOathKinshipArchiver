@@ -93,7 +93,7 @@ jobs:
             cp -r kinoathdesktop-1.6.*.deb stored_data/public/installers/;
             cp -r kinoathdesktop-1.6.*.rpm stored_data/public/installers/;
             cp -r ../snapshots/nl stored_data/public/;
-            echo "1.6.$(git rev-list --count --all desktop)" > stored_data/public/kinoath-stable-current.txt
+            echo "1.6.$(git rev-list --count --all desktop)" > stored_data/public/kinoath-stable-current.txt;
             ls -l stored_data/*;
     - name: Store build output
       uses: actions/upload-artifact@v4
