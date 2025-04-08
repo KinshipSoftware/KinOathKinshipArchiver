@@ -23,7 +23,7 @@ jobs:
     - name: Generate 1_5 DMG
       run: pwd;
             java --version;
-            jpackage --input kinoath-testing.app/Contents/MacOS/ --type dmg --name KinOathDesktop-testing-1-5-2261 --app-version 1.5.2261 --icon kinoath-testing.app/Contents/Resources/kinoath-testing.icns --main-jar kinoath-testing-1-5-2261.jar;
+            jpackage --input kinoath-testing.app/Contents/MacOS/ --type dmg --name KinOathDesktop-testing-1-5-2261 --app-version 1.5.2261 --icon kinoath-testing.app/Contents/Resources/kinoath-testing.icns --classpath ./lib/* --main-jar kinoath-testing-1-5-2261.jar;
             ls -l;
             mkdir stored_data;
             mkdir stored_data/public;
