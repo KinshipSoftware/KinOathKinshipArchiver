@@ -251,14 +251,6 @@
             <version>1.7</version>
         </dependency>
         <dependency>
-            <groupId>nl.mpi</groupId>
-            <artifactId>arbil</artifactId>
-            <!--when changing the Arbil version make sure that the JNLP dependencies are also updated--> 
-            <version>2.5.1039-stable</version>
-            <exclusions>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-codec</artifactId>
             <version>1.7</version>
@@ -328,7 +320,7 @@
             <artifactId>jaxb-api</artifactId>
             <version>2.3.1</version>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>saxon-xpath</artifactId>
             <version>8.7</version>
@@ -338,26 +330,6 @@
             <artifactId>Saxon-HE</artifactId>
             <version>11.4</version>
             <type>pom.sha512</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>arbil-commons</artifactId>
-            <version>2.5.39-stable</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>arbil-localisation</artifactId>
-            <version>2.5.145-stable</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>arbil</artifactId>
-            <version>2.5.1039-stable</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>arbil-help</artifactId>
-            <version>2.5.32-stable</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -380,7 +352,7 @@
             <version>8.0.13</version>
             <type>pom</type>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>xmlbeans</groupId>
             <artifactId>xbean</artifactId>
             <version>2.6.0</version>
@@ -389,16 +361,6 @@
             <groupId>commons-digester</groupId>
             <artifactId>commons-digester</artifactId>
             <version>2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>imdi-api</artifactId>
-            <version>1.1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mpi-util</artifactId>
-            <version>1.2.3</version>
         </dependency>
         <dependency>
             <groupId>nl.nikhef</groupId>
@@ -416,21 +378,11 @@
             <version>2.7.2</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>corpusstructure-api</artifactId>
-            <version>1.8.1</version>
-        </dependency>
-        <dependency>
             <groupId>net.handle</groupId>
             <artifactId>handle</artifactId>
             <version>6.1</version>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>typechecker</artifactId>
-            <version>1.7.2</version>
-        </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.apache.xmlbeans</groupId>
             <artifactId>xmlbeans</artifactId>
             <version>5.1.1</version>
@@ -452,27 +404,4 @@
             <version>8.7</version>
         </dependency>
     </dependencies>
-    <repositories>
-        <!-- <repository>
-            <id>MPI</id>
-            <name>MPI LAT Repository</name>
-            <url>http://lux15.mpi.nl/nexus/content/groups/public/</url>
-        </repository> -->
-        <!--        <repository>
-            <id>basex</id>
-            <name>BaseX Maven Repository</name>
-            <url>https://files.basex.org/maven</url>
-        </repository>-->
-        <repository>
-            <id>KinOathKinshipArchiver</id>
-            <name>KinOathKinshipArchiver Repository</name>
-            <url>https://kinshipsoftware.github.io/KinOathKinshipArchiver/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
 </project>
