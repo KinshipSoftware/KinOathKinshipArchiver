@@ -9,3 +9,4 @@
 /kin-type-string-parser/target/
 /core/target/
 /rest/target/
+.DS_Store

@@ -87,7 +87,7 @@ public class ArbilFieldViews {
 	try {
 	    savedFieldViews = (Hashtable<String, ArbilFieldView>) sessionStorage.loadObject(SAVED_FIELDVIEWS_FILE);
 	} catch (Exception ex) {
-	    BugCatcherManager.getBugCatcher().logError("load savedFieldViews failed", ex);
+//	    BugCatcherManager.getBugCatcher().logError("load savedFieldViews failed", ex);
 	    savedFieldViews = new Hashtable<String, ArbilFieldView>();
 	    createDefaultFieldViews();
 	}
@@ -97,7 +97,7 @@ public class ArbilFieldViews {
 		currentGlobalViewName = (String) sessionStorage.loadObject("currentGlobalViewName");
 	    }
 	} catch (Exception ex) {
-	    BugCatcherManager.getBugCatcher().logError("load currentGlobalViewName failed ", ex);
+//	    BugCatcherManager.getBugCatcher().logError("load currentGlobalViewName failed ", ex);
 
 	    // Make sure there are field views
 	    if (savedFieldViews.isEmpty()) {

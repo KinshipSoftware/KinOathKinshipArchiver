@@ -5,12 +5,11 @@
     <parent>
         <groupId>nl.mpi</groupId>
         <artifactId>kinoath-parent</artifactId>
-        <version>1.6</version>
+        <version>1.7</version>
     </parent>
     <groupId>nl.mpi</groupId>
     <artifactId>batik-renderer</artifactId>
-    <version>1.6-pretesting-SNAPSHOT</version>
-    <!-- <version>1.6.15-pretesting</version> -->
+    <version>1.7-pretesting-SNAPSHOT</version>
     <!--<version>${application.majorVersion}.${application.minorVersion}.62-${application.branch}</version>-->
     
     <name>KinOath Batik Renderer ${application.majorVersion}.${application.minorVersion}</name>
@@ -58,12 +57,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>kinoath-diagram</artifactId>
-            <version>1.6-pretesting-SNAPSHOT</version>
+            <version>1.7-pretesting-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>graph-sorter</artifactId>
-            <version>1.6-pretesting-SNAPSHOT</version>
+            <version>1.7-pretesting-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
