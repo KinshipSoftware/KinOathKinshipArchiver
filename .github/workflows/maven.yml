@@ -43,7 +43,6 @@ jobs:
             sed -i '/kinoath-help/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all kinoath-help)'-testing/}' ./kinoath-help/pom.xml;
             sed -i '/localisation/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all localisation)'-testing/}' ./localisation/pom.xml;
             sed -i '/rest/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all rest)'-testing/}' ./rest/pom.xml;
-            sed -i '/<application.buildVersion>-1</application.buildVersion>/<application.buildVersion>'$(git rev-list --count --all rest)'</application.buildVersion>/}' ./pom.xml;
             git diff;
             mvn clean test deploy -DaltDeploymentRepository=snapshot-repo::default::file:../snapshots;
             echo "target";
