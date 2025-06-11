@@ -4,9 +4,9 @@
   <artifactId>kinoath-rest</artifactId>
   <versioning>
     <versions>
-      <version>1.6-pretesting-SNAPSHOT</version>
-      <version>1.6-testing-SNAPSHOT</version>
+      <version>1.7-pretesting-SNAPSHOT</version>
+      <version>1.7-testing-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20250408155840</lastUpdated>
+    <lastUpdated>20250611131334</lastUpdated>
   </versioning>
 </metadata>

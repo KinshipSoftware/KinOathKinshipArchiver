@@ -3,12 +3,12 @@
   <groupId>nl.mpi</groupId>
   <artifactId>kinoath-core</artifactId>
   <versioning>
-    <release>1.6.22-testing</release>
+    <release>1.7.23-testing</release>
     <versions>
-      <version>1.6-pretesting-SNAPSHOT</version>
-      <version>1.6-testing-SNAPSHOT</version>
-      <version>1.6.22-testing</version>
+      <version>1.7-pretesting-SNAPSHOT</version>
+      <version>1.7-testing-SNAPSHOT</version>
+      <version>1.7.23-testing</version>
     </versions>
-    <lastUpdated>20250408155840</lastUpdated>
+    <lastUpdated>20250611131334</lastUpdated>
   </versioning>
 </metadata>
