@@ -49,7 +49,7 @@ jobs:
             ls -l desktop/target;
             echo "snapshots";
             ls -l ../snapshots;
-            jpackage --input desktop/target/ --type deb --name KinOathDesktop-1.7.$(git rev-list --count --all desktop) --app-version 1.7.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
+            jpackage --input desktop/target/ --type deb --add-modules all --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
             jpackage --input desktop/target/ --type rpm --name KinOathDesktop-1.7.$(git rev-list --count --all desktop) --app-version 1.7.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
             ls -l;
             mkdir stored_data;
