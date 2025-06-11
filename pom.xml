@@ -92,6 +92,7 @@
                         <exclude>**/*.php</exclude>
                         <exclude>installer/**</exclude>
                         <exclude>**/src/main/docbook/**</exclude>
+			<exclude>**/KmdiProfiles/*.xsd</exclude>
                     </excludes>
                 </configuration>
                 <executions>
