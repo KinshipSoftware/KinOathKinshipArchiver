@@ -25,9 +25,13 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +62,7 @@ import nl.mpi.kinnate.kindocument.CmdiTransformer;
 import nl.mpi.kinnate.kindocument.KinXsdException;
 import nl.mpi.kinnate.kintypestrings.KinTermGroup;
 import nl.mpi.kinnate.kintypestrings.KinType;
+import nl.mpi.kinnate.projects.ProjectRecord;
 import nl.mpi.kinnate.ui.GraphPanelContextMenu;
 import nl.mpi.kinnate.ui.KinDiagramPanel;
 import nl.mpi.kinnate.ui.MetadataPanel;
@@ -162,6 +167,24 @@ public class GraphPanel extends JPanel implements SavePanel {
         diagramScrollPanel = new DiagramScrollPanel(svgCanvas);
 //        svgCanvas.setBackground(Color.LIGHT_GRAY);
         this.add(BorderLayout.CENTER, diagramScrollPanel);
+    }
+
+    public void preloadXsdFiles(ProjectRecord projectRecord) {
+        final File profilesDirectory = new File(projectRecord.getProjectDirectory(), "KmdiProfiles");
+        if (!profilesDirectory.exists()) {
+            profilesDirectory.mkdir();
+        }
+        for (ProfileRecord profileRecord : this.dataStoreSvg.selectedProfiles) {
+            final String fileName = profileRecord.profileId.replace(":", "_") + "-kmdi.xsd";
+            try (InputStream resourceStream = GraphPanel.class.getClassLoader().getResourceAsStream("KmdiProfiles/" + fileName)) {
+                if (resourceStream != null) {
+                    Files.copy(resourceStream, new File(profilesDirectory, fileName).toPath());
+                    System.out.println("Extracted: " + fileName);
+                }
+            } catch (IOException exception) {
+                System.out.println("failed to extract: " + fileName);
+            }
+        }
     }
 
     public void setEntityCollection(EntityCollection entityCollection) {

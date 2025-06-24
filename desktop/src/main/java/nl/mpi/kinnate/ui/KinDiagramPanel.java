@@ -245,6 +245,7 @@ public class KinDiagramPanel extends JPanel implements SavePanel, KinTermSavePan
             }
             try {
                 graphPanel.dataStoreSvg.projectRecord = projectManager.checkForMissingProject(graphPanel.dataStoreSvg.projectRecord);
+                graphPanel.preloadXsdFiles(graphPanel.dataStoreSvg.projectRecord);
                 entityCollection = projectManager.getEntityCollectionForProject(graphPanel.dataStoreSvg.projectRecord);
             } catch (JAXBException exception) {
                 // todo: should/can we do more here
