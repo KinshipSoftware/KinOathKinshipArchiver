@@ -136,7 +136,9 @@ jobs:
             jpackage --input stored_data/target --type exe  --name KinOathDesktop-1.7.$(git rev-list --count --all desktop) --app-version 1.7.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
             cp -r KinOathDesktop-1.7.*.msi stored_data/public/installers/;
             cp -r KinOathDesktop-1.7.*.exe stored_data/public/installers/;
-            for FILE in stored_data/public/installers/KinOathDesktop-1.7*; do echo "<a href=\"https://kinshipsoftware.github.io/KinOathKinshipArchiver/installers/$(basename "$FILE")\">$(basename "$FILE")</a><br/>" >> stored_data/public/KinOathDesktop-1.7.html; done;
+            for FILE in stored_data/public/installers/KinOathDesktop-1.7*; do
+              echo "<a href=\"https://kinshipsoftware.github.io/KinOathKinshipArchiver/installers/"$(basename "$FILE")"\">"$(basename "$FILE")"</a><br/>" >> stored_data/public/KinOathDesktop-1.7.html;
+            done;
     - name: Store build output
       uses: actions/upload-artifact@v4
       with:
