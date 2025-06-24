@@ -50,7 +50,7 @@ jobs:
             echo "snapshots";
             ls -l ../snapshots;
             jpackage --input desktop/target/ --type deb --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
-            jpackage --input desktop/target/ --type rpm --name KinOathDesktop-1.7.$(git rev-list --count --all desktop) --app-version 1.7.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
+            jpackage --input desktop/target/ --type rpm --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
             ls -l;
             mkdir stored_data;
             mkdir stored_data/public;
@@ -58,8 +58,8 @@ jobs:
             mkdir ../snapshots/installers;
             pwd;
             cp -r desktop/target stored_data/;
-            cp -r kinoathdesktop-1.7.*.deb stored_data/public/installers/;
-            cp -r kinoathdesktop-1.7.*.rpm stored_data/public/installers/;
+            cp -r kinoathdesktop_1.7.*.deb stored_data/public/installers/;
+            cp -r kinoathdesktop_1.7.*.rpm stored_data/public/installers/;
             cp -r ../snapshots/nl stored_data/public/;
             echo "1.7.$(git rev-list --count --all desktop)" > stored_data/public/kinoath-testing-current.txt;
             ls -l stored_data/*;
