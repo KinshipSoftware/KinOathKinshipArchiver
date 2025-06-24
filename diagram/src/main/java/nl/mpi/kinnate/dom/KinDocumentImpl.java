@@ -45,7 +45,11 @@ import org.w3c.dom.svg.SVGRect;
 public class KinDocumentImpl implements KinDocument {
 
     SVGDocument doc;
-    final private EventListener mouseListenerSvg = null;
+    final private EventListener mouseListenerSvg;
+
+    public KinDocumentImpl(EventListener mouseListenerSvg) {
+        this.mouseListenerSvg = mouseListenerSvg;
+    }
 
     public void readDocument(String uri, String templateXml) throws IOException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();

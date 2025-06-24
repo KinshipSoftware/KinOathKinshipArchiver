@@ -214,7 +214,7 @@ public class GraphPanel extends JPanel implements SavePanel {
             svgFile = null;
         }
         try {
-            svgDiagram.readSvg(new KinDocumentImpl(), svgFilePath.toString());
+            svgDiagram.readSvg(new KinDocumentImpl(mouseListenerSvg), svgFilePath.toString());
             svgCanvas.setDocument(((KinDocumentImpl) svgDiagram.doc).getDoc());
             symbolGraphic = new SymbolGraphic(((KinDocumentImpl) svgDiagram.doc).getDoc());
             dataStoreSvg = DataStoreSvg.loadDataFromSvg(((KinDocumentImpl) svgDiagram.doc).getDoc());
@@ -239,7 +239,7 @@ public class GraphPanel extends JPanel implements SavePanel {
 
     public void generateDefaultSvg() {
         try {
-            svgDiagram.generateDefaultSvg(new KinDocumentImpl(), new DefaultSorter());
+            svgDiagram.generateDefaultSvg(new KinDocumentImpl(mouseListenerSvg), new DefaultSorter());
             dataStoreSvg.indexParameters.symbolFieldsFields.setAvailableValues(svgDiagram.entitySvg.listSymbolNames(((KinDocumentImpl) svgDiagram.doc), svgDiagram.svgNameSpace));
             svgCanvas.setSVGDocument(((KinDocumentImpl) svgDiagram.doc).getDoc());
             symbolGraphic = new SymbolGraphic(((KinDocumentImpl) svgDiagram.doc).getDoc());

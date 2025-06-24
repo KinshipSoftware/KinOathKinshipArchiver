@@ -60,7 +60,7 @@ public class ExampleSwingApp {
     private static final String RHOMBUS = "rhombus";
     private SvgUpdateHandler svgUpdateHandler;
     private final EntityData[] entiryData = getEntityNodes();
-    final KinDocumentImpl kinDocumentImpl = new KinDocumentImpl();
+    final KinDocumentImpl kinDocumentImpl = new KinDocumentImpl(null);
 
     public ExampleSwingApp() throws DOMException, IOException, OldFormatException, UnsortablePointsException, AbstractMethodError, KinElementException {
         svgCanvas.setDocument(getSVG());
