@@ -177,7 +177,7 @@ public class GetKin {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         }, entitySvg);
-        svgDiagram.generateDefaultSvg(new KinDocumentImpl(), new DefaultSorter());
+        svgDiagram.generateDefaultSvg(new KinDocumentImpl(null), new DefaultSorter());
         final SvgUpdateHandler svgUpdateHandler = new SvgUpdateHandler(svgDiagram);
         svgDiagram.graphData.setEntitys(entiryData);
         svgUpdateHandler.drawEntities(new KinRectangle(800, 600));
