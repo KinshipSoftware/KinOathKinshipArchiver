@@ -59,7 +59,7 @@ jobs:
             pwd;
             cp -r desktop/target stored_data/;
             cp -r kinoathdesktop_1.7.*.deb stored_data/public/installers/;
-            cp -r kinoathdesktop_1.7.*.rpm stored_data/public/installers/;
+            cp -r kinoathdesktop-1.7.*.rpm stored_data/public/installers/;
             cp -r ../snapshots/nl stored_data/public/;
             echo "1.7.$(git rev-list --count --all desktop)" > stored_data/public/kinoath-testing-current.txt;
             ls -l stored_data/*;
