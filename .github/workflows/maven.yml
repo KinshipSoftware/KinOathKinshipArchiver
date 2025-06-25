@@ -61,8 +61,8 @@ jobs:
             mkdir ../snapshots/installers;
             pwd;
             cp -r desktop/target stored_data/;
-            cp -r kinoathdesktop_1.7.*.deb stored_data/public/installers/;
-            cp -r kinoathdesktop-1.7.*.rpm stored_data/public/installers/;
+            cp -r kinoathdesktop*1.7.*.deb stored_data/public/installers/;
+            cp -r kinoathdesktop*1.7.*.rpm stored_data/public/installers/;
             cp -r ../snapshots/nl stored_data/public/;
             echo "1.7.$(git rev-list --count --all)" > stored_data/public/kinoath-testing-current.txt;
             ls -l stored_data/*;
@@ -102,7 +102,7 @@ jobs:
             java --version;
             jpackage --input stored_data/target/ --type dmg --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing.icns --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
             ls -l;
-            cp -r KinOathDesktop-*-1.7.*.dmg stored_data/public/installers/;
+            cp -r KinOathDesktop*1.7.*.dmg stored_data/public/installers/;
             ls -l stored_data/*;
             ls -l stored_data/public/installers/;
             ls -l stored_data/public/installers/*;
@@ -137,8 +137,8 @@ jobs:
             java --version;
             jpackage --input stored_data/target --type msi  --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
             jpackage --input stored_data/target --type exe  --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
-            cp -r KinOathDesktop-1.7.*.msi stored_data/public/installers/;
-            cp -r KinOathDesktop-1.7.*.exe stored_data/public/installers/;
+            cp -r KinOathDesktop*1.7.*.msi stored_data/public/installers/;
+            cp -r KinOathDesktop*1.7.*.exe stored_data/public/installers/;
     - name: Store build output
       uses: actions/upload-artifact@v4
       with:

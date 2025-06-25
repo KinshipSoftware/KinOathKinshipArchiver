@@ -191,6 +191,8 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
                             } else if (graphPanel.svgUpdateHandler.dragHandlesShowing() && !graphPanel.svgUpdateHandler.dropTargetDefined()) {
                                 // show add entity
                                 graphPanel.svgUpdateHandler.showAddEntityBox(kinPoint.x, kinPoint.y);
+                                // TODO: complete the add entity from relation UI feature
+                                graphPanel.svgUpdateHandler.setRelationDragHandle(null);
                             } else {
                                 graphPanel.svgUpdateHandler.setRelationDragHandle(null);
                                 updateSelectionDisplay();
@@ -308,13 +310,13 @@ public class MouseListenerSvgImpl extends MouseInputAdapter implements EventList
                         graphPanel.selectedGroupId.clear();
                         graphPanel.selectedGroupId.add(entityIdentifier);
                     } else // toggle the highlight
-                     if (shiftDown && nodeAlreadySelected) {
-                            // postpone until after a drag action can be tested for and only deselect if not draged
-                            entityToToggle = entityIdentifier;
-                            // graphPanel.selectedGroupId.remove(entityIdentifier);
-                        } else if (!nodeAlreadySelected) {
-                            graphPanel.selectedGroupId.add(entityIdentifier);
-                        }
+                    if (shiftDown && nodeAlreadySelected) {
+                        // postpone until after a drag action can be tested for and only deselect if not draged
+                        entityToToggle = entityIdentifier;
+                        // graphPanel.selectedGroupId.remove(entityIdentifier);
+                    } else if (!nodeAlreadySelected) {
+                        graphPanel.selectedGroupId.add(entityIdentifier);
+                    }
                     updateSelectionDisplay();
                 } catch (IdentifierException exception) {
                     BugCatcherManager.getBugCatcher().logError(exception);
