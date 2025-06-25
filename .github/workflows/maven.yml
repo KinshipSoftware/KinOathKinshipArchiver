@@ -158,7 +158,7 @@ jobs:
     - name: Generate Index
       run: pwd;
             for FILE in stored_data/public/installers/KinOathDesktop*1.7*; do
-              echo '<a href="https://kinshipsoftware.github.io/KinOathKinshipArchiver/installers/'$(basename "$FILE")'">'$(basename "$FILE")'</a><br/>' >> stored_data/public/KinOathDesktop-1.7.html;
+              echo '<a href="https://kinshipsoftware.github.io/KinOathKinshipArchiver/installers/'$(basename "$FILE")'">'$(basename "$FILE")'</a><br/>' >> stored_data/public/KinOathDownloads.html;
             done;
             ls -l stored_data/*;
             ls -l stored_data/public/installers/;

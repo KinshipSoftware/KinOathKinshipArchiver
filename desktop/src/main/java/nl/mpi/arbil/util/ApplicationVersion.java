@@ -32,6 +32,7 @@ public abstract class ApplicationVersion {
     public String currentMinor;
     public String currentRevision;
     public String currentVersionFile;
+    public String currentDownloadsLink;
     public String fullInfo;
     public String lastCommitDate;
     public String artifactVersion;

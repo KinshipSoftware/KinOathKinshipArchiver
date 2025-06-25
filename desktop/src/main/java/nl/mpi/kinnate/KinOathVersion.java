@@ -35,6 +35,7 @@ public class KinOathVersion extends ApplicationVersion {
             lastCommitDate = properties.getProperty("application.lastCommitDate");
             compileDate = properties.getProperty("application.compileDate");
             currentVersionFile = properties.getProperty("application.currentVersionFile");
+            currentDownloadsLink = properties.getProperty("application.currentDownloadsLink");
             artifactVersion = properties.getProperty("application.projectVersion");
         } catch (IOException ex) {
             System.err.println("Version properties could not be read!");
