@@ -37,7 +37,7 @@ jobs:
             sed -i '/kinoath-rest/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all rest)'-testing/}' ./*/pom.xml;
             sed -i '/kinoath-core/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all core)'-testing/}' ./*/pom.xml;
             sed -i '/kinoath-diagram/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all diagram)'-testing/}' ./*/pom.xml;
-            sed -i '/kinoath-desktop/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count)'-testing/}' ./desktop/pom.xml;
+            sed -i '/kinoath-desktop/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all)'-testing/}' ./desktop/pom.xml;
             sed -i '/graph-sorter/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all graph-sorter)'-testing/}' ./*/pom.xml;
             sed -i '/kin-type-string-parser/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all kin-type-string-parser)'-testing/}' ./*/pom.xml;
             sed -i '/core/{n;s/-testing-SNAPSHOT/.'$(git rev-list --count --all core)'-testing/}' ./core/pom.xml;
@@ -52,8 +52,8 @@ jobs:
             ls -l desktop/target;
             echo "snapshots";
             ls -l ../snapshots;
-            jpackage --input desktop/target/ --type deb --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.7.$(git rev-list --count)-testing.jar;
-            jpackage --input desktop/target/ --type rpm --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.7.$(git rev-list --count)-testing.jar;
+            jpackage --input desktop/target/ --type deb --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.7.$(git rev-list --count --all)-testing.jar;
+            jpackage --input desktop/target/ --type rpm --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.png --main-jar kinnate-1.7.$(git rev-list --count --all)-testing.jar;
             ls -l;
             mkdir stored_data;
             mkdir stored_data/public;
@@ -100,7 +100,7 @@ jobs:
       # arch -x86_64 jpackage --input stored_data/target/ --type dmg --name KinOathDesktop-x64-1.7.$(git rev-list --count --all desktop) --app-version 1.7.$(git rev-list --count --all desktop) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing.icns --main-jar kinnate-1.7.$(git rev-list --count --all desktop)-testing.jar;
       run: pwd;
             java --version;
-            jpackage --input stored_data/target/ --type dmg --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing.icns --main-jar kinnate-1.7.$(git rev-list --count)-testing.jar;
+            jpackage --input stored_data/target/ --type dmg --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing.icns --main-jar kinnate-1.7.$(git rev-list --count --all)-testing.jar;
             ls -l;
             cp -r KinOathDesktop*1.7.*.dmg stored_data/public/installers/;
             ls -l stored_data/*;
@@ -135,8 +135,8 @@ jobs:
     - name: Generate MSI
       run: pwd;
             java --version;
-            jpackage --input stored_data/target --type msi  --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.7.$(git rev-list --count)-testing.jar;
-            jpackage --input stored_data/target --type exe  --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.7.$(git rev-list --count)-testing.jar;
+            jpackage --input stored_data/target --type msi  --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.7.$(git rev-list --count --all)-testing.jar;
+            jpackage --input stored_data/target --type exe  --name KinOathDesktop --app-version 1.7.$(git rev-list --count --all) --icon desktop/src/main/resources/nl/mpi/kinnate/resources/icons/kinoath-testing128x128.ico --main-jar kinnate-1.7.$(git rev-list --count --all)-testing.jar;
             cp -r KinOathDesktop*1.7.*.msi stored_data/public/installers/;
             cp -r KinOathDesktop*1.7.*.exe stored_data/public/installers/;
     - name: Store build output
