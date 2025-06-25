@@ -3,27 +3,27 @@
   <groupId>nl.mpi</groupId>
   <artifactId>graph-sorter</artifactId>
   <versioning>
-    <lastUpdated>20250624193038</lastUpdated>
+    <lastUpdated>20250625134705</lastUpdated>
     <snapshot>
-      <timestamp>20250624.193038</timestamp>
+      <timestamp>20250625.134705</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.7-testing-20250624.193038-1</value>
-        <updated>20250624193038</updated>
+        <value>1.7-testing-20250625.134705-1</value>
+        <updated>20250625134705</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>1.7-testing-20250624.193038-1</value>
-        <updated>20250624193038</updated>
+        <value>1.7-testing-20250625.134705-1</value>
+        <updated>20250625134705</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>1.7-testing-20250624.193038-1</value>
-        <updated>20250624193038</updated>
+        <value>1.7-testing-20250625.134705-1</value>
+        <updated>20250625134705</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
