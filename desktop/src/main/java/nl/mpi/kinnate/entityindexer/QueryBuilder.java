@@ -244,8 +244,8 @@ public class QueryBuilder {
     }
 
     public String getDeleteQuery(UniqueIdentifier uniqueIdentifier, String databaseName) {
-        return "for $identifierNode in collection('" + databaseName + "')/*:Kinnate[*:Entity/*:Identifier/text() = \"" + uniqueIdentifier.getQueryIdentifier() + "\"]"
-                + "return db:delete('" + databaseName + "', fn:substring-after(base-uri($identifierNode), '/'))";
+        return "for $identifierNode in collection('" + databaseName + "')/*:Kinnate[*:Entity/*:Identifier = '" + uniqueIdentifier.getQueryIdentifier() + "'] "
+                + "return db:delete('" + databaseName + "', db:path($identifierNode))";
     }
 
 //    public String getEntityPath(String projectName, String projectPathString, UniqueIdentifier uniqueIdentifier) {

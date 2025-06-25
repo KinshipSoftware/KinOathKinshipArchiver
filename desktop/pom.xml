@@ -242,7 +242,7 @@
         <dependency>
             <groupId>org.basex</groupId>
             <artifactId>basex</artifactId>
-            <version>9.2.4</version>
+            <version>10.6</version>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
