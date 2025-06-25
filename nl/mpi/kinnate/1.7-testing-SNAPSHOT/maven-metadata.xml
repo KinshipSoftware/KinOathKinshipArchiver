@@ -3,27 +3,27 @@
   <groupId>nl.mpi</groupId>
   <artifactId>kinnate</artifactId>
   <versioning>
-    <lastUpdated>20250625134705</lastUpdated>
+    <lastUpdated>20250625154924</lastUpdated>
     <snapshot>
-      <timestamp>20250625.134705</timestamp>
+      <timestamp>20250625.154924</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.7-testing-20250625.134705-1</value>
-        <updated>20250625134705</updated>
+        <value>1.7-testing-20250625.154924-1</value>
+        <updated>20250625154924</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>1.7-testing-20250625.134705-1</value>
-        <updated>20250625134705</updated>
+        <value>1.7-testing-20250625.154924-1</value>
+        <updated>20250625154924</updated>
       </snapshotVersion>
       <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>1.7-testing-20250625.134705-1</value>
-        <updated>20250625134705</updated>
+        <value>1.7-testing-20250625.154924-1</value>
+        <updated>20250625154924</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
