@@ -108,7 +108,8 @@ public class HelpMenu extends JMenu {
         arbilWebsiteMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    dialogHandler.openFileInExternalApplication(new URI("http://tla.mpi.nl/tools/tla-tools/kinoath"));
+                    dialogHandler.openFileInExternalApplication(new URI("https://github.com/KinshipSoftware/KinOathKinshipArchiver/wiki"));
+                    // http://tla.mpi.nl/tools/tla-tools/kinoath
                 } catch (Exception ex) {
                     BugCatcherManager.getBugCatcher().logError(ex);
                 }
@@ -132,7 +133,8 @@ public class HelpMenu extends JMenu {
         arbilForumMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-                    dialogHandler.openFileInExternalApplication(new URI("http://tla.mpi.nl/forums/software/kinoath"));
+                    dialogHandler.openFileInExternalApplication(new URI("https://github.com/KinshipSoftware/KinOathKinshipArchiver/issues"));
+                    // http://tla.mpi.nl/forums/software/kinoath
                 } catch (Exception ex) {
                     BugCatcherManager.getBugCatcher().logError(ex);
                 }
