@@ -82,9 +82,13 @@ public class RelationLinker extends DocumentLoader {
         try {
             EntityDocument leadEntityDocument = getEntityDocument(leadIdentifier);
             for (UniqueIdentifier uniqueIdentifier : otherIdentifiers) {
-                EntityDocument entityDocument = getEntityDocument(uniqueIdentifier);
-                // add the new relation
-                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, null, null, dcrType, customType);
+                if (uniqueIdentifier.equals(leadIdentifier)) {
+                    BugCatcherManager.getBugCatcher().logError(new ImportException("Cannot link entity to self: " + leadIdentifier));
+                } else {
+                    EntityDocument entityDocument = getEntityDocument(uniqueIdentifier);
+                    // add the new relation
+                    leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, null, null, dcrType, customType);
+                }
             }
             saveAllDocuments();
         } catch (URISyntaxException exception) {
@@ -103,8 +107,12 @@ public class RelationLinker extends DocumentLoader {
         try {
             EntityDocument leadEntityDocument = getEntityDocuments(selectedIdentifiers, nonLeadEntityDocuments);
             for (EntityDocument entityDocument : nonLeadEntityDocuments) {
-                // add the new relation
-                leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, null, null, dcrType, customType);
+                if (entityDocument.getUniqueIdentifier().equals(leadEntityDocument.getUniqueIdentifier())) {
+                    BugCatcherManager.getBugCatcher().logError(new ImportException("Cannot link entity to self: " + leadEntityDocument.getUniqueIdentifier()));
+                } else {
+                    // add the new relation
+                    leadEntityDocument.entityData.addRelatedNode(entityDocument.entityData, relationType, null, null, dcrType, customType);
+                }
             }
             saveAllDocuments();
         } catch (URISyntaxException exception) {
